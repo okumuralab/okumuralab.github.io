@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    <title>twittering-mode – Haruhiko Okumura – Professor, Computer Science/Education</title>
+
+    <meta name="author" content="Haruhiko Okumura" />
+    <meta name="description" content="Professor, Computer Science/Education">
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Haruhiko Okumura - Professor, Computer Science/Education" href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+  </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://avatars1.githubusercontent.com/u/3616498" /></a>
+          
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Haruhiko Okumura</a></h1>
+            <p class="site-description">Professor, Computer Science/Education</p>
+          </div>
+          
+          <nav>
+            <!-- <a href="/">Blog</a> -->
+            <a href="/about">About</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>twittering-mode</h1>
+
+  <div class="entry">
+    <p>Emacs上で動くTwitterアプリ<a href="https://github.com/hayamiz/twittering-mode">twittering-mode</a>を久しぶりに使ってみた。</p>
+
+<p>インストールは簡単。上のサイトから twittering-mode.el をいただいてきて，load-pathの通っているところ（通常はsite-lispの中）に置く。~/.emacs.d/init.el には最低限次のように書く。</p>
+
+<figure class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">'twittering-mode</span><span class="p">)</span></code></pre></figure>
+
+<p>これで M-x twit とすれば動作する。</p>
+
+<p>最初 .curlrc を設定していたのでうまく動作しなかった。これは何とかしてほしい（追記：とりあえず curl-args に “–no-remote-name” を加えたら直ったようだ）。</p>
+
+<p>日本語の説明が<a href="http://www.emacswiki.org/emacs/TwitteringMode-ja">こちら</a>にもある。</p>
+
+<p>設定の例を示す：</p>
+
+<figure class="highlight"><pre><code class="language-elisp" data-lang="elisp"><span class="p">(</span><span class="nb">require</span> <span class="ss">'twittering-mode</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">twittering-use-master-password</span> <span class="no">t</span><span class="p">)</span> <span class="c1">;; 要GnuPG</span>
+<span class="c1">; (setq twittering-timer-interval 90) ;; default 90</span>
+<span class="c1">; (setq twittering-number-of-tweets-on-retrieval 20) ;; default 20, max 200</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">twittering-display-remaining</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">twittering-icon-mode</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">twittering-use-icon-storage</span> <span class="no">t</span><span class="p">)</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">twittering-initial-timeline-spec-string</span>
+      <span class="o">'</span><span class="p">(</span><span class="s">":home"</span>
+        <span class="s">":mentions"</span>
+<span class="c1">;       ":direct_messages"</span>
+<span class="c1">;       ":favorites"</span>
+<span class="c1">;       "h_okumura"</span>
+	<span class="p">))</span>
+<span class="c1">; フォーマット設定の例</span>
+<span class="c1">; %FILLは改行がなくなる。%FOLDは改行を保つ</span>
+<span class="p">(</span><span class="k">setq</span> <span class="nv">twittering-status-format</span>
+      <span class="s">"%i %S (%s) %C{%Y-%m-%d %H:%M:%S} %p\n%FOLD[  ]{%T // from %f%L%r%R}\n "</span><span class="p">)</span>
+<span class="c1">; 別の設定の例</span>
+<span class="c1">; (setq twittering-status-format</span>
+<span class="c1">;       "%i %S (%s) %C{%Y-%m-%d %H:%M:%S} %p %f%L%r%R\n%T\n")</span></code></pre></figure>
+
+
+  </div>
+
+  <div class="date">
+    Written on March 15, 2015
+  </div>
+
+  
+</article>
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+<a href="http://flickr.com/h_okumura"><i class="svg-icon flickr"></i></a>
+<a href="http://github.com/okumuralab"><i class="svg-icon github"></i></a>
+
+
+
+
+<a href="http://twitter.com/h_okumura"><i class="svg-icon twitter"></i></a>
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>
