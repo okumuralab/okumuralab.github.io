@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>PISA「盗難事件」問題ほか・回答編</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="pisa-robbr.html">PISA「盗難事件」問題ほか</a> &gt;
+</div>
+
+<h1>PISA「盗難事件」問題ほか・回答編</h1>
+
+<p>登場人物はすべて架空の人です。</p>
+
+<h2>A君の答え</h2>
+
+<p><img src="img/081215a.png" alt="" class="right" /></p>
+
+<p>相関係数の検定と χ<sup>2</sup>
+検定とは，右図が示すように，別のものを見ている。したがって，相関係数の検定</p>
+
+<pre>
+&gt; cor.test(1:6, x)
+</pre>
+
+<p>で求めた <i>p</i> = 0.016 で何ら問題ない。</p>
+
+<p>なお，右図は次のようにして描いた。</p>
+
+<pre>
+ni = 1000
+p = numeric(ni)
+q = numeric(ni)
+for (i in 1:ni) {
+  s = numeric(6)
+  for (j in 1:4826) {
+    k = sample(1:6, 1)
+    s[k] = s[k] + 1
+  }
+  p[i] = chisq.test(s)$p.value
+  q[i] = cor.test(1:6, s)$p.value
+}
+
+&gt; mean(p &lt;= 0.05)
+[1] 0.047
+&gt; mean(q &lt;= 0.05)
+[1] 0.047
+
+&gt; par(las=1)
+&gt; par(mgp=c(2,0.8,0))
+&gt; plot(p,q,asp=1,xlab="",ylab="")
+</pre>
+
+<h2>B君の答え</h2>
+
+<p>度数データ（一般に整数データ）の（Pearsonの）相関係数には注意が必要。例えば6個のイベントを3個のビンに投げ込む場合，(1,2,3) とか (0,2,4) あるいはその逆順は頻繁に生じる。これらと <code>1:3</code>
+の相関係数を求めると，<i>p</i> = 0
+になり，有意になりすぎる：</p>
+
+<pre>
+&gt; cor.test(1:3,1:3)
+
+	Pearson's product-moment correlation
+
+data:  1:3 and 1:3 
+t = Inf, df = 1, p-value < 2.2e-16
+alternative hypothesis: true correlation is not equal to 0 
+sample estimates:
+cor 
+  1 
+</pre>
+
+<p>順位相関係数ならこういうことは起きない。Pearsonの相関係数を使いたい場合は，並べ替え検定でより正確な <i>p</i> 値を求めることができる：</p>
+
+<pre>
+x = c(762,792,795,794,849,834)
+</pre>
+
+<p>としておいて</p>
+
+<pre>
+y = replicate(10000, cor(1:6, x[sample(6)]))  # 数はできるだけ多く
+</pre>
+
+<p>またはより正確には</p>
+
+<pre>
+library(gtools)
+n = factorial(6)
+y = numeric(n)
+p = permutations(6,6)
+for (i in 1:n) y[i] = cor(1:6, x[p[i,]])
+</pre>
+
+<p>そして最後に</p>
+
+<pre>
+mean(abs(y) &gt;= abs(cor(1:6,x)))
+</pre>
+
+<p>とすると，<i>p</i> = 0.022 となり，A君の主張より大きくなる。</p>
+
+<h2>C君の答え</h2>
+
+<p>相関係数の検定では，ほとんど増加のない場合でも，一定の割合で増加すれば，非常に有意になってしまう。通常の回帰分析ではなく，Poisson分布を帰無仮説として年ごとの増加率を検定しなければならない。</p>
+
+<pre>
+&gt; x = c(762,792,795,794,849,834)
+&gt; lm(x ~ seq(6))
+</pre>
+
+<p>とすれば，増加率が 15.14 件/年 であることがわかる。Poisson分布の乱数で同じことをしてみて，増加率の絶対値が偶然に 15.14 以上になる確率を求めて検定するのが正しい。</p>
+
+<pre>
+x = c(762,792,795,794,849,834)
+m = mean(x)
+ni = 1000000  # もっと小さくてよい
+r = numeric(ni)
+for (i in 1:ni) {
+  r[i] = lm(rpois(6,m) ~ seq(6))$coefficients[2]
+}
+r1 = lm(x ~ seq(6))$coefficients[2]
+mean(abs(r) &gt;= abs(r1))
+</pre>
+
+<p>結果は <i>p</i> = 0.025 ほどになり，B君の結果よりさらに大きくなる。</p>
+
+<h2>D君の答え</h2>
+
+<p>それならPoisson回帰をすればいい。</p>
+
+<p>線形の場合：</p>
+
+<pre>
+r = glm(x ~ seq(6), family=poisson(link="identity"))
+summary(r)
+</pre>
+
+<p><i>p</i> = 0.0253</p>
+
+<p>リンクが対数の場合：</p>
+
+<pre>
+r = glm(x ~ seq(6), family=poisson(link="log"))
+summary(r)
+</pre>
+
+<p><i>p</i> = 0.0255</p>
+
+<hr />
+
+<p><a href="/~okumura/">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2009-03-02 10:07:55
+<!-- hhmts end -->
+</p>
+</body>
+</html>

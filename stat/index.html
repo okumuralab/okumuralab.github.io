@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>統計・データ解析</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+</nav>
+
+<h1>統計・データ解析</h1>
+
+<p><a href="http://www.kyoritsu-pub.co.jp/bookdetail/9784320112414">『Rで楽しむ統計』</a>が出ました。<a href="https://github.com/okumuralab/RforFun">サポートページ</a></p>
+
+<p><a href="http://gihyo.jp/book/2018/978-4-7741-9503-2">『Rで楽しむベイズ統計入門』</a>が出ました。<a href="https://github.com/okumuralab/bayesbook">サポートページ</a>，第7章のRコードをStanで書き直した<a href="/~okumura/rstan/">Rで楽しむStan</a></p>
+
+<p>全国学力・学習状況調査の個票の疑似データが<a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/1404609.htm">こちら</a>で公開されています。データ分析の練習に<a href="180613.html">使えそう</a>です。</p>
+
+<h2>お品書き</h2>
+
+<ul>
+  <li><a href="first.html">Rの初歩</a></li>
+  <li><a href="R-win.html">Windows用Rガイド</a></li>
+  <li><a href="graphs.html">グラフの描き方</a>（ここからさらに多数リンクあり）</li>
+  <li><a href="basics.html">統計の基礎</a></li>
+  <li><a href="var_or_varp.html">分散はnで割るかn-1で割るか</a></li>
+  <li><a href="tests_and_CI.html">検定と区間推定</a></li>
+  <li>話題: <a href="bernoulli.html">止め方で結果が変わる？</a></li>
+  <li><a href="chisqtest.html">カイ2乗検定</a></li>
+  <li><a href="2by2.html">2×2の表，オッズ比，相対危険度</a> /
+      <a href="fishertest.html">Fisherの正確検定</a></li>
+  <li><em>[New]</em> <a href="titanic.html">タイタニック号沈没事故，(Cochran-)Mantel-Haenszel検定，Simpsonのパラドックス</a></li>
+  <li><a href="fisher-chisq.html">Fisherの正確検定かカイ2乗検定か</a></li>
+  <li><a href="ttest.html">t検定</a> /
+      <a href="signtest.html">符号検定とWilcoxonの符号付き順位検定</a> /
+      <a href="mcnemar.html">McNemar検定</a></li>
+  <li><a href="correlation.html">相関（と回帰）</a></li>
+  <li>話題: <a href="pisa-robbr.html">PISA「盗難事件」問題ほか</a></li>
+  <li><a href="wmw.html">Wilcoxon-Mann-Whitney検定</a></li>
+  <li><a href="excel-resample.html">Excelによるリサンプリング</a></li>
+  <li><a href="brunner-munzel.html">Brunner-Munzel検定</a></li>
+  <li>話題: <a href="sexratio.html">出生性比</a></li>
+  <li>話題: <a href="bkare.html">B型の彼氏</a> / <a href="140720.html">血液型と性格の無関連性</a></li>
+  <li><a href="anova.html">分散分析</a></li>
+  <li>話題: <a href="michelson.html">Michelson-Morley の実験</a></li>
+  <li>話題: <a href="molt-or-blend.html">モルトかブレンドか</a></li>
+  <li><a href="ROC.html">ROC曲線</a></li>
+  <li><a href="ggplot2.html">ggplot2</a></li>
+  <li>番外: <a href="prefectures.html">いろいろな都道府県別データ</a></li>
+  <li><a href="timeseries.html">時系列データ</a></li>
+  <li><a href="colors.html">統計グラフの色</a></li>
+  <li><a href="bootstrap.html">ブートストラップ</a></li>
+  <li><a href="poisson.html">ポアソン分布</a> /
+      <a href="160620.html">ポアソン分布のシミュレーション</a> /
+      <a href="150108.html">この分布はポアソン？</a> /
+      <a href="CI/">信頼区間</a></li>
+  <li><a href="rgooglemaps.html">RgoogleMapsを使った放射線地図</a></li>
+  <li><a href="110903.html">放射線量等分布マップ</a></li>
+  <li>話題: <a href="kamagayamap.html">鎌ケ谷市のハリネズミ地図</a></li>
+  <li>話題: <a href="110913.html">福島原発事故後の米国北西部の乳幼児死亡数</a></li>
+  <li><a href="covell.html">スペクトルのフィット1</a> /
+      <a href="poisson_regression.html">ポアソン回帰</a> /
+      <a href="141115.html">最尤法によるフィッティング</a> /
+      <a href="peakfit.html">スペクトルのフィット2</a> /
+      <a href="111220.html">例1</a> /
+      <a href="111220a.html">例2</a> /
+      <a href="111230a.html">例3</a> /
+      <a href="120110.html">例4</a> /
+      <a href="120615.html">LB2045</a> /
+      <a href="120905.html">EMF211</a> /
+      <a href="121005.html">LB2045の校正</a></li>
+  <li><a href="what_is_CI.html">信頼区間って何？</a></li>
+  <li><a href="logistic.html">ロジスティック回帰</a>（工事中）</li>
+  <li><a href="survival.html">生存時間解析</a>（工事中）/ <a href="cox.html">Cox回帰</a>（工事中）</li>
+  <li><a href="xml2.html">XMLデータの扱い方</a></li>
+  <li><a href="130203.html">データ作法</a></li>
+  <li><a href="exceldata.html">RでExcelのデータを読む方法</a></li>
+  <li><a href="inoshishi.html">イノシシはロングテール？</a></li>
+  <li><a href="make.html">Makefile</a> / <a href="Sweave.html">Sweave</a></li>
+  <li><a href="datatable.html">data.table</a> / <a href="readr.html">readr</a></li>
+  <li><a href="shinjuku.html">Webスクレイピングの例：新宿の放射線</a></li>
+  <li><a href="svg.html">SVG画像</a></li>
+  <li><a href="rjson.html">RでJSONを読む</a>
+  <li>番外：<a href="tokyo_snow.html">東京の雪</a></li>
+  <li>番外：<a href="tochiji2014.html">2014年の都知事選</a></li>
+  <li>番外：<a href="cs137_food.html">日常食中のセシウム137の推移</a></li>
+  <li><a href="meta.html">メタアナリシス</a></li>
+  <li><a href="effectsize.html">効果量，Cohen's d，検出力，検出限界</a></li>
+  <li><a href="kopipe.html">コピペのチェック</a></li>
+  <li><a href="140902.html">日本の薬の使用量</a></li>
+  <li><em>[検討中]</em> <a href="140917.html">偏相関係数（と「時系列」データのspurious regression）</a> / <a href="150209.html">時系列データの相関</a></li>
+  <li><a href="140921.html">ロジスティック回帰と変数選択</a></li>
+  <li>話題：<a href="141026.html">災害の確率</a> / <a href="141029.html">貨幣の重さ</a> / <a href="141029a.html">人口密度と出生率</a></li>
+  <li><a href="estat.html">e-StatのAPI</a></li>
+  <li><a href="ipynb.html">RをIPython Notebookから使う</a></li>
+  <li><a href="rserver.html">RStudio Serverを使う</a></li>
+  <li><a href="pca.html">主成分分析と因子分析</a></li>
+  <li><a href="multiplecomparisons.html">多重比較</a> (そのうちちゃんと書く)</li>
+  <li><a href="sound.html">音</a></li>
+  <li><a href="pisa.html">PISAデータを読む</a> / <a href="pisa2015.html">PISA 2015データを読む</a></li>
+  <li><a href="osaka2015.html">大阪市における特別区の設置についての投票</a></li>
+  <li><a href="150603.html">福島県の線量計の感度</a></li>
+  <li><a href="nippon.html">日本地図</a> / <a href="nippon2.html">日本地図: 2015年国勢調査のネット回答率</a> / <a href="nippon3.html">日本地図: 普通教室のエアコン設置率</a></li>
+  <li><a href="150808.html">気温と電力需要</a> / <a href="150809.html">猛暑日の増加</a></li>
+  <li><a href="fitbit.html">fitbit</a></li>
+  <li><a href="leaflet.html">leaflet</a>（書きかけ）</li>
+  <li><a href="math.html">Rで数式を書く</a></li>
+  <li><a href="sqlite.html">RからSQLiteを使う</a></li>
+  <li><a href="font.html">Rでのフォントの扱い</a></li>
+  <li><a href="160118.html">アイスクリームの売れ方</a>（2016年センター試験数学を題材として）</li>
+  <li><a href="adams.html">Adams方式</a></li>
+  <li><a href="imager.html">画像処理</a></li>
+  <li><a href="access_log.html">アクセスログの解析</a></li>
+  <li><a href="stirling.html">Stirlingの公式</a> / <a href="pendulum.html">振り子の等時性？</a></li>
+  <li><a href="160602.html">テレビと平均寿命</a> / <a href="160604.html">政治資金データ</a></li>
+  <li><a href="rscript.html">Rでのスクリプト処理</a> / <a href="160629.html">名古屋市のデータのCSV化</a> / <a href="160702.html">名古屋市のHPVVデータの解析</a></li>
+  <li><a href="160703.html">Cauchy分布のパラメタ推定</a></li>
+  <li><a href="161122.html">Excelファイルの集計</a></li>
+  <li>番外: <a href="gameoflife.html">ライフゲーム</a></li>
+  <li>番外かつ蛇足: <a href="Rprofile.html">~/.Rprofile</a></li>
+  <li><a href="170725.html">与えられた面積比のベン図を描く</a></li>
+  <li><a href="170730.html">ツイート数の推移</a></li>
+  <li>全国学力テストの都道府県別正答率 <a href="170829.html">2017年度</a> / 
+      <em>[New]</em> <a href="180804.html">2018年度</a></li>
+  <li><a href="170903.html">全国学力テストの都道府県別正答率と教員初任給</a> /
+      <a href="171006.html">日教組と学力</a></li>
+  <li><a href="170922.html">人口ピラミッドと男女比</a></li>
+  <li><a href="piaac.html">PIAACデータ解析</a></li>
+  <li><a href="exchangeparadox.html">二封筒の問題</a> /
+      <a href="180102.html">2項分布，過分散，過少分散</a></li>
+  <li><a href="180123.html">Fraserのパラドックス</a> / <a href="180123a.html">（続）</a></li>
+  <li><a href="180209.html">選択バイアスの影響を受ける推定・受けない推定</a></li>
+  <li><a href="180210.html">PCI手術は有効か？</a></li>
+  <li><em>[draft]</em> <a href="efronmorris.html">Efron--Morris (1975) の野球データ</a></li>
+  <li><a href="180321.html">福島県で胃がんが急増？</a></li>
+  <li><a href="180402.html">都道府県別平均寿命</a></li>
+  <li><a href="tdm.html">単語文書行列</a></li>
+  <li><a href="jpndistrict.html">jpndistrictによる地図</a></li>
+  <li><a href="quartile.html">四分位数の定義</a></li>
+  <li><a href="shape.html">シェープファイルを読む</a></li>
+  <li><a href="180809.html">走り始めの60分間が危険な時間！</a></li>
+  <li><a href="181007.html">誤差が与えられたときの回帰分析</a></li>
+  <li><a href="181231.html">アトピー性皮膚炎は幼稚園児だけ減少している？</a></li>
+</ul>
+
+<h2>Rや統計に関するリンク</h2>
+
+<p><a href="/~okumura/blog/">私の古いブログ</a>から</p>
+
+<ul>
+  <li><a href="/~okumura/blog/node/2272">日教組組織率と学力</a> /
+      <a href="/~okumura/blog/node/2274">日教組組織率と学力：補遺</a> /
+      <a href="/~okumura/blog/node/2282">日教組票と学力</a> /
+      <a href="/~okumura/blog/node/2283">日教組票と学力：補遺</a></li>
+  <li><a href="/~okumura/blog/node/2287">Excel使うな</a> /
+      <a href="/~okumura/blog/node/2585">Excel使うな：2010版</a></li>
+  <li><a href="/~okumura/blog/node/2492">「帰無仮説を採択」？</a></li>
+  <li><a href="/~okumura/blog/node/2546">折れ線グラフは0点に意味がない…はずだが</a></li>
+</ul>
+
+<p>いろいろ</p>
+
+<ul>
+  <li><a href="http://www.r-project.org/">The R Project for Statistical Computing</a></li>
+  <li><a href="http://www.rseek.org/">RSeek.org</a> -- R専門のGoogle Custom Search</li>
+  <li><a href="http://www.okada.jp.org/RWiki/">RjpWiki</a> -- 日本語のRのWikiサイト</li>
+  <li><a href="http://aoki2.si.gunma-u.ac.jp/">群馬大学の青木先生</a>：
+      <ul>
+	<li><a href="http://aoki2.si.gunma-u.ac.jp/R/index.html">R による統計処理</a></li>
+	<li><a href="http://aoki2.si.gunma-u.ac.jp/Hanasi/excel/index.html">ひどい話です！</a>
+	    -- Excelを統計解析に使ってはいけない理由</li>
+      </ul></li>
+  <li><a href="http://hawaii.sys.i.kyoto-u.ac.jp/~oba/bayeswiki/index.php">BayesWiki</a></li>
+  <li><a href="http://cse.naro.affrc.go.jp/takezawa/r-tips/r.html">R-Tips</a></li>
+  <li>CRANの中の<a href="http://cran.ism.ac.jp/doc/contrib/manuals-jp/">日本語ドキュメント</a>，特に間瀬先生の<a href="http://cran.ism.ac.jp/doc/contrib/manuals-jp/Mase-Rstatman.pdf">R基本統計関数マニュアル</a>（PDF）</li>
+  <li><a href="http://slack.ser.man.ac.uk/progs/stata/avoid_excel.html">Why not use Excel?</a></li>
+  <li><a href="http://stats.stackexchange.com/">Cross Validated</a>（英語：統計関係の掲示板）</li>
+  <li><a href="http://matome.naver.jp/odai/2134709644082692701">統計・機械学習・データマイニングの無料で読めるPDF資料 - NAVER まとめ</a></li>
+  <li><a href="http://id.fnshr.info/2013/08/11/online-stat-books/">オンラインで無料で読める統計書22冊｜Colorless Green Ideas</a></li>
+  <li><a href="http://tryr.codeschool.com/">Try R</a>（R学習サイト）</li>
+</ul>
+
+<p>オープンアクセスジャーナル</p>
+
+<ul>
+  <li><a href="http://journal.r-project.org/">The R Journal</a></li>
+  <li><a href="http://www.jstatsoft.org/">Journal of Statistical Software</a> --
+      R関係のペーパーが多い。サイトはRuby on Railsで作られている。</li>
+  <li><a href="http://www.amstat.org/PUBLICATIONS/JSE/">Journal of Statistics Education</a></li>
+  <li><a href="http://www.stat.auckland.ac.nz/~iase/publications.php?show=serj">Statistics Education Research Journal</a></li>
+  <li><a href="http://repositories.cdlib.org/uclastat/cts/tise/">Technology Innovations in Statistics Education</a></li>
+  <li><a href="http://www.amstat.org/publications/chance/">CHANCE</a> --
+      古い号は無料</li>
+  <li><a href="http://pareonline.net/">Practical Assessment, Research &amp; Evaluation</a></li>
+  <li><a href="http://www.amstat.org/education/stn/">Statistics Teacher Network</a> --
+      K12先生向け</li>
+  <li><a href="http://www.significancemagazine.org/">Significance Magazine</a> --
+      Web記事は無料。雑誌は無料iPad/iPhoneアプリ内で1冊250円で買える</li>
+</ul>
+
+<p>統計関係e-books（日本語）</p>
+
+<ul>
+  <li><a href="http://ebsa.ism.ac.jp/">統計科学のための電子図書システム</a></li>
+<!--
+  <li><a href="http://www.sci.kagoshima-u.ac.jp/~ebsa/">統計科学のための電子図書システムのWebページ</a></li>
+  <li><a href="http://www.sci.kagoshima-u.ac.jp/~ebqc/">品質管理のための電子図書システムのWebページ</a></li>
+  <li><a href="http://stat.sci.kagoshima-u.ac.jp/~data/">データで学ぶ！統計活用授業のための教材サイト</a></li>
+-->
+  <li><a href="http://park.itc.u-tokyo.ac.jp/atstat/jss75shunen/">日本統計学会75周年記念出版『21世紀の統計科学』(全3巻) 増補HP版</a></li>
+</ul>
+
+<p>統計関係e-books（英語）</p>
+
+<ul>
+  <li><a href="http://openlearn.open.ac.uk/course/view.php?id=1710">Exploring data: graphs and numerical summaries</a> -- LearningSpace -- OpenLearn -- The Open University</li>
+  <li><a href="http://wiki.stat.ucla.edu/socr/index.php/EBook">Advanced Placement Statistics Curriculum 2007</a> by <a href="http://www.socr.ucla.edu/">Statistics Online Computational Resource</a></li>
+  <li><a href="http://www.resample.com/content/text/index.shtml">Resampling: The New Statistics</a> by Julian L. Simon (1997)</li>
+  <li><a href="http://udel.edu/~mcdonald/statintro.html">Handbook of Biological Statistics</a> by John H. McDonald</li>
+  <li><a href="http://omega.albany.edu:8008/JaynesBookPdf.html">Probability Theory -- the Logic of Science</a> by E. T. Jaynes</li>
+  <li><a href="http://en.wikibooks.org/wiki/Statistics">Statistics</a> -- Wikibooks</li>
+  <li><a href="http://www.archive.org/details/firstcourseinmat029137mbp">A First Course In Mathematical Statistics</a> by C. E. Weatherburn (1949)</li>
+  <li><a href="http://www.archive.org/details/IntroductionToMathematicalStatisticsThirdEdition">Introduction To Mathematical Statistics, Third Edition</a> by Paul G. Hoel (1962)</li>
+  <li><a href="http://www.archive.org/details/IntroductoryStatistics">Introductory Statistics</a> by Thomas H. Wonnacott and Ronald J. Wonnacott (1969)</li>
+  <li><a href="http://psychclassics.yorku.ca/Fisher/Methods/">Statistical Methods for Research Workers</a> by Ronald A. Fisher (1925)（古典）</li>
+  <li><a href="http://digital.library.adelaide.edu.au/coll/special//fisher/">The R.A. Fisher Digital Archive</a></li>
+  <li><a href="http://bcs.whfreeman.com/pbs/">Practice Of Business Statistics</a>，<a href="http://bcs.whfreeman.com/pbs2e/">The Practice of Business Statistics, Second Edition</a> のいくつかの章が見本としてダウンロードできます</li>
+  <li><a href="http://www.StatisticalPractice.com/">The Little Handbook of Statistical Practice</a></li>
+  <li><a href="http://cast.massey.ac.nz/core/index.html?collection=Public">CAST: Public e-books</a></li>
+  <li>Prasenjit Saha, <a href="http://www.physik.uzh.ch/~psaha/pda/">Principles of Data Analysis</a> (2002)</li>
+  <li>Edward R. Tufte, <a href="http://www.edwardtufte.com/tufte/dapp/">Data Analysis for Politics and Policy</a> (1974)</li>
+  <li>G. Jay Kerns, <a href="http://www.lulu.com/product/file-download/introduction-to-probability-and-statistics-using-r/12037733">Introduction to Probability and Statistics Using R</a> (2010)</li>
+  <li>Willard C. Brinton: <a href="http://archive.org/details/graphicpresentat00brinrich">Graphic Presentation</a> (1939) スキャンPDF</li>
+  <li>Allen B. Downey, <a href="http://greenteapress.com/thinkstats/index.html">Think Stats: Probability and Statistics for Programmers</a> おなじ著者の本が他にも <a href="http://greenteapress.com/">Green Tea Press</a> で入手できる</li>
+  <li>Baayen (2008) <i>Analyzing Linguistic Data. A Practical Introduction to Statistics Using R</i> の草稿PDFが<a href="http://www.ualberta.ca/~baayen/publications.html">ここ</a>からリンクされている。DRAFTという透かしが入っている</li>
+  <li><a href="http://nonuke2011.blogspot.jp/2012/04/chongsuvivatwong-virasakdi-2007.html">nonuke2011: 疫学入門 いずれも全文pdf</a></li>
+  <li><a href="http://manuals.bioinformatics.ucr.edu/home/programming-in-r">R Programming - Manuals</a></li>
+  <li><a href="http://www.linuxlinks.com/article/20130216063859514/9oftheBestFreeRBooks-Part1.html">9 of the Best Free R Books - Part 1</a> …</li>
+  <li><a href="http://health.adelaide.edu.au/psychology/ccs/teaching/lsr/">Learning Statistics with R</a></li>
+  <li><a href="http://www.statisticsdonewrong.com/">Statistics Done Wrong</a> (邦訳: <a href="http://id.fnshr.info/2014/12/17/stats-done-wrong-toc/">ダメな統計学</a>)</li>
+  <!-- <li><a href="http://www.annualreviews.org/toc/statistics/1/1">Annual Review of Statistics and Its Application - Volume 1, 2014</a> 2015年1月まで無料公開</li> -->
+  <li>Trevor Hastie: <a href="https://web.stanford.edu/~hastie/pub.htm">Publications</a> から <i>The Elements of Statistical Learning</i>, <i>An Introduction to Statistical Learning with Applications in R</i>, <i>Statistical Learning with Sparsity: the Lasso and Generalizations</i>, <i>Computer Age Statistical Inference:Algorithms, Evidence and Data Science</i> などのPDFへのリンクあり</li>
+  <li><a href="http://www-bcf.usc.edu/~gareth/ISL/">Introduction to Statistical Learning</a>（The Elements of Statistical Learningの実践編。R使用）←このサイトは <a href="http://www.statlearning.com/">http://www.statlearning.com/</a> でもアクセスできる。本書のためのRパッケージISLRがCRANにある。著者たちの講義ビデオもある（詳しくは <a href="http://www.r-bloggers.com/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/">In-depth introduction to machine learning in 15 hours of expert videos | R-bloggers</a> 参照）。</li>
+  <li><a href="http://www.greenteapress.com/thinkbayes/">Think Bayes</a> (CC BY-NC)</li>
+  <li><a href="http://www.dataminingbook.info/">Data Mining and Analysis</a></li>
+  <li><a href="http://www.cs.ucl.ac.uk/staff/d.barber/brml/">Bayesian Reasoning and Machine Learning</a></li>
+  <li><a href="http://www.inference.phy.cam.ac.uk/itprnn/book.html">Information Theory, Pattern Recognition and Neural Networks</a></li>
+  <li><a href="http://christonard.com/12-free-data-mining-books/">12 Free (as in beer) Data Mining Books</a></li>
+  <li><a href="http://www.maths.bath.ac.uk/~sw283/">Simon Wood</a>: <a href="http://www.maths.bath.ac.uk/~sw283/core-statistics.pdf">Core Statistics</a> (PDF)</li>
+  <li><a href="http://jsresearch.net/">Teach Data Science</a>:
+      Introduction to Data Science --
+      Free Electronic Textbook with Introduction to R
+      (iBooks store から無料でダウンロードできる。PDF版もあり)</li>
+  <li>Hadley Wickham, <a href="http://adv-r.had.co.nz/">Advanced R</a>, <a href="https://r4ds.had.co.nz">R for Data Science</a>, <a href="https://github.com/hadley/ggplot2-book">ggplot2-book</a></li>
+  <li><a href="http://www.quantide.com/R/r-training/r-web-books/rabbit-introduction-to-r/">Rabbit Introduction to R</a></li>
+  <li>Virasakdi Chongsuvivatwong: <a href="http://cran.r-project.org/doc/contrib/Epicalc_Book.pdf">Analysis of Epidemiological Data Using R and Epicalc</a> (PDF) [ほかにも <a href="http://cran.r-project.org/doc/contrib/">http://cran.r-project.org/doc/contrib/</a> には多数の文書がある]</li>
+  <li>Tomás J. Aragón: <a href="http://www.medepi.net/docs/EpidemiologyUsingR.pdf">Epidemiology Using R</a> (PDF)</li>
+  <li><a href="http://genomicsclass.github.io/book/">PH525x series - Biomedical Data Science</a></li>
+  <li><a href="http://www.dataonfocus.com/21-free-data-mining-books/">27 Free Data Mining Books - DataOnFocus</a></li>
+  <li><a href="https://www.openintro.org/stat/textbook.php">OpenIntro Statistics</a></li>
+  <li>David Colquhoun: Lectures on Biostatictics (1971), <a href="http://www.dcscience.net/">DC's Improbable Science</a></li>
+  <li><a href="https://github.com/ProjectMOSAIC/LittleBooks/blob/master/README.md">ProjectMOSAIC/LittleBooks</a>: Start Teaching Statistics Using R / A Student's Guide to R</li>
+  <li><a href="http://www.cookbook-r.com">Cookbook for R</a></li>
+  <li>Miguel Hernan, <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/">Causal Inference Book</a> (drafts of the book: Hernán MA, Robins JM (2018). Causal Inference. Boca Raton: Chapman &amp; Hall/CRC, forthcoming)</li>
+  <li>Florian Heiss, <a href="http://www.urfie.net/">Using R for Introductory Econometrics</a>（下の方にオンライン版へのリンクあり）</li>
+  <li>Kieran Healy, <a href="https://socviz.co/">Data Visualization</a> (draft)</li>
+</ul>
+
+<hr>
+
+<p><a href="http://creativecommons.org/licenses/by/4.0/" rel="license"><img src="/~okumura/img/88x31.png" alt="Creative Commons License" style="border:none; position:relative; top:3px" width="88" height="31"></a>
+&nbsp;&nbsp;
+<a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-09 10:23:52</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

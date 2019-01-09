@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>グラフの例：ヒストグラム</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：ヒストグラム</h1>
+
+<p>ヒストグラム（histogram）は度数分布図のこと。</p>
+
+<p>連続量のヒストグラムは，棒どうしをくっつけて描く。</p>
+
+<p>Rでヒストグラムを描く関数は次のものがある：</p>
+
+<ul>
+  <li>標準のgraphicsパッケージの <code>hist()</code></li>
+  <li>MASSパッケージの <code>truehist()</code></li>
+  <li>latticeパッケージの <code>histogram()</code></li>
+  <li>ggplot2パッケージの <code>geom_histogram()</code></li>
+</ul>
+
+<p>日本流（？）のヒストグラムの階級は「○○以上，××未満」とする。数式で書けば，第 $i$ 階級は $b_i \leq x < b_{i+1}$ のように，左側の不等号に等号が付く。端の階級といえども $b_{n-1} \leq x \leq b_n$ のように両側を含めたりしない。このルールに従って描くには，標準の <code>hist()</code> に <code>right=FALSE</code>, <code>include.lowest=FALSE</code> のオプションを付けて描く。このあたりの設定ができるのは標準の <code>hist()</code> だけだと思うが，0.9999 と 1.0000 を区別する必要のない連続量のヒストグラムを描く際には，このような細部に気遣う必要はない。</p>
+
+<p>標準の <code>hist()</code> のデフォルトでは色が付かないので，<code>col="gray"</code> などとして色を付ける。度数（frequency）でなく密度（density）にする場合は <code>freq=FALSE</code> とする。できるだけ分割点 <code>breaks</code> を指定する（無指定なら適当に設定される）。</p>
+
+<p>例：100点満点のテストの点数が 10, 12, 20, 23, 25, 50, 100 であった。10点きざみの度数分布図を描け（実際にはこのような少数の度数分布図を描く意味はないが，単なる例示のため）。</p>
+
+<pre>
+x = c(10, 12, 20, 23, 25, 50, 100)
+hist(x, breaks=(0:11)*10, right=FALSE, include.lowest=FALSE, col="gray")
+</pre>
+
+<figure><img src="img/180725a.png" alt="ヒストグラムの例"></figure>
+
+<p>この場合，最後の階級に100点を含めてしまうには，次のようにする：</p>
+
+<pre>
+hist(x, breaks=(0:10)*10, right=FALSE, col="gray")
+</pre>
+
+<figure><img src="img/180725b.png" alt="ヒストグラムの例"></figure>
+
+<p>実際には，もうちょっと工夫して見やすいものにする。</p>
+
+<pre>
+par(mgp=c(2,0.8,0.5))     # 軸マージン（デフォルト: c(3,1,0)）
+hist(x, breaks=(0:10)*10, right=FALSE, col="gray", main="", xlab="", ylab="", yaxt="n")
+axis(2, 0:3, 0:3, las=1)
+</pre>
+
+<figure><img src="img/180725c.png" alt="ヒストグラムの例"></figure>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-07-25 21:41:56</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

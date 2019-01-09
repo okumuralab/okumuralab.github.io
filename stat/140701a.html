@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>音を描く</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<h1>音を描く</h1>
+
+<p>オシロスコープのように音の波を描いてみよう。</p>
+
+<p>音源は何でもいい。昔はCDからリッピングしていたが，再現できる例として，Internet Archiveの<a href="https://archive.org/details/MusopenCollectionAsFlac">Musopen Collection as FLAC</a>を使うことにする。これはパブリックドメインの音源で，しかもFLAC（オープンなロスレス圧縮）形式である。ここでは最初のGoldberg変奏曲のAria（FLACで13519283バイト）を使う。</p>
+
+<p>これをまず<a href="https://xiph.org/flac/">FLAC</a>で<a href="/~okumura/wavefmt.html">WAV形式</a>に変換する：</p>
+
+<pre>
+flac -d Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.flac
+</pre>
+
+<p>77376140バイトのWAVファイルができる。これをさらに<a href="/~okumura/dumpwave.c">dumpwave.c</a>でテキストに落とした：</p>
+
+<pre>
+$ gcc dumpwave.c -o dumpwave
+$ ./dumpwave Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.wav &gt;x.txt
+[RIFF] (77376132 bytes)
+[WAVEfmt ] (16 bytes)
+  Data type = 1 (1 = PCM)
+  Number of channels = 2 (1 = mono, 2 = stereo)
+  Sampling rate = 44100Hz
+  Bytes / second = 264600
+  Bytes x channels = 6
+  Bits / sample = 24
+
+[data] (77376096 bytes)
+</pre>
+
+<p>おお，24ビット/サンプルだ！</p>
+
+<p>できたテキストファイルは179573070バイト（約180MB）もある。これをRで読み込む：</p>
+
+<pre>
+x = read.table("x.txt")
+</pre>
+
+<p>でもいいが，非常に遅いので，<a href="datatable.html">data.table</a>を使うとよい：</p>
+
+<pre>
+library("data.table")
+x = fread("x.txt")
+dim(x)   # サイズ：12896016×2
+head(x)  # 冒頭は0が続く
+</pre>
+
+<p>12896016サンプル，2チャンネル（左右）である。</p>
+
+<p>冒頭の度数分布を調べてみる：</p>
+
+<pre>
+&gt; table(x$V1[1:100000])
+
+-2304 -2048 -1792 -1536 -1280 -1024  -768  -512  -256     0   256   512   768 
+    5   167   353   468   830  1101  1446 13575  4101 72289  1133  1124  1117 
+ 1024  1280  1536  1792  2048  2304  2560  2816 
+  696   447   424   321   236   130    33     4 
+</pre>
+
+<p>あれあれ，すべて256の倍数だ。せっかく24ビット音だと思ったら，16ビットだ。全体を256で割ってしまおう。</p>
+
+<pre>
+x = x / 256
+</pre>
+
+<p>冒頭をプロットしてみる：</p>
+
+<pre>
+s = 44100*10    # 無音の部分は飛ばす
+t = 44100*0.01  # 0.01秒
+plot(1:t, x$V1[(s+1):(s+t)], type="l", xlab="", ylab="", col="#0068b7") # 右
+points(1:t, x$V2[(s+1):(s+t)], type="l", col="#f39800")              # 左
+</pre>
+
+<div><img src="img/140702a.png" alt="子犬のワルツ 波形"></div>
+
+<p>これからだいたいの音の振動数（周波数）がわかる。ウィキペディアの<a href="http://ja.wikipedia.org/wiki/%E5%AD%90%E7%8A%AC%E3%81%AE%E3%83%AF%E3%83%AB%E3%83%84">子犬のワルツ</a>に出ている楽譜から，最初の音はA♭なので，Aを440Hzとすれば <code>440*2^(-1/12)</code> で415.3Hzほどになるはず。</p>
+
+<p>全体のヒストグラムを描いてみる。左右チャンネルはアペンドする：</p>
+
+<pre>
+x = append(chien[,1], chien[,2])
+length(x)  # 10007760
+hist(x, main="", xlab="", ylab="", col="gray")
+</pre>
+
+<div><img src="img/140702b.png" alt="子犬のワルツ ヒストグラム"></div>
+
+<p>実はこのように広いヒストグラムになるのは階級の幅が広すぎるためである。階級の幅を1にして比べてみよう。もっと0に集中している。</p>
+
+<pre>
+hist(x, main="", xlab="", ylab="", col="gray", breaks=30000)
+</pre>
+
+<div><img src="img/140702c.png" alt="子犬のワルツ ヒストグラム"></div>
+
+<p>もっと詳しく見るために，プロットせず度数分布だけ取り出してみよう：</p>
+
+<pre>
+h = hist(x, breaks=30000, plot=FALSE)
+str(h)
+sum(h$density)
+</pre>
+
+<div class="note">
+<p>上では分布の範囲がほぼ3万とわかっていたので <code>breaks=30000</code>
+としたが，一般には <code>breaks=-32768:32767</code>
+のようにすれば16ビット整数の全範囲がカバーできる。</p>
+</div>
+
+<p><code>h$density</code> に確率分布が入る。この分布のエントロピーを求めてみよう：</p>
+
+<pre>
+-sum(h$density * log2(h$density), na.rm=TRUE)
+</pre>
+
+<p>子犬のワルツの場合，約12.3ビット/サンプルである。</p>
+
+<p>エントロピーを求めるだけなら <code>hist()</code> でなく <code>table()</code>
+を使ってもできる：</p>
+
+<pre>
+t = as.numeric(table(x))
+p = t / sum(t)
+-sum(p * log2(p))
+</pre>
+
+<p>ところで，<code>x</code> の代わりに，その差分 <code>diff(x)</code>
+を使ってみたらどうなるか？ 差分の差分（2階差分）ではどうか？ …</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2014-07-08 08:30:15+09:00</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

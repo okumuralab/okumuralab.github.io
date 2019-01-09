@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>画像処理</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>画像処理</h1>
+
+<p>（まだ書きかけ）</p>
+
+<p>ここではimagerというパッケージによる画像処理を扱う。</p>
+
+<pre>
+install.packages("imager")
+library(imager)
+vignette(gettingstarted)     # 解説をブラウザで表示
+
+pic = load.image("hoge.png") # 読む
+oblect.size(pic)             # サイズを確認
+plot(pic, asp=1)             # 表示
+hist(pic, breaks=(0:255)/255, col="black")    # ヒストグラム
+hist(R(pic), breaks=(0:255)/255, col="red")   # 赤だけ
+hist(G(pic), breaks=(0:255)/255, col="green") # 緑だけ
+hist(B(pic), breaks=(0:255)/255, col="blue")  # 青だけ
+r = range(pic)  # 最小値・最大値を求める
+pic2 = (pic - r[1]) / (r[2] - r[1]) # 0〜1に調節
+save.image(pic2, "hoge.jpg") # 保存
+</pre>
+
+<p>画像はcimgクラスのオブジェクトで表される。これは各ピクセル・各色ごとに，深度が8ビットなら255で割り，16ビットなら65535で割って，0以上1以下のdouble型にしたもの。各色は関数 R()，G()，B() で取り出せる。</p>
+
+<p>画像の保存は save.image() で行う。画像の形式は拡張子で決められる。8ビット深度で保存され，JPEGの品質は指定できない。品質を気にする場合はいったんPNGで保存してImageMagickのconvertコマンドで <code>convert hoge.png -quality 92 hoge.jpg</code> のようにすればよいであろう。</p>
+
+<p>各色に分解してから操作し，再合成する方法：</p>
+
+<pre>
+r = R(pic)
+g = G(pic)
+b = B(pic)
+# 何らかの操作をする
+pic2 = as.cimg(c(r,g,b), dim=dim(pic))  # 再合成
+</pre>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-05-07 21:53:22</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

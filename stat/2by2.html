@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>2×2の表，オッズ比，相対危険度</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>2×2の表，オッズ比，相対危険度</h1>
+
+<h2>オッズ比，相対危険度</h2>
+
+<p>疫学では次のような2×2（2行2列）の表を考えることがよくあります：</p>
+
+<table>
+  <tbody>
+  <tr><th></th><th>疾病あり</th><th>疾病なし</th></tr>
+  <tr><th>曝露あり</th><td>$a$</td><td>$b$</td></tr>
+  <tr><th>曝露なし</th><td>$c$</td><td>$d$</td></tr>
+  </tbody>
+</table>
+
+<p>「曝露」（ばくろ，exposure）とは，何らかの条件にさらされることです（必ずしも害になるものとは限りません）。「疾病」（しっぺい，disease）は病気のことですが，より一般に「結果」（outcome）というほうがいいかもしれません。具体的には</p>
+
+<table>
+  <tbody>
+  <tr><th></th><th>肺がんあり</th><th>肺がんなし</th></tr>
+  <tr><th>喫煙あり</th><td>$a$</td><td>$b$</td></tr>
+  <tr><th>喫煙なし</th><td>$c$</td><td>$d$</td></tr>
+  </tbody>
+</table>
+
+<p>のようなことを考えればいいでしょう。</p>
+
+<p>このとき，$a/(a+b)$ や $c/(c+d)$ をそれぞれの場合の危険度（risk）といい，その比 $\dfrac{a/(a+b)}{c/(c+d)}$ を相対危険度（相対リスク，relative risk，RR）といいます。</p>
+
+<p>また，$a/b$ や $c/d$ をそれぞれの場合のオッズ（odds）といい，その比 $\dfrac{a/b}{c/d}$ をオッズ比（odds ratio，OR）といいます。</p>
+
+<p>危険度とオッズは，小さい値のときはどちらもほぼ等しくなります。</p>
+
+<p>相対危険度は，行・列のどちらを原因・結果と考えるかによって，答えが違ってきます（数学的には，行列の転置をとると，答えが違ってきます）。これに対して，オッズ比は行と列を入れ替えても変わりません。</p>
+
+<p>オッズ比の対数 $\log \mathrm{OR} = \log a - \log b - \log c + \log d$ は正規分布で近似でき，その分散は，各度数をポアソン分布とすれば $V(\log a) \approx 1/a$ などが成り立つので，$V(\log \mathrm{OR}) \approx 1/a + 1/b + 1/c + 1/d$ と近似できます。相対危険度も対数をとって $V(\log \mathrm{RR}) \approx 1/a - 1/(a+b) + 1/c - 1/(c+d)$ で近似します。</p>
+
+<p>オッズ比や相対危険度の信頼区間が 1 を含むことと，行・列が独立であること（$a:b = c:d$）とは，数学的に同じことですが，信頼区間を求める方法や，独立性の検定の方法によって，結果が一致しないことがあります（「検定」とはそんなもので，$p = 0.04$ と $p = 0.06$ の違いは実質科学的なものではなく，単なる線引きの問題です）。</p>
+
+<p>オッズ比と相対危険度には</p>
+
+\[
+  \mathrm{RR} = \frac{\mathrm{OR}(1 + c/d)}{1 + (c/d)\mathrm{OR}}
+  = \frac{\mathrm{OR}}{1 - c/(c+d) + (c/(c+d))\mathrm{OR}}
+\]
+
+<p>という関係があり，比較的安定に求められる被曝露群のオッズ $c/d$ または危険度 $c/(c+d)$ を使った式で変換できます。</p>
+
+<p>これら以外に，リスク差（risk difference，RD）$a/(a+b) - c/(c+d)$ も使われます。この分散は2項分布近似で $V(\mathrm{RD}) \approx ab/(a+b)^3 + cd/(c+d)^3$ となります。</p>
+
+<p>このページの最後に，ファイ係数，クラメールの $V$，Yule の $Q$ についても付記しました。</p>
+
+<p>対応がある場合の2×2の表については<a href="mcnemar.html">McNemar検定</a>をご覧ください。</p>
+
+<h2>Rによる2×2の表の表し方</h2>
+
+<p>次のような表があったとします（<a href="http://www.ncbi.nlm.nih.gov/pubmed/11979440?dopt=Abstract">この論文</a>の表IIの男性の一部）：</p>
+
+<table>
+  <tbody>
+  <tr><th></th><th>肺がんあり</th><th>肺がんなし</th></tr>
+  <tr><th>喫煙あり</th><td>231</td><td>23036</td></tr>
+  <tr><th>喫煙なし</th><td>26</td><td>10813</td></tr>
+  </tbody>
+</table>
+
+<p>この表を縦に読んでいくと，次のようになります：</p>
+
+<pre>
+<code>c(231, 26, 23036, 10813)</code>
+[1]   231    26 23036 10813
+</pre>
+
+<p>これを2行2列の行列の形にするには，次のように行数（<code>nrow</code>），列数（<code>ncol</code>）のどちらかを指定します：</p>
+
+<pre>
+<code>matrix(c(231,26,23036,10813), nrow=2)</code>
+     [,1]  [,2]
+[1,]  231 23036
+[2,]   26 10813
+</pre>
+
+<div class="note">
+<p>数値を横に（行ごとに）読んでいった場合は，次のように <code>byrow=TRUE</code> というオプションを与えます：</p>
+<pre>
+<code>matrix(c(231,23036,26,10813), nrow=2, byrow=TRUE)</code>
+     [,1]  [,2]
+[1,]  231 23036
+[2,]   26 10813
+</pre>
+</div>
+
+<p>変数に代入しましょう：</p>
+
+<pre>
+<code>x = matrix(c(231,26,23036,10813), nrow=2)</code>
+<code>x</code>
+     [,1]  [,2]
+[1,]  231 23036
+[2,]   26 10813
+</pre>
+
+<p>行・列に名前を付けるには次のようにします：</p>
+<pre>
+<code>rownames(x) = c("喫煙","非喫煙")</code>
+<code>colnames(x) = c("肺がんあり","肺がんなし")</code>
+<code>x</code>
+       肺がんあり 肺がんなし
+喫煙          231      23036
+非喫煙         26      10813
+</pre>
+
+<h2>相対危険度やオッズ比の求め方</h2>
+
+<p>手計算と照合しやすいように，数値例を簡単なものに変えました。以下では次のデータについて計算しています：</p>
+
+<pre>
+<code>x = matrix(c(12,5,6,12), nrow=2)</code>
+<code>x</code>
+     [,1] [,2]
+[1,]   12    6
+[2,]    5   12
+</pre>
+
+<h3>手計算</h3>
+
+<p>オッズ比は 4.8，その対数（1.5686）の分散は 0.5333，正規分布近似の $p$ 値は 0.0317，95%信頼区間は [1.147127, 20.084960] になります：</p>
+
+<pre>
+<code>(x[1,1]/x[1,2]) / (x[2,1]/x[2,2])</code>
+[1] 4.8
+<code>log((x[1,1]/x[1,2]) / (x[2,1]/x[2,2]))</code>
+[1] 1.568616
+<code>1/x[1,1] + 1/x[1,2] + 1/x[2,1] + 1/x[2,2]</code>
+[1] 0.5333333
+<code>pnorm(-1.568616 / sqrt(0.5333333)) * 2</code>
+[1] 0.03172043
+<code>exp(1.568616 + qnorm(c(0.025,0.975)) * sqrt(0.5333333))</code>
+[1]  1.147127 20.084960
+</pre>
+
+<h3>Fisherの正確検定による方法</h3>
+
+<p>関数 <code>fisher.test()</code> を使ってもオッズ比とその信頼区間が求められますが，上で定義したオッズ比とは少し違った定義（周辺分布を固定したときの最尤推定量，conditional MLE）を使っています。詳しくは<a href="fishertest.html">Fisherの正確検定</a>をご覧ください。</p>
+
+<pre>
+<code>fisher.test(x)</code>
+
+	Fisher's Exact Test for Count Data
+
+data:  x
+p-value = 0.04371
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  0.9465292 25.7201471
+sample estimates:
+odds ratio 
+  4.568253 
+</pre>
+
+<p>オッズ比はさきほどの 4.8 ではなく，4.568253 となりました。これは定義が微妙に違うためです。詳しくは<a href="fishertest.html">Fisherの正確検定</a>をご参照ください。また，95%信頼区間は $[0.95, 25.72]$ で，1 を含んでいるので有意でないように見えますが，$p$ 値は 0.05 未満です。</p>
+
+<h3>カイ2乗検定による方法</h3>
+
+<p>これはオッズ比などを求めるものではありませんが，行・列の独立性の検定をします。デフォルトでは連続性の補正をします。</p>
+
+<pre>
+<code>chisq.test(x)</code> # 補正あり
+
+	Pearson's Chi-squared test with Yates' continuity correction
+
+data:  x
+X-squared = 3.4808, df = 1, p-value = 0.06208
+
+<code>chisq.test(x, correct=FALSE)</code> # 補正なし
+
+	Pearson's Chi-squared test
+
+data:  x
+X-squared = 4.8577, df = 1, p-value = 0.02752
+</pre>
+
+<p>補正あり・なしで $p$ 値はそれぞれ 0.06208，0.02752 です。</p>
+
+<h3>Epiパッケージによる方法</h3>
+
+<p>Epiパッケージで2×2の表を扱う関数は <code>twoby2()</code> です。いろいろ出力しますが，オッズ比は通常の定義（unconditional MLE）を使い，信頼区間はWaldの方法（正規分布による近似）で求めています。</p>
+
+<pre>
+<code>install.packages("Epi")</code>  # 初めての場合はパッケージをインストールする
+<code>library(Epi)</code>             # ライブラリとして読み込む
+<code>twoby2(x)</code>
+2 by 2 table analysis: 
+------------------------------------------------------ 
+Outcome   : Col 1 
+Comparing : Row 1 vs. Row 2 
+
+      Col 1 Col 2    P(Col 1) 95% conf. interval
+Row 1    12     6      0.6667    0.4288   0.8420
+Row 2     5    12      0.2941    0.1280   0.5419
+
+                                   95% conf. interval
+             Relative Risk: 2.2667    1.0128   5.0730
+         Sample Odds Ratio: 4.8000    1.1471  20.0850
+Conditional MLE Odds Ratio: 4.5683    0.9465  25.7201
+    Probability difference: 0.3725    0.0427   0.6073
+
+             Exact P-value: 0.0437 
+        Asymptotic P-value: 0.0317 
+------------------------------------------------------
+</pre>
+
+<p>相対リスクは 2.2667 で，95%信頼区間は $[1,01, 5.07]$ です。また，標本オッズ比は 4.8 で，95%信頼区間は $[1.15, 20.09]$ です。その下の Conditional MLE Odds Ratio は <code>fisher.test()</code> の出してくる値です。$p$ 値は Exact のほうは <code>fisher.test()</code> と同じ 0.0437 で，Asymptotic のほうは近似です。数が多い場合は Asymptotic だけの表示になり，場合によっては「0」と表示されることがありますが，その場合は「$p < 0.001$ で有意」と報告すればいいでしょう（丸める前の値を知りたければ <code>twoby2(x)$p.value</code> と打ち込みます）。</p>
+
+<h3>epitoolsパッケージによる方法</h3>
+
+<p>epitoolsパッケージには4つの方法が用意されています：</p>
+
+<ul>
+  <li><code>oddsratio.midp()</code> または単に <code>oddsratio()</code>：mid-p法（median-unbiased estimation，exact CI）</li>
+  <li><code>oddsratio.fisher()</code>：Fisherの方法（conditional MLE，exact CI）</li>
+  <li><code>oddsratio.wald()</code>：Waldの方法（unconditional MLE，normal approximation）</li>
+  <li><code>oddsratio.small()</code>：正規分布近似＋小標本補正（normal approximation with small sample adjustment）</li>
+</ul>
+
+<p>上のEpiパッケージの <code>twoby2()</code> のオッズ比と同じ結果を出すのは <code>oddsratio.wald()</code> です。オッズ比とその信頼区間は <code>$measure</code> の Exposed2 欄に出力されます：</p>
+
+<pre>
+<code>install.packages("epitools")</code>  # 初めての場合はパッケージをインストールする
+<code>library(epitools)</code>             # ライブラリとして読み込む
+<code>oddsratio.wald(x)</code>
+$data
+          Outcome
+Predictor  Disease1 Disease2 Total
+  Exposed1       12        6    18
+  Exposed2        5       12    17
+  Total          17       18    35
+
+$measure
+          odds ratio with 95% C.I.
+Predictor  estimate    lower    upper
+  Exposed1      1.0       NA       NA
+  Exposed2      4.8 1.147127 20.08496
+
+$p.value
+          two-sided
+Predictor  midp.exact fisher.exact chi.square
+  Exposed1         NA           NA         NA
+  Exposed2 0.03527143   0.04371017 0.02752225
+
+$correction
+[1] FALSE
+
+attr(,"method")
+[1] "Unconditional MLE & normal approximation (Wald) CI"
+</pre>
+
+<p>ほかの方法もまとめて，違うところだけ記します：</p>
+
+<pre>
+<code>oddsratio.wald(x)</code>
+  Exposed2      4.8 1.147127 20.08496
+<code>oddsratio.midp(x)</code>
+  Exposed2 4.503795 1.105796 21.10137
+<code>oddsratio.fisher(x)</code>
+  Exposed2 4.568253 0.9465292 25.72015
+<code>oddsratio.small(x)</code>
+  Exposed2 3.428571 1.099686 17.37077
+</pre>
+
+<h3>vcdパッケージによる方法</h3>
+
+<pre>
+<code>install.packages("vcd")</code>
+<code>library(vcd)</code>
+<code>oddsratio(x, log=FALSE)</code>
+[1] 4.8
+</pre>
+
+<p>Waldの方法が使われます。単純明快にオッズ比（unconditional）だけ出力されます。信頼区間や $p$ 値は次のようにします：</p>
+
+<pre>
+<code>confint(oddsratio(x, log=FALSE))</code>
+          lwr      upr
+[1,] 1.147127 20.08496
+<code>summary(oddsratio(x))</code>
+     Log Odds Ratio Std. Error z value Pr(>|z|)  
+[1,]         1.5686     0.7303  2.1479  0.03172 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+</pre>
+
+<h3>fmsbパッケージによる方法</h3>
+
+<p>中澤 港 先生のfmsbパッケージにもepitoolsと同じ名前の <code>oddsratio()</code>，<code>rateratio()</code>，<code>riskratio()</code> という関数があります。</p>
+
+<p>この <code>oddsratio()</code> は，行列の指定と同様，縦順に数値を4つ並べます。</p>
+
+<pre>
+<code>install.packages("fmsb")</code>
+<code>library(fmsb)</code>
+<code>oddsratio(12, 5, 6, 12)</code>
+           Disease Nondisease Total
+Exposed         12          6    18
+Nonexposed       5         12    17
+Total           17         18    35
+
+	Odds ratio estimate and its significance probability
+
+data:  12 5 6 12
+p-value = 0.02983
+95 percent confidence interval:
+  1.147127 20.084959
+sample estimates:
+[1] 4.8
+</pre>
+
+<p>Waldの方法を使っています。詳細は中澤先生の<a href="http://minato.sip21c.org/bulbul/20141227.html">鵯記878</a>をご覧ください。</p>
+
+<p><em>[2017-03-31追記]</em> fmsb-0.6.0でvcdと同じ結果を返すオプションが付きました：<code>library(fmsb); oddsratio(14, 1, 41981-14, 18327-1, p.calc.by.independence=FALSE)</code></p>
+
+<h3>exact2x2パッケージによる方法</h3>
+
+<p>exact2x2については<a href="fishertest.html">Fisherの正確検定</a>にも少し書きました。このパッケージは <code>exact2x2()</code> という関数を定義していますが，特によく使うオプションについては <code>fisher.exact()</code>，<code>blaker.exact()</code>，<code>mcnemar.exact()</code> という名前でもアクセスできます。</p>
+
+<pre>
+<code>install.packages("exact2x2")</code>
+<code>library(exact2x2)</code>
+<code>fisher.exact(x)</code>
+
+	Two-sided Fisher's Exact Test (usual method using minimum likelihood)
+
+data:  x
+p-value = 0.04371
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  1.0905 22.9610
+sample estimates:
+odds ratio 
+  4.568253 
+
+<code>blaker.exact(x)</code>
+
+	Blaker's Exact Test
+
+data:  x
+p-value = 0.04371
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  1.0905 23.6488
+sample estimates:
+odds ratio 
+  4.568253 
+</pre>
+
+<p><code>fisher.exact()</code> の $p$ 値とオッズ比の点推定値（conditional）は <code>fisher.test()</code> と同じですが，信頼区間は $p$ 値と同じ方法で求めていますので，片方だけ有意ということがありません。</p>
+
+<p>まとめると次のようになります：</p>
+
+<table>
+  <tbody>
+  <tr><th>パッケージ</th><th>関数</th><th>p値</th><th>オッズ比</th><th>95%信頼区間</th></tr>
+  <tr><td>-</td><td>手計算</td><td>0.03172043</td><td>4.8</td><td>[1.147127, 20.084960]</td></tr>
+  <tr><td>-</td><td><code>fisher.test()</code></td><td>0.04371</td><td>4.568253</td><td>[0.9465292, 25.7201471]</td></tr>
+  <tr><td>-</td><td><code>chisq.test()</code></td><td>0.06208</td><td>-</td><td>-</td></tr>
+  <tr><td>-</td><td><code>chisq.test(correct=FALSE)</code></td><td>0.02752</td><td>-</td><td>-</td></tr>
+  <tr><td>Epi</td><td><code>twoby2()</code></td><td>Exact: 0.0437</td><td>Sample: 4.8000</td><td>Sample: [1.1471, 20.0850]</td></tr>
+  <tr><td>Epi</td><td><code>twoby2()</code></td><td>Asymptotic: 0.0317</td><td>Conditional: 4.5683</td><td>Conditional: [0.9465, 25.7201]</td></tr>
+  <tr><td>epitools</td><td><code>oddsratio.wald()</code></td><td>chisq: 0.02752225</td><td>4.8</td><td>[1.147127, 20.08496]</td></tr>
+  <tr><td>epitools</td><td><code>oddsratio.midp()</code></td><td>0.03527143</td><td>4.503795</td><td>[1.105796, 21.10137]</td></tr>
+  <tr><td>epitools</td><td><code>oddsratio.fisher()</code></td><td>0.04371017</td><td>4.568253</td><td>[0.9465292, 25.72015]</td></tr>
+  <tr><td>epitools</td><td><code>oddsratio.small()</code></td><td>-</td><td>3.428571</td><td>[1.099686, 17.37077]</td></tr>
+  <tr><td>vcd</td><td><code>oddsratio()</code></td><td>0.03172</td><td>4.8</td><td>[1.147127, 20.08496]</td></tr>
+  <tr><td>fmsb</td><td><code>oddsratio()</code></td><td>0.02983</td><td>4.8</td><td>[1.147127, 20.084959]</td></tr>
+  <tr><td>exact2x2</td><td><code>fisher.exact()</code></td><td>0.04371</td><td>4.568253</td><td>[1.0905, 22.9610]</td></tr>
+  <tr><td>exact2x2</td><td><code>blaker.exact()</code></td><td>0.04371</td><td>4.568253</td><td>[1.0905, 23.6488]</td></tr>
+  </tbody>
+</table>
+
+<h3>（付）glmパッケージによる方法</h3>
+
+<p>行列ではなく生データが次のように与えられている場合の方法です。<code>logistic.display()</code> はepiDisplay（旧epicalc）パッケージの関数です。</p>
+
+<pre>
+<code>x = rep(0:1, c(18,17))</code>
+<code>y = rep(c(0,1,0,1), c(12,6,5,12))</code>
+<code>r = glm(y ~ x, family="binomial")</code>
+<code>logistic.display(r)</code>
+
+Logistic regression predicting y 
+ 
+           OR(95%CI)         P(Wald's test) P(LR-test)
+x: 1 vs 0  4.8 (1.15,20.08)  0.032          0.026     
+                                                      
+Log-likelihood = -21.7558
+No. of observations = 35
+AIC value = 47.5116
+</pre>
+
+<h2>雑</h2>
+
+<p><a href="141223.html">津田敏秀先生の「有病オッズ比」問題</a>に計算例があります。</p>
+
+<p>相対危険度の信頼区間の求め方のいろいろについては，<a href="http://r.789695.n4.nabble.com/R-Confidence-interval-for-relative-risk-td812269.html">R help - [R] Confidence interval for relative risk</a> という議論のMichael Deweyによるまとめ <a href="http://www.zen103156.zen.co.uk/rr.pdf">http://www.zen103156.zen.co.uk/rr.pdf</a> や，<a href="http://stats.stackexchange.com/questions/3112/calculation-of-relative-risk-confidence-interval">Calculation of Relative Risk Confidence Interval - Cross Validated</a> の議論をご覧ください。</p>
+
+<h2>（付）ファイ係数，クラメールのVなど</h2>
+
+<p>$2 \times 2$ に限らず，表の各行（各列）の独立性を検定するためによく使われるのが「カイ2乗」（$\chi^2$）という統計量です（<a href="chisqtest.html">カイ2乗検定</a>参照）。これを0以上1以下に収まるように変換したものが「クラメールの $V$」（Cramér's $V$）です：</p>
+
+\[ V = \sqrt{\frac{\chi^2}{n \cdot \mathrm{min}(\mathrm{nrow}-1,\mathrm{ncol}-1)}} \]
+
+<p>ここで $n$ は表の値を全部合計したもの，nrow と ncol は行数，列数です。特に $2 \times 2$ の表については，ファイ係数（phi coefficient，$\phi$）と呼ばれます：</p>
+
+\[ \phi = \sqrt{\frac{\chi^2}{n}} = \frac{|ad-bc|}{\sqrt{(a+b)(c+d)(a+c)(b+d)}} \]
+
+<p>この分子の絶対値を外せば，どちらの向きに関連があるかもわかります。以下では絶対値なしのほうを使います。</p>
+
+<p>2通りの定義でさきほどの行列 <code>x</code> のファイ係数を求めてみましょう：</p>
+
+<pre>
+<code>sqrt(chisq.test(x,correct=FALSE)$statistic / sum(x))</code>
+ X-squared 
+0.04054061
+<code>a = x[1,1]; b = x[1,2]; c = x[2,1]; d = x[2,2]</code>
+<code>(a*d-b*c) / sqrt((a+b)*(c+d)*(a+c)*(b+d))</code>
+[1] 0.04054061
+</pre>
+
+<p>ライブラリ psych にファイ係数（絶対値なし）を求める関数があります：</p>
+
+<pre>
+<code>install.packages("psych")</code>
+<code>library(psych)</code>
+<code>phi(x)</code>
+[1] 0.04
+<code>phi(x, digits=8)</code>
+[1] 0.04054061
+</pre>
+
+<p>ファイ係数と似たものに Yule の $Q$ があります。これはオッズ比（OR）を -1 から 1 までの範囲に変換したものとも考えられます：</p>
+
+\[ Q = \frac{ad-bc}{ad+bc} = \frac{\mathrm{OR} - 1}{\mathrm{OR} + 1} \]
+
+<p>これは psych パッケージの <code>Yule()</code> で計算できます：</p>
+
+<pre>
+<code>Yule(x)</code>
+[1] 0.6131828
+<code>(a*d-b*c) / (a*d+b*c)</code>
+[1] 0.6131828
+</pre>
+
+<p>これらの比較は次の論文をご覧ください：</p>
+
+<ul>
+  <li>Matthijs J. Warrens (2008), <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC2798022/">On Association Coefficients for 2×2 Tables and Properties That Do Not Depend on the Marginal Distributions</a></li>
+</ul>
+
+<p>どれを使うかは分野によると思いますが，医学・疫学方面では相対危険度（RR）やオッズ比（OR）（いずれも対数変換したもの）がよく用いられます（<a href="meta.html">メタアナリシス</a>参照）。<a href="http://www.researchgate.net/post/What_is_the_difference_between_odds_ratio_and_relative_risk">What is the difference between odds ratio and relative risk?</a> という議論も参考になります。</p>
+
+<p>どの効果量を使うかで迷ったら，オッズ比を使えばいいでしょう。Michael Borenstein ほか <i>Introduction to Meta-Analysis</i> (Wiley, 2009) はオッズ比について次のように書いています：
+<blockquote lang="en">
+Many people find this effect size measure less intuitive than the risk ratio, but the odds ratio has statistical properties that often make it the best choice for a meta-analysis.
+</blockquote>
+
+<p>$2 \times 2$ より大きい表の「効果量」はクラメールの $V$ でいいか，という話がありますが，まずは効果量の考え方に立ち戻ってデータの扱い方を考え直したほうがいいでしょう。</p>
+
+<p>連続量を大小または大中小に分けて $2 \times 2$ や $2 \times 3$ の表にした場合は，確実に元の連続量に立ち戻るほうがいいでしょう。$n$ 段階の順序尺度の量は 1, 2, …, $n$ の得点に直すほうがいいでしょう。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-09 10:31:45</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

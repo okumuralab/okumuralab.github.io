@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Fisherの正確検定</title>
+<meta name="keywords" content="Fisher, フィッシャー, 正確検定, 正確確率検定, 直接確率法, exact test">
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Fisherの正確検定</h1>
+
+<h2>はじめに</h2>
+
+<p>Fisher（フィッシャー）の正確検定（Fisher's exact test）は，分割表（クロス集計表）の各行（各列）が独立かどうかを調べる方法です。直接確率法とも呼ばれます。</p>
+
+<h2>2×2分割表の検定</h2>
+
+<p>2008年12月8日のニュースによれば，麻生内閣の支持率が前回と比べて半減しました。ネットで調べられる限りの結果を<a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2310">私のブログ</a>に載せました。これを見ると，20.9%から25.5%と，かなりばらつきがあります。このばらつきは偶然と考えていいでしょうか。</p>
+
+<p>回答数のわかっている調査について，人数に直すと，次のような分割表（contingency table）が得られます。問題は，この表の行ごと（あるいは列ごと）の独立性の問題に焼き直すことができます（発表されているパーセント値は概数ですので，この数値は正確でないかもしれません）。</p>
+
+<table>
+<tbody>
+<tr><th></th><th>支持</th><th>それ以外</th></tr>
+<tr><th>読売</th><td>228</td><td>863</td></tr>
+<tr><th>毎日</th><td>217</td><td>814</td></tr>
+<tr><th>朝日</th><td>456</td><td>1618</td></tr>
+<tr><th>NHK</th><td>284</td><td>851</td></tr>
+</tbody>
+</table>
+
+<p>ここでは，一番違いの大きい読売とNHKに限定して考えましょう（残りは後で考えます）。</p>
+
+<table>
+<tbody>
+<tr><th></th><th>支持</th><th>それ以外</th></tr>
+<tr><th>読売</th><td>228</td><td>863</td></tr>
+<tr><th>NHK</th><td>284</td><td>851</td></tr>
+</tbody>
+</table>
+
+<p>これを考える前に，もっと単純な問題を考えましょう。男女各5人に意見を聞いたところ，次のように賛否が分かれました。男女で差はあるといえるでしょうか。</p>
+
+<table>
+<tbody>
+<tr><th></th><th>賛</th><th>否</th></tr>
+<tr><th>男</th><td>3</td><td>2</td></tr>
+<tr><th>女</th><td>1</td><td>4</td></tr>
+</tbody>
+</table>
+
+<p>さらに別の問題にしてみましょう。壷の中に赤玉4個，白玉6個が入っていました。ここからランダムに5個取り出したところ，赤玉が3個，白玉が2個である確率を求めてください。</p>
+
+<table>
+<tbody>
+<tr><th></th><th>赤玉</th><th>白玉</th></tr>
+<tr><th>取り出した</th><td>3</td><td>2</td></tr>
+<tr><th>まだ壷の中</th><td>1</td><td>4</td></tr>
+</tbody>
+</table>
+
+<p>10個から5個取り出す組合せは $_{10}C_5$ で，そのうち赤3，白2であるのは $_4C_3 \times  {}_6C_2$ 通りですから，確率は</p>
+
+\[ \frac{{}_4C_3 \cdot {}_6C_2}{{}_{10}C_5} \]
+
+<p>になります。$_n C_r$ を求めるRの関数 <code>choose()</code> を使えば</p>
+
+<pre>
+&gt; choose(4,3)*choose(6,2)/choose(10,5)
+[1] 0.2380952
+</pre>
+
+<p>のように求められます。</p>
+
+<p>どの玉を取り出す確率も同じという帰無仮説のもとに，10個から5個取り出して，これ以上に珍しい事象が起こる確率（$p$ 値）を求めましょう。まず，取り出したものの合計が5個という条件を満たす分割表をすべて挙げれば，</p>
+
+<table>
+<tbody>
+<tr><th></th><th>赤玉</th><th>白玉</th><th>赤玉</th><th>白玉</th><th>赤玉</th><th>白玉</th><th>赤玉</th><th>白玉</th><th>赤玉</th><th>白玉</th></tr>
+<tr><th>取り出した</th><td>4</td><td>1</td><td>3</td><td>2</td><td>2</td><td>3</td><td>1</td><td>4</td><td>0</td><td>5</td></tr>
+<tr><th>まだ壷の中</th><td>0</td><td>5</td><td>1</td><td>4</td><td>2</td><td>3</td><td>3</td><td>2</td><td>4</td><td>1</td></tr>
+</tbody>
+</table>
+
+<p>になり，それぞれの確率をさきほどと同じ方法で求めると</p>
+
+\[ 0.02380952, 0.2380952, 0.4761905, 0.2380952, 0.02380952 \]
+
+<p>になります。実際に得られた結果はこのうちの2番目の，確率 0.2380952
+のものですので，「これか，これより珍しい結果」を「確率が 0.2380952
+以下の結果」と解釈すれば，この5通りのうち真ん中の 0.4761905
+を除いた4通りが該当します。それらを合計すると $p = 0.5238$ になります。</p>
+
+<div class="note">
+縦計，横計のことを周辺度数（marginal frequencies，marginal totals）といいます。周辺度数を固定したときの上のような確率分布を超幾何分布（hypergeometric distribution）といいます。
+</div>
+
+<p>この手順をもっと簡単にしてくれるRの関数 <code>fisher.test()</code>
+があります。この引数はこの場合2×2の行列 $\begin{pmatrix} 3 & 2 \\ 1 & 4 \end{pmatrix}$ ですが，これはRでは <code>matrix(c(3,1,2,4), nrow=2)</code> と表します（デフォルトでは縦に読みます）ので，次のように入力します。</p>
+
+<pre>
+&gt; fisher.test(matrix(c(3,1,2,4),nrow=2))
+
+	Fisher's Exact Test for Count Data
+
+data:  matrix(c(3, 1, 2, 4), nrow = 2) 
+p-value = 0.5238
+alternative hypothesis: true odds ratio is not equal to 1 
+95 percent confidence interval:
+   0.2180460 390.5629165 
+sample estimates:
+odds ratio 
+  4.918388 
+</pre>
+
+<p>この方法をフィッシャーの正確検定（Fisher's exact test）または直接確率法といいます。</p>
+
+<p>上の例では，10個のうちちょうど半分を取り出したので，分布は左右対称でしたが，10個のうち4個を取り出すことにすれば</p>
+
+<table>
+<tbody>
+<tr><th></th><th>赤玉</th><th>白玉</th><th>赤玉</th><th>白玉</th><th>赤玉</th><th>白玉</th><th>赤玉</th><th>白玉</th><th>赤玉</th><th>白玉</th></tr>
+<tr><th>取り出した</th><td>4</td><td>0</td><td>3</td><td>1</td><td>2</td><td>2</td><td>1</td><td>3</td><td>0</td><td>4</td></tr>
+<tr><th>まだ壷の中</th><td>0</td><td>6</td><td>1</td><td>5</td><td>2</td><td>4</td><td>3</td><td>3</td><td>4</td><td>2</td></tr>
+</tbody>
+</table>
+
+<p>の確率は</p>
+
+\[ 0.004761905, 0.1142857, 0.4285714, 0.3809524, 0.07142857 \]
+
+<p>となり，対称でなくなります。この場合，左から2番目（確率0.1142857）が実際の結果とすれば，「これか，より珍しい場合」の合計は</p>
+
+\[ 0.004761905 + 0.1142857 + 0.07142857 \]
+
+<p>になります。これは両側検定ですが，片側検定なら 0.004761905 + 0.1142857
+です。片側確率の2倍が両側確率にならない例の一つです。</p>
+
+<div class="note">
+上では「これか，より珍しい場合」を，フィッシャーに従って「確率がこれ以下の場合」と解釈しましたが，「$\chi^2$ 値がこれ以下の場合」と解釈することもできます。両側検定の場合，両者の結果が異なることもあります。また，両側確率は単に片側確率を2倍するのがよいという意見（F. Yates, ``Test of Significance for 2×2 Contingency Tables'', <i>Journal of the Royal Statistical Society, Series A (General)</i>, Vol. 147, No. 3 (1984), pp. 426-463）もありますが，2×2 分割表以外（一般に複数の自由度がある場合）では，そもそも片側・両側という概念が定義できません。
+</div>
+
+<p>最初の問題に戻って，読売とNHKの麻生内閣支持率の違い</p>
+
+<table>
+<tbody>
+<tr><th></th><th>支持</th><th>それ以外</th></tr>
+<tr><th>読売</th><td>228</td><td>863</td></tr>
+<tr><th>NHK</th><td>284</td><td>851</td></tr>
+</tbody>
+</table>
+
+<p>を検定してみましょう。</p>
+
+<pre>
+&gt; fisher.test(matrix(c(228,284,863,851),nrow=2))
+</pre>
+
+<p>結果は $p = 0.02335$ で，こんな違いが偶然に生じるのは100回に2回しかないことがわかります。</p>
+
+<div class="note">
+<p>Rの <code>matrix()</code> はオプション <code>byrow=TRUE</code>
+を与えないと列ごとに数値を読むので，上では行と列を入れ替えた入力をしていることになりますが，縦計
+$a + c$，$b + d$，横計 $a + b$，$c + d$
+を固定したときに分割表 $\bigl[\begin{smallmatrix} a & b \\ c & d \end{smallmatrix} \bigr]$ を得る確率は</p>
+
+\[ \frac{{}_{a+c}C_a \cdot {}_{b+d}C_b}{{}_nC_{a+b}} = \frac{\dfrac{(a+c)!}{a!c!} \cdot \dfrac{(b+d)!}{b!d!}}{\dfrac{n!}{(a+b)!(c+d)!}} = \frac{(a+b)!(c+d)!(a+c)!(b+d)!}{n!a!b!c!d!} \]
+
+<p>ですから，行と列を入れ替えても同じ結果になります。</p>
+</div>
+
+<h2>任意の分割表の場合</h2>
+
+<p>上の式を拡張して，任意の $m \times n$ 分割表 $[a_{ij}]$ について</p>
+
+\[ \frac{(\sum_j a_{1j})! \ldots (\sum_j a_{mj})! (\sum_i a_{i1})! \ldots (\sum_i a_{in})! }{n! a_{11}! a_{12}! \ldots a_{mn}!} \]
+
+<p>を計算することができます。元の分割表と同じ行和・列和を与えるすべての分割表について上の確率を計算し，元の分割表以下の確率の和を求めれば，任意の分割表についてフィッシャーの方法での $p$ 値が得られます。今のコンピュータは速いので，たいていの場合に，古い $\chi^2$ 検定は不要になります。</p>
+
+<p>このページの最初の表の全データを入れてやってみましょう。</p>
+
+<pre>
+&gt; fisher.test(matrix(c(228,863,217,814,456,1618,284,851),nrow=4,byrow=TRUE))
+
+	Fisher's Exact Test for Count Data
+
+data:  
+p-value = 0.0712
+alternative hypothesis: two.sided 
+</pre>
+
+<p>あれあれ，読売とNHKの違いが $p = 0.02335$ で有意だったのに，今度は $p = 0.0712$
+で有意ではなくなりました（というような 0.05
+を境にして結果の解釈が質的に変わってしまうような言い方には問題があるのですが，いずれにしても $p$
+値が減少してしまっています）。これは多重比較（multiple comparison）の問題といって，4行のデータ全体としてのばらつきは有意でなくても，その中から2行を選んで行う $_4C_2 = 6$
+通りの検定のうちどれかは有意になってしまうということはよくあります。7行のデータなら
+$_7C_2 = 21$
+通りの比較ができるので，何も違わなくても期待値として21通りのうち一つは5%水準で有意になります。多重比較には注意が必要です。</p>
+
+<div class="note">
+2×2 より大きい分割表の場合，メモリが足りなくなることがあります。このときは，<code>fisher.test()</code> に <code>workspace</code>
+というオプションにメモリの量（4バイト単位）を指定します。デフォルトは <code>workspace = 200000</code> です。これ以外にもいろいろなオプションがありますので，うまくいかないときは <code>help()</code> で調べてください。
+</div>
+
+<h2>オッズ比</h2>
+
+<p><code>fisher.test()</code> はオッズ比（odds ratio，OR）も出力します。オッズ（odds）とは「当たりの確率」を「外れの確率」で割ったもので，オッズ比はその比です。内閣支持率の例では (354/432)/(418/370) = 0.725 がオッズ比です。分割表の縦横を入れ替えてもオッズ比は同じです。詳しくは<a href="2by2.html">2×2の表，オッズ比，相対危険度</a>をご覧ください。</p>
+
+<div class="note">
+<p><code>fisher.test()</code> の出力するオッズ比は上の定義から少し外れていますので，少し説明しておきます。$a + c$
+個の赤玉から $a$ 個，$b + d$ 個の白玉から $b$
+個を取り出す分割表 $\bigl[\begin{smallmatrix} a & b \\ c & d \end{smallmatrix} \bigr]$ で，赤・白を取り出す確率 $p$，$q$ が等しくないとし，$a$
+の分布は ${}_{a+c}C_a p^a(1-p)^c$，$b$
+の分布は ${}_{b+d}C_b q^b(1-q)^d$ という2項分布でモデル化します。$a$，$c$
+が与えられたとき，確率 ${}_{a+c}C_a p^a(1-p)^c$ を最大にするパラメータ
+$p$ を求めてみましょう。このように確率を最大にするように選んだパラメータを最尤推定量（maximum likelihood estimator，MLE）といいます。確率を $p$
+で微分したものを 0 と置くと，$p/(1-p) = a/c$ という期待通りの式が出ます。同じように白玉についても
+$q/(1-q) = b/d$ で，両者の間に何の条件も付けなければ，オッズ比は期待通りの $\dfrac{p/(1-p)}{q/(1-q)} = \dfrac{a/c}{b/d}$ という式で求められます。ここで，赤玉を $a$ 個，白玉を $b$ 個選ぶ確率は，積</p>
+
+\[ {}_{a+c}C_a p^a(1-p)^c \times {}_{b+d}C_b q^b(1-q)^d \]
+
+<p>で与えられます。これはすべての可能な $a$，$b$
+について合計すれば1になります。これを，取り出す個数 $a + b$
+を固定したときの条件付き確率にするには，$a + b$
+を固定してすべての可能な $a$
+について合計すると1になるように比例定数を付け替えなければなりません。見通しをよくするために上の式を</p>
+
+\[ {}_{a+c}C_a p^a(1-p)^{-a} \times {}_{b+d}C_b q^{-a}(1-q)^a \times (1-p)^{a+c} q^{a+b} (1-q)^{(b+d)-(a+b)} \]
+
+<p>と変形すると，最後の $\times$ 以下は定数ですので，条件付き確率は結局</p>
+
+\[ \frac{{}_{a+c}C_a \cdot {}_{b+d}C_b \cdot \omega^a}{\sum\limits_a {}_{a+c}C_a \cdot {}_{b+d}C_b \cdot \omega^a}, \qquad \omega = \frac{p/(1-p)}{q/(1-q)} \]
+
+<p>になります。これを最大にする $\omega$ が，Rが出力するオッズ比です。これは $a + b =$ 一定 という条件付きの最尤推定量（conditional MLE）です。通常はオッズ比として，条件なしの最尤推定量（unconditional MLE）である $\dfrac{a/b}{c/d}$ を報告すればいいでしょう。</p>
+</div>
+
+<p>Fisherの検定はオッズ比が1であることの検定と理屈上は同じことですが，<code>fisher.test()</code> の採用する一般的な計算方法では，$p$ 値とオッズ比の信頼区間とは別の方法で計算されるので，同じ結果にならないことがあります。例えば</p>
+
+<pre>
+ex1 = matrix(c(6,12,12,5), nrow=2)
+</pre>
+
+<p>という例で試してみましょう。<code>fisher.test(ex1)</code> では，$p$ 値は 0.044 ですので5%水準で有意ですが，オッズ比の95%信頼区間は $[0.039, 1.056]$ ですので 1 を含みます。</p>
+
+<p>このあたりの事情は <a href="http://cran.r-project.org/web/packages/exact2x2/index.html">exact2x2</a> というパッケージの解説に書かれている通りです。この状況を改善するには，次のように exact2x2 パッケージをインストールし，<code>fisher.test()</code> の代わりに <code>fisher.exact()</code> を使います：</p>
+
+<pre>
+install.packages("exact2x2")
+library(exact2x2)
+fisher.exact(ex1)
+</pre>
+
+<p>$p$ 値は <code>fisher.test()</code> と同じ 0.044 ですが，95%信頼区間は $[0.0435, 0.9170]$ となり，5%水準で有意でないことと矛盾しない結果になります。</p>
+
+<p>参考文献：Michael P. Fay, Two-sided Exact Tests and Matching Confidence Intervals for Discrete Data, <i>R Journal</i> <b>2</b>, 53-58 (2010). <a href="http://journal.r-project.org/archive/2010-1/RJournal_2010-1_Fay.pdf">[PDF]</a></p>
+
+<h2>Fisherの正確検定は正確か？</h2>
+
+<p>昔からいろいろ議論があるところです。昔の議論は誤解に基づくものもありましたが，今でもシミュレーションしてみてカイ2乗検定のほうがいいではないかという話がよく出ます（<a href="fisher-chisq.html">Fisherの正確検定かカイ2乗検定か</a>参照）。</p>
+
+<p>まずこのページの上のほうにある「壷の中に赤玉4個，白玉6個が入っていました。ここからランダムに5個取り出したところ」という問題と，その上の「男女各5人に意見を聞いたところ」という問題は，少し違うものです。壷の問題は周辺度数が固定されているので超幾何分布を使うことに異論はないでしょうけれども，男女各5人の賛否は 4:6 に固定されているわけではなく，潜在的に起こりうる事象はもっとたくさんあります。このあたりに，カイ2乗検定のほうが正確な理由があります。</p>
+
+<p>同様なことをBayesianの立場から論じた論文がGelmanのブログ
+<a href="http://www.stat.columbia.edu/~cook/movabletype/archives/2009/05/i_hate_the_so-c.html">I hate the so-called Fisher exact test: a pointer to one of my favorite articles - Statistical Modeling, Causal Inference, and Social Science</a>
+からリンクされています。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-01-12 21:29:37</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

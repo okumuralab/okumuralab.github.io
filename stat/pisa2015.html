@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>PISA 2015データを読む</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>PISA 2015データを読む<em>（未完）</em></h1>
+
+<p>これは<a href="pisa.html">PISAデータを読む</a>のPISA 2015年版（2016年12月結果公開）である。生徒のアンケート個票をRで読んで分析するのが目的である。</p>
+
+<h2>取得から読み込みまで</h2>
+
+<p><a href="http://www.oecd.org/">OECD</a>
+の
+<a href="http://www.oecd.org/pisa/">PISA</a> (Programme for International Student Assessment)
+の2015年版データは
+<a href="https://www.oecd.org/pisa/data/2015database/">PISA 2015 Database</a>
+から得られる。例えば SPSS Data Files の Student questionnaire data file (407MB, ファイル名 PUF_SPSS_COMBINED_CMB_STU_QQQ.zip)
+をダウンロードして展開すると CY6_MS_CMB_STU_QQQ.sav
+という1.5Gバイトほどのファイルになる。これをRで読むには次のようにする：</p>
+
+<pre>
+<code># install.packages("foreign")</code>
+<code>library(foreign)</code>
+<code>data = read.spss("CY6_MS_CMB_STU_QQQ.sav", to.data.frame=TRUE)</code>
+<code>object.size(data)</code>  # 2.5Gバイト
+</pre>
+
+<p>2.5Gバイトという巨大なメモリを占有する。これを</p>
+
+<pre>
+<code>data = read.spss("CY6_MS_CMB_STU_QQQ.sav", to.data.frame=TRUE, use.value.labels=FALSE)</code>
+<code>object.size(data)</code>  # 3.8Gバイト
+</pre>
+
+<p>とするとさらに巨大なメモリを要する。</p>
+
+<p>さて，最近は Hadley Wickham 作のパッケージ群を使うのが流行りなので，<code>haven</code>
+パッケージを試してみよう。これは zip で固めたままでも読むことができるが，以下では展開したものを読み込んでいる。</p>
+
+<pre>
+<code>library(haven)</code>
+<code>data = read_sav("CY6_MS_CMB_STU_QQQ.sav")</code>
+<code>object.size(data)</code>  # 3.8Gバイト
+</pre>
+
+<p>これもかなりメモリを占有する。</p>
+
+<p>以下では，この <code>read_sav()</code> で読んだデータを分析する。</p>
+
+<p>念のためCSV化したものをzipで固めた <a href="data/CY6_MS_CMB_STU_QQQ.zip">CY6_MS_CMB_STU_QQQ.zip</a> も置いておく。</p>
+
+<p>2.4GHz Core 2 Duo メモリ8GBのMacでR 3.4.1で読んでみた：</p>
+
+<pre>
+data = read.csv("CY6_MS_CMB_STU_QQQ.csv", as.is=TRUE)  # 遅いので諦めた
+library(readr)
+data = read_csv("CY6_MS_CMB_STU_QQQ.csv")  # 4分50秒
+library(data.table)
+data = fread("CY6_MS_CMB_STU_QQQ.csv")     # 1分40秒
+</pre>
+
+<h2>回答の分析</h2>
+
+<p>ファイルのデータ構造は上記ページ「Codebooks for the main files」からExcel形式でダウンロードできる。主なメタデータは次の通りである：</p>
+
+<ul>
+  <li>CNTRYID: 国コード（番号）</li>
+  <li>CNT: 国（3文字）</li>
+  <li>CNTSCHID: 学校コード</li>
+  <li>CNTSTUID: 生徒コード</li>
+  <li>OECD: OECD加盟国であるか（0: No, 1: Yes）</li>
+</ul>
+
+<p>質問の内容は「The questionnaires below are available in Annex A of PISA 2015 Assessment and Analytical Framework (OECD, 2015)」からリンクされている。例えば ST011「Which of the following are in your home?」の中の ST011Q04TA「A computer you can use for school work」では 1（Yes），2（No）が回答である。日本の生徒についての内訳を見るには</p>
+
+<pre>
+<code>table(data$ST011Q04TA[data$CNT=="JPN"])</code>
+
+   1    2 
+4095 2477 
+</pre>
+
+<p>とする。国とのクロス集計をしてみよう：</p>
+
+<pre>
+<code>x = table(data$CNT, data$ST011Q04TA)</code>
+<code>head(x)</code>
+     
+          1     2
+  ALB     0     0
+  ARE 12386  1303
+  AUS 13019   978
+  AUT  6734   222
+  BEL  9084   418
+  BGR  5473   219
+</pre>
+
+<p>手抜き棒グラフにしてみよう：</p>
+
+<pre>
+<code>barplot(sort(x[,1] / rowSums(x[,1:2])), horiz=TRUE, las=1)</code>
+</pre>
+
+<figure><img src="img/161207a.png" alt=""></figure>
+
+<p>日本は下から7番目である。</p>
+
+<p>（未完）</p>
+
+<h2>参考リンク</h2>
+
+<ul>
+  <li><a href="http://smarterpoland.pl/index.php/2016/12/pisa-2015-how-to-readprocessplot-the-data-with-r/">PISA 2015 – how to read/process/plot the data with R</a></li>
+  <li>CRAN: <a href="https://cran.r-project.org/web/packages/intsvy/index.html">intsvy</a> の最新版 <a href="https://github.com/eldafani/intsvy">GitHub: eldafani/intsvy</a></li>
+  <li>遠藤諭さん: <a href="http://ascii.jp/elem/000/001/407/1407179/">日本の子供は賢いがコンピューターが使えない</a> / <a href="http://ascii.jp/elem/000/001/410/1410256/">OECD、PISAの結果をみると日本はもはや“オタク”ですらない</a></li>
+  <li>林向達さん: <a href="http://www.con3.com/rinlab/?p=1652">RでPISA2015</a> / <a href="http://www.con3.com/rinlab/?p=1713">RでPISA2015〈その2〉</a></li>
+  <li>豊福晋平さんの <a href="http://i-learn.jp">i-learn.jp</a> にもPISAの記事多数</li>
+</ul>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2017-07-24 16:12:01</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

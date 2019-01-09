@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>重力波データの解析</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<h1>重力波データの解析</h1>
+
+<h2>LIGOのHFS5ファイルをRで読む</h2>
+
+<p>重力波検出に成功した<a href="http://www.ligo.org">LIGO</a>の
+<a href="https://losc.ligo.org/s/events/GW150914/GW150914_tutorial.html">SIGNAL PROCESSING WITH GW150914 OPEN DATA</a>
+というチュートリアルには，Python 3を使ったデータ解析の方法が説明してある。これをRでやってみよう。</p>
+
+<p>データは
+<a href="https://www.hdfgroup.org/HDF5/">HDF5</a>
+形式である。RでHDF5形式を読むには，Bioconductorの
+<a href="http://bioconductor.org/packages/release/bioc/html/rhdf5.html">rhfd5</a>
+というパッケージが便利である。まずこれをインストールしよう。</p>
+
+<pre>
+<code>source("https://bioconductor.org/biocLite.R")</code>
+<code>biocLite("rhdf5")</code>
+<code>library("rhdf5")</code>
+<code>vignette("rhdf5")</code> # 解説PDFを読む
+</pre>
+
+<div class="note">
+<p>CRANに最近入った <a href="https://cran.r-project.org/web/packages/h5/">h5</a> というライブラリも使えるかもしれない。</p>
+</div>
+
+<p>LIGOのチュートリアルで言及されているファイルを一つダウンロードしよう。例えば
+<a href="https://losc.ligo.org/s/events/GW150914/H-H1_LOSC_4_V1-1126259446-32.hdf5">H-H1_LOSC_4_V1-1126259446-32.hdf5</a>
+というファイルは，H1側の4096HzサンプリングのGPS時刻1126259446秒から32秒間のデータである。GPS時刻とは1980-01-06 00:00:00 UTCからの秒数である（ただし閏秒を入れないので現在のUTCより17秒進んでいる）。したがってGPS時刻1126259446秒は</p>
+
+<pre>
+<code>as.POSIXct(1126259446-17, origin="1980-01-06 00:00:00", tz="GMT")</code>
+[1] "2015-09-14 09:50:29 GMT"
+</pre>
+
+<p>つまり 2015-09-14 09:50:29 UTC である。</p>
+
+<p>HDF5ファイルに含まれる全データを表示したければ，次のようにする（画面が埋め尽くされるので，やらないほうがよい）：</p>
+
+<pre>
+<code>h5dump("H-H1_LOSC_4_V1-1126259446-32.hdf5")</code> # やるな
+<code>H5close()</code>
+</pre>
+
+<p>まずはHDF5ファイルの構造を調べよう：</p>
+
+<pre>
+<code>h5ls("H-H1_LOSC_4_V1-1126259446-32.hdf5")</code>
+                 group            name       otype  dclass    dim
+0                    /            meta   H5I_GROUP               
+1                /meta     Description H5I_DATASET  STRING  ( 0 )
+2                /meta  DescriptionURL H5I_DATASET  STRING  ( 0 )
+3                /meta        Detector H5I_DATASET  STRING  ( 0 )
+4                /meta        Duration H5I_DATASET INTEGER  ( 0 )
+5                /meta        GPSstart H5I_DATASET INTEGER  ( 0 )
+6                /meta     Observatory H5I_DATASET  STRING  ( 0 )
+7                /meta            Type H5I_DATASET  STRING  ( 0 )
+8                /meta        UTCstart H5I_DATASET  STRING  ( 0 )
+9                    /         quality   H5I_GROUP               
+10            /quality          detail   H5I_GROUP               
+11            /quality      injections   H5I_GROUP               
+12 /quality/injections InjDescriptions H5I_DATASET  STRING      5
+13 /quality/injections   InjShortnames H5I_DATASET  STRING      5
+14 /quality/injections         Injmask H5I_DATASET INTEGER     32
+15            /quality          simple   H5I_GROUP               
+16     /quality/simple  DQDescriptions H5I_DATASET  STRING      7
+17     /quality/simple    DQShortnames H5I_DATASET  STRING      7
+18     /quality/simple          DQmask H5I_DATASET INTEGER     32
+19                   /          strain   H5I_GROUP               
+20             /strain          Strain H5I_DATASET   FLOAT 131072
+</pre>
+
+<p>最後の <code>strain/Strain</code> という位置にある131072個の浮動小数点数が目的のstrainデータである。次のようにしてこの部分だけ取り込む：</p>
+
+<pre>
+<code>h1 = h5read("H-H1_LOSC_4_V1-1126259446-32.hdf5", "strain/Strain")</code>
+<code>H5close()</code>
+<code>head(h1)</code>
+[1] 2.263866e-19 2.450625e-19 2.607349e-19 2.395652e-19 2.358858e-19
+[6] 2.275551e-19
+<code>plot(h1, type="l")</code>
+</pre>
+
+<div class="note">
+<p>別の方法として，次のようにして全データを取り込んでから，必要な部分を使うこともできる：</p>
+<pre>
+<code>h1 = h5read("H-H1_LOSC_4_V1-1126259446-32.hdf5", "/")</code>
+<code>H5close()</code>
+<code>str(h1)</code>
+List of 3
+ $ meta   :List of 8
+  ..$ Description   : chr "Strain data time series from LIGO"
+  ..$ DescriptionURL: chr "http://losc.ligo.org/"
+  ..$ Detector      : chr "H1"
+  ..$ Duration      : int 32
+  ..$ GPSstart      : int 1126259446
+  ..$ Observatory   : chr "H"
+  ..$ Type          : chr "StrainTimeSeries"
+  ..$ UTCstart      : chr "2015-09-14T09:50:30"
+ $ quality:List of 3
+  ..$ detail    : NULL
+  ..$ injections:List of 3
+  .. ..$ InjDescriptions: chr [1:5(1d)] "no cbc injections" "no burst inejctions" "no detchar injections" "no continuous wave injections" ...
+  .. ..$ InjShortnames  : chr [1:5(1d)] "NO_CBC_HW_INJ" "NO_BURST_HW_INJ" "NO_DETCHAR_HW_INJ" "NO_CW_HW_INJ" ...
+  .. ..$ Injmask        : int [1:32(1d)] 31 31 31 31 31 31 31 31 31 31 ...
+  ..$ simple    :List of 3
+  .. ..$ DQDescriptions: chr [1:7(1d)] "data present" "passes cbc CAT1 test" "passes cbc CAT2 test" "passes cbc CAT3 test" ...
+  .. ..$ DQShortnames  : chr [1:7(1d)] "DATA" "CBC_CAT1" "CBC_CAT2" "CBC_CAT3" ...
+  .. ..$ DQmask        : int [1:32(1d)] 127 127 127 127 127 127 127 127 127 127 ...
+ $ strain :List of 1
+  ..$ Strain: num [1:131072(1d)] 2.26e-19 2.45e-19 2.61e-19 2.40e-19 2.36e-19 ...
+<code>head(h1$strain$Strain)</code>
+[1] 2.263866e-19 2.450625e-19 2.607349e-19 2.395652e-19 2.358858e-19
+[6] 2.275551e-19
+</pre>
+</div>
+
+<p>あとはL1側のデータも同様に取得し，プロットする。</p>
+
+<pre>
+t = (0:(length(h1)-1)) / 4096
+H1 = h1 * 1e18
+L1 = l1 * 1e18
+plot(t, H1, type="l", ylim=range(c(H1,L1)), col="#f39800",
+     xlab="time since 1126259446", ylab="strain / 1e-18")
+points(t, L1, type="l", col="#0068b7")
+text(0, 0.7, "H1")
+text(0, -1.1, "L1")
+</pre>
+
+<figure><img src="img/160213b.png" alt=""></figure>
+
+<h2>パワースペクトル</h2>
+
+<p>パワースペクトルを描いてみる。いろいろな方法があるが，ここでは
+<a href="https://cran.r-project.org/web/packages/psd/">psd</a>
+という新しいパッケージを使ってみる。</p>
+
+<pre>
+install.packages("psd")
+library(psd)
+h1p = pspectrum(h1, x.frqsamp=4096, Nyquist.normalize=FALSE)
+l1p = pspectrum(l1, x.frqsamp=4096, Nyquist.normalize=FALSE)
+plot(h1p, col="#f39800")
+plot(l1p, col="#0068b7", add=TRUE)
+</pre>
+
+<p>これでも十分だが，LIGOのチュートリアルに合わせて，横軸も対数目盛にしてみる：</p>
+
+<pre>
+plot(h1p$freq, h1p$spec, type="l", col="#f39800", log="xy",
+     xlim=c(10,2048), xlab="frequency", ylab="spectrum")
+points(l1p$freq, l1p$spec, type="l", col="#0068b7")
+</pre>
+
+<figure><img src="img/160213c.png" alt=""></figure>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-02-13 22:14:52</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

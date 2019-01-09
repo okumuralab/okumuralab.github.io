@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>福島原発事故後の米国北西部の乳幼児死亡数</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>福島原発事故後の米国北西部の乳幼児死亡数</h1>
+
+<p>以下は
+<a href="http://d.hatena.ne.jp/warbler/20110629/1309354848">原発事故以降アメリカ北西部で乳幼児の死亡数が35%上昇しているって、ホント？ - warblerの日記</a>
+に触発されて書いたものです。先日福島で開かれた<a href="http://www.nippon-foundation.or.jp/org/news/fukushima-sympo.html">国際会議「放射線と健康リスク」</a>でも<a href="http://sallas.blog109.fc2.com/blog-entry-134.html">とりあげられた</a>そうです（Thanks: 片瀬久美子さん）。</p>
+
+<p>まずは次の記事。</p>
+
+<ul>
+  <li>Janette D. Sherman and Joseph Mangano,
+      <a href="http://www.counterpunch.org/2011/06/10/is-the-increase-in-baby-deaths-in-the-us-a-result-of-fukushima-fallout/">Is the Increase in Baby Deaths in the US a Result of Fukushima Fallout?</a></li>
+</ul>
+
+<p>そこに示されたデータ：</p>
+
+<table border="1" style="margin-left: 2em; border-collapse: collapse; border: 3px solid black">
+  <tbody>
+    <tr><th style="padding: 0.2em 0.7em; text-align: left">2011/3/19までの4週</th><td style="padding: 0.2em 0.7em; text-align: right">37 (9.25/week)</td></tr>
+    <tr><th style="padding: 0.2em 0.7em; text-align: left">2011/5/28までの10週</th><td style="padding: 0.2em 0.7em; text-align: right">125 (12.50/week)</td></tr>
+  </tbody>
+</table>
+
+<p>12.5/9.25≒1.35 で，35%の増加です。これは統計的に有意です，とShermanたちは書いています。</p>
+
+<p>本当でしょうか。全部で162人で，そのうち4/14が最初の4週に入るという帰無仮説を立てます。実際に最初の4週に入ったのは37人ですから，Rに</p>
+
+<pre>
+binom.test(37, 162, 4/14)
+</pre>
+
+<p>と打ち込むと，<i>p</i>=0.1174 です。有意とは言えませんね。ここからして嘘です。</p>
+
+<p>そして次の記事。</p>
+
+<ul>
+  <li>Michael Moyer, <a href="http://blogs.scientificamerican.com/observations/2011/06/21/are-babies-dying-in-the-pacific-northwest-due-to-fukushima-a-look-at-the-numbers/">Are Babies Dying in the Pacific Northwest Due to Fukushima? A Look at the Numbers</a></li>
+</ul>
+
+<p>Shermanたちの記事は，事故前と事故後でできるだけ増加するように，うまく期間を選んであるという指摘です。</p>
+
+<p>データは
+<a href="http://wonder.cdc.gov/mmwr/mmwrmort.asp">Centers for Disease Control and Prevention</a>
+で公開されていますので，ここで実際にデータを取得します。データは過去に遡って修正されることもあるようですので，必ずしもMoyerのデータとは一致しません。</p>
+
+<p>2011年9月13日11時ごろ私が取得したデータをCSVの形で挙げておきます。</p>
+
+<pre>
+Week,ending,Berkeley,Seattle,Santa Cruz,San Jose,San Francisco,Sacramento,Portland,Boise,Total
+1,2011/1/8,0,0,1,2,5,3,4,1,16
+2,2011/1/15,2,2,0,6,3,1,4,1,19
+3,2011/1/22,0,2,0,3,0,3,0,1,9
+4,2011/1/29,0,3,0,5,1,4,3,2,18
+5,2011/2/5,0,1,1,3,2,4,0,0,11
+6,2011/2/12,0,3,0,3,3,1,4,2,16
+7,2011/2/19,0,4,0,4,2,6,2,1,19
+8,2011/2/26,0,3,0,0,4,2,0,2,11
+9,2011/3/5,0,1,0,3,0,1,4,0,9
+10,2011/3/12,0,2,0,2,1,2,1,0,8
+11,2011/3/19,1,2,0,2,2,2,0,0,9
+12,2011/3/26,1,6,0,2,2,2,2,1,16
+13,2011/4/2,0,3,1,1,NA,1,0,0,6
+14,2011/4/9,0,0,1,1,1,2,0,1,6
+15,2011/4/16,1,2,0,2,0,5,1,0,11
+16,2011/4/23,0,4,0,4,2,1,0,0,11
+17,2011/4/30,0,5,0,5,1,4,3,0,18
+18,2011/5/7,1,2,0,7,3,4,0,1,18
+19,2011/5/14,0,3,0,1,2,3,2,2,13
+20,2011/5/21,2,2,0,2,1,5,1,2,15
+21,2011/5/28,0,0,0,5,3,1,2,0,11
+22,2011/6/4,0,0,1,4,0,2,1,0,8
+23,2011/6/11,0,1,0,1,3,4,1,2,12
+24,2011/6/18,0,2,0,2,0,1,2,0,7
+25,2011/6/25,0,4,0,2,2,2,2,1,13
+26,2011/7/2,2,1,0,NA,0,0,2,1,6
+27,2011/7/9,0,1,0,0,1,1,2,1,6
+28,2011/7/16,1,1,0,2,0,2,1,1,8
+29,2011/7/23,0,0,1,2,1,1,2,4,11
+30,2011/7/30,1,2,1,0,2,1,1,0,8
+31,2011/8/6,1,2,0,3,2,3,2,0,13
+32,2011/8/13,0,7,0,1,2,1,3,1,15
+33,2011/8/20,0,4,0,2,0,3,1,0,10
+34,2011/8/27,1,4,0,3,3,3,1,1,16
+35,2011/9/3,0,4,0,6,0,2,1,1,14
+</pre>
+
+<p>グラフにすると次のようになります。</p>
+
+<div><img src="img/110913b.png" alt="米国北西部の乳幼児死亡数の推移"></div>
+
+<p>この図からもわかるように，Shermanたちはなぜ事故後に10週間とったのに事故前に4週間しかとらなかったかというと，たまたま4週間だけ低い値が続いたからです。もしかしたら，選んだ8都市も，恣意的に選んだのかもしれません。</p>
+
+<p>上の図を描くためのRのコマンド</p>
+
+<pre>
+# quartz()                      # Mac
+# par(family="HiraKakuProN-W3") # Mac
+par(mgp=c(1.6,0.6,0))           # 微調整
+cols = c(rep("black",7), rep("blue",4), rep("red",10), rep("black",14))
+plot(data$Week, data$Total, type="o", pch=16, col=cols,
+     xlab="Week", ylab="Total", ylim=range(data$Total)+c(-1,1))
+</pre>
+
+<p>ちなみにこのグラフからすると<a href="poisson.html">ポアソン分布</a>と考えてよさそうです。平均 <code>mean(data$Total)</code> = 11.91429 のポアソン分布とすると</p>
+
+<pre>
+&gt; qpois(0.025, mean(data$Total))
+[1] 6
+&gt; qpois(0.975, mean(data$Total))
+[1] 19
+</pre>
+
+<p>で95%は6から19くらいに入ります。</p>
+
+<hr>
+
+<p>上を書いたのは2011-09-13でしたが，その後，Shermanたちはさらに
+<a href="http://www.radiation.org/reading/pubs/HS42_1F.pdf">An unexpected mortality increase in the United States follows arrival of the radioactive plume from Fukushima: is there a correlation?</a>
+という論文を書き，2011年の週12以降の14週間の死者数と週11以前14週間の死者数を1年前と比べて
+<i>p</i> &lt; 0.000001
+で有意な差があるなどと主張しています。そこで彼らが根拠としている<a href="http://wonder.cdc.gov/mmwr/mmwrmort.asp">CDCの米国122都市の死亡数速報</a>をもとに再計算してみましょう。2000年以降のデータを<a href="/~okumura/stat/data/CDC-deaths.csv">CDC-deaths.csv</a>に入れました（速報値なので後で修正がかなり入ります）。彼らの根拠としている週12から始まる14週間の死亡数をプロットしてみました：</p>
+
+<div>
+<img src="img/111223a.png" alt="米国122都市の週12-25の死者数の推移">
+</div>
+
+<p>2011年が特に増えたという証拠はありません。</p>
+
+<p>Rでこのグラフを描くには次のようにします：</p>
+
+<pre>
+data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/CDC-deaths.csv",
+                comment.char="#", as.is=TRUE)
+deaths = numeric(2011)  # 面倒なので2011要素の配列を作ってしまう
+for (i in 2000:2011)
+  deaths[i] = sum(data$all[data$year == i & data$week >= 12 & data$week <= 25])
+plot(2000:2011, deaths[2000:2011], type="o", pch=16, xlab="Year", ylab="Deaths")
+</pre>
+
+<p>ちなみにこの死亡数データはポアソン分布と著しく異なります。</p>
+
+<pre>
+&gt; chisq.test(deaths[2000:2011])
+
+	Chi-squared test for given probabilities
+
+data:  deaths[2000:2011] 
+X-squared = 1487.047, df = 11, p-value &lt; 2.2e-16
+</pre>
+
+<p>参考：Scientific Americanの批判
+<a href="http://blogs.scientificamerican.com/observations/2011/12/20/researchers-trumpet-another-flawed-fukushima-death-study/">Researchers Trumpet Another Flawed Fukushima Death Study | Observations, Scientific American Blog Network</a>
+と片瀬久美子さんによる紹介
+<a href="http://d.hatena.ne.jp/warbler/20111223/1324627553">ジャネット・シェルマンさんら再び</a></p>
+
+<hr>
+
+<p>このページは 2011-12-23 からずっと更新していませんでしたが，<a href="http://togetter.com/li/1039843">「福島第一原発事故後の米国北西部で小児甲状腺癌が増加」という3年前の主張、ちょっと調べたら2重の嘘でした</a>というまとめでこのページを言及していただいたので，<a href="/~okumura/stat/data/CDC-deaths.csv">CDC-deaths.csv</a>を更新した<a href="/~okumura/stat/data/CDC-deaths2.csv">CDC-deaths2.csv</a>を作成し，グラフを描きなおしてみました（下図）：</p>
+
+<div>
+<img src="img/161030a.png" alt="米国122都市の週12-25の死者数の推移">
+</div>
+
+<p>なお，CDCの
+<a href="https://wonder.cdc.gov/mmwr/mmwrmort.asp">Morbidity and Mortality Weekly Report (MMWR)</a>
+は2016年の39週をもって終了したとのことです。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-09 10:35:50</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

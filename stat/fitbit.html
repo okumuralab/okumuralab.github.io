@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>fitbit</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>fitbit</h1>
+
+<p><em>[2017-09-29]</em> 2017-09-08あたりからfitbitの仕様が変わったようで fitbitScraper が機能しなくなった。<a href="https://github.com/corynissen/fitbitScraper/issues/20">ここ</a>で議論されている。</p>
+
+<p><em>[2017-12-07]</em> fitbit のファームウェアのアップデートが来たのでやってみたら，プログレスバーのちょうど半分のところで止まってしまった。リブートしても同じ状態だし，英語サポートにメールで教えていただいたファクトリリセットを試してもできなかった。諦めかけたら，@fitbit_jp さんが「Bluetoothの解除等はお試しなられましたか？」とメンションをくださったので，ダメ元で iPhone でBluetoothペアリングを解除してアプリを立ち上げたら，勝手にペアリングを再開して，アップデートが再開した。なるほど，こういうことだったのか。</p>
+
+<p><em>[2017-12-08]</em> どうやら fitbitScraper はダメのようだ。<a href="https://annofoneblog.wordpress.com/2017/10/19/your-heart-your-calories-your-sleep-your-data-how-to-extract-your-fitbit-data-and-make-graphs-using-r/">こちら</a>に API を直接叩いてRで解析する方法がある。</p>
+
+<h2>概説（そのうち詳しく書く）</h2>
+
+<p><a href="https://www.fitbit.com/">fitbit</a> Charge HR を買った。2015年12月4日夜に届いたので，さっそく翌日の<a href="https://prs.ism.ac.jp/useRjp/hiki.cgi?2015%C7%AF%C5%D9+%A5%C7%A1%BC%A5%BF%B2%F2%C0%CF%B4%C4%B6%ADR%A4%CE%C0%B0%C8%F7%A4%C8%CD%F8%CD%D1">R研究集会</a>に付けていった。</p>
+
+<p>fitbitのWebサイトやアプリでのデータ閲覧は無料。データのダウンロードは<del>有料である</del>一月分のデータなら無料でダウンロードできるが，日ごとの代表値だけなので，内容が薄い。幸い，Rの <a href="https://cran.r-project.org/web/packages/fitbitScraper/index.html">fitbitScraper</a> というパッケージを使えば，Webサイトからデータをスクレープして取得できる。</p>
+
+<p>出力の形式はときどき変わるようなので，確認が必要。</p>
+
+<pre>
+install.packages("fitbitScraper")
+library(fitbitScraper)
+
+cookie = login(email="メールアドレス", password="パスワード")
+steps = get_intraday_data(cookie, what="steps", date="2015-12-05")
+distance = get_intraday_data(cookie, what="distance", date="2015-12-05")
+floors = get_intraday_data(cookie, what="floors", date="2015-12-05")
+active_minutes = get_intraday_data(cookie, what="active-minutes", date="2015-12-05")
+calories_burned = get_intraday_data(cookie, what="calories-burned", date="2015-12-05")
+heart_rate = get_intraday_data(cookie, what="heart-rate", date="2015-12-05")
+</pre>
+
+<p>これで1日分のデータが取得できる。次は心拍数のプロットである。</p>
+
+<pre>
+t = heart_rate$time
+h = ifelse(heart_rate$bpm == 0, NA, heart_rate$bpm)
+plot(t, h, type="l", col="#f39800", lwd=2, xlab="", ylab="",
+     xlim=as.POSIXct(c("2015-12-05 06:00","2015-12-05 22:00")),
+     las=1, panel.first=grid(NA,NULL))
+</pre>
+
+<figure><img src="img/151206a.png" alt="心拍数"></figure>
+
+<p>心拍数以外は15分きざみだが，心拍数は5分きざみの数値が得られる。ちなみに，iOSのfitbitアプリでは次のようなグラフになる。</p>
+
+<figure><img src="img/151206b.jpg" alt="心拍数"></figure>
+
+<p>睡眠データについては例えば <code>get_sleep_data(cookie, "2016-01-08", "2016-01-10")</code>
+とすれば1月8〜10日の毎日の（つまり前日夜から当日朝までの）睡眠データが取得できる。取得できるのは睡眠開始時刻・終了時刻・覚醒回数・寝返り回数などである。スマホを使えば，グラフ（画像）で個々の覚醒時刻・寝返り時刻が次のように表示できる：</p>
+
+<figure><img src="img/160124c.png" alt="睡眠"></figure>
+
+<p><a href="http://d.hatena.ne.jp/dichika/20160128/p1">RでfitbitとJawboneから睡眠データを取得する</a>によれば，APIを使えば上のような図を描くデータが取得できるらしい。あとでやってみよう。</p>
+
+<h2>1日の心拍数の変化</h2>
+
+<p>心拍数についてはKarvonenの式というのがあり，安静時心拍数と最大心拍数の間で運動強度を0%から100%まで目盛る。最大心拍数の推定値としては220から年齢を引く。私の場合，安静時心拍数を60bpm，年齢を5歳刻みに丸めて最大心拍数を220-65=155とした。</p>
+
+<p>次のようなスクリプトを作っておく。</p>
+
+<pre>
+#! /usr/local/bin/Rscript
+
+if (!require(fitbitScraper)) {
+    install.packages("fitbitScraper")
+    if (!require(fitbitScraper)) q("no", 1)
+}
+cookie = login(email="...", password="...")
+today = as.character(Sys.Date())
+heart_rate = get_intraday_data(cookie, what="heart-rate", date=today)
+
+png("heartrate.png", width=750, height=350, type="cairo")
+
+t = heart_rate$time
+h = ifelse(heart_rate$bpm == 0, NA, heart_rate$bpm)
+
+high = 220 - 65  # 220 - age (approximate)
+low = 60
+r = seq(0, 100, 20)
+s = low + r * (high - low) / 100
+tt = seq(as.POSIXct(paste(today, "06:00")), by=3600, length.out=18)
+
+par(mar=c(3,3,1,4)+0.1, mgp=c(2,0.8,0), las=1)
+plot(t, h, type="l", col="#f39800", lwd=2, xlab="", ylab="",
+     xlim=as.POSIXct(paste(today, c("06:00", "23:00"))), ylim=c(low,high),
+     panel.first=abline(h=s, v=tt, col="lightgray", lty="dotted"), xaxt="n")
+axis(1, at=tt, labels=6:23)
+axis(4, at=s, labels=paste0(r,"%"))
+
+dev.off()
+</pre>
+
+<p>crontabに次のように登録する：</p>
+
+<pre>
+0 7-23 * * * /.../.../.../fitbit.R &gt;/dev/null 2&gt;&amp;1
+</pre>
+
+<p>例として上と同じデータを使うと次のようになる（cairoではなくquartzデバイスに出力）：</p>
+
+<figure><img src="img/160416a.png" alt="心拍数"></figure>
+
+<h2>安静時心拍数</h2>
+
+<p>1日の心拍数の変化もおもしろいが，毎日の安静時心拍数をプロットすると，風邪をひいたなどの体調の悪い日が歴然と現れる（図は省略する）。</p>
+
+<pre>
+rhr = get_daily_data(cookie, what="getRestingHeartRateData",
+                     start_date="2016-01-01", end_date="2016-08-10")
+plot(as.POSIXct(rhr$time), rhr$restingHeartRate, pch=16, type="o")
+</pre>
+
+<p>上の <code>plot()</code> のオプションは適当である。特に時間軸をわかりやすくする方法は<a href="timeseries.html">時系列データ</a>を参照されたい。</p>
+
+<h2>睡眠</h2>
+
+<p>睡眠データは次のようにして取得できる：</p>
+
+<pre>
+<code>sleep = get_sleep_data(cookie, start_date="2016-07-01", end_date="2016-08-10")</code>
+</pre>
+
+<p>結果のデータ構造は <code>str(sleep)</code> と打ち込んで出てくる長いリストを読めばよいが，ややこしいので，以下では実例で示す。</p>
+
+<pre>
+<code>sleep$df$date</code>
+[1] "2016-07-18" "2016-07-29" "2016-08-01" "2016-08-02" "2016-08-03"
+[6] "2016-08-04" "2016-08-10"
+</pre>
+
+<p>この4番目の日（2016-08-02）は，出張でホテルの環境が悪く，最悪の睡眠状態であった。スマホのツールで見ると次のような感じである：</p>
+
+<figure><img src="img/160810a.png" alt="酷い睡眠状態の例"></figure>
+
+<pre>
+<code>sleep$df[4,]$date</code>
+[1] "2016-08-02"
+<code>sleep$df[4,]$startDateTime</code>
+[1] "2016-8-01 23:11:00"
+<code>sleep$df[4,]$endDateTime</code>
+[1] "2016-8-02 06:40:00"
+<code>sleep$df[4,]$sleepDuration</code>
+[1] 449
+<code>sleep$df[4,]$breaks</code>
+[[1]]
+   startTime magnitude duration            startDateTime
+1      23:23         2        3 2016, 8, 1, 23, 23, 0, 0
+2      23:27         2        1 2016, 8, 1, 23, 27, 0, 0
+3      23:28         3        6 2016, 8, 1, 23, 28, 0, 0
+4      23:34         2        3 2016, 8, 1, 23, 34, 0, 0
+5      23:39         2        1 2016, 8, 1, 23, 39, 0, 0
+6       0:33         2        1  2016, 8, 2, 0, 33, 0, 0
+7       0:40         2        1  2016, 8, 2, 0, 40, 0, 0
+8       0:42         2        6  2016, 8, 2, 0, 42, 0, 0
+9       2:12         2        1  2016, 8, 2, 2, 12, 0, 0
+10      2:52         2        1  2016, 8, 2, 2, 52, 0, 0
+11      3:34         2        1  2016, 8, 2, 3, 34, 0, 0
+12      3:57         2        1  2016, 8, 2, 3, 57, 0, 0
+13      4:53         2        5  2016, 8, 2, 4, 53, 0, 0
+<code>sleep$df[4,]$breaks[[1]]$startTime</code>
+ [1] "23:23" "23:27" "23:28" "23:34" "23:39" "0:33"  "0:40"  "0:42"  "2:12" 
+[10] "2:52"  "3:34"  "3:57"  "4:53" 
+<code>sleep$df[4,]$breaks[[1]]$startDateTime[[13]]</code>
+[1] 2016    8    2    4   53    0    0
+</pre>
+
+<p>図と見比べれば，<code>magnitude</code> の <code>2</code> は「寝返りを繰返す状態」，<code>3</code> は「目覚めた状態」であることがわかる。<code>duration</code> は分単位のようだ。</p>
+
+<p>これはかなり悪い例で，快眠の場合は寝返りも目覚めもゼロである。</p>
+
+<p>このデータをリアルタイムで取得して（実際にはポーリング回数を頻繁にして）最適な時刻に目覚ましを鳴らす（あるいはfitbitのバイブ機能で目を覚まさせる）ことは研究課題である。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2017-12-08 16:01:50</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

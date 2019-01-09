@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>全国学力テストの都道府県別正答率と教員初任給</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>全国学力テストの都道府県別正答率と教員初任給</h1>
+
+<p>先日発表された2017年全国学力テストの正答率と教員給与が関係しているだろうか（データはこのページの下に示す）。</p>
+
+<pre>
+plot(教員初任給, rowMeans(正答率[,2:9]), type="n",
+     xlab="教員初任給（円）", ylab="正答率平均（%）")
+text(教員初任給, rowMeans(正答率[,2:9]), 都道府県名)
+</pre>
+
+<figure><img src="img/170903a.png" alt="教員初任給と正答率平均"></figure>
+
+<p>あるいは教員以外の初任給と教員初任給の比が関係しているかもしれない。</p>
+
+<pre>
+plot(教員初任給/大卒初任給/1000, rowMeans(正答率[,2:9]), type="n",
+     xlab="教員初任給/大卒初任給", ylab="正答率平均（%）")
+text(教員初任給/大卒初任給/1000, rowMeans(正答率[,2:9]), 都道府県名)
+</pre>
+
+<figure><img src="img/170903b.png" alt="教員初任給/大卒初任給と正答率平均"></figure>
+
+<p>どちらもあまり関係しそうにない。</p>
+
+<h2>データ</h2>
+
+<p>47都道府県の順序は次の通り：</p>
+
+<pre>
+都道府県名 = c(
+"北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島",
+"茨城", "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川",
+"新潟", "富山", "石川", "福井", "山梨", "長野", "岐阜",
+"静岡", "愛知", "三重", "滋賀", "京都", "大阪", "兵庫",
+"奈良", "和歌山", "鳥取", "島根", "岡山", "広島", "山口",
+"徳島", "香川", "愛媛", "高知", "福岡", "佐賀", "長崎",
+"熊本", "大分", "宮崎", "鹿児島", "沖縄")
+</pre>
+
+<p>全国学力テストについては<a href="170829.html">こちら</a>参照：</p>
+
+<pre>
+正答率 = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/atest2017.csv")
+</pre>
+
+<p>大卒初任給については厚労省の<a href="http://www.mhlw.go.jp/toukei/list/53-1a.html">賃金構造基本統計調査（初任給）</a>→平成28年→「付表3　都道府県、性、学歴別初任給及び都道府県間格差」（fuhyo03.xls）にそのものずばりがある。男女計大学卒初任給（千円）は次の通り：</p>
+
+<pre>
+大卒初任給 = c(
+194.1, 184.9, 189.7, 199.3, 190.3, 189.0, 193.1, 192.4,
+205.7, 195.1, 204.5, 205.0, 211.3, 207.3, 187.8, 194.3,
+195.3, 193.9, 199.0, 198.7, 195.2, 200.6, 205.0, 199.0,
+200.9, 200.8, 204.3, 199.5, 199.6, 195.9, 182.9, 187.5,
+192.4, 198.2, 190.5, 193.7, 194.5, 190.3, 188.2, 194.8,
+191.8, 185.2, 186.9, 193.2, 185.5, 186.4, 165.9)
+</pre>
+
+<p>教員初任給は，総務省 &gt; 政策 &gt; 地方行財政 &gt; 地方公務員制度 &gt; 給与・定員等の状況 &gt; <a href="http://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/teiin-kyuuyo02.html">給与・定員等の調査結果等</a> &gt; <a href="http://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/kyuuyo/kyuuyo_jc.html">地方公務員給与実態調査</a> &gt; <a href="http://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/kyuuyo/h28_kyuuyo_1.html">平成２８年 地方公務員給与の実態</a> &gt; <a href="http://www.soumu.go.jp/main_sosiki/jichi_gyousei/c-gyousei/kyuuyo/pdf/h28_kyuyo_1_03.pdf">第２　統計表I 　一般職関係　第４表～第９表の４（ＰＤＦ）</a> の p.209 にある。PDFなので</p>
+
+<pre>
+pdftotext -raw h28_kyuyo_1_03.pdf
+</pre>
+
+<p>でテキストに直し，該当部分を切り出し，まず3桁ごとのコンマ（,）を一括置換で削除する。都道府県名は「北 海 道」のようにスペースが入っているので，日本語文字間のスペースを次のようなRubyスクリプトで削除する：</p>
+
+<pre>
+#! /usr/bin/env ruby -w
+# coding: utf-8
+
+while line = gets
+  while line =~ /(\p{Han}) (\p{Han})/
+    line.gsub!(/(\p{Han}) (\p{Han})/, "\\1\\2")
+  end
+  puts line
+end
+</pre>
+
+<p><code>\p{Han}</code>，<code>\p{Hiragana}</code>，<code>\p{Katakana}</code>
+のようなUnicodeのプロパティについては<a href="https://docs.ruby-lang.org/ja/latest/doc/spec=2fregexp.html">Ruby 2.4.0 リファレンスマニュアル &gt; 正規表現</a>からリンクされている<a href="https://github.com/k-takata/Onigmo/blob/master/doc/UnicodeProps.txt">ここ</a>参照。</p>
+
+<p>さらに「小計」を含む余計な行を <code>grep -v '小計'</code> で削除する。</p>
+
+<p>最後に，半角スペースをコンマに置換し，欠測値を表す <code>−</code> を削除すれば完了（<a href="data/h28_kyuyo_1_03_1.csv">h28_kyuyo_1_03_1.csv</a>）。小・中学校教諭（大学卒）の初任給は以下の通りである：</p>
+
+<pre>
+教員初任給 = c(
+197900,197900,199700,206000,199582,202400,210500,201200,204700,202900,
+204700,205200,196300,198100,204700,204700,198800,204700,204700,208100,
+208700,206480,205300,210600,204700,207300,201900,202449,204700,204700,
+202400,199166,211200,204700,209300,204700,204700,201904,201300,204700,
+201500,197900,204700,204700,197900,197900,197900)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2017-09-03 16:47:54</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

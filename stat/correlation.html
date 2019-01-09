@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>相関（と回帰）</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>相関（と回帰）</h1>
+
+<h2>準備体操</h2>
+
+<p>40個の正規分布の乱数を2組作って，それぞれを横軸，縦軸にとってプロットしてみましょう：</p>
+
+<pre>
+x = rnorm(40); y = rnorm(40); plot(x, y)
+</pre>
+
+<p>デフォルトの白丸では見にくいので，黒丸（<code>pch=16</code>）にしましょう：</p>
+
+<pre>
+x = rnorm(40); y = rnorm(40); plot(x, y, pch=16)
+</pre>
+
+<p>これから勉強する「相関係数」を上に書き加えてみましょう：</p>
+
+<pre>
+x = rnorm(40); y = rnorm(40); plot(x, y, pch=16, main=cor(x,y))
+</pre>
+
+<p>何度もやって，感覚をつかみましょう。</p>
+
+<h2>相関係数</h2>
+
+<p>2008年9月24日に就任した中山成彬（なりあき）国土交通相は，「日教組（日本教職員組合）が強いところは学力が低い」などの発言で，5日後の28日には辞職してしまいます。</p>
+
+<p>この「日教組が強いところは学力が低い」を反証するため，朝日新聞は27日朝刊で13道府県の全国学力調査の中3数学Aの点数をもとに「相関なし」と結論づけています。しかし，この13道府県はどういう基準で選んだのか，なぜ中3数学Aなのか，疑問の残る記事になってしまいました。紙面には「〈注〉科目は1位と最下位の県の得点差が最も大きいものを選びました」とありますが，恣意的に特定の科目を選んだととられないためには，全科目を調べるか，あるいは総合得点を使うべきでした。</p>
+
+<p>同じ朝日新聞でも，版によっては13道府県の日教組組織率を数字で挙げています。文科省サイトで公開されている平成20年度全国学力・学習状況調査の都道府県別の全4科目正答率の合計と合わせて表にしておきます。組織率データの信頼性については，ここでは不問とします。</p>
+
+<figure style="float:right; margin:0 0 1em 2em;">
+  <img src="img/140916a.png" alt="">
+</figure>
+
+<table>
+  <tbody>
+  <tr><th></th><th>組織率（%）</th><th>正答率合計</th></tr>
+  <tr><th>北海道</th><td>50</td><td>237.9</td></tr>
+  <tr><th>岩手県</th><td>40</td><td>238.8</td></tr>
+  <tr><th>秋田県</th><td>50</td><td>270.2</td></tr>
+  <tr><th>富山県</th><td>50</td><td>270.1</td></tr>
+  <tr><th>福井県</th><td>90</td><td>276.3</td></tr>
+  <tr><th>静岡県</th><td>70</td><td>259.2</td></tr>
+  <tr><th>愛知県</th><td>60</td><td>256.6</td></tr>
+  <tr><th>大阪府</th><td>30</td><td>231.4</td></tr>
+  <tr><th>香川県</th><td> 1</td><td>259.0</td></tr>
+  <tr><th>高知県</th><td>10</td><td>220.7</td></tr>
+  <tr><th>大分県</th><td>60</td><td>242.9</td></tr>
+  <tr><th>宮崎県</th><td>10</td><td>251.6</td></tr>
+  <tr><th>沖縄県</th><td>40</td><td>209.4</td></tr>
+  </tbody>
+</table>
+
+<p>このデータの散布図（相関図）を描いてください。Rなら次のコマンドで描けます。</p>
+
+<pre>
+組織率 = c(50,40,50,50,90,70,60,30,1,10,60,10,40)
+正答率合計 = c(237.9,238.8,270.2,270.1,276.3,259.2,256.6,231.4,259.0,220.7,242.9,251.6,209.4)
+plot(組織率, 正答率合計)
+</pre>
+
+<div class="note">
+<p>実際には次のように多少オプションを付けて描きました：</p>
+<pre>
+par(mgp=c(2,0.8,0))
+plot(組織率, 正答率合計, pch=16, xlab="組織率（%）")
+</pre>
+</div>
+
+<p>実際に描いてみると，なんとなく右肩上がりに見えるかもしれません。この傾向の度合，つまりこの場合は組織率と正答率合計の関連の度合を数字にしたものが，相関係数（correlation coefficient，長い名前はピアソンの積率相関係数 Pearson's product-moment correlation coefficient）です。相関係数は -1 から 1 までの値をとり，正負の関連が強いほど ±1 に近づき，関連が低ければ 0 に近づきます（詳しくは後で述べます）。</p>
+
+<div class="note">
+<p>上のピアソンは Karl Pearson（1857〜1936年）ですが，その息子 Egon S. Pearson（1895〜1980年）もネイマン・ピアソンの理論で有名です。</p>
+</div>
+
+<p>Rで相関係数を求める関数は <code>cor()</code> です。</p>
+
+<pre>
+&gt; cor(組織率, 正答率合計)
+[1] 0.4251695
+</pre>
+
+<p>$p$ 値や信頼区間まで求める関数は <code>cor.test()</code> です：</p>
+
+<pre>
+&gt; cor.test(組織率, 正答率合計)
+
+	Pearson's product-moment correlation
+
+data:  組織率 and 正答率合計 
+t = 1.558, df = 11, p-value = 0.1475
+alternative hypothesis: true correlation is not equal to 0 
+95 percent confidence interval:
+ -0.1643066  0.7908813 
+sample estimates:
+      cor 
+0.4251695 
+</pre>
+
+<p>つまり，（ピアソンの）相関係数は 0.425 で，組合の組織率が高いほど成績が良いという傾向が見られますが，95%信頼区間は $[-0.16, 0.79]$ と広く（$p$ 値は 0.15 ほど），統計的に有意ではありません。したがって，このデータから何かを結論づけるのは早計です。</p>
+
+<p>いずれにしても，47都道府県からこの13道府県を選んだ理由が明らかでありませんので（もしかしたら朝日新聞が恣意的に選んだ？），もともと何の意味もないデータといえます。</p>
+
+<p>もし47都道府県全部のデータがあったとしても，人口1千万の東京都と人口数十万の小さな県を同じ重みで考えていいのかという疑問もあります。県ごと（あるいは国ごと）のデータを散布図にすると何らかの知見が得られることはよくありますが，相関係数から量的な結論を導く際には注意が必要です。</p>
+
+<p>仮に相関関係が見られた場合でも，それを因果関係と結びつけるのは早計です。例えば「組合が強いところは学力が低い」という相関関係が見られたとしても（このデータからは逆の関係が示唆されていますが），それだけでは，組合が学力を下げているとも，学力が低いから組合でがんばっているともいえますし，まったく別の要因が両方の原因となっているのかもしれません。</p>
+
+<p>要は，相関関係から安易に因果関係を導いてはいけないということです。</p>
+
+<h2>回帰分析</h2>
+
+<p>上のようなプロットを描くと，右上がりの直線を書き足したくなりますね。このようなデータを直線で近似するのが回帰分析（regression analysis）の考え方です。なぜ「回帰」（regression，元に戻ること）というかは後で説明します。</p>
+
+<p>上のようなプロットにどうやって「えいやっ」と直線を引くかは，通常は，直線と点との鉛直距離の2乗の和を最小にする「最小2乗法」を使います。そのためのRの関数が <code>lm()</code> です（linear modelから来ています）。</p>
+
+<pre>
+&gt; r = lm(正答率合計 ~ 組織率)
+&gt; abline(r)   # 上で描いたプロットに直線を重ね書きする
+&gt; summary(r)
+
+Call:
+lm(formula = 正答率合計 ~ 組織率)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-37.551 -12.200   2.197  14.701  25.116 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 233.5486    10.6703  21.888 2.03e-10 ***
+組織率        0.3351     0.2151   1.558    0.148    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 18.98 on 11 degrees of freedom
+Multiple R-squared:  0.1808,	Adjusted R-squared:  0.1063 
+F-statistic: 2.427 on 1 and 11 DF,  p-value: 0.1475
+</pre>
+
+<p>これは，正答率合計 = 0.3351 × 組織率 + 233.5486 という式で予測できることを示しています。ただし，$p$ 値はさきほどと同じ 0.1475 です。相関係数が 0 であるという帰無仮説と，回帰分析したとき傾きが 0 であるという帰無仮説とは，同じことだからです。</p>
+
+<h2>息抜き体操</h2>
+
+<p>「準備体操」のプロットに直線をあてはめてみましょう：</p>
+
+<pre>
+x = rnorm(40); y = rnorm(40); plot(x, y, pch=16, main=cor(x,y)); abline(lm(y ~ x))
+</pre>
+
+<p>何度もやって感覚をつかみましょう。</p>
+
+<p>横軸が中間試験の成績，縦軸が期末試験の成績とすると，相関が完全でないために，中間試験で良い点をとった人でも，期末試験では平均（0）に近くなります。</p>
+
+<p>横軸が親の成績，縦軸が子の成績とすると，相関が完全でないために，親が優秀でも，子は平均（0）に近くなります。</p>
+
+<p>この現象が，有名な<a href="http://ja.wikipedia.org/wiki/%E3%83%95%E3%83%A9%E3%83%B3%E3%82%B7%E3%82%B9%E3%83%BB%E3%82%B4%E3%83%AB%E3%83%88%E3%83%B3">フランシス・ゴルトン</a>が発見した「平均への回帰」（regression to the mean）です。</p>
+
+<h2>順位相関係数</h2>
+
+<p>相関係数と名の付くものは上のピアソンの相関係数以外にもいくつかあり，Rでは後述のケンドールの順位相関係数，スピアマンの順位相関係数が同じ <code>cor()</code> で計算できます：</p>
+
+<pre>
+&gt; cor(組織率, 正答率合計, method="kendall")
+[1] 0.3736324
+&gt; cor(組織率, 正答率合計, method="spearman")
+[1] 0.5076522
+</pre>
+
+<p>$p$ 値や信頼区間まで求める関数はやはり <code>cor.test()</code> です：</p>
+
+<pre>
+&gt; cor.test(組織率, 正答率合計, method="kendall")
+
+	Kendall's rank correlation tau
+
+data:  組織率 and 正答率合計 
+z = 1.7298, p-value = 0.08366
+alternative hypothesis: true tau is not equal to 0 
+sample estimates:
+      tau 
+0.3736324 
+
+Warning message:
+In cor.test.default(組織率, 正答率合計, method = "kendall") :
+   タイのため正確な p 値を計算することができません 
+&gt; cor.test(組織率, 正答率合計, method="spearman")
+
+	Spearman's rank correlation rho
+
+data:  組織率 and 正答率合計 
+S = 179.2146, p-value = 0.07656
+alternative hypothesis: true rho is not equal to 0 
+sample estimates:
+      rho 
+0.5076522 
+
+Warning message:
+In cor.test.default(組織率, 正答率合計, method = "spearman") :
+   タイのため正確な p 値を計算することができません 
+</pre>
+
+<p>このどれもが $p \leq 0.05$ を満たしていません（有意な結果が得られるようにいろいろな計算法を試すのはいけないことですが）。</p>
+
+<p>以下ではこれらの相関係数についてさらに詳しく説明します。</p>
+
+<h2>ピアソンの相関係数</h2>
+
+<p>互いに関連する（独立でない）二つの確率変数 $X$，$Y$ を考えます。例えば $X$ は数学の点数，$Y$ は理科の点数だとすると，$X$ が平均より大きいときは $Y$ も平均より大きい傾向があり，$X$ が平均より小さいときは $Y$ も平均より小さい傾向がありそうです。このような二つの変数の間の関係を調べてみましょう。</p>
+
+<p>平均よりどれくらい大きいか（小さいか）を調べるには，テストの点数なら偏差値に直すほうがわかりやすいでしょう。同じように，統計学でも，変数 $X$ の平均値（期待値）を $\mu_X = E(X)$，分散を $\sigma_X^2 = E((X - \mu_X)^2)$ とするとき，</p>
+
+\[ x = \frac{X - \mu_X}{\sigma_X} \]
+
+<p>で与えられる $x$ に変換して考えると便利なことがあります。$X$ を $x$ に直すことを標準化する（standardize）ということにします。同様に $Y$ を標準化したものを $y$ とします。</p>
+
+<p>こうしておくと，</p>
+
+\[ E(x) = 0, \quad E(x^2) = 1, \quad E(y) = 0, \quad E(y^2) = 1 \]
+
+<p>となります。</p>
+
+<p>ここでもし $X$，$Y$ が独立なら積の期待値は $E(xy) = 0$ ですが，一般には $E(xy)$ は必ずしも 0 になりません：</p>
+
+<ul>
+  <li>$x > 0$ のとき $y > 0$，$x < 0$ のとき $y < 0$ となる傾向があるなら，つまり $x$ と $y$ が同符号となる傾向があるなら，その積は正になる傾向があるので，$E(xy) > 0$ となります。</li>
+  <li>$x > 0$ のとき $y < 0$，$x < 0$ のとき $y > 0$ となる傾向があるなら，つまり $x$ と $y$ が異符号となる傾向があるなら，その積は負になる傾向があるので，$E(xy) < 0$ となります。</li>
+</ul>
+
+<p>この</p>
+
+\[ \rho = E(xy) = E\biggl(\frac{X - \mu_X}{\sigma_X} \cdot \frac{Y - \mu_Y}{\sigma_Y}\biggr) \]
+
+<p>が，$X$ と $Y$ の相関係数（ピアソンの積率相関係数）です。証明は省きますが，相関係数 $\rho$ は必ず</p>
+
+\[ -1 \leq \rho \leq 1 \]
+
+<p>の範囲に入ります。</p>
+
+<p>上の $\rho$ は母集団 $X$，$Y$ の相関係数でしたが，標本については</p>
+
+\[
+  \begin{align*}
+    r &= \frac{1}{n-1} \sum_{i=1}^n \frac{X_i - \bar{X}}{s_X} \frac{Y_i - \bar{Y}}{s_Y} \\
+      &= \frac{\displaystyle \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})}{\displaystyle \sqrt{\frac{1}{n-1} \sum_{i=1}^n (X_i - \bar{X})^2} \sqrt{\frac{1}{n-1} \sum_{i=1}^n (Y_i - \bar{Y})^2}}
+  \end{align*}
+\]
+
+<p>で計算します。この最後の式では $1/(n-1)$ はすべて約分して消すことができますので，「$n$ で割るか $n - 1$ で割るか」の話はここでは影響しません。この $r$ も必ず $-1 \leq r \leq 1$ の範囲に入ります。</p>
+
+<div class="note">
+<p>数学的には，$r$ は二つの $n$ 次元の単位ベクトルの内積にほかならず，このことがわかれば $-1 \leq r \leq 1$ は自明です（（コーシー・）シュワルツの不等式）。</p>
+</div>
+
+<p>この最後の式の分子 $\displaystyle \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})$ を $X$ と $Y$ の共分散（covariance）と呼びます。</p>
+
+<p>Rで例えば
+$X_1 = 1$,
+$X_2 = 2$,
+$X_3 = 3$ と 
+$Y_1 = 1$,
+$Y_2 = 3$,
+$Y_3 = 2$
+の相関係数を求めるには，次のようにします。</p>
+
+<pre>
+&gt; x = c(1,2,3)    # x = 1:3 でも同じ
+&gt; y = c(1,3,2)
+&gt; cor(x, y)
+</pre>
+
+<p>これで $r = 0.5$ が求まります。</p>
+
+<p>$X$，$Y$ が独立に正規分布に従うなら，</p>
+
+\[ t = \frac{r \sqrt{n-2}}{\sqrt{1 - r^2}} \]
+
+<p>は自由度 $n - 2$ の $t$ 分布に従います。</p>
+
+<p>さきほどの例で計算すると，</p>
+
+<pre>
+&gt; x = c(1, 2, 3)  # x = 1:3 でも同じ
+&gt; y = c(1, 3, 2)
+&gt; r = cor(x, y)   # r = 0.5 になる
+&gt; n = 3
+&gt; t = r * sqrt(n-2) / sqrt(1 - r^2)  # t = 0.5773503
+&gt; 2 * pt(-t, n-2) # 0.6666667 と表示される
+</pre>
+
+<p>となります。より簡単には <code>cor.test(x, y)</code> と打ち込めば相関係数と $p$ 値などが出力されます。</p>
+
+<pre>
+&gt; cor.test(x, y)
+
+	Pearson's product-moment correlation
+
+data:  x and y 
+t = 0.5774, df = 1, p-value = 0.6667
+alternative hypothesis: true correlation is not equal to 0 
+sample estimates:
+cor 
+0.5 
+</pre>
+
+<div class="note">
+<p>相関係数 $r$ の不偏推定量 $G(r)$ は次の式で近似できます（Ingram Olkin and John W. Pratt, ``Unbiased Estimation of Certain Correlation Coefficients'', <i>The Annals of Mathematical Statistics</i>, Vol.29, No.1 (1958), pp.201-211.）。</p>
+\[ G(r) = \left( 1 + \frac{1 - r^2}{2(n - 3)} \right) r\]
+<p>この式の誤差は $n \geq 8$ で 0.01 以下，$n \geq 18$ で 0.001 以下とのことです。</p>
+</div>
+
+<div class="note">
+<p>共分散を求めるRの関数は <code>cov()</code> です。なお，高校数学では，分散も共分散も，分母が $n-1$ でなく $n$ のものを使いますので，Rの分散 <code>var()</code>，共分散 <code>cov()</code> の結果と異なります。Excelについては，古くは $n$ で割る方式の COVAR() がありましたが，Excel 2010以降は $n$ で割る方式の COVARIANCE.P() と，$n-1$ で割る方式の COVARIANCE.S() があるようです。</p>
+</div>
+
+<div class="note">
+<p>共分散には $\mathrm{cov}(X+Y,Z) = \mathrm{cov}(X,Z) + \mathrm{cov}(Y,Z)$ という線形性があります。特に $X+Y=Z$ のとき $\mathrm{cov}(X,Z) + \mathrm{cov}(Y,Z) = \mathrm{cov}(Z,Z) = \mathrm{var}(Z)$ ですので，$\mathrm{cov}(X,Z)/\mathrm{var}(Z) + \mathrm{cov}(Y,Z)/\mathrm{var}(Z) = 1$ になります。この左辺の各項を $X$ と $Y$ の共分散比と呼ぶことがあります。共分散比の合計は 1 です。例えば $X$ をセンター試験の点数，$Y$ を個別試験の点数とすると，共分散比は各試験の寄与率を表すと考えられます。共分散比は試験の数が3個以上でも定義できますので，各試験科目の寄与率を求めるのにも共分散比が使われます。</p>
+</div>
+
+<h2>順位相関係数</h2>
+
+<p>ピアソンの積率相関係数は，外れ値に影響されやすいという欠点があります。そのため，データの数値そのものではなく，その順位だけによる方法がいくつか考えられました。</p>
+
+<p>一つは，単にデータの順位からピアソンの相関係数を求める方法です。この方法による相関係数を，スピアマンの順位相関係数またはスピアマンの $\rho$（ロー）（Spearman's rank correlation coefficient，Spearman's rho）といいます。</p>
+
+<p>等しい値（タイ，tie）が現れるときは，その順位は，等しくなかったときの順位の平均値にします。たとえば，実際の値が 5, 7, 7, 9, 10 のとき，順位は 1, 2.5, 2.5, 4, 5 とします（あるいは大きい順に 5, 3.5, 3.5, 2, 1 としても同じことです）。</p>
+
+<div class="note">
+<p>スピアマンの $\rho$ の検定は，$n$ が十分大きければピアソンの相関係数と同じ方法（$t$ 検定）で可能です。</p>
+</div>
+
+<div class="note">
+<p>Rの <code>cor.test(..., method="spearman")</code> で，帰無仮説を $\rho = 0$ としたときのスピアマンの $\rho$ の検定は，$n \leq 1290$ のときは D. J. Best and D. E. Roberts, ``Algorithm AS 89: The Upper Tail Probabilities of Spearman's Rho,'' <i>Applied Statistics</i>, Vol.24, No.3 (1975), pp.377-379 にほぼ従って計算します。これは，$n \leq 9$（元論文では 6）のときは片方のデータの $n!$ 通りの並べ替えを行って，そのうち何通りが，観測された $|\rho|$ 以上の値をとるかを調べ，それを $n!$ で割ったものを求めます。$n > 9$（元論文では $n > 6$）のときは $1/n$ についての級数展開で，少なくとも2桁の精度があるとのことです。$n > 1290$ のときは $t$ 検定を使います。</p>
+</div>
+
+<p>もう一つのよく使われるものは，ケンドールの順位相関係数またはケンドールの $\tau$（タウ）（Kendall's rank correlation coefficient，Kendall's tau）と呼ばれるものです。ケンドールが1938年に流行らせたのでこう呼ばれますが，ケンドールによれば，1900年ごろからいろいろな人が使っていたとのことです。</p>
+
+<p>これの求めようとするものは，ランダムに二つを選んだとき，その $X$ の順序と $Y$ の順序が同じになる確率（例えば，A君がB君より数学ができたとき，A君がB君より英語もできる確率）です。実際には，この確率を2倍して1を引くことにより，-1 から 1 の範囲に収めたものが，ケンドールの $\tau$ です。スピアマンの $\rho$ より具体的に求めようとしているものがはっきりしているのと，正規分布で近似しやすいことが特長です。</p>
+
+<p>より具体的には，すべてのペアについて，両変数が同順のペアの数から逆順のペアの数を引き，ペアの総数 $n(n-1)/2$ で割ったものがケンドールの $\tau$ です。タイがある場合も含めてもっと厳密にいうと，$S = m_x = m_y = 0$ を初期値として，$1 \leq i < j \leq n$ を満たすすべての整数のペア $(i,j)$ について，</p>
+
+<ul>
+  <li>$X_i < X_j$ かつ $Y_i < Y_j$ ならば $S$ に  1 を加算する</li>
+  <li>$X_i > X_j$ かつ $Y_i > Y_j$ ならば $S$ に  1 を加算する</li>
+  <li>$X_i < X_j$ かつ $Y_i > Y_j$ ならば $S$ に -1 を加算する</li>
+  <li>$X_i > X_j$ かつ $Y_i < Y_j$ ならば $S$ に -1 を加算する</li>
+  <li>$X_i \neq X_j$ ならば $m_x$ に 1 を加算する</li>
+  <li>$Y_i \neq Y_j$ ならば $m_y$ に 1 を加算する</li>
+</ul>
+
+<p>を行い，最後に</p>
+
+\[ \tau = \frac{S}{\sqrt{\vphantom{m} \smash{m_x m_y}}} \]
+
+<p>とすると $\tau$ が求まります。分子 $S$ は同順のペア数から逆順のペア数を引いたもので，分母は基本的にはペアの総数 $m = n(n-1)/2$ ですが，タイがある場合は各変数のタイでないペアの総数の相乗平均としています。</p>
+
+<p>ケンドールの $\tau$ とスピアマンの $\rho$ は，いずれも -1 から 1 までの値をとり，二つの変数の順序関係がまったく同順であれば 1，まったく逆順であれば -1 になるという点では同じです。両者に1対1の対応はありませんが，近似的に非線形な関係があり，中程度の相関では $\tau$ のほうが絶対値が小さくなります。どちらが統計的に有意になりやすいということはありません。$\tau$ のほうが正規分布に近いので扱いやすい反面，$n$ が小さいと $\tau$ は $\rho$ に比べて飛び飛びの値しか取らないことが目立ちます。</p>
+
+<p>下の図は10ペアの乱数を何回も作ってケンドールの $\tau$（横軸）とスピアマンの $\rho$（縦軸）を計算した結果の散布図です。</p>
+
+<figure><img src="img/taurho.png" alt="" /></figure>
+
+<div class="note">
+<p>2変数が同じ順に並んでいても，タイの位置が異なれば，どちらの順位相関係数も 1 になりません。</p>
+</div>
+
+<div class="note">
+<p>ケンドールの $\tau$ のタイの処理の仕方はいくつか考えられますが，上で述べたものは $\tau_b$ と呼ばれる方法です。</p>
+</div>
+
+<div class="note">
+<p>Rの <code>cor.test(..., method="kendall")</code> で，帰無仮説を $\tau = 0$ としたときのケンドールの $\tau$ の検定は，$n < 50$ またはオプション <code>exact=TRUE</code> 指定時には，タイがなければ厳密な方法を使います。これ以外の場合は正規分布で近似する方法で行います。$\tau$ の分子 $S$ が単なる $\pm 1$ の和であることを考えれば，$n$ が大きければ中心極限定理により正規分布に近づくことが理解できます。具体的には母集団が独立のとき $\tau$ はタイがなければ正規分布 $N(0, (4n+10)/9n(n-1))$ に近づきます。</p>
+</div>
+
+<div class="note">
+<p>タイがある場合は <code>cor.test(..., method="kendall")</code> では $\tau$ の分子 $S$ が分散</p>
+\[ V(S) = \frac{n (n - 1) (2 n + 5) - V_x - V_y}{18} + \frac{T_x T_y}{2n(n - 1)} + \frac{U_x U_y}{9n(n - 1)(n - 2)} \]
+<p>の正規分布に近づくことを使っています。ここで</p>
+\[
+  T_k = \sum t_k (t_k - 1), \quad
+  U_k = \sum t_k (t_k - 1) (t_k - 2), \quad
+  V_k = \sum t_k (t_k - 1) (2 t_k + 5)
+\]
+<p>です（$k = x, y$ で，$t_x$, $t_y$ はそれぞれ $X$, $Y$ の個々のタイの長さのベクトルです。例えば $X = (1, 2, 3, 3, 4, 5, 5, 5)$ なら，$t_x = (2, 3)$ で，$\sum t_x (t_x - 1) = 2(2-1) + 3(3-1) = 8$ となります）。</p>
+</div>
+
+<div class="note">
+<p>タイのある場合も含めて正確な $p$ 値を求めるには，並べ替え検定の考え方を使います。例えば1万回のシミュレーションでは</p>
+<pre>
+t = cor(X, Y, method="kendall")
+a = replicate(10000, cor(X,sample(Y),method="kendall"))
+mean(abs(a) >= abs(t)) # 両側確率
+</pre>
+<p>このページの最初に挙げた例では $p = 0.08366$ でしたが，100万回のシミュレーションでは $p = 0.095$ ほどです。ただし，気をつけなければならないのは，ケンドールの $\tau$ が飛び飛びの値をとることです。このため，値をコピー＆ペーストして使っても四捨五入のために正しくない結果を生じることがあります：</p>
+<pre>
+&gt; t
+[1] 0.3736324
+&gt; mean(abs(a) &gt;= t)
+[1] 0.095084
+&gt; mean(abs(a) &gt;= 0.3736324)
+[1] 0.07212
+&gt; mean(abs(a) &gt;= 0.3736323)
+[1] 0.095084
+</pre>
+<p>この場合は $p = 0.095$ のほうが正しいのですが，少しずらすと $p = 0.072$ になります。正規分布による近似 $p = 0.08366$ はこのほぼ真ん中の値になっています。ちなみに，100万個の中にユニークな値は67個しかありません：</p>
+<pre>
+&gt; length(unique(a))
+[1] 67
+</pre>
+</div>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-03-27 10:29:37</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

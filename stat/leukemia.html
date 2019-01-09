@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>グラフの例：白血病による死亡数の推移</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</div>
+
+<p><em>[2015-12-27追記]</em> このページを作成したのは2011-12-05で，2012-06-08に更新しているが，その後のデータも加えた<a href="leukemia2.html">新しい記事</a>を書いた。</p>
+
+<h1>グラフの例：白血病による死亡数の推移</h1>
+
+<p><a href="http://togetter.com/li/222594">政府が「白血病増加」のデータを出してもあわてない人 - Togetter</a> にインスパイアされて作成してみた。</p>
+
+<p><a href="http://www.e-stat.go.jp/SG1/estat/GL08020101.do?_toGL08020101_&tstatCode=000001028897&requestSender=dsearch">人口動態統計</a>の平成23〜21年「月報（概数）」の「月次」の各月の「4 死亡数・死亡率（人口10万対），死因簡単分類別・対前年比較」から「白血病」の死亡数を拾ったところ，<a href="data/leukemia.csv">leukemia.csv</a>のようになった。</p>
+
+<p>とりあえず手抜き折れ線グラフ。改良してください。</p>
+
+<div>
+<img src="img/120608a.png" alt="白血病による死亡数の推移" />
+</div>
+
+<pre>
+# quartz()
+# par(family="HiraKakuProN-W3")
+leu = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/leukemia.csv",
+               as.is=TRUE)
+par(mgp=c(2,0.8,0))
+par(las=1)
+plot(NULL, xlim=c(1,12), ylim=range(leu[,2])*c(0.95,1.05), xaxt="n", xlab="月", ylab="")
+axis(1, 1:12, 1:12)
+points(leu[1:12,2], type="b", pch="8")
+points(leu[13:24,2], type="b", pch="9")
+points(leu[25:36,2], type="b", pch="0")
+points(leu[37:47,2], type="b", pch="1")
+title(main="2008-2011年の月ごとの白血病による死亡数", line=0.5)
+</pre>
+
+<p>追記：<a href="http://www.jgnn.net/ls/2011/12/post-3476.html">こちら</a>に2003年からの月次データのグラフと2000年からの年次データのグラフがありました。</p>
+
+<hr />
+
+<p><a href="/~okumura/" rel="me">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-12-30 18:45:30</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

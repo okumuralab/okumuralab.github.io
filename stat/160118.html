@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>アイスクリームの売れ方</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>アイスクリームの売れ方</h1>
+
+<h2>問題</h2>
+
+<p>2016年1月17日の入試センター試験「数学①」の「数学I」（全問必答）の第4問および「数学I・数学A」の第2問（必答問題）で，2003〜2012年の120か月の各世帯の1日あたりアイスクリーム平均購入額と，東京の月別気象データの相関を調べる問題が出題された。</p>
+
+<figure><img src="img/160126a.png" alt="入試センター試験数学I第4問"></figure>
+
+<h2>データを調べる</h2>
+
+<p>アイスクリーム平均購入額については，「総務省統計局（2013）『家計調査年報』」が出典と書かれているが，Googleで検索して出てきた<a href="http://www.stat.go.jp/data/kakei/2013np/index.htm">家計調査年報（家計収支編）平成25年（2013年）</a>を見てもどこにあるのかわからない。</p>
+
+<p>そこで，<a href="http://www.e-stat.go.jp/">e-Stat</a> のキーワード検索で「アイスクリーム」を入れる。一覧から「家計調査」→「家計収支編」をクリック，左で「データベース」を選び「表題一覧表示」をクリック，「月次」があるのは上の三つだけなので，最新のもの（一番上）の「DB」を選ぶ。</p>
+
+<p>「1/5 表章項目」で「選択」をクリック，「金額」しかないのでそれを選択し，「選択項目表示」をクリックすると，下に入る。これで「OK」をクリック。</p>
+
+<p>「2/5 品目分類（27年改定）」で「選択」をクリック，たくさんあるので右で「アイスクリーム」を検索。「356 アイスクリーム・シャーベット」が見つかるので，それを選択し，「選択項目表示」をクリックすると，下に入る。これで「OK」をクリック。</p>
+
+<p>同様に，「3/5 世帯区分」で「二人以上の世帯（2000年〜）」，「4/5 地域区分」で「全国」，「5/5 時間軸（月次）」では「全項目表示」。</p>
+
+<p>「表示位置」については，「品目分類」を「列1」，「時間軸（月次）」を「行1」にし，「レイアウトイメージの確認」をクリックして確認。</p>
+
+<p>「ダウンロード」をクリックし，CSV形式でダウンロードする。</p><!-- FEH_00200561_160118222737.csv -->
+
+<p>東京の気象データについては，気象庁Webページ『過去の気象データ』が出典と書かれているので，検索して<a href="http://www.data.jma.go.jp/gmd/risk/obsdl/index.php">過去の気象データ・ダウンロード</a>のページに行く。</p>
+
+<p>「地点を選ぶ」で「東京」を選ぶ。</p>
+
+<p>「項目を選ぶ」で，データの種類「月別値」，項目「日最高気温の月平均」「降水量の月合計」「月平均相対湿度」「日最高気温25℃以上の日数（月）」を選ぶ。</p>
+
+<p>「期間を選ぶ」で2003年1月〜2012年12月を選ぶ。</p>
+
+<p>「CSVファイルをダウンロード」をクリックする。</p><!-- data.csv -->
+
+<p>CSVファイルはRでもExcelで開ける。Excelのほうが慣れている人は，Excelで使いやすいように整形するのがわかりやすいであろう。</p>
+
+<p>念のため，このようにして得た世帯あたりアイスクリーム・シャーベットの消費金額を <a href="data/icecream.csv">icecream.csv</a>，東京の気象を <a href="data/tokyo-weather-2003-2012.csv">tokyo-weather-2003-2012.csv</a> として置いておいた（いずれもShift JIS）。いずれもRで読みやすいように整形してある。</p>
+
+<h2>グラフを描く</h2>
+
+<p>ここでは整形したデータを読む方法を書いておく：</p>
+
+<pre>
+icecream = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/icecream.csv", comment.char="#")
+tokyo = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo-weather-2003-2012.csv")
+</pre>
+
+<p>データによっては日あたりの量に直す必要があるので，年・月を与えるとその月の日数を求める関数が必要になる。例えば次のようにすればよい。</p>
+
+<pre>
+days = function(year, month) {
+    m = c(31,28,31,30,31,30,31,31,30,31,30,31)
+    m[month] + ((month == 2) && ((year %% 4 == 0) && (year %% 100 != 0) || (year %% 400 == 0)))
+}
+</pre>
+
+<p>プロットは例えば次のようになる。</p>
+
+<pre>
+plot(tokyo[,3], icecream[,3]/days(icecream$年,icecream$月),
+     pch=16, xlab="平均最高気温（℃）", ylab="アイスクリーム購入額（円）")
+</pre>
+
+<figure><img src="img/160126b.png" alt="平均最高気温・アイスクリーム購入額"></figure>
+
+<p>ダウンロードしたファイルをRで直接読むこともできる。これが本来は望ましい（手作業が入らないので）。おおよそ次のようにすればよい（ファイル名はご自分のものに直してください）。<code>fileEncoding="SJIS"</code> はWindowsではデフォルトなので省略可。</p>
+
+<pre>
+x = read.csv("気象.csv", header=FALSE, fileEncoding="SJIS", skip=7)
+y = read.csv("アイスクリーム.csv", header=FALSE, fileEncoding="SJIS", skip=11)
+y$V1 = NULL
+y$V2 = NULL
+y$V3 = gsub("月", "", gsub("年", "/", y$V3))
+y$V4 = as.numeric(gsub("[,*]", "", y$V4))
+z = merge(x, y, by.x="V1", by.y="V3")
+z$年 = gsub("/.*", "", z$V1)
+z$月 = gsub(".*/", "", z$V1)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-03-24 10:33:39</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

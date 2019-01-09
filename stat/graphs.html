@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>グラフの描き方</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>グラフの描き方</h1>
+
+<h2>基本的な考え方</h2>
+
+<ul>
+  <li>棒グラフは比例尺度の量を表すのに用い，棒の長さ（面積）が量に比例するように描くのが基本。一つだけずば抜けて大きい値があるときに棒の上のほうで省略線を用いることはあるが，下を省略して全体の長さを切り詰めることは好ましくない。例えば気象観測データについては，雨量は比例尺度であるので棒グラフで表してもよいが，気温は（絶対温度でない限り）間隔尺度であり，棒グラフは使えない。</li>
+  <li>折れ線グラフは，両軸とも間隔尺度以上であるのが基本。0点から始める必要はない。特に時系列データについてよく使われる。</li>
+  <li>円グラフは全体における割合を表すにはよいが，全体との比較ではなく個々の値どうしの比較には棒グラフがよい。いわゆる3次元（3D）円グラフは，錯覚を利用して特定の部分を大きく見せるためのもので，一般には用いない。</li>
+  <li>円グラフは複数回答のアンケート結果の図示には絶対に用いない。</li>
+  <li>色分けして凡例を付けるのは色覚異常者に優しくないので避けたい。凡例と見比べる必要のないグラフが好ましい。</li>
+  <li>いわゆるチャートジャンク（情報量のない視覚的な飾り）は情報デザインの観点からも避けるべきである。</li>
+</ul>
+
+<div class="note">
+<p>パレート図やZipfの法則の図示などで順位を横軸にとって度数を折れ線で表すが，これは折れ線グラフというよりは度数多角形（度数分布多角形）である。</p>
+</div>
+
+<h3>グラフに関する私のブログ</h3>
+
+<ul>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2266">3D円グラフを使うのはやめよう</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2301">ユーレイ棒グラフ</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2304">ユーレイ棒グラフ？</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2335">折れ線グラフもゼロから描かなければならないと教えられている？</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2360">恐ろしいグラフ</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2381">折れ線グラフは変化を示すために使おう</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2428">楕円グラフ</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2460">Nature も楕円グラフ</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2461">ブラウザシェアも3D円グラフ</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2471">円グラフを棒グラフにして良くなった例</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2532">グラフの魔法</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2556">教科書が酷いグラフを推奨している</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2558">横軸が名義尺度の折れ線グラフ</a></li>
+  <li><a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2565">ソフトバンクの棒グラフ</a></li>
+</ul>
+
+<h3>学校で教えないグラフ：</h3>
+
+<ul>
+  <li>Tukeyのボックスプロット（箱ひげ図）：いくつかの度数分布を比較するのに便利。少数の場合は（ジッタ付き）ドットプロット（↓ではない）のほうがよい。［追記：今は箱ひげ図は学校で教えます。古いままになっています。すみません。そのうち改訂します］</li>
+  <li>Clevelandのドットプロット：名義尺度に対する間隔尺度を表すのに便利（→ <a href="http://www.b-eye-network.com/view/2468">Dot Plots: A Useful Alternative to Bar Charts</a>）</li>
+  <li>Tufteのスパークライン：ミニ折れ線グラフ（→ Edward Tufteの <a href="http://www.edwardtufte.com/tufte/books_be">Beautiful Evidence</a> という本に詳しいが，関係する部分の抜粋が <a href="http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0001OR">Sparkline theory and practice</a> に掲載されている。Excel 2010以降にもマイクロソフト版の<a href="http://office.microsoft.com/ja-jp/excel-help/HA010354892.aspx">スパークライン</a>がある）</li>
+</ul>
+
+<h2>Rによるグラフの描き方</h2>
+
+<p>以下ではRの標準のグラフの描き方を説明します。より新しい方法として
+<a href="ggplot2.html">ggplot2</a>
+を使う方法があります。</p>
+
+<h3>基本（Windowsの場合）</h3>
+
+<p>Windows上のRでグラフを描いてWord等に貼り付けるだけなら，あまり考えること（自由度）はありません。単純にグラフを描いて，マウスで大きさを調節し，「ファイル」→「クリップボードにコピー」→「メタファイル」でコピーして，Word等に貼り付けます。</p>
+
+<p>グラフをPDFやEPSの形式で保存する場合は，単純に描いただけでは日本語部分が文字化けします。化けた場合は，いったんグラフの窓を閉じて，あらかじめ</p>
+
+<pre>
+&gt; par(family="Japan1GothicBBB")   # または Japan1Ryumin
+</pre>
+
+<p>と打ち込んでから，グラフを描くコマンドを打ち込みます（警告が出ますが無視します）。フォントは埋め込まれずGothicBBB-Mediumなどの名前参照だけになります（WindowsのAdobe Readerでは小塚ゴシックなどの代替フォントで表示されます）。</p>
+
+<h3>基本（Macの場合）</h3>
+
+<p>デフォルトのグラフ用窓のサイズは7インチ×7インチの正方形です。印刷用にたとえばA5横（210x148mm）のサイズにするには，「環境設定」→「Quartz」でサイズを幅8.267717インチ，高さ5.826772インチに設定するか，Rコンソールに次のように打ち込みます。</p>
+
+<pre>
+quartz(width=8.267717,height=5.826772)
+</pre>
+
+<p>他の文書に挿入する場合は，描いてからマウスで窓サイズを調節するほうが楽です。現在の窓サイズは
+<code>par("din")</code>
+で調べられますので，これを
+<code>quartz(width=...,height=...)</code>
+に与えれば，同じサイズが再現できます。</p>
+
+<p>デフォルトのフォントは</p>
+
+<pre>
+par("family")
+</pre>
+
+<p>とすれば調べられます。最初は空文字列 <code>""</code>
+になっていますが，この状態では ArialMT (TrueType)
+が使われるようです。これを例えば Helvetica (TrueType) にするには</p>
+
+<pre>
+par(family="Helvetica")
+</pre>
+
+<p>とします。ほかに <code>Times</code>
+でも <code>Palatino</code>
+でも使えます。<code>Times</code>
+の場合，デフォルトの <code>font=1</code>
+が <span style="font-family: Times, 'Times New Roman', serif">Times-Roman</span>，メインタイトルのデフォルト <code>font=2</code>
+が <span style="font-family: Times, 'Times New Roman', serif; font-weight: bold">Times-Bold</span>，<code>font=3</code>
+が <span style="font-family: Times, 'Times New Roman', serif; font-style: italic">Times-Italic</span>，<code>font=4</code>
+が <span style="font-family: Times, 'Times New Roman', serif; font-style: italic; font-weight: bold">Times-BoldItalic</span> となります。</p>
+
+<p>日本語のファミリーとしては <code>"HiraKakuPro-W3"</code>
+などが使えます。画面で見るだけなら <code>"Osaka"</code>
+のほうが軽いでしょう。</p>
+
+<p>デフォルトのフォントは欧文にしておき，日本語を使いたいところはその都度
+<code>text()</code> や <code>mtext()</code>
+の中で <code>family="HiraKakuPro-W3"</code>
+などを指定するという手もあります。</p>
+
+<p>これでグラフの窓がアクティブになっているときに「ファイル」→「別名で保存」でPDF形式で保存できます。フォントは埋め込まれますので安心してLaTeX文書にも挿入できます。別の方法として，グラフの窓がアクティブになっているときに command + C し，「プレビュー」を立ち上げて「ファイル」→「クリップボードから新規作成」すれば，ベクトル形式で「プレビュー」に移せますので，「プレビュー」のメニューから好きな形式で保存できます。あるいは，ラスター画像でよければ，
+control + shift + command + 4
+でマウスで選択し，「プレビュー」の「ファイル」→「クリップボードから新規作成」で「プレビュー」に移せます。Macではアンチエイリアスが効きますので，このままPNGで保存するだけでWeb用のきれいな図ができます。</p>
+
+<p>以下はいろいろなグラフの描き方の例です。ついでに右図はプロット用の点の種類です。</p>
+
+<p><img src="img/points.png" alt="pchで指定できる点の種類" class="right"></p>
+
+<h3>棒グラフ・柱状グラフ（ヒストグラム）</h3>
+
+<ul>
+  <li><a href="histogram.html">グラフの例：ヒストグラム</a></li>
+  <li><a href="100410a.html">グラフの例：グラフの例：地域別面積</a></li>
+  <li><a href="090503a.html">グラフの例：都道府県別人口</a></li>
+  <li><a href="181005.html">グラフの例：縦書きのラベル</a></li>
+  <li><a href="090503d.html">グラフの例：国立大学運営費交付金</a></li>
+  <li><a href="kaken.html">グラフの例：科研費予算額の推移</a></li>
+  <li><a href="101020a.html">グラフの例：交通事故死者数</a></li>
+  <li><a href="160612.html">グラフの例：賃金・所得・給与の分布</a></li>
+  <li><a href="090504c.html">グラフの例：アンケート</a>（円グラフも）</li>
+  <li><a href="090507.html">グラフの例：アンケート（複数回答）</a></li>
+  <li><a href="090426.html">グラフの例：積み重ね棒グラフ</a></li>
+  <li><a href="110123.html">グラフの例：積み重ね棒グラフ2</a></li>
+  <li><a href="180305.html">グラフの例：国立の教員養成大学・学部（教員養成課程）の就職状況</a></li>
+  <li><a href="111121.html">グラフの例：迷惑メールの数</a></li>
+  <li><a href="likert.html">グラフの例：リッカート型データ</a></li>
+  <li><a href="excel-hist.html">おまけ：Excelでヒストグラム</a></li>
+  <li><a href="180408.html">月別平均気温と降水量</a>（棒グラフと折れ線グラフ）</li>
+</ul>
+
+<h3>折れ線グラフ</h3>
+
+<ul>
+  <li><a href="090503c.html">グラフの例：地球温暖化</a></li>
+  <li><a href="090503b.html">グラフの例：男女別睡眠時間の推移</a></li>
+  <li><a href="090502.html">パソコン世帯普及率</a>（総務省）</li>
+  <li><a href="090510.html">パソコン世帯普及率</a>（内閣府）</li>
+  <li><a href="sexratio.html">出生性比</a></li>
+  <li><a href="090604.html">グラフの例：出生率</a></li>
+  <li><a href="130910.html">グラフの例：出生数と死亡数</a></li>
+  <li><a href="100706.html">グラフの例：生まれかわり</a></li>
+  <li><a href="followers.html">グラフの例：Twitterのフォロワー数</a></li>
+  <li><a href="leukemia2.html">グラフの例：白血病による死亡率の推移</a></li>
+  <li><a href="life_expectancy.html">グラフの例：日本人の平均寿命</a></li>
+  <li><a href="140923.html">グラフの例：世界の賃金</a></li>
+  <li><a href="yenrate.html">グラフの例：円相場</a></li>
+</ul>
+
+<h3>ストリップチャート，ボックスプロット</h3>
+
+<ul>
+  <li><a href="michelson.html">Michelson-Morley の実験</a></li>
+</ul>
+
+<h3>（Clevelandの）ドットプロット</h3>
+
+<ul>
+  <li><a href="090509.html">グラフの例：都道府県別人口（ドットプロット）</a></li>
+  <li><a href="090426a.html">グラフの例：ドットプロット</a></li>
+</ul>
+
+<h3>分位数プロット（quantile plot）</h3>
+
+<ul>
+  <li><a href="090512.html">グラフの例：分位数プロット</a></li>
+</ul>
+
+<h3>散布図</h3>
+
+<ul>
+  <li><a href="090509b.html">グラフの例：都道府県別人口・面積</a></li>
+  <li><a href="090517.html">グラフの例：散布図（対話型）</a></li>
+  <li><a href="130503a.html">グラフの例：都道府県別・男女別高卒進学率</a></li>
+  <li><a href="131103.html">ワインの価格</a></li>
+  <li><a href="140728.html">気温と降水量</a></li>
+</ul>
+
+<h3>その他</h3>
+
+<ul>
+  <li><a href="100121a.html">グラフの例：高校数学のグラフ</a></li>
+  <li><a href="090607.html">グラフの例：実行時間の比較</a>（実験値＋理論値，対数目盛り）</li>
+  <li><a href="100121b.html">グラフの例：音の波形</a></li>
+  <li><a href="110601a.html">グラフの例：何と呼ぶのかわからないグラフ^^;</a></li>
+</ul>
+
+<h3>資料</h3>
+
+<ul>
+  <li><a href="prefectures.html">いろいろな都道府県別データ</a></li>
+</ul>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-10-05 21:58:16</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

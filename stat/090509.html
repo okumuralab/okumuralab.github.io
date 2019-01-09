@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>グラフの例：都道府県別人口（ドットプロット）</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：都道府県別人口（ドットプロット）</h1>
+
+<p>ここでもデータの例として
+<a href="prefectures.html">いろいろな都道府県別データ</a>
+の人口を使います。</p>
+
+<p>棒グラフは必ず0から始まらなければなりません。折れ線グラフにはこの制約はありませんが，名義尺度では使えません。都道府県のような名義尺度の場合には，（Clevelandの）ドットプロット（dot plot）が便利です。これは，基本的には</p>
+
+<pre>
+# par(family="HiraKakuPro-W3")
+dotchart(population, labels=kenmei)
+</pre>
+
+<p>で描けますが，少しだけ凝ってみます：</p>
+
+<pre>
+# quartz(width=4.568898, height=9.960630) # Mac
+# par(family="HiraKakuPro-W3")            # Mac
+par(mar=c(5,5,2,2)+0.1) # マージン（デフォルト: c(5,4,4,2)+0.1）
+par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
+par(xpd=FALSE)          # プロットエリア外に描かない
+par(xaxs="i")           # プロットエリアを範囲ぴったりに
+o = order(population)
+dotchart(population[o]/1000, pch=16, xlim=c(0,14), xlab="人口（100万人）")
+par(xpd=TRUE)           # プロットエリア外に描く
+text(0, seq_along(o), kenmei[o], pos=2)
+axis(3, labels=FALSE)
+</pre>
+
+<p><img src="img/090509.png" alt=""></p>
+
+<p><code>dotchart()</code> はRで標準のものですが，<code>lattice</code>
+パッケージにはやや高機能のものが入っています。これは基本的には</p>
+
+<pre>
+library(lattice)
+dotplot(kenmei ~ population)
+</pre>
+
+<p>でいいのですが，少しだけ凝ってみます：</p>
+
+<pre>
+library(lattice)
+x = reorder(kenmei, population)
+dotplot(x ~ population/1000, scales=list(fontfamily="HiraKakuPro-W3"), xlab="")
+mtext("人口（百万人）", 1, padj=4.5)
+</pre>
+
+<p><code>HiraKakuPro-W3</code>
+はMacのフォントですので，適宜変更してください。</p>
+
+<div class="note">
+<p><code>epicalc</code> パッケージにも <code>dotplot()</code>
+という関数がありますが，これは点で描いた度数分布図です。<code>epicalc</code>
+パッケージでは <code>summ()</code>
+という関数でデータの要約を出力しますが，それに付随して大きい順に並べ替えたデータがプロットされます。こちらのほうがClevelandのドットプロットに近いものです。詳しくは
+<a href="http://cran.r-project.org/doc/contrib/Epicalc_Book.pdf">Analysis of epidemiological data using R and Epicalc</a>
+というオンライン本が公開されています。</p>
+</div>
+
+<div class="note">
+<p>epicalc パッケージは epiDisplay パッケージに改編されたようです。<a href="http://stackoverflow.com/questions/32316360/why-was-package-epicalc-removed-from-cran">Why was package 'epicalc' removed from CRAN?</a> 参照。</p>
+</div>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-02-21 19:55:10</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

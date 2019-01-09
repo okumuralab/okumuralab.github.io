@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="keywords" content="二封筒の問題,二つの封筒の問題,交換のパラドックス">
+<title>二封筒の問題：解決編？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>二封筒の問題：解決編？</h1>
+
+<p>（<a href="exchangeparadox.html">二封筒の問題</a>の続き）</p>
+
+<p>問題を整理しよう。スワミは金額 $x$，$2x$ の封筒を用意した。$x$ はわからない。つまり，この問題の隠れたパラメータは $x$ である。あなたの封筒に入っていた金額 $y$ は，パラメータ $x$ に依存する測定値である。この問題の数理モデルは，$x$ が与えられればそれぞれ確率 1/2 で $y = x$ または $y = 2x$ を得ることである。そして，われわれの仕事は，データ $y$ からパラメータ $x$ を推定することである。</p>
+
+<p>具体的に，あなたの封筒に $y = 1000$ 円入っていたとしよう。すると，$x = 500$（このとき，もう一方の封筒には500円入っている）または $x = 1000$（このとき，もう一方の封筒には2000円入っている）のどちらかである。$x = 500$，$x = 1000$ の事前確率をそれぞれ $p$，$q$ としよう。モデルから，$y$ について可能な値は3通りある：</p>
+
+<table>
+  <tbody>
+  <tr><th></th><th>$y=500$</th><th>$y=1000$</th><th>$y=2000$</th></tr>
+  <tr><th>$x=500$</th><td>$p/2$</td><td>$p/2$</td><td></td></tr>
+  <tr><th>$x=1000$</th><td></td><td>$q/2$</td><td>$q/2$</td></tr>
+  </tbody>
+</table>
+
+<p>ここで封筒を開けて $y = 1000$ が観測されたとすると，$x = 500$ の確率と $x = 1000$ の確率の比は $p : q$ である。つまり，相手の封筒の中身が500円，2000円である確率の比は $p : q$ である。その期待値があなたの持っている1000円と等しくなるのは</p>
+
+\[ \frac{500p + 2000q}{p+q} = 1000 \]
+
+<p>のときである。これを解けば，$p : q = 2 : 1$ となる。つまり，パラドックスを起こさないパラメータ $x$ の事前分布は</p>
+
+\[ p(x) \propto \frac{1}{x} \]
+
+<p>のようにスケールすればよい。スワミが投資額を2倍にする確率は半分である。</p>
+
+<p>この分布は，拙著<a href="https://github.com/okumuralab/bayesbook">『Rで楽しむベイズ統計入門』</a>p.99でベンフォードの法則に関連して書いた $\log x$ について一様な事前分布である（$d\log x = dx/x$ であるので $x$ についての事前分布 $p(x)$ は $1/x$ に比例する）。$x > 0$ という制約以外に何の条件もない場合には，この事前分布が最も自然であることが多い。この二封筒の問題は，このことの証拠の一つとなりうるという点で，たいへん興味深いものである。</p>
+
+<p>もちろんこれ以外の考え方もありうるであろう。それに，スワミはこれ以外の事前分布で $x$ を決めようとするかもしれない。$p(x) \propto 1/x$ より平坦な分布であれば，交換するほうが期待値として得である。ただし，その場合は，無条件に交換するのではなく，封筒を開いて金額 $y$ を確認し，それがあまり高額であれば，もう一人にその倍の金額を渡している可能性は低い（スワミの財力に限度がある）と考えられるので，交換しないほうがよいかもしれない。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-01-03 13:51:57</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

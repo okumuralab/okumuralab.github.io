@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>readr</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>readr，haven，readxl</h1>
+
+<h2>readr とは？</h2>
+
+<p><a href="https://CRAN.R-project.org/package=readr">readr</a> はHadley Wickham作のデータ読み込み用パッケージです。R標準の <code>read.csv()</code> などと比べて，ずっと高速かつ便利です（<a href="datatable.html">data.table</a> パッケージの <code>fread()</code> がさらに高速です）。</p>
+
+<p>CRANからのインストールは</p>
+
+<pre>
+install.packages("readr")
+</pre>
+
+<p>でできます。</p>
+
+<p>R標準の関数と違い，<code>read_delim()</code>，<code>read_csv()</code>，<code>read_tsv()</code>，<code>read_csv2()</code>，<code>read_fwf()</code>，<code>read_table()</code>，<code>read_log()</code> のように，アンダーバーを含む名前になっています。</p>
+
+<p>例えばCSVファイルを読むには</p>
+
+<pre>
+library(readr)
+x = read_csv("ファイル名またはURL")
+</pre>
+
+<p>とします。主なオプションは次の通りです：</p>
+
+<ul>
+  <li><code>col_names=TRUE</code>：列名（デフォルト <code>TRUE</code> は1行目を列名とする。<code>FALSE</code> は <code>X1</code>，<code>X2</code>，…とする。文字列のベクトルを与えればそれが列名となる）</li>
+  <li><code>col_types=NULL</code>：列の型（デフォルト <code>NULL</code> はすべて自動判別。<code>"c"</code> は文字列，<code>"d"</code> はdouble，<code>"i"</code> は整数，<code>"l"</code> は論理型，<code>"D"</code> は日付，<code>"T"</code> は日時，<code>"t"</code> は時，<code>"?"</code> は自動判断，<code>"_"</code> や <code>"-"</code> はスキップ）</li>
+  <li><code>na=c("","NA")</code>：欠損値（Not Available）を表す文字列</li>
+  <li><code>comment=""</code>：コメント開始文字</li>
+  <li><code>skip=0</code>：先頭の無視する行数</li>
+  <li><code>n_max=-1</code>：最大データ行数</li>
+  <li><code>trim_ws=TRUE</code>：前後の空白文字を無視する</li>
+  <li><code>locale=default_locale()</code>：ロケール指定</li>
+</ul>
+
+<p>文字コード（エンコーディング）はデフォルトではUTF-8ですが，次のようにすれば任意のロケールが指定できます：</p>
+
+<pre>
+x = read_csv("test.csv", locale=locale(encoding="CP932"))  # またはSJISなど
+</pre>
+
+<p>ロケールについては <code>locale()</code>，<code>default_locale()</code>
+を調べてください。おもしろいのは，デフォルトでは3桁ごとのカンマを含む数値をちゃんとパースできることです。Excelで3桁ごとにカンマを付けて表示しているときにCSV保存すると，例えば123456789は <code>"123,456,789 "</code> のように（なぜか余分なスペースも付いて）保存されます。これをR標準の <code>read.csv()</code> で読むと文字列になってしまいますが，<code>read_csv()</code> なら正しくパースできます。</p>
+
+<p>おもしろい使い方として，<code>x = read_csv("</code> まで打ってから，データをRコンソールにコピペし，<code>")</code> を打ち込むという方法も使えます。例えば</p>
+
+<pre>
+x = read_csv("魔,方,陣
+2,9,4
+7,5,3
+6,1,8")
+</pre>
+
+<p>のような感じです。これで <code>x</code> と打ち込むと</p>
+
+<pre>
+# A tibble: 3 x 3
+     魔    方    陣
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;
+1     2     9     4
+2     7     5     3
+3     6     1     8
+</pre>
+
+<p>と表示されます。この表示からもわかるように，結果は通常のデータフレームではなく tibble という型になります。この1行目は <code>x[1,]</code> で得られますが，この1列目は <code>x[,1]</code> とするとベクトルではなく1列の tibble になってしまいます。1列目をベクトルとして取り出すには <code>x[[1]]</code> とする必要があります。</p>
+
+<p>現実的な例でやってみましょう。<a href="rgooglemaps.html">RgoogleMapsを使った放射線地図</a>で使った福島県の放射線データ <a href="data/fukushima.csv">fukushima.csv</a> は，422656地点の緯度（lat），経度（lon），放射線（radiation，μSv/h単位），日時（datetime）を収めたものです。これをローカルにダウンロードして，読み込んで，それぞれの欄の平均値を表示し，時間を計測してみましょう（Macを買い換えたので新しく計測し直しました）。</p>
+
+<pre>
+<code># 従来のread.csv()</code>
+<code>system.time({x1 = read.csv("~/public_html/stat/data/fukushima.csv", as.is=TRUE)})</code>
+   ユーザ   システム       経過  
+     0.973      0.029      1.002 
+<code>system.time(print(mean(x1$lat)))</code>
+[1] 37.59176
+   ユーザ   システム       経過  
+     0.001      0.000      0.001 
+<code>system.time(print(mean(x1$lon)))</code>
+[1] 140.4282
+   ユーザ   システム       経過  
+     0.001      0.000      0.001 
+<code>system.time(print(mean(as.POSIXct(x1$datetime))))</code>
+[1] "2011-07-18 01:52:49 JST"
+   ユーザ   システム       経過  
+     7.978      3.138     11.164 
+<code># 新しいread_csv()</code>
+<code>system.time({x2 = read_csv("~/public_html/stat/data/fukushima.csv")})</code>
+Parsed with column specification:
+cols(
+  lat = col_double(),
+  lon = col_double(),
+  radiation = col_double(),
+  datetime = col_character()
+)
+   ユーザ   システム       経過  
+     0.304      0.014      0.319 
+<code>system.time(print(mean(x2$lat)))</code>
+[1] 37.59176
+   ユーザ   システム       経過  
+     0.001      0.000      0.001 
+<code>system.time(print(mean(x2$lon)))</code>
+[1] 140.4282
+   ユーザ   システム       経過  
+     0.001      0.000      0.001 
+<code>system.time(print(mean(as.POSIXct(x2$datetime))))</code>
+[1] "2011-07-18 01:52:49 JST"
+   ユーザ   システム       経過  
+     7.816      3.181     11.011 
+</pre>
+
+<p>読み込みは劇的に早くなりましたが，他の計算は当然ながら変わりません。特に，日時を表す文字列を内部形式に変換する <code>as.POSIXct()</code> の遅さが目立ちます。そこで，readr に含まれている <code>parse_datetime()</code> を使ってみます。</p>
+
+<pre>
+<code>system.time(print(mean(parse_datetime(x2$datetime, format="%Y/%m/%d %H:%M:%S"))))</code>
+[1] "2011-07-18 01:52:49 UTC"
+   ユーザ   システム       経過  
+     0.082      0.001      0.084 
+<code>system.time(print(mean(parse_datetime(x2$datetime, format="%Y/%m/%d %H:%M:%S", locale=locale(tz="Asia/Tokyo")))))</code>
+[1] "2011-07-18 01:52:49 JST"
+   ユーザ   システム       経過  
+     1.146      0.008      1.155 
+</pre>
+
+<p>ロケールを指定しなければ2桁高速化できました。指定した場合はやや遅くなりますが，それでも <code>as.POSIXct()</code> よりは高速です。</p>
+
+<p>次のように読み込み時点で日時のフォーマットを指定することが可能ですが，現時点ではロケールは指定できないようです：</p>
+
+<pre>
+<code>system.time({x2 = read_csv("~/public_html/stat/data/fukushima.csv",</code>
+<code class="cont">                           col_types=cols(</code>
+<code class="cont">                             datetime=col_datetime(format="%Y/%m/%d %H:%M:%S")</code>
+<code class="cont">                           ))})</code>
+   ユーザ   システム       経過  
+     0.359      0.015      0.374 
+</pre>
+
+<h2>haven</h2>
+
+<p>そのうち書きます。</p>
+
+<h2>readxl</h2>
+
+<p>とりあえず<a href="exceldata.html">RでExcelのデータを読む方法</a>をお読みください。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-07-21 21:18:48</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

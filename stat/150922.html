@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>標本サイズの決め方</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>標本サイズの決め方</h1>
+
+<p><a href="http://www.amazon.co.jp/dp/4897753368">臨床研究いろはにほ</a>という本は，臨床研究に必要な考え方をうまくまとめてある本です。そこに，例えばA治療（イベント発症率10%）とB治療（イベント発症率20%）を比較し，B治療の有効性を証明するのに必要な症例数が片群273例（α過誤5%，β過誤10%）であることが書いてありますが，計算のしかたが書いてありません。Rではどのようにすればよいでしょうか。なお，α過誤5%ということは有意水準を0.05にすることを意味し，β過誤10%ということは検出力（power）が0.9つまり仮定した効果があれば9割の確率で有意な結果が出ることを意味します。</p>
+
+<p>Rには標準で <code>power.prop.test()</code> という関数が備わっています。これを使えば，</p>
+
+<pre>
+<code>power.prop.test(p1=0.1, p2=0.2, power=0.9, strict=TRUE)</code>
+
+     Two-sample comparison of proportions power calculation 
+
+              n = 265.8559
+             p1 = 0.1
+             p2 = 0.2
+      sig.level = 0.05
+          power = 0.9
+    alternative = two.sided
+
+NOTE: n is number in *each* group
+</pre>
+
+<p>つまり片群で266例あればよいことになります（この場合 <code>strict=TRUE</code> がなくても結果はほとんど変わりません）。</p>
+
+<p>また，pwrパッケージにも同様な関数 <code>pwr.2p.test()</code> や，両群のサイズが異なる場合にも使える <code>pwr.2p2n.test()</code> があります。</p>
+
+<pre>
+<code>library(pwr)</code>
+<code>pwr.2p.test(ES.h(0.1,0.2), power=0.9)</code>
+
+     Difference of proportion power calculation for binomial distribution (arcsine transformation) 
+
+              h = 0.2837941
+              n = 260.9272
+      sig.level = 0.05
+          power = 0.9
+    alternative = two.sided
+
+NOTE: same sample sizes
+</pre>
+
+<p>片群で261例あればよいことになります。どちらの結果も，最初に挙げた本とは少しだけ違います。本はどういうソフトで計算したのでしょうか。</p>
+
+<div class="note">
+<p>青木先生の<a href="http://aoki2.si.gunma-u.ac.jp/lecture/SampleSize/index.html">標本の大きさの決定</a>の<a href="http://aoki2.si.gunma-u.ac.jp/lecture/SampleSize/ptest.html">二群の比率の差の検定のとき</a>に計算式やRコードが書いてあります。やってみると，R標準の <code>power.prop.test()</code>（<code>strict=TRUE</code> なし）と同じ結果になりました。</p>
+</div>
+
+<p>シミュレーションを使って，もっと正確な結果を求めてみましょう。元となる検定には <code>fisher.test()</code> を使うことにします。速さを考えていない素朴なコードです。無駄に回数を多くしていますが，1000回か10000回でも十分です。</p>
+
+<pre>
+<code>foo = function(n) {</code>
+<code class="cont">    n1 = rbinom(1, n, 0.1)</code>
+<code class="cont">    n2 = n - n1</code>
+<code class="cont">    n3 = rbinom(1, n, 0.2)</code>
+<code class="cont">    n4 = n - n3</code>
+<code class="cont">    fisher.test(matrix(c(n1,n2,n3,n4), nrow=2))$p.value</code>
+<code class="cont">}</code>
+<code>p = replicate(1000000, foo(260)); mean(p &lt;= 0.05)  # 0.874301</code>
+<code>p = replicate(1000000, foo(265)); mean(p &lt;= 0.05)  # 0.880944</code>
+<code>p = replicate(1000000, foo(270)); mean(p &lt;= 0.05)  # 0.888573</code>
+<code>p = replicate(1000000, foo(275)); mean(p &lt;= 0.05)  # 0.894095</code>
+<code>p = replicate(1000000, foo(280)); mean(p &lt;= 0.05)  # 0.899182</code>
+<code>p = replicate(1000000, foo(285)); mean(p &lt;= 0.05)  # 0.905091</code>
+</pre>
+
+<p>グラフを描くと次のようになり，検出力0.9を得るにはだいたい280症例くらい必要なことがわかります。</p>
+
+<!--
+<pre>
+x = seq(260, 285, 5)
+y = c(0.874301, 0.880944, 0.888573, 0.894095, 0.899182, 0.905091)
+plot(x, y, type="o", pch=16, xlab="", ylab="", las=1, panel.first=grid())
+</pre>
+-->
+
+<figure><img src="img/150922a.png" alt=""></figure>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-09-22 20:09:18</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

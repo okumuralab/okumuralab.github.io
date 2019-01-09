@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>グラフの例：Twitterのフォロワー数</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：Twitterのフォロワー数</h1>
+
+<p>奥村（@h_okumura）のフォロワー数です。このような時系列データの扱い方は<a href="timeseries.html">時系列データ</a>をご覧ください。</p>
+
+<figure><img src="img/180223b.png" alt="h_okumuraのフォロワー数の推移"></figure>
+
+<p>2011年3月11日（大震災の日）から3カ月だけ急増していることがわかります。</p>
+
+<p>データは <a href="data/h_okumura.csv">h_okumura.csv</a> というCSVファイルに収めました。</p>
+
+<pre>
+x = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/h_okumura.csv", as.is=TRUE)
+t = as.POSIXct(x$date)
+f = x$followers
+par(mgp=c(2,0.8,0))  
+plot(t, f, type="l", ylim=range(c(0,f)), xlab="", ylab="", xaxt="n")
+axis.POSIXct(1, at=as.POSIXct(paste0(2010:2018, "/01/01")), format="%Y年")
+points(as.POSIXct("2011/03/11"), f[t == as.POSIXct("2011/03/11")], pch=16, col="red")
+text(as.POSIXct("2011/03/11"), f[t == as.POSIXct("2011/03/11")], "3/11", pos=1)
+points(as.POSIXct("2011/06/11"), f[t == as.POSIXct("2011/06/11")], pch=16, col="red")
+text(as.POSIXct("2011/06/11"), f[t == as.POSIXct("2011/06/11")], "6/11", pos=3)
+</pre>
+
+<p>Twilogからのデータの簡単な取り出し方は
+<a href="http://d.hatena.ne.jp/oxon/20120116/1326711797">twilog の統計情報から follower 数の変化を数値で取り出す方法 - 宇宙線実験の覚え書き</a>
+が参考になります。</p>
+
+<p>まず <a href="http://twilog.org">Twilog</a> にログインします。Flash Playerを禁止している場合は許可し，Stats → フォロワー数推移 → 全期間 とクリックすると，全期間のフォロワー数のグラフが現れます。次に，私（スクリーン名 h_okumura）なら <code>http://twilog.org/chart-dir/h/h_okumura-7-3.txt</code> をブラウザで開きます（<code>/h/</code> はスクリーン名の1文字目）。数字などがたくさん表示されますので，コピペしてテキストファイルに保存します。そのあとはお好きな方法でそれをCSVにします。</p>
+
+<p>ちなみに，私の最初のツイートは <a href="https://twitter.com/h_okumura/status/1454138565">2009-04-05 08:34:06 JST</a> ですが，Twilogに保存されているのは 2010-01-08 からで，Twilogでフォロワー数が捕捉されているのは 2010-01-31 からです。</p>
+
+<p>ところで，ごく最近，ツイッターの不正アカウント対策のおかげで，フォロワー数が急に減っている場合があるという噂があります。私の場合はそのようなことはなさそうです：</p>
+
+<pre>
+f = f[t >= as.POSIXct("2018/01/01")]
+t = t[t >= as.POSIXct("2018/01/01")]
+plot(t, f, pch=16, type="o", xlab="", ylab="", xaxt="n")
+axis.POSIXct(1, at=as.POSIXct(paste0(2018, c("/01/01","/02/01","/02/23"))), format="%m/%d")
+</pre>
+
+<figure><img src="img/180223c.png" alt="h_okumuraのフォロワー数の推移"></figure>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-02-23 22:50:54</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

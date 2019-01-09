@@ -1,0 +1,104 @@
+GetMap =
+function (center, zoom = 12, markers, path = "", span, frame, 
+    hl="ja", sensor = "true", maptype = c("roadmap", "mobile", "satellite", 
+        "terrain", "hybrid", "mapmaker-roadmap", "mapmaker-hybrid")[4], 
+    format = c("gif", "jpg", "jpg-baseline", "png8", "png32")[5], 
+    size = c(640, 640), destfile = "MyTile.png", RETURNIMAGE = TRUE, 
+    GRAYSCALE = FALSE, verbose = 1) 
+{
+    stopifnot(all(size <= 640))
+    fileBase <- substring(destfile, 1, nchar(destfile) - 4)
+    fileExt <- substring(destfile, nchar(destfile) - 2, nchar(destfile))
+    if (missing(center)) {
+        print("Note that when center and zoom are not specified, no meta information on the map tile can be stored. This basically means that R cannot compute proper coordinates. You can still download the map tile and view it in R but overlays are not possible. Do you want to proceed ? (y/n)")
+        ans <- readLines(n = 1)
+        if (ans != "y") 
+            return()
+    }
+    else if (is.numeric(center) & !missing(zoom)) {
+        MyMap <- list(lat.center = center[1], lon.center = center[2], 
+            zoom = zoom)
+        BBOX <- list(ll = XY2LatLon(MyMap, -size[1]/2 + 0.5, 
+            -size[2]/2 - 0.5), ur = XY2LatLon(MyMap, size[1]/2 + 
+            0.5, size[2]/2 - 0.5))
+        MetaInfo <- list(lat.center = center[1], lon.center = center[2], 
+            zoom = zoom, url = "google", BBOX = BBOX)
+        save(MetaInfo, file = paste(destfile, "rda", sep = "."))
+    }
+    if (length(size) < 2) {
+        s <- paste(size, size, sep = "x")
+    }
+    else {
+        s <- paste(size, collapse = "x")
+    }
+    if (!missing(center)) 
+        center <- paste(center, collapse = ",")
+    if (missing(format)) {
+        if (fileExt == "jpg") 
+            format <- "jpg"
+        if (fileExt == "png") 
+            format <- "png32"
+    }
+    googleurl <- "http://maps.google.com/maps/api/staticmap?"
+    if (!missing(span)) {
+        span <- paste(span, collapse = ",")
+        url <- paste(googleurl, "center=", center, "&span=", 
+            span, "&size=", s, "&maptype=", maptype, "&format=", 
+            format, "&sensor=", sensor, "&language=", hl, sep = "")
+    }
+    else if (missing(center) & missing(zoom)) {
+        stopifnot(!missing(markers) | path != "")
+        url <- paste(googleurl, "size=", s, "&maptype=", maptype, 
+            "&format=", format, "&sensor=", sensor, "&language=", hl, sep = "")
+    }
+    else {
+        stopifnot(!missing(center), !missing(zoom))
+        url <- paste(googleurl, "center=", center, "&zoom=", 
+            zoom, "&size=", s, "&maptype=", maptype, "&format=", 
+            format, "&sensor=", sensor, "&language=", hl, sep = "")
+    }
+    url <- paste(url, path, sep = "")
+    if (!missing(markers)) {
+        if (is.data.frame(markers)) 
+            markers <- as.matrix(markers)
+        if (is.matrix(markers)) {
+            latlon = which(colnames(markers) %in% c("lat", "lon"))
+            for (i in 1:nrow(markers)) {
+                if (any(c("size", "color", "label") %in% colnames(markers))) {
+                  m1 <- paste(colnames(markers)[-latlon], markers[i, 
+                    -latlon], collapse = "|", sep = ":")
+                  m1 <- paste("&markers=", m1, sep = "")
+                }
+                else m1 <- ""
+                m <- paste(markers[i, c("lat", "lon")], collapse = ",")
+                m <- paste(m1, m, sep = "|")
+                if (i == 1) {
+                  markers.string <- m
+                }
+                else {
+                  markers.string <- paste(markers.string, m, 
+                    sep = "")
+                }
+            }
+        }
+        else if (is.character(markers)) {
+            markers.string <- markers
+        }
+        if (verbose) 
+            print(markers.string)
+        url <- paste(url, markers.string, sep = "")
+    }
+    if (verbose) 
+        print(url)
+    if (verbose == -1) 
+        browser()
+    if (verbose < 2) 
+        download.file(url, destfile, mode = "wb", quiet = TRUE)
+    if (RETURNIMAGE) {
+        myMap <- ReadMapTile(destfile)
+        if (GRAYSCALE) 
+            myMap$myTile <- RGB2GRAY(myMap$myTile)
+        return(myMap)
+    }
+    invisible(url)
+}

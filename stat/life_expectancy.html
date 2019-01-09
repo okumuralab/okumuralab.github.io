@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>日本人の平均寿命</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>日本人の平均寿命</h1>
+
+<p>[2017-08-31 追記] <a href="http://www.e-stat.go.jp/SG1/estat/GL08020101.do?_toGL08020101_&tstatCode=000001031336">e-Stat</a>に2015年の生命表が出たので <a href="data/lifetable2015.csv">lifetable2015.csv</a> として置いておく。</p>
+
+<p>男女別の平均寿命は次のグラフのようになる。青が男，オレンジが女である。</p>
+
+<div><img src="img/170727a.png" alt="日本人の平均寿命の推移"></div>
+
+<pre>
+data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/life_expectancy_Japan.csv", comment.char="#")
+par(mgp=c(2,0.8,0))
+matplot(data[,1], data[,2:3], type="o", pch=16, lty=1, col=c("#0080ff","#ff8000"), xlab="", ylab="平均寿命")
+axis(4, data[nrow(data),2:3], c("男","女"), las=1)
+</pre>
+
+<p>（[2014-07-31] にここに書いた部分は，上に新しいものを載せたので，次の1文を除き，削除した。）</p>
+
+<p><a href="http://www.garbagenews.net/archives/1940398.html">日本の平均寿命の推移をグラフ化してみる(2013年)(最新) - ガベージニュース</a>も参考になる。</p>
+
+<p>［2014-08-15:追記］2013年の平均寿命は男80.21歳，女86.61歳だが，そもそも平均で表していいのか。寿命の中央値にあたる「寿命中位数」（理系の用語では半減期）はどれくらいか。生命表から「生存数」（10万人あたりで書いてあるので10万で割る）を拾ってプロットすると次のようになる。これが0.5とクロスするところが中央値である。男83歳，女89歳ほどである。3歳ほど得した気分だ［追記：寿命中位数の詳しい値は<a href="http://www.mhlw.go.jp/toukei/saikin/hw/life/life13/index.html">平成25年簡易生命表の概況</a>の3番目のPDFに載っており，2013年は男83.19年，女89.40年である］。</p>
+
+<div><img src="img/140815a.png" alt="生命表：生存数"></div>
+
+<p>データ <a href="data/lifetable2013.csv">lifetable2013.csv</a> を置いておくので，グラフの描き方は工夫されたい。</p>
+
+<p>［2014-08-15:さらに追記］平均値・中央値の次は，最頻値だ。上のグラフの曲線を微分して符号を逆転する。最頻値は男87〜88歳，女91〜92歳になる。さらに3歳ほど得した気分だ［追記：中澤先生にご指摘いただいたが，この値は生命表の「死亡数」欄に載っていた。「生存数」欄の単純な差分と若干異なるのは丸めの影響だろう］。</p>
+
+<div><img src="img/140815b.png" alt="生命表：生存数の微分"></div>
+
+<p>[2014-08-18:追記] 中澤先生からいろいろ<a href="https://twitter.com/MinatoNakazawa/status/501134350680088576">ご指摘</a>いただいたので後でちゃんと書き直す。中澤先生の<a href="http://minato.sip21c.org/demography/death.pdf">人口学講義「死亡の分析」</a>（PDF）を勉強中。</p>
+
+<p>要は，10万人に (1 - 死亡率) を順に掛けていったものが生存数で，その差分が死亡数。ただし丸め誤差があるので計算通りにならない。生存数の曲線下面積が平均寿命である。実際，台形則 <code>(lx[1]/2 + sum(lx[2:105]) + lx[106]/2) / 100000</code> でちょうど一致する。</p>
+
+<p>念のため，簡易生命表全体をCSV化したもの <a href="data/lifetable2013m.csv">lifetable2013m.csv</a>，<a href="data/lifetable2013f.csv">lifetable2013f.csv</a> を置いておく。最初の0〜4週，2・3・6月は <code>#</code> でコメントアウトしてある。最後の行は105歳以上である。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2017-08-31 10:27:34</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

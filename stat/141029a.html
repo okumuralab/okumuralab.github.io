@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>人口密度と出生率</title>
+<link rel="stylesheet" href="../style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>人口密度と出生率</h1>
+
+<p>2014年10月29日の日経新聞記事<a href="http://www.nikkei.com/paper/article/?ng=DGKKASDF17H0P_T21C14A0EA1000">（真相深層）少子化対策より交付金？ 地方創生「東京集中是正論」の裏側　都市の若者支援急務</a>（有料）に載っている「欧州の地域別人口密度と出生率」というプロットがひどいという<a href="https://twitter.com/kotosaka/status/527331140810469376">このツイート</a>が話題になっていた。</p>
+
+<p>データについては，微妙に違うようだが，鈴木努先生（@snatool）に<a href="https://twitter.com/snatool/status/527400384977850368">教えていただいた</a>ものがほぼ同じようである：</p>
+
+<ul>
+  <li><a href="http://epp.eurostat.ec.europa.eu/NavTree_prod/everybody/BulkDownloadListing?file=data/tgs00100.tsv.gz">tgs00100</a> (Fertility Rate)</li>
+  <li><a href="http://epp.eurostat.ec.europa.eu/NavTree_prod/everybody/BulkDownloadListing?file=data/tgs00024.tsv.gz">tgs00024</a> (Population Density)</li>
+</ul>
+
+<p>これら（gunzipで伸長）をRで読み込む。</p>
+
+<pre>
+fertility = read.table("tgs00100.tsv", header=TRUE, as.is=TRUE, na.strings=":")
+popden = read.table("tgs00024.tsv", header=TRUE, as.is=TRUE, na.strings=":")
+fertility[,1] = sub("TOTAL,", "", fertility[,1])
+all = merge(fertility, popden, by.x=1, by.y=1)
+fert = all$X2012.x
+pden = all$X2012.y
+plot(pden, fert, xlim=c(0,8000), xlab="人口密度（km2あたり）", ylab="出生率")
+abline(lm(fert ~ pden))
+</pre>
+
+<figure>
+  <img src="img/141029a.png" alt="人口密度と出生率">
+  <figcaption>Source: <a href="http://ec.europa.eu/eurostat">Eurostat</a></figcaption>
+</figure>
+
+<p>横軸を対数目盛にしてみる。</p>
+
+<pre>
+plot(pden, fert, xlim=c(3,8000), xlab="人口密度（km2あたり）", ylab="出生率", log="x")
+abline(lm(fert ~ log10(pden)))
+</pre>
+
+<figure>
+  <img src="img/141029b.png" alt="人口密度と出生率">
+  <figcaption>Source: <a href="http://ec.europa.eu/eurostat">Eurostat</a></figcaption>
+</figure>
+
+<p>もう何も言うことはない。いや，たとえ相関があっても，人口密度を高くすれば出生率が上がる（下がる）という問題ではない。</p>
+
+<p>［追記］Eurostatの <a href="http://epp.eurostat.ec.europa.eu/portal/page/portal/about_eurostat/policies/copyright_licence_policy">Copyright notice and free re-use of data</a> に従って「Source: Eurostat」という表示を図のキャプションに入れました。ご指摘多謝。</p>
+
+<p>［追記］参考（必ずしも参考にならないコメント多し）：<a href="http://togetter.com/li/738694">勢いと雰囲気で押し切るトンデモグラフを堂々と掲載してきた日経新聞 - Togetterまとめ</a></p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2014-10-30 13:57:56+09:00</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

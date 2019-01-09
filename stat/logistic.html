@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ロジスティック回帰</title>
+<link rel="stylesheet" href="../style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</div>
+
+<h1>ロジスティック回帰</h1>
+
+<p>かなり前（最終更新日2012-08-12）にざっと書いて放置していたページです。とりあえずMathJaxで書き直しました。より新しい<a href="140921.html">ロジスティック回帰と変数選択</a>のほうが詳しいと思います。</p>
+
+<h2>合格の判定</h2>
+
+<h3>問題</h3>
+
+<p>次のような表があるとします。</p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse">
+  <tbody>
+    <tr><th>$y$</th><th>$x_1$</th><th>$x_2$</th></tr>
+    <tr><td>0</td><td>3.6</td><td>60.1</td></tr>
+    <tr><td>1</td><td>4.1</td><td>52.0</td></tr>
+    <tr><td>0</td><td>3.7</td><td>62.5</td></tr>
+    <tr><td>0</td><td>4.9</td><td>60.6</td></tr>
+    <tr><td>1</td><td>4.4</td><td>54.1</td></tr>
+    <tr><td>0</td><td>3.6</td><td>63.6</td></tr>
+    <tr><td>1</td><td>4.9</td><td>68.0</td></tr>
+    <tr><td>0</td><td>4.8</td><td>38.2</td></tr>
+    <tr><td>1</td><td>4.1</td><td>59.5</td></tr>
+    <tr><td>0</td><td>4.3</td><td>47.3</td></tr>
+  </tbody>
+</table>
+
+<p>ここで $y$ は入試の合否（合格なら1，不合格なら0），$x_1$ は内申点，$x_2$ は模試偏差値を表すとしましょう。</p>
+
+<p>通常の重回帰分析では，</p>
+
+\[ y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 \]
+
+<p>が（最小2乗法の意味で）できるだけ正確に成り立つように $\beta_0$，$\beta_1$，$\beta_2$ を求めます。しかし，合否は0か1しか値がありません。そこで，1である確率を $\pi$ と書けば，ロジスティック回帰では次の式が（最尤法の意味で）できるだけ正確に成り立つような $\beta_0$，$\beta_1$，$\beta_2$ を求めます：</p>
+
+\[ \log\left(\frac{\pi}{1-\pi}\right) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 \]
+
+<p>上のような回帰式の左辺に現れる関数をリンク関数といいます。この場合のリンク関数はロジット関数と呼ばれ，$\mathrm{logit}(\pi)$ と書くことがあります。ちなみに $\pi/(1-\pi)$ はオッズ（odds）と呼ばれる量ですので，ロジット関数はオッズの対数ということになります。</p>
+
+<p>上の式を確率 $\pi$ について解けば次のようになります：</p>
+
+\[ \pi = \frac{\exp(\beta_0 + \beta_1 x_1 + \beta_2 x_2)}{1 + \exp(\beta_0 + \beta_1 x_1 + \beta_2 x_2)} = \frac{1}{1 + \exp[-(\beta_0 + \beta_1 x_1 + \beta_2 x_2)]} \]
+
+<p>この右辺は $\mathrm{logit}^{-1}(\beta_0 + \beta_1 x_1 + \beta_2 x_2)$ とも書きます。この $\mathrm{logit}^{-1}$ という関数（logitの逆関数）はロジスティック関数と呼ばれるものの一種です。</p>
+
+<h3>データの読み込み方（RStudio使用）</h3>
+
+<p><a href="data1.csv">data1.csv</a> というファイルをダウンロードして，RStudioの右上の「Workspace」ペインで「Import Dataset」→「From Text File...」とたどって，読み込ませます。</p>
+
+<h3>データの読み込み方（クリップボード経由）</h3>
+
+<ol>
+  <li>WindowsならRに次のように打ち込んでください（リターンキーはまだ押しません）：<br>
+      <code>data1 = read.table("clipboard", header=TRUE)</code><br>
+      MacならRに次のように打ち込んでください（リターンキーはまだ押しません）：<br>
+      <code>data1 = read.table(pipe("pbpaste"), header=TRUE)</code></li>
+  <li>このページの上の表または同じデータの入ったExcelの表を（ヘッダ部分「y，x1，x2」も含めて）マウスで選択し，右クリックで「コピー」を選びます。</li>
+  <li>Rで，さきほど押さなかったエンターキーを押します。</li>
+  <li>念のため，Rで <code>data1</code> と打ち込んで，正しいデータになっていることを確かめます。</li>
+</ol>
+
+<h3>データの読み込み方（Excel経由）</h3>
+
+<ol>
+  <li>Excelにデータを打ち込み，CSV形式で保存してください。</li>
+  <li>Rで次のように打ち込んでください：<br>
+      <code>data1 = read.csv(file.choose())</code><br>
+      ファイル選択の窓が現れますので，さきほど保存したCSVファイルを選んでください。Rで「不完全な最終行が見つかりました」という警告が出ることがありますが，無視してください。<br>
+      もし日本語を含む表が文字化けするなら次のようにして文字コードを指定します：<br>
+      <code>data1 = read.csv(file.choose(), fileEncoding="CP932")</code></li>
+  <li>念のため，Rで <code>data1</code> と打ち込んで，正しいデータになっていることを確かめます。</li>
+</ol>
+
+<h3>通常の重回帰分析</h3>
+
+<p>Rで重回帰分析をするには，</p>
+
+<pre>
+lm(y ~ x1 + x2, data=data1)
+</pre>
+
+<p>と打ち込みます（lm は linear model の意味です）。もっと良い方法は，</p>
+
+<pre>
+result1 = lm(y ~ x1 + x2, data=data1)
+</pre>
+
+<p>のように結果を変数（オブジェクト）に入れておき，</p>
+
+<pre>
+summary(result1)
+</pre>
+
+<p>として結果を表示させることです。このほうが複数のモデルを比較するときにも便利です。この場合は次のように表示されます：</p>
+
+<pre>
+Call:
+lm(formula = y ~ x1 + x2, data = data1)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.6548 -0.3092 -0.2713  0.5010  0.7095 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept) -1.69441    2.24318  -0.755    0.475
+x1           0.29598    0.37222   0.795    0.453
+x2           0.01483    0.02159   0.687    0.514
+
+Residual standard error: 0.552 on 7 degrees of freedom
+Multiple R-squared: 0.1113,	Adjusted R-squared: -0.1426 
+F-statistic: 0.4385 on 2 and 7 DF,  p-value: 0.6616 
+</pre>
+
+<p>つまり $y = -1.69441 + 0.29598x_1 + 0.01483x_2$ で予測されることがわかります（ただしどの係数も有意ではありません）。</p>
+
+<h3>ロジスティック回帰</h3>
+
+<p>上で説明したロジスティック回帰を行って結果を <code>result2</code> というオブジェクトに代入するには</p>
+
+<pre>
+result2 = glm(y ~ x1 + x2, data=data1, family=binomial(link="logit"))
+</pre>
+
+<p>と打ち込みます。続いて</p>
+
+<pre>
+summary(result2)
+</pre>
+
+<p>と打ち込めば次のように表示されます：</p>
+
+<pre>
+Call:
+glm(formula = y ~ x1 + x2, family = binomial(link = "logit"), 
+    data = data1)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.4754  -0.8584  -0.8007   1.1905   1.5719  
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept) -9.44589    9.12237  -1.035    0.300
+x1           1.27158    1.49423   0.851    0.395
+x2           0.06424    0.08739   0.735    0.462
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 13.460  on 9  degrees of freedom
+Residual deviance: 12.345  on 7  degrees of freedom
+AIC: 18.345
+
+Number of Fisher Scoring iterations: 4
+</pre>
+
+<p>つまり $\mathrm{logit}(\pi) = -9.44589 + 1.27158x_1 + 0.06424x_2$ で予測されることがわかります（ただしどの係数も有意ではありません）。</p>
+
+<p>また，<code>fitted(result2)</code> と打ち込むと，フィットされた値 $\mathrm{logit}^{-1}(\beta_0 + \beta_1 x_1 + \beta_2 x_2)$ が表示されます。</p>
+
+<h2>カブトムシの問題</h2>
+
+<p>次の表は，Annette J. Dobson and Adrian G. Barnett, <i>An Introduction to Generalized Linear Models, 3rd ed.</i> (CRC Press, 2008) の p.127 にあるデータです。$x$ はある薬品の量（対数），$n$ はその薬品を与えたカブトムシの数，$y$ はそのうち死んだ数です。薬品の量が増えると死ぬ確率がどのように高くなるかを調べます。</p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse">
+  <tbody>
+    <tr><th>$x$</th><th>$n$</th><th>$y$</th></tr>
+    <tr><td>1.6907</td><td>59</td><td> 6</td></tr>
+    <tr><td>1.7242</td><td>60</td><td>13</td></tr>
+    <tr><td>1.7552</td><td>62</td><td>18</td></tr>
+    <tr><td>1.7842</td><td>56</td><td>28</td></tr>
+    <tr><td>1.8113</td><td>63</td><td>52</td></tr>
+    <tr><td>1.8369</td><td>59</td><td>53</td></tr>
+    <tr><td>1.8610</td><td>62</td><td>61</td></tr>
+    <tr><td>1.8839</td><td>60</td><td>60</td></tr>
+  </tbody>
+</table>
+
+<p>モデルは $\mathrm{logit}(\pi) = \beta_0 + \beta_1 x$ で，確率 $\pi$ はほぼ $y/n$ になるはずです。</p>
+
+<p>さきほどと同様にしてデータ（<a href="data2.csv">data2.csv</a>）を <code>data2</code> に読み込んで，次のように打ち込みます。</p>
+
+<pre>
+result3 = glm(cbind(y,n-y) ~ x, data=data2, family=binomial(link="logit"))
+</pre>
+
+<p>関数 <code>glm()</code> に与えるモデル式の左辺は，成功した個数のベクトル $y$ と失敗した個数のベクトル $n - y$ をコラム結合 <code>cbind()</code> した8行2列の行列です。</p>
+
+<p><code>summary(result3)</code> と打つと次のような結果が表示されます：</p>
+
+<pre>
+Call:
+glm(formula = cbind(y, n - y) ~ x, family = binomial(link = "logit"), 
+    data = data2)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.5941  -0.3944   0.8329   1.2592   1.5940  
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  -60.717      5.181  -11.72   &lt;2e-16 ***
+x             34.270      2.912   11.77   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 284.202  on 7  degrees of freedom
+Residual deviance:  11.232  on 6  degrees of freedom
+AIC: 41.43
+
+Number of Fisher Scoring iterations: 4
+</pre>
+
+<h2>その他のモデル</h2>
+
+<p>関数 <code>glm()</code> の名前は一般化線形モデル（generalized linear model，GLM）から来ています。<code>family=</code> で指定できる確率分布およびリンク関数のおもなものを挙げておきます：</p>
+
+<ul>
+  <li><code>binomial(link="logit")</code></li>
+  <li><code>binomial(link="probit")</code></li>
+  <li><code>binomial(link="cauchit")</code></li>
+  <li><code>binomial(link="log")</code></li>
+  <li><code>binomial(link="cloglog")</code></li>
+  <li><code>gaussian(link="identity")</code></li>
+  <li><code>gaussian(link="log")</code></li>
+  <li><code>gaussian(link="inverse")</code></li>
+  <li><code>Gamma(link="inverse")</code></li>
+  <li><code>Gamma(link="identity")</code></li>
+  <li><code>Gamma(link="log")</code></li>
+  <li><code>inverse.gaussian(link="1/mu^2")</code></li>
+  <li><code>inverse.gaussian(link="inverse")</code></li>
+  <li><code>inverse.gaussian(link="identity")</code></li>
+  <li><code>inverse.gaussian(link="log")</code></li>
+  <li><code>poisson(link="log")</code></li>
+  <li><code>poisson(link="identity")</code></li>
+  <li><code>poisson(link="sqrt")</code></li>
+  <li><code>quasi(link="identity", variance="constant")</code></li>
+  <li><code>quasibinomial(link="logit")</code></li>
+  <li><code>quasipoisson(link="log")</code></li>
+</ul>
+
+<p>詳しくは <code>glm</code> や <code>family</code> のヘルプをご覧ください。</p>
+
+<h2>glmが収束しないとき</h2>
+
+<p>より収束しやすい <code>glm2</code> というパッケージが開発されています。詳しくは <a href="http://journal.r-project.org/archive/2011-2/2011-2_index.html">The R Journal, Volume 3/2</a> の Ian C. Marschner, “glm2: Fitting Generalized Linear Models with Convergence Problems” というペーパーをご覧ください（オープンアクセスです）。</p>
+
+<h2>多項ロジスティック回帰</h2>
+
+<p>Rで多項ロジスティック回帰をするパッケージはいくつかあるようですが，ここではVGAMパッケージをご紹介しておきます。詳しくは Thomas W. Yee, <a href="http://www.jstatsoft.org/v32/i10/paper">The VGAM Package for Categorical Data Analysis</a>, <i>Journal of Statistical Software</i>, Vol.32, No.10 (2010) をご覧ください。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-12-17T21:17:46+09:00">2014-12-17 21:17:46</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

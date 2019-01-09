@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>大阪市における特別区の設置についての投票</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</div>
+
+<h1>大阪市における特別区の設置についての投票</h1>
+
+<p>2015年5月17日，大阪都構想の住民投票が行われたが，賛成694844，反対705585の僅差で，大阪市の存続が決まった。</p>
+
+<ul>
+  <li><a href="http://www.city.osaka.lg.jp/contents/wdu240/sokuho/kaihyo_data_10.html">区ごとの開票結果</a></li>
+  <li><a href="http://www.city.osaka.lg.jp/contents/wdu240/sokuho/tohyo_data_10.html">区ごとの有権者数・投票者数</a></li>
+  <li><a href="http://www.city.osaka.lg.jp/contents/wdu240/sokuho/kijitsuzen.html">区ごとの期日前投票・不在者投票者数</a>（前回2011年の市長選挙時の値も参考として挙げられている）</li>
+</ul>
+
+<p>これらのデータの冗長な部分を除いたすべてを
+<a href="data/osaka2015.csv">osaka2015.csv</a>
+として置いておく（文字コードはUTF-8）。Rでの読み込みは次のようにしてできる。</p>
+
+<pre>
+osaka = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/osaka2015.csv")
+</pre>
+
+<p>これだけでもいろいろグラフが描けるが，やはり区ごとの年齢構成が重要である。</p>
+
+<ul>
+  <li><a href="http://www.city.osaka.lg.jp/toshikeikaku/page/0000015211.html">大阪市市政　年齢別推計人口</a></li>
+</ul>
+
+<p>このデータはExcelだがやや自動処理がしにくい。Hiroaki Yutaniさん（@yutannihilation）がCSV化してくださった：</p>
+
+<ul>
+  <li><a href="https://rstudio-pubs-static.s3.amazonaws.com/80496_6ab5f0fbf622494dac4da5e69e334107.html">大阪市年齢別推計人口ExcelをRに読み込む</a></li>
+  <li><a href="https://github.com/yutannihilation/osaka_age_composition">yutannihilation/osaka_age_composition · GitHub</a></li>
+</ul>
+
+<p>これをダウンロードして，読み込む：</p>
+
+<pre>
+age = read.csv("osaka_age_composition.csv")
+</pre>
+
+<p>各区の20歳以上の平均年齢を求め，賛成率とともにプロットする：</p>
+
+<pre>
+ku = sub('区$', '', osaka$区名)
+avg = function(i) {
+    a = subset(age, district == ku[i] &amp; age &gt;= 20)
+    sum(a$total * a$age) / sum(a$total)
+}
+avgage = sapply(1:24, avg)
+
+par(mgp=c(2,0.8,0))  # 軸マージン（デフォルト: c(3,1,0)）
+par(xpd=TRUE)        # グラフ領域を超えて文字を書く
+
+with(osaka, plot(avgage, 100*賛成/(賛成+反対), xlab="平均年齢", ylab="賛成率（%）", pch=NA))
+with(osaka, text(avgage, 100*賛成/(賛成+反対), 区名))
+</pre>
+
+<p>グラフは次のようになる。こういう図は，通常は原因と想定するものを横軸，結果と想定するものを縦軸にとる。ただし，当然ながら，たとえ相関関係があっても，因果関係が示されるわけではない。</p>
+
+<figure><img src="img/150519c.png" alt="大阪市各区の20歳以上の平均年齢と都構想賛成率"></figure>
+
+<p>最小2乗法で直線をあてはめて図に書き込みたいなら</p>
+
+<pre>
+r = with(osaka, lm(100*賛成/(賛成+反対) ~ avgage))
+par(xpd=FALSE)
+abline(r)
+</pre>
+
+<p>とすることが考えられる。ただし小さい区も大きい区も同じ重みでフィットするのではなく，投票数で重み付けするほうがよいだろう。</p>
+
+<pre>
+r = with(osaka, lm(100*賛成/(賛成+反対) ~ avgage, weights=賛成+反対))
+</pre>
+
+<p>さらに言えば，これはそもそも最小2乗法でフィットすべきデータではなく，2項分布を仮定して一般化線形モデル（ロジスティック回帰など）を使うべきかもしれない。いや，その場合も横軸の値は正確にわかっているべきで，平均年齢しかわかっていない場合には……。</p>
+
+<p>……などとモデル化に凝るのもいいが，ここでは，モデルに依存する直線を引くのはやめて，上の図のように単に事実だけをプロットし，判断は見る人に任せることを選びたい。安易に直線を描くことの問題点は<a href="141029a.html">人口密度と出生率</a>でも述べた。</p>
+
+<p>同様の理由で，このような区ごとの平均値の相関係数</p>
+
+<pre>
+with(osaka, cor(賛成/(賛成+反対), avgage))  # -0.7921376
+</pre>
+
+<p>も，個人ごとの年齢・賛否の相関係数とはまったく異なるものであることに注意すべきである。</p>
+
+<div class="note">
+<p>とはいうものの，このデータから，投票率と賛成率を性×年齢の関数として求めてみたいという気はするので，ちょっとつぶやいてみた：</p>
+<blockquote class="twitter-tweet" lang="ja"><p lang="ja" dir="ltr">大阪都の件，区×性×年齢データがあるのだから，投票率と賛成率を性×年齢の関数と見るロジスティックモデルを最尤推定する人はいないかな <a href="http://t.co/OswF5gZCE7">http://t.co/OswF5gZCE7</a></p>&mdash; Haruhiko Okumura (@h_okumura) <a href="https://twitter.com/h_okumura/status/602427140802379779">2015, 5月 24</a></blockquote> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>やってみたという人はまだおられないようだ。</p>
+</div>
+
+<p>ちなみに，平均でなく中央値を使いたいなら，上の <code>avg</code> を次のものに置き換える：</p>
+
+<pre>
+med = function(i) {
+    a = subset(age, district == ku[i] &amp; age &gt;= 20)
+    median(rep(a$age,a$total))
+}
+</pre>
+
+<p><em>[追記]</em> 次のように文字の大きさを投票者数の平方根に比例させるほうがよかったかもしれない。</p>
+
+<pre>
+with(osaka, text(avgage, 100*賛成/(賛成+反対), 区名, cex=sqrt((賛成+反対)/50000)))
+</pre>
+
+<figure><img src="img/150524a.png" alt="大阪市各区の20歳以上の平均年齢と都構想賛成率（改良版）"></figure>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-05-26 14:12:06</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

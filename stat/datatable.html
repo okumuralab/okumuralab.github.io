@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>data.table</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>data.table</h1>
+
+<p><em>[追記]</em> 高速でデータを読み込む fread() 以外の選択肢としてHadley Wickhamの <a href="readr.html">readr</a> もお薦めです。現時点では fread() のほうが少し速いようです。</p>
+
+<h2>data.tableとは？</h2>
+
+<p><code>data.table</code> は従来の <code>data.frame</code> に代わるデータ型を提供するパッケージです。効率が良く，巨大なデータファイルの読み込み・書き出しが桁違いに速くなります。</p>
+
+<ul>
+  <li><a href="http://r-datatable.com">data.table</a></li>
+  <li><a href="https://CRAN.R-project.org/package=data.table">CRAN - Package data.table</a></li>
+</ul>
+
+<p>インストールとライブラリの読み込みは想定通りです：</p>
+
+<pre>
+install.packages("data.table")
+library(data.table)
+</pre>
+
+<h2>データの読み込み</h2>
+
+<p><code>data.frame</code> の読み込みは <code>read.csv()</code> などのいくつかの関数で行いましたが，<code>data.table</code> の読み込みは <code>fread()</code> だけです。</p>
+
+<pre>
+data = fread("ファイル名またはURL")
+</pre>
+
+<p>CSVかTSVか，ヘッダがあるかないかは，たいてい自動判断してくれます。もしうまくいかなかったら，オプションで指定します。</p>
+
+<pre>
+data = fread("ファイル名またはURLまたはデータ", sep=",", header=TRUE, na.strings=c("NA",""))
+</pre>
+
+<p>ただし，文字コードだけは設定できないようです。Mac上ではUTF-8しか扱ってくれませんでした。また，<code>na.strings=c("","欠測値")</code> のようなUTF-8文字列を与えても無視されるようです。</p>
+
+<div class="note">
+<p><code>Sys.setlocale(category="LC_ALL", locale="ja_JP.SJIS")</code>
+してみましたが，読み込み方は変わったものの，文字化けして表示されるだけのようです。</p>
+</div>
+
+<p>また，開発途上のためか高速化のためか，CSVは<a href="http://tools.ietf.org/html/rfc4180">RFC 4180</a>準拠ではなく，ダブルクォートが入り子になっているとうまくいきません。</p>
+
+<p>おもしろい使い方として，<code>data = fread("</code> まで打ってから，データをRコンソールにコピペし，<code>")</code> を打ち込むという方法も使えます。例えば</p>
+
+<pre>
+data = fread("魔,方,陣
+2,9,4
+7,5,3
+6,1,8")
+</pre>
+
+<p>または</p>
+
+<pre>
+data = fread("
+魔,方,陣
+2,9,4
+7,5,3
+6,1,8
+")
+</pre>
+
+<p>のような感じです。これで <code>data</code> と打ち込むと</p>
+
+<pre>
+   魔 方 陣
+1:  2  9  4
+2:  7  5  3
+3:  6  1  8
+</pre>
+
+<p>と表示されます。</p>
+
+<p>現実的な例でやってみましょう。<a href="rgooglemaps.html">RgoogleMapsを使った放射線地図</a>で使った福島県の放射線データ <a href="data/fukushima.csv">fukushima.csv</a> は，422656地点の緯度（lat），経度（lon），放射線（radiation，μSv/h単位），日時（datetime）を収めたものです。これをローカルにダウンロードして，読み込んで，それぞれの欄の平均値を表示し，時間を計測してみましょう（使っているマシンが多少速くなったので，結果を改訂しました）：</p>
+
+<pre>
+&gt; # 従来のdata.frame版
+&gt; system.time({df = read.csv("~/public_html/stat/data/fukushima.csv", as.is=TRUE)})
+   ユーザ   システム       経過  
+     0.928      0.027      0.963 
+&gt; system.time(print(mean(df$lat)))
+[1] 37.59176
+   ユーザ   システム       経過  
+     0.001      0.000      0.001 
+&gt; system.time(print(mean(df$lon)))
+[1] 140.4282
+   ユーザ   システム       経過  
+     0.001      0.000      0.001 
+&gt; system.time(print(mean(as.POSIXct(df$datetime))))
+[1] "2011-07-18 01:52:49 JST"
+   ユーザ   システム       経過  
+     7.881      3.178     11.147 
+&gt; 
+&gt; # 新しいdata.table版
+&gt; system.time({dt = fread("~/public_html/stat/data/fukushima.csv")})
+   ユーザ   システム       経過  
+     0.174      0.022      0.057 
+&gt; system.time(print(mean(dt$lat)))
+[1] 37.59176
+   ユーザ   システム       経過  
+     0.001      0.000      0.001 
+&gt; system.time(print(mean(dt$lon)))
+[1] 140.4282
+   ユーザ   システム       経過  
+     0.001      0.000      0.001 
+&gt; system.time(print(mean(as.POSIXct(dt$datetime))))
+[1] "2011-07-18 01:52:49 JST"
+   ユーザ   システム       経過  
+     7.890      3.093     11.059 
+</pre>
+
+<p>読み込みは劇的に早くなりました。他の計算はあまり変わりません。ただ，この場合は，日時を表す文字列を内部形式に変換する <code>as.POSIXct()</code> が遅すぎてどうにもなりません。</p>
+
+<p>これを改善するには <a href="https://CRAN.R-project.org/package=fasttime">fasttime</a> パッケージを使います。</p>
+
+<pre>
+install.packages("fasttime")
+</pre>
+
+<p>試してみましょう。</p>
+
+<pre>
+&gt; library(fasttime)
+&gt; 
+&gt; system.time(print(mean(fastPOSIXct(df$datetime))))
+[1] "2011-07-18 10:52:49 JST"
+   ユーザ   システム       経過  
+     0.022      0.001      0.024 
+&gt; system.time(print(mean(fastPOSIXct(dt$datetime))))
+[1] "2011-07-18 10:52:49 JST"
+   ユーザ   システム       経過  
+     0.019      0.000      0.020 
+</pre>
+
+<p>今のマシンでも2桁以上，昔のマシンでは3桁高速化できました！ すごいですね！ でも答えが違ってますね。実は fasttime は変換元の文字列はGMTにしか対応していないので，JSTなら <code>9*3600</code> を引く必要があります。</p>
+
+<pre>
+&gt; mean(fastPOSIXct(dt$datetime)) - 9*3600
+[1] "2011-07-18 01:52:49 JST"
+</pre>
+
+<p>data.table の <code>fread()</code> と fasttime の <code>fastPOSIXct()</code>
+で劇的に高速化できることがおわかりいただけたでしょうか。</p>
+
+<p><em>まだまだ未完</em>ですが，とりあえず data.table を使った例：</p>
+
+<ul>
+  <li><a href="rgooglemaps.html">RgoogleMapsを使った放射線地図</a></li>
+  <li><a href="shinjuku.html">Webスクレイピングの例：新宿の放射線</a></li>
+  <li><a href="tokyo_snow.html">東京の雪</a></li>
+</ul>
+
+<hr>
+
+<p>[追記] lubridateパッケージにも高速な変換関数があります：<a href="http://qiita.com/hoxo_m/items/6f18b163946f6f41deca">R で文字列を POSIX time に変換するには lubridate::parse_date_time2() がちょっぱや #rstatsj - Qiita</a></p>
+
+<p>[追記] Hadley Wickham が <code>fread()</code> に相当する readr というもの（旧 fastread）を作っています：<a href="https://github.com/hadley/readr">hadley/readr · GitHub</a></p>
+
+<p>[追記] <a href="http://cran.r-project.org/web/packages/readr/">readr</a> がCRANに入りました（<a href="http://blog.rstudio.org/2015/04/09/readr-0-1-0/">readr 0.1.0 | RStudio Blog</a>）。SPSS，Stata，SASファイルを読む <a href="http://cran.r-project.org/web/packages/haven/">haven</a> も。Excelファイルを読む readxl（<a href="exceldata.html">RでExcelのデータを読む方法</a>参照）も合わせて，Hadley Wickham だらけになりました。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-07-21 16:46:19</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

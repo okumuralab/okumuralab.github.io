@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>シェープファイルを読む</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>シェープファイルを読む</h1>
+
+<h2>はじめに</h2>
+
+<p>シェープファイル（Shapefile）は，地図を表すベクトルデータ形式である。<a href="https://www.esri.com/">Esri</a> が提唱した。拡張子 shp，shx，dbf の三つのファイルから成る。ほかにも投影法についての情報を持つ prj や，メタデータの xml などを含むことがある。</p>
+
+<p>日本の行政区域を表すシェープファイルは，<a href="http://nlftp.mlit.go.jp/ksj/">国土数値情報</a>サイトの「行政区域」や，<a href="https://www.e-stat.go.jp/">e-Stat</a> の「地図で見る」→「境界データダウンロード」→「小地域」→「国勢調査」→「小地域」→「世界測地系緯度経度・Shape形式」などで入手できる。</p>
+
+<div class="note">
+<p>国土数値のファイルをダウンロードする際に <a href="https://CRAN.R-project.org/package=kokudosuuchi">kokudosuuchi</a> パッケージが便利である。参考：<a href="https://notchained.hatenablog.com/entry/2016/11/08/220222">Rから国土数値情報ダウンロードサービス Web APIを使うパッケージkokudosuuchiをCRANで公開しました</a></p>
+</div>
+
+<p>シェープファイルを読むRのパッケージはいろいろあるが，ここでは <a href="https://CRAN.R-project.org/package=sf">sf</a>（simple features）パッケージを用いる。</p>
+
+<pre>
+# install.packages("sf")
+library(sf)
+</pre>
+
+<p>シェープファイルを読む関数は <code>st_read()</code> または <code>read_sf()</code> である。前者はメッセージを出力し，後者は出力しない。前者はデフォルトで文字列をファクターに変換し，後者は変換しない。いずれにしても <code>options(stringsAsFactors=FALSE)</code> を実行しておけばファクターに変換されない。</p>
+
+<h2>三重県のシェープファイル</h2>
+
+<p>ここでは国土数値情報の「行政区域」の三重県を使ってみる。ファイル名は <!a href="http://nlftp.mlit.go.jp/ksj/gml/data/N03/N03-18/N03-180101_24_GML.zip" rel="nofollow">N03-180101_24_GML.zip</a> である。これを展開し，Rでシェープファイルを読み込む。中身がシフトJIS（CP932）のため，エンコーディングの指定が必要である。ファイル名を指定する場合は shp のファイル名だけでよいし，shp，shx，dbf の入っているディレクトリを指定するだけでもよい（カレントディレクトリなら <code>"."</code>）。</p>
+
+<pre>
+<code>options(stringsAsFactors=FALSE)</code>
+<code>mie = st_read("N03-180101_24_GML/", options="ENCODING=CP932")</code>
+options:        ENCODING=CP932 
+Reading layer `N03-18_24_180101' from data source `/.../.../N03-180101_24_GML' using driver `ESRI Shapefile'
+Simple feature collection with 7480 features and 5 fields
+geometry type:  POLYGON
+dimension:      XY
+bbox:           xmin: 135.8532 ymin: 33.72286 xmax: 136.9901 ymax: 35.25765
+epsg (SRID):    NA
+proj4string:    +proj=longlat +ellps=GRS80 +no_defs
+</pre>
+
+<p>中を見てみよう：</p>
+
+<pre>
+<code>mie</code>
+Simple feature collection with 7480 features and 5 fields
+geometry type:  POLYGON
+dimension:      XY
+bbox:           xmin: 135.8532 ymin: 33.72286 xmax: 136.9901 ymax: 35.25765
+epsg (SRID):    NA
+proj4string:    +proj=longlat +ellps=GRS80 +no_defs
+# A tibble: 7,480 x 6
+   N03_001 N03_002 N03_003 N03_004  N03_007                            geometry
+   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;                         &lt;POLYGON [°]&gt;
+ 1 三重県  NA      NA      津市     24201   ((136.5282 34.71053, 136.5276 34.7…
+ 2 三重県  NA      NA      津市     24201   ((136.4232 34.84402, 136.4233 34.8…
+ 3 三重県  NA      NA      四日市市 24202   ((136.6458 34.93301, 136.6458 34.9…
+ 4 三重県  NA      NA      四日市市 24202   ((136.6466 34.94488, 136.6465 34.9…
+ 5 三重県  NA      NA      四日市市 24202   ((136.6589 34.95153, 136.6588 34.9…
+ 6 三重県  NA      NA      四日市市 24202   ((136.6771 34.97827, 136.6763 34.9…
+ 7 三重県  NA      NA      四日市市 24202   ((136.652 34.98822, 136.6519 34.98…
+ 8 三重県  NA      NA      四日市市 24202   ((136.6531 34.99381, 136.653 34.99…
+ 9 三重県  NA      NA      四日市市 24202   ((136.673 34.99794, 136.6728 34.99…
+10 三重県  NA      NA      四日市市 24202   ((136.5404 35.06994, 136.5407 35.0…
+# ... with 7,470 more rows
+<code>table(mie$N03_003)</code>
+
+  員弁郡   桑名郡   三重郡   多気郡   度会郡 南牟婁郡 北牟婁郡 
+       1        1        6        7     2301       27     1362 
+</pre>
+
+<p>N03_007 は <a href="http://www.soumu.go.jp/denshijiti/code.html">全国地方公共団体コード</a> の市区町村コードからチェックディジットを除いたものである。</p>
+
+<div class="note">
+<p>もし読み込んでから文字化けがわかった場合，次のようにしてUTF-8に変換できる：</p>
+<pre>
+mie$N03_001 = iconv(mie$N03_001, from="CP932", to="UTF-8")
+mie$N03_003 = iconv(mie$N03_003, from="CP932", to="UTF-8")
+mie$N03_004 = iconv(mie$N03_004, from="CP932", to="UTF-8")
+</pre>
+</div>
+
+<p>これをプロットするために</p>
+
+<pre>
+plot(mie)
+</pre>
+
+<p>と打ち込むと，N03_001，N03_002，N03_003，N03_004，N03_007 のそれぞれについて三重県の地図が出力される。N03_001 はすべて「三重県」であるのですべて同じ色で，N03_002 はすべて NA であるので白地図で，N03_003 は郡部だけ色分けして，N03_004 と N03_007 は行政区分ごとに色分けして出力される。</p>
+
+<p>ポリゴンデータの部分は <code>mie$geometry</code> でもアクセスできるが，より一般的には <code>st_geometry(mie)</code> とする：</p>
+
+<pre>
+<code>st_geometry(mie)</code>
+Geometry set for 7480 features 
+geometry type:  POLYGON
+dimension:      XY
+bbox:           xmin: 135.8532 ymin: 33.72286 xmax: 136.9901 ymax: 35.25765
+epsg (SRID):    NA
+proj4string:    +proj=longlat +ellps=GRS80 +no_defs
+First 5 geometries:
+POLYGON ((136.5282 34.71053, 136.5276 34.71027,...
+POLYGON ((136.4232 34.84402, 136.4233 34.84401,...
+POLYGON ((136.6458 34.93301, 136.6458 34.93301,...
+POLYGON ((136.6466 34.94488, 136.6465 34.94479,...
+POLYGON ((136.6589 34.95153, 136.6588 34.9515, ...
+</pre>
+
+<p>したがって，</p>
+
+<pre>
+plot(st_geometry(mie))
+</pre>
+
+<p>とだけ打ち込めば行政区分の白地図ができる。余白を狭くしたければあらかじめ <code>par(mar=c(0,0,0,0))</code> と打ち込んでおけばよい。また，区分なしの全体を描きたければ，次のようにする：</p>
+
+<pre>
+plot(st_union(mie))
+</pre>
+
+<p>市町村単位の情報を描きこむには，1行が1市町村に対応するようにデータを集約するほうが便利である：</p>
+
+<pre>
+mie2 = aggregate(mie, list(mie$N03_007), unique)
+</pre>
+
+<p>こうすれば，<a href="jpndistrict.html">jpndistrictによる地図</a>で描いたような図が描きやすい：</p>
+
+<pre>
+x = c(11,3,100,6,34,25,1,4,40,91,0,100,0,84,100,100,71,58,29,18,38,100,100,100,83,100,10,0,0)
+cols = colorRamp(c("#66ccff", "white", "#ff9900"))
+plot(st_geometry(mie2), col=rgb(cols(x/100)/255))
+</pre>
+
+<p>各市町村の重心座標を求め，そこに市町村名を書く：</p>
+
+<pre>
+c = st_centroid(st_geometry(mie2))
+text(st_coordinates(c), mie2$N03_004, cex=0.5)
+</pre>
+
+<div class="note">
+<p>逆に，最初読み込んだままの行を生かすことも可能である：</p>
+<pre>
+t = unique(data.frame(code=mie$N03_007, name=mie$N03_004))
+t$x = x
+mie3 = merge(mie, t, by.x="N03_007", by.y="code")
+plot(st_geometry(mie3), col=rgb(cols(mie3$x/100)/255))
+</pre>
+</div>
+
+<h2>全国のシェープファイル</h2>
+
+<p>国土数値情報の <!a href="http://nlftp.mlit.go.jp/ksj/gml/data/N03/N03-18/N03-180101_GML.zip" rel="nofollow">N03-180101_GML.zip</a> をいただいてきて展開する。こちらのほうはシフトJISではないのでエンコーディングのオプションは不要であった。</p>
+
+<pre>
+<code>options(stringsAsFactors=FALSE)</code>
+<code>japan = st_read("N03-180101_GML/")</code>
+Reading layer `N03-18_180101' from data source `/.../N03-180101_GML' using driver `ESRI Shapefile'
+Simple feature collection with 116929 features and 5 fields
+geometry type:  POLYGON
+dimension:      XY
+bbox:           xmin: 122.9337 ymin: 20.42275 xmax: 153.9868 ymax: 45.55724
+epsg (SRID):    NA
+proj4string:    +proj=longlat +ellps=GRS80 +no_defs
+</pre>
+
+<p>これをコードの上2桁で集約すると，1行が1都道府県になる（とても時間がかかる）：</p>
+
+<pre>
+japan2 = aggregate(japan, list(substr(japan$N03_007, 1, 2)), head, n=1)
+</pre>
+
+<p>これをそのままプロットすると非常に重く，しかも境界が複雑で見栄えが悪い。そこで境界を単純化する。そのためには sf パッケージの <code>st_simplify()</code> が使えるが，より良いアルゴリズムが rmapshaper パッケージの <code>ms_simplify()</code> に実装されている。データ量を約 1/1000 に縮めてみよう：</p>
+
+<pre>
+japan3 = ms_simplify(japan2, keep=0.001, keep_shapes=TRUE)
+</pre>
+
+<div class="note">
+<p>sf パッケージの <code>st_simplify()</code> でも試してみよう。こちらは緯度経度データを単純化しようとすると警告が出る。無視してもよいが，km 単位に直してから 1 km 精度で単純化してみる：<p>
+<pre>
+japan2s = st_transform(japan2, "+proj=utm +zone=54 +datum=WGS84 +units=km")
+japan3s = st_simplify(japan2s, dTolerance=1)
+japan3s = st_transform(japan3s, "+proj=longlat +ellps=GRS80")
+</pre>
+</div>
+
+<p>余計な列を省き，列の名前を付け替える：</p>
+
+<pre>
+japan = japan3[ ,1:2]
+names(japan) = c("code","pref","geometry")
+</pre>
+
+<p>できたデータをシェープファイル形式で保存するには</p>
+
+<pre>
+st_write(japan, "japan.shp", layer_options="ENCODING=UTF-8")
+</pre>
+
+<p>とすればよいが，ここではGeoJSON形式で保存する。ファイルが一つにまとまっておりネット越しに使うのも楽である：</p>
+
+<pre>
+st_write(japan, "japan.geojson")
+</pre>
+
+<p>できた <a href="https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan.geojson">japan.geojson</a> は公開しておく。次のように読む：</p>
+
+<pre>
+japan = st_read("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan.geojson", stringsAsFactors=FALSE)
+</pre>
+
+<p>確認には <code>plot(st_geometry(japan))</code> としてみればよいが，ここでは投影法の確認も兼ねて，緯度・経度の線（graticule）や軸（axes）も描きこんでみよう：</p>
+
+<pre>
+plot(st_geometry(japan), graticule=TRUE, axes=TRUE)
+</pre>
+
+<p>座標系をUTM（Universal Transverse Mercator）に変えてみよう：</p>
+
+<pre>
+j = st_transform(japan, "+proj=utm +zone=54 +datum=WGS84 +units=km") # 52:九州 53:西日本 54:東日本
+plot(st_geometry(j), graticule=TRUE, axes=TRUE)
+</pre>
+
+<figure>
+  <img src="img/180805a.png" alt="緯度経度">
+  <img src="img/180805b.png" alt="UTM 54">
+</figure>
+
+<p>例として<a href="nippon3.html">日本地図: 普通教室のエアコン設置率</a>と同じことをしてみよう：</p>
+
+<!--
+plot(st_geometry(japan), xlim=c(127.6,148.5), ylim=c(26.2,45.4), lwd=0.3, col=rgb(cols(c)/255))
+rect(142+(0:99)/20, 30, 142+(1:100)/20, 31, col=rgb(cols(0:99/99)/255), border=NA)
+rect(142, 30, 147, 31)
+text(142+(0:2)*2.5, 30, c("0%","50%","100%"), pos=1)
+-->
+
+<pre>
+x = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/aircon_shochu.csv", fileEncoding="UTF-8")
+cols = colorRamp(c("#ff2800","white","#0041ff"))
+pal = rgb(cols((0:101)/101)/255)
+j = st_transform(japan, "+proj=utm +zone=54 +datum=WGS84 +units=km") # 52:九州 53:西日本 54:東日本
+j$aircon = x[,4]   # 範囲 [0,100]
+par(mar=c(0,0,0,0))
+par(mgp=c(2,0.8,0))
+plot(j["aircon"], lwd=0.3, pal=pal, breaks=-1:101, nbreaks=103, key.length=0.4, key.pos=4, main="")
+</pre>
+
+<!--
+bb = c(900, 3200, 1000, 3700)
+rect(bb[1], bb[2]+(bb[4]-bb[2])*(0:99)/100,
+     bb[3], bb[2]+(bb[4]-bb[2])*(1:100)/100,
+     col=rgb(cols(0:99/99)/255), border=NA)
+rect(bb[1], bb[2], bb[3], bb[4])
+text(bb[1], bb[2]+(bb[4]-bb[2])*(0:2)/2, c("0%","50%","100%"), pos=2)
+-->
+
+<figure><img src="img/180805c.png" alt="普通教室のエアコン設置率"></figure>
+
+<p>もうちょっと単純化して，沖縄県はインセットに入れてみる：</p>
+
+<pre>
+j = ms_simplify(j, keep=0.1, keep_shapes=TRUE)
+j$geometry[[47]] = j$geometry[[47]] + c(700,1500)
+plot(j["aircon"], lwd=0.3, pal=pal, breaks=-1:101, nbreaks=103, key.length=0.4, key.pos=4,
+     main="", xlim=c(-600, 1050), ylim=c(3500, 5030), reset=FALSE)
+lines(c(-600,-300,100,100), c(4150,4150,4450,4750))
+</pre>
+
+<figure><img src="img/180806a.png" alt="普通教室のエアコン設置率"></figure>
+
+<p>ついでに全国を市町村レベルで集約して，約 1/100 に単純化したものを用意しておこう：</p>
+
+<pre>
+library(sf)
+library(rmapshaper)
+options(stringsAsFactors=FALSE)
+japan = st_read("N03-180101_GML/")
+japan2 = aggregate(japan, list(japan$N03_007), head, n=1)
+japan3 = ms_simplify(japan2, keep=0.01, keep_shapes=TRUE)
+#
+# Fatal error in CALL_AND_RETRY_0
+# Allocation failed - process out of memory
+#
+</pre>
+
+<p>データ量が多いと，このように R が落ちてしまう。そこで，北海道，本州，残りに分割する：</p>
+
+<pre>
+library(sf)
+library(rmapshaper)
+options(stringsAsFactors=FALSE)
+japan = st_read("N03-180101_GML/")
+japan2 = aggregate(japan, list(japan$N03_007), head, n=1)
+japan2$Group.1 = NULL
+japan2a = japan2[as.numeric(substr(japan2$N03_007, 1, 2)) %in% 1,]
+japan3a = ms_simplify(japan2a, keep=0.01, keep_shapes=TRUE)
+japan2b = japan2[as.numeric(substr(japan2$N03_007, 1, 2)) %in% 2:35,]
+japan3b = ms_simplify(japan2b, keep=0.01, keep_shapes=TRUE)
+japan2c = japan2[as.numeric(substr(japan2$N03_007, 1, 2)) %in% 36:47,]
+japan3c = ms_simplify(japan2c, keep=0.01, keep_shapes=TRUE)
+japan3 = rbind(japan3a,japan3b,japan3c)
+st_write(japan3, "japan2.geojson")
+</pre>
+
+<p>できた <a href="https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan.geojson">japan2.geojson</a> は公開しておく。次のように読む：</p>
+
+<pre>
+japan2 = st_read("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan2.geojson", stringsAsFactors=FALSE)
+</pre>
+
+<p>これを使って三重県の白地図を描こう：</p>
+
+<pre>
+mie = subset(japan2, N03_001=="三重県")
+par(mar=c(0,0,0,0))
+plot(st_geometry(mie), lwd=0.3)
+c = st_centroid(st_geometry(mie))
+text(st_coordinates(c), mie$N03_004)
+</pre>
+
+<figure><img src="img/180804b.png" alt="三重県"></figure>
+
+<p><a href="rgooglemaps.html">RgoogleMapsを使った放射線地図</a>もこれを使って描くことができる：</p>
+
+<pre>
+library(sf)
+library(RColorBrewer)
+japan = st_read("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan2.geojson", stringsAsFactors=FALSE)
+fukushima = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/fukushima.csv", as.is=TRUE)
+t = as.POSIXct(fukushima$datetime)
+o = order(t)
+cols=c("white",brewer.pal(9, "YlOrRd"),rep("black",100))
+par(mar=c(0,0,0,0))
+plot(st_geometry(japan2), xlim=c(139.2015,141.0421), ylim=c(36.7540,38.01304), lwd=0.3, col="#c8c8cb")
+c = st_centroid(st_geometry(japan2))
+points(fukushima$lon[o], fukushima$lat[o], pch=16, col=cols[floor(fukushima$radiation[o]*2)+1])
+points(141.032339, 37.422778, pch="×", cex=2)
+text(st_coordinates(c), japan2$N03_004, cex=0.5)
+</pre>
+
+<figure><img src="img/180804c.png" alt="放射線地図"></figure>
+
+<p>ついでに，福島第一原発と三重大学の距離（大円距離）は500kmくらいである：</p>
+
+<pre>
+<code>f1 = st_sfc(st_point(c(141.032339,37.422778)), crs="+proj=longlat")</code>
+<code>mieu = st_sfc(st_point(c(136.5248,34.7468)), crs="+proj=longlat")</code>
+<code>st_distance(f1, mieu, by_element=TRUE)</code>
+502871.3 [m]
+</pre>
+
+<h2>参考</h2>
+
+<ul>
+  <li><a href="http://nonki1974.hateblo.jp/entry/2017/07/12/082343">sfパッケージ＆国土数値情報でコロプレス図</a></li>
+  <li><a href="https://qiita.com/nozma/items/8e890595c07d3be86bc9">Rを使ってシェープファイルから白地図を描く</a></li>
+  <li><a href="https://qiita.com/nozma/items/b89d9471ea804e9ea9d3">Rとleafletで国土数値情報の平年値メッシュを可視化する</a></li>
+  <li><a href="https://geocompr.robinlovelace.net/">Geocomputation with R</a></li>
+</ul>
+
+<footer>
+<hr>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-12-15 16:28:40</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

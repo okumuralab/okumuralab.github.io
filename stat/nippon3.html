@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>日本地図: 普通教室のエアコン設置率</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>日本地図: 普通教室のエアコン設置率</h1>
+
+<p>文科省<a href="http://www.mext.go.jp/b_menu/houdou/29/06/1386475.htm">公立学校施設の空調（冷房）設備設置状況の結果について</a>から2017年4月1日現在の小中学校普通教室のエアコン設置率をグラフにした。</p>
+
+<pre>
+# install.packages("NipponMap")
+library(NipponMap)
+x = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/aircon_shochu.csv", fileEncoding="UTF-8")
+c = x[,4] / 100   # 範囲 [0,1]
+cols = colorRamp(c("#ff2800","white","#0041ff"))
+JapanPrefMap(col=rgb(cols(c)/255))
+rect(142+(0:99)/20, 32, 142+(1:100)/20, 33, col=rgb(cols(0:99/99)/255), border=NA)
+rect(142, 32, 147, 33)
+text(142+(0:2)*2.5, 32, c("0%","50%","100%"), pos=1)
+</pre>
+
+<figure><img src="img/180721a.png" alt="小中学校普通教室エアコン設置率"></figure>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-07-21 11:22:09</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

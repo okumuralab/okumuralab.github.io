@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>音波のアニメーション</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>音波のアニメーション</h1>
+
+<p>うまくいかないので放置。</p>
+
+<pre>
+library(animation)
+x = runif(1000, 0, 8)  # 0〜8の一様乱数1000個
+y = runif(1000, 0, 1)  # 0〜1の一様乱数1000個
+ani.options(ani.width=700, ani.height=100, interval=0.1)
+saveGIF({
+    par(mar=c(0,0,0,0)+0.1)      # マージンはできるだけ切り詰める
+    for (i in 0:9) {
+        plot(x + 0.1 * sin(2*pi*(i-2*x)/10) + rnorm(1000,0,0.02),  # x座標
+             y + rnorm(1000,0,0.02),                               # y座標
+             xlim=c(0.5,7.5), ylim=c(0,1), xlab="", ylab="", xaxt="n", yaxt="n", xaxs="i", yaxs="i")
+    }
+})
+</pre>
+
+<p>カレントディレクトリに animation.gif というファイル名で生成されます。</p>
+
+<figure><img src="img/180203d.gif" alt=""></figure>
+
+<p>うーん，わかりにくいかな。ちょっと極端だけど，<code>sin(...)</code> の係数を <code>0.1</code> から <code>0.4</code>
+にしたバージョンも置いておく：</p>
+
+<figure><img src="img/180207a.gif" alt=""></figure>
+
+<p>要は，音の波は疎密波だけれど，空気が動いていくわけではなく，個々の空気分子は同じところで往復運動をしているだけで，その位相が場所によってずれているので，疎密のパターンが移動していくということが表したかったのである。</p>
+
+<p>@kohske 先生が改良してくださった：</p>
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">普通に見ると多分運動検出が平均輝度に応答しちゃって個々の往復運動は認識しづらいので、ちょっと改変（無許可すいません）。<br>RT <a href="https://t.co/jvADko3Yb1">https://t.co/jvADko3Yb1</a> <a href="https://t.co/1j25F3QPH3">pic.twitter.com/1j25F3QPH3</a></p>&mdash; kohske (@kohske) <a href="https://twitter.com/kohske/status/961056156872396801?ref_src=twsrc%5Etfw">2018年2月7日</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+
+<p>もうちょっと物理的な説明を<a href="/~okumura/misc/180203.html">こちら</a>に書き始めたのだが，中途半端な状態で止まっている。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-02-07 11:03:12</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

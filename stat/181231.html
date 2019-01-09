@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>アトピー性皮膚炎は幼稚園児だけ減少している？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>アトピー性皮膚炎は幼稚園児だけ減少している？</h1>
+
+<p>文科省の<a href="http://www.mext.go.jp/b_menu/toukei/chousa05/hoken/1268826.htm">学校保健統計調査</a>は，幼稚園（および認定こども園）・小・中・高校に在籍する5〜17歳（4月1日現在）の子どもについて毎年行われる抽出調査である。</p>
+
+<p>2018年度の調査によれば「アトピー性皮膚炎にかかる子どもは平成18年度以降、幼稚園でその割合が最も少なくなった」（<a href="https://www3.nhk.or.jp/news/html/20181226/k10011759421000.html">スキンケアが大切 アトピー性皮膚炎の子ども 幼稚園は最少に</a>）。これは「乳幼児への「スキンケア」の重要性が浸透してきたことの表れ」だという。</p>
+
+<p>この様子をグラフにしてみよう。</p>
+
+<p>e-Statの<a href="http://www.e-stat.go.jp/SG1/estat/NewList.do?tid=000001011648">学校保健統計調査</a>の「年次統計」に「学校種別　疾病・異常被患率等の推移（昭和23年度～平成30年度）」がある。「EXCEL」をクリックすると「h30_hoken_nenzi_06.xlsx」というファイルが得られる。これは見栄え重視のExcel表であるため，整形が必要である。一方，「DB」をクリックすると，平成27年度（2015年度）までのデータしか得られない。ここではExcelファイルのほうを使うことにする。</p>
+
+<pre>
+x1 = na.omit(read_excel("h30_hoken_nenzi_06.xlsx", sheet=1, range="AG81:AG95", col_names=FALSE)[[1]])
+x2 = na.omit(read_excel("h30_hoken_nenzi_06.xlsx", sheet=2, range="AH81:AH95", col_names=FALSE)[[1]])
+x3 = na.omit(read_excel("h30_hoken_nenzi_06.xlsx", sheet=3, range="AI81:AI95", col_names=FALSE)[[1]])
+x4 = na.omit(read_excel("h30_hoken_nenzi_06.xlsx", sheet=4, range="AH81:AH95", col_names=FALSE)[[1]])
+y = 2006:2018
+matplot(y, cbind(x1,x2,x3,x4), type="b", pch=c("幼","小","中","高"), col="black",
+        xlab="年度", ylab="アトピー性皮膚炎 (%)")
+</pre>
+
+<figure><img src="img/181231a.png" alt="アトピー性皮膚炎の推移"></figure>
+
+<p>確かに幼稚園児のアトピー性皮膚炎はどんどん減少しているが，小中高校ではそのような傾向は見られない。</p>
+
+<p>e-Statの<a href="http://www.e-stat.go.jp/SG1/estat/NewList.do?tid=000001011648">学校保健統計調査</a>に戻って，「平成３０年度（速報）」の「全国表」をクリックし，「年齢別　疾病・異常被患率等」のExcelファイルをダウンロードする。「h30_hoken_tokei_02.xlsx」というファイルが得られる。</p>
+
+<pre>
+a1 = read_excel("h30_hoken_tokei_02.xlsx", range="AO28:AO43", col_names=FALSE, col_types="numeric")[[1]][c(1,3:8,10:12,14:16)]
+a2 = read_excel("h30_hoken_tokei_02.xlsx", range="AO45:AO60", col_names=FALSE, col_types="numeric")[[1]][c(1,3:8,10:12,14:16)]
+matplot(5:17, cbind(a1,a2), type="b", pch=c("男","女"), col="black",
+        xlab="年齢", ylab="アトピー性皮膚炎 (%)")
+</pre>
+
+<figure><img src="img/181231b.png" alt="年齢別アトピー性皮膚炎の割合"></figure>
+
+<p>小学校で急に増えていることがわかる。どうしてか。</p>
+
+<p>5歳児は幼稚園（または認定こども園）に通っている児童だけしか調べていないので，保育園児なども含めれば，アトピー性皮膚炎はもっと多いという可能性もある。ただ，国民生活基礎調査の3年ごとの健康票の通院者率・年齢5歳階級のデータを調べてくださったかたによれば，傾向は同じだという（すみません自分ではチェックしていません）。やはり小学校に上がると何らかの理由で増えるのであろうか。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-12-31 11:34:27</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

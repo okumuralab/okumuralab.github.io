@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>グラフの例：都道府県別人口</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</div>
+
+<h1>グラフの例：都道府県別人口</h1>
+
+
+<p>データの例として
+<a href="prefectures.html">いろいろな都道府県別データ</a>
+の人口を使ってみましょう。</p>
+
+<p>グラフを描く前に，Macの場合は <code>par(family="HiraKakuPro-W3")</code>
+などと打ち込んで日本語のフォントを設定しておきます。</p>
+
+<p>棒グラフの基本は</p>
+
+<pre>
+barplot(population)
+</pre>
+
+<p>または</p>
+
+<pre>
+barplot(population, names.arg=kenmei)
+</pre>
+
+<p>ですが，この場合は横にするほうが文字が入りやすいので，次のようにします。</p>
+
+<pre>
+par(las=1)              # 縦軸の文字を横向きにしない（las: label style）
+par(mar=c(5,5,4,2)+0.1) # マージン（デフォルト: c(5,4,4,2)+0.1）
+par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
+barplot(population, names.arg=kenmei, horiz=TRUE)
+</pre>
+
+<p>字が縦に詰まるので，グラフウィンドウをマウスで少し縦に長くします（あるいはオプション
+<code>cex.names=0.6</code>
+を与えると軸の文字サイズが0.6倍になります）。しかしよく見たら順序が逆なので，次のようにすると正しくなります。単位は千人ではなく百万人にしました。</p>
+
+<pre>
+barplot(population[47:1]/1000, names.arg=kenmei[47:1], horiz=TRUE)
+</pre>
+
+<p>横軸の説明を付けたいですね。テキストをグラフの任意の位置に書くのは <code>text()</code>
+で，マージンの任意の位置に書くのは <code>mtext()</code>
+です。</p>
+
+<pre>
+mtext("人口（百万人）",1,padj=1.5)
+</pre>
+
+<p>目盛りを上にも付けたいなら，次のようにします。</p>
+
+<pre>
+axis(3)
+</pre>
+
+<p>1，2，3，4は下，左，上，右を意味します。目盛りだけで数値が不要なら
+<code>axis(3, labels=FALSE)</code> のようにします。</p>
+
+<p>しかし，北から南に並べるより，人口の多い順に並べたほうがわかりやすいので，次のようにしてみました。</p>
+
+<pre>
+o = order(population)
+barplot(population[o]/1000, names.arg=kenmei[o], horiz=TRUE)
+</pre>
+
+<p>このグラフで仮に三重県がどの位置にあるかを言いたいのなら，</p>
+
+<pre>
+barplot(population[o]/1000, names.arg=kenmei[o], horiz=TRUE,
+        col=ifelse(kenmei[o]=="三重県",gray(0.5),gray(0.9)))
+</pre>
+
+<p>のように三重県だけ別の色（ここでは濃い灰色）にすれば意図がよく伝わるでしょう。</p>
+
+<p>次の例は，棒の間隔（<code>space</code>）を0にして度数分布図風にしたものです。上部に全人口に対する割合の目盛りを入れました。</p>
+
+<p><img src="img/090503a.png" alt="都道府県別人口" /></p>
+
+<pre>
+par(mgp=c(2,0.5,0))     # 軸マージン（デフォルト: c(3,1,0)）
+s = sum(population) / 1000
+barplot(population[o]/1000, names.arg=kenmei[o], horiz=TRUE,
+        space=0, xlim=c(0,s/10), axes=FALSE)
+axis(1, line=-1)
+t = seq(0,10,2)
+axis(3, s * t / 100, paste(t, "%", sep=""), line=-1)
+mtext("人口（百万人）", 1, padj=0.8)
+mtext("人口の割合", 3, padj=-0.8)
+</pre>
+
+<hr />
+
+<p><a href="/~okumura/">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2009-10-16 08:10:10
+<!-- hhmts end -->
+</p>
+</body>
+</html>

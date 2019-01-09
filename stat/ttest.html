@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>t検定</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1><i>t</i> 検定</h1>
+
+<h2>1標本の平均の検定</h2>
+
+<p>確率変数 $X$ の分布が正規分布 $N(\mu, \sigma^2)$
+であり，そこから $n$ 個取り出した標本の平均値を</p>
+
+\[ \bar{X} = \frac{X_1 + X_2 + \cdots + X_n}{n} \]
+
+<p>とし，標本分散を</p>
+
+\[ s^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar{X})^2 \]
+
+<p>とすると，</p>
+
+\[ t = \frac{\bar{X} - \mu}{\sqrt{s^2 / n}} \]
+
+<p>は，$\sigma^2$ の値にかかわらず，自由度 $n - 1$ の $t$
+分布になります。このことを使って，母集団が平均 $\mu$ の正規分布かどうかを検定できます。</p>
+
+<p>実際には $X$ が正規分布でなくても，$n$
+が大きければ中心極限定理により $\bar{X}$
+は正規分布に近づくので，この検定は母集団が正規分布かどうかには鈍感です。データの分布が正規分布かどうかの検定をしてから $t$ 検定を行う必要はまったくありません。</p>
+
+<h2>1標本の平均の検定の例</h2>
+
+<p>10人の患者にある睡眠薬を飲ませたところ，睡眠時間がそれぞれ次の時間だけ増えました（Arthur R. Cushny and A. Roy Peebles, <i>The Journal of Physiology</i> <b>32</b>, 501-510 (1905)）：</p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse">
+  <tbody>
+    <tr><td>1.9</td><td>0.8</td><td>1.1</td><td>0.1</td><td>-0.1</td><td>4.4</td><td>5.5</td><td>1.6</td><td>4.6</td><td>3.4</td></tr>
+  </tbody>
+</table>
+
+<p>Rに <code>x = scan()</code> と打ち込んで，<code>1:</code> のようなプロンプトが出たら，上の表の数値10個をそこにコピペし，最後にEnterを1〜2回打ち込んでください。あるいは</p>
+
+<pre>
+x = c(1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4)
+</pre>
+
+<p>というコマンドをRにコピペしても同じです。</p>
+
+<p>検定の前に，まずはグラフを描いてみましょう。一例です：</p>
+
+<ul>
+  <li>箱ひげ図 <code>boxplot(x)</code></li>
+  <li>ドット図 <code>stripchart(x, pch=16, at=0, method="stack")</code></li>
+  <li>ヒストグラム <code>hist(x, right=FALSE, col="gray")</code></li>
+</ul>
+
+<p>データのイメージがつかめたら，$t$ 検定してみましょう。</p>
+
+<pre>
+t.test(x)
+</pre>
+
+<p>結果は次のように表示されます：</p>
+
+<pre>
+	One Sample t-test
+
+data:  x 
+t = 3.6799, df = 9, p-value = 0.005076
+alternative hypothesis: true mean is not equal to 0 
+95 percent confidence interval:
+ 0.8976775 3.7623225 
+sample estimates:
+mean of x 
+     2.33 
+</pre>
+
+<p>下から読んでいくと，このデータの平均値は 2.33 で，その95%信頼区間は $[0.90, 3.76]$ だということがわかります（54分〜3時間46分）。信頼区間は 0 を含んでいませんので，これだけで「平均値が 0」という帰無仮説は棄却されることがわかりますが，念のため $p$ 値を見てみると，0.005 という小さい値です。どうやら，データは帰無仮説を支持していないようです。つまり，睡眠薬の効果はあったといえます。</p>
+
+<p>「母集団の平均値が 0」という帰無仮説を検定したいかどうかにかかわらず，<code>t.test()</code> は平均値の信頼区間を求めるのに便利です。グラフに描くなら，信頼区間をエラーバーとして書き込みましょう。</p>
+
+<div class="note">
+<p>正規分布を仮定しないノンパラメトリックな検定法として<a href="signtest.html">符号検定とWilcoxonの符号付き順位検定</a>があります。ただし，このような研究では「睡眠時間が増えたかどうか」ではなく「何時間増えたか（95%信頼区間の意味で）」が意味を持ちますので，臆せず $t$ 検定を使いましょう。</p>
+</div>
+
+<h2>2標本の平均の差の検定</h2>
+
+<p>確率変数 $X$ から引き出した $m$ 個の値 $X_1$, $X_2$, ..., $X_m$
+と，確率変数 $Y$ から引き出した $n$ 個の値 $Y_1$, $Y_2$, ..., $Y_n$
+があったとします。どちらの分布も正規分布と仮定したとき，それらの母平均が等しいという仮説を検定してみましょう。</p>
+
+<p>それぞれの標本平均を $\bar{X}$, $\bar{Y}$,
+標本分散を $s_X^2$, $s_Y^2$
+とします。</p>
+
+<h3>分散が等しいと仮定できる場合</h3>
+
+<p>二つの標本をプールしたものから次の式で分散の推定値 $s^2$ を求めます：</p>
+
+\[
+  \begin{align*}
+    s^2 &= \frac{(X_1 - \bar{X})^2 + \cdots + (X_m - \bar{X})^2 + (Y_1 - \bar{Y})^2 + \cdots + (Y_n - \bar{Y})^2}{m + n - 2} \\
+        &= \frac{(m - 1) s_X^2 + (n - 1) s_Y^2}{m + n - 2}
+  \end{align*}
+\]
+
+<p>このとき，</p>
+
+\[ t = \frac{\bar{X} - \bar{Y}}{\sqrt{s^2 \big( \frac{1}{m} + \frac{1}{n} \big) }} \]
+
+<p>は自由度 $m + n - 2$ の $t$ 分布に従います。</p>
+
+<h3>分散が等しいと仮定できない場合</h3>
+
+<p>一般には，$X$ の母分散も $Y$
+の母分散も不明であるなら，それらが等しいかどうかも不明のはずです。この場合によく用いられる方法は，</p>
+
+\[ t = \frac{\bar{X} - \bar{Y}}{\sqrt{s_X^2 \big/ m + s_Y^2 \big/ n}} \]
+
+<p>が近似的に自由度</p>
+
+\[ \nu = \frac{(s_X^2 \big/ m + s_Y^2 \big/ n)^2}{\dfrac{(s_X^2 \big/ m)^2}{m-1} + \dfrac{(s_Y^2 \big/ n)^2}{n-1}} \]
+
+<p>の $t$ 分布に従うことを使うものです。これはWelch（ウェルチ）が次の論文で提案した方法の一つで，広く用いられています。</p>
+
+<ul>
+  <li>B. L. Welch,
+  The significance of the difference between two means when the population variances are unequal,
+  <i>Biometrika</i> <b>29</b>, 350-362 (1938).</li>
+</ul>
+
+<p>この自由度 $\nu$ は整数になりませんが，$t$ 分布は $\nu$ が整数でない場合にも拡張できます。</p>
+
+<p>分散が等しいかどうかわからない場合は，下の「分散が等しいかどうか不明の場合」をご覧ください。</p>
+
+<p>Welchの検定は，片方の標準偏差を 0 にすれば，1標本の $t$ 検定に帰着します。</p>
+
+<h2>2標本の平均の差の検定の例</h2>
+
+<p>2組の患者たちに痛みのレベルを報告してもらったところ，次のような結果を得ました
+(T. Lumley, <i>Biometrics</i> <b>52</b>, 354-361 (1996))。</p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse">
+  <tbody>
+    <tr><th>x</th><td>1</td><td>2</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>2</td><td>4</td><td>1</td><td>1</td></tr>
+  </tbody>
+</table>
+<table border="1" cellspacing="0" style="border-collapse:collapse">
+  <tbody>
+    <tr><th>y</th><td>3</td><td>3</td><td>4</td><td>3</td><td>1</td><td>2</td><td>3</td><td>1</td><td>1</td><td>5</td><td>4</td></tr>
+  </tbody>
+</table>
+  
+<pre>
+x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
+y = c(3,3,4,3,1,2,3,1,1,5,4)
+</pre>
+
+<p>まずは図を描いてみましょう。箱ひげ図なら <code>boxplot(x, y)</code> です。<code>x</code> のほうは 1 がほとんどで，例外的に 2 と 4 があります。<code>y</code> のほうは中央値が 3 で，1 から 5 まで分布しています。</p>
+
+<p>これらの平均値の差を $t$ 検定してみます：</p>
+
+<pre>
+t.test(x, y)
+</pre>
+
+<p>結果は次のように表示されます：</p>
+
+<pre>
+	Welch Two Sample t-test
+
+data:  x and y 
+t = -2.9486, df = 15.916, p-value = 0.009479
+alternative hypothesis: true difference in means is not equal to 0 
+95 percent confidence interval:
+ -2.3556088 -0.3846509 
+sample estimates:
+mean of x mean of y 
+ 1.357143  2.727273 
+</pre>
+
+<p><code>t.test()</code> のデフォルトはWelchの方法（分散が等しいことを仮定しない $t$ 検定）です。上の出力から <code>x</code> の平均と <code>y</code> の平均がそれぞれ 1.36 と 2.73 で，これらの差の95%信頼区間が $[-2.36, -0.38]$ であることがわかります。信頼区間が 0 を含まないことから，両群の平均値の差は統計的に有意だといえます（$p = 0.009$）。</p>
+
+<p>なお，分散が等しいと仮定する場合は，Rでは次のようにして計算します：</p>
+
+<pre>
+t.test(x, y, var.equal=TRUE)
+</pre>
+
+<p>結果は次のようになりました：</p>
+
+<pre>
+	Two Sample t-test
+
+data:  x and y 
+t = -3.1158, df = 23, p-value = 0.004862
+alternative hypothesis: true difference in means is not equal to 0 
+95 percent confidence interval:
+ -2.2797891 -0.4604706 
+sample estimates:
+mean of x mean of y 
+ 1.357143  2.727273 
+</pre>
+
+<div class="note">
+<p>対応するノンパラメトリックな検定として<a href="wmw.html">Wilcoxon-Mann-Whitney検定</a>（分布が同じ場合）や<a href="brunner-munzel.html">Brunner-Munzel検定</a>（分布が異なる場合）があります。</p>
+</div>
+
+<figure style="float:right; margin:0 0 1em 2em;">
+  <img src="img/140917b.png" alt="">
+</figure>
+
+<div class="note">
+<p>各群の95%信頼区間を比較する簡単なグラフを付けておきます。</p>
+<pre>
+cix = t.test(x)$conf.int
+ciy = t.test(y)$conf.int
+dotchart(c(mean(x),mean(y)), pch=16, xlim=range(cix,ciy),
+         xlab="睡眠時間の伸び（時間）")
+arrows(cix[1], 1, cix[2], 1, length=0.05, angle=90, code=3)
+arrows(ciy[1], 2, ciy[2], 2, length=0.05, angle=90, code=3)
+mtext(c("対照群","実験群"), side=2, at=1:2, line=0.5, las=1)
+</pre>
+</div>
+
+<h2>平均と標準偏差が与えられた場合の検定</h2>
+
+<p>Rの <code>t.test()</code> はデータそのものを与えますが，個数1，平均1，標準偏差1，個数2，平均2，標準偏差2を与えて等分散・非等分散の $t$ 検定をする関数は次のように書くことができます。標準偏差は $n - 1$ で割る方式であることに注意してください。</p>
+
+<pre>
+ttest = function(n1, x1, s1, n2, x2, s2) {
+  n = n1 + n2 - 2
+  u = ((n1 - 1) * s1^2 + (n2 - 1) * s2^2) / n
+  t = (x1 - x2) / sqrt(u / n1 + u / n2)
+  r = cat("Equal variance:\n\t", sep="")
+  r = cat(r, "t = ", t, ", df = ", n, ", p = ", 2 * pt(-abs(t), n), "\n", sep="")
+  t = (x1 - x2) / sqrt(s1^2 / n1 + s2^2 / n2)
+  n = (s1^2 / n1 + s2^2 / n2)^2 / ((s1^2 / n1)^2 / (n1-1) + (s2^2 / n2)^2 / (n2-1))
+  r = cat(r, "Unequal variance:\n\t", sep="")
+  cat(r, "t = ", t, ", df = ", n, ", p = ", 2 * pt(-abs(t), n), "\n", sep="")
+}
+</pre>
+
+<p>1標本の場合，つまり片方の値が確定している場合は，確定しているほうの標準偏差を 0，個数を 2 以上の適当な数にしてください。</p>
+
+<h2>分散が等しいかどうか不明の場合</h2>
+
+<p>「分散が等しいかどうか不明のときは，分散が等しいことを仮定しない $t$ 検定（Welch の方法）を使う」というのが現在のベストプラクティスです。</p>
+
+<p>次のような「2段階検定」が過去において薦められたことがありました：「等分散かどうかわからないときは，まず等分散かどうかの検定をして，その $p$ 値が0.05（あるいはそれ以外の適当な数）より大きければ等分散を仮定した $t$ 検定を行い，そうでなければ等分散を仮定しない $t$ 検定を行う」。</p>
+
+<p>これは，統計的検定の基本の誤解から来ていると思われます。等分散の検定で $p$ 値が十分小さければ「等分散でない」というのはいいのですが，$p$ 値が十分小さくなければ「等分散である」というのは間違いで，「等分散かどうかかわからない」というのが統計的検定の基本です。「等分散かどうかかわからない」ときに「等分散である」を仮定した $t$ 検定を行えば，正しい結果は得られません。</p>
+
+<p>$p$ 値の求め方が妥当かどうかのチェックとして，帰無仮説のもとに，多数の $p$ 値をシミュレーションで求めて，$p \leqq \alpha$ が偶然に現れる確率が $\alpha$ であるかどうか（つまり $p$ 値が区間 $[0,1]$ で一様分布かどうか）を調べることが考えられます。</p>
+
+<p>「母平均が等しい」という帰無仮説を満たすデータ2組を作ります。ここでは $N(0, 1.5^2)$ に従う10個の $x$ と，$N(0,1)$ に従う30個の $y$ を使いましょう。これらの平均値の差を $t$ 検定するには</p>
+
+<pre>
+x = rnorm(10, mean=0, sd=1.5)
+y = rnorm(30, mean=0, sd=1.0)
+t.test(x, y)
+</pre>
+
+<p>とすればいいのですが，これを100万回行って，$p$ 値のヒストグラムを描いてみます：</p>
+
+<pre>
+p = replicate(1000000, {
+  x = rnorm(10, mean=0, sd=1.5)
+  y = rnorm(30, mean=0, sd=1.0)
+  t.test(x, y)$p.value
+})
+
+hist(p, freq=FALSE, col="gray")
+</pre>
+
+<figure>
+  <img src="img/140906a.png" alt="">
+</figure>
+
+<p>帰無仮説のもとに $p$ 値は一様分布をするはずですが，上の図は，確かにそうなっていることを示しています。</p>
+
+<p>今度は，$x$ と $y$ の分散が等しいかどうかの検定 <code>var.test(x, y)</code> をまず行って，その $p$ 値が 0.05 より大きいときだけ，分散が等しい場合の $t$ 検定をすることにしてみましょう。</p>
+
+<pre>
+p2 = replicate(1000000, {
+  x = rnorm(10, mean=0, sd=1.5)
+  y = rnorm(30, mean=0, sd=1.0)
+  vp = var.test(x, y)$p.value
+  t.test(x, y, var.equal=(vp > 0.05))$p.value
+})
+
+hist(p2, freq=FALSE, col="gray")
+</pre>
+
+<figure>
+  <img src="img/140906b.png" alt="">
+</figure>
+
+<p>これは一様分布になっていません。このような「2段階検定」は正しい $p$ 値を与えないことになります。</p>
+
+<p>念のため，SPSSの薦めるLevene（ルビーン，レビーン）検定による方法もやってみましょう。これはRでは <code>car</code>（Companion to Applied Regression）というパッケージに <code>leveneTest()</code> という名前で入っています。</p>
+
+<pre>
+install.packages("car")
+library(car)
+
+g = rep(factor(c(1,2)), c(10,30))
+p3 = replicate(1000000, {
+  x = rnorm(10, mean=0, sd=1.5)
+  y = rnorm(30, mean=0, sd=1.0)
+  vp = leveneTest(c(x,y) ~ g, center="mean")$Pr[1]
+  t.test(x, y, var.equal=(vp > 0.05))$p.value
+})
+
+hist(p3, freq=FALSE, col="gray")
+</pre>
+
+<figure>
+  <img src="img/140906c.png" alt="">
+</figure>
+
+<p>やはり一様分布になりません。ちなみに，上で使った <code>leveneTest(..., center="mean")</code> は平均を使う元来のLevene検定ですが，デフォルト（<code>center="median"</code>）は中央値を使う方法（Brown-Forsythe検定）です。</p>
+
+<div class="note">
+<p>もう少し詳しく書くと，等分散を仮定した $t$ 検定でも，両群のデータ数が等しい場合は多少の分散の違いに頑健ですが，そうでない場合は，上の例のように分散が大きい群が少ないと左が上がり，逆の場合は左が下がります。これが重畳されて，上のような結果になるわけです。</p>
+</div>
+
+<h3>この項の参考</h3>
+
+<ul>
+  <li>Donald W. Zimmerman, <a href="http://www.tandfonline.com/doi/abs/10.1080/.VArpnUsU87c">Some Properties of Preliminary Tests of Equality of Variances in the Two-Sample Location Problem</a>, <i>The Journal of General Psychology</i> <b>123</b>, 217-231 (1996).</li>
+  <li>Zimmerman, D. W., Inflaction of type I error rates by unequal variances associated with parametric, nonparametric, and rank-transformation tests, <a href="http://www.uv.es/psicologica/paraARCHIVES/2004.html">Psicológica 25</a>, 103-133 (2004).</li>
+  <li>Graeme D. Ruxton, <a href="http://beheco.oxfordjournals.org/content/17/4/688.full">The unequal variance t-test is an underused alternative to Student’s t-test and the Mann–Whitney U test</a>, <i>Behav. Ecol.</i> <b>17</b>, 688-690 (2006).</li>
+  <li>2008年の私のブログ<a href="/~okumura/blog/node/2262">2段階t検定の是非</a></li>
+  <li>青木繁伸先生の<a href="http://aoki2.si.gunma-u.ac.jp/lecture/BF/index.html">二群の平均値（代表値）の差を検定するとき</a>：
+      <blockquote>
+      なお，事前検定を行うことが不適切であることはだんだん理解されてきているので，この観点から言えば「等分散検定後に普通の t 検定」というのは好ましくない。分散が等しかろうと等しくなかろうと，最初からズバリ「等分散を仮定しない t 検定」を行うのが正しいやり方である。
+      </blockquote></li>
+</ul>
+
+<!--
+<p>以下は古い部分です：</p>
+
+<pre>
+ni = 1000000                     # 100万回のシミュレーション
+p = numeric(ni)                  # p[1]..p[ni] というni個の変数を作る
+for (i in 1:ni) {                # iが1からniまでループ
+  x = rnorm(10, mean=0, sd=1.5)  # 平均0，標準偏差1.5の正規乱数を10個作る
+  y = rnorm(30, mean=0, sd=1.0)  # 平均0，標準偏差1.0の正規乱数を30個作る
+  p[i] = t.test(x, y)$p.value    # Welchのt検定によるp値をp[i]に代入
+}
+mean(p &lt;= 0.05)                  # p≦0.05となる割合を出力
+mean(p &lt;= 0.01)                  # p≦0.01となる割合を出力
+</pre>
+
+<p>上を実行すると，論理的に辻褄が合っていれば，$p \leqq 0.05$ となる割合は 0.05
+と出力されるはずです。同様に，<code>t.test(x, y)</code>
+を <code>t.test(x, y, var.equal=TRUE)</code>
+とすれば，等分散を仮定する方法についての $p$ 値が求められます。</p>
+
+<p>等分散かどうか検定してから振り分ける方法は，<code>t.test()</code>
+の行を次の2行にします。</p>
+
+<pre>
+  vp = var.test(x, y)$p.value
+  p[i] = t.test(x, y, var.equal=(vp &gt; 0.05))$p.value
+</pre>
+
+<p>論理的に辻褄が合っていれば出力される値と実際に出力された値は次のようになりました。2段階の方法については，等分散かどうかの判断は水準0.05で行う場合と0.2で行う場合について調べました（それ以外については下に書きます）。</p>
+
+<table border="1">
+<tr><th>&nbsp;</th><th>0.05</th><th>0.01</th></tr>
+<tr><th>等分散を仮定</th><td>0.107469</td><td>0.033762</td></tr>
+<tr><th>2段階，0.05</th><td>0.080198</td><td>0.024796</td></tr>
+<tr><th>2段階，0.2</th><td>0.064214</td><td>0.018550</td></tr>
+<tr><th>Welchだけ</th><td>0.051515</td><td>0.011337</td></tr>
+<tr><th>順位をWelch</th><td>0.054944</td><td>0.014522</td></tr>
+<tr><th>WMW</th><td>0.078591</td><td>0.019815</td></tr>
+<tr><th>Brunner-Munzel</th><td>0.056938</td><td>0.017402</td></tr>
+<tr><th>並べ替えBrunner-Munzel</th><td>0.051</td><td>0.012</td></tr>
+</table>
+
+<p>このように，実際に等分散でない場合は，等分散かどうかの検定を使わず，Welchの方法だけで行うのが正しい方法です。</p>
+
+<p>ついでに順位についてのWelchの $t$
+検定や，<a href="wmw.html">WMW検定</a>，<a href="brunner-munzel.html">Brunner-Munzel検定</a>も試してみました。
+WMW検定も等分散でない場合に甘くなります。Brunner-Munzel検定は小さい $p$
+値については少し甘くなるようです。</p>
+
+<p>最後の並べ替えBrunner-Munzel検定については，あまりたくさん試せませんでしたが，下のようなプログラムでやってみました。</p>
+
+<pre>
+library(lawstat)
+ni = 1000
+nj = 10000
+p = numeric(ni)
+q = numeric(nj)
+for (i in 1:ni) {
+  x = rnorm(10, mean=0, sd=1.5)
+  y = rnorm(30, mean=0, sd=1.0)
+  z = c(x, y)
+  d = abs(brunner.munzel.test(x,y)$statistic)
+  for (j in 1:nj) {
+    s = sample(1:40, 10)
+    e = abs(brunner.munzel.test(z[s],z[-s])$statistic)
+    q[j] = (e &gt; d);
+  }
+  p[i] = mean(q)
+}
+mean(p &lt;= 0.05)
+mean(p &lt;= 0.01)
+</pre>
+-->
+
+<h2>対応がある場合の検定</h2>
+
+<p>たとえば $n$ 人の被験者について，ある薬を飲む前の値 $X_1$, $X_2$, ..., $X_n$
+と，飲んだ後の値 $Y_1$, $Y_2$, ..., $Y_n$
+を測定したとしましょう。このときは，上で述べた2標本の平均の差の検定をそのまま行うよりも，差
+$d_i = X_i - Y_i$
+について1標本の平均の差の検定をするほうが，一般に良い結果が得られます。</p>
+
+<p>シミュレーションで確かめてみましょう。$x$ は $N(0,1)$ からの50個の乱数，$y$ はそれにさらに $N(0.2, 0.5^2)$ を加えたものです。100万回のシミュレーションで，$p \leqq 0.05$ になる確率（検出力，検定力）を調べます。</p>
+
+<pre>
+p = replicate(1000000, {
+  x = rnorm(50)
+  y = x + rnorm(50, mean=0.2, sd=0.5)
+  c(t.test(x,y)$p.value, t.test(x-y)$p.value)
+})
+
+mean(p[1,] <= 0.05)
+mean(p[2,] <= 0.05)
+</pre>
+
+<p><code>t.test(x, y)</code> で優位な結果が得られる確率は0.3%ほどしかないのに，<code>t.test(x - y)</code> なら79%の確率で有意になります。</p>
+
+<p>このように，値が独立ではなくペアの関係があるなら，その情報を利用しないと損です。</p>
+
+<p>このような，対応がある場合の $t$ 検定は，プリテスト・ポストテストの差の分析のほか，一卵性双生児を使った実験にも使われます。また，何らかの指標が似ている人どうしで人為的なペアを作るということもしばしば行われますが，その場合は，その「何らかの指標」を含めたモデル化をすることも含めて，よく検討すべきかもしれません。</p>
+
+<p>なお，<code>t.test(X - Y)</code> の代わりに <code>t.test(X, Y, paired=TRUE)</code> としても同じことです。</p>
+
+<h2>3標本以上の平均が等しいかどうかの検定</h2>
+
+<p><code>t.test()</code> に対応するものは <code>oneway.test()</code>
+です。これはデフォルト（<code>var.equal=FALSE</code>）では
+B. L. Welch (1951), On the comparison of several mean values: an alternative approach. <i>Biometrika</i>, <b>38</b>, 330-336
+に従って等分散を仮定しない検定をします。</p>
+
+<h2>（おまけ）検定でやってはいけないこと</h2>
+
+<p>1000人の被験者をリクルートして，ある薬が効くかどうかテストしようとしています。もし薬の効果がないなら，5%水準の $t$ 検定をすれば，間違って有意な効果があるという結果が出てしまう確率は5%のはずです。確かめてみましょう。</p>
+
+<pre>
+foo = function() {
+    x = rnorm(1000)
+    if (t.test(x)$p.value &lt; 0.05)
+        return(1)
+    return(0)
+}
+a = replicate(1000, foo())
+mean(a)
+</pre>
+
+<p>でも，1000人もの被験者をリクルートするのはたいへんです。最初は少人数の被験者で始めて，有意な結果が出なければ少しずつ人数を増やしていくという案を思いつきました。この場合，間違って有意な結果が出てしまう確率はどれくらいあるのでしょうか。</p>
+
+<pre>
+foo = function() {
+    x = rnorm(1000)
+    for (i in 2:1000) {
+        if (t.test(x[1:i])$p.value &lt; 0.05)
+            return(1)
+    }
+    return(0)
+}
+a = replicate(1000, foo())
+mean(a)
+</pre>
+
+<p>おやおや？！</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-09 10:24:48</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

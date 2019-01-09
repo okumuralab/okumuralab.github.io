@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>グラフの例：生まれかわり</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</div>
+
+<h1>グラフの例：生まれかわり</h1>
+
+<p>統計数理研究所の<a href="http://www.ism.ac.jp/kokuminsei/table/index.htm">日本人の国民性調査</a>の中から<a href="http://www.ism.ac.jp/kokuminsei/table/data/html/ss6/6_2/6_2_all.htm">男・女の生まれかわり</a>を図示しよう。</p>
+
+<p>質問「もういちど生まれかわるとしたら、あなたは男と女の、どちらに、生れてきたいと思いますか？」に対して，回答の選択肢は「男に」「女に」「その他」（記入），「D.K.」（Don't Know＝わからない）である。</p>
+
+<p>次の表はそれぞれ，男が「男に」と答えた割合，男が「女に」と答えた割合，女が「男に」と答えた割合，女が「女に」と答えた割合を，％単位で示した。</p>
+
+<pre>
+年      男男    男女    女男    女女
+1958    90      5       64      27
+1963    88      7       55      36
+1968    89      5       43      48
+1973    89      5       42      51
+1978    90      4       41      52
+1983    90      5       39      56
+1988    90      4       34      59
+1993    88      3       29      65
+1998    88      5       28      67
+2003    87      5       25      69
+2008    87      6       23      71
+</pre>
+
+<p>上の表をコピーして，Windowsなら</p>
+
+<pre>
+生まれかわり = read.table("clipboard", header=TRUE)
+</pre>
+
+<p>Macなら</p>
+
+<pre>
+生まれかわり = read.table(pipe("pbpaste"), header=TRUE)
+</pre>
+
+<p>と打ち込む。正しく入力できたか調べるために</p>
+
+<pre>
+生まれかわり
+</pre>
+
+<p>とだけ打ち込んでみよう。</p>
+
+<p>ここでできたオブジェクト <code>生まれかわり</code>
+は2次元のデータフレームである。各変数は <code>生まれかわり$男男</code>
+などのような書き方でアクセスできる。<code>生まれかわり$</code>
+を略して <code>男男</code> といった名前だけでアクセスするには</p>
+
+<pre>
+attach(生まれかわり)
+</pre>
+
+<p>と打ち込む。</p>
+
+<p>グラフを描くには，単純には</p>
+
+<pre>
+plot(年, 男男, type="o", ylim=c(0,100))
+points(年, 男女, type="o")
+</pre>
+
+<p>などのようにすればいい。Macではあらかじめ
+<code>par(family="HiraKakuPro-W3")</code>
+のように打ち込んでおかないと日本語部分が化ける。もっとかっこよくするには次のようにする。</p>
+
+<pre>
+# par(family="HiraKakuPro-W3")            # Mac
+
+par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
+par(las=1)              # 縦軸の文字を横向きにしない
+
+plot(年, 男男, ylim=c(0,100),
+     pch=1, type="o", col="royalblue3", lwd=2,
+     xlab="", ylab="", xaxt="n")
+points(年, 男女, pch=2, type="o", col="royalblue3", lwd=2)
+points(年, 女男, pch=16, type="o", col="orangered2", lwd=2)
+points(年, 女女, pch=17, type="o", col="orangered2", lwd=2)
+
+mtext("生まれかわるとしたら…", 3, cex=1.2, line=0.2)
+
+axis(1, 年)
+axis(2, "％", at=100, padj=-1)
+
+text(1983, 男男[年==1983], "男：男に", pos=3)
+text(1983, 男女[年==1983], "男：女に", pos=3)
+text(1983, 女男[年==1983], "女：男に", pos=3)
+text(1983, 女女[年==1983], "女：女に", pos=3)
+</pre>
+
+<div><img src="img/100706.png" alt="生まれかわるとしたら…" /></div>
+
+<hr />
+
+<p><a href="/~okumura/" rel="me">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2010-07-07 14:16:05
+<!-- hhmts end -->
+</p>
+</body>
+</html>

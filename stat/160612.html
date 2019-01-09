@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>グラフの例：賃金・所得・給与の分布</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<article>
+<h1>グラフの例：賃金・所得・給与の分布</h1>
+
+<p>このページの古いバージョンは<a href="090504a.html">グラフの例：賃金の分布</a>である。</p>
+
+<h2>厚労省の賃金構造基本統計調査</h2>
+
+<p>厚生労働省<a href="http://www.mhlw.go.jp/toukei/list/chinginkouzou.html">賃金構造基本統計調査</a>の結果の概要の<a href="http://www.mhlw.go.jp/toukei/itiran/roudou/chingin/kouzou/z2015/index.html">平成27年</a>（2015年）の<a href="http://www.mhlw.go.jp/toukei/itiran/roudou/chingin/kouzou/z2015/dl/07.pdf">賃金の分布</a>（PDF）をグラフにしてみる。</p>
+
+<p>この調査は毎年6月の所定内給与額を調べたものである。諸手当や賞与は含まれていないので，実際の年収はこの12倍より多いはずである。詳しくいえば次の通りである（<a href="http://www.mhlw.go.jp/toukei/itiran/roudou/chingin/kouzou/z2015/yougo.html">平成27年賃金構造基本統計調査　結果の概況：主な用語の定義</a>）：</p>
+
+<blockquote>
+<p>本概況に用いている「賃金」は、６月分の所定内給与額をいう。</p>
+<p>「所定内給与額」とは、労働契約等であらかじめ定められている支給条件、算定方法により６月分として支給された現金給与額（きまって支給する現金給与額）のうち、超過労働給与額（(1)時間外勤務手当、(2)深夜勤務手当、(3)休日出勤手当、(4)宿日直手当、(5)交替手当として支給される給与をいう。）を差し引いた額で、所得税等を控除する前の額をいう。</p>
+</blockquote>
+
+<p>以下は男だけである。女の分布は各自試みられたい。</p>
+
+<pre>
+# quartz(width=6, height=9)      # Mac
+# par(family="HiraKakuProN-W3")  # Mac
+par(xpd=TRUE)  # プロットエリア外に text() を描く
+par(mar=c(1,4,1,4)+0.1) # マージン c(5,4,4,2)+0.1
+
+賃金 = c(0,100,120,140,160,180,200,220,240,260,280,300,
+         320,340,360,400,450,500,600,700,800,900,1000,1200)
+割合 = c(0.1,0.3,1.2,2.8,4.6,6.1,7.6,7.9,7.8,7.1,6.5,5.9,5.1,
+         4.5,7.6,7.3,5.0,6.1,3.2,1.5,0.7,0.3,0.3,0.4)
+幅 = c(賃金[-1], 1400) - 賃金  # 最大階級の最大値は任意に1400とする
+
+barplot(割合/幅, 幅, horiz=TRUE, space=0, axes=FALSE)
+t = c(0,100,200,300,360,400,450,500,600,700,800,900,1000,1200)
+axis(2, labels=paste0(t/10,"万"), at=t, lwd=0, lwd.tick=1)
+text(割合/幅, 賃金+幅/2, paste0(" ",割合,"%"), cex=0.6, adj=0)
+</pre>
+
+<figure><img src="img/160612a.png" alt="賃金の分布（男）"></figure>
+
+<p>平均値335.1千円，中位数（中央値）293.8千円とのことである。</p>
+
+<h2>厚労省の国民生活基礎調査</h2>
+
+<p>[2018-04-21] データを新しいものに入れ替えた。</p>
+
+<p>厚生労働省の<a href="http://www.mhlw.go.jp/toukei/list/20-21.html">国民生活基礎調査</a>→<a href="http://www.mhlw.go.jp/toukei/list/20-21kekka.html">結果の概要</a>→<a href="http://www.mhlw.go.jp/toukei/saikin/hw/k-tyosa/k-tyosa16/index.html">平成28年　国民生活基礎調査の概況</a>→<a href="http://www.mhlw.go.jp/toukei/saikin/hw/k-tyosa/k-tyosa16/xls/13.xls">統計表を、xls形式でダウンロードできます</a>の「第８表　各種世帯別にみた所得金額階級別世帯数の分布及び中央値」では，「50万円未満」「50万円以上100万円未満」…「1000万円以上」という階級で割合を表にしている。ここでいう所得とは，前年（2015年）の世帯ごとの年間所得で，税金や社会保険料を含む。平均所得は545万8千円，中央値は428万円である。サンプル調査である。</p>
+
+<pre>
+所得 = c(seq(0,500,50), seq(600,1000,100))
+割合 = c(1.0, 5.2, 6.5, 6.9, 7.3, 6.4, 7.0, 6.2, 5.6, 4.8, 8.8, 7.7, 6.3, 4.9, 3.7, 11.7)
+幅 = c(所得[-1], 1500) - 所得  # 最大階級の最大値は任意に1500とする
+par(las=1, xpd=TRUE)
+barplot(割合/幅, 幅, 0, horiz=TRUE, axes=FALSE)
+text(0, 所得, paste0(所得,"万"), adj=1.1)
+text(割合/幅, 所得+幅/2, paste0(割合,"%"), cex=0.6, adj=-0.1)
+</pre>
+
+<figure><img src="img/180421c.png" alt="世帯別所得分布"></figure>
+
+<h2>国税庁の民間給与実態統計調査</h2>
+
+<p><a href="http://www.e-stat.go.jp">e-Stat</a>の「民間給与実態統計＞結果表＞年次＞2014年」の第3表その1（1年を通じて勤務した給与所得者）の給与の分布（男女計）を示す。こちらは税務署に提出する源泉徴収票の「支払金額」そのものと思われる。「給与」の詳しい定義は次の通りである：</p>
+
+<blockquote>
+<p>平成26年における1年間の支給総額（給料・手当及び賞与の合計額をいい、給与所得控除前の収入金額である。）で、通勤手当等の非課税分は含まない。なお、役員の賞与には、企業会計上の役員賞与のほか、税法上役員の賞与と認められるものも含まれている。</p>
+</blockquote>
+
+<p>階級は「100万円以下」，「100万円超200万円以下」，…，「2500万円超」となっている。</p>
+
+<pre>
+給与 = c(seq(100,1000,100), 1500, 2000, 2500, 3000) # 上限は任意に3000万とする
+度数 = c(4177606, 7214336, 8028818, 8240812, 6632790, 4501863,
+         2804385, 1895962, 1249799, 821431, 1483416, 305993, 94661, 110800)
+幅 = 給与 - c(0,給与[-length(給与)])
+割合 = 度数 / sum(度数)
+barplot(割合/幅, 幅, horiz=TRUE, space=0, axes=FALSE)
+t = seq(0, 2500, 500)
+axis(2, labels=paste0(t,"万"), at=t, lwd=0, lwd.tick=1)
+text(割合/幅, 給与-幅/2, paste0(" ",format(割合*100,digits=1),"%"), cex=0.6, adj=0)
+</pre>
+
+<figure><img src="img/160612b.png" alt="給与の分布"></figure>
+
+<p>平均は415万円とのことである。中央値は不明だが300–400万円の間である。</p>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-04-21 13:52:56</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

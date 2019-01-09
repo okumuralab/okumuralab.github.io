@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Stirlingの公式</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>Stirlingの公式</h1>
+
+<p><a href="https://twitter.com/mikanjiruu/status/736605741738385408">教授に「スターリングの近似は本当に凄く良い近似だよ」と言われて確かめてみたら…</a>というツイートを見かけたので私もやってみた。</p>
+
+<p>Stirlingの公式</p>
+
+\[ x! = \Gamma(x+1) \approx \sqrt{2\pi x} \, x^x e^{-x} \]
+
+<p>をRでプロットするだけである：</p>
+
+<pre>
+curve(gamma(x+1), xlim=c(0,10), log="y", col="#0068b7", xlab="", ylab="")
+curve(sqrt(2*pi*x) * x^x * exp(-x), add=TRUE, col="#f39800")
+curve(sqrt(2*pi*x) * x^x * exp(-x) * (1 + 1/(12*x)), add=TRUE, col="#f39800")
+</pre>
+
+<p>青が $\Gamma(x+1)$，橙がStirlingの近似である。</p>
+
+<figure><img src="img/160602a.png" alt="Stirling formula"></figure>
+
+<p>さらに正確な式</p>
+
+\[ x! = \Gamma(x+1) \approx \sqrt{2\pi x} \, x^x e^{-x} \left(1 + \frac{1}{12x} \right) \]
+
+<p>も含めて，詳しくは黒木玄さんの<a href="http://www.math.tohoku.ac.jp/~kuroki/LaTeX/#2016-05-01">ガンマ分布の中心極限定理とStirlingの公式</a>に詳しい解説がある。黒木玄さんはさらに，<a href="http://www.math.tohoku.ac.jp/~kuroki/LaTeX/#2016-06-16">Kullback-Leibler情報量に関する解説</a>で，多項分布のStirling近似（の対数の $-n$ 倍）がKullback-Leibler情報量になることを導出されている。</p>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-06-17 15:29:56</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

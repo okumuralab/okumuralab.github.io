@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ベイズ確率の考え方</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<h1>ベイズ確率の考え方</h1>
+
+<p>拙著<a href="https://www.amazon.co.jp/dp/4774195030">『Rで楽しむベイズ統計入門』</a>と同じ考え方をしている本をいくつか紹介します（これ以外の考え方を否定するものではありません）。</p>
+
+<hr>
+
+<p>Anthony O'Hagan and Jonathan Forster (2004), <i>Kendall's Advanced Theory of Statistics, Volume 2B: Bayesian Inference, 2nd edition</i>, p.11:</p>
+
+<blockquote>
+The fundamental distinction between classical and Bayesian inference is that in Bayesian inference the parameters are random variables, and therefore have both prior and posterior distributions.  In classical inference the parameters take unique values, although these values are unknown, and it is not permitted to treat them as random or to give them probabilities.
+</blockquote>
+
+<hr>
+
+<p>Andrew Gelman, John B. Carlin, Hal S. Stern, David B. Dunson, Aki Vehtari, and Donald B. Rubin (2013), <i>Bayesian Data Analysis, Third Edition</i> (BDA3), p.3:</p>
+
+<blockquote>
+A primary motivation for Bayesian thinking is that it facilitates a common-sense interpretation of statistical conclusions. For instance, a Bayesian (probability) interval for an unknown quantity of interest can be directly regarded as having a high probability of containing the unknown quantity, in contrast to a frequentist (confidence) interval, which may strictly be interpreted only in relation to a sequence of similar inferences that might be made in repeated practice.
+</blockquote>
+
+<hr>
+
+<p>Christopher M. Bishop (2006), <i>Pattern Recognition and Machine Learning</i> (PRML), p.21:</p>
+
+<blockquote>
+<p>So far in this chapter, we have viewed probabilities in terms of the frequencies of random, repeatable events. We shall refer to this as the classical or frequentist interpretation of probability. Now we turn to the more general Bayesian view, in which probabilities provide a quantification of uncertainty.</p>
+<p>Consider an uncertain event, for example whether the moon was once in its own orbit around the sun, or whether the Arctic ice cap will have disappeared by the end of the century. These are not events that can be repeated numerous times in order to define a notion of probability as we did earlier in the context of boxes of fruit. Nevertheless, we will generally have some idea, for example, of how quickly we think the polar ice is melting. If we now obtain fresh evidence, for instance from a new Earth observation satellite gathering novel forms of diagnostic information, we may revise our opinion on the rate of ice loss. Our assessment of such matters will affect the actions we take, for instance the extent to which we endeavour to reduce the emission of greenhouse gasses. In such circumstances, we would like to be able to quantify our expression of uncertainty and make precise revisions of uncertainty in the light of new evidence, as well as subsequently to be able to take optimal actions or decisions as a consequence. This can all be achieved through the elegant, and very general, Bayesian interpretation of probability.</p>
+<p>The use of probability to represent uncertainty, however, is not an ad-hoc choice, but is inevitable if we are to respect common sense while making rational coherent inferences. For instance, Cox (1946) showed that if numerical values are used to represent degrees of belief, then a simple set of axioms encoding common sense properties of such beliefs leads uniquely to a set of rules for manipulating degrees of belief that are equivalent to the sum and product rules of probability. This provided the first rigorous proof that probability theory could be regarded as an extension of Boolean logic to situations involving uncertainty (Jaynes, 2003). Numerous other authors have proposed different sets of properties or axioms that such measures of uncertainty should satisfy (Ramsey, 1931; Good, 1950; Savage, 1961; deFinetti, 1970; Lindley, 1982). In each case, the resulting numerical quantities behave pre- cisely according to the rules of probability. It is therefore natural to refer to these quantities as (Bayesian) probabilities.</p>
+</blockquote>
+
+<hr>
+
+<p>D. Barber (2012), <a href="http://www.cs.ucl.ac.uk/staff/d.barber/brml/">Bayesian Reasoning and Machine Learning</a> (BRML), p.9:</p>
+
+<blockquote>
+Here’s a problem that is typical of the kind of scenario one might face in a machine learning situation. A film enthusiast joins a new online film service. Based on expressing a few films a user likes and dislikes, the online company tries to estimate the probability that the user will like each of the 10000 films in their database. If we were to define probability as a limiting case of infinite repetitions of the same experiment, this wouldn’t make much sense in this case since we can’t repeat the experiment. However, if we assume that the user behaves in a manner consistent with other users, we should be able to exploit the large amount of data from other users’ ratings to make a reasonable ‘guess’ as to what this consumer likes. This degree of belief or Bayesian subjective interpretation of probability sidesteps non-repeatability issues – it’s just a framework for manipulating real values consistent with our intuition about probability[159].
+</blockquote>
+
+<hr>
+
+<p>M.A. Hernán and J.M. Robins (2019), <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/">Causal Inference</a> (Boca Raton: Chapman & Hall/CRC, forthcoming), p.123:</p>
+
+<blockquote>
+In contrast with a frequentist 95% confidence interval, a Bayesian 95% credible interval can be interpreted as “there is a 95% probability that the estimand is in the interval”, but probability is defined as degree-of-belief.
+</blockquote>
+
+<hr>
+
+<p>Particle Data Group, <a href="http://pdg.lbl.gov/2017/reviews/rpp2017-rev-statistics.pdf">Statistics</a>, p.24:</p>
+
+<blockquote>
+a Bayesian posterior probability may be used to determine regions that will have a given probability of containing the true value of a parameter.
+</blockquote>
+
+<hr>
+
+<p>Bradley Efron and Trevor Hastie (2016), <i>Computer Age Statistical Inference: Algorithms, Evidence, and Data Science</i>: 長くなるので引用しないが，第3章「Bayesian Inference」で長々と述べられている。</p>
+
+<hr>
+
+<p>D.R. Cox (2006), <i>Principles of Statistical Inference</i> 第5章「Interpretations of uncertainty」で詳しく述べられている。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-04 10:21:42</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

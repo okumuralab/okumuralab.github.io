@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Fraserのパラドックス（続）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Fraserのパラドックス（続）</h1>
+
+<p><a href="180123.html">Fraserのパラドックス</a>の続編である。</p>
+
+<p>とりあえずRでシミュレーションしてみよう。</p>
+
+<p>与えられた事前分布に基づき，パラメータ $x$ を選ぶ。それに基づき，データ $y$ を生成する。そのデータから，常に $x_1 = \mathrm{max}(\lfloor y/2 \rfloor, 1)$ を選ぶ方法と，事後確率最大の $x$ を選ぶ方法を適用し，それぞれ正解なら 1，そうでないなら 0 を返す。これを多数回実行し，成績を比較する。</p>
+
+<p>この時点で，前ページで挙げた正方形の尤度の表ではまずく，次のように $y$ のほうが長い表でないといけないことがわかるであろう。</p>
+
+<figure><img src="img/180123b.png" alt=""></figure>
+
+<p>この図からわかるように，$y$ のかなりの範囲で $x$ の推定値は一択である。</p>
+
+<p>事前分布としては一様乱数を使ってみる。</p>
+
+<pre>
+nx = 20
+ny = 2*nx+1
+prior = runif(nx)  # 事前分布
+lik = matrix(0, nrow=nx, ncol=ny)  # 尤度
+for (x in 1:nx) {
+    lik[x, max(floor(x/2), 1)] = 1/3
+    lik[x, 2*x] = 1/3
+    lik[x, 2*x+1] = 1/3
+}
+f = function() {  # シミュレーション
+    x = sample(1:nx, 1, prob=prior)
+    y = sample(1:ny, 1, prob=lik[x,1:ny])
+    x1 = max(floor(y/2), 1)
+    xbayes = which.max(prior * lik[1:nx,y])
+    c(x1 == x, xbayes == x)
+}
+r = replicate(100000, f())  # 10万回
+rowMeans(r)  # それぞれの方法の成績 mean(r[1,]), mean(r[2,])
+</pre>
+
+<p>実際にやってみるとわかるが，第1の方法は確かに少なくとも2/3の勝率である。しかし第2の方法はさらに勝率が良い。</p>
+
+<p>つまり，事前分布がわかるなら，単純にベイズを適用するのがベストである。事前分布がまったくわからないなら第1の方法が良いが，このモデルについては，単調減少する事前分布を仮定して事後分布最大を選ぶことと同じである。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-01-25 16:02:59</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

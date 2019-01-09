@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>気温と電力需要</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>気温と電力需要</h1>
+
+<p><a href="http://agora.ex.nii.ac.jp/earthquake/201103-eastjapan/energy/electrical-japan/stat/161/?4">一日の最大電力と気温の関係（一般電気事業者ごと） - 中部</a>
+は，東日本で2011年の震災前と震災後の違いが際立って読み取れるが，中部電力管内では2クラスタに分かれるように見える。なぜか。とりあえず2014年度だけについて調べてみた。</p>
+
+<p><a href="http://denki-yoho.chuden.jp/index.html?cid=t_ma2">中部電力｜電力需給状況のお知らせ</a>から<a href="http://www.chuden.co.jp/resource/corporate/datalist_09.pdf">過去の電力需要実績（2014年度）</a>（PDF）をダウンロードし，次のようにしてテキストファイルに直す：</p>
+
+<pre>
+pdftotext -raw datalist_09.pdf
+</pre>
+
+<p>できた datalist_09.txt を次のRubyスクリプトでCSV化する：</p>
+
+<pre>
+#! /usr/bin/env ruby -w
+# coding: utf-8
+
+while line = gets
+  if line =~ /^(\d\d\d\d)年(\d\d)月(\d\d)日 . (.*)$/
+    x = "#{$1}-#{$2}-#{$3} #{$4}"
+    x.gsub!(/,/, "")
+    x.gsub!(/ /, ",")
+    puts x
+  end
+end
+</pre>
+
+<p>できた datalist_09.csv をRに読み込む：</p>
+
+<pre>
+data09 = read.csv("datalist_09.csv", header=FALSE)
+</pre>
+
+<p>これをフラット（1データ1行）にする：</p>
+
+<pre>
+power = data.frame(datetime=seq(as.POSIXct("2014-04-01 01:00"),
+                                as.POSIXct("2015-04-01 00:00"),
+                                3600))
+power$val = as.vector(t(as.matrix(data09[,2:25])))
+</pre>
+
+<p>気温データは気象庁の<a href="http://www.data.jma.go.jp/gmd/risk/obsdl/index.php">過去の気象データ・ダウンロード</a>から取得する。具体的には，「地点を選ぶ」で名古屋，「項目を選ぶ」で時別値・気温，「期間を選ぶ」で2014年4月1日から2015年3月31日，「表示オプションを選ぶ」はデフォルト（値を表示・すべての期間の値を表示・すべて数値・日付リテラル）のまま。「CSVファイルをダウンロード」をクリックすると data.csv というファイル名でダウンロードされる。文字コードはShift JISだが，頭の5行を無視すれば文字コード無指定でも問題ない：</p>
+
+<pre>
+temp = read.csv("data.csv", skip=5, header=FALSE)
+</pre>
+
+<p>とりあえず全データをプロットしてみる：</p>
+
+<pre>
+plot(temp$V2, power$val, xlab="名古屋の気温（℃）", ylab="電力需要実績（発電端，万kW）")
+</pre>
+
+<p>冒頭のリンク先にある図は，毎日の最大電力の時間と，そのときの名古屋の気温をプロットしている。Rでは次のようにすればよい：</p>
+
+<pre>
+m = sapply(0:364, function(i){which.max(power$val[24*i+(1:24)])+24*i})
+plot(temp$V2[m], power$val[m], xlab="名古屋の気温（℃）", ylab="電力需要実績（発電端，万kW）")
+</pre>
+
+<p>確かに2クラスタに分かれるように見える。曜日でプロットしてみる：</p>
+
+<pre>
+plot(temp$V2[m], power$val[m], type="n",
+     xlab="名古屋の気温（℃）", ylab="電力需要実績（発電端，万kW）")
+text(temp$V2[m], power$val[m], weekdays(power$datetime[m], abbreviate=TRUE))
+</pre>
+
+<figure><img src="img/150808a.png" alt=""></figure>
+
+<p>どうやら曜日が関係するようだ。上のクラスタは月〜金で，下は土日に若干の金・月などが混ざっている。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-08-10 05:05:08</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

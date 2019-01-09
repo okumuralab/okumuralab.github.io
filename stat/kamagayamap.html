@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>鎌ケ谷市のハリネズミ地図</title>
+<meta name="keywords" content="鎌ケ谷市, 鎌ヶ谷市, 放射線, 放射能, 地図, ハリネズミ, はりねずみ, 針鼠" />
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</div>
+
+<h1>鎌ケ谷市のハリネズミ地図</h1>
+
+<p>2011年8月25日〜9月26日の測定に基づいて10月21日に発表された鎌ケ谷市（「鎌ヶ谷市」ではない）の通学路の放射線マップは次のようなものでした（オリジナルはPDFで，鎌ケ谷市サイトからは削除されましたが，<a href="data/h231021map.pdf">ここ</a>に保存してあります）。</p>
+
+<div>
+<img src="img/h231021map.png" style="border:1px solid" alt="鎌ケ谷市通学路放射線量マップ" />
+</div>
+
+<p>こんなわかりにくい図は珍しいので有名になり，たくさんの改良案が作られ，@knj961
+さんが
+<a href="http://togetter.com/li/205142">ネットワークでつくる鎌ケ谷市通学路放射線量マップ - Togetter</a>
+にまとめてくださっています。</p>
+
+<p>元の図は10月24日には鎌ケ谷市サイトから削除されましたが，11月7日に<a href="http://www.city.kamagaya.chiba.jp/news/gakkoukyouiku/h231104tsuugakuro_houshasen_map/h231104tsuugakuro_houshasen_map.html">復活しました</a>。これはGoogle Mapsを使ったもので，スクリーンショットを貼っておきます：</p>
+
+<div>
+<img src="img/111107e.png" alt="鎌ケ谷市通学路放射線量マップ改訂版" />
+</div>
+
+<p>これで完璧ですが，<a href="rgooglemaps.html">RgoogleMaps</a>を使って描いたスタティックな図の例も一つだけ示しておきます。赤い文字が線量で，単位は0.01μSv/hです。</p>
+
+<div>
+<img src="img/111107d.png" alt="鎌ケ谷市通学路放射線量マップRgoogleMaps版" />
+</div>
+
+<p>これは次のようにして描けます。あらかじめRに
+<a href="rgooglemaps.html">RgoogleMaps</a>
+パッケージをインストールしておいてください。</p>
+
+<pre>
+data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/111107kamagaya.csv")
+library(RgoogleMaps)
+source("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/GetMap.R")
+KamagayaMap = GetMap(c(35.77279,139.9979), destfile="kamagaya.png",
+                     zoom=14, sensor="false", hl="ja", maptype="roadmap")
+tmp = PlotOnStaticMap(KamagayaMap, lat=data[,1], lon=data[,2],
+                      col="red", FUN=text, labels=data[,3]*100, cex=0.7)
+</pre>
+
+<p>なお，測定はクリアパルスの<a href="http://www.clearpulse.co.jp/jpn/news/2011/0316/index.html">A2700</a>というCsI(Tl)シンチレータで30秒ずつ行ったそうです。カタログによれば感度は0.01μSv/hに対して10カウント/分以上とのことですので，仮にぴったり10cpm/0.01μSv/hだとすると，今回の測定値のメディアン0.13μSv/hでは30秒で65カウントで，その95%信頼区間は0.10〜0.16μSv/h（統計誤差だけ）ということになります。</p>
+
+<hr />
+
+<p><a href="/~okumura/" rel="me">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2011-11-23 13:56:27
+<!-- hhmts end -->
+</p>
+</body>
+</html>

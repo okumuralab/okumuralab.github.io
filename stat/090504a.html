@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>グラフの例：賃金の分布</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</div>
+
+<p><img src="img/090504a.png" alt="賃金の分布" class="right" /></p>
+
+<h1>グラフの例：賃金の分布</h1>
+
+<p>このページの新しいバージョンは<a href="160612.html">グラフの例：賃金・給与の分布</a>である。</p>
+
+<p><a href="http://www.mhlw.go.jp/toukei/itiran/roudou/chingin/kouzou/z2008/index.html">厚生労働省：平成20年賃金構造基本統計調査結果（全国）</a>にある「賃金の分布」（PDF）のデータ<ins>（男）</ins>をグラフにしました。</p>
+
+<p>このページを作ってから1年たちました。最新の<a href="http://www.mhlw.go.jp/toukei/itiran/roudou/chingin/kouzou/z2009/index.html">厚生労働省：平成21年賃金構造基本統計調査結果（全国）</a>で男女のグラフを描いてください。</p>
+
+<p>この調査は毎年6月の所定内給与額を調べたものです。諸手当や賞与は含まれていませんので，実際の年収はこの12倍より多いはずです。<a href="http://diamond.jp/articles/-/7842">年収300万円なら十分“勝ち組”に？</a>という記事は数字を1桁間違えて月収と年収を間違えているようです（<a href="http://blog.livedoor.jp/shimanekoblog/archives/1407276.html">平均年収が300万を切ったって？　それ間違いですから</a>）。</p>
+
+<pre>
+# quartz(width=5.911417, height=9.191929) # Mac
+# par(family="HiraKakuPro-W3")            # Mac
+par(xpd=TRUE)  # プロットエリア外に text() を描く
+par(mar=c(1,4,1,4)+0.1) # マージン c(5,4,4,2)+0.1
+
+賃金 = c(0,100,120,140,160,180,200,220,240,260,280,300,
+         320,340,360,400,450,500,600,700,800,900,1000,1200)
+割合 = c(0.2,0.5,1.3,2.6,4.4,5.6,7.5,7.6,7.6,6.9,6.4,6.2,
+         5.4,4.8,8.1,7.6,5.2,6.2,3.0,1.4,0.7,0.3,0.3,0.2)
+幅 = c(賃金[2:24],1400)-賃金
+
+barplot(割合/幅, 幅, horiz=TRUE, space=0, axes=FALSE)
+t = c(0,100,200,300,360,400,450,500,600,700,800,900,1000,1200)
+axis(2, labels=paste(t/10,"万",sep=""), at=t, lwd=0, lwd.tick=1)
+text(割合/幅, 賃金+幅/2, paste(" ",割合,"%",sep=""), cex=0.6, adj=0)
+</pre>
+
+<p>平均値333.7千円，中位数（中央値）298.1千円です。</p>
+
+<hr />
+
+<p><a href="/~okumura/">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-06-12 16:34:06</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

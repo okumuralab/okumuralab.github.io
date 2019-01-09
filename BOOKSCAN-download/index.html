@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>BOOKSCANから自動ダウンロード – Haruhiko Okumura – Professor, Computer Science/Education</title>
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+  </head>
+
+  <body>
+  <h1>BOOKSCANから自動ダウンロード</h1>
+
+    <p><a href="https://www.bookscan.co.jp">BOOKSCAN</a>は1冊100円からでスキャンを請け負ってくれる会社。</p>
+
+<p>ただし，最低価格だと，スキャンされたPDFはWebからダウンロードするしかない。これが遅く，複数ファイルを同時ダウンロードできない。</p>
+
+<p>ダウンロードすべきファイルのURL一覧は，ダウンロードページをスクレープすればすぐに得られる。ただ，認証が必要であるため，まずはGoogle Chromeでログインしてから「cookies.txt」という拡張機能を使ってクッキーをcookies.txt形式エクスポートし，それをwgetで使う：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">wget <span class="nt">--load-cookies</span> cookies.txt <span class="s1">'https://system.bookscan.co.jp/download.php?....pdf'</span></code></pre></figure>
+
+<p>cookies.txtの形式は<a href="http://www.cookiecentral.com/faq/#3.5">ここ</a>参照。</p>
+
+<p>念のため，BOOKSCANの一覧ページのソースから上のようなスクリプトを生成するRubyコード：</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">while</span> <span class="n">line</span> <span class="o">=</span> <span class="nb">gets</span><span class="p">()</span>
+  <span class="k">if</span> <span class="n">line</span> <span class="o">=~</span> <span class="sr">/&lt;a href="(download\.php.*?&amp;f=(.*\.pdf))"/</span>
+    <span class="nb">puts</span> <span class="s2">"wget --load-cookies cookies.txt 'https://system.bookscan.co.jp/</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="s2">'"</span>
+    <span class="nb">puts</span> <span class="s2">"mv '</span><span class="si">#{</span><span class="vg">$1</span><span class="si">}</span><span class="s2">' '</span><span class="si">#{</span><span class="vg">$2</span><span class="si">}</span><span class="s2">'"</span>
+    <span class="nb">puts</span> <span class="s2">"sleep 5"</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre></figure>
+
+
+  <div class="date">
+    Written on March 28, 2015
+  </div>
+
+  </body>
+</html>

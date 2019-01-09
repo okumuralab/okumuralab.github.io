@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>グラフの例：Twitterのフォロワー数</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：Twitterのフォロワー数</h1>
+
+<p>→ <a href="111114.html">このページの旧バージョン</a></p>
+
+<p>奥村（@h_okumura）のフォロワー数です。このような時系列データの扱い方は<a href="timeseries.html">時系列データ</a>をご覧ください。</p>
+
+<figure><img src="img/181228a.png" alt="h_okumuraのフォロワー数の推移"></figure>
+
+<p>2011年3月11日（大震災の日）から3カ月だけ急増していることがわかります。</p>
+
+<p>データは <a href="http://twilog.org">Twilog</a> から取り出しました。Twilog の自分のページの Stats をクリックします（Twilog にログインする必要はありません）。HTMLソースの <code>ar_data[7]</code> にフォロワー数の配列が，<code>ar_lbl[6]</code> に日付ラベルの配列があります。これらを例えば <code>followers.R</code> というファイルにコピペして，<code>ar_data[7] = [...];</code> を <code>f = c(...)</code> に，<code>ar_lbl[6] = [...];</code> を <code>d = c(...)</code> に書き直します。R のコンソールに次のように入力するとグラフが描けます：</p>
+
+<pre>
+source("followers.R")
+t = as.Date(paste0('20', substr(d, 1, 2),
+                   '-',  substr(d, 3, 4),
+                   '-',  substr(d, 5, 6)))
+plot(t, f, type="l", ylim=range(c(0,f)), xlab="", ylab="", xaxt="n")
+axis.Date(1, at=as.Date(paste0(2010:2018, "-01-01")), format="%Y年")
+</pre>
+
+<p>2011年の3月11日と6月11日にマークを入れてみました。</p>
+
+<pre>
+points(as.Date("2011-03-11"), f[t == as.Date("2011-03-11")], pch=16, col="red")
+text(as.Date("2011-03-11"), f[t == as.Date("2011-03-11")], "3/11", pos=1)
+points(as.Date("2011-06-11"), f[t == as.Date("2011-06-11")], pch=16, col="red")
+text(as.Date("2011-06-11"), f[t == as.Date("2011-06-11")], "6/11", pos=3)
+</pre>
+
+<p>ちなみに，私の最初のツイートは <a href="https://twitter.com/h_okumura/status/1454138565">2009-04-05 08:34:06 JST</a> ですが，Twilogに保存されているのは 2010-01-08 からで，Twilogでフォロワー数が捕捉されているのは 2010-01-31 からです。</p>
+
+<p>2018年6月以降だけ見てみます：</p>
+
+<pre>
+f0 = f[t &gt;= as.Date("2018/06/01")]
+t0 = t[t &gt;= as.Date("2018/06/01")]
+plot(t0, f0, pch=16, type="o", xlab="", ylab="", xaxt="n")
+axis.Date(1, t0, format="%m/%d")
+</pre>
+
+<figure><img src="img/181228b.png" alt="h_okumuraのフォロワー数の推移"></figure>
+
+<p>ときどき減少するのはツイッターによる大量アカウント削除のためのようです。2018年7月12日は22270人だったのが，13日には22124人になり，146人（約0.7%）減りました。ときどき急増する原因は不明です（何かでバズったため？）。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-12-28 14:23:06</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

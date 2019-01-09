@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>McNemar検定</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>McNemar検定</h1>
+
+<h2>McNemar検定と2項検定</h2>
+
+<p>McNemar（マクネマー，マクニマー，頭の「マ」にアクセント）検定は，対応のある $t$ 検定に似ていますが，結果が2値（「なし」と「あり」）に限られる場合に使います。</p>
+
+<p>例えば，20人にプリテスト・ポストテストを受験させ，合格・不合格を調べたところ，次のようになったとします：</p>
+
+<table>
+  <tbody>
+  <tr><th></th><th>合格</th><th>不合格</th></tr>
+  <tr><th>プリテスト</th><td>7</td><td>13</td></tr>
+  <tr><th>ポストテスト</th><td>14</td><td>6</td></tr>
+  </tbody>
+</table>
+
+<p>プリテスト合格者は7人でしたが，ポストテスト合格者は14人に増えたので，成績は向上したように見えます。でも，フィッシャーの検定</p>
+
+<pre>
+fisher.test(matrix(c(7,14,13,6), nrow=2))
+</pre>
+
+<p>をしてみると，$p = 0.05616$ ですので，5%水準で有意ではありません。</p>
+
+<p>ところが，プリテスト受験者とポストテスト受験者は同じ20人ですので，よく内訳を調べてみると，次のようになっていました：</p>
+
+<table>
+  <tbody>
+  <tr><th></th><th>ポストテスト合格</th><th>ポストテスト不合格</th></tr>
+  <tr><th>プリテスト合格</th><td>6</td><td>1</td></tr>
+  <tr><th>プリテスト不合格</th><td>8</td><td>5</td></tr>
+  </tbody>
+</table>
+
+<p>プリテスト・ポストテストの両方に合格した人や，両方に不合格だった人は，変化がないので，除外して考えます。重要なのは，不合格から合格に転じた人が8人もいるのに対して，合格から不合格に転じた人は1人しかいないということです。</p>
+
+<p>McNemar検定は，「どちらも合格」「どちらも不合格」を無視して，「不合格→合格」8人と「合格→不合格」1人の違いが有意かどうかを調べる検定です。</p>
+
+<p>元々のMcNemar検定（Rの <code>mcnemar.test()</code>）は $\chi^2$ 検定を使うのですが，よく考えてみると，8人と1人の違いの検定は，「硬貨を9回投げて表が8回，裏が1回出たが，硬貨は大丈夫か」という2項検定のほうが厳密に計算できそうです：</p>
+
+<pre>
+&gt; binom.test(1, 9)  # binom.test(8, 9) でも同じ
+
+	Exact binomial test
+
+data:  1 and 9
+number of successes = 1, number of trials = 9, p-value = 0.03906
+alternative hypothesis: true probability of success is not equal to 0.5
+95 percent confidence interval:
+ 0.002809137 0.482496515
+sample estimates:
+probability of success 
+             0.1111111 
+</pre>
+
+<p>$p = 0.03906$ で，5%水準で有意になりました。</p>
+
+<div class="note">
+<p>元々のMcNemar検定は次のようになります：</p>
+<pre>
+&gt; mcnemar.test(matrix(c(6,8,1,5), nrow=2))
+
+	McNemar's Chi-squared test with continuity correction
+
+data:  matrix(c(6, 8, 1, 5), nrow = 2)
+McNemar's chi-squared = 4, df = 1, p-value = 0.0455
+</pre>
+<p>デフォルトは連続性の補正をします。補正をしないなら <code>correct=FALSE</code> オプションを与えます。連続性の補正をする・しないの区別はややこしいので，余計なことを考える必要のない厳密な2項検定による方法がお薦めです。</p>
+</div>
+
+<div class="note">
+<p>要するに，McNemar検定は，「不合格」を0，「合格」を1として，ポストテストとプリテストの差を<a href="signtest.html">符号検定</a>していることにあたります。</p>
+<p>符号検定の代わりに<a href="ttest.html">t検定</a>を使うことも可能です。そうすれば，「変化なし」の情報も捨てる必要はありません：</p>
+<pre>
+t.test(c(rep(0,11),rep(1,8),rep(-1,1)))  # 変化なし11個，1増8個，1減1個
+</pre>
+<p>$p = 0.01527$ となります。</p>
+</pre>
+</div>
+
+<div class="note">
+<p>そもそも，「合格」「不合格」の2値ではなく，成績の測定をしっかりすれば，大手を振って，対応のある $t$ 検定を使うことができます。逆に，「成績が正規分布していないっぽい」などという懸念から $t$ 検定をやめて上位群・下位群に2分してMcNemar検定を使うのなら，残念です。</p>
+</div>
+
+<h2><code>mcnemar.exact()</code> によるMcNemar検定</h2>
+
+<p>本質的には以上で説明したことで尽きていますが，オッズ比とその信頼区間も求める方法として，ここではexact2x2パッケージの <code>mcnemar.exact()</code> を使う方法を説明します。まずは（まだインストールしていないなら）exact2x2パッケージをインストールし，ライブラリとして読み込みます：</p>
+
+<pre>
+install.packages("exact2x2")
+library(exact2x2)
+</pre>
+
+<p>使い方は，次のように分割表を行列の形で与えます：</p>
+
+<pre>
+&gt; mcnemar.exact(matrix(c(6,8,1,5), nrow=2))
+
+	Exact McNemar test (with central confidence intervals)
+
+data:  matrix(c(6, 8, 1, 5), nrow = 2)
+b = 1, c = 8, p-value = 0.03906
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.00281705 0.93235414
+sample estimates:
+odds ratio 
+     0.125 
+</pre>
+
+<p>2項検定のときと同じ $p$ 値 0.03906 が得られました。また，オッズは 1:8 ですので 0.125 ですが，効果がない場合のオッズ 1:1 と比較して，オッズ比も 0.125 になり，その95%信頼区間が $[0.003, 0.932]$ であることもわかります。</p>
+
+<div class="note">
+<p><code>mcnemar.exact()</code> は <code>binom.test()</code> ではなくexactciパッケージの <code>binom.exact()</code> を使っています。でもこれは <code>binom.test()</code> より <code>binom.exact()</code> のほうが正確だというわけではなく，方法が違っているだけです。両者の違いについては<a href="tests_and_CI.html">検定と区間推定</a>の最後のところでも説明しました。</p>
+</div>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-09-15T15:14:51+09:00">2014-09-15 15:14:51</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

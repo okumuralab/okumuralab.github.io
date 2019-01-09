@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>2014年の都知事選</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>2014年の都知事選</h1>
+
+<p>とりあえず<a href="http://sokuho.h26tochijisen.metro.tokyo.jp/">東京都-H26東京都知事選挙投開票速報</a>のデータをCSVにした：<a href="data/tochiji2014.csv">tochiji2014.csv</a>。</p>
+
+<pre>
+x = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tochiji2014.csv")
+par(mgp=c(2,0.8,0))  # 好み
+plot(x$投票率_平均, x$ますぞえ/x$投票者数_計, pch=16,
+     cex=sqrt(x$選挙当日有権者数_計)/300,
+     xlab="投票率", ylab="舛添得票率")
+</pre>
+
+<p>円の面積が有権者数に比例するように描いた。</p>
+
+<img src="img/140211a.png" alt="2014都知事選：投票率と舛添得票率">
+
+<p>ついでにほかの候補も。</p>
+
+<img src="img/140211b.png" alt="2014都知事選：投票率と主要候補得票率">
+
+<p>ほかに参考になりそうなサイト：</p>
+
+<ul>
+  <li><a href="http://www.asahi.com/articles/ASG294JLLG29UZPS001.html">舛添氏、高齢層から圧倒的な支持　都知事選出口調査分析：朝日新聞デジタル</a></li>
+  <li><a href="http://www.jiji.com/jc/c?g=pol_30&k=2014020900228&m=rss&utm_source=dlvr.it&utm_medium=twitter">時事ドットコム：原発「将来ゼロ」６割＝半数は舛添氏に－都知事選・出口調査</a></li>
+  <li><a href="http://www.jgnn.net/ls/2014/02/201429.html">【更新】東京都知事選挙(2014年2月9日実施)投票動向分析 - 【ネタ倉庫】ライトニング・ストレージ</a></li>
+  <li><a href="http://www.jgnn.net/ls/2014/02/201429-1.html">若年層の棄権が多そう...都知事選(2014年2月9日実施)投票動向分析補足 - 【ネタ倉庫】ライトニング・ストレージ</a></li>
+  <li><a href="http://www.huffingtonpost.jp/2014/02/09/tochiji-sen-on-map_n_4757689.html">宇都宮氏と細川氏が食い合い？ 田母神氏が強い地域は...... 地図でみる都知事選</a></li>
+  <li><a href="http://blog.georepublic.info/2014/tochiji-sen-on-map/">ハフィントン・ポスト「地図で見る都知事選」でGeoFuseを使っていただきました - The Georepublic Times</a></li>
+</ul>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-02-11T22:24:20+09:00">2014-02-11 22:24:20</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

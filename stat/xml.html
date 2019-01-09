@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>XMLデータの扱い方</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</div>
+
+<h1>XMLデータの扱い方</h1>
+
+<p><em>[2015-04-21追記]</em> Hadley Wickham の xml2 パッケージが CRAN に入りました。<a href="http://blog.rstudio.org/2015/04/21/xml2/">Parse and process XML (and HTML) with xml2 | RStudio Blog</a> 参照。</p>
+
+<p><em>[2015-12-30追記]</em> 久しぶりにページを更新しようと思ったら，鯖江市の<a href="http://www3.city.sabae.fukui.jp/xml/population/population.xml">人口XML</a>はまったく内容が変わっていました。とりあえず新しい<a href="xml2.html">XMLデータの扱い方</a>のページを作りましたので，そちらをご覧ください。</p>
+
+<h2>XMLとは</h2>
+
+<p>XMLはExtensible Markup Language（拡張可能なマーク付け言語）の略称です。構造をもつデータを表現するための一種の言語です。</p>
+
+<p>鯖江市がXMLなどを使ったオープンデータの公開を始めました：</p>
+
+<ul>
+  <li><a href="http://www.city.sabae.fukui.jp/pageview.html?id=11552">福井県鯖江市＞データシティ鯖江（XML,RDFによるオープンデータ化の推進）</a></li>
+</ul>
+
+<p>ここではこのデータをRで読んで使う方法を解説します。</p>
+
+<h2>人口データ</h2>
+
+<p>鯖江市の<a href="http://www3.city.sabae.fukui.jp/xml/population/population.xml">人口XML</a>をWebブラウザで開いてもおそらくタグがたくさん入ったテキストとして扱われてしまうと思います。</p>
+
+<p>このようなXMLをデータとして読むためのRのパッケージXMLをインストールし，読み込んでおきます：</p>
+
+<pre>
+install.packages("XML")
+library(XML)
+</pre>
+
+<p>これで次のようにURLを指定してデータが読み込めます：</p>
+
+<pre>
+data = xmlToDataFrame("http://www3.city.sabae.fukui.jp/xml/population/population.xml")
+</pre>
+
+<p><code>head(data)</code> と打ち込むと，何となく読めているようです：</p>
+
+<pre>
+  no year  gengo household population   man woman url
+1  1 1956 昭和31      8500      41735 19561 22174  …
+2  2 1957 　　32      9719      47855 22744 25111  …
+3  3 1958 　　33      9794      47899 22677 25222  …
+……
+</pre>
+
+<p>「昭和」や「平成」が付いていたり付いていなかったりするし，そもそもこんな単純なデータならXMLでなくてもCSVにしておけばExcelでも簡単に開けるのに……という突っ込みはさておいて，<code>str(data)</code> と打ち込んで，読み込んだデータの構造を調べてみましょう。</p>
+
+<pre>
+'data.frame':	56 obs. of  8 variables:
+ $ no        : Factor w/ 56 levels "1","10","11",..: 1 12 23 34 45 53 54 55 56 2 ...
+ $ year      : Factor w/ 56 levels "1956","1957",..: 1 2 3 4 5 6 7 8 9 10 ...
+ $ gengo     : Factor w/ 56 levels "    17","    18",..: 55 17 18 19 20 21 22 23 24 26 ...
+ $ household : Factor w/ 56 levels "10125","10286",..: 52 53 54 55 56 1 2 3 4 5 ...
+ $ population: Factor w/ 56 levels "41735","47855",..: 1 2 3 4 5 6 7 8 9 10 ...
+ $ man       : Factor w/ 56 levels "19561","22646",..: 1 4 3 2 5 6 7 8 9 10 ...
+ $ woman     : Factor w/ 56 levels "22174","25111",..: 1 2 3 4 5 8 7 6 9 11 ...
+ $ url       : Factor w/ 56 levels ...
+</pre>
+
+<p>全部factor（因子）として読み込まれてしまいました。これを文字列として読み込むのであれば</p>
+
+<pre>
+data = xmlToDataFrame("http://www3.city.sabae.fukui.jp/xml/population/population.xml",
+                      stringsAsFactors=FALSE)
+</pre>
+
+<p>のようにオプションを付けます。さらに，年や人口は整数か実数で読み込みたいので，</p>
+
+<pre>
+data = xmlToDataFrame("http://www3.city.sabae.fukui.jp/xml/population/population.xml",
+                      stringsAsFactors=FALSE,
+                      colClasses=c("integer","integer","character",
+                                   "numeric","numeric","numeric",
+                                   "numeric","character"))
+</pre>
+
+<p>望み通りの型で読めたか <code>str(data)</code> で確認しておきましょう。</p>
+
+<div class="note">
+<p>その場限りの処理なら，いちいち読み直すのではなく，</p>
+<pre>
+data$year = as.integer(data$year)
+data$population = as.numeric(data$population)
+</pre>
+<p>のようにして数値に変換するほうが早いでしょう。</p>
+</div>
+
+<p>とりあえず人口のグラフを描くと次のようになります：</p>
+
+<pre>
+par(mgp=c(2,0.8,0))
+plot(data$year, data$population, type="o", pch=16, xlab="年", ylab="人口")
+</pre>
+
+<div><img src="img/130115a.png" alt="鯖江市の人口の推移"></div>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-12-30 20:36:49</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

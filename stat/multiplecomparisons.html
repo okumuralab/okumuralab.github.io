@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>多重比較</title>
+<link rel="stylesheet" href="../style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+td { text-align: left }
+th { text-align: right }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>多重比較</h1>
+
+<h2>多重比較とは</h2>
+
+<p>例えば血液型と性格に関係があるか調べたいとします。20項目の性格検査を行って，それぞれについて統計的検定をします。すると，まったく血液型と性格に関係がなくても，偶然に $p \leq 0.05$ になる項目の数の期待値は 1 ですので，有意な結果が出ても当然です。このような問題を，多重比較（multiple comparisons）の問題といいます。</p>
+
+<p>性格検査の項目を1つに絞ったとしても，A型，B型，AB型，O型という4グループを比較しようとして ${}_4 C_2 = 6$ 通りの検定をすれば，（これら6通りの検定は互いに独立ではありませんが）やはり多重比較の問題が生じます。</p>
+
+<p>このように偶然に統計的に有意な結果が出てしまうのは困るということで，多重比較の際には $p$ 値を調整しなければならない，あるいは有意水準を $\alpha = 0.05$ より下げなければならないという考え方があります。そのための方法がたくさん考え出されています。</p>
+
+<h2>いろいろな方法の比較</h2>
+
+<p>一番単純な考え方が，Bonferroni（ボンフェローニ）の方法です。これは，例えば20通りの検定をするなら，有意水準を $\alpha$ から $\alpha / 20$ に下げます。あるいは，$p$ 値を20倍したものを元の $\alpha$ と比べると考えても同じことです。Rの <code>p.adjust()</code> 関数は後者の考え方で $p$ 値を調整します。</p>
+
+<p>例として，次の $p$ 値の列が得られたとしましょう：</p>
+
+<pre>
+&gt; p = (1:10) * 0.01
+&gt; p
+ [1] 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.10
+</pre>
+
+<p>これをBonferroniの方法で調整します：</p>
+
+<pre>
+&gt; p.adjust(p, "bonferroni")
+[1] 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
+</pre>
+
+<p>ちょうど10倍されていることがわかります。</p>
+
+<p>ほかにもいろいろな方法があります。Holmの方法では次のようになります。</p>
+
+<pre>
+&gt; p.adjust(p, "holm")
+ [1] 0.10 0.18 0.24 0.28 0.30 0.30 0.30 0.30 0.30 0.30
+</pre>
+
+<p>ほかにどういう方法があるのでしょうか。リストしてみます。</p>
+
+<pre>
+&gt; p.adjust.methods
+[1] "holm"       "hochberg"   "hommel"     "bonferroni" "BH"        
+[6] "BY"         "fdr"        "none"
+</pre>
+
+<p><code>BH</code> と <code>fdr</code> はどちらも Benjamini and Hochberg (1995) の False Discovery Rate です。<code>BY</code> は Benjamini and Yekutieli (2001) の方法です。全部の方法を適用すると次のようになります：</p>
+
+<table>
+  <tbody>
+  <tr><th>holm</th><td>0.1</td><td>0.18</td><td>0.24</td><td>0.28</td><td>0.3</td><td>0.3</td><td>0.3</td><td>0.3</td><td>0.3</td><td>0.3</td></tr>
+  <tr><th>hochberg</th><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td></tr>
+  <tr><th>hommel</th><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td></tr>
+  <tr><th>bonferroni</th><td>0.1</td><td>0.2</td><td>0.3</td><td>0.4</td><td>0.5</td><td>0.6</td><td>0.7</td><td>0.8</td><td>0.9</td><td>1</td></tr>
+  <tr><th>BH (fdr)</th><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td></tr>
+  <tr><th>BY</th><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td></tr>
+  <tr><th>none</th><td>0.01</td><td>0.02</td><td>0.03</td><td>0.04</td><td>0.05</td><td>0.06</td><td>0.07</td><td>0.08</td><td>0.09</td><td>0.1</td></tr>
+  </tbody>
+</table>
+
+<p>多重比較の補正をしなければ5項目について有意（$p \leq 0.05$）と判断するはずのところが，多重比較の補正をしたら有意な項目はなくなってしまいました。でも，これら10項目はどれも $p \leq 0.1$ で，10項目すべてが偶然この範囲に入る確率は $0.1^{10} = 0.0000000001$ です。それでもなお，一つも有意でないという結果になってしまいました。</p>
+
+<h2>どの補正を使えばいいの？ そもそも補正は必要？</h2>
+
+<p>以下は独断と偏見です。</p>
+
+<p>統計的仮説検定を金科玉条とする考え方を捨てて，$p$ 値は目安と考えて補正せず，<a href="effectsize.html">効果量</a>と信頼区間を報告しましょう。</p>
+
+<p>参考：</p>
+
+<ul>
+  <li><a href="http://psg-mac43.ucsf.edu/ticr/syllabus/courses/9/2003/02/27/Lecture/readings/Rothman.pdf">Kenneth J. ‎Rothman: No Adjustments Are Needed for Multiple Comparisons</a> (1990)</li>
+  <li><a href="http://arxiv.org/abs/0907.2478">Andrew Gelman, Jennifer Hill, Masanao Yajima: Why we (usually) don't have to worry about multiple comparisons</a> (2009)</li>
+</ul>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-04-11 11:09:09</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

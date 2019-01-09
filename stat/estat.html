@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>e-StatのAPI</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>e-StatのAPI</h1>
+
+<p>[2015-01-30] <a href="http://www.e-stat.go.jp/api/">政府統計の総合窓口(e-Stat)−API機能</a>バージョン2.0の提供が始まった。以下は2.0に書き換えた。</p>
+
+<p>[2015-12-21] 「からだにいいもの」に<a href="http://www.karada-good.net/analyticsr/r-354/">Rで解析：政府統計の総合窓口(e-Stat)のAPIを利用したデータの取得例</a>という記事が出たようだ（まだ読んでない）。</p>
+
+<p>[2016-07-17] <a href="http://notchained.hatenablog.com/entry/2016/07/17/000530">e-Stat APIバージョン2.1をRから使う</a>，API 2.1になってCSVもどきが取れるようになったようだ。</p>
+
+<h2>はじめに</h2>
+
+<p><a href="http://akiyoko.hatenablog.jp/entry/2014/12/25/025309">政府統計ポータル（e-Stat）と R でサンタさんの12月の出費動向を調べてみた - akiyoko blog</a>
+はマウス操作の説明がほとんどなので，APIを使ってスマートにできないかと考え，
+<a href="http://qiita.com/mzmttks/items/a4cc11b61f6d79ac6b12">WebAPI - e-Stat を使って統計情報を取得してみる - Qiita</a>
+などを読んで勉強を始めた。しかし，R_Linux 師匠が
+<a href="http://rpubs.com/R_Linux/estat?utm_source=twitterfeed&utm_medium=twitter">RPubs - 政府統計の総合窓口(e-Stat)のAPIを使ってみる</a>
+というすばらしい記事を書いてくださったので，することはなくなった。</p>
+
+<p>とりあえず，なるべく重複がないようにメモしておく。</p>
+
+<h2>政府統計の窓口APIでデータを取得する</h2>
+
+<p><a href="http://www.e-stat.go.jp/">政府統計の総合窓口</a>のデータをAPIで提供する<a href="http://statdb.nstac.go.jp/">次世代統計利用システム</a>の試行運用が始まったのが2013年6月10日である。私もさっそく利用登録したが，そのままになっていた。</p>
+
+<p>2014年10月31日にAPI機能の本格運用が始まった。詳細情報は上記サイトからe-Stat内の<a href="http://www.e-stat.go.jp/api/">政府統計の総合窓口(e-Stat)-API機能</a>のページに移った。登録情報も受け継がれた。2015年1月30日にはAPI 2.0が出た。</p>
+
+<p>詳細は<a href="http://www.e-stat.go.jp/api/api-info/api-spec/">API仕様</a>のページにあるPDFを読めばわかるはずだが，ざっくばらんにまとめておく。</p>
+
+<p>APIで提供するデータはXMLまたはJSON形式である。元はXMLで，これをJSONにも変換しており，大きいデータをJSONで取得するとエラーになるらしい（ただし2.0時点では未確認）ので，今のところはXMLのほうがよさそうである。</p>
+
+<p>まずは<a href="http://www.e-stat.go.jp/api/regist-login/">利用登録</a>し，「アプリケーションID」なるものを取得しておく必要がある。以下ではアプリケーションIDを「XXXX」と記す。</p>
+
+<p>全部Rで行うことも可能であるが，ここではMacまたはLinuxのターミナルでwgetを使ってファイルを取得する。まず，全データのリストをXMLで取得するには，ターミナルで次のように打ち込む：</p>
+
+<pre>
+wget http://api.e-stat.go.jp/rest/2.0/app/getStatsList?appId=XXXX
+</pre>
+
+<div class="note">
+<p>Rだけでやりたければ，次のようにする：</p>
+<pre>
+library(RCurl)
+x = getURI("http://.....")
+</pre>
+<p>これで <code>x</code> にテキストが入る。ファイルにしたければこれを保存すればよい：</p>
+<pre>
+write(x, "filename")
+</pre>
+</div>
+
+<div class="note">
+<p>Mac標準のcurlコマンドをwgetと同様に使うためには，<code>~/.curlrc</code> に次のように書き込んでおく：</p>
+<pre>
+--location
+--remote-name-all
+--remote-header-name
+--remote-time
+--xattr
+</pre>
+<p>これで <code>curl http://.....</code> と打ち込む。</p>
+</div>
+
+<p>うまくいけば60Mバイト強のXMLファイルが得られる。</p>
+
+<p>全データのリストが必要なければ，<a href="http://www.e-stat.go.jp/api/api-info/api-data/">提供データ</a>のページにあるものから選ぶ。例えば「国勢調査」の「政府統計コード」（statsCode）は 00200521 であるので，</p>
+
+<pre>
+wget 'http://api.e-stat.go.jp/rest/2.0/app/getStatsList?appId=XXXX&amp;statsCode=00200521'
+</pre>
+
+<p>とする。ターミナルにこのような <code>&amp;</code> を含むURLを打ち込む際には必ずクォートで囲む。</p>
+
+<p>次のような形式でリストされている。</p>
+
+<pre>
+        &lt;TABLE_INF id="0003033021"&gt;
+            &lt;STAT_NAME code="00200521"&gt;国勢調査&lt;/STAT_NAME&gt;
+            &lt;GOV_ORG code="00200"&gt;総務省&lt;/GOV_ORG&gt;
+            &lt;STATISTICS_NAME&gt;平成22年国勢調査 速報集計 抽出速報集計&lt;/STATISTICS_NAME&gt;
+            &lt;TITLE no="00110"&gt;年齢(各歳)，男女，国籍(総数及び日本人)別人口，平均年齢及び年齢中位数 全国，全国市部，全国郡部&lt;/TITLE&gt;
+            &lt;CYCLE&gt;-&lt;/CYCLE&gt;
+            &lt;SURVEY_DATE&gt;201010&lt;/SURVEY_DATE&gt;
+            &lt;OPEN_DATE&gt;2011-06-29&lt;/OPEN_DATE&gt;
+            &lt;SMALL_AREA&gt;0&lt;/SMALL_AREA&gt;
+            &lt;MAIN_CATEGORY code="02"&gt;人口・世帯&lt;/MAIN_CATEGORY&gt;
+            &lt;SUB_CATEGORY code="01"&gt;人口&lt;/SUB_CATEGORY&gt;
+            &lt;OVERALL_TOTAL_NUMBER&gt;1980&lt;/OVERALL_TOTAL_NUMBER&gt;
+            &lt;UPDATED_DATE&gt;2011-08-02&lt;/UPDATED_DATE&gt;
+        &lt;/TABLE_INF&gt;
+</pre>
+
+<p>これで「平成22年国勢調査 速報集計 抽出速報集計 年齢(各歳)，男女，…」が0003033021というID（statsDataId）を持つことがわかる。これを取得するには次のようにターミナルに打ち込む：</p>
+
+<pre>
+wget 'http://api.e-stat.go.jp/rest/2.0/app/getStatsData?appId=XXXX&amp;statsDataId=0003033021'
+</pre>
+
+<p>これをXMLでなくJSONで取得するには次のようにする：</p>
+
+<pre>
+wget 'http://api.e-stat.go.jp/rest/2.0/app/json/getStatsData?appId=XXXX&amp;statsDataId=0003033021'
+</pre>
+
+<p>XMLはきれいにインデントされているが，JSONは全体が1行になっている上に，「全角」文字は <code>\u6B63</code> のようにUnicodeの番号に変換されているので，人間が読むには不向きである。</p>
+
+<h2>XML/JSONをパースする</h2>
+
+<p>いろいろな手法のメモ：</p>
+
+<ul>
+  <li><a href="http://nonki1974.hateblo.jp/entry/2013/06/14/221243">Rで統計API - 備忘録＠かすみがおか</a>：e-StatデータをRで素直にパースし，グラフを描いている</li>
+  <li><a href="http://fits.hatenablog.com/entry/2013/09/23/002707">R による XML の CSV 化 - なんとなくな Developer のメモ</a>：e-StatデータをR（およびGroovy）のいろいろな方法でCSV化し，時間を比較している</li>
+  <li><a href="http://rpubs.com/R_Linux/estat?utm_source=twitterfeed&utm_medium=twitter">RPubs - 政府統計の総合窓口(e-Stat)のAPIを使ってみる</a>：Rのjsonliteでパースし，データフレーム化している</li>
+  <li><a href="http://qiita.com/mzmttks/items/a4cc11b61f6d79ac6b12">WebAPI - e-Stat を使って統計情報を取得してみる - Qiita</a>：Pythonでe-StatのXMLをパースし，グラフを描いている</li>
+</ul>
+
+<p>まず，R標準のデータフレーム形式に直し，CSVで書き出すところまでやってみる。さきほど得たXMLファイルを <code>0003033021.xml</code> とする。実際のデータ行は <code>&lt;VALUE&gt;</code> ... <code>&lt;/VALUE&gt;</code> で表されているので，まずは <code>//VALUE</code> を取得する。各行の属性は，男女が <code>cat01</code>，年齢階級が <code>cat02</code> に，という具合に入っているが，属性値は <code>000</code>，<code>001</code> といったコードで表されており，例えば <code>cat01</code> の各コードの意味は <code>&lt;CLASS_OBJ id="cat01"&gt;</code> ... <code>&lt;/CLASS_OBJ&gt;</code> の中に入っており，<code>001</code> の意味は <code>&lt;CLASS code="001" name="男" level="1"/&gt;</code> から「男」だとわかる。これらを組み合わせて元の表を復元しなければならない。けっこうややこしい作業である（最初からCSVで用意してくれればいいのに！）が，Rでは次のようにエレガントに書ける：</p>
+
+<pre>
+library(XML)
+doc = xmlParse("0003033021.xml")
+items = getNodeSet(doc, "//VALUE")
+
+foo = function(x) {
+    n = getNodeSet(doc, paste0("//CLASS_OBJ[@id='", x, "']/CLASS"))
+    tbl = sapply(n, xmlGetAttr, "name")
+    names(tbl) = sapply(n, xmlGetAttr, "code")
+    tbl[sapply(items, xmlGetAttr, x)]
+}
+
+cat01 = foo("cat01")
+cat02 = foo("cat02")
+cat03 = foo("cat03")
+area  = foo("area")
+time  = foo("time")
+value = as.numeric(sapply(items, xmlValue))
+df = data.frame(cat01, cat02, cat03, area, time, value)
+
+write.csv(df, file="0003033021.csv", row.names=FALSE)
+</pre>
+
+<p>JSONの場合も同様である。基本は次のようにしてデータフレームを得る。列名・属性名をコードから名前に変換する部分は省略する。</p>
+
+<pre>
+library("jsonlite")
+json = fromJSON("0003033021.json")
+df = json$GET_STATS_DATA$STATISTICAL_DATA$DATA_INF$VALUE
+</pre>
+
+<h2>実際のデータ解析</h2>
+
+<p>以上でR標準のデータフレーム形式にできた。まず中を調べる：</p>
+
+<pre>
+&gt; summary(df)
+            cat01              cat02               cat03           area    
+ 総数（男女別）:660   総数（年齢）:  18   総数（国籍）:990   全国    :660  
+ 男            :660   0歳         :  18   日本人      :990   全国市部:660  
+ 女            :660   1歳         :  18                      全国郡部:660  
+                      2歳         :  18                                    
+                      3歳         :  18                                    
+                      4歳         :  18                                    
+                      (Other)     :1872                                    
+     time          value          
+ 2010年:1980   Min.   :       43  
+               1st Qu.:    78475  
+               Median :   544500  
+               Mean   :  1606972  
+               3rd Qu.:   897575  
+               Max.   :128056000  
+</pre>
+
+<p>サブセットにしないと扱いにくい。</p>
+
+<pre>
+df1 = subset(df, cat01=="男" & cat03=="日本人" & area=="全国")
+df2 = subset(df, cat01=="女" & cat03=="日本人" & area=="全国")
+</pre>
+
+<p>これで <code>df1</code> の <code>cat02</code>（年齢）と <code>value</code>（値）をグラフにすればいいはずだが，<code>cat02</code> を列挙してみると，こんな具合である：</p>
+
+<pre>
+&gt; df1$cat02
+  [1] 総数（年齢）       0歳                1歳               
+  [4] 2歳                3歳                4歳               
+……（中略）……
+[100] 98歳               99歳               100歳以上         
+[103] 不詳               （再掲）15歳未満   （再掲）15～64歳  
+[106] （再掲）65歳以上   （再掲）75歳以上   （再掲）85歳以上  
+[109] （再掲）平均年齢   （再掲）年齢中位数
+110 Levels: 総数（年齢） 0歳 1歳 2歳 3歳 4歳 5歳 6歳 7歳 8歳 9歳 10歳 ... （再掲）年齢中位数
+</pre>
+
+<p>「0歳」から「100歳以上」を取り出すには，配列の引数を <code>[2:102]</code> に限ればよい。まずは簡単なプロット（右端は「100以上」）：</p>
+
+<pre>
+&gt; plot(0:100, df2$value[2:102], type="o", xlab="Age", ylab="Population")
+&gt; points(0:100, df1$value[2:102], pch=16, type="o")
+</pre>
+
+<p>きれいな人口ピラミッドを描くには，中澤 港 先生の pyramid パッケージを使う（横軸の単位は「万人」）：</p>
+
+<pre>
+&gt; install.packages("pyramid")
+&gt; library(pyramid)
+&gt; pyramids(df1$value[2:102]/10000, df2$value[2:102]/10000, c(0:99,"100-"), Cstep=10, Laxis=c(0,60,120))
+</pre>
+
+<figure><img src="img/141231a.png" alt=""></figure>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-07-17 16:55:22</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>PISAデータを読む</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>PISAデータを読む</h1>
+
+<p>以下は古いPISA 2012についてのものです。PISA 2012データは今でもPISAのサイトから入手できますが，以下にはリンク切れのページもあります。<a href="pisa2015.html">PISA 2015データを読む</a>のほうをご参照ください。</p>
+
+<h2>PISAデータを取得する</h2>
+
+<p><a href="http://www.oecd.org/">OECD</a>
+の
+<a href="http://www.oecd.org/pisa/">PISA</a> (Programme for International Student Assessment)
+のデータは
+<a href="http://www.oecd.org/pisa/pisaproducts/">PISA products</a>
+からリンクをたどって得られる。例えば
+<a href="http://pisa2012.acer.edu.au/downloads.php">Database - PISA 2012</a>
+の
+Data sets in TXT format (compressed)
+の最初にある
+Student questionnaire data file
+はダウンロードすると235202268バイト（235Mバイト）の
+INT_STU12_DEC03.zip
+が得られる（たいへん遅いので注意）。これを展開すると1140901500バイト（約1Gバイト）の
+INT_STU12_DEC03.txt
+になる。これは固定長テキストデータ（行末CRLF）で，フォーマットは例えば
+SPSS syntax to read in student questionnaire data file (INT_STU12_SPSS.sps)
+を見ればわかる。</p>
+
+<p>ちなみに，別にある
+<a href="http://pisa2012.acer.edu.au/downloadsCBA.php">Database - PISA CBA 2012</a>
+は，CBA (Computer-Based Assessment) によるデータで，上の部分集合である。ここにある
+Student questionnaire data file
+は 271323 x 615 のデータである。</p>
+
+<p>PISAのライセンスについては
+<a href="http://www.oecd.org/pisa/47307726.pdf">‎PISA Product Licence</a>
+に記されている。データや統計は商用利用も含めて自由に利用できる。</p>
+
+<p>PISAについての日本語情報は次のサイトにある：</p>
+
+<ul>
+  <li><a href="http://www.nier.go.jp/kokusai/pisa/">OECD生徒の学習到達度調査(PISA)：国立教育政策研究所 National Institute for Educational Policy Research</a></li>
+</ul>
+
+<p>ここのPISA2012要約を見ると，日本では高校1年相当の生徒を対象に，層化二段抽出法で全国191校から約6400人を対象にしたことがわかる（データベースには6351人分のデータがある）。</p>
+
+<h2>PISAデータをCSV化する</h2>
+
+<p>PISAの固定長テキストデータを通常のCSVファイルにするPythonスクリプトが
+<a href="http://sakura-education.com/myblog/archives/157">RによるPISAの分析（データの準備）</a>
+で紹介されている。ここではこれをRubyに書き直した次のものを使う：</p>
+
+<pre>
+#! /usr/bin/ruby -w
+# -*- coding: utf-8 -*-
+ 
+x = []
+y = []
+v = []
+
+File.foreach('INT_STU12_SPSS.sps') do |line|
+  line.strip!
+  break if line == "."
+  if line =~ /^(\w+) (\d+) - (\d+)/
+    v &lt;&lt; $1
+    x &lt;&lt; $2.to_i - 1
+    y &lt;&lt; $3.to_i - 1
+  end
+end
+
+puts v.join(',')
+
+while line = gets
+  z = []
+  x.length.times do |i|
+    z &lt;&lt; line[x[i]..y[i]].strip
+  end
+  puts z.join(',')
+end
+</pre>
+
+<p>次のように打ち込む：</p>
+
+<pre>
+./spss.rb INT_STU12_DEC03.txt &gt; 2012all.csv
+</pre>
+
+<p>すると，約1.2Gバイトの 2012all.csv ができる（行末LFの場合1259448400バイト。CRLFなら485491バイト増）。</p>
+
+<p>念のため，この 2012all.csv を圧縮した <a href="data/PISA2012.zip">PISA2012.zip</a> を置いておく。</p>
+
+<h2>Rで読み込む</h2>
+
+<p>ここでは，標準の <code>read.csv()</code> より速いはずの readr の <code>read_csv()</code> を使ってみる：</p>
+
+<pre>
+library(readr)
+ALL = read_csv("2012all.csv") # 40秒ほど
+dim(ALL) # 485490 634
+object.size(ALL) # 1621663888 bytes
+</pre>
+
+<p>1.6Gバイトのメモリを食うが，どうってことはない。</p>
+
+<p>634個ある各変数の意味は，さきほどの INT_STU12_SPSS.sps
+にも簡潔に書かれているが，より詳しくは
+Codebook for student questionnaire data file (M_stu_codebook.pdf)
+を読めばよい。具体的な質問は Questionnaires のところにある。</p>
+
+<h2>解析例</h2>
+
+<p><code>sum(ALL$CNT=="JPN")</code> と打てばわかるように，日本は6351人分のデータがある。</p>
+
+<p>例えばIC09 "How often do you use a computer for the following activities <u>outside of school</u>?" の6番目の "Doing homework on the computer" という問いについての日本の子どもたちの回答分布は</p>
+
+<pre>
+&gt; table(ALL$IC09Q06[ALL$CNT=="JPN"])
+
+   1    2    3    4    5    7    9 
+5524  307  133   38   21   94  234 
+</pre>
+
+<p>である。ここで回答は次の意味を持つ：</p>
+
+<ol>
+  <li value="1">Never or hardly ever</li>
+  <li value="2">Once or twice a month</li>
+  <li value="3">Once or twice a week</li>
+  <li value="4">Almost every day</li>
+  <li value="5">Every day</li>
+  <li value="7">N/A</li>
+  <li value="8">Invalid</li>
+  <li value="9">Missing</li>
+</ol>
+
+<p>これと国名を掛け合わせたクロス集計をし，回答1（学校外でコンピュータで宿題なんかしないよ）の割合を国別に見てみよう。ただしOECD国に限ることにする。</p>
+
+<pre>
+x = table(ALL$CNT[ALL$OECD==1], ALL$IC09Q06[ALL$OECD==1])
+barplot(sort(x[,1] / rowSums(x[,1:5])), horiz=TRUE, las=1)
+</pre>
+
+<figure><img src="img/IC09Q06.png" alt="学校外でコンピュータで宿題をしない"></figure>
+
+<p>日本ではコンピュータを使う宿題を出さないことがわかる。</p>
+
+<p>日本の家庭にはコンピュータがないのか。</p>
+
+<pre>
+x = table(ALL$CNT[ALL$OECD==1], ALL$ST26Q04[ALL$OECD==1])
+barplot(sort(x[,1] / rowSums(x[,1:2])), horiz=TRUE, las=1)
+</pre>
+
+<figure><img src="img/ST26Q04.png" alt="勉強に使えるコンピュータ"></figure>
+
+<p>トルコとメキシコを除いて，他のOECD国よりかなり少ない。</p>
+
+<div class="note">
+<p>日本だけ色を変えるには例えば次のようにする：</p>
+<pre>
+x = table(ALL$CNT[ALL$OECD==1], ALL$ST26Q04[ALL$OECD==1])
+s = sort(x[,1] / rowSums(x[,1:2]))
+barplot(s, horiz=TRUE, las=1, col=ifelse(names(s)=="JPN",gray(0.4),gray(0.8)))
+</pre>
+</div>
+
+<div class="note">
+<p>さらに3文字国名を日本語にするにはウィキペディアの<a href="https://ja.wikipedia.org/wiki/ISO_3166-1">ISO 3166-1</a>から作った表 <a href="data/countries.csv">countries.csv</a>（UTF-8）を使う。ただし，最後の6件（上海，台北，ペルミ，米国のいくつかの州）は国名ではなくPISAで便宜的に使っている地域名である。また，韓国・北朝鮮・台湾は略称を使った。</p>
+<pre>
+cnt = read.csv("countries.csv")
+tcnt = cnt$国名
+names(tcnt) = cnt$三字
+x = table(ALL$CNT, ALL$ST26Q04)
+s = sort(x[,1] / rowSums(x[,1:2]))
+par(mar=c(1,10,1,2)+0.1) # マージン（デフォルト: c(5,4,4,2)+0.1）
+barplot(s, horiz=TRUE, las=1, col=ifelse(names(s)=="JPN",gray(0.4),gray(0.8)),
+        names.arg=tcnt[names(s)], xlim=c(0,1), axes=FALSE)
+axis(3, at=0:5/5, labels=paste(0:5*20, "%", sep=""), line=-1.5)
+</pre>
+<p>結果は<a href="img/ST26Q04.pdf">このPDF</a>のようになる。</p>
+<p>もう一つのほう（IC09Q06）は次のようにして<a href="img/IC09Q06.pdf">このPDF</a>のようになる。</p>
+<pre>
+x = table(ALL$CNT, ALL$IC09Q06)
+s = sort(x[,1] / rowSums(x[,1:5]))
+par(mar=c(1,10,1,2)+0.1) # マージン（デフォルト: c(5,4,4,2)+0.1）
+barplot(s, horiz=TRUE, las=1, col=ifelse(names(s)=="JPN",gray(0.4),gray(0.8)),
+        names.arg=tcnt[names(s)], xlim=c(0,1), axes=FALSE)
+axis(3, at=0:5/5, labels=paste(0:5*20, "%", sep=""), line=-1)
+</pre>
+<p>ついでに，OECD国に限った図は<a href="img/ST26Q04OECD.pdf">これ</a>と<a href="img/IC09Q06OECD.pdf">これ</a>である。</p>
+</div>
+
+<p>今度は散布図を描いてみよう。IC01の質問 Are any of these devices available for you to use <u>at home</u>? に対して (a) Desktop computer (b) Portable laptop, or notebook (g) &lt;Cell phone&gt; (with Internet access) などについて (1) Yes, and I use it (2) Yes, but I don't use it (3) No の選択肢がある。(g) のケータイ（ネット接続可）を使う割合については簡単である：</p>
+
+<pre>
+x = table(ALL$CNT, ALL$IC01Q07)
+ph = x[,1] / rowSums(x[,1:3])
+</pre>
+
+<p>デスクトップPCとノートPCについては，少なくともどちらか一つ使う割合を求めたい。これは両方使わない割合を1から引けばよい：</p>
+
+<pre>
+x = table(ALL$CNT, ALL$IC01Q01, ALL$IC01Q02)
+pc = 1 - rowSums(x[,2:3,2:3]) / rowSums(x[,1:3,1:3])
+</pre>
+
+<p>この二つを散布図にする：</p>
+
+<pre>
+plot(100*pc, 100*ph, pch=NA, xlab="PC（%）", ylab="携帯（%）", xlim=c(59,104))
+text(100*pc, 100*ph, tcnt[names(ph)])
+</pre>
+
+<figure><img src="img/150525b.png" alt="PCと携帯の利用率"></figure>
+
+<h2>PISA成績</h2>
+
+<p>個票には成績は含まれていない。</p>
+
+<div class="note">
+<p>成績の代わりに，plausible values というものが複数含まれている。これは，個人の成績としては用いてはならないが，全体についての統計量を計算する際に使うことのできる値である。<i lang="en">i</i> 番目の plausible value を使って統計量を求め，それを <i lang="en">i</i> について平均すれば，全体の統計量が求められる。</p>
+</div>
+
+<p>国ごとの成績概要は，例えば2012年なら <a href="http://www.oecd.org/pisa/keyfindings/pisa-2012-results-volume-i.htm">PISA 2012 Results</a> の <a href="http://dx.doi.org/10.1787/888932937035">Download Excel snapshot of student performance in mathematics, reading and science</a> (XLS) から得られる。これに3文字国名を付けてCSVにした <a href="data/pisa2012summary.csv">pisa2012summary.csv</a> を置いておく。項目は，CNT（3文字国名），country（国名），math_mean（数学平均），math_low（数学レベル2未満の割合），math_top（数学レベル5・6の割合），math_change（数学の年変化），reading_mean（読解平均），reading_change（読解の年変化），science_mean（理科平均），science_change（理科の年変化）である。</p>
+
+<p>同様に，<a href="data/pisa2009summary.csv">pisa2009summary.csv</a> は，CNT（3文字国名），country（国名），reading（読解），math（数学），science（理科）の平均である。</p>
+
+<p>ちょっと手抜きで見にくいが散布図の例（数学）：</p>
+
+<figure><img src="img/150924a.png" alt="PISA数学2009と2012の散布図"></figure>
+
+<pre>
+p2009 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/pisa2009summary.csv")
+p2012 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/pisa2012summary.csv")
+cnt = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/countries.csv")
+p = merge(p2009, p2012)
+p = merge(p, cnt, by.x="CNT", by.y="三字")
+with(p, plot(math, math_mean, type="n", xlab="PISA 2009", ylab="PISA 2012", asp=1))
+with(p, text(math, math_mean, labels=国名, col=ifelse(CNT=="JPN","red","black")))
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-10-17 21:49:23</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

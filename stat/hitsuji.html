@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ひつじがnひき</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="first.html">Rの初歩</a> &gt;
+</nav>
+
+<h1>ひつじがnひき</h1>
+
+<p>眠れない夜は，ひつじを数えてみましょう。</p>
+
+<pre>
+for (i in 1:10) cat("ひつじが", i, "ひき\n")
+</pre>
+
+<p>眠れない夜が続くときは，ひつじを数える関数を作りましょう。</p>
+
+<pre>
+hitsuji = function() { for (i in 1:10) cat("ひつじが", i, "ひき\n") }
+</pre>
+
+<p>これで <code>hitsuji()</code> と打てば，ひつじが数えられます。単に <code>hitsuji</code>
+と打つと関数の定義を見ることができます。</p>
+
+<p>ひつじの数を変えられるようにしてみましょう。</p>
+
+<pre>
+hitsuji = function(n) { for (i in 1:n) cat("ひつじが", i, "ひき\n") }
+</pre>
+
+<p>これで <code>hitsuji(100)</code> と打てば，ひつじが100ひき数えられます。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-02-01 13:02:55</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

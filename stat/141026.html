@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>災害の確率</title>
+<link rel="stylesheet" href="../style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>災害の確率</h1>
+
+<h2>巨大噴火の確率</h2>
+
+<p>2014年10月22日のNHKニュース<a href="http://www3.nhk.or.jp/news/html/20141022/t10015614021000.html">巨大噴火 “今後１００年間で確率約１％”</a>によれば，「日本の広い範囲が火山灰で覆われ、火砕流が１００キロ余り先まで達するような巨大噴火」が「今後１００年間に起きる確率はおよそ１％で、回数にすると１万年に１回程度、阪神・淡路大震災を起こした兵庫県南部地震が起きる前の確率とほぼ同じ程度だということです」。</p>
+
+<p>詳しくは神戸大学の<a href="http://www.kobe-u.ac.jp/NEWS/info/2014_10_22_01.html">巨大カルデラ噴火のメカニズムとリスクを発表</a>にある（論文は <a href="http://www.japan-acad.go.jp/en/publishing/pja_b.html">Proceedings of the Japan Academy, Ser. B</a> に出る予定らしい）。これによれば，兵庫県南部地震（阪神・淡路大震災）のほうは「発生前日における30年発生確率」である。<a href="http://www.jishin.go.jp/main/index.html">地震調査研究推進本部</a>の<a href="http://www.jishin.go.jp/main/choukihyoka/ichiran.htm">今までに公表した活断層及び海溝型地震の長期評価結果一覧</a>の<a href="http://www.jishin.go.jp/main/choukihyoka/chokuzen.htm">過去に発生した地震の、地震発生直前における確率</a>によれば，30年確率は「0.02%〜8%」とのことである（<a href="http://www.jishin.go.jp/main/pamphlet/shoraiyosoku/shoraiyosoku_c1-1.pdf">‎このPDF</a>が詳しい）。同程度といってもずいぶん幅があるようだ（30年と100年の違いどころではない）。</p>
+
+<h2>地震の確率</h2>
+
+<p>2011年の東日本大震災直後に話題になったが，その時点での東海地震の30年確率は87%であった（ウィキペディアの<a href="http://ja.wikipedia.org/wiki/%E6%9D%B1%E6%B5%B7%E5%9C%B0%E9%9C%87">東海地震</a>参照）。<a href="https://twitter.com/HeizoTakenaka/status/67726323170283520">竹中平蔵氏の2011年5月10日のツイート</a>「３０年で大地震の確率は８７%・・浜岡停止の最大の理由だ。確率計算のプロセスは不明だが、あえて単純計算すると、この１年で起こる確率は２．９%、この一カ月の確率は０．２%だ。原発停止の様々な社会経済的コストを試算するために１カ月かけても、その間に地震が起こる確率は極めて低いはずだ。」という計算が話題になった（<a href="http://togetter.com/li/133823">竹中平蔵（笑） - Togetterまとめ</a> 参照）。これに関連して書かれたブログをいくつか紹介する：</p>
+
+<ol>
+  <li><a href="http://d.hatena.ne.jp/doitmyself1001/20110510/1305005680">「30年で大地震が起こる確率が87%」のときの「1年間に大地震が起こる確率」 - doitmyself1001の日記</a></li>
+  <li><a href="http://d.hatena.ne.jp/LibrePDM/20110510">地震の発生確率について - LibrePDMの日記</a></li>
+  <li><a href="http://www.anlyznews.com/2011/05/blog-post_11.html">地震の発生確率について、文系らしく説明してみる: ニュースの社会科学的な裏側</a></li>
+  <li><a href="http://oxon.hatenablog.com/entry/20110512/1305187792">竹中平蔵を叩いてる人はどうしちゃったの？数学を使わない説明するからちゃんと読め - 宇宙線実験の覚え書き</a></li>
+</ol>
+
+<p>厳密には，地震発生確率は（一般的なPoissonモデルではなく）Brownian Passage Time（BPT）というモデルで計算されている（<a href="http://www.jishin.go.jp/main/chousa/10_yosokuchizu/k_keisan.pdf">‎解説：地震発生確率の計算方法</a>参照）。これは地震の周期が平均 $\mu$，分散 $(\alpha\mu)^2$ でじたばたするというモデルで，発生確率の密度関数は次で与えられる：</p>
+
+\[ f(t) = \sqrt{\frac{\mu}{2 \pi \alpha^2 t^3}} \exp \left(-\frac{(t - \mu)^2}{2 \alpha^2 \mu t} \right) \]
+
+<p>ただし，東海地震については，前回の地震からの時間が平均周期をかなり超えているので，Poissonモデルで近似しても大きな違いはないであろう。</p>
+
+<p>地震をPoisson過程と見るなら，1年間に地震の起こる確率 $p_1$ は一定で，地震発生は毎年独立であり，30年間地震が起こらない確率は $(1 - p_1)^{30}$ である。これを $1 - 0.87 = 0.13$ と等しいとおけば，$p_1 = 1 - 0.13^{1/30} = 0.066$ である：</p>
+
+<pre>
+&gt; 1 - 0.13^(1/30)
+[1] 0.0657464
+</pre>
+
+<p>この計算は上に挙げたブログの最初のものと同じである。</p>
+
+<p>上に挙げた3番目のブログ記事では，この計算を「指数分布になるのに、二項分布を利用しているので計算結果が誤っている」と書いているが，これは勘違い。Poisson過程なら，任意の時点から次の地震が起こるまでの時間 $t$ の分布は</p>
+
+\[ f(t) = \lambda e^{- \lambda t} \]
+
+<p>で与えられる指数分布になる。最初の1年に地震が起こる確率は</p>
+
+\[ p_1 = \lambda \int_0^1 e^{- \lambda t} dt = 1 - e^{- \lambda} \]
+
+<p>同様に，30年間に地震が起こる確率は</p>
+
+\[ p_{30} = \lambda \int_0^{30} e^{- \lambda t} dt = 1 - e^{-30 \lambda} \]
+
+<p>したがって</p>
+
+\[ p_1 = 1 - (e^{-30 \lambda})^{1/30} = 1 - (1 - p_{30})^{1/30} \]
+
+<p>となる。つまり，「2項分布」を使っても指数分布を使っても同じことである。</p>
+
+<p>いずれにしても，地震の確率なんてものは，ざっくりしたものなので，元の竹中氏の計算で十分という指摘ももっともである。</p>
+
+<p>ちなみに，東海近辺で地震の起きた年をいくつか拾うと，</p>
+
+<pre>
+&gt; x = c(1498, 1605, 1707, 1854)
+&gt; dx = diff(x)
+&gt; mean(dx)
+[1] 118.6667
+&gt; sd(dx) / mean(dx)
+[1] 0.2078462
+&gt; 2011 - x[4]
+[1] 157
+</pre>
+
+<p>ということで，ざっくりと $\mu = 120$，$\alpha = 0.2$ でBPTモデルで計算すると，</p>
+
+<pre>
+&gt; m = 120
+&gt; a = 0.2
+&gt; bpt = function(t) { (m/(2*pi*a^2*t^3))^(1/2)*exp(-(t-m)^2/(2*a^2*m*t)) }
+&gt; integrate(bpt, 157, 187)
+0.06356807 with absolute error &lt; 7.1e-16
+&gt; integrate(bpt, 157, Inf)
+0.07306916 with absolute error &lt; 9.1e-05
+&gt; 0.06356807 / 0.07306916
+[1] 0.8699713
+</pre>
+
+<p>ということで，最新の地震から157年目の2011年から30年間に地震の起こる確率は87%になる。</p>
+
+<figure><img src="img/141030a.png" alt=""></figure>
+
+<pre>
+plot(NULL, xlim=c(0,250), ylim=c(0,max(bpt(110:130))), axes=FALSE, xlab="", ylab="")
+axis(1, c(0,120,157,187,250))
+x = seq(157,187,5)
+y = bpt(x)
+polygon(c(x,x[length(x)],x[1]), c(y,0,0), col=gray(0.6))
+x = seq(187,250,7)
+y = bpt(x)
+polygon(c(x,x[length(x)],x[1]), c(y,0,0), col=gray(0.9))
+curve(bpt(x), lwd=2, add=TRUE)
+</pre>
+
+<p>同様に，最初の1年では</p>
+
+<pre>
+&gt; integrate(bpt, 157, 158)
+0.004361829 with absolute error &lt; 4.8e-17
+&gt; 0.004361829 / 0.07306916
+[1] 0.05969453
+</pre>
+
+<p>で，5.97%となる。「30年確率は87%」のPoissonモデルで計算した6.57%より少し小さい。</p>
+
+<p>ちなみに，$\lambda \int_0^{\infty} t e^{-\lambda t} dt = 1/\lambda$ であるので，$\lambda$ は次の地震が起きるまでの時間の期待値の逆数である。東海地震の平均間隔を120年として $\lambda = 1/120$ の指数分布であてはめてみれば，いつを起点としても30年確率は $(1/120) \int_0^{30} e^{-t/120} dt = 0.22$ であり，BPTモデルとまったく異なる。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-06-03 13:08:37</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

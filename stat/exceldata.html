@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>RでExcelのデータを読む方法</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td, th { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>RでExcelのデータを読む方法</h1>
+
+<p><del>今のところXLConnectパッケージが制約や問題点が少ないようである。</del>
+openxlsxパッケージについて追記した。<del>xlsxに限ればこれがお薦めである（ただし注意点あり）。</del></p>
+
+<p>Hadley Wickhamのreadxlパッケージについて書き足した。爆速かつ完璧。</p>
+
+<h2>xlsxパッケージ</h2>
+
+<p><a href="http://cran.r-project.org/web/packages/xlsx/">xlsxパッケージ</a>はxls/xlsxファイルを読み書きするためのものである。Javaで書かれた<a href="http://poi.apache.org/">Apache POI</a>を使っている。インストールはMacでも簡単に行えた（昨今のセキュリティ事情からJavaをアンインストールした人は使えない）。</p>
+
+<p>ワークシートをデータフレームとして読み込む関数は
+<code>read.xlsx()</code>
+と
+<code>read.xlsx2()</code>
+である。どちらもファイル名とシート番号（1から始まる）を引数とする：</p>
+
+<pre>
+data = read.xlsx("test.xls", 1) # または read.xlsx2("test.xls", 1)
+</pre>
+
+<p>いろいろなオプションが指定できるので，ヘルプを参照されたい。Windowsの日本語環境では <code>encoding="UTF-8"</code> のオプションが必要のようである。</p>
+
+<p>ヘルプによれば，<code>read.xlsx()</code> より <code>read.xlsx2()</code>
+のほうがJava依存度が高く，行方向に大きいデータでは1桁高速とのことである。</p>
+
+<p>デフォルト（<code>header=TRUE</code>）では1行目が列の名前になる。<code>read.xlsx()</code> は，それ以降の最初の空でない要素から各列のデータ型を判断する。<code>read.xlsx2()</code> はすべて文字列として読む。いずれも，<code>colClasses</code> で各列の型を指定することができる。</p>
+
+<p>いずれもデフォルトでは文字列を因子（factor）に変換する。特に <code>read.xlsx2()</code>
+はすべて文字列として読むので，数値も因子になる。これを避けるには</p>
+
+<pre>
+data = read.xlsx2("test.xls", 1, stringsAsFactors=FALSE)
+</pre>
+
+<p>のようなオプションを使うか，あらかじめ</p>
+
+<pre>
+options(stringsAsFactors=FALSE)
+</pre>
+
+<p>と打ち込んでおくのがよい。</p>
+
+<p>下の「いろいろな方法の比較」を見れば，いろいろおもしろいことがわかる。日時については，<code>read.xlsx()</code>
+は日時として扱っているのに <code>read.xlsx2()</code>
+では内部表現の数値の文字列になってしまっている。また，セルA4には 2013-02-01 23:45:01
+と入力したのに <code>read.xlsx()</code>
+で 2013-02-01 23:45:00 になってしまっている。12:34:56 のような時刻だけの場合は 1899-12-30
+という日付が付く。これらの理由はExcelの日時の内部形式にある。</p>
+
+<div class="note">
+<p>Excelの日時の内部表現は，1900年1月1日を第1日（第0日ではない）とした数値である。つまり，数値0はこの前日の1900年1月0日（つまり1899年12月31日）に対応する。もっとも，これは1900年を閏年とした場合（間違いだが古いLotus 1-2-3との互換性のためExcelではこうしている）の値で，1900年を閏年としない正しい計算では数値0は1899年12月30日に対応する。また，昔のMac版Excelでは数値0は1904年1月1日に対応したが，現在はWindows版と同じ方式がデフォルトで，環境設定の「計算方法」で起点を1904年に変更できる。</p>
+<p>この内部表現は浮動小数点数で，小数部は時刻を表す。数値0.5は，一般的な正午12:00を表す場合と，Excelの1900年1月0日（正しくは1899年12月30日）の正午を表す場合がある。</p>
+<p>Excelはタイムゾーンも夏時間も扱えない。</p>
+</div>
+
+<p><code>read.xlsx2()</code> ではこの内部表現の数値をそのまま文字列として返す。ヘルプには，これを日時に直すには <code>as.POSIXct((x-25569)*86400, tz="GMT", origin="1970-01-01")</code>
+または日付なら <code>as.Date(x-25569, origin="1970-01-01")</code>
+とすればよいと書かれている。<code>read.xlsx()</code>
+ではそのような変換をしている。しかしこれはまずい。実際，下の「いろいろな方法の比較」の例でセルA4に入れた 2013-02-01 23:45:01
+は1秒ずれて 2013-02-01 23:45:00 になっている。理由は，この日時の (x-25569)*86400
+は 1359762300.999… となり，<code>as.POSIXct()</code>
+は小数部分を切り捨てるためである。秒単位の表示をするためには
+<code>as.POSIXct(round((x-25569)*86400), origin="1970-01-01")</code>
+とすべきである（Excelに入れた日時が現地時間であるとすれば <code>tz="GMT"</code>
+もまずい）。</p>
+
+<h2>gdataパッケージ</h2>
+
+<p><a href="http://cran.r-project.org/web/packages/gdata/">gdataパッケージ</a>はGregory Warnes（<a href="http://cran.r-project.org/web/packages/genetics/">geneticsパッケージ</a>の作者）によるデータハンドリングのためのツール集である。この中に，Perlを使ってxls/xlsxファイルを読む <code>read.xls()</code> などの関数がある。MacやLinuxでは簡単に使えるが，Windowsでは<a href="http://cran.r-project.org/web/packages/gdata/INSTALL">ここ</a>を見てPerlのインストールから始めなければならない。Windowsの日本語環境では <code>read.xls()</code> に <code>fileEncoding="UTF-8"</code> のオプションが必要のようである。</p>
+
+<p>ここで使われているPerlスクリプトは，Macなら例えば
+<code>~/Library/R/2.15/library/gdata/perl/</code>
+のようなディレクトリに収められている。この中の <code>xls2csv.pl</code>
+がxls/xlsxをcsvに変換する。使い方は</p>
+
+<pre>
+xls2csv.pl [-s] Excelファイル名 [出力ファイル名] [ワークシート番号]
+</pre>
+
+<p>である。オプション <code>-s</code> で空白行を無視しない。出力ファイル名やシート番号を略せば
+<code>ベース名.csv</code>
+または
+<code>ベース名_シート名.csv</code>
+になる。</p>
+
+<p>このスクリプトでは，Excelのシートに表示される通りの値に丸められてしまうので，例えば6.022e23を入れても6.02e23になってしまうという問題がある（下の「いろいろな方法の比較」参照）。</p>
+
+<h2>XLConnectパッケージ</h2>
+
+<p><a href="http://cran.r-project.org/web/packages/XLConnect/">XLConnect</a>も<a href="http://poi.apache.org/">Apache POI</a>ベースで，Javaに依存する。xls/xlsxともに読み書きできる。Macのバイナリは用意されていないので，以下のようにしてソースからインストールする（ご指摘感謝！）：</p>
+
+<pre>
+install.packages("XLConnect", type="source") # Mac
+</pre>
+
+<div class="note">
+<p>R 3.0.0ではMacでも普通にバイナリインストールできた。</p>
+</div>
+
+<p>MacのGUIでも「CRAN（ソース）」を選択すればインストールできるとのことである。<a href="https://github.com/miraisolutions/xlconnect">github</a>からもインストールできる。</p>
+
+<p>たいへん大きなパッケージであるが，シートごとに読むのであれば次のようにファイル名とシート番号（またはシート名）を指定すればデータフレームの形で取得できる：</p>
+
+<pre>
+data = readWorksheetFromFile("test.xls", 1) # xlsxも同様
+</pre>
+
+<p>結果はxls/xlsxともに完璧である。なお，他のパッケージと違って，日時の変換はExcelに合わせて1900年を閏年とするバグを温存している。したがって，数値0には1899-12-31が対応する。</p>
+
+<p>より一般的には，例えば次のようにする。デフォルトでは1行目に列名が並んでいると仮定するが，そうでない場合は <code>header=FALSE</code> オプションが必要。</p>
+
+<pre>
+wb = loadWorkbook("test.xlsx")
+sh = getSheets(wb) # シート名の配列を得る
+for (s in sh) {
+  data = readWorksheet(wb, s, header=FALSE)
+  # ...
+}
+</pre>
+
+<p>ほかにも多数のオプションがある。ヘルプ参照。</p>
+
+<h2>いろいろな方法の比較</h2>
+
+<p>例として，MacのExcel 2011で次のように入力し，xlsおよびxlsx形式で保存する。</p>
+
+<div><img src="img/130210a.png" alt="Excelの入力例"></div>
+
+<p>ここでは手で打ち込んだが，次のCSVファイルを読み込んでも同じことである：</p>
+
+<pre>
+日時,時刻,文字列,数値
+2013-02-10 12:34:56,12:34:56,"Hello, world!",299792458
+2013-02-11 00:00:00,,,3.14159265358979
+2013-02-01 23:45:01,23:45:01,もじれつ,
+,00:00:00,,6.022e23
+</pre>
+
+<p>セルD5には <code>6.022e23</code> と入力したが，「数値」と判断され，セル内では
+6.02E+23 に見える（上の <i>fx</i> の右には 6.022E+23
+と表示されているので内部では正しく扱われている）。セルの書式設定で「標準」に直せばセル内も 6.022E+23 になる。</p>
+
+<p>また，A列は「日付」→「2001-3-14 13:30」の形式，B列には「時刻」→「13:30:55」の形式を設定し，セルA2には
+<code>2013-2-10 12:34:56</code>
+と入力したが，セル内では 2013-2-10 12:34 までしか表示されない（上の <i>fx</i> の右には :56
+まで表示される）。セルA4も <code>2013-2-1 23:45:01</code> と入力したが分までしか表示されない。</p>
+
+<div class="note">
+<p>これをExcelからCSVまたはHTMLで保存したらどうなるか。結果は，日付は分までしか出力されず，6.022e23と入れたセルも6.02E+23になってしまう。Excelを入力ツールとして使う際に注意しなければならない点である。</p>
+</div>
+
+<div class="note">
+<p>ちなみにxlsxファイルの中身はXMLで，CSVで表すと次のような文字列が収められている：</p>
+<pre>
+日時,時刻,文字列,数値
+41315.524259259262,0.52425925925925931,"Hello, world!",299792458
+41316,,,3.14159265358979
+41306.989594907405,0.98959490740740741,もじれつ,
+,0,,6.0220000000000003E+23
+</pre>
+</div>
+
+<p>Rのxlsxパッケージの <code>read.xlsx()</code> でxls/xlsxファイルを処理した例を示す。上に書いたように，「日時」の列の最後の 23:45:00 は間違いである。</p>
+
+<pre>
+&gt; read.xlsx("test.xls", 1)
+                 日時                時刻        文字列         数値
+1 2013-02-10 12:34:56 1899-12-30 12:34:56 Hello, world! 2.997925e+08
+2 2013-02-11 00:00:00                &lt;NA&gt;          &lt;NA&gt; 3.141593e+00
+3 2013-02-01 23:45:00 1899-12-30 23:45:01      もじれつ           NA
+4                &lt;NA&gt; 1899-12-30 00:00:00          &lt;NA&gt; 6.022000e+23
+&gt; read.xlsx("test.xlsx", 1)
+                 日時                時刻        文字列         数値
+1 2013-02-10 12:34:56 1899-12-30 12:34:56 Hello, world! 2.997925e+08
+2 2013-02-11 00:00:00                &lt;NA&gt;          &lt;NA&gt; 3.141593e+00
+3 2013-02-01 23:45:00 1899-12-30 23:45:01      もじれつ           NA
+4                &lt;NA&gt; 1899-12-30 00:00:00          &lt;NA&gt; 6.022000e+23
+</pre>
+
+<p>同じファイルに対して，<code>read.xlsx2()</code> では次のようになる。NAは空文字列になっている。</p>
+
+<pre>
+&gt; read.xlsx2("test.xls", 1, stringsAsFactors=FALSE)
+                日時               時刻        文字列             数値
+1  41315.52425925926 0.5242592592592593 Hello, world!     2.99792458E8
+2            41316.0                                  3.14159265358979
+3 41306.989594907405 0.9895949074074074      もじれつ                 
+4                                   0.0                       6.022E23
+&gt; read.xlsx2("test.xlsx", 1, stringsAsFactors=FALSE)
+                日時               時刻        文字列             数値
+1  41315.52425925926 0.5242592592592593 Hello, world!     2.99792458E8
+2            41316.0                                  3.14159265358979
+3 41306.989594907405 0.9895949074074074      もじれつ                 
+4                                   0.0                       6.022E23
+</pre>
+
+<p>次に，Rのgdataパッケージの <code>read.xls()</code>
+でxls/xlsxファイルを処理した例を示す。上にも書いたように，「数値」の列の最後の 6.02e+23
+は間違いである。</p>
+
+<pre>
+&gt; read.xls("test.xls", 1)
+Wide character in print at /Users/okumura/Library/R/2.15/library/gdata/perl/xls2csv.pl line 270.
+Wide character in print at /Users/okumura/Library/R/2.15/library/gdata/perl/xls2csv.pl line 270.
+             日時     時刻        文字列         数値
+1 2013/2/10 12:34 12:34:56 Hello, world! 2.997925e+08
+2  2013/2/11 0:00                        3.141593e+00
+3  2013/2/1 23:45 23:45:01      もじれつ           NA
+4                  0:00:00               6.020000e+23
+&gt; read.xls("test.xlsx", 1)
+       日時ニチジ 時刻ジコク 文字列モジレツ   数値スウチ
+1 2013/2/10 12:34   12:34:56  Hello, world! 2.997925e+08
+2  2013/2/11 0:00                           3.141593e+00
+3  2013/2/1 23:45   23:45:01       もじれつ           NA
+4                    0:00:00                6.022000e+23
+</pre>
+
+<p>最後に，RのXLConnectパッケージの <code>readWorksheetFromFile()</code>
+でxls/xlsxファイルを処理した例を示す。他のパッケージで1899-12-30となるところが1899-12-31となっていることに注意する。</p>
+
+<pre>
+&gt; readWorksheetFromFile("test.xls", 1)
+                 日時                時刻        文字列         数値
+1 2013-02-10 12:34:56 1899-12-31 12:34:56 Hello, world! 2.997925e+08
+2 2013-02-11 00:00:00                &lt;NA&gt;          &lt;NA&gt; 3.141593e+00
+3 2013-02-01 23:45:01 1899-12-31 23:45:01      もじれつ           NA
+4                &lt;NA&gt; 1899-12-31 00:00:00          &lt;NA&gt; 6.022000e+23
+&gt; readWorksheetFromFile("test.xlsx", 1)
+                 日時                時刻        文字列         数値
+1 2013-02-10 12:34:56 1899-12-31 12:34:56 Hello, world! 2.997925e+08
+2 2013-02-11 00:00:00                &lt;NA&gt;          &lt;NA&gt; 3.141593e+00
+3 2013-02-01 23:45:01 1899-12-31 23:45:01      もじれつ           NA
+4                &lt;NA&gt; 1899-12-31 00:00:00          &lt;NA&gt; 6.022000e+23
+</pre>
+
+<p>比較のため，RではなくRubyであるが，<a href="/~okumura/ruby/data.html">Rubyによるデータ処理</a>のspreadsheetライブラリの例で*.xlsを処理すると次のようになる（それぞれ
+<code>puts row.join(',')</code> および <code>puts CSV.generate_line(row)</code> の出力）：</p>
+
+<pre>
+日時,時刻,文字列,数値
+41315.5242592593,0.524259259259259,Hello, world!,299792458
+41316.0,,,3.14159265358979
+41306.9895949074,0.989594907407407,もじれつ
+,0.0,,6.022e+23
+</pre>
+
+<pre>
+日時,時刻,文字列,数値
+2013-02-10T12:34:56+00:00,1899-12-30T12:34:56+00:00,"Hello, world!",299792458
+2013-02-11T00:00:00+00:00,,,3.14159265358979
+2013-02-01T23:45:01+00:00,1899-12-30T23:45:01+00:00,もじれつ
+,1899-12-30T00:00:00+00:00,,6.022e+23
+</pre>
+
+<p>また，*.xlsxについて，同ページのrooライブラリの例では次のようになる（それぞれ
+<code>puts row.join(',')</code> および <code>sheet.to_csv</code> の出力）：</p>
+
+<pre>
+日時,時刻,文字列,数値
+2013-02-10T12:34:56+00:00,45296.00000000001,Hello, world!,299792458.0
+2013-02-11,,,3.14159265358979
+2013-02-01T23:45:00+00:00,85501.0,もじれつ,
+,0.0,,6.022e+23
+</pre>
+
+<pre>
+"日時","時刻","文字列","数値"
+2013-02-10T12:34:56+00:00,12:34:56,"Hello, world!",299792458
+2013-02-11,,,3.14159265358979
+2013-02-01T23:45:00+00:00,23:45:01,"もじれつ",
+,00:00:00,,602200000000000027262976
+</pre>
+
+<p>さらに比較のため，Pythonで書かれた
+<a href="https://github.com/dilshod/xlsx2csv">dilshod/xlsx2csv</a>
+を使ってみる（<code>sudo pip3 install xlsx2csv</code> しておく）。時刻が分単位に切り捨てられてしまう：</p>
+
+<pre>
+日時,時刻,文字列,数値
+2013/02/10 12:34,12:34,"Hello, world!",299792458
+2013/02/11 00:00,,,3.14159265358979
+2013/02/ 1 23:45,23:45,もじれつ,
+,00:00,,602200000000000027262976
+</pre>
+
+<h2 id="openxlsx">追記：openxlsxパッケージ</h2>
+
+<p><a href="http://cran.r-project.org/web/packages/openxlsx/index.html">openxlsx</a>
+はJavaに依存せずxlsxファイルの読み書きができるパッケージである（<a href="http://d.hatena.ne.jp/dichika/20141202/p1">Javaに依存せずにxlsxを読む - 東京で尻を洗う</a>参照）。</p>
+
+<p>以下のように簡単かつ高速に処理できる。ただし，日時の内部形式を文字列に直す <code>convertToDateTime()</code> は空セル（NA）があるとエラーになる。また，時刻の内部形式を文字列に直す関数がないので <code>convertToDateTime()</code> を流用することになる（不要な 1899-12-30 が付いてしまう）。</p>
+
+<pre>
+&gt; install.packages("openxlsx")
+&gt; library(openxlsx)
+&gt; data = read.xlsx("test.xlsx")
+&gt; data
+      日時      時刻        文字列         数値
+1 41315.52 0.5242593 Hello, world! 2.997925e+08
+2 41316.00        NA          &lt;NA&gt; 3.141593e+00
+3 41306.99 0.9895949      もじれつ           NA
+4       NA 0.0000000          &lt;NA&gt; 6.022000e+23
+&gt; convertToDate(data$日時)
+[1] "2013-02-10" "2013-02-11" "2013-02-01" NA          
+&gt; convertToDateTime(data$日時)
+ 以下にエラー as.POSIXlt.character(x, tz, ...) : 
+character string is not in a standard unambiguous format
+&gt; convertToDateTime(data$日時[1:3])
+[1] "2013-02-10 12:34:56 JST" "2013-02-11 00:00:00 JST"
+[3] "2013-02-01 23:45:00 JST"
+&gt; convertToDateTime(data$時刻[c(1,3:4)])
+[1] "1899-12-30 12:34:56 JCST" "1899-12-30 23:45:01 JCST"
+[3] "1899-12-30 00:00:00 JCST"
+</pre>
+
+<p>追記：Windowsではinvalid multibyte errorとなり使えないという情報をいただいた。</p>
+
+<p>[2015-12-06] 追記：<a href="http://www.karada-good.net/analyticsr/r-338/">Rで解析：セル体裁！大きなデータも大丈夫！エクセル操作の「openxlsx」パッケージ</a></p>
+
+<h2 id="readxl">readxl</h2>
+
+<p>Hadley Wickhamの新しい <a href="http://cran.r-project.org/web/packages/readxl/index.html">readxl</a>（開発版は <a href="https://github.com/hadley/readxl">hadley/readxl</a>）を試してみた。爆速という評判。最初はちょっとおかしかったが，バグ報告したおかげで直してもらえた。結果は完璧：</p>
+
+<pre>
+&gt; install.packages("readxl")
+&gt; # install.packages("devtools")              # 開発版の場合
+&gt; # devtools::install_github("hadley/readxl") # 開発版の場合
+&gt; library(readxl)
+&gt; data1 = read_excel("test.xls")
+&gt; data1
+                 日時                時刻        文字列         数値
+1 2013-02-10 12:34:56 1899-12-30 12:34:56 Hello, world! 2.997925e+08
+2 2013-02-11 00:00:00                &lt;NA&gt;          &lt;NA&gt; 3.141593e+00
+3 2013-02-01 23:45:00 1899-12-30 23:45:01      もじれつ           NA
+4                &lt;NA&gt; 1899-12-30 00:00:00          &lt;NA&gt; 6.022000e+23
+&gt; data2 = read_excel("test.xlsx")
+&gt; data2
+                 日時                時刻        文字列         数値
+1 2013-02-10 12:34:56 1899-12-30 12:34:56 Hello, world! 2.997925e+08
+2 2013-02-11 00:00:00                &lt;NA&gt;          &lt;NA&gt; 3.141593e+00
+3 2013-02-01 23:45:00 1899-12-30 23:45:01      もじれつ           NA
+4                &lt;NA&gt; 1899-12-30 00:00:00          &lt;NA&gt; 6.022000e+23
+</pre>
+
+<h2 id="manyfiles">大量のExcelファイルを集計する</h2>
+
+<p>カレントディレクトリに大量のExcelファイルがあって，それを集計したいとする。ファイルは次のような形式で1行だけ（あるいは複数行）のデータが入っているとする。</p>
+
+<table>
+  <tbody>
+  <tr><th>品名</th><th>値段</th></tr>
+  <tr><td>りんご</td><td>298</td></tr>
+  </tbody>
+</table>
+
+<p>これらを全部縦につないで一つの大きなデータフレームにしたい。ただし1行目は烈名であるので一つあれば十分である。</p>
+
+<p>上で解説した readxl パッケージの <code>read_excel()</code> 関数を使えば次のようにできる：</p>
+
+<pre>
+names = dir(pattern="*.xlsx")
+alldata = do.call(rbind, lapply(names, read_excel))
+</pre>
+
+<h2>参考</h2>
+
+<ul>
+  <li><a href="/~okumura/ruby/data.html">Rubyによるデータ処理</a></li>
+  <li><a href="http://support.microsoft.com/kb/214330/ja">Excel の 1900 年を基準とした日付方式と 1904 年を基準とした日付方式の違いについて</a></li>
+  <li><a href="http://support.microsoft.com/kb/205719">XL2000: Office スプレッドシート コンポーネントで最早の日付は Excel からが異なります</a></li>
+  <li><a href="http://www.r-bloggers.com/quickly-read-excel-xlsx-worksheets-into-r-on-any-platform/">Quickly read Excel (xlsx) worksheets into R on any platform | (R news &amp; tutorials)</a></li>
+</ul>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-12-06 10:57:42</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

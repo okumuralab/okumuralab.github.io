@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>2項分布の信頼区間の説明</title>
+<link rel="stylesheet" href="style.css">
+<script>
+function choose(n, r) {
+  var c = 1;
+  while (r >= 1) {
+    c *= n / r;  n--;  r--;
+  }
+  return c;
+}
+function dbinom(r, n, theta) {
+  return choose(n, r) * Math.pow(theta, r) * Math.pow(1-theta, n-r);
+}
+var canvas;
+function draw(e) {
+  var ctx = canvas.getContext('2d');
+  var mx = e ? (e.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft) - canvas.offsetLeft) : 250;
+  var my = e ? (e.clientY + (document.body.scrollTop  || document.documentElement.scrollTop)  - canvas.offsetTop) : 100;
+  theta = mx / 500;
+  if (theta > 1) theta = 1;
+  if (theta < 0) theta = 0;
+  if (my < 50) {
+    if (theta < 0.5) theta = 0.06673951; else theta = 0.65245285;
+  }
+  var pr = new Array(11);
+  for (var i = 0; i <= 10; i++) pr[i] = dbinom(i,10,theta);
+  var s = 0, t = 0;
+  for (var j = 0; j <= 3; j++) s += pr[j];
+  for (var j = 3; j <= 10; j++) t += pr[j];
+  ctx.clearRect(0,0,500,350);
+  ctx.font = "normal 15px sans-serif";
+  for (var i = 0; i <= 10; i++) {
+    var x = 46 * i;
+    var y = 320;
+    var w = 40;
+    var h = -600 * pr[i];
+    ctx.beginPath();
+    ctx.rect(x, y, w, h);
+    if (s < t) {
+      if (i <= 3) {
+        ctx.fillStyle = "#ff2800";
+      } else {
+        ctx.fillStyle = "#66ccff";
+      }
+    } else {
+      if (i >= 3) {
+        ctx.fillStyle = "#ff2800";
+      } else {
+        ctx.fillStyle = "#66ccff";
+      }
+    }
+    ctx.fill();
+    ctx.fillStyle = "black";
+    ctx.fillText(i, x+((i<10)?15:10), 350);
+  }
+  ctx.font = "normal 40px sans-serif";
+  // ctx.fillText("θ= " + Math.round(1000*theta)/1000, 150, 40);
+  ctx.fillText("θ= " + theta.toFixed(3), 150, 40);
+  ctx.fillStyle = "#ff2800";
+  ctx.font = "normal 20px sans-serif";
+  if (s < t) {
+    ctx.fillText("p=" + s.toFixed(3), 10, 100);
+  } else {
+    ctx.fillText("p=" + t.toFixed(3), 380, 100);
+  }
+}
+function init() {
+  canvas = document.getElementById('MyCanvas');
+  canvas.addEventListener('mousemove', draw, false);
+  draw(null);
+}
+window.onload = init;
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計</a> &gt;
+</nav>
+
+<h1>2項分布の信頼区間の説明</h1>
+
+<p>硬貨を10回投げて表が3回出た。表の出る回数を2項分布 Binom(10, θ) とするとき，θの95%信頼区間を求めたい。</p>
+
+<p>θの95%信頼区間の定義は，片側 <i>p</i> 値が2.5%以上になるようなθの範囲である（「両側 <i>p</i> 値が5%以上」でなく「片側 <i>p</i> 値が2.5%以上」を使うのは，離散分布の場合は両側 <i>p</i> 値がθの連続関数でないからである）。次のグラフでわかるように，そのようなθの範囲は 0.067 から 0.652 までである。</p>
+
+<canvas id="MyCanvas" width="500" height="350">
+お使いのブラウザはHTML5のcanvasに対応していないようです。
+</canvas>
+
+<p>使い方：上の領域でマウスを動かす。左端でθ=0，右端でθ=1となる。マウスの位置をグラフの上のほう50ピクセル以内くらい（「θ=・・・」と書いてある高さ）にすると，θ=0.067またはθ=0.652に飛ぶ。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-09-25 15:32:00</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

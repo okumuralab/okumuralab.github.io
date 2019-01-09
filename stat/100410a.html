@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>グラフの例：地域別面積</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</div>
+
+<h1>グラフの例：地域別面積</h1>
+
+<p>データの例として
+<a href="http://www.stat.go.jp/data/nenkan/01.htm">統計局ホームページ/日本統計年鑑－第1章　国土・気象</a>
+の「1 - 1 国土構成島数，面積及び周囲」の面積データを使ってみましょう。</p>
+
+<table border="1">
+<tr><th>地域</th><th>面積（km<sup>2</sup>）</th></tr>
+<tr><th>北海道</th><td>83457</td></tr>
+<tr><th>本州</th><td>231113</td></tr>
+<tr><th>四国</th><td>18792</td></tr>
+<tr><th>九州</th><td>42191</td></tr>
+<tr><th>沖縄</th><td>2276</td></tr>
+</table>
+
+<p>これをRに打ち込むにはいろいろな方法がありますが，ここでは簡単にベクトルとしてみます。</p>
+
+<pre>
+地域 = c("北海道","本州","四国","九州","沖縄")
+面積 = c(83457,231113,18792,42191,2276) / 10000
+</pre>
+
+<p>面積は km<sup>2</sup> 単位では値が大きすぎるので，万km<sup>2</sup> 単位にするために10000で全体を割っています。</p>
+
+<p>グラフを描く前に，Macの場合は <code>par(family="HiraKakuProN-W3")</code>
+などと打ち込んで日本語のフォントを設定しておきます。</p>
+
+<p>地域ごとの面積を棒グラフにする際の基本は</p>
+
+<pre>
+barplot(面積, names.arg=地域)
+</pre>
+
+<p>です。さらに縦軸にラベルを付けるには</p>
+
+<pre>
+barplot(面積, names.arg=地域, ylab="面積（万km^2）")
+</pre>
+
+<p>とします。もう少し凝ると，次のようになります。</p>
+
+<pre>
+par(las=1)              # 縦軸の文字を横向きにしない（las: label style）
+par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
+barplot(面積, names.arg=地域, ylab="面積（万km^2）")
+</pre>
+
+<p>km^2ではなくkm<sup>2</sup>のように上付きにするには，
+<code>expression(paste("面積（万", km^2, "）"))</code>
+のような書き方をします。</p>
+
+<p>最後に，さらに凝ってみます：</p>
+
+<pre>
+barplot(面積, names.arg=地域)
+axis(2, labels=expression(paste("面積（万", km^2, "）")),
+     at=20, hadj=0.3, padj=-1, tick=FALSE)
+</pre>
+
+<p><img src="img/100410a.png" alt="" /></p>
+
+<hr />
+
+<p><a href="/~okumura/">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2011-11-22 15:15:11
+<!-- hhmts end -->
+</p>
+</body>
+</html>

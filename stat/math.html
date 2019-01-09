@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Rで数式を書く</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Rで数式を書く</h1>
+
+<h2>plotmath</h2>
+
+<p>Rのプロットの中にちょっとした数式を書き込みたいときは <code>expression()</code> という関数を使う。</p>
+
+<pre>
+<code>?plotmath</code>
+</pre>
+
+<p>でヘルプを見ると説明がある。</p>
+
+<pre>
+<code>demo(plotmath)</code>
+</pre>
+
+<p>でデモが見られる。</p>
+
+<p>標準正規分布の分布関数をプロットして，タイトルに $\dfrac{1}{\sqrt{2\pi}} \exp(-x^2/2)$ という数式を書いてみよう。</p>
+
+<pre>
+curve(dnorm(x), xlim=c(-3,3), ylab="",
+      main=expression(frac(1,sqrt(2*pi))*exp(-x^2/2)))
+</pre>
+
+<figure><img src="img/160103a.png" alt=""></figure>
+
+<p>私の環境のデフォルトのフォント（ヒラギノ）で何とか数式が表示された。しかし，このフォントではイタリック体がうまく出ない。そこで，フォントをTimesに変えてやってみる。文字 $x$ だけイタリック体にする。</p>
+
+<pre>
+curve(dnorm(x), xlim=c(-3,3), xlab=expression(italic(x)), ylab="",
+      main=expression(frac(1,sqrt(2*pi))*exp(-italic(x)^2/2)),
+      family="Times")
+</pre>
+
+<figure><img src="img/160103b.png" alt=""></figure>
+
+<div class="note">
+<p>微妙な違いだが exp(...) を数式扱いではなくテキストとして書くには次のようにする：</p>
+<pre>
+curve(dnorm(x), xlim=c(-3,3), ylab="",
+      main=expression(paste(frac(1,sqrt(2*pi)), "exp(", -x^2/2, ")")))
+</pre>
+<p>このほうが括弧が締まって見えるようにも思う。</p>
+</div>
+
+<div class="note">
+<p><code>expression(...)</code> と同じことだが <code>parse(text="...")</code> とすれば文字列として数式が与えられることを教えていただいた：</p>
+<pre>
+curve(dnorm(x), xlim=c(-3,3), ylab="",
+      main=parse(text="frac(1,sqrt(2*pi))*exp(-x^2/2)"))
+</pre>
+<p>この方法なら数式を表す文字列を <code>sprintf()</code> などで生成することも簡単である。</p>
+</div>
+
+<div class="note">
+<p>ほかにも <code>substitute()</code> などがあることを教えていただいた。RjpWikiの<a href="http://www.okada.jp.org/RWiki/?%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF%E3%82%B9%E5%8F%82%E8%80%83%E5%AE%9F%E4%BE%8B%E9%9B%86%EF%BC%9A%E6%95%B0%E5%BC%8F%E3%81%AE%E3%83%97%E3%83%AD%E3%83%83%E3%83%88">グラフィックス参考実例集：数式のプロット</a>参照。</p>
+</div>
+
+<h2>latex2exp</h2>
+
+<p>われわれは数式の記法としては $\mathrm{\LaTeX}$ に慣れている。その記法を上記plotmathの記法に変換してくれる <code>TeX()</code> という関数がパッケージ <a href="https://cran.r-project.org/web/packages/latex2exp/index.html">latex2exp</a> により提供されている。これはあくまでplotmathの枠内で数式を書くものであり，新しい機能を追加するものではないが，plotmathの独自記法を覚える必要がないという点で便利である。</p>
+
+<pre>
+<code>install.packages("latex2exp")</code>
+<code>library(latex2exp)</code>
+</pre>
+
+<p>詳細はGitHubの <a href="https://github.com/stefano-meschiari/latex2exp">stefano-meschiari/latex2exp</a> に解説がある。</p>
+
+<p>これを使えば，このページの最初の例は次のように書くことができる。バックスラッシュは2重に書くことに気をつけなければならない。</p>
+
+<pre>
+curve(dnorm(x), xlim=c(-3,3), xlab=TeX("$x$"), ylab="",
+      main=TeX("$\\frac{1}{\\sqrt{2\\pi}}\\exp(-x^2/2)$"))
+</pre>
+
+<p>ただ，文字は自動的にはイタリック体にならない。明示的に <code>\\mathit{x}</code> のように書く必要がある。</p>
+
+<pre>
+curve(dnorm(x), xlim=c(-3,3), xlab=TeX("$\\mathit{x}$"), ylab="",
+      main=TeX("$\\frac{1}{\\sqrt{2\\pi}}\\exp(-\\mathit{x}^2/2)$"),
+      family="Times")
+</pre>
+
+<h2>tikzDevice</h2>
+
+<p>本格的な $\mathrm{\LaTeX}$ の数式を書くには，Rの <a href="https://cran.r-project.org/web/packages/tikzDevice/index.html">tikzDevice</a> を使えばよい。</p>
+
+<p>TikZの解説は拙著<a href="http://oku.edu.mie-u.ac.jp/~okumura/bibun6/">［改訂第6版］LaTeX2e 美文書作成入門</a>の付録Dにある。RでtikzDeviceを使う方法はpp.368-369にある。ここではR-Forgeからインストールするように書かれているが，現在はCRANに入っているので，単に</p>
+
+<pre>
+<code>install.packages("tikzDevice")</code>
+</pre>
+
+<p>でインストールできる。開発はGitHubの <a href="https://github.com/yihui/tikzDevice">yihui/tikzDevice</a> で行われている。</p>
+
+<p>念のため拙著で描いた図を再掲しておく。</p>
+
+<figure><img src="img/160103c.png" alt=""></figure>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-01-04 15:40:16+09:00</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

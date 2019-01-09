@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>全国学力テストの都道府県別正答率</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>全国学力テストの都道府県別正答率</h1>
+
+<p>2017年8月28日に，平成29年度全国学力テスト（正確には「全国学力・学習状況調査」）の結果が国研の<a href="http://www.nier.go.jp/kaihatsu/zenkokugakuryoku.html">このページ</a>で公開された。</p>
+
+<p>今年は，都道府県ごとの競争を煽らないために，都道府県別平均正答率は整数に丸めて公開された。しかし，実際には小数点以下の勝った負けたが行われている。確かに全体としては整数に丸めた値しか公表されていないが，都道府県別のファイルには小数第1位までちゃんと書かれており，さらに度数分布まで公開されているので任意精度で平均正答率を求めることができる。</p>
+
+<p>詳しい情報が書かれているのは，<a href="http://www.nier.go.jp/17chousakekkahoukoku/factsheet/17prefecture-City/">このページ</a>からリンクされているExcelファイル群である。とりあえずこれらを全部ダウンロードしてみよう（これはRではなくUNIXのコマンドである）：</p>
+
+<pre>
+wget -m -np -w 5 http://www.nier.go.jp/17chousakekkahoukoku/factsheet/17prefecture-City/
+</pre>
+
+<p>ディレクトリに分かれてたくさんのファイルが取得できる。このうち，小学校の成績の県ごとのファイルは 01p_17r.xlsx から 47p_17r.xlsr までである。これらの名前一覧を取得するRのコマンドは次の通りである（全部のファイルが見える上位のディレクトリで実行する）：</p>
+
+<pre>
+names = dir(pattern="^\\d\\dp_17r.xlsx$", full.names=TRUE, recursive=TRUE)
+</pre>
+
+<p>Excelで開いてみると，AE9〜AE24の範囲に国語Aの正答数の度数分布（0問〜15問）が並んでいることがわかる。これらを取得して，都道府県ごとの平均正答数を求めるRのコマンドは次の通りである（あらかじめ <code>library(readxl)</code> しておく）：</p>
+
+<pre>
+f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="AE9:AE24")) # 国語A
+x = sapply(names, f)
+pka = sapply(1:47, function(i) sum(x[,i]*0:15)/sum(x[,i]))
+</pre>
+
+<p>同様に他の科目や中学校も行えばよい。全体をまとめて，平均正答数を平均正答率（％）に変換してCSVファイルに収めるところまでは，次のスクリプトになる：</p>
+
+<pre>
+library(readxl)
+
+# 小学校
+names = dir(pattern="^\\d\\dp_17r.xlsx$", full.names=TRUE, recursive=TRUE)
+f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="AE9:AE24")) # 国語A
+x = sapply(names, f)
+pka = sapply(1:47, function(i) sum(x[,i]*0:15)/sum(x[,i]))
+f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="AE53:AE62")) # 国語B
+x = sapply(names, f)
+pkb = sapply(1:47, function(i) sum(x[,i]*0:9)/sum(x[,i]))
+f = function(n) unlist(read_excel(n, 2, col_names=FALSE, range="AE9:AE24")) # 算数A
+x = sapply(names, f)
+psa = sapply(1:47, function(i) sum(x[,i]*0:15)/sum(x[,i]))
+f = function(n) unlist(read_excel(n, 2, col_names=FALSE, range="AE53:AE64")) # 算数B
+x = sapply(names, f)
+psb = sapply(1:47, function(i) sum(x[,i]*0:11)/sum(x[,i]))
+
+# 中学校
+names = dir(pattern="^\\d\\dm_17r.xlsx$", full.names=TRUE, recursive=TRUE)
+f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="AD8:AD40")) # 国語A
+x = sapply(names, f)
+mka = sapply(1:47, function(i) sum(x[,i]*0:32)/sum(x[,i]))
+f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="AD55:AD64")) # 国語B
+x = sapply(names, f)
+mkb = sapply(1:47, function(i) sum(x[,i]*0:9)/sum(x[,i]))
+f = function(n) unlist(read_excel(n, 2, col_names=FALSE, range="AD8:AD44")) # 数学A
+x = sapply(names, f)
+msa = sapply(1:47, function(i) sum(x[,i]*0:36)/sum(x[,i]))
+f = function(n) unlist(read_excel(n, 2, col_names=FALSE, range="AD55:AD70")) # 数学B
+x = sapply(names, f)
+msb = sapply(1:47, function(i) sum(x[,i]*0:15)/sum(x[,i]))
+
+all = data.frame(番号=1:47,
+                 小国A=pka*(100/15), 小国B=pkb*(100/9), 小算A=psa*(100/15), 小算B=psb*(100/11),
+                 中国A=mka*(100/32), 中国B=mkb*(100/9), 中数A=msa*(100/36), 中数B=msb*(100/15))
+write.csv(all, "atest2017.csv", quote=FALSE, row.names=FALSE)
+</pre>
+
+<p>このようにして作った <a href="data/atest2017.csv">atest2017.csv</a> を置いておく（文字コードはExcelでも読めるようにBOM付きUTF-8とした）。</p>
+
+<p>せっかく整数に丸めて公表されているのに，勝手に丸める前の値を公開していいものか。ちょっと悩んだので，都道府県名は付けないでおいた。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2017-08-29 13:48:04</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

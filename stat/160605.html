@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>自治体一覧</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>自治体一覧</h1>
+
+<p>全国の自治体一覧は国税庁の法人番号公表サイトの<a href="http://www.houjin-bangou.nta.go.jp/setsumei/kuninokikanichiran.html#市町村">市町村</a>にある<a href="http://www.houjin-bangou.nta.go.jp/setsumei/images/cities.xlsx">cities.xlsx</a>に列挙されている。</p>
+
+<pre>
+<code>library(readxl)</code>
+<code>cities = read_excel("cities.xlsx", skip=1)</code>
+<code>dim(cities)</code>
+[1] 1718    4
+</pre>
+
+<p>1718自治体がリストされている。</p>
+
+<p>ただ，この表には郵便番号がない。そこで，郵便局の<a href="http://www.post.japanpost.jp/zipcode/dl/jigyosyo/index-zip.html">事業所の個別郵便番号データダウンロード</a>から<a href="http://www.post.japanpost.jp/zipcode/dl/jigyosyo/zip/jigyosyo.zip">最新データのダウンロード</a>（ZIP）を取ってきて展開すると JIGYOSYO.CSV というCSVファイルが得られる。</p>
+
+<pre>
+<code>JIGYOSYO = read.csv("JIGYOSYO.CSV", header=FALSE, fileEncoding="CP932", as.is=TRUE)</code>
+<code>x = JIGYOSYO[grep("(市役所|町役場|村役場)$", JIGYOSYO$V3), 3:8]</code>
+<code>dim(x)</code>
+[1] 1371    6
+</pre>
+
+<p>1371自治体しか個別郵便番号を持っていない。ということで，少し考え直す。</p>
+
+<p>まず国税庁の1718自治体について，自治体名がユニークかどうか調べてみる。</p>
+
+<pre>
+<code>c = cities$名称</code>
+<code>u = unique(c)</code>
+<code>n = sapply(u, function(x) sum(c == x))</code>
+<code>table(n)</code>
+n
+   1    2    3    4 
+1659   20    5    1 
+<code>c[n == 4]</code>
+[1] "池田町"
+<code>subset(cities, 名称=="池田町")</code>
+         法人番号   名称                                   所在地 備考
+163 1000020016446 池田町       北海道中川郡池田町字西１条７－１１   NA
+774 2000020183822 池田町           福井県今立郡池田町稲荷３５－４   NA
+871 9000020204811 池田町 長野県北安曇郡池田町大字池田３２０３－６   NA
+916 8000020214043 池田町     岐阜県揖斐郡池田町六之井１４６８－１   NA
+</pre>
+
+<p>都道府県名を取得するところでリストのバグに気づいた。木更津市と日置市だけ県名がない。</p>
+
+<pre>
+pref = substr(cities[,3], 1, regexpr("..(都|道|府|県|市)", cities[,3], perl=TRUE)+2)
+pref[pref == "木更津市"] = "千葉県"
+pref[pref == "日置市"] = "鹿児島県"
+</pre>
+
+<p>都道府県名を合わせれば自治体名はユニークになる：</p>
+
+<pre>
+<code>cp = paste0(cities[,2], " ", pref)</code>
+<code>length(cp)</code>
+[1] 1718
+<code>length(unique(cp))</code>
+[1] 1718
+</pre>
+
+<p>郵便番号表からはユニークなものが1354役場ある。これも都道府県を付けてユニークにする。</p>
+
+<pre>
+<code>length(unique(x$V3))</code>
+[1] 1354
+<code>xp = paste0(x$V3, " ", x$V4)</code>
+<code>length(xp)</code>
+[1] 1371
+<code>length(unique(xp))</code>
+[1] 1369
+<code>uxp = unique(xp)</code>
+<code>nuxp = sapply(uxp, function(x) sum(xp == x))</code>
+<code>table(nuxp)</code>
+nuxp
+   1    2 
+1367    2 
+<code>uxp[nuxp == 2]</code>
+[1] "八幡平市役所 岩手県" "青梅市役所 東京都"  
+</pre>
+
+<p>青梅市役所は単なるダブりみたい。八幡平市役所は本当に2箇所あるのか？</p>
+
+<p>国税庁データのほうにも「役所」または「役場」を追加する。</p>
+
+<pre>
+<code>cc = ifelse(grepl("市$", c), paste0(c, "役所"), paste0(c, "役場"))</code>
+<code>ccp = paste0(cc, " ", pref)</code>
+<code>length(ccp)</code>
+[1] 1718
+<code>length(unique(ccp))</code>
+[1] 1718
+<code>setdiff(uxp, ccp)</code>
+ [1] "鯵ケ沢町役場 青森県"           "七ヶ宿町役場 宮城県"          
+ [3] "茨城県　鉾田市役所 茨城県"     "牧村役場 新潟県"              
+ [5] "岐阜県加茂郡富加町役場 岐阜県" "一色町役場 愛知県"            
+ [7] "吉良町役場 愛知県"             "幡豆町役場 愛知県"            
+ [9] "愛知県大府市役所 愛知県"       "愛知県　高浜市役所 愛知県"    
+[11] "海部郡大治町役場 愛知県"       "愛知県知多郡東浦町役場 愛知県"
+[13] "滋賀県　守山市役所 滋賀県"     "大阪府　大東市役所 大阪府"    
+[15] "大阪府泉南市役所 大阪府"       "鳥取県　境港市役所 鳥取県"    
+[17] "東出雲町役場 島根県"           "広島県安芸郡坂町役場 広島県"  
+[19] "香川県　善通寺市役所 香川県"   "須惠町役場 福岡県"            
+<code>length(setdiff(ccp, uxp))</code>
+[1] 369
+</pre>
+
+<p>これでだいたい構造がわかったので，国税庁データについて郵便番号（zip）を求める：</p>
+
+<pre>
+<code>zip = sapply(1:1718, function(i) x[grep(ccp[i], xp)[1], 6])</code>
+<code>length(zip)</code>
+[1] 1718
+<code>sum(!is.na(zip))</code>
+[1] 1364
+</pre>
+
+<p>これで1718件中1364件は郵便番号が求められた。残り354件はおそらく個別郵便番号がないのであろう。</p>
+
+<p>一般の郵便番号データは<a href="http://www.post.japanpost.jp/zipcode/dl/kogaki-zip.html">こちら</a>の<a href="http://www.post.japanpost.jp/zipcode/dl/kogaki/zip/ken_all.zip">全国一括</a>をダウンロードすればよい。展開してでてくるCSVファイルを読む：</p>
+
+<pre>
+<code>yuubin = read.csv("KEN_ALL.CSV", header=FALSE, fileEncoding="CP932")</code>
+</pre>
+
+<p>V7〜V9が住所，V3が郵便番号である。税務署データの住所 cities[,3] が一番近いものを選べばよい。</p>
+
+<p><a href="kopipe.html">コピペのチェック</a>でも書いた編集距離を使ってみる。</p>
+
+<pre>
+library(stringdist)
+addr = paste0(yuubin[,7], yuubin[,8], yuubin[,9])
+dist = rep(NA, 1718)
+for (i in 1:1718) {
+  if (is.na(zip[i])) {
+    d = stringdist(cities[i,3], addr, method='lv')
+    m = min(d)
+    zip[i] = yuubin[d == m, 3][1]
+    dist[i] = m
+  }
+}
+</pre>
+
+<p>これでとりあえず埋めることができた。</p>
+
+<pre>
+<code>cities$zip = zip</code>
+<code>cities$dist = dist</code>
+<code>write.csv(cities, "cities_zip.csv", quote=FALSE, eol="\r\n", row.names=FALSE, fileEncoding="CP932")</code>
+</pre>
+
+<p>試行錯誤の列挙になってしまった。もっと良い方法を緩募。</p>
+
+<p>なお，上の自治体数は特別区を含んでいない（含めるべきだったのだろう）。</p>
+
+<p>なお，郵便番号付きの自治体一覧はJ-LISの<a href="https://www.j-lis.go.jp/spd/code-address/jititai-code.html">地方公共団体コード住所</a>からたどれるページにあるので，こちらをスクレーピングしたほうが早いかもしれない。</p>
+
+<p>総務省にも<a href="http://www.soumu.go.jp/denshijiti/code.html">全国地方公共団体コード</a>があるが，こちらは住所や郵便番号はない。</p>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-06-05 20:31:22</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

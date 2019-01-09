@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>グラフの例：迷惑メールの数</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</div>
+
+<h1>グラフの例：迷惑メールの数</h1>
+
+<p>次のグラフは<a href="http://www.dekyo.or.jp/soudan/chain/report/index.html">日本データ通信協会迷惑メール相談センターへ寄せられたチェーンメールの転送数</a>です。2010年8月から2011年にかけてのデータですが，3月11日の震災では思ったほど増えず，むしろゴールデンウィークで増えていることがわかります（連休効果）。理由はいろいろ考えられます。</p>
+
+<div>
+<img src="img/121008a.png" alt="日本データ通信協会迷惑メール相談センターへ寄せられたチェーンメールの転送数" />
+</div>
+
+<p>データを<a href="data/chainletters.csv">chainletters.csv</a>に書き込んで，次のようにして描きました：</p>
+
+<pre>
+par(las=1)           # 縦軸の文字を横向きにしない
+par(mgp=c(2,0.8,0))  # 目盛の位置の微調整
+chainletters = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/chainletters.csv",
+                        as.is=TRUE, fileEncoding="SJIS", comment.char="#")
+t = as.POSIXct(chainletters$期間)
+plot(t + 3.5*24*60*60, chainletters$件数, type="h",
+     xlab="", ylab="", xaxt="n", lwd=5, lend=1, col="#0068b7")
+r = as.POSIXct(range(t))
+axis.POSIXct(1, at=seq(r[1],r[2]+3.5*24*60*60,by="month"), format="%b月")
+title("日本データ通信協会迷惑メール相談センターへ寄せられたチェーンメールの転送数",
+      line=0.5) # 必要なら文字サイズをcex.mainで調整する
+</pre>
+
+<p>時間の表し方については<a href="timeseries.html">時系列データ</a>をご覧ください。</p>
+
+<p><code>plot()</code> の <code>type="h"</code>
+がヒストグラム風のプロットです。デフォルトでは細い線になりますので，<code>lwd=8</code>
+などとして太くしています。太くした場合，デフォルトでは端点が丸みを帯びますので，<code>lend=1</code>
+または <code>lend="butt"</code> で端点を平らにします。</p>
+
+<p>期間の最初は区間の中心から半分だけずれますので，3.5日だけずらしています。</p>
+
+<hr />
+
+<p><a href="/~okumura/">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2012-10-08 11:21:42
+<!-- hhmts end -->
+</p>
+</body>
+</html>

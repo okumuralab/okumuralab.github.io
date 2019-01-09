@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>貨幣の重さ</title>
+<link rel="stylesheet" href="../style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>貨幣の重さ</h1>
+
+<p>NHKニュースによれば，<a href="http://www3.nhk.or.jp/news/html/20141027/k10015730041000.html">大阪の造幣局で恒例の貨幣大試験</a>が行われた。「このうち５００円硬貨は、１０００枚の重さが７キログラム、誤差を１３グラム以下にすることが定められていて、造幣局の担当者が１０００枚ずつてんびんにかけて慎重に重さを量っていました。」</p>
+
+<p>詳しい方法は，財務省の<a href="http://www.mof.go.jp/currency/coin/test/20140930.html">第１４３次製造貨幣大試験を実施します</a>からリンクされている<a href="http://www.mof.go.jp/currency/coin/test/20140930a.html">（参考資料）製造貨幣大試験について</a>にある。</p>
+
+<p>500円貨幣（硬貨）については，4万枚ごとに1枚抜き取った1000枚をまとめて計る。7000±13グラムの範囲であれば合格。</p>
+
+<p>1枚あたり7.000±0.013グラムということになりそうだが，もし誤差が独立であれば，1000枚で13グラムの誤差は，1枚では $13 / \sqrt{1000} = 0.41$ グラムの誤差に相当する。したがって，1枚あたり7.00±0.41グラムということになる。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-10-29T10:27:30+09:00">2014-10-29 10:27:30</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

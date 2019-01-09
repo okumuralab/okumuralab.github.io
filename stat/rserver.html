@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>RStudio Serverを使う</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>RStudio Serverを使う</h1>
+
+<p>CentOS 6.xにRStudio Serverをインストールしてみる。</p>
+
+<p>まずRを入れる必要がある。yumでも入るが，私はいつもソースからコンパイルしている。ソースをダウンロードして展開し，その中に入って，次のようにする。RStudio Serverを使うためには <code>--enable-R-shlib</code> は必須。PDF作成にはTeXが必要。texmf.cnfでセキュリティのため <code>openin_any = p</code> を設定していると失敗する。</p>
+
+<pre>
+./configure --enable-R-shlib
+make
+make install
+</pre>
+
+<p>あとはRStudio Serverの無償版をダウンロードして，<a href="http://www.rstudio.com/products/rstudio/download-server/">ここ</a>の通りにする：</p>
+
+<pre>
+# yum install openssl098e
+# wget http://download2.rstudio.org/rstudio-server-*-x86_64.rpm
+# yum install --nogpgcheck rstudio-server-*-x86_64.rpm
+</pre>
+
+<p>これでプロセスが起動する。あとはブラウザで <code>http://サーバ名:8787</code> にアクセスするだけ。認証画面が出るので，サーバのユーザ名・パスワードでログインする。残念ながら無償版ではSSL/TLSは使えないので，インターネット越しで使うのは怖い。</p>
+
+<p>プロセスを止めるには</p>
+
+<pre>
+rstudio-server stop
+</pre>
+
+<p>とする。init.dの中のスクリプトではなくUpstartという仕組みを使っているので，サーバを再起動しても自動で立ち上がらないようにするには，/etc/init/ にある rstudio-server.conf を例えば rstudio-server.conf.bak にリネームして</p>
+
+<pre>
+# initctl reload-configuration
+</pre>
+
+<p>しておく。念のため</p>
+
+<pre>
+# initctl list
+</pre>
+
+<p>して <code>rstudio-server stop/waiting</code> という行が出なければOK。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-01-31 21:47:26</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>符号検定とWilcoxonの符号付き順位検定</title>
+<meta name="keywords" content="符号検定, Wilcoxon, ウィルコクソン, ウイルコクソン, 符号付き順位検定, 符号付順位検定, 符号つき順位検定, 符号付き順位和検定, 符号付順位和検定, 符号つき順位和検定">
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>符号検定とWilcoxonの符号付き順位検定</h1>
+
+<h2>符号検定</h2>
+
+<p>10人の患者にある睡眠薬を飲ませたところ，睡眠時間がそれぞれ次の時間だけ増えました
+(Arthur R. Cushny and A. Roy Peebles, <i>The Journal of Physiology</i> <b>32</b>, 501-510 (1905)):</p>
+
+<blockquote>
+<p>1.9,  0.8,  1.1,  0.1, -0.1,  4.4,  5.5,  1.6,  4.6,  3.4</p>
+</blockquote>
+
+<p>つまり，10個のうち負の値は1個だけで，残り9個は正です。正・負の符号の付き方は全部で $2^{10} = 1024$ 通りあり，そのうちで</p>
+
+<ul>
+  <li>すべて正になる場合は $_{10}C_0 = 1$ 通り</li>
+  <li>一つだけ負になる場合は $_{10}C_1 = 10$ 通り</li>
+  <li>二つだけ負になる場合は $_{10}C_2 = (10 \times 9) / (2 \times 1) = 45$ 通り</li>
+</ul>
+
+<p>等々のように場合分けできます。すべての場合を合計すると，当然ですが $2^{10} = 1024$
+になります。</p>
+
+<p>もし正になる確率と負になる確率が同じなら，</p>
+
+<ul>
+  <li>すべて正になる確率は 1/1024</li>
+  <li>一つだけ負になる確率は 10/1024</li>
+  <li>二つだけ負になる確率は 45/1024</li>
+</ul>
+
+<p>となるはずです。実際のデータは10個のうち一つだけ負ですので，このようになる確率と，もっと極端な（すべて正になる）確率を合計すれば，10/1024 + 1/1024 = 11/1024
+です。逆に，すべて負になる確率と，一つだけ正になる確率を合計すれば，やはり 10/1024 + 1/1024 = 11/1024
+です。そこで，10個のうち1個以下の符号が他と異なる確率は，22/1024
+で，$p$ 値は約0.02です。つまり，偶然では50回に1回しか起きない事象です。</p>
+
+<p>このような検定法を符号検定（sign test）といいます。</p>
+
+<p>符号検定では，差が 0 のデータは外して考えます。</p>
+
+<p>一般に，0でない数が <code>n</code> 個あって，そのうち <code>m</code> 個が正（または負）であるなら，<code>binom.test(m, n)</code> で符号検定できます。例えば上の例の場合は</p>
+
+<pre>
+&gt; binom.test(1, 10)
+
+	Exact binomial test
+
+data:  1 and 10
+number of successes = 1, number of trials = 10, p-value = 0.02148
+alternative hypothesis: true probability of success is not equal to 0.5
+95 percent confidence interval:
+ 0.002528579 0.445016117
+sample estimates:
+probability of success 
+                   0.1 
+</pre>
+
+<p>で，$p = 0.02148$ となります。</p>
+
+<h2>Wilcoxonの符号付き順位検定</h2>
+
+<p>さきほどのデータで，順序関係</p>
+
+\[ -0.1 < 0.1 < 0.8 < 1.1 < 1.6 < 1.9 < 3.4 < 4.4 < 4.6 < 5.5 \]
+
+<p>しか意味がないのであれば，符号検定以上のことはできません。</p>
+
+<p>ここで，もし絶対値の順序関係</p>
+
+\[ 0.1 = 0.1 < 0.8 < 1.1 < 1.6 < 1.9 < 3.4 < 4.4 < 4.6 < 5.5 \]
+
+<p>に意味があるのであれば，順位（同順位があれば順位の平均をとります）</p>
+
+\[ 1.5, 1.5, 3, 4, 5, 6, 7, 8, 9, 10 \]
+
+<p>に変換してから，符号を戻して，合計した値</p>
+
+\[ -1.5 + 1.5 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 = 52 \]
+
+<p>を考えます。この符号の付け方は $2^{10} = 1024$
+通りありますが，順位和が 52 以上になるのは全部 $+$ にした場合と二つの $1.5$ のどちらかに $-$
+を付けた場合の3通りです。同様に，順位和が $-52$
+以下になるのも3通りですので，偶然で順位和が $\pm 52$
+またはそれより極端な値になる確率は $p = 6/1024 = 0.005859$
+です。これがWilcoxon（ウィルコクソン）の符号付き順位検定（符号付き順位和検定，Wilcoxon signed-rank test）です。</p>
+
+<p>一般にさきほどの単なる符号検定より小さい $p$ 値が得られますが，こちらのほうは，絶対値が比較可能でなければなりません。別の言い方をすると，分布の密度関数が正と負で対称であるという帰無仮説を検定することになります。</p>
+
+<p>なお，すべて符号が同じ（またはゼロ）なら，符号検定と同じことになります。</p>
+
+<h3>Rによる計算</h3>
+
+<p>Rの標準の関数でWilcoxonの符号つき順位検定をするには次のようにします。</p>
+
+<pre>
+x = c(1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4)
+&gt; wilcox.test(x)
+
+	Wilcoxon signed rank test with continuity correction
+
+data:  x 
+V = 53.5, p-value = 0.009298
+alternative hypothesis: true location is not equal to 0 
+
+Warning message:
+In wilcox.test.default(x) :
+   タイがあるため、正確な p 値を計算することができません 
+</pre>
+
+<p>このように，残念ながら同じ値 1.5 が複数ありますので，近似計算になります。データの個数が十分多ければこれで問題ないのですが，この場合には，正確な値 $p = 0.005859$ とやや外れてしまいます。</p>
+
+<p>厳密な答えを求める一つの方法は，exactRankTests パッケージの <code>wilcox.exact()</code>
+を使うものです：</p>
+
+<pre>
+&gt; library(exactRankTests)
+ Package ‘exactRankTests’ is no longer under development.
+ Please consider using package ‘coin’ instead.
+
+&gt; wilcox.exact(x)
+
+	Exact Wilcoxon signed rank test
+
+data:  x 
+V = 53.5, p-value = 0.005859
+alternative hypothesis: true mu is not equal to 0 
+</pre>
+
+<p>しかし，上のメッセージにあるように，exactRankTests
+パッケージは開発が止まっています（このメッセージは2006年に出るようになりましたが，その後も小さな修正はなされているようです）。代替としては <a href="http://cran.r-project.org/package=coin">coin</a>（conditional inference）パッケージの <code>wilcoxsign_test()</code>
+があります。使い方は，次のように，この場合なら0を10個並べただけのデータ <code>rep(0,10)</code>
+と比較します。比較は <code>~</code> という演算子で行います：</p>
+
+<pre>
+&gt; library(coin)
+&gt; wilcoxsign_test(x ~ rep(0,10), distribution="exact")
+
+        Exact Wilcoxon-Signed-Rank Test
+
+data:  y by
+         x (neg, pos)
+         stratified by block
+Z = 2.6519, p-value = 0.005859
+alternative hypothesis: true mu is not equal to 0
+</pre>
+
+<p>要素ごとに対応するベクトル <code>x</code> と <code>y</code>
+を比較するなら，<code>wilcoxsign_test(x ~ y, distribution="exact")</code>
+とします。このとき，0の処理法のデフォルトは <code>"Pratt"</code>
+です。<code>wilcox.exact()</code>
+と同じにしたいなら，<code>wilcoxsign_test(..., zero.method="Wilcoxon")</code>
+とします。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2012-08-14 21:21:36
+<!-- hhmts end -->
+</p>
+</body>
+</html>

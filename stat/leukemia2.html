@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>グラフの例：白血病による死亡率の推移</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：白血病による死亡率の推移</h1>
+
+<p><em>[2018-12-29]</em> 2017年のデータを追加した。</p>
+
+<p>以前書いた<a href="leukemia.html">グラフの例：白血病による死亡数の推移</a>のアップデート版である。</p>
+
+<p>e-Stat の <a href="http://www.e-stat.go.jp/SG1/estat/GL08020101.do?_toGL08020101_&amp;tstatCode=000001028897&amp;requestSender=dsearch">人口動態調査 &gt; 人口動態統計</a>
+の
+確定数 &gt; 死亡 &gt; 年次
+の2001年から2017年までの「月別にみた死因簡単分類別死亡率（人口10万対）」から「白血病」の死亡率を拾ったところ，<a href="data/leukemia3.csv">leukemia3.csv</a>のようになった。各月の率は，年率に換算したもの（人口10万あたり）である。</p>
+
+<figure><img src="img/181229a.png" alt="白血病による死亡率の推移"></figure>
+
+<pre>
+leu = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/leukemia3.csv")
+with(leu, plot(year+(month-1)/12, rate, type="o", pch=16, xlab="年", ylab="死亡率/10万/年"))
+</pre>
+
+<p>あるいは次のようにまず時系列に変換してもよい：</p>
+
+<pre>
+x = ts(leu$rate, start=c(2001,1), frequency=12)   # convert to time-series object
+plot(x, type="o", pch=16, xlab="年", ylab="死亡率/10万/年")
+</pre>
+
+<p>トレンドと季節変動に分解してみる：</p>
+
+<pre>
+y = decompose(x)
+ts.plot(cbind(y$trend, y$trend+y$seasonal), lty=1:2, xlab="年", ylab="死亡率/10万/年")
+</pre>
+
+<figure><img src="img/181229b.png" alt="白血病による死亡率の推移"></figure>
+
+<p>原発事故（2011年3月）が起こる前から徐々に増えているが，急増している様子はない。</p>
+
+<hr>
+
+<p>2011年11月に「各都道府県の国公立医師会病院の統計によると、今年の4月から10月にかけて、「白血病」と診断された患者数が、昨年の約7倍にのぼったことが21日に判明した。これを受けて、日本医師会会長原中勝征は、原発事故との因果関係は不明として、原因が判明次第発表するとした」というコピペがネットで多数見られた。ソースは新聞だとされたが，そのような報道は見つからない。日本医師会も<a href="https://web.archive.org/web/20111129155750/http://www.med.or.jp/people/info/people_info/000614.html">否定する声明</a>（アーカイブ）を出した。</p>
+
+<p>同様なデマは現在に至っても健在である。</p>
+
+<p>なお，罹患率は死亡率のように精度のよいデータが出ていないが，<a href="http://ganjoho.jp/reg_stat/statistics/stat/annual.html">がん情報サービス &gt; 統計 &gt; がん統計 &gt; 年次推移</a>
+の2番目の表によれば，近年の白血病の年齢調整罹患率は男女とも「横ばい」である。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-12-29 14:49:12</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

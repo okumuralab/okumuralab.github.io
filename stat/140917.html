@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>偏相関係数</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>偏相関係数</h1>
+
+<p><a href="http://blog.goo.ne.jp/r-de-r">裏 RjpWiki</a>
+の
+<a href="http://blog.goo.ne.jp/r-de-r/e/f2f855eacedcb883307072d01659f28b">2 個の時系列データの相関を考えるときは...</a>
+と
+<a href="http://blog.goo.ne.jp/r-de-r/e/3897f5e2c2a60277fd954673a8c1a2d8">2 個の時系列データの相関を考えるときは...（その2）</a>
+がたいへんおもしろかったので試してみた。</p>
+
+<p>まず <i>p</i> 値は本来は帰無仮説のもとに一様分布になるべきである。例：</p>
+
+<pre>
+p = replicate(100000, {
+  x = rnorm(100)
+  y = rnorm(100)
+  cor.test(x, y)$p.value
+})
+hist(p, freq=FALSE, breaks=20, col="gray", main="")
+</pre>
+
+<figure><img src="img/140917d.png" alt=""></figure>
+
+<p>しかし「時系列」ではそうならないことがある。例として，まったく独立に生成されたはずの二つのランダムウォークする系列の相関係数を求めると，こんな具合になる：</p>
+
+<pre>
+p = replicate(100000, {
+  x = cumsum(rnorm(100))
+  y = cumsum(rnorm(100))
+  cor.test(x, y)$p.value
+})
+hist(p, freq=FALSE, breaks=20, col="gray", main="")
+</pre>
+
+<figure><img src="img/140917e.png" alt=""></figure>
+
+<p>こういう場合には，「時間」<code>t = 1:100</code> の影響を引いた偏相関係数を使えばよい（？）。偏相関係数とその <i>p</i> 値を求める関数は，裏RjpWikiのコードを借用して作った：</p>
+
+<pre>
+pcor = function(x, y, t) {
+  r_xy = cor(x, y) # 単相関係数
+  r_tx = cor(t, x) # 時間との単相関係数
+  r_ty = cor(t, y) # 時間との単相関係数
+  r_xy.t = (r_xy-r_tx*r_ty)/sqrt(1-r_tx^2)/sqrt(1-r_ty^2) # 偏相関係数
+  n = length(t)
+  t.stat = abs(r_xy.t)*sqrt(n-3)/sqrt(1-r_xy.t^2) # 母偏相関係数=0 の検定統計量
+  p.value = pt(t.stat, df=n-3, lower.tail=FALSE)*2 # P 値を求める（両側検定）
+  c(r_xy.t, p.value)
+}
+p = replicate(100000, {
+  x = cumsum(rnorm(100))
+  y = cumsum(rnorm(100))
+  t = 1:100
+  pcor(x, y, t)[2]
+})
+hist(p, freq=FALSE, breaks=20, col="gray", main="")
+</pre>
+
+<figure><img src="img/140917f.png" alt=""></figure>
+
+<p>あれ，「時間」の影響を引いてもやっぱりおかしい。</p>
+
+<p>念のため
+<a href="http://blog.goo.ne.jp/r-de-r/e/3897f5e2c2a60277fd954673a8c1a2d8">2 個の時系列データの相関を考えるときは...（その2）</a>
+にあるサンプルデータ <code>d</code> でやってみると</p>
+
+<pre>
+&gt; pcor(d$x, d$y, d$t)
+[1] -0.1263188  0.4435144
+</pre>
+
+<p>で一致するので <code>pcor()</code> のバグではないと思う。</p>
+
+<p>ちなみに，偏相関係数を求めるには ppcor というパッケージの <code>pcor()</code>，<code>pcor.test()</code> があるようなので，使ってみる：</p>
+
+<pre>
+&gt; library(ppcor)
+&gt; pcor.test(d$x, d$y, d$t)
+    estimate   p.value  statistic  n gp  Method
+1 -0.1263188 0.4385926 -0.7745721 40  1 pearson
+</pre>
+
+<p>偏相関係数そのものは一致するが <i>p</i> 値は少し違う。どうやらこれは <code>pt()</code> でなく <code>pnorm()</code> を使って <i>p</i> 値を求めているようだ。念のためこちらの <i>p</i> 値を使っても同様な結果が得られた。</p>
+
+<p>結論：「時系列」（ランダムウォーク）データの「見せかけの回帰」（spurious regression）は，時間の（線形な）影響を引き去った偏相関係数を使っても，依然として存在する。</p>
+
+<p>なお，偏相関係数の <i>p</i> 値は，線形回帰 <code>summary(lm(d$y ~ d$x + d$t))</code> の <code>d$x</code> の係数の <i>p</i> 値と等しい。こちらは <i>t</i> 検定を使っている。</p>
+
+<hr>
+
+<p>[2014-09-24] 相関係数の <i>p</i> 値と偏相関係数の <i>p</i> 値の関係も調べてみた。</p>
+
+<pre>
+p = replicate(1000, {
+  x = cumsum(rnorm(100))
+  y = cumsum(rnorm(100))
+  t = 1:100
+  c(cor.test(x, y)$p.value, pcor(x, y, t)[2])
+})
+plot(p[1,], p[2,], asp=1, xlab="相関係数のp値", ylab="偏相関係数のp値",
+     xlim=c(0,1), ylim=c(0,1))
+</pre>
+
+<figure><img src="img/140924a.png" alt=""></figure>
+
+<pre>
+p = replicate(100000, {
+  x = cumsum(rnorm(100))
+  y = cumsum(rnorm(100))
+  t = 1:100
+  c(cor.test(x, y)$p.value, pcor(x, y, t)[2])
+})
+cor(p[1,], p[2,])
+</pre>
+
+<p>両 <i>p</i> 値の相関係数は 0.09 程度で，弱い相関しかない。有意な相関係数があっても，偏相関係数にすることによって有意でなくすことができるかもしれないが，その逆もありうる。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-09-24T14:16:17+09:00">2014-09-24 14:16:17</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>全国学力テスト模擬データ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>全国学力テスト模擬データ</h1>
+
+<p>文科省が<a href="http://www.nier.go.jp/kaihatsu/zenkokugakuryoku.html">全国学力・学習状況調査</a>（全国学力テスト）の<a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/1404609.htm">パブリックユースデータ（擬似データ）</a>を公開した。これをRで読み込んで中を調べる方法を解説する。</p>
+
+<p>ここでは<a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/__icsFiles/afieldfile/2018/05/07/1404609_2_1.xlsx">生徒データ（Excel:3126KB）</a>つまり中学生（中3）のデータを使う。まずはダウンロードして，Excelで開いてみよう。このような，1行目に変数名，2行目以降に値が並び，セル結合をしていない素直な長方形データは，Rで簡単に扱える。</p>
+
+<p>昔なら，いったんCSVファイルに変換してからRで読み込むところだが，CSVファイルの文字コードによってはRで文字化けが起こったりするので，初心者向きでなかった。今は，RでExcelファイルをそのまま読み込むほうが簡単である。</p>
+
+<p>Excelファイルを読み込む操作は，Rstudioならマウスで簡単にできる。右上のペインで「Import Dataset」→「From Excel…」をクリックする（初回使用時にはライブラリのインストールが始まり，しばらく待たされる）。「Browse…」ボタンを押し，ダウンロードしたファイル 1404609_2_1.xlsx を探し，「Open」を押す。データのプレビュー画面が現れる。左下の「Import Options:」で，「Name:」のところ（データの名前）がファイル名から自動生成された「X1404609_2_1」になっている。このままでもよいが，後でわかりやすいように，ここではこれを「seito」に直し，念のためマウスで別の入力欄をクリックする（あるいは Tab キーまたは Enter キーを打つ）。プレビューが再生成されたことを確認してから，右下の「Import」を押す。</p>
+
+<div class="note">
+<p>同じことを素のRで行うには，次のように打ち込む：</p>
+<pre>
+<code>library(readxl)</code> # これがエラーになるなら install.packages("readxl") する
+<code>seito = read_excel("1404609_2_1.xlsx")</code> # Excelファイルの保存場所に注意
+</pre>
+</div>
+
+<p>これで seito という変数に生徒データが読み込まれた。</p>
+
+<pre>
+<code>seito</code>  # 中を見てみる
+# A tibble: 2,000 x 430
+   実施年 地域規模 解答用紙番号  性別 生徒質問紙種別 正答数_国Ａ 正答数_国Ｂ
+    &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;                &lt;dbl&gt;       &lt;dbl&gt;
+ 1   2015        3            1     2 NA                      27           7
+ 2   2015        1            2     2 NA                      26           4
+ 3   2015        1            3     2 NA                      27           7
+ 4   2015        2            4     1 NA                      22           7
+ 5   2015        1            5     2 NA                      27           8
+ 6   2015        2            6     2 NA                      27           3
+ 7   2015        4            7     2 NA                      19           7
+ 8   2015        1            8     1 NA                      23           6
+ 9   2015        3            9     1 NA                      20           5
+10   2015        3           10     1 NA                      32           9
+# ... with 1,990 more rows, and 423 more variables: 正答数_数Ａ &lt;dbl&gt;,
+#   正答数_数Ｂ &lt;dbl&gt;, 正答数_理 &lt;dbl&gt;, 正答数_理Ａ &lt;dbl&gt;, 正答数_理Ｂ &lt;dbl&gt;,
+#   正答率_国Ａ &lt;dbl&gt;, 正答率_国Ｂ &lt;dbl&gt;, 正答率_数Ａ &lt;dbl&gt;, 正答率_数Ｂ &lt;dbl&gt;,
+#   正答率_理 &lt;dbl&gt;, 正答率_理Ａ &lt;dbl&gt;, 正答率_理Ｂ &lt;dbl&gt;, 学力層_国Ａ &lt;dbl&gt;,
+#   学力層_国Ｂ &lt;dbl&gt;, 学力層_数Ａ &lt;dbl&gt;, 学力層_数Ｂ &lt;dbl&gt;, 学力層_理科 &lt;dbl&gt;,
+#   学力層_理科Ａ &lt;dbl&gt;, 学力層_理科Ｂ &lt;dbl&gt;, 正答数_国Ａ_領域１ &lt;dbl&gt;, …
+</pre>
+
+<p>データ行列の行数・列数を調べる：</p>
+
+<pre>
+<code>dim(seito)</code>
+[1] 2000  430
+</pre>
+
+<p>変数名一覧を列挙する：</p>
+
+<pre>
+<code>names(seito)</code>
+  [1] "実施年"             "地域規模"           "解答用紙番号"      
+  [4] "性別"               "生徒質問紙種別"     "正答数_国Ａ"       
+  [7] "正答数_国Ｂ"        "正答数_数Ａ"        "正答数_数Ｂ"       
+ [10] "正答数_理"          "正答数_理Ａ"        "正答数_理Ｂ"       
+ [13] "正答率_国Ａ"        "正答率_国Ｂ"        "正答率_数Ａ"       
+ [16] "正答率_数Ｂ"        "正答率_理"          "正答率_理Ａ"       
+ [19] "正答率_理Ｂ"        "学力層_国Ａ"        "学力層_国Ｂ"       
+（以下略）
+</pre>
+
+<p>1〜19番の変数のサマリー（最小値，第1四分位数，中央値，平均値，第3四分位数，最大値）を出力する：</p>
+
+<pre>
+summary(seito[,1:19])
+     実施年        地域規模     解答用紙番号         性別     生徒質問紙種別
+ Min.   :2015   Min.   :1.00   Min.   :   1.0   Min.   :1.0   Mode:logical  
+ 1st Qu.:2015   1st Qu.:2.00   1st Qu.: 500.8   1st Qu.:1.0   NA's:2000     
+ Median :2015   Median :3.00   Median :1000.5   Median :1.5                 
+ Mean   :2015   Mean   :2.47   Mean   :1000.5   Mean   :1.5                 
+ 3rd Qu.:2015   3rd Qu.:3.00   3rd Qu.:1500.2   3rd Qu.:2.0                 
+ Max.   :2015   Max.   :4.00   Max.   :2000.0   Max.   :2.0                 
+  正答数_国Ａ     正答数_国Ｂ     正答数_数Ａ     正答数_数Ｂ    
+ Min.   : 7.00   Min.   :0.000   Min.   : 3.00   Min.   : 0.000  
+ 1st Qu.:22.00   1st Qu.:5.000   1st Qu.:18.75   1st Qu.: 4.000  
+ Median :25.00   Median :6.000   Median :23.00   Median : 6.000  
+ Mean   :24.79   Mean   :5.888   Mean   :22.95   Mean   : 6.505  
+ 3rd Qu.:28.00   3rd Qu.:7.000   3rd Qu.:28.00   3rd Qu.: 9.000  
+ Max.   :33.00   Max.   :9.000   Max.   :36.00   Max.   :15.000  
+（以下略）
+</pre>
+
+<p>詳しくは<a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/__icsFiles/afieldfile/2018/05/15/1404609_1.pdf">データレイアウト（PDF:784KB）</a>にあるが，実施年はすべて2015，地域規模は1:大都市，2:中核市，3:その他の市，4:町村，性別は1:男子，2:女子，0:不明，生徒質問紙種別はすべて欠測値（NA）である。その次からが正答数と，100点満点に換算した正答率が続く。</p>
+
+<p>国語A，国語B，数学A，数学B，理科の5科目それぞれ45分で答える。Aは基本，Bは応用である。それぞれの満点はデータの最大値に等しい。データでは理科以外に理科A，理科Bがあるが，便宜上二つに分けたようで，基本・応用という区別ではなさそうである。5科目を単純にプロットしてみる：</p>
+
+<pre>
+plot(seito[,6:10])
+</pre>
+
+<figure><img src="img/180727c.png" alt="5科目のプロット"></figure>
+
+<p>数学Aの正答数分布のヒストグラムを描いてみよう（<a href="histogram.html">グラフの例：ヒストグラム</a>参照）。<code>seito</code> の8番目の変数である数学Aの正答数をベクトル（数値の列）として取り出すには <code>seito$正答数_数Ａ</code> または <code>seito[[8]]</code> とする。全角・半角を区別するので <code>seito$正答数_数A</code> ではエラーになる。また，<code>seito[,8]</code> でもいいような気がするが，<code>read_excel()</code> の出力するtibbleというデータ構造は，<code>seito[,8]</code> では1列だけのtibbleとなって，ベクトル（数値の列）を要求する場面ではエラーになる。</p>
+
+<pre>
+hist(seito[[8]], breaks=0:37, right=FALSE, include.lowest=FALSE, col="gray")
+</pre>
+
+<p>もうちょっとがんばって綺麗にする：</p>
+
+<pre>
+par(mar=c(2,3,1,1)+0.1)  # 下・左・上・右マージン（デフォルト: c(5,4,4,2)+0.1）
+par(mgp=c(2,0.8,0))      # 軸マージン（デフォルト: c(3,1,0)）
+par(las=1)               # 文字は水平に
+hist(seito[[8]], breaks=0:37, right=FALSE, include.lowest=FALSE, col="gray", 
+     main="", freq=FALSE, xlab="", ylab="", xaxt="n")
+t = c(0, 10, 20, 30, 36) # 目盛位置
+axis(1, t+0.5, t)        # 位置を0.5ずらす
+</pre>
+
+<p>ついでに，平均・標準偏差の等しい正規分布の密度関数を重ね書きしてみる：</p>
+
+<pre>
+curve(dnorm(x, mean(seito[[8]])+0.5, sd(seito[[8]])), add=TRUE, col="#ff990080", lwd=3)
+</pre>
+
+<figure><img src="img/180726a.png" alt="数学Aヒストグラム"></figure>
+
+<p>国語Aと国語Bの正答率の平均，数学Aと数学Bの正答率の平均，5科目の正答率の平均を求めて，<code>seito</code> に追加する：</p>
+
+<pre>
+seito$正答率_国 = (seito$正答率_国Ａ + seito$正答率_国Ｂ) / 2  # あるいは rowMeans(seito[,13:14]
+seito$正答率_数 = (seito$正答率_数Ａ + seito$正答率_数Ｂ) / 2  # あるいは rowMeans(seito[,15:16]
+seito$正答率 = rowMeans(seito[,13:17])
+</pre>
+
+<p>これらの散布図（相関図）を描く：</p>
+
+<pre>
+plot(seito$正答率_国, seito$正答率_数)
+</pre>
+
+<p>もうちょっとがんばってきれいにする。重なりを避けるため，ほんの少し（±0.2）ジッター（ぶれ）を付けてみた：</p>
+
+<pre>
+par(mgp=c(2,0.8,0))      # 軸マージン（デフォルト: c(3,1,0)）
+plot(jitter(seito$正答率_国,amount=0.2), jitter(seito$正答率_数,amount=0.2),
+     xlim=c(0,100), ylim=c(0,100), xlab="国語", ylab="数学")
+</pre>
+
+<figure><img src="img/180726b.png" alt="国語・数学の散布図"></figure>
+
+<p>半透明の黒丸を使う手もある：</p>
+
+<pre>
+plot(seito$正答率_国, seito$正答率_数, pch=16, col="#00000080",
+     xlim=c(0,100), ylim=c(0,100), xlab="国語", ylab="数学")
+</pre>
+
+<figure><img src="img/180726c.png" alt="国語・数学の散布図"></figure>
+
+<p>例えば男女を別の色にすることによって情報量が増す：</p>
+
+<pre>
+par(mar=c(3,3,1,1)+0.1)  # 下・左・上・右マージン（デフォルト: c(5,4,4,2)+0.1）
+par(mgp=c(2,0.8,0))      # 軸マージン（デフォルト: c(3,1,0)）
+cols = c("#0041ff80","#ff280080")
+plot(seito$正答率_国, seito$正答率_数, pch=16, col=cols[seito$性別],
+     xlim=c(0,100), ylim=c(0,100), xlab="国語", ylab="数学")
+legend("topleft", c("男","女"), pch=16, col=cols)
+</pre>
+
+<figure><img src="img/180727a.png" alt="国語・数学の散布図"></figure>
+
+<p>相関係数は <code>cor()</code> または <code>cor.test()</code> で求める：</p>
+
+<pre>
+<code>cor.test(seito$正答率_国, seito$正答率_数)</code>
+
+	Pearson's product-moment correlation
+
+data:  seito$正答率_国 and seito$正答率_数
+t = 39.736, df = 1998, p-value &lt; 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.6391802 0.6881876
+sample estimates:
+      cor 
+0.6643974 
+</pre>
+
+<p>数学は男子のほうができるのであろうか？</p>
+
+<pre>
+<code>mean(seito$正答率_数[seito$性別 == 1])</code>
+[1] 53.6175
+<code>mean(seito$正答率_数[seito$性別 == 2])</code>
+[1] 53.49639
+</pre>
+
+<div class="note">
+<p>次のように書くこともできる：</p>
+<pre>
+<code>with(seito, tapply(正答率_数, 性別, mean))</code>
+       1        2 
+53.61750 53.49639 
+</pre>
+</div>
+
+<p>男子（1）のほうが女子（2）より多少平均点が高いように見える。箱ひげ図で比べてみよう。</p>
+
+<pre>
+boxplot(正答率_数 ~ 性別, data=seito, ylim=c(0,100), names=c("男","女"))
+</pre>
+
+<figure><img src="img/180727b.png" alt="数学の箱ひげ図"></figure>
+
+<p>差はなさそうである。念のため <i>t</i> 検定をしてみる：</p>
+
+<pre>
+<code>t.test(seito$正答率_数[seito$性別==1], seito$正答率_数[seito$性別==2])</code>
+</pre>
+
+<p>または同じことであるが次のようにするほうが楽である：</p>
+
+<pre>
+<code>t.test(正答率_数 ~ 性別, data=seito)</code>
+</pre>
+
+<p>結果は次のようになる：</p>
+
+<pre>
+	Welch Two Sample t-test
+
+data:  正答率_数 by 性別
+t = 0.14809, df = 1996.7, p-value = 0.8823
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.482746  1.724968
+sample estimates:
+mean in group 1 mean in group 2 
+       53.61750        53.49639 
+</pre>
+
+<p>同様に，5科目平均正答率が地域規模と関係しているか，箱ひげ図と分散分析で調べてみる：</p>
+
+<pre>
+<code>boxplot(正答率 ~ 地域規模, data=seito)</code>
+<code>oneway.test(正答率 ~ 地域規模, data=seito)</code>
+
+	One-way analysis of means (not assuming equal variances)
+
+data:  正答率 and 地域規模
+F = 0.94629, num df = 3.00, denom df = 629.17, p-value = 0.4178
+</pre>
+
+<p>図は略す。有意な差はない。</p>
+
+<p>「生徒質問紙回答_001」は<a href="http://www.nier.go.jp/15chousa/15chousa.htm">平成27年度全国学力・学習状況調査の調査問題・正答例・解説資料について</a>の「生徒質問紙」によれば「朝食を毎日食べている」で，1:している，2:どちらかといえば，している，3:あまりしていない，4:全くしていないの4択である。それぞれの数は次のようにして求められる：</p>
+
+<pre>
+<code>table(seito$生徒質問紙回答_001)</code>
+
+   1    2    3 
+1332  626   42 
+</pre>
+
+<p><code>boxplot()</code> と <code>oneway.test()</code> で調べてみるとよい。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-09-26 16:27:08</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

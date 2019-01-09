@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>日本の薬の使用量</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>日本の薬の使用量</h1>
+
+<p>「日本の人口は世界の２％に過ぎないのに、世界の薬の約４０％は日本人が使う」というツイートが流れている。これについてはすでにNATROMさんが<a href="http://d.hatena.ne.jp/NATROM/20120831">日本の薬の使用量はケタ違いなのか？</a>で論じておられるが，<a href="http://dx.doi.org/10.1787/health-data-en">OECDのデータ</a>が新しくなっているので，データをCSV形式（<a href="data/oecd_pharma.csv">oecd_pharma.csv</a>）にして，グラフを描き直してみた。CSVファイルには2文字の国コード（ドメイン名に使われるもの）も加えた。</p>
+
+<ul>
+  <li>元データ：<a href="http://www.oecd-ilibrary.org/sites/health_glance-2013-en/07/04/index.html?contentType=&itemId=%2fcontent%2fchapter%2fhealth_glance-2013-67-en&mimeType=text%2fhtml&containerItemId=%2fcontent%2fserial%2f19991312&accessItemIds=%2fcontent%2fbook%2fhealth_glance-2013-en">OECD iLibrary: Statistics / Health at a Glance / 2013 / Pharmaceutical expenditure</a></li>
+</ul>
+
+<figure>
+  <img src="img/140902a.png" alt="Expenditure on pharmaceuticals per capita">
+</figure>
+
+<pre>
+pharma = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/oecd_pharma.csv", comment.char="#")
+par(mgp=c(2,0.8,0))
+barplot(pharma[,4], names.arg=pharma[,1], las=TRUE, horiz=TRUE, xlab="USD", xlim=c(0,1000),
+        col=ifelse(pharma[,1]=="JP","#f39800","#0068b7"))
+text(x=pharma[,4], y=(0:30)*1.2+0.5, labels=round(pharma[,4]), pos=4, xpd=TRUE)
+</pre>
+
+<p>日本は4位に上昇している。同点のように見えるIE（アイルランド）は647.7ドル，JP（日本）は648.0ドルである</p>
+
+<p>さて，問題は1人あたりではなく国全体の薬の使用量を求めることであるが，これはやはり<a href="http://dx.doi.org/10.1787/health-data-en">OECDのデータ</a>で提供されている国別の人口データを掛け算すればよいだろう。これもCSV形式（<a href="data/oecd_population.csv">oecd_population.csv</a>）にして置いておく。やはり1列目に2文字の国コードを付けた。これらを <code>merge()</code> すれば，同じ名前（国コード：<code>Code</code>）のところを揃えてマージ（ジョイン）してくれる：</p>
+
+<pre>
+population = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/oecd_population.csv", comment.char="#")
+data = merge(pharma, population)
+</pre>
+
+<p>これで <code>names(data)</code> すればわかるように，6列目に人口（2011年）が加わった。4列目と6列目の積が国別の薬の使用量になる：</p>
+
+<pre>
+expenditure = data[,4] * data[,6]
+</pre>
+
+<p>日本がOECD 31か国全体に占める割合は，</p>
+
+<pre>
+expenditure[data[,1]=="JP"] / sum(expenditure)
+</pre>
+
+<p>で 11.85% になる。世界全体ではもっともっと低い値になるだろう。</p>
+
+<p>冒頭の40%という値はどこから出たのだろうか？</p>
+
+<pre>
+o = order(-expenditure)
+head(data.frame(data[o,2], expenditure[o] / sum(expenditure)))
+</pre>
+
+<p>のようにして上位をリストアップしてみると，</p>
+
+<pre>
+1 United States                      0.43905219
+2         Japan                      0.11851822
+3       Germany                      0.07354993
+4        France                      0.05568568
+5         Italy                      0.04235009
+6        Mexico                      0.04048452
+</pre>
+
+<p>米国がダントツで 43.91% である。40% というのは米国のことかもしれない（しかしそれも全世界ではなくOECD 31か国の中での割合であるが）。</p>
+
+<p>どなたか全世界のデータをご存じのかたはお教えください。</p>
+
+<hr>
+
+<p>さっそく前野先生 @joji に教えていただいた <a href="http://apps.who.int/medicinedocs/en/m/abstract/Js20052en/">WMS 2011 - Medicine Expenditures, Annex</a> にあるExcelファイル s20052en.xls をCSV化して（あるいはExcelを読み込むライブラリを使って）読み込む：</p>
+
+<pre>
+med = read.csv("s20052en.csv")
+med1 = subset(med, Year==2006)  # 2006年までしかない
+s = med1[,8]
+s[med1$Country=="Japan"] / sum(s, na.rm=TRUE)
+</pre>
+
+<p>0.09540386 つまり 9.5% ほどだ。ちなみに上位は</p>
+
+<pre>
+o = order(-s)
+head(data.frame(med1$Country[o], s[o]/sum(s,na.rm=TRUE)))
+</pre>
+
+<p>とすると出る。米国が1位で 32.2%，日本が2位。</p>
+
+<pre>
+1 United States of America                0.32186198
+2                    Japan                0.09540386
+3                  Germany                0.05788400
+4                    China                0.05209589
+5                   France                0.05202372
+6                    Italy                0.03867830
+</pre>
+
+<p>ちなみに元データの5列目「NCU」は National Currency Unit でその国の通貨。「PPP」は Purchasing Power Parity 購買力平価というらしい。</p>
+
+<hr>
+
+<p>オマケとして2011年の人口の65歳以上の割合（パーセント）<a href="data/oecd_aged.csv">oecd_aged.csv</a> もCSVで置いておく。</p>
+
+<hr>
+
+<p>[2014-09-22] 日経新聞に世界の医薬品市場シェアのグラフが載っていた。出典は
+<a href="http://www.imshealth.com/">IMS Health</a>
+のようだ。特に
+<a href="http://www.imshealth.com/portal/site/imshealth/menuitem.762a961826aad98f53c753c71ad8c22a/?vgnextoid=f29007faae752410VgnVCM10000076192ca2RCRD">Global Use of Medicines: Outlook Through 2017 Report Exhibits</a>
+からリンクされている
+<a href="http://www.imshealth.com/deployedfiles/imshealth/Global/Content/Corporate/IMS%20Health%20Institute/Reports/Global_Use_of_Meds_Outlook_2017/Geographic_Distribution_Medicine_Spending.pdf">Geographic Distribution of Medicine Spending‎</a>
+というPDFが該当する。これによれば，2012年の日本のシェアは12%だが，2017年には9%に落ち込む予想らしい。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-09-22T15:33:58+09:00">2014-09-22 15:33:58</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

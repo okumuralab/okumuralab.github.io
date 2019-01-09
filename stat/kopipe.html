@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>コピペのチェック</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>コピペのチェック</h1>
+
+<h2>前処理</h2>
+
+<p>以下のチェックをする前に，Wordのdocxファイルは docx2txt を使ってテキストに直しておく：</p>
+
+<pre>
+for x in *.docx; do docx2txt.pl $x; done
+</pre>
+
+<p>それ以外のものも UTF-8 テキストに変換しておく。</p>
+
+<h2>その1</h2>
+
+<p>コピペのチェックが流行りなので，やってみた。ただし，ネット検索するのでなく，相互剽窃のチェックだけである。Rのstringdistパッケージを使う。</p>
+
+<pre>
+# レポート（テキストファイル）のファイル名（tmp/*.txt の場合）
+names = dir("tmp", "*.txt", full.names=TRUE)
+
+library(stringdist)
+
+n = length(names)
+s = character(n)
+for (i in 1:n) {
+  s[i] = readChar(names[i], 2000) # 頭2000文字分読む（Unicode）
+}
+for (i in 1:(n-1)) {
+  for (j in (i+1):n) {
+    ni = nchar(s[i])
+    nj = nchar(s[j])
+    d = stringdist(s[i], s[j], method='lv') - abs(ni - nj)
+    if (d < 100) {
+      cat(names[i], names[j], ni, nj, d, "\n")
+    }
+  }
+}
+</pre>
+
+<p>上ではLevenshtein距離から文字数の差の絶対値を引いたものを使っている。どのような指標が良いかは考え中。</p>
+
+<p><em>[追記]</em> i をもとにして j を作った場合，j のどれくらいの割合が i かを示す量として，<code>(max(ni, nj) - d) / nj</code> が良いかもしれない。</p>
+
+<h2>その2</h2>
+
+<p>文字列 $x$ の Kolmogorov complexity（ざっくり言えば，データ圧縮後の最小ファイルサイズ）を $K(x)$ とし，文字列 $x$，$y$ をつなぎ合わせた文字列を $x+y$ とすると，</p>
+
+\[ \max(K(x),K(y)) \leq K(x+y) \leq K(x) + K(y) \]
+
+<p>が成り立つ。中辺 $K(x+y)$ が左辺に近いほど $x$，$y$ は似ている。これを使ってレポートの類似性を調べることができる（かもしれない）。$K(x)$ の代わりに <code>gzip</code>（オプション <code>-9</code>）で圧縮後のファイルサイズを使う：</p>
+
+<pre>
+K = numeric(n)
+for (i in 1:n) {
+  K[i] = as.numeric(system(paste("cat", names[i], "| gzip -9 -c | wc -c"), intern=T))
+}
+for (i in 1:(n-1)) {
+  for (j in (i+1):n) {
+    Kij = as.numeric(system(paste("cat", names[i], names[j], "| gzip -9 -c | wc -c"), intern=T))
+    # Kij が max(K[i],K[j]) と K[i]+K[j] のどちらに近いか調べて報告
+  }
+}
+</pre>
+
+<p>この種のものは2002年に <a href="http://arxiv.org/abs/cond-mat/0108530">Language Trees and Zipping</a> というペーパーが（よりによって）Physical Review Letters に掲載されてからちょっとだけ流行した。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-11-04 16:17:49</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Webスクレイピングの例：新宿の放射線</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Webスクレイピングの例：新宿の放射線</h1>
+
+<h2>はじめに</h2>
+
+<p>東京都健康安全研究センターの<a href="http://monitoring.tokyo-eiken.go.jp/">環境放射線測定結果</a>サイトで毎時間の空間放射線の測定値が公開されています。私の<a href="http://oku.edu.mie-u.ac.jp/rad/#tokyo">放射線関連グラフ</a>でもグラフを自動表示しています。</p>
+
+<p>特に，新宿区百人町の健康安全研究センター屋上のモニタリングポスト（地上約18m）では，東日本大震災前から精密な値を測っています。2011年3月以降の値を当サイトの <a href="data/shinjuku.csv">shinjuku.csv</a> というCSVファイルに収めてあります。</p>
+
+<h2>shinjuku.csvの作り方</h2>
+
+<p>まず，<a href="http://monitoring.tokyo-eiken.go.jp/mp_shinjuku_air_week_list.html">環境放射線測定結果 - 大気中の放射線量測定/１時間単位（新宿）[週選択]</a> のページからリンクされているデータ（HTMLファイル）をいただいてきます。</p>
+
+<p>この場合は大量のデータといえるほどのものではありませんが，一般論として，大量のデータをダウンロードする場合には，配慮が必要です。例えばウィキペディアの<a href="http://ja.wikipedia.org/wiki/%E3%82%A6%E3%82%A7%E3%83%96%E3%82%B9%E3%82%AF%E3%83%AC%E3%82%A4%E3%83%94%E3%83%B3%E3%82%B0">ウェブスクレイピング</a>をご覧ください。偽計業務妨害容疑で逮捕され20日間勾留された有名な<a href="http://ja.wikipedia.org/wiki/%E5%B2%A1%E5%B4%8E%E5%B8%82%E7%AB%8B%E4%B8%AD%E5%A4%AE%E5%9B%B3%E6%9B%B8%E9%A4%A8%E4%BA%8B%E4%BB%B6">岡崎市立中央図書館事件</a>（いわゆるLibrahack事件）の例もあります（これは図書館側に問題があったのですが）。</p>
+
+<p>例えば2013年の全データ（第1週〜第52週）は http://monitoring.tokyo-eiken.go.jp/report/shinjuku/ の中の mon_air_week_2013XXw.html（XX = 01〜52）というファイルに収められています。これらを一括でダウンロードするには，UNIX系OS（Linux，Macなど）では，例えば次のようなコマンドで行います（Macではwgetをインストールしておくか，元々入っているcurlを使うように手直しします）。</p>
+
+<pre>
+for x in `seq 1 52`
+do
+  wget `printf "http://monitoring.tokyo-eiken.go.jp/report/shinjuku/mon_air_week_2013%02dw.html" $x`
+  sleep 1
+done
+</pre>
+
+<p>もちろんこれくらいであれば1行で</p>
+
+<pre>
+for x in `seq 1 52`; do wget `printf "http://monitoring.tokyo-eiken.go.jp/report/shinjuku/mon_air_week_2013%02dw.html" $x`; sleep 1; done
+</pre>
+
+<p>と打ってしまう人が多いかもしれません。</p>
+
+<p>「配慮」として，ここでは一つダウンロードするごとに <code>sleep 1</code> で1秒待っています。某図書館のような問題を抱えたサイトでは，もっと待つ必要があるかもしれません。</p>
+
+<p>中を見ると，実際のデータは次のような形で入っています。日時と，μGy/h単位の線量率の最大値・最小値・平均値です。Gy（グレイ）はほぼSv（シーベルト）と同程度の単位です（厳密には違います）。</p>
+
+<pre>
+						&lt;th&gt;2014/02/09 
+23:01～24:00&lt;/th&gt;
+						&lt;td&gt;0.0358&lt;/td&gt;
+						&lt;td&gt;0.0314&lt;/td&gt;
+						&lt;td&gt;0.0334&lt;/td&gt;
+</pre>
+
+<p>無駄にインデントされていたり改行が入っていたりしますが，気にしないことにします。これを読んでCSVに出力するには，Rubyなら例えば次のようにできます。</p>
+
+<pre>
+#! /usr/bin/ruby
+# -*- coding: utf-8 -*-
+
+buf = ARGF.read
+
+while buf =~ %r{&lt;th&gt;([\d/]+)\s*([\d:]+)[^&lt;]*&lt;/th&gt;\s*&lt;td&gt;([\d.]+)&lt;/td&gt;\s*&lt;td&gt;([\d.]+)&lt;/td&gt;\s*&lt;td&gt;([\d.]+)&lt;/td&gt;}m
+  print "#{$1} #{$2},#{$3},#{$4},#{$5}\n"
+  buf = $'  # 前回のマッチの直後から始める
+end
+</pre>
+
+<p>これで <code>./hoge.rb * &gt;x.csv</code> のように出力し，<code>sort x.csv &gt;shinjuku.csv</code> のように並べ替え，頭に <code>datetime,max,min,avg</code> のような列名を付ければ，完成です。</p>
+
+<div class="note">
+<p><code>&lt;td&gt;([\d.]+)&lt;/td&gt;</code> を <code>&lt;td&gt;(.*?)&lt;/td&gt;</code>
+としたところ，最大値・最小値が空で，平均値に「点検中」「停電中」のような文字列が入っているところも拾いました。それはそれでいいのですが，そもそも日時も入っていない欠測値もあるので，欠測値は無視する方向でまとめました。</p>
+
+<p><code>&lt;th&gt;([\d/]+)\s*([\d:]+)[^&lt;]*&lt;/th&gt;</code>
+を <code>&lt;th&gt;([\d/]+)\s*([\d:]+).*?&lt;/th&gt;</code>
+にしたところ，<code>.*?</code> が最初の <code>&lt;/th&gt;</code>
+の前で止まるかと思ったらそういうわけではなく，さらにその次の条件も満たす <code>&lt;/th&gt;</code>
+までマッチしてしまい，間違った結果を出してしまいました。最小量指定子 <code>.*?</code>
+は必ずしも「ネストしていない括弧の対応を取るため」に使えない例です（参考：<a href="http://docs.ruby-lang.org/ja/2.0.0/doc/spec=2fregexp.html">正規表現</a>）。</p>
+
+<p>なお，こんな簡単な場合はかえって煩わしいかもしれませんが，より一般的な方法として，Ruby の <a href="http://nokogiri.org/">Nokogiri</a> を使えば，次のようにできます。この例では，最新のデータを収めたURLから直接読み込んでいます。</p>
+
+<pre>
+#! /usr/bin/ruby
+# -*- coding: utf-8 -*-
+
+require 'open-uri'
+require 'nokogiri'
+
+url = 'http://monitoring.tokyo-eiken.go.jp/mp_shinjuku_air_data.html'
+
+charset = nil
+html = open(url) do |f|
+  charset = f.charset
+  f.read
+end
+
+doc = Nokogiri::HTML.parse(html, nil, charset)
+
+doc.xpath('//tbody/tr').each do |tr|
+  if tr.css('th').text =~ %r{\A([\d/]+)\s*([\d:]+)}
+    print "#{$1} #{$2}"
+    tr.xpath('td').each do |td|
+      print ",#{td.text}"
+    end
+    puts
+  end
+end
+</pre>
+</div>
+
+<p>欠測の詳細は<a href="http://monitoring.tokyo-eiken.go.jp/information.html">環境放射線測定結果 - 新着情報</a>に載っていますが，一番長いのは 2013/07/23 から 2013/07/25 のもので，次のように書かれています：</p>
+
+<blockquote>
+<p>　新宿モニタリングポストを設置している建物の解体工事に伴い、モニタリングポストをこれまで設置していた建物の屋上（地上約18ｍ）から隣の建物の屋上（地上約22m）に移設します。</p>
+<p>　そのため、平成25年7月23日（火曜日）10時から25日（木曜日）17時まで測定を停止します。</p>
+<p>　なお、当センター敷地内の工事完了後には、モニタリングポストを地上に移設する予定です。</p>
+</blockquote>
+
+<h2>Rでプロット</h2>
+
+<p>Rで読んで解析するには，ここでは <a href="datatable.html">data.table</a>
+と，そこで説明した fasttime を使うことにします。</p>
+
+<pre>
+library(data.table)
+library(fasttime)
+shinjuku = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/shinjuku.csv")
+shinjuku$datetime = fastPOSIXct(shinjuku$datetime) - 9*3600
+
+s = subset(shinjuku, datetime &lt; as.POSIXct("2011/03/11"))
+
+par(mgp=c(2,0.8,0)) # 好み
+plot(range(s$datetime), range(c(s$min,s$max)),
+     type="n", xaxt="n", xlab="", ylab="μGy/h")
+r = as.POSIXct(round(range(s$datetime), "days"))
+axis.POSIXct(1, at=seq(r[1],r[2],by="day"), format="%b/%d")
+segments(s$datetime, s$min, s$datetime, s$max, col=gray(0.5))
+points(s$datetime, s$avg, type="o", pch=16, col="black")
+</pre>
+
+<img src="img/140210a.png" alt="2011年3月頭の新宿の線量率">
+
+<p>ついでに 2013/07/23 の移設前の10日間もプロットしてみましょう。</p>
+
+<pre>
+s = shinjuku[datetime %between% c(as.POSIXct("2013/07/13"),as.POSIXct("2013/07/23"))]
+</pre>
+
+<p><code>plot</code> 以下は同じです。</p>
+
+<img src="img/140210b.png" alt="2013年7月の移設前の新宿の線量率">
+
+<p>事故前より 0.01μGy/h 程度大きいところで推移しています。
+
+<p>さらに移設後の10日間です。</p>
+
+<pre>
+s = shinjuku[datetime %between% c(as.POSIXct("2013/07/26"),as.POSIXct("2013/08/05"))]
+</pre>
+
+<p><code>plot</code> 以下は同じです。</p>
+
+<img src="img/140210c.png" alt="2013年7月の移設後の新宿の線量率">
+
+<p>あれ，事故前のレベルに戻ってしまいました。移設作業で除染されたのかな？</p>
+
+<h2>[2015-02-12追記] readHTMLTable()</h2>
+
+<p>XMLパッケージの <code>readHTMLTable()</code> を使えばもっと簡単にできると教えていただきました（<a href="http://abrahamcow.hatenablog.com/entry/2015/02/12/003525?utm_medium=twitter&utm_source=twitterfeed">R から HTML の表を読み込む - 廿TT</a>）。</p>
+
+<pre>
+<code>library(XML)</code>
+<code>shinjuku = readHTMLTable("http://monitoring.tokyo-eiken.go.jp/mp_shinjuku_air_data.html")</code>
+<code>head(shinjuku[[1]])</code>
+                           V1     V2     V3     V4
+1 2015/02/12 \r\n07:01～08:00 0.0364 0.0326 0.0346
+2 2015/02/12 \r\n06:01～07:00 0.0366 0.0323 0.0344
+3 2015/02/12 \r\n05:01～06:00 0.0367 0.0327 0.0342
+4 2015/02/12 \r\n04:01～05:00 0.0364 0.0317 0.0340
+5 2015/02/12 \r\n03:01～04:00 0.0360 0.0306 0.0338
+6 2015/02/12 \r\n02:01～03:00 0.0354 0.0323 0.0340
+</pre>
+
+<p>ヘッダは，セル結合を使っているためか，うまく取得できません。日時は途中で改行 <code>\r\n</code> が入っています。再パースが必要ですが，かなり楽そうです。</p>
+
+<h2>[2015-12-30追記] rvest</h2>
+
+<p>Hadley Wickhamが <a href="http://cran.r-project.org/web/packages/rvest/index.html">rvest</a> というWebスクレーピング用パッケージを作っています。</p>
+
+<pre>
+<code>library(rvest)</code>
+<code>x = read_html("http://monitoring.tokyo-eiken.go.jp/mp_shinjuku_air_data.html")</code>
+<code>t = html_table(x, header=FALSE, fill=TRUE)</code>
+<code>head(t[[1]][-1:-2,])</code>
+                           X1     X2     X3     X4
+3 2015/12/30 \r\n20:01～21:00 0.0321 0.0285 0.0306
+4 2015/12/30 \r\n19:01～20:00 0.0324 0.0292 0.0307
+5 2015/12/30 \r\n18:01～19:00 0.0332 0.0286 0.0305
+6 2015/12/30 \r\n17:01～18:00 0.0328 0.0292 0.0306
+7 2015/12/30 \r\n16:01～17:00 0.0325 0.0291 0.0309
+8 2015/12/30 \r\n15:01～16:00 0.0329 0.0293 0.0308
+</pre>
+
+<p>ちなみにrvest（アー（ル）ヴェスト）はharvest（収穫する＝scrapeする）の語呂合わせと思われます。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-03-23 15:12:00</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Collatzの問題</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="first.html">Rの初歩</a> &gt;
+</nav>
+
+<h1>Collatzの問題</h1>
+
+<p>1937年にドイツの数学者Collatz（コラッツ）が，「ある数が偶数なら2で割り，奇数なら3倍して1を足す。これを繰り返すとすべての数は1になるだろう」と予想しましたが，だれもそれを証明することができていません。</p>
+
+<p>Rのプログラムで調べてみましょう。</p>
+
+<pre>
+collatz = function(n) {
+  cat(n)
+  while (n &gt; 1) {
+    if (n %% 2 == 0) {
+      n = n / 2
+    } else {
+      n = 3 * n + 1
+    }
+    cat(" →", n)
+  }
+  cat("\n")
+}
+</pre>
+
+<p>ここで <code>n %% 2</code> はnを2で割った余りです。</p>
+
+<p>例えば <code>collatz(3)</code> と打つと次のように出ます。</p>
+
+<pre>
+3 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+</pre>
+
+<p>いろいろな数から出発して，Collatzの予想が正しいかどうか確かめてください。</p>
+
+<p>ところで，Rではもうちょっと簡単に書くこともできます。例えば</p>
+
+<pre>
+collatz = function(n) {
+  cat(n)
+  while (n &gt; 1) {
+    n = ifelse(n %% 2 == 0, n / 2, 3 * n + 1)
+    cat(" →", n)
+  }
+  cat("\n")
+}
+</pre>
+
+<p>あるいは</p>
+
+<pre>
+collatz = function(n) {
+  a = n
+  while (n &gt; 1) {
+    n = ifelse(n %% 2 == 0, n / 2, 3 * n + 1)
+    a = c(a, n)
+  }
+  a
+}
+</pre>
+
+<p>と書くことができます。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-02-01 13:02:24</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

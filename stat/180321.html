@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>福島県で胃がんが急増？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>福島県で胃がんが急増？</h1>
+
+<hr>
+
+<p><em>[2018-03-21]</em> グラフをSVG化する方法を<a href="180321a.html">別ページ</a>に書いた。</p>
+
+<p><em>[2018-09-19]</em> <a href="https://ganjoho.jp/reg_stat/statistics/brochure/monitoring.html">全国がん罹患モニタリング集計</a>に2018-09-15付で新しいデータが入ったので追加した。</p>
+
+<p><em>[2018-12-28]</em> <a href="https://ganjoho.jp/reg_stat/statistics/dl/index.html">がんに関する統計データのダウンロード</a>に2018-11-19付で新しいデータが入ったので追加した。</p>
+
+<hr>
+
+<p>国立がん研究センターの<a href="https://ganjoho.jp/reg_stat/statistics/dl/index.html">がんに関する統計データのダウンロード</a>の都道府県別死亡データから，全がん死亡数・粗死亡率・年齢調整死亡率（1995年～2017年）pref_AllCancer_mortality(1995-2017).xls，部位別75歳未満年齢調整死亡率（1995年～2017年）pref_CancerSite_mortalityASR75(1995-2017).xls をいただいてくる。</p>
+
+<pre>
+library(readxl)
+par(mgp=c(2,0.8,0), las=1)
+all = read_excel("pref_AllCancer_mortality(1995-2017).xls", "asr75")
+matplot(1995:2017, t(all[2:48, 4:26]), type="o", pch=16, lty=1, col="#66ccff", xlab="", ylab="")
+points(1995:2017, all[8, 4:26], type="o", pch=16, col="#ff2800")
+mtext("全がん死亡率の推移（赤は福島県）", line=-1.5, cex=1.5)
+
+bui = read_excel("pref_CancerSite_mortalityASR75(1995-2017).xls", "asr75", col_types=c(rep("text",5),rep("numeric",23)))
+matplot(1995:2017, t(bui[290:336, 6:28]), type="o", pch=16, lty=1, col="#66ccff", xlab="", ylab="")
+points(1995:2017, bui[296, 6:28], type="o", pch=16, col="#ff2800")
+mtext("胃がん死亡率の推移（赤は福島県）", line=-1.5, cex=1.5)
+</pre>
+
+<figure><img src="img/181228c.png" alt="全がん死亡率の推移（赤は福島県）"></figure>
+
+<figure><img src="img/181228d.png" alt="胃がん死亡率の推移（赤は福島県）"></figure>
+
+<p>書き忘れたが，縦軸は年齢調整死亡率（男女計，人口10万対）である。</p>
+
+<p>地域ごとの罹患率についてはPDFでしか公開されていないようだ。<a href="https://ganjoho.jp/reg_stat/statistics/brochure/monitoring.html">全国がん罹患モニタリング集計</a>から，フォーマットが現在と同じ2005年以降のものをいただいてくる。ファイル名は mcij*.pdf である。これらを一括でテキストファイルにする（要 pdftotext）：</p>
+
+<pre>
+for x in mcij*.pdf; do pdftotext -raw $x; done
+</pre>
+
+<p>これらのテキストから「胃 C16」という文字列の最後のものを見つけ，その後の表をコピーする。「*3」「*4」のような注が入っているものがあるので，それは削除する。できたUTF-8テキストファイルを
+<a href="data/mcij2005_C16.txt">mcij2005_C16.txt</a>,
+<a href="data/mcij2006_C16.txt">mcij2006_C16.txt</a>,
+<a href="data/mcij2007_C16.txt">mcij2007_C16.txt</a>,
+<a href="data/mcij2008_C16.txt">mcij2008_C16.txt</a>,
+<a href="data/mcij2009_C16.txt">mcij2009_C16.txt</a>,
+<a href="data/mcij2010_C16.txt">mcij2010_C16.txt</a>,
+<a href="data/mcij2011_C16.txt">mcij2011_C16.txt</a>,
+<a href="data/mcij2012_C16.txt">mcij2012_C16.txt</a>,
+<a href="data/mcij2013_C16.txt">mcij2013_C16.txt</a>
+<a href="data/mcij2014_C16.txt">mcij2014_C16.txt</a>
+として置いておくので，間違いがないかPDFと比較していただければ助かる。これらをまずRで読み込む：</p>
+
+<pre>
+m05 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2005_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m06 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2006_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m07 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2007_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m08 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2008_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m09 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2009_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m10 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2010_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m11 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2011_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m12 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2012_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m13 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2013_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m14 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2014_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+</pre>
+
+<p>これらは次の項目から成る：</p>
+
+<ul>
+  <li>V1: 地域</li>
+  <li>V2: 男死亡数</li>
+  <li>V3: 男粗死亡率</li>
+  <li>V4: 男年齢調整死亡率/10万</li>
+  <li>V5: 男罹患数</li>
+  <li>V6: 男粗罹患率</li>
+  <li>V7: 男年齢調整罹患率/10万</li>
+  <li>V8: 女死亡数</li>
+  <li>V9: 女粗死亡率</li>
+  <li>V10: 女年齢調整死亡率/10万</li>
+  <li>V11: 女罹患数</li>
+  <li>V12: 女粗罹患率</li>
+  <li>V13: 女年齢調整罹患率/10万</li>
+  <li>V14: 登録精度 ("*" &gt; "†" &gt; "")</li>
+</ul>
+
+<p>グラフは次のようにして描く：</p>
+
+<pre>
+x = merge(m05[,c(1,7)], m06[,c(1,7)], by="V1", all=TRUE)
+x = merge(x, m07[,c(1,7)], by="V1", all=TRUE)
+x = merge(x, m08[,c(1,7)], by="V1", all=TRUE)
+x = merge(x, m09[,c(1,7)], by="V1", all=TRUE)
+x = merge(x, m10[,c(1,7)], by="V1", all=TRUE)
+x = merge(x, m11[,c(1,7)], by="V1", all=TRUE)
+x = merge(x, m12[,c(1,7)], by="V1", all=TRUE)
+x = merge(x, m13[,c(1,7)], by="V1", all=TRUE)
+x = merge(x, m14[,c(1,7)], by="V1", all=TRUE)
+matplot(2005:2014, t(x[,-1]), type="o", pch=16, lty=1, col="#66ccff", xlab="", ylab="", main="男 胃 年齢調整罹患率/10万")
+points(2005:2014, t(x[x[,1]=='福島県',-1]), type="o", pch=16, col="#ff2800")
+
+y = merge(m05[,c(1,13)], m06[,c(1,13)], by="V1", all=TRUE)
+y = merge(y, m07[,c(1,13)], by="V1", all=TRUE)
+y = merge(y, m08[,c(1,13)], by="V1", all=TRUE)
+y = merge(y, m09[,c(1,13)], by="V1", all=TRUE)
+y = merge(y, m10[,c(1,13)], by="V1", all=TRUE)
+y = merge(y, m11[,c(1,13)], by="V1", all=TRUE)
+y = merge(y, m12[,c(1,13)], by="V1", all=TRUE)
+y = merge(y, m13[,c(1,13)], by="V1", all=TRUE)
+y = merge(y, m14[,c(1,13)], by="V1", all=TRUE)
+matplot(2005:2014, t(y[,-1]), type="o", pch=16, lty=1, col="#66ccff", xlab="", ylab="", main="女 胃 年齢調整罹患率/10万")
+points(2005:2014, t(y[y[,1]=='福島県',-1]), type="o", pch=16, col="#ff2800")
+</pre>
+
+<figure><img src="img/180919a.png" alt="男 胃 年齢調整罹患率/10万（赤は福島県）"></figure>
+
+<figure><img src="img/180919b.png" alt="女 胃 年齢調整罹患率/10万（赤は福島県）"></figure>
+
+<p>地域ごとの罹患率データは，精度がまちまちであり，地域間の比較に使うのは本来あまり望ましくない。全体の傾向を見るために使っていただきたい。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-12-28 17:51:13</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

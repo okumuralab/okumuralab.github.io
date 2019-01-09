@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Sweave</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Sweave</h1>
+
+<p>R＋LaTeXで「文芸的プログラミング」しようと思ったら，R標準のSweave（エスウィーブ）か，最近流行のknitr（ニッター）を使う。ここではSweaveを説明する。</p>
+
+<p>このページを書いたきっかけは，<a href="http://prcs.ism.ac.jp/useRjp/hiki.cgi?2013%C7%AF%C5%D9+%A5%C7%A1%BC%A5%BF%B2%F2%C0%CF%B4%C4%B6%ADR%A4%CE%C0%B0%C8%F7%A4%C8%CD%F8%CD%D1">2013年度統計数理研究所共同研究集会「データ解析環境Rの整備と利用」</a>（2013-11-29）で，R Core TeamでSweaveなどをメンテしておられるMurdoch先生に直々にいろいろ教えていただいたことである。詳しくは当日の資料
+<a href="http://www.stats.uwo.ca/faculty/murdoch/ism2013/">Reproducible Research</a>
+を参照されたい。</p>
+
+<h2>「文芸的プログラミング」って何？</h2>
+
+<p>TeXの作者Knuthが考えたプログラミング方法論。詳しくは
+<a href="http://www.amazon.co.jp/dp/0937073806">Literate Programming</a>
+という本を参照されたい。有沢誠先生による邦訳
+<a href="http://www.amazon.co.jp/dp/4756101909">文芸的プログラミング</a>
+は絶版のようである。</p>
+
+<p>うんと簡単にいえば，ドキュメントの中にコードを含め，ドキュメントとしてもコードとしても使えるようにする方法。Knuthはこの実装の一つとして1983年に「WEB」を書き，それでTeXを再実装した。ちなみに「WEB」は「Web」（World Wide Web）より早い。</p>
+
+<p>このWEBを再実装したものがRamsey（1989）の
+<a href="http://www.cs.tufts.edu/~nr/noweb/">Noweb</a>
+であり，それをS（後のR）の世界に持ち込んだものがLeisch（2002）の
+<a href="http://www.stat.uni-muenchen.de/~leisch/Sweave/">Sweave</a>
+である。</p>
+
+<p>Sweaveについては
+Ihaka (2009): ``Customizing Sweave to Produce Better Looking LaTeX Output''
+が非常に参考になる。Ihakaの
+<a href="http://www.stat.auckland.ac.nz/~ihaka/?Papers_and_Talks">Papers and Talks</a>
+のページから得られる。</p>
+
+<p>ちなみに，Bracken（2009）の
+<a href="https://github.com/cameronbracken/pgfSweave">cameronbracken/pgfSweave</a>
+というものがあったが，現在メンテナンスされていない。</p>
+
+<h2>インストール</h2>
+
+<p>Rにはもともと入っているので何もする必要はない。</p>
+
+<p>TeX側では，Rに同梱されているSweave.styを入れる必要がある。Mac版Rならば<p>
+
+<pre>
+/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/
+</pre>
+
+<p>の下にあるものを例えば texmf-local/tex/latex/R/ を作ってそこにコピーするか，シンボリックリンクする：</p>
+
+<pre>
+cd /usr/local/texlive/texmf-local/tex/latex (例えば)
+ln -s /Library/Frameworks/R.framework/Resources/share/texmf/tex/latex ./R
+</pre>
+
+<p>texmf-local 以下を変更した場合は <code>mktexlsr</code> コマンドを忘れないように。</p>
+
+<h2>Sweaveの例</h2>
+
+<p>次のファイルを作り，foo.Rnw（またはfoo.Snw）という名前でUTF-8で保存する。拡張子の nw は上記 noweb が起源らしい。</p>
+
+<pre>
+\documentclass{jsarticle}
+\begin{document}
+
+一様乱数を5個作って平均する。
+<<>>=
+x = runif(5)
+x
+mean(x)
+@
+\end{document}
+</pre>
+
+<p>Rのコンソールで次のように打ち込む：</p>
+
+<pre>
+Sweave("foo.Rnw", encoding="utf-8")
+</pre>
+
+<p>あるいは，次のように（たとえ不要でも）入力がUTF-8であることがわかる行を書いておけば自動判断される：</p>
+
+<pre>
+\documentclass{jsarticle}
+\usepackage[utf8]{inputenc}
+\begin{document}
+……
+</pre>
+
+<p>これで foo.tex が生成されるので，platex + dvipdfmx でPDFにする。platex の代わりに uplatex を使う場合は1行目を <code>\documentclass[uplatex]{jsarticle}</code> にすればよい。</p>
+
+<h2>いろいろ</h2>
+
+<p>Ihaka（上記参照）の推奨（例えば *.Rnw の <code>\begin{document}</code> の直後に入れる）：</p>
+
+<pre>
+\DefineVerbatimEnvironment{Sinput}{Verbatim} {xleftmargin=2em}
+\DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=2em}
+\DefineVerbatimEnvironment{Scode}{Verbatim}{xleftmargin=2em}
+\fvset{listparameters={\setlength{\topsep}{0pt}}}
+\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+</pre>
+
+<p>日本語なら，左マージンは全角幅（zw）の整数倍にしたい。また，jsarticleの本文行送りは日本語なので広めにしているが，Rコードの行送りは少し減らしたい：</p>
+
+<pre>
+\fvset{xleftmargin=2zw,baselinestretch=0.75}
+</pre>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2013-12-01T17:13:09+09:00">2013-12-01 17:13:09</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

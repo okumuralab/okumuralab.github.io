@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>都道府県別飲用水(水道水)環境放射能測定結果</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<h1>都道府県別飲用水(水道水)環境放射能測定結果</h1>
+
+<p>(このページは<a rel="nofollow" href="http://face.f7.ems.okayama-u.ac.jp/~t2/pukiwiki/index.php?%C5%D4%C6%BB%C9%DC%B8%A9%CA%CC%B0%FB%CD%D1%BF%E5%28%BF%E5%C6%BB%BF%E5%29%B4%C4%B6%AD%CA%FC%BC%CD%C7%BD%C2%AC%C4%EA%B7%EB%B2%CC">岡山大学の垂水先生のページ</a>のミラーです)</p>
+
+<h2>データ</h2>
+
+<ul>
+  <li><a href="mext-water.csv">mext-water.csv</a></li>
+  <li><a href="mext-water.xls">mext-water.xls</a></li>
+  <li>元データ
+      <ul>
+	<li>文部科学省　<a rel="nofollow" href="http://www.mext.go.jp/a_menu/saigaijohou/syousai/1303956.htm">http://www.mext.go.jp/a_menu/saigaijohou/syousai/1303956.htm</a>　より 上水（蛇口水）の調査結果 次のファイルより作成
+	    <ul>
+	      <li>平成23年3月22日（火曜日）採取 （PDF:90KB）</li>
+	      <li>平成23年3月21日（月曜日）採取 （PDF:75KB）</li>
+	      <li>平成23年3月20日（日曜日）採取 （PDF:186KB）</li>
+	      <li>平成23年3月19日（土曜日）採取 （PDF:175KB）</li>
+	      <li>平成23年3月18日（金曜日）採取 （PDF:171KB）</li>
+	    </ul>
+	</li>
+      </ul>
+  </li>
+</ul>
+
+<h2>R program</h2>
+
+<pre>
+library("ggplot2")
+
+str_replace&lt;-function(d,pat,a)  {
+  sub(pat,a,d)
+}
+
+dwater &lt;- read.csv('http://face.f7.ems.okayama-u.ac.jp/~t2/data/stat/mext-water.csv', 
+    fileEncoding="sjis", skip=2, na="-", as.is=TRUE)
+
+dwater[(!is.na(dwater[,4]))&amp;(dwater[,4]=="不検出"),4]&lt;-0
+dwater[,4]&lt;-as.numeric(dwater[,4])
+
+location&lt;-dwater$都道府県
+dwater$都道府県 &lt;- str_replace(location,"（.*）","")
+
+dest.pref&lt;-c(8:15,19)
+dtemp&lt;-dwater[dwater$pref%in%dest.pref,]
+
+lct &lt;- Sys.getlocale("LC_TIME"); Sys.setlocale("LC_TIME", "C")
+ttime &lt;- strptime(dtemp[,3], "%m月%d日")
+
+G &lt;- ggplot(dtemp, aes(as.POSIXct(ttime), I.131, colour=都道府県)) +
+     geom_line() + geom_point() + xlab("日時(日ー月)") + ylab("I-131(Bq/kg)")
+
+G +  facet_wrap(~都道府県)
+</pre>
+
+<div><img src="mext-water1.png" alt="" /></div>
+
+<div><img src="mext-water2.png" alt="" /></div>
+
+</body>
+</html>

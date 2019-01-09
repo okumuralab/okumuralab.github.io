@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>グラフの例：トンデル論文</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</div>
+
+<h1>グラフの例：トンデル論文</h1>
+
+<h2>はじめに</h2>
+
+<p>トンデル（Martin Tondel）は放射線の低線量被ばくの影響を研究している人です。2011年12月28日のNHKの番組「追跡！真相ファイル」<a href="http://www.nhk.or.jp/tsuiseki/shinsou_top/20111228.html">低線量被ばく　揺らぐ国際基準</a>にも登場しました。しかし，彼の論文についてはいろいろ批判があります。</p>
+
+<h2>トンデルの2004年の論文</h2>
+
+<p>まず <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1732641/">Increase of regional total cancer incidence in north Sweden due to the Chernobyl accident?</a> という論文です。表1のデータをCSVの形で載せておきます。これはスウェーデン北部の地域を放射能汚染度で分類したときの人口・発がん者数・総死亡数です。1列目がセシウム137（<sup>137</sup>Cs）の密度（kBq/m<sup>2</sup>），次の3列が1988年の人口（男・女・計），次の3列が1988-1996年の発がん数（男・女・計），最後の3列が1988-1996年の総死亡数（男・女・計）です。</p>
+
+<pre>
+Cs137,Pop_M,Pop_W,Pop_T,Can_M,Can_W,Can_T,Dea_M,Dea_W,Dea_T
+&lt;3,185646,173863,359509,2810,3881,6691,5629,3029,8658
+3–29,269922,257890,527812,4501,5877,10378,7294,4358,11652
+30–39,48053,44270,92323,752,1075,1827,1294,811,2105
+40–59,63512,61350,124862,1185,1559,2744,2048,1188,3236
+60–79,11112,10513,21625,172,229,401,291,172,463
+80–120,8722,8329,17051,153,215,368,288,159,447
+Total,586967,556215,1143182,9573,12836,22409,16844,9717,26561
+</pre>
+
+<p>これをコピーして次のどちらかをRに打ち込めば <code>tondel1</code> というオブジェクトにデータが読み込まれます。</p>
+
+<pre>
+tondel1 = read.csv("clipboard")     # Windowsの場合
+tondel1 = read.csv(pipe("pbpaste")) # Macの場合
+</pre>
+
+<p>まずは発がん率を汚染度ごとに調べ，グラフにしてみます。エラーバーは95%信頼区間です。</p>
+
+<pre>
+# quartz()                      # Mac
+# par(family="HiraKakuProN-W3") # Macフォント
+par(mgp=c(2,0.8,0))             # 好み：マージンを狭く
+attach(tondel1)
+ci = matrix(NA, 6, 2)  # 6×2行列を作る。初期値はすべてNA
+for (i in 1:6) ci[i,1:2] = binom.test(Can_T[i], Pop_T[i])$conf.int
+plot(c(0.8,6.2), range(ci), type="n", xaxt="n",
+     xlab=expression(paste({}^137, Cs, " (", kBq/m^2, ")")),
+     ylab="Cancer Rate")
+points(1:6, Can_T[1:6]/Pop_T[1:6], type="o", pch=16, lwd=2)
+arrows(1:6, ci[,1], 1:6, ci[,2], angle=90, code=3, length=0.05)
+axis(1, 1:6, Cs137[1:6])
+</pre>
+
+<p>上の <code>Can</code> を <code>Dea</code> に置き換えて死亡数についても調べてみましたが，微妙です。それぞれの地域性（年齢構成，都会か田舎か，煙草の消費量など）が考慮されていないからです。</p>
+
+<div>
+<img src="img/111231a.png" alt="発がん数と汚染度" />
+<img src="img/111231b.png" alt="死亡数と汚染度" />
+</div>
+
+<p>論文では表5に5-59歳の発がん数の素データが1986-1987年と1988-1996年について載っています。CSV形式で表すと次のようになります：</p>
+
+<pre>
+Cs137,Can_86_87,Can_88_96
+&lt;3,712,4181
+3–29,1024,6402
+30–39,175,1130
+40–59,254,1623
+60–79,36,252
+80–120,32,235
+Total,2233,13823
+</pre>
+
+<p>実際の論文では，年齢調整などいろいろな統計処理をしているのですが，残念ながらそれを検証するデータを私は持ち合わせていません。しかし，この素データは，同じ地域についての比較ですので，地域性による交絡因子には影響を受けにくいと考えられます。そこで，このデータだけに基づいて，できるだけモデルに依存しないように，1986-1996年の発がん数のうちどれだけの割合が1988-1996年のものであるかを，2項分布を仮定して <code>binom.test()</code>
+で調べた95%信頼区間とともにグラフにしてみます。1986年のチェルノブイリ原発事故が起きたばかりの1986-1987年と，それによる影響が出始めた1988-1996年との発がん数の比は，その地域の汚染度によって違いがあるだろうというわけです。</p>
+
+<div>
+<img src="img/111231c.png" alt="発がん数，1988-1996年/1986-1996年" />
+</div>
+
+<p>このグラフを描くには，上のデータをクリップボードにコピーしてから，次のように打ち込みます：</p>
+
+<pre>
+tondel2 = read.csv("clipboard")     # Windowsの場合
+tondel2 = read.csv(pipe("pbpaste")) # Macの場合
+attach(tondel2)
+for (i in 1:6)
+  ci[i,1:2] = binom.test(Can_88_96[i], Can_86_87[i]+Can_88_96[i])$conf.int
+plot(c(0.8,6.2), range(ci), type="n", xaxt="n",
+     xlab=expression(paste({}^137, Cs, " (", kBq/m^2, ")")),
+     ylab="Cancer 88-96/86-96")
+points(1:6, Can_88_96[1:6]/(Can_86_87[1:6]+Can_88_96[1:6]),
+       type="o", pch=16, lwd=2)
+arrows(1:6, ci[,1], 1:6, ci[,2], angle=90, code=3, length=0.05)
+axis(1, 1:6, Cs137[1:6])
+</pre>
+
+<p>なんとなく右上がりの傾向が見えてきました。このあとはモデルに依存しますし，計算もおおまかですが，横軸を等間隔または区間の中央と仮定し，2項分布の一般化線形回帰をしてみます。</p>
+
+<pre>
+n = Can_86_87[1:6] + Can_88_96[1:6]
+p = Can_88_96[1:6] / n
+x = 1:6  # あるいは区間の中央をとって次のようにする
+# x = c(3/2, (3+29)/2, (30+39)/2, (40+59)/2, (60+79)/2, (80+120)/2)
+fit = glm(cbind(Can_88_96[1:6], Can_86_87[1:6]) ~ x, family=binomial)
+summary(fit)
+</pre>
+
+<p>結果のサマリー <code>summary(fit)</code> を見ると，傾きの <i>p</i>
+値は，等間隔で <i>p</i> = 0.0855，区間の中央で <i>p</i> = 0.0877
+程度です。微妙に有意ではありませんでした。</p>
+
+<p>しかし，こういうものには交絡がつきものです。トンデルの分析では（年齢調整などのほか）人口密度を交絡因子として考慮しているのが特徴です（スウェーデンでは人口密度40人/km<sup>2</sup>未満の地域ではがんが少ないようです）。その結果，ぎりぎり2σレベルで有意だというのが彼の結論です。もっとも，2σレベルではそれほど強い証拠と言えませんし，隠れた交絡があるかもしれませんので，この論文のタイトルには「？」が付けられています。</p>
+
+<h2>トンデルの2011年の論文</h2>
+
+<p><a href="http://www.ncbi.nlm.nih.gov/pubmed/21112071">Risk of malignancies in relation to terrestrial gamma radiation in a Swedish population cohort</a>
+という論文は，被ばく線量とがんの関係を調べています。</p>
+
+<p>次は論文の表2から取ったものです。TGR（terrestrial gamma radiation）が線量率（nGy/h，ほぼ0.001μSv/h）で，HR（hazard ratio）がハザード比（0-60を1としたときの危険性の度合），その右の二つが95%信頼区間です。グラフ化は宿題です。</p>
+
+<pre>
+TGR,HR,CI_L,CI_H
+0-60,1,1,1
+61-75,1.04,1.02,1.06
+76-83,1.05,1.02,1.07
+84-91,1.07,1.04,1.10
+92-95,1.04,1.10,1.08
+96-366,0.99,0.96,1.02
+</pre>
+
+<h2>参考</h2>
+
+<ul>
+  <li>Tondel (2004): <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1732641/">Increase of regional total cancer incidence in north Sweden due to the Chernobyl accident?</a></li>
+  <li>Tondel (2011): <a href="http://www.ncbi.nlm.nih.gov/pubmed/21112071">Risk of malignancies in relation to terrestrial gamma radiation in a Swedish population cohort</a></li>
+  <li><a href="http://d.hatena.ne.jp/buvery/20110520">ECRRの福島リスク計算は妄想の産物 - buveryの日記</a></li>
+  <li><a href="http://jun-makino.sakura.ne.jp/Journal/journal-2011-05.html#31">Official journal of Jun Makino</a> 2011/5/31の「なんだか意味不明な ことが書いてある」以降</li>
+  <li><a href="http://www.nhk.or.jp/tsuiseki/shinsou_top/20111228.html">低線量被ばく　揺らぐ国際基準 - NHK 追跡！真相ファイル</a></li>
+  <li><a href="http://togetter.com/li/234209">子育てママを恐怖に陥れた、トンデルNHK追跡！真相ファイル　の検証 - Togetter</a></li>
+  <li><a href="http://blog.goo.ne.jp/yoshi_swe/e/6c768f8d028351291a58069838c7d812">NHK追跡！真相ファイル 『低線量被ばく 揺らぐ国際基準』 コメント - スウェーデンの今</a></li>
+</ul>
+
+<hr />
+
+<p><a href="/~okumura/" rel="me">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2012-01-01 07:20:23
+<!-- hhmts end -->
+</p>
+</body>
+</html>

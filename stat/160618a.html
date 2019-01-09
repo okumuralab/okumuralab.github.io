@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>有意でなかったのでサンプルサイズを増やそう…</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<article>
+<h1>有意でなかったのでサンプルサイズを増やそう…</h1>
+
+<p>被験者10人で実験したけれど，サンプルサイズが小さすぎて有意な結果が出なかった。11人目をリクルートして，やっぱり駄目だったので，11人目をリクルートし，…と続けていけばどうなるか。</p>
+
+<p>数値実験してみよう。とりあえず1変数の <i lang="en">t</i> 検定で。</p>
+
+<pre>
+foo = function() {
+    x = rnorm(1000)
+    for (i in 10:1000) {
+        if (t.test(x[1:i])$p.value &lt; 0.05) return(i)
+    }
+    return(0)
+}
+r = replicate(1000, foo())
+x = sapply(10:1000, function(t) sum(r &gt;= 10 &amp; r &lt;= t))
+plot(10:1000, x, log="x", ylim=c(0,500), xlab="", ylab="")
+</pre>
+
+<figure><img src="img/160618a.png" alt=""></figure>
+
+<p>サンプルサイズ10から始めたので，そのときはほぼ5%の確率で5%有意になるのは当たり前である。これをサンプルサイズ1000まで増やしていくと，半分に近い確率で有意になってしまった。</p>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-06-18 14:03:36</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

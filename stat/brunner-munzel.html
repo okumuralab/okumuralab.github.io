@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Brunner-Munzel検定</title>
+<link rel="stylesheet" href="../style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Brunner-Munzel検定</h1>
+
+<h2>はじめに</h2>
+
+<p>二つの確率変数 $X_1$，$X_2$ が同じ分布に従うという帰無仮説を検定するには，有名なWMW検定（Wilcoxon-Mann-Whitney test）が使えます。しかし，分布が異なる（例えば分散が異なる）場合には，これでは正確に検定できません。</p>
+
+<p>そこで，分布が同じことは仮定せず，両群から一つずつ値を取り出したとき，どちらが大きい確率も等しいという帰無仮説を検定することにします。つまり，</p>
+
+\[ p = P(X_1 < X_2) + \frac{1}{2}P(X_1 = X_2) \]
+
+<p>としたとき，$p = 1/2$ が帰無仮説になります。</p>
+
+<p>この考え方から生まれたのが，Brunner（ブルンナー）とMunzel（ムンツェル）によるBrunner-Munzel検定（Brunner-Munzel test）です。</p>
+
+<p>以下では，彼らの次の論文に基づいて解説します。</p>
+
+<ul>
+  <li lang="en">Edgar Brunner and Ullrich Munzel,
+  ``The nonparametric Behrens-Fisher problem:
+  Asymptotic theory and a small-sample approximation'',
+  <i>Biometrical Journal</i>, Vol. 42, pp. 17-25 (2000).</li>
+</ul>
+
+<h2>Brunner-Munzel検定の定式化</h2>
+
+<p>各群 $i\ (=1,2)$ から大きさ $n_i$ の標本を取り出したとします：</p>
+
+\[ X_{i1}, X_{i2}, \ldots, X_{in_i} \]
+
+<p>全部を並べた $N = n_1 + n_2$ 個のデータ</p>
+
+\[ X_{11}, X_{12}, \ldots, X_{1n_1}, \quad X_{21}, X_{22}, \ldots, X_{2n_2} \]
+
+<p>の，全体を通しての順位を</p>
+
+\[ R_{11}, R_{12}, \ldots, R_{1n_1}, \quad R_{21}, R_{22}, \ldots, R_{2n_2} \]
+
+<p>とします（同順位がある場合は順位の平均を用います。以下同様）。この各群内での平均を</p>
+
+\[ \bar{R}_{i\cdot} = \frac{1}{n_i}(R_{i1} + R_{i2} + \cdots + R_{in_i}) \]
+
+<p>とすると，</p>
+
+\[ \hat{p} = \frac{\bar{R}_{2\cdot} - \bar{R}_{1\cdot}}{N} + \frac{1}{2} \]
+
+<p>が，最初に挙げた $p$ の不偏推定量になります。</p>
+
+<p>一方，それぞれの群内での順位を</p>
+
+\[ R_{i1}^{(i)}, R_{i2}^{(i)}, \ldots, R_{in_i}^{(i)} \]
+
+<p>とすると，その平均は</p>
+
+\[ \frac{1}{n_i}(R_{i1}^{(i)} + R_{i2}^{(i)} + \cdots + R_{in_i}^{(i)}) = \frac{n_i + 1}{2} \]
+
+<p>です。ここで</p>
+
+\[
+  \begin{gather*}
+   S_i^2 = \frac{1}{n_i - 1} \sum_{k=1}^{n_i}
+   \left( R_{ik} - R_{ik}^{(i)} - \bar{R}_{i\cdot} + \frac{n_i + 1}{2} \right)^2 \\\\
+   \hat{\sigma}_i^2 = \frac{S_i^2}{(N - n_i)^2}, \qquad
+   \hat{\sigma}_N^2 = N \left(\frac{\hat{\sigma}_1^2}{n_1} + \frac{\hat{\sigma}_2^2}{n_2} \right)
+  \end{gather*}
+\]
+
+<p>とすると，</p>
+
+\[ W_N^{BF} = \frac{1}{\sqrt{N}} \cdot
+              \frac{\bar{R}_{2\cdot} - \bar{R}_{1\cdot}}{\hat{\sigma}_N}
+   = \frac{n_1 n_2 (\bar{R}_{2\cdot} - \bar{R}_{1\cdot})}{(n_1 + n_2)\sqrt{n_1 S_1^2 + n_2 S_2^2}}
+\]
+
+<p>は，漸近的に（$n_i$ や $n_2$ が大きくなると），標準正規分布 $N(0,1)$ に近づきます。小標本の場合には，より良い近似として，$W_N^\mathrm{BF}$ を自由度</p>
+
+\[ \hat{f} = \frac{(\hat{\sigma}_1^2 / n_1 + \hat{\sigma}_2^2 / n_2)^2}
+              {\dfrac{(\hat{\sigma}_1^2 / n_1)^2}{n_1 - 1} +
+               \dfrac{(\hat{\sigma}_2^2 / n_2)^2}{n_2 - 1}}
+   = \frac{(n_1 S_1^2 + n_2 S_2^2)^2}
+              {\dfrac{(n_1 S_1^2)^2}{n_1 - 1} + \dfrac{(n_2 S_2^2)^2}{n_2 - 1}}
+\]
+
+<p>の $t$ 分布で検定することをBrunnerとMunzelは提案しています。</p>
+
+<h2>Rでの計算</h2>
+
+<p>Rには lawstat パッケージに <code>brunner.munzel.test()</code> があります。<a href="ttest.html">t検定</a>で使った Lumley (1996) のデータで試してみましょう。</p>
+
+<pre>
+library(lawstat)
+x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
+y = c(3,3,4,3,1,2,3,1,1,5,4)
+brunner.munzel.test(x, y)
+</pre>
+
+<p>結果は次のようになりました：</p>
+
+<pre>
+Brunner-Munzel Test
+
+data:  x and y
+Brunner-Munzel Test Statistic = 3.1375, df = 17.683,
+p-value = 0.005786
+95 percent confidence interval:
+ 0.5952169 0.9827052
+sample estimates:
+P(X&lt;Y)+.5*P(X=Y)
+        0.788961
+</pre>
+
+<h2>並べ替えBrunner-Munzel検定</h2>
+
+<p>サンプルが非常に小さい場合には，Brunner-Munzelの統計量に並べ替え検定を適用すれば，もっと正確に計算できます。この方法（permuted Brunner-Munzel test）は次の文献で評価されています：</p>
+
+<ul>
+  <li lang="en">Karin Neubert and Edgar Brunner,
+  ``A studentized permutation test for the non-parametric Behrens-Fisher problem'',
+  <i>Computational Statistics and Data Analysis</i>,
+  Vol. 51, pp. 5192-5204 (2007).</li>
+</ul>
+
+<p>さきほどと同じデータでやってみましょう。全部の並べ替えでやってみたところ，Pentium 4 3.20GHzのLinuxマシンで6000秒あまりかかりました。</p>
+
+<pre>
+bm = brunner.munzel.test(x, y)$statistic
+n1 = length(x)
+n2 = length(y)
+N = n1 + n2
+xandy = c(x, y)
+foo = function(X) {
+  brunner.munzel.test(xandy[X], xandy[-X])$statistic
+}
+z = combn(1:N, n1, foo)
+mean(abs(z) &gt;= abs(bm))
+</pre>
+
+<p>結果は <code>0.008037645</code> となりました。</p>
+
+<h2>t検定との関係</h2>
+
+<img src="img/081208b.png" alt="graph" class="right">
+
+<p>Brunner-Munzel検定と，Welchの $t$ 検定を順位について適用した場合とでは，右図のように，どちらかといえば前者のほうが小さい $p$ 値が出やすいようです。</p>
+
+<p>この図は次のRのプログラムで描きました：</p>
+
+<pre>
+ni = 1000
+pt = pbm = numeric(ni)
+for (i in 1:ni) {
+  a = sample(20)
+  b = sample(5:10, 1)
+  x = a[1:b]
+  y = a[(b+1):20]
+  pt[i] = t.test(x, y)$p.value
+  pbm[i] = brunner.munzel.test(x, y)$p.value
+}
+par(mgp=c(1.5,0.6,0)) # 数字とラベルをもっと軸に近づける
+plot(pt, pbm, xlim=c(0,0.1), ylim=c(0,0.1))
+abline(0, 1)
+</pre>
+
+<hr>
+
+<p>[追記] より詳しいシミュレーション結果→<a href="http://d.hatena.ne.jp/hoxo_m/20150217/p1">マイナーだけど最強の統計的検定 Brunner-Munzel 検定</a></p>
+
+<p>[追記] 並べ替え検定の改良版→ <a href="http://blog.goo.ne.jp/r-de-r/e/83dc811baf41ecfe469fa794a4c51b84?fm=rss&utm_medium=twitter&utm_source=twitterfeed">Brunner-Munzel の並べ替え検定 - 裏 RjpWiki</a></p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-09 10:30:53</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

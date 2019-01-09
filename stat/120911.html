@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>放射能測定の誤差</title>
+<link rel="stylesheet" href="style.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<h1>放射能測定の誤差</h1>
+
+<h2>簡単な練習問題</h2>
+
+<p>感度 100Bq/cps の測定器があったとする。cps は counts per second の略で，1秒間に何個の放射線をカウントしたかという値。100Bq/cps とは，仮に1秒間に1回カウントすれば 100Bq の放射能があるということだ。1kg の検体なら，100Bq/kg ということになる。</p>
+
+<p>何も入れない状態で1000秒測って100カウント，検体を入れて1000秒測って156カウントだったとする。このときの放射能と誤差は？</p>
+
+<p>検体によって56カウント増えたのだから，1000秒で割って 0.056cps 増えたことになる。これに 100Bq/cps を掛ければ 5.6Bq ということになる。この誤差は $\sqrt{100 + 156} = 16$ であるが，これも1000秒で割って 100Bq/cps を掛ければ 1.6Bq になる。検体が 1kg なら，5.6±1.6 Bq/kg ということになる。1σ相当の誤差 1.6 の3倍 4.8 より 5.6 が大きいので，この値はNDではない。</p>
+
+
+<h2>参考</h2>
+
+<ul>
+  <li><a href="http://www.mhlw.go.jp/shinsai_jouhou/shokuhin.html">食品中の放射性物質への対応｜厚生労働省</a>の中の<a href="http://www.mhlw.go.jp/stf/houdou/2r985200000249rb-att/2r985200000249sz.pdf">食品中の放射性セシウムスクリーニング法の一部改正について（平成24年3月1日厚生労働省食品安全部監視安全課長通知）</a>（PDF）</li>
+  <li>上本道久，<a href="http://www.jsac.or.jp/bunseki/pdf/bunseki2010/201005nyuumon.pdf">検出限界と定量下限の考え方</a>，ぶんせき，2010（5），216-221．</li>
+  <li>J. A. Cooper, Factors determining the ultimate detection sensitivity of Ge(Li) gamma-ray spectrometers, <i>Nuclear Instruments and Methods</i> <b>82</b>, 273-277 (1970)</li>
+</ul>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-08 22:18:41</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

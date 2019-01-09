@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>グラフの例：男女別睡眠時間の推移</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：男女別睡眠時間の推移</h1>
+
+<figure><img src="img/090503b1.png" alt=""></figure>
+
+<p><a href="http://www.stat.go.jp/data/shakai/2006/gaiyou.htm">平成18年社会生活基本調査</a>
+の「生活時間編・時間帯編・平均時刻編」の「結果の概要」のp.8にあるデータです。ここで
+7.56
+などとあるのは
+7+56/60
+の意味です（誤解を避けるために
+7:56
+などと書くほうがいいでしょう）。「15歳以上」とのことですが，睡眠時間は年齢に依存するので，日本人の年齢分布が時間とともに変われば，それだけで睡眠時間の平均値は変わってしまうので，このようなグラフは注意して見なければなりません。</p>
+
+<pre>
+# par(family="HiraKakuProN-W3") # Macでのフォント指定
+par(xpd=TRUE)  # プロットエリア外に text() を描く
+par(mgp=c(2,1.8,1))     # 軸マージン（デフォルト: c(3,1,0)）
+par(las=1)              # 縦軸の文字を横向きにしない
+
+睡眠時間 = data.frame(
+  年=seq(1986,2006,5),
+  男=c(7+56/60,7+50/60,7+52/60,7+49/60,7+47/60),
+  女=c(7+39/60,7+34/60,7+36/60,7+35/60,7+32/60))
+
+plot(睡眠時間$年, 睡眠時間$男,
+     pch=16, type="o", ylim=c(7.5,8),
+     xlab="", ylab="", axes=FALSE,
+     col="royalblue3", lwd=2)
+points(睡眠時間$年, 睡眠時間$女, pch=1, type="o",
+     col="orangered2", lwd=2)
+mtext("15歳以上の日本人の睡眠時間", 3, cex=1.2,
+      family="HiraKakuProN-W6")
+axis(1, 睡眠時間$年)
+t = seq(7.5, 8, 1/6)
+axis(2, t, c("7:30", "7:40", "7:50", "8:00"))
+text(1996, 睡眠時間$男[3], "男", pos=3)
+text(1996, 睡眠時間$女[3], "女", pos=3)
+axis(2, "時間", at=8, padj=-1)
+t = c(睡眠時間$男[5], 睡眠時間$女[5])
+text(2006, t, c("7:47", "7:32"), pos=1)
+</pre>
+
+<!-- springgreen4 -->
+
+<figure><img src="img/101011a.png" alt="男女別睡眠時間の推移"></figure>
+
+<p>このような折れ線グラフの縦横比は，折れ線の傾きが ±45° 程度になるのが最適と言われています。この原則を
+William S. Cleveland, <i>The Elements of Graphing Data</i> (Hobart Press, 1994)
+では banking to 45° と呼んでいます。ここでは最も急な1986〜1991年の傾きがほぼ45°になるようにしました。総務省の報告書のグラフは縦軸の範囲を広く取りすぎたため変化が読みにくくなっています。なお，睡眠時間の0点は特に意味がありませんので，0点と省略線は不要です。</p>
+
+<p>こうした調査は
+<a href="http://www.nhk.or.jp/bunken/">NHK放送文化研究所</a>
+が5年ごとに行っている国民生活時間調査にもあります。
+<a href="http://www.nhk.or.jp/bunken/new/new_06021001.html">2005年の調査</a>
+では平均睡眠時間7:33，標準偏差1:41となっています。</p>
+
+<hr>
+
+<p>追記：<a href="http://www.stat.go.jp/data/shakai/2011/gaiyou.htm">平成23年社会生活基本調査</a>に2011年の結果が出ています。男は7時間46分，女は7時間33分でした。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-09-05T14:56:21+09:00">2014-09-05 14:56:21</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

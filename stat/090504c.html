@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>グラフの例：アンケート</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</div>
+
+<h1>グラフの例：アンケート</h1>
+
+<p><a href="http://econ4u.org/blog/?p=587">Poll: How many millions are in a trillion? - Econ4U.org</a>
+というアンケートの結果です。</p>
+
+<p>
+<img src="img/090504c.png" alt="兆は百万の何倍？（棒グラフ）" />
+<img src="img/090504c2.png" alt="兆は百万の何倍？（円グラフ）" />
+</p>
+
+<p>棒グラフ：</p>
+
+<pre>
+# quartz(width=4.882874, height=3.507874)
+par(mar=c(1,6,3,4)+0.1) # マージン c(5,4,4,2)+0.1
+par(xpd=TRUE)  # プロットエリア外に text() を描く
+
+選択肢 = c("千倍","一万倍","十万倍","百万倍","千万倍","わからない")
+値 = c(18,12,21,21,17,12)
+
+barplot(値[6:1], horiz=TRUE, axes=FALSE, space=0)
+text(0, (5:0)+0.45, 選択肢,  pos=2, family="HiraKakuPro-W3")
+text(値, (5:0)+0.45, paste(値,"%",sep=""), pos=4)
+mtext("兆は百万の何倍？", cex=1.2, family="HiraKakuPro-W6")
+</pre>
+
+<p>円グラフ：</p>
+
+<pre>
+pie(値, labels=選択肢, clockwise=TRUE, family="HiraKakuPro-W3")
+mtext("兆は百万の何倍？", cex=1.2, family="HiraKakuPro-W6")
+</pre>
+
+<p>円グラフは割合の違いが読み取りにくいことがわかると思います。</p>
+
+<p>昔は trillion は米国では 10<sup>12</sup>，英国などでは 10<sup>18</sup>
+でしたが，次第に米国の用法が広まり，英国も1974年に公式に 10<sup>12</sup>
+に移行しました（Wikipedia の
+<a href="http://en.wikipedia.org/wiki/Long_and_short_scales">Long and short scales</a>
+に解説があります）。なお，このアンケートは選択肢に 10<sup>18</sup>
+を含んでいませんし，対象も米本国在住者に限っていますので，古い用法が原因で正解が少ないわけではなさそうです。オバマ大統領が不況対策に trillion dollars
+を費やすと言っていますが，多くの米国人は理解していないというわけです。</p>
+
+<hr />
+
+<p><a href="/~okumura/">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2009-05-09 16:28:26
+<!-- hhmts end -->
+</p>
+</body>
+</html>

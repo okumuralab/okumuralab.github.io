@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>グラフの例：交通事故死者数</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css">
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</div>
+
+<h1>グラフの例：交通事故死者数</h1>
+
+<hr>
+
+<p><em>[追記]</em> 2013年06月13日に公開された「交通事故統計（平成25年5月末）」というExcelファイルによれば，1998-2012年の死者数は
+9211, 9006, 9066, 8747, 8326, 7768, 7425, 6927, 6403, 5782, 5197, 4968, 4922, 4663, 4411
+となっており，以下と若干異なります。</p>
+
+<hr>
+
+<div><img src="img/vbmacro.png" style="float:right; margin:0 0 1em 1em" alt="このファイルには Visual Basic のマクロが含まれています"></div>
+
+<p><a href="http://www.npa.go.jp/toukei/index.htm">統計（警察庁）</a>のページから現時点で最新の<a href="http://www.e-stat.go.jp/SG1/estat/List.do?lid=000001067843">交通事故統計（平成22年9月末）</a>に飛び，Excelファイルをダウンロードしました。例によって我が国の統計はWindows＋Excelに依存しきっているので，MacのExcel 2008では右図のようなエラーが出ますが，かまわず開きます。</p>
+
+<p>1995年（平成7年）から2009年（平成21年）までの毎年の交通事故死者数は次のようになっているようです：</p>
+
+<pre style="clear:both">
+年 = 1995:2009
+死者数 = c(10679, 9942, 9640, 9211, 9006, 9066, 8747,
+           8326, 7702, 7358, 6871, 6352, 5744, 5155, 4914)
+</pre>
+
+<p>これをグラフにしてみましょう。まず準備です。</p>
+
+<pre>
+# par(family="HiraKakuProN-W3") # これはMacだけの和文フォント設定
+par(las=1)              # 縦軸の文字を横向きにしない
+par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
+</pre>
+
+<p>棒グラフなら，例えば次のように描けます。</p>
+
+<pre>
+barplot(死者数, names.arg=substr(年,3,4), col="#77aaee")
+axis(2, "人", at=10000, padj=-1)
+title("交通事故死者数", line=-1)
+</pre>
+
+<div><img src="img/101020a.png" alt="交通事故死者数"></div>
+
+<p>このデータ（の2005年までの分）のRによる図示と考察は熊谷悦生，舟尾暢男『Rで学ぶデータマイニングI データ解析の視点から』（九天社，2007年）のpp.134-143にあります［九天社は倒産し，2008年に改訂版がオーム社から<a href="http://ssl.ohmsha.co.jp/cgi-bin/menu.cgi?&amp;ISBN=978-4-274-06746-4">Rで学ぶデータマイニングI データ解析編</a>として出ています］。このデータに対しては「平成14年（2002年）6月の道路交通法改正により飲酒運転の罰則が最大30万円となったことで飲酒運転自体が減りその結果死者数が減少した」とのコメントが当時あったそうですが，図示してみると，毎年徐々に減っており，2002年を境として減少したわけではないことがわかります（2002年以外にも道路交通法は改正されています）。</p>
+
+<p>折れ線グラフなら，例えば次のようにすれば描けます：</p>
+
+<pre>
+plot(年, 死者数, type="o", pch=16, xlab="", ylab="", xaxt="n")
+t = c(1995, 2000, 2005, 2009)
+axis(1, t, t)
+axis(4, labels=FALSE)
+title("交通事故死者数", line=0.5)
+axis(2, "人", at=10000, padj=-1)
+</pre>
+
+<p>実は1970年（昭和45年）のデータもあるので，これを加えると次のようになります：</p>
+
+<pre>
+plot(年, 死者数, type="o", pch=16, xlab="", ylab="", xaxt="n",
+     xlim=c(1970,2009), ylim=range(c(16765,死者数)))
+points(1970, 16765, pch=16)
+lines(c(1970,1995), c(16765,10679), type="b", col="gray")
+t = c(1970, 1995, 2000, 2005, 2009)
+axis(1, t, t)
+axis(4, labels=FALSE)
+title("交通事故死者数", line=0.5)
+axis(2, "人", at=16000, padj=-1)
+</pre>
+
+<div><img src="img/101020b.png" alt="交通事故死者数"></div>
+
+<p>ちなみに，警察庁の交通事故死の定義は，事故後24時間以内の死亡です。死者数の減少は，交通事故の減少よりも，延命技術の進歩によっているのかもしれません。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2013-06-26 14:19:58+09:00</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

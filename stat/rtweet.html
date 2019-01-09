@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>rtweet</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>rtweet</h1>
+
+<p><a href="https://rtweet.info">rtweet</a>（<a href="https://CRAN.R-project.org/package=rtweet">CRANのページ</a>）はRでツイッターを読み書きするパッケージ。</p>
+
+<p>Rのコンソールに次のように打ち込む：</p>
+
+<pre>
+<code>install.packages("rtweet")</code>
+<code>library(rtweet)</code>
+<code>r = get_my_timeline()</code>
+Requesting token on behalf of user...
+Waiting for authentication in browser...
+Press Esc/Ctrl + C to abort
+</pre>
+
+<p>ブラウザに次のような画面が現れる：</p>
+
+<figure><img src="img/181224a.png" alt="rstats2twitter"></figure>
+
+<p>「連携アプリを認証」をクリックすると，「Authentication complete. Please close this page and return to R.」というテキスト表示になるので，そのページを閉じる。Rのコンソールには「Authentication complete.」と表示される。</p>
+
+<p>これで <code>r</code> に自分のタイムライン100ツイート分（デフォルト）が入る。これを人間に見やすく整形し，タブ区切りにしてファイルに保存するには次のようにする：</p>
+
+<pre>
+foo = function(x) {
+    id = x$status_id
+    time = as.character(as.POSIXct(as.numeric(x$created_at), origin="1970-01-01 00:00"))
+    scrname = x$screen_name
+    if (x$is_retweet) {
+        text = paste0("RT @", x$retweet_screen_name, ": ", x$retweet_text)
+    } else {
+        text = x$text
+    }
+    url1 = unlist(x$urls_t.co)
+    url2 = unlist(x$urls_expanded_url)
+    if (!is.na(url1)) {
+        for (i in 1:length(url1)) text = gsub(url1[i], url2[i], text)
+    }
+    text = gsub("\\n", "\r", text)  # または gsub("\\n", "\\\\n", text)
+    c(id, time, scrname, text)
+}
+
+n = dim(r)[1]
+
+write_tsv(as.data.frame(t(sapply(1:n, function(i) foo(r[i,])))), "timeline.txt",
+          append=TRUE, col_names=FALSE)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-12-24 22:20:13</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

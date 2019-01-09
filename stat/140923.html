@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>グラフの例：世界の賃金</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：世界の賃金</h1>
+
+<p><a href="https://twitter.com/ChieMatsumoto/status/514208813604298752/photo/1">この図</a>がたくさんリツイートされているようだが，本当だろうか。</p>
+
+<p>とりあえず<a href="http://stats.oecd.org/index.aspx?queryid=27359">OECDの労働力</a>ページの左メニュー Earnings → Average Annual Wages と進んだところのデータの 2013 USD PPPs and 2013 constant prices を使った。</p>
+
+<pre>
+年 = 2000:2013
+japan = c(35567,35391,34798,34713,34704,35157,34736,34459,34613,34158,34857,35739,35167,35405)
+us = c(52082,52433,52366,52479,53504,53501,54331,55270,54900,55054,55318,55781,56067,56340)
+au = c(44652,44463,45056,45700,47268,47749,48822,49838,48553,49218,51272,52333,51050,50449)
+
+plot(2000:2013, japan, type="o", ylim=range(c(0,japan,us,au)), xlab="", ylab="2013 USD PPP")
+text(2007, japan[8], "Japan", pos=1)
+points(2000:2013, us, type="o", pch=16)
+text(2007, us[8], "US", pos=1)
+points(2000:2013, au, type="o", pch=2)
+text(2007, au[8], "Australia", pos=1)
+</pre>
+
+<figure><img src="img/140923e.png" alt="各国の平均賃金の推移"></figure>
+
+<p>ほかの国も描いてください。</p>
+
+<p>プロットのところは <code>matplot()</code> を使えばさらに簡単に次のように書ける：</p>
+
+<pre>
+x = data.frame(japan, us, au)
+matplot(年, x, pch=c(16,2,1), col="black", type="o", lty=1, xlab="", ylab="2013 USD PPP")
+axis(4, x[14,], c("Japan","US","Australia"))
+</pre>
+
+<figure><img src="img/160404a.png" alt="各国の平均賃金の推移"></figure>
+
+<p>0から始めたければ <code>matplot()</code> にオプション <code>ylim=range(c(0,x))</code> を付ける。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-04-05 13:20:20</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

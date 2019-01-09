@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>猛暑日の増加</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>猛暑日の増加</h1>
+
+<p>[2018-07-20] <code>as.POSIXct()</code> を <code>as.Date()</code> に変えました。</p>
+
+<p>東京管区気象台の<a href="http://www.jma-net.go.jp/tokyo/sub_index/tokyo/kikou/t_ts/t_ts.html">東京における雷日数や真夏日等の日数の変化</a>というページを見ると，猛暑日（日最高気温35℃以上）の日数が1876年以来著しく増加していることがわかる。ところが，平均気温を見ると，地球温暖化・都市化の影響で徐々に増加しているが，激しく変わっているようには見えない。平均ではなくて猛暑日の日数を見るべきであるという議論もある。しかし，「猛暑日」（日最高気温35℃以上）や「真夏日」（日最高気温30℃以上）のような分布の裾の日数は，何℃で切るかによって印象が大きく異なる。気温変化を誇張することにならないか。</p>
+
+<div class="note">
+<p>「東京」の観測地点は2014年12月2日に約900m離れた地点に移転している。詳しくは<a href="http://www.jma.go.jp/jma/kishou/minkan/koushu141114/shiryou1.pdf">「東京」の観測地点の移転について</a>（PDF，2014年11月14日，気象庁観測部）を参照されたい。</p>
+</div>
+
+<p>東京の日々の最高・平均温度等は気象庁の<a href="http://www.data.jma.go.jp/gmd/risk/obsdl/index.php">過去の気象データ・ダウンロード</a>から取得する。具体的には，「地点を選ぶ」で東京，「項目を選ぶ」で日別値：日平均気温・日最高気温・日最低気温，「期間を選ぶ」では全期間を選ぶとデータ量上限を超えるので数年ごと，「表示オプションを選ぶ」はデフォルト（値を表示・すべての期間の値を表示・すべて数値・日付リテラル）のまま。「CSVファイルをダウンロード」をクリックすると data.csv というファイル名でダウンロードされる。ファイルを結合・編集して，次のようなCSVファイル <a href="data/tokyo_temps.csv">tokyo_temps.csv</a> を得る：</p>
+
+<pre>
+年月日,平均気温,品質情報1,均質番号1,最高気温,品質情報2,均質番号2,最低気温,品質情報3,均質番号3
+1875/6/10,20.5,8,1,24.5,8,1,16.4,8,1
+1875/6/11,19.7,8,1,25.7,8,1,13.7,8,1
+1875/6/12,20.7,8,1,25.1,8,1,16.3,8,1
+1875/6/13,21.7,8,1,23.2,8,1,20.1,8,1
+1875/6/14,,1,1,,1,1,,1,1
+1875/6/15,19.3,8,1,21.8,8,1,16.8,8,1
+...
+</pre>
+
+<p>Rでデータを読む：</p>
+
+<pre>
+tokyo = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_temps.csv", as.is=TRUE)
+</pre>
+
+<p>1876-1890年と，2000-2014年を比較してみよう：</p>
+
+<pre>
+tokyo[,1] = as.Date(tokyo[,1])
+tokyo1 = tokyo[tokyo$年月日 &gt;= as.Date("1876-01-01") &amp;
+               tokyo$年月日 &lt;= as.Date("1890-12-31"),]
+tokyo2 = tokyo[tokyo$年月日 &gt;= as.Date("2000-01-01"),]
+h1 = hist(tokyo1$最高気温, breaks=-1:40, right=FALSE, plot=FALSE)$counts
+h2 = hist(tokyo2$最高気温, breaks=-1:40, right=FALSE, plot=FALSE)$counts
+plot((-1:39)+0.5, h1, type="o", pch=16, col="#0068b7", xlab="最高気温", ylab="日数")
+points((-1:39)+0.5, h2, type="o", pch=16, col="#f39800")
+</pre>
+
+<p>青が1876-1890年，橙が2000-2014年である：</p>
+
+<figure><img src="img/150809a.png" alt=""></figure>
+
+<p>分布の右裾を拡大して描いた（日数0の点は省略）：</p>
+
+<figure><img src="img/150809b.png" alt=""></figure>
+
+<p>この百数十年で分布の右裾は3℃ほど上昇したことがわかる。同じことを「猛暑日（35℃以上）は25倍以上に増えた」と言うこともできる。</p>
+
+<p>[2018-07-16 追記] 早川尚男先生から次のコメントをいただきましたのでご紹介するとともに私への宿題とします：</p>
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">19世紀後半は小氷期として扱われる事も多い異常低温期なので、この比較も誤解を招きます。後、近年では60年代も涼しかった。</p>&mdash; 早川尚男 (@hhayakawa) <a href="https://twitter.com/hhayakawa/status/1018649751078690816?ref_src=twsrc%5Etfw">2018年7月16日</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">それから東京は気温の変化を調べる場所として不適切。ヒートアイランドで、特に最低気温が特異的に上昇しており、近隣と比べて最低気温が全く違う様になってしまった。都市化していない時期との気温比較は人工的要素が大きくなる。</p>&mdash; 早川尚男 (@hhayakawa) <a href="https://twitter.com/hhayakawa/status/1018650679244570627?ref_src=twsrc%5Etfw">2018年7月16日</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-07-20 19:43:37</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Wilcoxon-Mann-Whitney検定</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Wilcoxon-Mann-Whitney検定（WMW検定）</h1>
+
+<h2>WMW検定とは</h2>
+
+<p>2組の数</p>
+
+\[ \{ x_1, x_2, \ldots, x_n \},\quad \{ y_1, y_2, \ldots, y_m \} \]
+
+<p>があったとき，$x_i > y_j$ を満たす $(i, j)$ の組の数に $x_i = y_j$
+を満たす組の数の半分を足したものを $U$ とすると，もしこれらの $n + m$
+個の数の並び順がランダムであれば，$U$ の確率分布は漸化式 $p_{n,m}(U) = \frac{n}{n+m} p_{n-1,m}(U-m) + \frac{m}{n+m} p_{n,m-1}(U)$ から計算できます。さらに，$n$, $m$
+が大きければ，$U$ の分布はほぼ正規分布 $N(nm/2, nm(n+m+1)/12)$
+になります。このことを使った検定を，Wilcoxon-Mann-Whitney検定（ウィルコクソン・マン・ホイットニー検定，WMW検定）といいます［$U$ の定義は統計ソフトによって若干異なります］。</p>
+
+<p>上で定義した $U$ の値は，$n + m$ 個の中での $x_1, x_2, \ldots, x_n$
+の順位の和から $n(n + 1)/2$
+を引いた値に等しいので，$U$ を使った検定は，順位和を使った検定ということもできます。</p>
+
+<p>この検定は，まず American Cyanamid という会社の Wilcoxon（ウィルコクソン）という人が1945年に，1標本の場合（Wilcoxon の符号付き順位検定）と2標本の場合（この方法）の考え方を提案し，1947年に Mann（マン）と Whitney（ホイットニー）が $U$ という統計量を導入して統計学的に論じました。呼び方としては，Wilcoxon の順位和検定（Wilcoxon rank-sum test），Mann-Whitney の $U$ 検定（Mann-Whitney $U$ test），Wilcoxon-Mann-Whitney 検定（WMW test），Mann-Whitney-Wilcoxon 検定（MWW test）等がありますが，どれも同じことです。</p>
+
+<ul>
+  <li>Frank Wilcoxon,
+      ``Individual comparisons by ranking methods'',
+      <i>Biometrics Bulletin</i>,
+      Vol. 1 (1945), pp. 80-83.</li>
+  <li>H. B. Mann and D. R. Whitney,
+      ``On a Test of Whether one of Two Random Variables
+      is Stochastically Larger than the Other'',
+      <i>The Annals of Mathematical Statistics</i>,
+      Vol. 18, No. 1 (1947), pp. 50-60.</li>
+</ul>
+
+<p>参考：</p>
+
+<ul>
+  <li>Andrew Gelman: <a href="http://andrewgelman.com/2015/07/13/dont-do-the-wilcoxon/">Don't do the Wilcoxon</a></li>
+</ul>
+
+<h2>RでのWMW検定</h2>
+
+<p>Lumley (1996) のデータ (T. Lumley, <i>Biometrics</i> <b>52</b>, 354-361)
+をRでWMW検定してみます。</p>
+
+<pre>
+&gt; x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
+&gt; y = c(3,3,4,3,1,2,3,1,1,5,4)
+&gt; wilcox.test(x,y)
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  x and y
+W = 32.5, p-value = 0.007741
+alternative hypothesis: true location shift is not equal to 0
+
+ 警告メッセージ: 
+ wilcox.test.default(x, y) で: 
+   タイがあるため、正確な p 値を計算することができません 
+</pre>
+
+<p>ここで W と出ているのは $x_i > y_j$ となる $(i, j)$
+の数に $x_i = y_j$ となる $(i, j)$
+の数の半分を加えたものです（さきほどの $U$ の定義と逆になっています）。</p>
+
+<p>さきほどWMW検定は漸化式により正確な $p$ 値が求められると書きましたが，この場合はタイ（等しい値）があるので，漸化式は使えず，正規分布による近似値になってしまったようです。タイがなくても，両群の個数の和が50以上になると，正規分布近似に切り替わるので，50個以上の場合に正確な値を求めたいなら <code>wilcox.test(x,y,exact=TRUE)</code> とすればいいのですが，タイが一つでもあれば，このオプションを付けても無駄です。正確な値を求めたければ，exactRankTests というパッケージを使うのが一つの方法です。</p>
+
+<pre>
+&gt; library(exactRankTests)
+ Package ‘exactRankTests’ is no longer under development.
+ Please consider using package ‘coin’ instead.
+
+&gt; wilcox.exact(x,y)
+
+	Exact Wilcoxon rank sum test
+
+data:  x and y
+W = 32.5, p-value = 0.00669
+alternative hypothesis: true mu is not equal to 0
+</pre>
+
+<p>メッセージにも出ていますが，exactRankTests
+パッケージは開発が継続されていないようです。代わりに
+<a href="http://cran.r-project.org/package=coin">coin</a>
+パッケージを使えということですので，やってみましょう。使い方がちょっと違います。</p>
+
+<pre>
+library(coin)
+wilcox_test(c(x,y) ~ factor(c(rep("x",length(x)),rep("y",length(y)))),
+            distribution="exact")
+</pre>
+
+<p>結果は <code>wilcox.exact(x,y)</code> と同じになります。</p>
+
+<p>WMW検定は両群がまったく同じ分布をしているという帰無仮説の検定です。実質的には順位を $t$ 検定しているのとほぼ同じことですので，両群の分散が異なる場合は，順位に直して，等分散を仮定しない $t$ 検定をするという手が考えられます。より最近の方法としては<a href="brunner-munzel.html">Brunner-Munzel検定</a>があります。</p>
+
+<p>WMW検定は，$x_i > y_j$ を満たすペアの個数についての検定だといえばもっともらしく聞こえますが，各群の順位和についての検定だというと，間隔尺度でない順位を合計して何の意味があるのだ！と叱られるかもしれません。実際にはどちらの言い方も数学的に同値です。</p>
+
+<h2>t検定との関係</h2>
+
+<figure><img src="img/081208a.png" alt="graph" class="right"></figure>
+
+<p>WMW検定と，分散が等しいと仮定する $t$ 検定を順位について適用した場合とでは，ほぼ同じことを調べているので，両者の $p$ 値はほぼ一致します（右図）。</p>
+
+<p>この図は次のRのプログラムで描きました：</p>
+
+<pre>
+r = replicate(100, {
+  a = sample(20)
+  b = sample(5:10, 1)
+  x = a[1:b]
+  y = a[(b+1):20]
+  c(t.test(x, y, var.equal=TRUE)$p.value, wilcox.test(x, y)$p.value)
+})
+plot(r[1,], r[2,], xlab="pt", ylab="pw", asp=1)
+abline(0, 1)
+</pre>
+
+<h2>分散が異なる場合の挙動</h2>
+
+<p>すでに述べたように，この検定は2群の分布が等しいときに意味があります。例えば分散が異なると，正しくない結果を与えます。<a href="ttest.html">t検定</a>のときと同様にチェックしてみましょう。</p>
+
+<pre>
+p = replicate(1000000, {
+  x = rnorm(10, mean=0, sd=1.5)
+  y = rnorm(30, mean=0, sd=1.0)
+  wilcox.test(x, y)$p.value
+})
+hist(p, freq=FALSE, col="gray")
+</pre>
+
+<figure><img src="img/181128a.png" alt=""></figure>
+
+<p>ノンパラメトリック検定はこのように小サンプルではぎざぎざになることが多いので，各群のサンプルサイズを10倍にしてみましょう。</p>
+
+<pre>
+q = replicate(1000000, {
+  x = rnorm(100, mean=0, sd=1.5)
+  y = rnorm(300, mean=0, sd=1.0)
+  wilcox.test(x, y)$p.value
+})
+hist(q, freq=FALSE, col="gray")
+</pre>
+
+<figure><img src="img/181128b.png" alt=""></figure>
+
+<p>このように，$p < 0.05$ のところが多く出すぎてしまいます。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-09 10:24:26</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

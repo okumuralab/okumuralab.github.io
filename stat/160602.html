@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>テレビ普及率と平均寿命</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>テレビと平均寿命</h1>
+
+<h2>疑似相関</h2>
+
+<p>菊池誠ほか『もうダマされないための「科学」講義』（光文社新書，2011年）p.&#8239;17 に，100世帯当たりのテレビ保有台数と平均寿命をそれぞれ横軸と縦軸にプロットした図がある。両者は非常に強い相関があるが，テレビを見れば寿命は延びるわけではない。</p>
+
+<p>このような疑似相関はたくさんあり，<a href="http://www.tylervigen.com/spurious-correlations">Spurious Correlations</a>というサイトにたくさんのおもしろい例が集められている。</p>
+
+<h2>テレビと平均寿命のプロット</h2>
+
+<p>テレビの普及率・保有数量の推移は内閣府の<a href="http://www.esri.cao.go.jp/jp/stat/shouhi/shouhi.html">消費動向調査</a>のページからリンクされている「主要耐久消費財等の普及率（二人以上の世帯）」「主要耐久消費財等の保有数量（二人以上の世帯）」というExcelファイルにある（現時点でのファイル名：<a href="http://www.esri.cao.go.jp/jp/stat/shouhi/2016/201603fukyuritsu.xls">201603fukyuritsu.xls</a>，<a href="http://www.esri.cao.go.jp/jp/stat/shouhi/2016/201603hoyusuryou.xls">201603hoyusuryou.xls</a>）。</p>
+
+<p>この中にあるのはカラーテレビだけである。少し下にある「主要耐久消費財等の普及率（平成16年（2004年）3月で調査終了した品目）」（ファイル名：<a href="http://www.esri.cao.go.jp/jp/stat/shouhi/0403fukyuritsu.xls">0403fukyuritsu.xls</a>），「主要耐久消費財等の保有数量（平成16年（2004年）3月で調査終了した品目）」（ファイル名：<a href="http://www.esri.cao.go.jp/jp/stat/shouhi/0403hoyusuryou.xls">0403hoyusuryou.xls</a>）には白黒テレビも載っている。</p>
+
+<p>これらのExcelファイルからテレビに関する列を抜き出したものを <a href="data/TV.csv">TV.csv</a> として置いておく。「調査時期」は注釈に月末とあるので「2月」を2月28日，「3月」を3月31日とした。「薄型（液晶・プラズマ等）」は「薄型」とした。</p>
+
+<p>これを手抜きプロットしたものが次の図である：</p>
+
+<pre>
+TV = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/TV.csv", fileEncoding="SJIS")
+matplot(TV[,1], TV[,3:6], xlab="", ylab="保有数量（100世帯あたり）", pch=c("白","カ","ブ","薄"))
+matplot(TV[,1], TV[,7:12], xlab="", ylab="普及率（%）", pch=c("白","カ","大","小","ブ","薄"))
+</pre>
+
+<figure><img src="img/160604e.png" alt="テレビ台数の推移"></figure>
+
+<figure><img src="img/160604a.png" alt="テレビ普及率の推移"></figure>
+
+<p>2009年をピークとして保有数量は減少している。数量・普及率とも2014年に急減しているが，この年から「ブラウン管テレビ」が調査対象から外されたためである。アナログ放送終了は2011年7月24日（岩手・宮城・福島は2012年3月31日）である。</p>
+
+<p>一方，平均寿命は厚労省の<a href="http://www.mhlw.go.jp/toukei/saikin/hw/life/life14/index.html">平成26年簡易生命表の概況</a>の<a href="http://www.mhlw.go.jp/toukei/saikin/hw/life/life14/dl/life14-09.pdf">参考資料2　平均余命の年次推移</a>（PDF）から得られる。平均寿命は0歳の平均余命として求められる。念のためCSVにして<a href="data/life2014.csv">life2014.csv</a>として置いておく。</p>
+
+<p>これも手抜きプロットしておく：</p>
+
+<pre>
+life = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/life2014.csv", fileEncoding="SJIS")
+matplot(life[,1], life[,c(2,8)], xlab="", ylab="平均寿命", pch=c("男","女"))
+</pre>
+
+<figure><img src="img/160604b.png" alt="平均寿命の推移"></figure>
+
+<p>さて，テレビと平均寿命の関係である。まずテレビのデータと平均余命のデータをマージする（共通の列「年」で揃える）。欠測値は0とする。テレビ普及率はカラーテレビ普及率と白黒テレビ普及率の和（ただし100を超えれば100にする）とした。</p>
+
+<pre>
+a = merge(TV, life)
+f = function(x) ifelse(is.na(x), 0, x)  # 欠測値を0で置き換える関数
+plot(f(a$カラーテレビ)+f(a$白黒テレビ), (a$男0+a$女0)/2, xlab="保有数量（100世帯あたり）", ylab="平均寿命")
+plot(pmin(100,f(a$普及率カラーテレビ)+f(a$普及率白黒テレビ)), (a$男0+a$女0)/2, xlab="テレビ普及率", ylab="平均寿命")
+</pre>
+
+<figure><img src="img/160604f.png" alt="テレビ保有数量と平均寿命"></figure>
+
+<figure><img src="img/160604c.png" alt="テレビ普及率と平均寿命"></figure>
+
+<p>カラーテレビだけでやってみる：</p>
+
+<pre>
+plot(f(a$カラーテレビ), (a$男0+a$女0)/2, xlab="カラーテレビ保有数量（100世帯あたり）", ylab="平均寿命")
+plot(f(a$普及率カラーテレビ), (a$男0+a$女0)/2, xlab="カラーテレビ普及率", ylab="平均寿命")
+</pre>
+
+<figure><img src="img/160604g.png" alt="カラーテレビ保有数量と平均寿命"></figure>
+
+<figure><img src="img/160604d.png" alt="カラーテレビ普及率と平均寿命"></figure>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-06-12 09:40:30</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

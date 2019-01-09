@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>単語文書行列</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>単語文書行列</h1>
+
+<p>いくつかの教科書について，その教科書に出てくる用語が与えられている。このデータから，ある用語がある教科書の中にあれば1，なければ0を要素とする「単語文書行列」（term-document matrix）を作って，売れ筋教科書の多くに含まれる用語が自社の教科書に欠けていないか確認するのに使いたい。</p>
+
+<p>第1の教科書（文書）<code>d[[1]]</code> には hoge と fuga という用語（単語）が含まれる，等々を次のようにベクトルで表す：</p>
+
+<pre>
+d = list()
+d[[1]] = c("hoge", "fuga")
+d[[2]] = c("hoge", "geho")
+d[[3]] = c("geho", "fuga")
+d[[4]] = c("foo", "bar", "hoge")
+</pre>
+
+<p>これをデータフレームに変換する：</p>
+
+<pre>
+options(stringsAsFactors=FALSE)
+m = list()
+for (i in 1:4) {
+    m[[i]] = data.frame(t=d[[i]], x=rep(1,length(d[[i]])))
+    names(m[[i]]) = c("t", paste0("d",i))
+}
+</pre>
+
+<p>これらのデータフレームを単にフルジョインすれば，目的の行列が得られる：</p>
+
+<pre>
+tdm = merge(m[[1]], m[[2]], all=TRUE)
+for (i in 3:4) {
+    tdm = merge(tdm, m[[i]], all=TRUE)
+}
+tdm[is.na(tdm)] = 0
+</pre>
+
+<p>結果は次のようになる：</p>
+
+<pre>
+<code>tdm</code>
+     t d1 d2 d3 d4
+1  bar  0  0  0  1
+2  foo  0  0  0  1
+3 fuga  1  0  1  0
+4 geho  0  1  1  0
+5 hoge  1  1  0  1
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-07-21 20:12:23</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

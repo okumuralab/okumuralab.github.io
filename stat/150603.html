@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>福島県の線量計の感度</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>福島県の線量計の感度</h1>
+
+<h2>郡山駅東口の線量計</h2>
+
+<p>郡山駅東口の線量計（正式な名称は「リアルタイム線量測定システム」，<a href="http://www.flickr.com/photos/h_okumura/17759091704">写真</a>）を見ていると，ゆらぎがけっこうある。原子力規制委員会の<a href="http://radioactivity.nsr.go.jp/map/ja/">放射線モニタリング情報</a>からCSVデータをダウンロードして調べてみた。冬は積雪時に遮蔽効果で線量が低くなるので，2015年3月〜5月の3ヶ月間のデータを調べる。</p>
+
+<p>放射線モニタリング情報のサイトからダウンロードしたファイルは db.csv というファイル名である。このCSVファイルをRの <code>read.csv()</code> で読む際には，ヘッダ（1行目の項目名）がないので <code>header=FALSE</code> を指定する。文字コードはシフトJIS（をMicrosoftが拡張したCP932）なので <code>fileEncoding="CP932"</code> も指定する：</p>
+
+<pre>
+d = read.csv("db.csv", header=FALSE, fileEncoding="CP932")
+t = as.POSIXct(d[,5])  # 5列目が年月日（POSIXct型）
+n = length(t)          # データ点数
+x = d[,6]              # 6列目が線量率（μSv/h）
+</pre>
+
+<p>こういう時系列は，通常は</p>
+
+<pre>
+plot(t, x, type="l")
+</pre>
+
+<p>のようにして折れ線グラフにするのだが，データ点数が多いのと，ホワイトノイズが乗っているので，真っ黒になってしまう。そこで，黒丸（<code>pch=16</code>）にアルファチャンネルを付けて少し透明にしてみる（<code>col="#00000020"</code>）。この最後の <code>20</code> という透明度（16進2桁）を加減すれば，黒さを調節できる：</p>
+
+<pre>
+plot(t, x, pch=16, col="#00000020")
+</pre>
+
+<figure><img src="img/150603c.png" alt=""></figure>
+
+<p>ほぼランダムなように見える。日周変化（次のようにしてプロットできる）は，なさそうだ。日周変化を調べる次のベタな方法は，日時を内部表現の数値（UNIX時刻，1970年からの秒数，UTC）<code>as.numeric(t)</code> に直して，9時間（<code>3600*9</code>）を加えてJSTにし，24時間（<code>3600*24</code>）で割った剰余（<code>%%</code>）を求めて，それをさらに3600で割って時間に直す：</p>
+
+<pre>
+plot(((as.numeric(t) + 3600*9) %% (3600*24)) / 3600, x, pch=16, col="#00000020")
+</pre>
+
+<p>隣同士の相関もほとんどない（<code>asp</code> はアスペクト比）。</p>
+
+<pre>
+plot(x[1:(n-1)], x[2:n], pch=16, col="#00000020", asp=1)
+</pre>
+
+<figure><img src="img/150603d.png" alt=""></figure>
+
+<p>ヒストグラムも描いてみよう。実はこのデータは X.XXX μSv/h のように小数第3位まで公開されているのだが，最下位桁はほぼノイズなので小数第2位までで十分だという議論がある。しかし，分布を調べるには小数第3位まであったほうがよい：</p>
+
+<pre>
+hist(x, col="gray", breaks=50)
+</pre>
+
+<figure><img src="img/150603e.png" alt=""></figure>
+
+<p>10分ごとに計測されたこの分布を，<a href="poisson.html">ポアソン分布</a>に従う計数値に比例するとしよう。平均 <code>mean(x)</code> は 0.2690509，標準偏差 <code>sd(x)</code> は 0.01084415，両者の比の2乗 <code>(mean(x) / sd(x))^2</code> は 615.5699 であり，この値が計数値の平均になる。1分あたりだと 61.55699 で，これが 0.2690509μSv/h に相当するので，割り算すると 228.7931，つまり約 230 cpm/(μSv/h) ということになる。標準偏差の2乗は分散 <code>var()</code> なので，まとめると，</p>
+
+<pre>
+mean(x) / var(x) / 10
+</pre>
+
+<p>で cpm/(μSv/h) 値が求められる。最後の 10 は1データ点あたりの計測時間（分）である。</p>
+
+<p>ちなみに，後述の「思い付いた方法」を使ってみると，</p>
+
+<pre>
+x1 = x[1:(n-1)]
+x2 = x[2:n]
+1 / mean((x1-x2)^2 / (x1+x2)) / 10
+</pre>
+
+<p>244.8525 となり，上の値より7%ほど大きい。</p>
+
+<h2>いわき市役所の線量計</h2>
+
+<p>こちらは固定型（いわゆるモニタリングポスト）で，やはり2015年3〜5月である。ホワイトノイズではなく信号が見えるようなので，通常の折れ線グラフでプロット：</p>
+
+<!-- quartz(width=6.35, height=4.35) -->
+
+<pre>
+plot(t, x, type="l")
+</pre>
+
+<figure><img src="img/150606a.png" alt=""></figure>
+
+<p>9点の移動平均をとって，重ね書きしてみる：</p>
+
+<pre>
+y = filter(x, rep(1/9,9))
+points(t, y, type="l", col="red")
+</pre>
+
+<p>ちょっとわかりにくいので，残差をプロットしてみる：</p>
+
+<pre>
+d = x - y
+plot(t, d, pch=16, col="#00000020")
+</pre>
+
+<p>ヒストグラム：</p>
+
+<pre>
+hist(d, col="gray", breaks=50)
+</pre>
+
+<p>残差の隣同士の相関：</p>
+
+<pre>
+plot(d[1:(n-1)], d[2:n], pch=16, col="#00000020", asp=1)
+</pre>
+
+<p>このように，測定値の量子化誤差によるアーティファクトがあらわになってしまう。とりあえずそれは無視して機械的にセンサ感度を調べてみる（10は1データ点あたり10分間測定）：</p>
+
+<pre>
+mean(x) / var(d, na.rm=TRUE) / 10
+</pre>
+
+<p>約 35000 cpm/(μSv/h) であることがわかる。</p>
+
+<p>より単純にトレンドを除去するために差分をとってみる：</p>
+
+<pre>
+d = diff(x)  # 次に同じ: d = x[2:n] - x[1:(n-1)]
+2 * mean(x) / var(d) / 10  # 差分の分散は元の分散の2倍
+</pre>
+
+<p>これだとおおよそ 33000 cpm/(μSv/h) 程度になる。</p>
+
+<p>日周変化を見るには，1日（144点）より長い移動平均との差を，毎日の時刻を横軸にとってプロットすればよい：</p>
+
+<pre>
+y = filter(x, rep(1/401,401))
+d = x - y
+plot(((as.numeric(t) + 3600*9) %% (3600*24)) / 3600, d, pch=16, col="#00000010")
+</pre>
+
+<figure><img src="img/150606b.png" alt=""></figure>
+
+<p>人の活動時間は線量が減っているように見える。</p>
+
+<h3>[2015-06-27] 思い付いた方法</h2>
+
+<p>cpm/(μSv/h)値は <code>mean(x) / var(x) / 分</code> で求められるが，<code>x1 = x[1:(n-1)]</code>，<code>x2 = x[2:n]</code> と置くと，<code>var(x)</code> は <code>mean((x1-x2)^2) / 2</code> とほぼ等しい。したがって，<code>var(x) / mean(x)</code> は <code>mean((x1-x2)^2 / (x1+x2))</code> とほぼ等しい。</p>
+
+<pre>
+x1 = x[1:(n-1)]
+x2 = x[2:n]
+1 / mean((x1-x2)^2 / (x1+x2)) / 10
+</pre>
+
+<p>とすると，33000 cpm/(μSv/h) 程度になる。このほうが，<code>x</code> のトレンドに強い。</p>
+
+<p>もし線量計が10分ごとのカウント値をそのまま使うのでなく，前の10分のカウント値も併用していて，隣接する値に相関がある場合は，相関が消えるだけ間隔を付けてみるといいかもしれない：</p>
+
+<pre>
+x1 = x[1:(n-2)]
+x2 = x[3:n]
+1 / mean((x1-x2)^2 / (x1+x2)) / 10
+</pre>
+
+<p>ただ，間隔が増えるにつれて，今度はトレンドの影響が出るので，感度が低めに出てしまう。</p>
+
+<p>この方法と，9点の移動平均を引いてから分散を求める方法を，比較してみた。正解は100cpm/(μSv/h)であるが，次第に変化の速い変動を付けている。</p>
+
+<pre>
+foo = function(k) {
+    n = 1000
+    x = rpois(n, 200+100*sin(2*pi*k*(0:(n-1))/n)) / 1000
+    x1 = x[1:(n-1)]
+    x2 = x[2:n]
+    d = x - filter(x, rep(1/9,9))
+    c(1 / mean((x1-x2)^2/(x1+x2)) / 10, mean(x) / var(d,na.rm=TRUE) / 10)
+}
+a = sapply((0:500)/10, foo)
+plot((0:500)/10, a[1,], ylim=range(a[1,],a[2,]), xlab="k", ylab="cpm/(μSv/h)")
+points((0:500)/10, a[2,], col="red")
+</pre>
+
+<figure><img src="img/150629a.png" alt=""></figure>
+
+<p>提案の方法（黒）のほうが良い。移動平均を引く方法（赤）では，変化が少ないところでは過大評価になり，変化が増えると急速に過小評価になることがわかる。</p>
+
+<p>なお，提案の方法で <code>mean()</code> を <code>median()</code> や <code>mean(trim=0.1)</code> などにするのはよくないが，大きい値を除いて平均するのは意味があるかもしれない。</p>
+
+<h2>機種による感度の違い</h2>
+
+<p>jsdfq43wtrさんが現場を回ってメーカーを調べてくださった（<a href="http://www.jsdfq43wtr.net/monitoring-post/status/mp-maker-memo.csv">mp-maker-memo.csv</a>）。これを読んで例えばN社のデータだけを1日分JSONで取ってくるスクリプトを作るにはRubyで次のようにすればよい（<a href="rjson.html">RでJSONを読む</a>参照）：</p>
+
+<pre>
+require "csv"
+CSV.foreach("mp-maker-memo.csv") do |row|
+  if row[9] == "N"
+    puts "wget http://radioactivity.nsr.go.jp/data/ja/real/area_#{row[1]}/#{row[2]}_trend.json"
+  end
+end
+</pre>
+
+<p>同様にしてF社も取得し，それぞれ <code>N</code>，<code>F</code> というサブディレクトリに収める。よく見るとF社のものにはMで始まる可搬型モニタリングポストも混じっている（jsdfq43wtrさんの<a href="http://www.jsdfq43wtr.net/monitoring-post/status/mp-type.php">モニタリングポストの種別</a>参照）。試行錯誤の末，次のようにして，横軸を平均線量，縦軸を感度として，メーカーごとにプロットした。</p>
+
+<pre>
+N = dir("N", "^1.*\\.json$", full.names=TRUE)
+F = dir("F", "^1.*\\.json$", full.names=TRUE)
+M = dir("F", "^M.*\\.json$", full.names=TRUE)
+
+foo = function(f) {
+    x = fromJSON(f)
+    v = x$day$air$value # これでair/airF/airMのどれかを拾う
+    v = ifelse(v == 0, NA, v)  # 0は欠損値
+    n = length(v)
+    v1 = v[1:(n-1)]
+    v2 = v[2:n]
+    c(mean(v, na.rm=TRUE), 1 / mean((v1-v2)^2/(v1+v2), na.rm=TRUE) / 10)
+}
+
+cN = sapply(N, foo)
+cF = sapply(F, foo)
+cM = sapply(M, foo)
+
+plot(NULL, xlim=range(c(cN[1,],cF[1,],cM[1,])), ylim=range(c(cN[2,],cF[2,],cM[2,])),
+     xlab="μSv/h", ylab="cpm/(μSv/h)", log="xy")
+points(cN[1,], cN[2,], pch="N", col="blue")
+points(cF[1,], cF[2,], pch="F", col="black")
+points(cM[1,], cM[2,], pch="M", col="red")
+</pre>
+
+<figure><img src="img/150628a.png" alt="機種と感度"></figure>
+
+<p>感度は，モニタリングポストは10000〜30000，N社は2000〜3000，F社は200〜300であることがわかる。</p>
+
+<p>F社で一番線量が高いところにあるものがNo.102200（飯舘村/福島県立相馬農業高等学校飯舘校）である。この2015-03-01 00:00から2015-06-28 00:00までのデータをCSVで取得して解析してみた：</p>
+
+<pre>
+plot(t, x, pch=16, col="#00000020")  # かなりトレンドがある
+cor(x[1:(n-1)], x[2:n])  # 0.7680932 強い正の相関
+mean(x) / var(x) / 10  # 56.87193 これは小さすぎる
+y = filter(x, rep(1/9,9)) # 9点で平滑化
+d = x - y
+cor(d[1:(n-1)], d[2:n], use="complete.obs") # -0.1346533 かなり負
+mean(x) / var(d, na.rm=TRUE) / 10 # 274.4076 少し大きすぎ
+y = filter(x, rep(1/25,25)) # ±2時間の平滑化
+d = x - y
+cor(d[1:(n-1)], d[2:n], use="complete.obs") # -0.02275492 ほぼ無相関
+plot(d[1:(n-1)], d[2:n], pch=16, col="#00000020", asp=1) # ほぼ円
+mean(x) / var(d, na.rm=TRUE) / 10 # 250.5785
+x1 = x[1:(n-1)]
+x2 = x[2:n]
+1 / mean((x1-x2)^2 / (x1+x2)) / 10 # 245.0939
+</pre>
+
+<p>245 cpm/(μSv/h) 程度の感度である。</p>
+
+<p>一方，N社で一番線量が高いところにあるのがNo.102278（会津若松市/会津若松市大木の芝原公園）である。こちらは3月に大きな変動があり，4月以降落ち着くので，2015-04-01 00:00から2015-06-28 00:00までを調べてみる：</p>
+
+<pre>
+plot(t, x, pch=16, col="#00000020")  # まだトレンドがある
+cor(x[1:(n-1)], x[2:n])  # 0.7684599 強い正の相関
+mean(x) / var(x) / 10  # 601.4008 これは小さすぎる
+y = filter(x, rep(1/9,9)) # 9点で平滑化
+d = x - y
+cor(d[1:(n-1)], d[2:n], use="complete.obs") # -0.1150526 かなり負
+mean(x) / var(d, na.rm=TRUE) / 10 # 2888.883 少し大きすぎ
+y = filter(x, rep(1/15,15))
+d = x - y
+cor(d[1:(n-1)], d[2:n], use="complete.obs") # -0.01281046 ほぼ無相関
+plot(d[1:(n-1)], d[2:n], pch=16, col="#00000020", asp=1) # ほぼ円
+mean(x) / var(d, na.rm=TRUE) / 10 # 2625.594
+x1 = x[1:(n-1)]
+x2 = x[2:n]
+1 / mean((x1-x2)^2 / (x1+x2)) / 10 # 2599.197
+</pre>
+
+<p>2600 cpm/(μSv/h) 程度の感度である。</p>
+
+<p>このようにN社製のほうが感度が1桁高いので，比較的低線量の地点に配置するのは理にかなっている。これだけの精度が本当に必要かどうかは別の話である。</p>
+
+<div class="note">
+<p>オマケ：例えばこのNo.102278のデータをコマンドで取得するには次のようにする：
+<code>wget --post-data='ParentArea=07G&amp;AreaCode=07202&amp;StationCode=102278&amp;DataType=real&amp;SensorCode=air&amp;StartDate=2015-04-01&amp;StartHour=00&amp;StartMinute=00&amp;EndDate=2015-06-28&amp;EndHour=00&amp;EndMinute=00&amp;IntervalMinute=10' http://radioactivity.nsr.go.jp/monitor_sv/downloadCSV</code></p>
+</div>
+
+<h2>福島県の線量計全部</h2>
+
+<p><a href="rjson.html">RでJSONを読む</a>にある方法で福島県の全部のJSONファイルを取得し，上の方法を適用してみた。分類はファイル名のパターン（以下の正規表現参照）で行った。JSONファイルの10分ごとデータは1日分（144点）しかないので，誤差がかなりある。</p>
+
+<pre>
+files4 = dir(pattern="^[0-9]{4}_trend\\.json$")
+files6 = dir(pattern="^[0-9]{6}_trend\\.json$")
+files10 = dir(pattern="^[0-9]{10}_trend\\.json$")
+filesHG = dir(pattern="^HG[0-9]*_trend\\.json$")
+filesM = dir(pattern="^M[0-9]*_trend\\.json$")
+c4  = sapply(files4, foo)
+c6  = sapply(files6, foo)
+c10 = sapply(files10, foo)
+cHG = sapply(filesHG, foo)
+cM  = sapply(filesM, foo)
+plot(NULL,
+     xlim=range(c(c4[1,],c6[1,],c10[1,],cHG[1,],cM[1,]),na.rm=TRUE),
+     ylim=range(c(c4[2,],c6[2,],c10[2,],cHG[2,],cM[2,]),na.rm=TRUE),
+     xlab="μSv/h", ylab="cpm/(μSv/h)", log="xy", type="n")
+points(c6[1,], c6[2,], pch="6", col="#663300")
+points(cM[1,], cM[2,], pch="M", col="#ff9900")
+points(cHG[1,], cHG[2,], pch="H", col="#35a16b")
+points(c10[1,], c10[2,], pch="0", col="#ff2800")
+points(c4[1,], c4[2,], pch="4", col="#0041ff")
+</pre>
+
+<p><a href="img/150702a.png">当初の図</a>の後，範囲を全国に広げ，2週間分のデータを使って描きなおしたものが次の図である：</p>
+
+<figure><img src="img/150715a.png" alt=""></figure>
+
+<p>ちなみに，上のプログラムをちょっと変えて，横軸に最大値と最小値の差，縦軸に比をとってグラフを描いてみる：</p>
+
+<pre>
+foo = function(f) {
+    x = fromJSON(f)
+    v = x$day$air$value
+    v = ifelse(v == 0, NA, v)
+    c(max(v,na.rm=TRUE) - min(v,na.rm=TRUE),
+      max(v,na.rm=TRUE) / min(v,na.rm=TRUE))
+}
+</pre>
+
+<figure><img src="img/150704a.png" alt=""></figure>
+
+<p>この図から，例えば差が0.2μSv/hかつ比が1.2以上といった異常値検出の方法が使えるかもしれないことが考えられる。</p>
+
+<h2>（おまけ）東京都のモニタリングポスト</h2>
+
+<p>東京都の<a href="http://monitoring.tokyo-eiken.go.jp/mon_post.html">環境放射線測定結果</a>のデータは1時間きざみであるが，<a href="http://radioactivity.nsr.go.jp/map/ja">原子力規制委員会サイト</a>には10分きざみの値が掲載されている（ただし2012/03/30 00:10以降）。1日（144点，オレンジ），1週間（1008点，緑），1ヶ月（4320点，青）の3通りの窓を使い，横軸に窓の位置，縦軸に計算結果（感度）をプロットした。左側ほど新しい時間である。</p>
+
+<pre>
+d = read.csv("db.csv", header=FALSE, fileEncoding="CP932")
+x = d[,6]
+n = length(x)
+bar = function(s, w) {
+    x1 = x[s:(s+w-1)]
+    x2 = x[(s+1):(s+w)]
+    1 / mean((x1-x2)^2 / (x1+x2)) / 10
+}
+plot(1:(n-144), sapply(1:(n-144), bar, 144), pch=16, type="l", col="#ff9900",
+     xlab="", ylab="cpm/(μSv/h)", panel.first=grid())
+points(1:(n-1008), sapply(1:(n-1008), bar, 1008), pch=16, type="l", col="#35a16b")
+points(1:(n-4320), sapply(1:(n-4320), bar, 4320), pch=16, type="l", col="#0041ff")
+</pre>
+
+<figure><img src="img/150703a.png" alt=""></figure>
+
+<p>おそらく16000cpm/(μSv/h)程度と思われる。1日の集計では誤差が大きいこともこの図からわかる。</p>
+
+<h2>[2016-03-17] 飯舘村の新データ</h2>
+
+<p><a href="https://www.minpo.jp/news/detail/2016031729627">飯舘村がモニタリングポスト８８基運用開始</a>（福島民報，2016/03/17）。</p>
+
+<p>というわけで，<a href="https://www.f-map.biz/radiMap_iitate/index">飯舘村 放射線量マップ</a>ができた。データはCSVでダウンロードできる。2016-03-16 00:00までの全データをダウンロードして<a href="data/iitate20160316.csv">ここ</a>に置いておいた。</p>
+
+<p>感度の分布を見てみよう：</p>
+
+<pre>
+rad = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/iitate20160316.csv",
+               fileEncoding="CP932", as.is=TRUE)
+id = unique(sort(rad$機器ID))
+f = function(i, plot=FALSE) {
+    r = subset(rad, 機器ID==i)
+    x = r$測定値1m
+    if (plot) {
+        t = as.POSIXct(paste(r$測定日, r$測定時刻, sep=" "))
+        plot(t, x, type="l")
+    }
+    n = length(x)
+    x1 = x[1:(n-2)]
+    x2 = x[3:n]
+    1 / mean((x1-x2)^2 / (x1+x2)) / 10
+}
+s = sapply(id, f)
+hist(log10(s), col="gray", breaks=200, xaxt="n", xlab="cpm/(μSv/h)")
+tic = c(10,100,1000,10000,100000); axis(1, at=log10(tic), labels=tic)
+</pre>
+
+<figure><img src="img/160317b.png" alt=""></figure>
+
+<pre>
+&gt; median(s[s < 1000], na.rm=TRUE)  # 左半分の中央値
+[1] 230.7817
+&gt; median(s[s > 1000], na.rm=TRUE)  # 右半分の中央値
+[1] 31498.54
+</pre>
+
+<p>…と計算したところで，一部の機器は測定間隔が60分であることを教えていただいた。その場合は10で割っているところを60で割らなければならない。ちゃんと時間間隔も調べて計算し直す必要がある。</p>
+
+<hr>
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-03-18 22:33:27</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

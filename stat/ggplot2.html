@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ggplot2</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>ggplot2</h1>
+
+<h2>はじめの一歩</h2>
+
+<p><a href="http://ggplot2.org/">ggplot2</a>はRのグラフ描画パッケージの一つで，シンプルで美しいグラフが描ける。</p>
+
+<p>ggplot2を使うには，まずパッケージをインストールする（初回のみ）：</p>
+
+<pre>
+install.packages("ggplot2")
+</pre>
+
+<p>ライブラリをロードする（Rを起動するごとに）：</p>
+
+<pre>
+library(ggplot2)
+</pre>
+
+<p>ggplot2付属のdiamondsというデータを使い，横軸にcarat（重さ：カラット数），縦軸にprice（値段：USドル）をプロットしてみる：</p>
+
+<pre>
+qplot(carat, price, data=diamonds)
+</pre>
+
+<p>メインタイトル，xラベル，yラベルを付けてみる：</p>
+
+<pre>
+qplot(carat, price, data=diamonds,
+      main="ダイヤモンドの価格", xlab="カラット", ylab="価格（USドル）")
+</pre>
+
+<div><img src="img/ggplot2-1.png" alt="ダイヤモンドの価格"></div>
+
+<p>日本語を使うとMacで文字化けする。通常のプロットであれば <code>par(family="HiraKakuProN-W3")</code> などのように日本語のフォントファミリを指定すればよいが，ggplotは「テーマ」（theme）というものを使っているので，変更法がやや異なる。通常は次のように打ち込むだけでよい。</p>
+
+<pre>
+old = theme_set(theme_gray(base_family="HiraKakuProN-W3"))
+</pre>
+
+<p>別のテーマを使う場合も同様である。例えば背景のないシンプルなテーマなら次のようにする：</p>
+
+<pre>
+old = theme_set(theme_bw(base_family="HiraKakuProN-W3"))
+</pre>
+
+<p>元に戻すには</p>
+
+<pre>
+theme_set(old)
+</pre>
+
+<p>または</p>
+
+<pre>
+theme_set(theme_gray(base_family=""))
+</pre>
+
+<p>とする。</p>
+
+<p>PDF作成のときは，フォントが埋め込まれなくてもよいなら，例えば</p>
+
+<pre>
+pdf("hoge.pdf")
+old = theme_set(theme_gray(base_family="Japan1GothicBBB"))
+qplot(carat, price, data=diamonds,
+      main="ダイヤモンドの価格", xlab="カラット", ylab="価格（USドル）")
+dev.off()
+</pre>
+
+<p>のようにすればよい。フォントを埋め込む場合は，Macなら例えば</p>
+
+<pre>
+quartz(type="pdf", file="hoge.pdf")
+theme_set(theme_gray(base_family="HiraKakuProN-W3"))
+qplot(carat, price, data=diamonds,
+	     main="ダイヤモンドの価格", xlab="カラット", ylab="価格（USドル）")
+dev.off()
+</pre>
+
+<p>とすればよい。詳しくは<a href="first.html">Rの初歩</a>を参照されたい。</p>
+
+<h2>以下準備中</h2>
+
+<p>蛇足</p>
+
+<ul>
+  <li>2015年1月，ggplot2バージョン1.0.0が<a href="http://blog.rstudio.org/2015/01/09/ggplot2-updates/">出た</a>。2015年12月，ggplotバージョン2.0.0が<a href="http://blog.rstudio.org/2015/12/21/ggplot2-2-0-0/">出た</a>。</li>
+  <li>ggplot本のソースはGitHubの<a href="https://github.com/hadley/ggplot2-book">hadley/ggplot2-book</a>で公開されている。RとTeXの環境さえ整えてあればPDFがmakeできる。</li>
+  <li>Hadley Wickhamが<a href="http://jasp.ism.ac.jp/~nakanoj/workshop10/2010Rmeeting.htm">2010年のR研究集会</a>で統数研に来られたとき，自炊してiPadに入れたggplot2本に<a href="https://www.flickr.com/photos/h_okumura/8366435205">サイン</a>していただいた。</li>
+</ul>
+
+<h2>関連リンク</h2>
+
+<ul>
+  <li><a href="http://d.hatena.ne.jp/mickey24/20110315/ggplot2">福島原発のγ線量測定データをggplot2で可視化してみた - ぬいぐるみライフ(仮)</a></li>
+</ul>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-12-31 09:26:00</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

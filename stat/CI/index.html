@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>信頼区間</title>
+<link rel="stylesheet" href="../../style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  "HTML-CSS": { matchFontHeight: false },
+  displayAlign: "left",
+  displayIndent: "2em"
+});
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="../">統計・データ解析</a> &gt;
+</nav>
+
+<h1>信頼区間</h1>
+
+<p>図のRソースは <code>.png</code> を <code>.R</code> に変えたものです。</p>
+
+<h2>はじめに</h2>
+
+<p>ここでは，<a href="poisson.html">ポアソン分布</a>を例として，信頼区間の求め方について詳しく説明します。</p>
+
+<p>ある期間に $x$ ($=0,1,2,\ldots$) 回起こる事象があり，回数の期待値 $E(x) = \lambda$ ($\geq 0$) が与えられているとき，$x$ の確率分布は（適当な仮定の下に）ポアソン分布</p>
+
+\[ \mathrm{dpois}(x,\lambda) = \frac{\lambda^x e^{-\lambda}}{x!} \]
+
+<p>になります。<code>dpois()</code> はRの関数ですので，Rで簡単に計算したりグラフにしたりできます。例えば $x = 0, \ldots, 20$，$\lambda = 5$ なら，</p>
+
+<pre>
+barplot(dpois(0:20,5), names.arg=0:20)
+</pre>
+
+<p>と打ち込めばグラフが描けます。ここでは少し色を付けた図を載せておきます。</p>
+
+<figure id="dpois">
+<img src="dpois.png" alt="">
+</figure>
+
+<p>正規分布のような連続した分布なら，両側から2.5%ずつ切り取った残りの95%の部分がどこからどこまでかはっきりしますが，ポアソン分布のような離散的な分布では，両側からぴったり2.5%ずつ取ることは一般に不可能です。2.5%以下でなるべく大きな部分を両側から切り取ることにすれば，中央の青い部分 $x = 1, 2, \ldots, 10$ は95%より少し大きく，98%近くになります。</p>
+
+<p>その前に，そもそもこれは回数の期待値 $\lambda = 5$ がわかっている場合の分布で，特定の実験の結果 $x = 5$ が得られたとしても，そこからこのような $\lambda$ の「分布」が導かれるわけではありません（そもそも $\lambda$ は「分布」しません）。</p>
+
+<h2>片側 $p$ 値から導かれる信頼区間</h2>
+
+<p>ポアソン分布に従う事象が $x = 5$ 回起こった場合，パラメータ $\lambda$ の「95%信頼区間」（Confidence Interval，CI）とは，</p>
+
+\[ \sum_{x=5}^{\infty} \mathrm{dpois}(x, \lambda_1) = 0.025 \]
+
+<p>かつ</p>
+
+\[ \sum_{x=0}^{5} \mathrm{dpois}(x, \lambda_2) = 0.025 \]
+
+<p>を満たす $\lambda_1$，$\lambda_2$ を両端点とする区間 $\lambda_1 \leq \lambda \leq \lambda_2$ と定義するのが一般的です。つまり片側 $p$ 値が 0.025 になるような $\lambda$ を両端点として持つ区間です。以降では，区間 $\lambda_1 \leq \lambda \leq \lambda_2$ を $[\lambda_1, \lambda_2]$ と書くことにします。これだけでは $x = 0$ のとき上端 $\lambda_2$ しか定まりませんが，そのときは $\lambda_1 = 0$ と定めます。</p>
+
+<p>この定義による信頼区間は，Rの <code>poisson.test()</code> で求められます：</p>
+
+<pre>
+&gt; poisson.test(5)
+
+...
+95 percent confidence interval:
+  1.623486 11.668332
+sample estimates:
+event rate 
+         5 
+</pre>
+
+<p>つまり $[1.6, 11.7]$ が95%信頼区間です。験算：</p>
+
+<pre>
+&gt; 1 - ppois(4, 1.623486)
+[1] 0.02499998
+&gt; ppois(5, 11.668332)
+[1] 0.025
+</pre>
+
+<p>別の験算：</p>
+
+<pre>
+&gt; poisson.test(5, r=1.623486, alternative="greater")
+
+	Exact Poisson test
+
+data:  5 time base: 1
+number of events = 5, time base = 1, p-value = 0.025
+...
+
+&gt; poisson.test(5, r=11.668332, alternative="less")
+
+	Exact Poisson test
+
+data:  5 time base: 1
+number of events = 5, time base = 1, p-value = 0.025
+...
+</pre>
+
+<p>信頼区間の水準（信頼水準，confidence level）は，95%以外に，68.3%，90%，99%といった値がよく使われます。これらは <code>poisson.test()</code> に <code>conf.level=0.68269</code> のようなオプションを与えれば求められます。</p>
+
+<p>信頼区間の考え方を説明するために次のような図がよく使われます。縦軸は $\lambda$ で，それぞれの $\lambda$ に対応するポアソン分布で両側の2.5%（以下）を外した中央の95%（以上）の範囲を青い横線で表しています。例えばこのページの冒頭の図で挙げた $\lambda = 5$ の場合は，$1 \leq x \leq 10$ が95%（以上）の範囲です。ここで実際に $x = 5$ が観測されたならば，今度は図を縦に見て，$1.6 \leq \lambda \leq 11.7$ の範囲の $\lambda$ と相入れることを読み取ります。つまり，信頼区間は $[1.6, 11.7]$ です。</p>
+
+<figure>
+<img src="one.png" alt="">
+</figure>
+
+<h2>両側 $p$ 値から導かれる信頼区間</h2>
+
+<p>上の方法では，片側2.5%点から信頼区間を導きました。しかし，単に $p$ 値といえば，両側の $p$ 値，つまり，与えられた観測値 $x_1$ について $\mathrm{dpois}(x, \lambda) \leq \mathrm{dpois}(x_1, \lambda)$ を満たすすべての $\mathrm{dpois}(x, \lambda)$ の和のことを指すことが多いと思います。Rの <code>poisson.test()</code> の出力する $p$ 値もデフォルトではこれです（上の例のようにオプション <code>alternative="greater"</code> または <code>"less"</code> を指定すれば片側 $p$ 値になります）。</p>
+
+<p>例えば，帰無仮説 $\mathrm{dpois}(x, 3)$ について，観測値 $x = 7$ を得た場合，</p>
+
+<pre>
+&gt; poisson.test(7, r=3)
+
+	Exact Poisson test
+
+data:  7 time base: 1
+number of events = 7, time base = 1, p-value = 0.03351
+alternative hypothesis: true event rate is not equal to 3
+95 percent confidence interval:
+  2.814363 14.422675
+sample estimates:
+event rate 
+         7 
+</pre>
+
+<p>ですから，（両側の）$p$ 値は $0.03351 < 0.05$ で，5%水準で有意です。しかし $3 \in [2.8,14.4]$ ですから，$\lambda = 3$ は95%信頼区間に含まれます。有意であることと信頼区間に含まれないことが対応しません。</p>
+
+<p>有意であることと信頼区間に含まれないことが対応するような信頼区間を定義することもできます。図で説明すれば，与えられた $\lambda$ について，$\mathrm{dpois}(x,\lambda)$ の大きい値から合計して95%以上になった時点で止めます。そのときの $x$ の範囲を青い横線として描き，それを縦に見て信頼区間を読み取ります。</p>
+
+<figure>
+<img src="two.png" alt="">
+</figure>
+
+<p>この方法（青）と片側 $p$ 値に基づく方法（オレンジ）を比べた図です。</p>
+
+<figure>
+<img src="one-two.png" alt="">
+</figure>
+
+<p>この方法で信頼区間を求めるには，<code>exactci</code> パッケージの <code>poisson.exact()</code> 関数で，オプション <code>tsmethod</code>（two-sided methodの意）に <code>"minlike"</code> を与えます：</p>
+
+<pre>
+&gt; install.packages("exactci")
+&gt; library(exactci)
+&gt; poisson.exact(7, r=3, tsmethod="minlike")
+
+	Exact two-sided Poisson test (sum of minimum likelihood method)
+
+data:  7 time base: 1
+number of events = 7, time base = 1, p-value = 0.03351
+alternative hypothesis: true event rate is not equal to 3
+95 percent confidence interval:
+  3.2853 14.3402
+sample estimates:
+event rate 
+         7 
+</pre>
+
+<p>この方法が通常の方法と比べてややこしいのは，必ずしも $p = 0.05$ に相当する点がないことです。上の例でも，$\lambda = 14.34$ で $p$ 値が不連続になっています。このような不連続な点も含めた場合，与えられた $p$ に相当する点が右裾だけで二つあることもあります（そのときは外側を採ります）。</p>
+
+<figure>
+<img src="pval.png" alt="">
+</figure>
+
+<p>また，「$\mathrm{dpois}(x, \lambda) \leq \mathrm{dpois}(x_1, \lambda)$ を満たすすべての $\mathrm{dpois}(x, \lambda)$ の和」は，ポアソン分布のような離散分布ならいいのですが，連続分布では変数変換すると値が変わってしまいます。</p>
+
+<h2>Feldman-Cousinsの方法</h2>
+
+<p>Feldman and Cousins の <a href="http://dx.doi.org/10.1103/PhysRevD.57.3873">A Unified Approach to the Classical Statistical Analysis of Small Signals</a> (1998) にある方法です。同じもの（の改訂版）が <a href="http://arxiv.org/abs/physics/9711021">arXiv</a> にあります。物理（特に素粒子方面）で非常にもてはやされている方法です。尤度比</p>
+
+\[ R = \frac{\mathrm{dpois}(x, \lambda)}{\mathrm{dpois}(x, \lambda_{\text{best}})} \]
+
+<p>の大きい順に $\mathrm{dpois}(x, \lambda)$ を加えていき，95%以上になったら止めます（95%信頼区間の場合）。ここで $\lambda_{\text{best}}$ は，与えられた $x$ について $\mathrm{dpois}(x, \lambda)$ を最大にするような $\lambda$ の値，つまり $\lambda$ の最尤推定量です。この場合は単に $\lambda_{\text{best}} = x$ ですが，$\lambda$ の値に制約がある場合には違ってきます。</p>
+
+<figure>
+<img src="fc.png" alt="">
+</figure>
+
+<p>一つ前の方法と比べてみると，青い横棒が全体として右にシフトしていることがわかります。一つ前の方法を青，Feldman-Cousins をピンクで重ねて描いてみるとよくわかります。</p>
+
+<figure>
+<img src="two-fc.png" alt="">
+</figure>
+
+<p>この方法が威力を発揮するのは，パラメータ $\lambda$ に制約がある場合です。制約条件と，通常の方法で求めた信頼区間との共通部分をとると，信頼区間の幅が狭くなりすぎたり，場合によっては信頼区間が空集合になったりします。Feldman-Cousins の方法なら，制約条件によって $R$ の分母が変わってくるので，制約条件と矛盾しない信頼区間が求められます。</p>
+
+<p>例として，制約 $\lambda \geq 3$ を課してみましょう。この場合は $\lambda_{\text{best}} = \mathrm{max}(3, x)$ になります。Feldman と Cousins によれば，これはバックグラウンドのイベントが平均して3個あることがわかっている場合に相当します。</p>
+
+<figure>
+<img src="fc2.png" alt="">
+</figure>
+
+<p>左端で青い部分が二つに割れていることがわかります。この場合，抜けている部分は無視して信頼区間を読み取ります。$x = 0$ のときの最尤推定量は $\lambda = 3$，95%信頼区間は $[3.0, 4.6]$ になります。これに対して，通常の（片側 $p$ 値に基づく）95%信頼区間は $[0, 3.689]$ で，90%信頼区間は $[0, 2.996]$ ですから，90%信頼区間と制約条件との共通部分は空集合になります。</p>
+
+<p>Feldman-Cousins論文には，いろいろな制約 $\lambda \geq b$ について，バックグラウンドを引いた信頼区間 $[\lambda_1-b, \lambda_2-b]$ の表が載っていますが，それらは $\lambda_2 - b$ が $b$ について単調非増加になるように修正されています。この修正をしなければ $x = 0$ での95%信頼区間は次のグラフのようになります。</p>
+
+<figure>
+<img src="fcconf.png" alt="">
+</figure>
+
+<p>尤度比がある値以下の部分 $l \leq c_{\alpha}$ を棄却域とする考え方は，有名な Kendall の教科書（最新版：<i>Kendall's Advanced Theory of Statistics</i>, sixth edition, volume 2A の Chapter 22 の冒頭）にも載っている一般的な方法です。Feldman and Cousins の方法は，これを制約のある問題に応用したものです。ただ，制約条件を考慮した信頼区間の利用には注意が必要です。</p>
+
+<p>例えば放射性物質の測定で，仮にどの試料にも放射性物質がなければ，カウントからバックグラウンドを引いた値は半分が正，半分が負になります。そのまま発表すれば，平均してほぼ 0 になることがわかるのですが，制約を考慮してすべて 0 以上にしたら，平均すると正の値になってしまいます。つまり，この方法は<a href="../meta.html">メタアナリシス</a>に向いていません。制約条件を入れない生の値も付ける必要があります。</p>
+
+<p>バックグラウンド $b = 3$ があるはずなのにカウント $x = 0$ が得られたということは，平均して3回起こるバックグラウンドがたまたま起きなかったラッキーな場合で，純粋な信号 $x$ が見えているともいえます。その信頼区間がなぜ $b$ に依存しなければならないのか，しかも $b$ が増えると信頼区間の幅が狭くなるのか，あまり自明でないように思えます。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-12-14T17:11:49+09:00">2014-12-14 17:11:49</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

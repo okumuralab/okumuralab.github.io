@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ライフゲーム</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>ライフゲーム</h1>
+
+<p>統計とは関係ないが，<a href="../javascript/gameoflife.html">JavaScriptで書いたライフゲーム</a>をRに移植してみた。9行で書けた。</p>
+
+<pre>
+a = b = matrix(0, nrow=50, ncol=50)
+a[24:26,25] = a[25,24] = a[26,26] = 1
+for (g in 1:300) {
+    b[2:49,2:49] = a[1:48,1:48] + a[1:48,2:49] + a[1:48,3:50] +
+                   a[2:49,1:48]                + a[2:49,3:50] +
+                   a[3:50,1:48] + a[3:50,2:49] + a[3:50,3:50]
+    a = ifelse(b != 2, b == 3, a)
+    heatmap(a, Rowv=NA, Colv=NA, scale="none", col=0:1, main=g)
+}
+</pre>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-06-26 22:32:50</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

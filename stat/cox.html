@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Cox回帰</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Cox回帰</h1>
+
+<p>Rで生存時間解析をするためのパッケージ <a href="http://cran.r-project.org/web/packages/survival/index.html"><code>survival</code></a> をあらかじめ読み込んでおきます：</p>
+
+<pre>
+library(survival)
+</pre>
+
+<p>このとき <code>survival</code> 中で必要なパッケージ <code>splines</code> も読み込まれます。</p>
+
+<p>詳しくはパッケージ <code>survival</code> の<a href="http://cran.r-project.org/web/packages/survival/survival.pdf">マニュアル</a>（PDF）を読めばいいのですが，ここではCox（コックス）回帰のための関数 <code>coxph()</code> について解説します。</p>
+
+<p>Cox回帰（Cox比例ハザードモデル）は，ハザード（平たくいえば単位時間の死亡率）が時間 $t$ と例えば二つの変数 $x_1$，$x_2$ の関数であるとき，次のように時間の関数とそれ以外の変数の線形結合の指数関数に因数分解できると仮定します：</p>
+
+\[ h(t, x_1, x_2) = h_0(t) \exp(\beta_1 x_1 + \beta_2 x_2) \]
+
+<p>この左辺の関数をハザード関数（hazard function），右辺の時間だけに依存する因子 $h_0(t)$ を基準ハザード関数（baseline hazard function）と呼びます。</p>
+
+<p>具体的に次のような簡単なデータ（マニュアルの <code>coxph()</code> の解説で使われています）を仮定しましょう：</p>
+
+<table border="1" cellspacing="0" style="border-collapse:collapse">
+  <tbody>
+    <tr><th>time</th><th>status</th><th>x</th><th>sex</th></tr>
+    <tr><td>4</td><td>1</td><td>0</td><td>0</td></tr>
+    <tr><td>3</td><td>1</td><td>2</td><td>0</td></tr>
+    <tr><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+    <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+    <tr><td>2</td><td>1</td><td>1</td><td>1</td></tr>
+    <tr><td>2</td><td>1</td><td>0</td><td>1</td></tr>
+    <tr><td>3</td><td>0</td><td>0</td><td>1</td></tr>
+  </tbody>
+</table>
+
+<p>これを <code>test1</code> というオブジェクトに読み込んでください。</p>
+
+<p>このデータで，<code>x</code> は何らかの変数，<code>sex</code> は性別，<code>time</code> は時間で，<code>status</code> が1なら死亡を意味します。例えば最初のケースは4時間後に死亡しました。<code>status</code> が0なら生存を意味します。例えば最後のケースは3時間後にまだ生きていましたが時間切れでそれ以上観察しませんでした。</p>
+
+<p>このような <code>time</code> と <code>status</code> を合わせたものをここではsurvivalオブジェクトと呼びます。Survivalオブジェクトを作るには <code>Surv()</code> 関数を使います。例として</p>
+
+<pre>
+Surv(test1$time, test1$status)
+</pre>
+
+<p>と打ち込んでみてください。画面に次のように現れるはずです：</p>
+
+<pre>
+[1] 4  3  1  1+ 2  2  3+
+</pre>
+
+<p>この 3+ というのは少なくとも3時間生きていたことを表します。</p>
+
+<p>さて，これを使ってCox回帰をしてみましょう：</p>
+
+<pre>
+result1 = coxph(Surv(time,status) ~ x + sex, data=test1)
+summary(result1)
+</pre>
+
+<p>画面に次のように出ます：</p>
+
+<pre>
+Call:
+coxph(formula = Surv(time, status) ~ x + sex, data = test1)
+
+  n= 7, number of events= 5 
+
+      coef exp(coef) se(coef)     z Pr(&gt;|z|)
+x   0.7812    2.1841   0.7976 0.979    0.327
+sex 0.9338    2.5441   1.4081 0.663    0.507
+
+    exp(coef) exp(-coef) lower .95 upper .95
+x       2.184     0.4579    0.4575     10.43
+sex     2.544     0.3931    0.1610     40.19
+
+Concordance= 0.571  (se = 0.206 )
+Rsquare= 0.15   (max possible= 0.822 )
+Likelihood ratio test= 1.13  on 2 df,   p=0.567
+Wald test            = 0.96  on 2 df,   p=0.619
+Score (logrank) test = 1.05  on 2 df,   p=0.5927
+</pre>
+
+<p>上では基準ハザード関数は性別によらないと考えて計算しましたが，基準ハザード関数が性別によると仮定して，変数としては使わないのであれば，<code>sex</code> の代わりに <code>strata(sex)</code> とします。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2012-03-21 15:18:21
+<!-- hhmts end -->
+</p>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>PISA「盗難事件」問題ほか</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</div>
+
+<h1>PISA「盗難事件」問題ほか</h1>
+
+<h2>PISA「盗難事件」問題</h2>
+
+<p><a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/07032813.htm">国際学力調査－文部科学省</a>からリンクされている問題例（<a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/071205/002.pdf">PDF:1,342KB</a>）の最後に次のような「盗難事件に関する問題（PISA2000年調査及び2003年調査問題）」があります。</p>
+
+<blockquote>
+<p style="text-align:center">盗難事件</p>
+<p>あるTVレポーターがこのグラフを示して、「1999年は1998年に比べて、盗難事件が激増しています」と言いました。</p>
+<table border="0">
+  <tr><td>年間の盗難<br />事件数</td><td><img src="img/pisa-robbr.png" alt="グラフ" /></td></tr>
+</table>
+<p>このレポーターの発言は、このグラフの説明として適切ですか。適切である、または適切でない理由を説明してください。</p>
+</blockquote>
+
+<p>これは省略棒グラフを使って違いを不適切に強調したものです。グラフから数値を読み取るのは微妙ですが，それぞれ508，516だとしましょう。この違いは統計的に有意でしょうか。</p>
+
+<p>盗難事件が1998年に起きる確率も1999年に起きる確率も等しいという帰無仮説を立てて，Rで検定してみましょう：</p>
+
+<pre>
+&gt; 508+516
+[1] 1024
+&gt; binom.test(508,1024,0.5)
+
+	Exact binomial test
+
+data:  508 and 1024 
+number of successes = 508, number of trials = 1024,
+p-value = 0.8269
+alternative hypothesis: true probability of success is not equal to 0.5 
+95 percent confidence interval:
+ 0.4650308 0.5271792 
+sample estimates:
+probability of success 
+             0.4960938 
+</pre>
+
+<p>というわけで，<i>p</i> = 0.8269 では，違いがあるとはとてもいえません。</p>
+
+<p>わざわざ検定しなくても，2項分布の分散が <i>np</i>(1&nbsp;-&nbsp;<i>p</i>)
+であることを使えば，<i>p</i> = 1/2
+であるという帰無仮説のもとに分散は <i>n</i>/4 = 1024/4 = 256，標準偏差は 16
+です。1024の半分の512からの外れ 4 は，0.25σ しかありません。計算するまでもないのですが，</p>
+
+<pre>
+&gt; pnorm(-0.25)*2
+[1] 0.8025873
+</pre>
+
+<p>で，さきほどとほぼ同じ結果になりました。</p>
+
+<p>ちなみに，2項分布を正規分布で近似するのと同じことですが，χ<sup>2</sup> 分布を使って検定することもできます：</p>
+
+<pre>
+&gt; chisq.test(c(508,516),correct=FALSE)
+
+	Chi-squared test for given probabilities
+
+data:  c(508, 516) 
+X-squared = 0.0625, df = 1, p-value = 0.8026
+</pre>
+
+<p>このほうが，データベクトル <code>c(508,516)</code>
+をそのまま与えればいいだけですし，項目が増えても同じやりかたでできます。</p>
+
+<p>ちなみに，項目がどんどん増えれば，各項目に入る確率 <i>p</i>
+はどんどん減るので，2項分布の分散 <i>np</i>(1&nbsp;-&nbsp;<i>p</i>)
+は <i>np</i> に近づきます。これはその項目の度数に等しいことに注目してください。このような場合の分布をポアソン分布（Poisson distribution）といいます。ランダムに発生する事象をたくさんのビンに分けて度数を調べたときの分布がこれにあたります。盗難事件がランダムに発生するなら，毎年の盗難事件の件数はまさにポアソン分布になり，毎年の発生件数の分散は，毎年の発生件数そのものに等しくなります（標準偏差はその平方根です）。毎年100件の盗難が起きるなら，件数の標準偏差は10件で，95％信頼区間はほぼ100±20になります。</p>
+
+<p>上の例は，平均512のポアソン分布の二つのビンを見ていると考えることもできます。平均512ならば，分散も512で，二つのビンの差の分散は512 + 512 = 1024になります。標準偏差はこの平方根の32で，二つのビンの差は8ですから，ちょうど標準偏差の 1/4 の違いということになり，さきほどと同じ結論になります。</p>
+
+<h2>海難審判の裁決件数</h2>
+
+<p><img src="img/nhk-kainan.jpg" alt="NHKの捏造棒グラフ" class="right" /></p>
+
+<p>高木浩光さんが日記でこのような捏造棒グラフを批判しておられます：</p>
+
+<ul>
+  <li>2007年01月28日 <a href="http://takagi-hiromitsu.jp/diary/20070128.html">日常化するNHKの捏造棒グラフ</a></li>
+  <li>2007年02月04日 <a href="http://takagi-hiromitsu.jp/diary/20070204.html">NHKの棒グラフ描画システムが機械的に世論を狂わせている可能性</a></li>
+</ul>
+
+<p>これは平成9〜14年の毎年の件数をNHKが右図のような捏造棒グラフにして，ほとんど違いがないものを「やや増加傾向」としたという話です。</p>
+
+<p>平成9〜14年の実際のデータは次の通りです：</p>
+
+<pre>
+&gt; x = c(762,792,795,794,849,834)
+</pre>
+
+<p>ざっと見て平均800です。ポアソン分布だとすると，標準偏差は約28で，95％信頼区間はその約2倍の幅です。データはすべてこの区間内に入っているので，単なるポアソン分布のように見えます。もうちょっとまじめに計算すると，</p>
+
+<pre>
+&gt; mean(x)
+[1] 804.3333
+&gt; var(x)
+[1] 1002.667
+</pre>
+
+<p>平均と分散がほぼ等しいので，ポアソン分布っぽく見えます。</p>
+
+<p>より簡単でわかりやすいのが χ<sup>2</sup> 検定です：</p>
+
+<pre>
+&gt; chisq.test(x)
+
+	Chi-squared test for given probabilities
+
+data:  x 
+X-squared = 6.2329, df = 5, p-value = 0.2842
+</pre>
+
+<p>ご覧のように，<i>p</i> 値は 0.2842 で，毎年の件数の差は有意ではありません。</p>
+
+<p>では「増加傾向にある」は間違っているのでしょうか。回帰分析をしてみればいいのですが，同じことですので，整数 1〜6 との相関係数を求めてみます：</p>
+
+<pre>
+&gt; cor.test(1:6, x)
+
+	Pearson's product-moment correlation
+
+data:  1:6 and x 
+t = 4.0055, df = 4, p-value = 0.01606
+alternative hypothesis: true correlation is not equal to 0 
+95 percent confidence interval:
+ 0.3034110 0.9885011 
+sample estimates:
+      cor 
+0.8946714 
+</pre>
+
+<p>相関係数は <i>r</i> = 0.89 で，<i>p</i> 値は 0.016 と，かなり有意です。さきほどの χ<sup>2</sup>
+検定の結果とどう折り合いをつければいいのでしょうか。</p>
+
+<p>ここは各自で考えてみましょう。 <a href="pisa-robbr2.html">:-)</a></p>
+
+<hr />
+
+<p><a href="/~okumura/">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2008-12-21 22:49:26
+<!-- hhmts end -->
+</p>
+</body>
+</html>

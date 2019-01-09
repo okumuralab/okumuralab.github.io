@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>「福島県で胃がんが急増？」のグラフをSVG化する</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>「福島県で胃がんが急増？」のグラフをSVG化する</h1>
+
+<p><a href="180321.html">福島県で胃がんが急増？</a>のグラフを少しでも対話型にするためにSVG化する方法を検討する。SVGについては<a href="/~okumura/html5/svg.html">こちら</a>を参照されたい。</p>
+
+<p>SVGにすれば，最初のグラフは次のようになる。マウスを乗せるとグラフが赤くなり，少し待つとツールチップ（吹き出し）に都道府県名が現れる。</p>
+
+<figure>
+<svg width="696" height="576">
+<style>
+ text { font-size:16px; font-family:sans-serif; }
+ .gr:hover, .gr path:hover { stroke:#ff2800; stroke-width:4; }
+</style>
+<rect x="52" y="2" width="642" height="544" stroke="black" fill="none" />
+<path d="M 58 546 l 0 +10" fill="none" stroke="black" stroke-width="1" />
+<text x="58" y="571" text-anchor="middle">1995</text>
+<path d="M 208 546 l 0 +10" fill="none" stroke="black" stroke-width="1" />
+<text x="208" y="571" text-anchor="middle">2000</text>
+<path d="M 358 546 l 0 +10" fill="none" stroke="black" stroke-width="1" />
+<text x="358" y="571" text-anchor="middle">2005</text>
+<path d="M 508 546 l 0 +10" fill="none" stroke="black" stroke-width="1" />
+<text x="508" y="571" text-anchor="middle">2010</text>
+<path d="M 658 546 l 0 +10" fill="none" stroke="black" stroke-width="1" />
+<text x="658" y="571" text-anchor="middle">2015</text>
+<path d="M 52 546 l -10 0" fill="none" stroke="black" stroke-width="1" />
+<text x="37" y="551" text-anchor="end">60</text>
+<path d="M 52 466 l -10 0" fill="none" stroke="black" stroke-width="1" />
+<text x="37" y="471" text-anchor="end">70</text>
+<path d="M 52 386 l -10 0" fill="none" stroke="black" stroke-width="1" />
+<text x="37" y="391" text-anchor="end">80</text>
+<path d="M 52 306 l -10 0" fill="none" stroke="black" stroke-width="1" />
+<text x="37" y="311" text-anchor="end">90</text>
+<path d="M 52 226 l -10 0" fill="none" stroke="black" stroke-width="1" />
+<text x="37" y="231" text-anchor="end">100</text>
+<path d="M 52 146 l -10 0" fill="none" stroke="black" stroke-width="1" />
+<text x="37" y="151" text-anchor="end">110</text>
+<path d="M 52 66 l -10 0" fill="none" stroke="black" stroke-width="1" />
+<text x="37" y="71" text-anchor="end">120</text>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="136.5" width="4" height="4" />
+<rect x="86" y="117" width="4" height="4" />
+<rect x="116" y="146.7" width="4" height="4" />
+<rect x="146" y="175.2" width="4" height="4" />
+<rect x="176" y="177.6" width="4" height="4" />
+<rect x="206" y="185" width="4" height="4" />
+<rect x="236" y="192.1" width="4" height="4" />
+<rect x="266" y="227.9" width="4" height="4" />
+<rect x="296" y="253.4" width="4" height="4" />
+<rect x="326" y="236.5" width="4" height="4" />
+<rect x="356" y="238" width="4" height="4" />
+<rect x="386" y="260.5" width="4" height="4" />
+<rect x="416" y="273.5" width="4" height="4" />
+<rect x="446" y="285.5" width="4" height="4" />
+<rect x="476" y="279" width="4" height="4" />
+<rect x="506" y="292.7" width="4" height="4" />
+<rect x="536" y="292.2" width="4" height="4" />
+<rect x="566" y="307.2" width="4" height="4" />
+<rect x="596" y="316" width="4" height="4" />
+<rect x="626" y="318.5" width="4" height="4" />
+<rect x="656" y="322.7" width="4" height="4" />
+<rect x="686" y="338.8" width="4" height="4" />
+</g>
+<path d="M 58 138.5 L 88 119 118 148.7 148 177.2 178 179.6 208 187 238 194.1 268 229.9 298 255.4 328 238.5 358 240 388 262.5 418 275.5 448 287.5 478 281 508 294.7 538 294.2 568 309.2 598 318 628 320.5 658 324.7 688 340.8" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>北海道</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="106.1" width="4" height="4" />
+<rect x="86" y="87" width="4" height="4" />
+<rect x="116" y="115.1" width="4" height="4" />
+<rect x="146" y="131.5" width="4" height="4" />
+<rect x="176" y="124.8" width="4" height="4" />
+<rect x="206" y="146.6" width="4" height="4" />
+<rect x="236" y="146" width="4" height="4" />
+<rect x="266" y="181.6" width="4" height="4" />
+<rect x="296" y="189" width="4" height="4" />
+<rect x="326" y="159.5" width="4" height="4" />
+<rect x="356" y="198.8" width="4" height="4" />
+<rect x="386" y="183.3" width="4" height="4" />
+<rect x="416" y="194.3" width="4" height="4" />
+<rect x="446" y="210.3" width="4" height="4" />
+<rect x="476" y="236.4" width="4" height="4" />
+<rect x="506" y="215.3" width="4" height="4" />
+<rect x="536" y="242.7" width="4" height="4" />
+<rect x="566" y="251.7" width="4" height="4" />
+<rect x="596" y="227.2" width="4" height="4" />
+<rect x="626" y="239.9" width="4" height="4" />
+<rect x="656" y="248.6" width="4" height="4" />
+<rect x="686" y="278" width="4" height="4" />
+</g>
+<path d="M 58 108.1 L 88 89 118 117.1 148 133.5 178 126.8 208 148.6 238 148 268 183.6 298 191 328 161.5 358 200.8 388 185.3 418 196.3 448 212.3 478 238.4 508 217.3 538 244.7 568 253.7 598 229.2 628 241.9 658 250.6 688 280" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>青森</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="224.1" width="4" height="4" />
+<rect x="86" y="258.3" width="4" height="4" />
+<rect x="116" y="221.9" width="4" height="4" />
+<rect x="146" y="218.5" width="4" height="4" />
+<rect x="176" y="242.1" width="4" height="4" />
+<rect x="206" y="269.5" width="4" height="4" />
+<rect x="236" y="237.4" width="4" height="4" />
+<rect x="266" y="265.1" width="4" height="4" />
+<rect x="296" y="298.3" width="4" height="4" />
+<rect x="326" y="314.4" width="4" height="4" />
+<rect x="356" y="295.9" width="4" height="4" />
+<rect x="386" y="339.3" width="4" height="4" />
+<rect x="416" y="343.4" width="4" height="4" />
+<rect x="446" y="373.8" width="4" height="4" />
+<rect x="476" y="345.3" width="4" height="4" />
+<rect x="506" y="316.5" width="4" height="4" />
+<rect x="536" y="338.2" width="4" height="4" />
+<rect x="566" y="366.8" width="4" height="4" />
+<rect x="596" y="378" width="4" height="4" />
+<rect x="626" y="388" width="4" height="4" />
+<rect x="656" y="376.3" width="4" height="4" />
+<rect x="686" y="373.9" width="4" height="4" />
+</g>
+<path d="M 58 226.1 L 88 260.3 118 223.9 148 220.5 178 244.1 208 271.5 238 239.4 268 267.1 298 300.3 328 316.4 358 297.9 388 341.3 418 345.4 448 375.8 478 347.3 508 318.5 538 340.2 568 368.8 598 380 628 390 658 378.3 688 375.9" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>岩手</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="175.1" width="4" height="4" />
+<rect x="86" y="189.3" width="4" height="4" />
+<rect x="116" y="221.7" width="4" height="4" />
+<rect x="146" y="215.4" width="4" height="4" />
+<rect x="176" y="193.5" width="4" height="4" />
+<rect x="206" y="236.2" width="4" height="4" />
+<rect x="236" y="258.5" width="4" height="4" />
+<rect x="266" y="310.2" width="4" height="4" />
+<rect x="296" y="300.9" width="4" height="4" />
+<rect x="326" y="286" width="4" height="4" />
+<rect x="356" y="305.4" width="4" height="4" />
+<rect x="386" y="307.7" width="4" height="4" />
+<rect x="416" y="311.5" width="4" height="4" />
+<rect x="446" y="345.6" width="4" height="4" />
+<rect x="476" y="355.7" width="4" height="4" />
+<rect x="506" y="370.3" width="4" height="4" />
+<rect x="536" y="367.4" width="4" height="4" />
+<rect x="566" y="378.1" width="4" height="4" />
+<rect x="596" y="408.8" width="4" height="4" />
+<rect x="626" y="411.7" width="4" height="4" />
+<rect x="656" y="405.4" width="4" height="4" />
+<rect x="686" y="448.2" width="4" height="4" />
+</g>
+<path d="M 58 177.1 L 88 191.3 118 223.7 148 217.4 178 195.5 208 238.2 238 260.5 268 312.2 298 302.9 328 288 358 307.4 388 309.7 418 313.5 448 347.6 478 357.7 508 372.3 538 369.4 568 380.1 598 410.8 628 413.7 658 407.4 688 450.2" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>宮城</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="134.3" width="4" height="4" />
+<rect x="86" y="99.6" width="4" height="4" />
+<rect x="116" y="138.9" width="4" height="4" />
+<rect x="146" y="175.2" width="4" height="4" />
+<rect x="176" y="161" width="4" height="4" />
+<rect x="206" y="149.2" width="4" height="4" />
+<rect x="236" y="195.2" width="4" height="4" />
+<rect x="266" y="216.2" width="4" height="4" />
+<rect x="296" y="214.8" width="4" height="4" />
+<rect x="326" y="236.2" width="4" height="4" />
+<rect x="356" y="255.5" width="4" height="4" />
+<rect x="386" y="246" width="4" height="4" />
+<rect x="416" y="308.1" width="4" height="4" />
+<rect x="446" y="289.9" width="4" height="4" />
+<rect x="476" y="315.5" width="4" height="4" />
+<rect x="506" y="271.5" width="4" height="4" />
+<rect x="536" y="298.6" width="4" height="4" />
+<rect x="566" y="311.7" width="4" height="4" />
+<rect x="596" y="318.1" width="4" height="4" />
+<rect x="626" y="332" width="4" height="4" />
+<rect x="656" y="294.1" width="4" height="4" />
+<rect x="686" y="324.7" width="4" height="4" />
+</g>
+<path d="M 58 136.3 L 88 101.6 118 140.9 148 177.2 178 163 208 151.2 238 197.2 268 218.2 298 216.8 328 238.2 358 257.5 388 248 418 310.1 448 291.9 478 317.5 508 273.5 538 300.6 568 313.7 598 320.1 628 334 658 296.1 688 326.7" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>秋田</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="230.1" width="4" height="4" />
+<rect x="86" y="191.8" width="4" height="4" />
+<rect x="116" y="212.3" width="4" height="4" />
+<rect x="146" y="215.7" width="4" height="4" />
+<rect x="176" y="220" width="4" height="4" />
+<rect x="206" y="226.3" width="4" height="4" />
+<rect x="236" y="246.4" width="4" height="4" />
+<rect x="266" y="312.2" width="4" height="4" />
+<rect x="296" y="308.3" width="4" height="4" />
+<rect x="326" y="309.9" width="4" height="4" />
+<rect x="356" y="349.2" width="4" height="4" />
+<rect x="386" y="327.5" width="4" height="4" />
+<rect x="416" y="366.7" width="4" height="4" />
+<rect x="446" y="346.7" width="4" height="4" />
+<rect x="476" y="395.3" width="4" height="4" />
+<rect x="506" y="379" width="4" height="4" />
+<rect x="536" y="368" width="4" height="4" />
+<rect x="566" y="384" width="4" height="4" />
+<rect x="596" y="380.6" width="4" height="4" />
+<rect x="626" y="396.5" width="4" height="4" />
+<rect x="656" y="452.5" width="4" height="4" />
+<rect x="686" y="411.5" width="4" height="4" />
+</g>
+<path d="M 58 232.1 L 88 193.8 118 214.3 148 217.7 178 222 208 228.3 238 248.4 268 314.2 298 310.3 328 311.9 358 351.2 388 329.5 418 368.7 448 348.7 478 397.3 508 381 538 370 568 386 598 382.6 628 398.5 658 454.5 688 413.5" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>山形</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="206" width="4" height="4" />
+<rect x="86" y="165.6" width="4" height="4" />
+<rect x="116" y="198.2" width="4" height="4" />
+<rect x="146" y="212.6" width="4" height="4" />
+<rect x="176" y="215.5" width="4" height="4" />
+<rect x="206" y="228" width="4" height="4" />
+<rect x="236" y="210.8" width="4" height="4" />
+<rect x="266" y="263.6" width="4" height="4" />
+<rect x="296" y="325.6" width="4" height="4" />
+<rect x="326" y="265.2" width="4" height="4" />
+<rect x="356" y="300" width="4" height="4" />
+<rect x="386" y="316.6" width="4" height="4" />
+<rect x="416" y="321" width="4" height="4" />
+<rect x="446" y="346.2" width="4" height="4" />
+<rect x="476" y="345.5" width="4" height="4" />
+<rect x="506" y="351.7" width="4" height="4" />
+<rect x="536" y="368.8" width="4" height="4" />
+<rect x="566" y="359.4" width="4" height="4" />
+<rect x="596" y="385.5" width="4" height="4" />
+<rect x="626" y="400.7" width="4" height="4" />
+<rect x="656" y="381.3" width="4" height="4" />
+<rect x="686" y="393.4" width="4" height="4" />
+</g>
+<path d="M 58 208 L 88 167.6 118 200.2 148 214.6 178 217.5 208 230 238 212.8 268 265.6 298 327.6 328 267.2 358 302 388 318.6 418 323 448 348.2 478 347.5 508 353.7 538 370.8 568 361.4 598 387.5 628 402.7 658 383.3 688 395.4" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>福島</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="174" width="4" height="4" />
+<rect x="86" y="169.2" width="4" height="4" />
+<rect x="116" y="166.4" width="4" height="4" />
+<rect x="146" y="177.4" width="4" height="4" />
+<rect x="176" y="209.6" width="4" height="4" />
+<rect x="206" y="213" width="4" height="4" />
+<rect x="236" y="223.7" width="4" height="4" />
+<rect x="266" y="233.5" width="4" height="4" />
+<rect x="296" y="251.1" width="4" height="4" />
+<rect x="326" y="269.6" width="4" height="4" />
+<rect x="356" y="263.4" width="4" height="4" />
+<rect x="386" y="291.3" width="4" height="4" />
+<rect x="416" y="291.8" width="4" height="4" />
+<rect x="446" y="321" width="4" height="4" />
+<rect x="476" y="334.2" width="4" height="4" />
+<rect x="506" y="348.2" width="4" height="4" />
+<rect x="536" y="359.9" width="4" height="4" />
+<rect x="566" y="372.4" width="4" height="4" />
+<rect x="596" y="376.7" width="4" height="4" />
+<rect x="626" y="375.2" width="4" height="4" />
+<rect x="656" y="359" width="4" height="4" />
+<rect x="686" y="404.3" width="4" height="4" />
+</g>
+<path d="M 58 176 L 88 171.2 118 168.4 148 179.4 178 211.6 208 215 238 225.7 268 235.5 298 253.1 328 271.6 358 265.4 388 293.3 418 293.8 448 323 478 336.2 508 350.2 538 361.9 568 374.4 598 378.7 628 377.2 658 361 688 406.3" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>茨城</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="197.3" width="4" height="4" />
+<rect x="86" y="196.2" width="4" height="4" />
+<rect x="116" y="171.5" width="4" height="4" />
+<rect x="146" y="158.9" width="4" height="4" />
+<rect x="176" y="190.7" width="4" height="4" />
+<rect x="206" y="207.6" width="4" height="4" />
+<rect x="236" y="227.8" width="4" height="4" />
+<rect x="266" y="290.2" width="4" height="4" />
+<rect x="296" y="233.8" width="4" height="4" />
+<rect x="326" y="284.5" width="4" height="4" />
+<rect x="356" y="293.3" width="4" height="4" />
+<rect x="386" y="275.7" width="4" height="4" />
+<rect x="416" y="300.8" width="4" height="4" />
+<rect x="446" y="325.5" width="4" height="4" />
+<rect x="476" y="351.2" width="4" height="4" />
+<rect x="506" y="343" width="4" height="4" />
+<rect x="536" y="352.6" width="4" height="4" />
+<rect x="566" y="363.3" width="4" height="4" />
+<rect x="596" y="382.3" width="4" height="4" />
+<rect x="626" y="380" width="4" height="4" />
+<rect x="656" y="408.6" width="4" height="4" />
+<rect x="686" y="378.4" width="4" height="4" />
+</g>
+<path d="M 58 199.3 L 88 198.2 118 173.5 148 160.9 178 192.7 208 209.6 238 229.8 268 292.2 298 235.8 328 286.5 358 295.3 388 277.7 418 302.8 448 327.5 478 353.2 508 345 538 354.6 568 365.3 598 384.3 628 382 658 410.6 688 380.4" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>栃木</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="227.3" width="4" height="4" />
+<rect x="86" y="275.1" width="4" height="4" />
+<rect x="116" y="248.9" width="4" height="4" />
+<rect x="146" y="247.7" width="4" height="4" />
+<rect x="176" y="263.5" width="4" height="4" />
+<rect x="206" y="266.7" width="4" height="4" />
+<rect x="236" y="271.2" width="4" height="4" />
+<rect x="266" y="301.3" width="4" height="4" />
+<rect x="296" y="281.2" width="4" height="4" />
+<rect x="326" y="319.9" width="4" height="4" />
+<rect x="356" y="312.1" width="4" height="4" />
+<rect x="386" y="340.3" width="4" height="4" />
+<rect x="416" y="347.7" width="4" height="4" />
+<rect x="446" y="355.6" width="4" height="4" />
+<rect x="476" y="378.7" width="4" height="4" />
+<rect x="506" y="358.2" width="4" height="4" />
+<rect x="536" y="372.9" width="4" height="4" />
+<rect x="566" y="394.7" width="4" height="4" />
+<rect x="596" y="401.9" width="4" height="4" />
+<rect x="626" y="397.4" width="4" height="4" />
+<rect x="656" y="421" width="4" height="4" />
+<rect x="686" y="465.7" width="4" height="4" />
+</g>
+<path d="M 58 229.3 L 88 277.1 118 250.9 148 249.7 178 265.5 208 268.7 238 273.2 268 303.3 298 283.2 328 321.9 358 314.1 388 342.3 418 349.7 448 357.6 478 380.7 508 360.2 538 374.9 568 396.7 598 403.9 628 399.4 658 423 688 467.7" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>群馬</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="165.3" width="4" height="4" />
+<rect x="86" y="154.6" width="4" height="4" />
+<rect x="116" y="183.7" width="4" height="4" />
+<rect x="146" y="187.4" width="4" height="4" />
+<rect x="176" y="198.8" width="4" height="4" />
+<rect x="206" y="186.6" width="4" height="4" />
+<rect x="236" y="224.8" width="4" height="4" />
+<rect x="266" y="241.8" width="4" height="4" />
+<rect x="296" y="265.4" width="4" height="4" />
+<rect x="326" y="275" width="4" height="4" />
+<rect x="356" y="275.8" width="4" height="4" />
+<rect x="386" y="299.7" width="4" height="4" />
+<rect x="416" y="302.9" width="4" height="4" />
+<rect x="446" y="313.1" width="4" height="4" />
+<rect x="476" y="344.9" width="4" height="4" />
+<rect x="506" y="344.8" width="4" height="4" />
+<rect x="536" y="361" width="4" height="4" />
+<rect x="566" y="366.5" width="4" height="4" />
+<rect x="596" y="393.3" width="4" height="4" />
+<rect x="626" y="391.6" width="4" height="4" />
+<rect x="656" y="397.2" width="4" height="4" />
+<rect x="686" y="419" width="4" height="4" />
+</g>
+<path d="M 58 167.3 L 88 156.6 118 185.7 148 189.4 178 200.8 208 188.6 238 226.8 268 243.8 298 267.4 328 277 358 277.8 388 301.7 418 304.9 448 315.1 478 346.9 508 346.8 538 363 568 368.5 598 395.3 628 393.6 658 399.2 688 421" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>埼玉</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="153.4" width="4" height="4" />
+<rect x="86" y="134.5" width="4" height="4" />
+<rect x="116" y="180.6" width="4" height="4" />
+<rect x="146" y="176.5" width="4" height="4" />
+<rect x="176" y="193.9" width="4" height="4" />
+<rect x="206" y="218.7" width="4" height="4" />
+<rect x="236" y="229.1" width="4" height="4" />
+<rect x="266" y="243.8" width="4" height="4" />
+<rect x="296" y="283.8" width="4" height="4" />
+<rect x="326" y="257.8" width="4" height="4" />
+<rect x="356" y="296.7" width="4" height="4" />
+<rect x="386" y="309.4" width="4" height="4" />
+<rect x="416" y="329.2" width="4" height="4" />
+<rect x="446" y="340.8" width="4" height="4" />
+<rect x="476" y="355.4" width="4" height="4" />
+<rect x="506" y="369.8" width="4" height="4" />
+<rect x="536" y="386.9" width="4" height="4" />
+<rect x="566" y="405.9" width="4" height="4" />
+<rect x="596" y="396.9" width="4" height="4" />
+<rect x="626" y="411.2" width="4" height="4" />
+<rect x="656" y="413.5" width="4" height="4" />
+<rect x="686" y="426.5" width="4" height="4" />
+</g>
+<path d="M 58 155.4 L 88 136.5 118 182.6 148 178.5 178 195.9 208 220.7 238 231.1 268 245.8 298 285.8 328 259.8 358 298.7 388 311.4 418 331.2 448 342.8 478 357.4 508 371.8 538 388.9 568 407.9 598 398.9 628 413.2 658 415.5 688 428.5" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>千葉</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="132.6" width="4" height="4" />
+<rect x="86" y="134.8" width="4" height="4" />
+<rect x="116" y="140.4" width="4" height="4" />
+<rect x="146" y="158.7" width="4" height="4" />
+<rect x="176" y="155.9" width="4" height="4" />
+<rect x="206" y="182.7" width="4" height="4" />
+<rect x="236" y="199.4" width="4" height="4" />
+<rect x="266" y="224" width="4" height="4" />
+<rect x="296" y="247.4" width="4" height="4" />
+<rect x="326" y="241.9" width="4" height="4" />
+<rect x="356" y="273" width="4" height="4" />
+<rect x="386" y="294.5" width="4" height="4" />
+<rect x="416" y="312.5" width="4" height="4" />
+<rect x="446" y="312.1" width="4" height="4" />
+<rect x="476" y="340.7" width="4" height="4" />
+<rect x="506" y="340.6" width="4" height="4" />
+<rect x="536" y="364.6" width="4" height="4" />
+<rect x="566" y="373.1" width="4" height="4" />
+<rect x="596" y="378.9" width="4" height="4" />
+<rect x="626" y="396.8" width="4" height="4" />
+<rect x="656" y="400.7" width="4" height="4" />
+<rect x="686" y="420.3" width="4" height="4" />
+</g>
+<path d="M 58 134.6 L 88 136.8 118 142.4 148 160.7 178 157.9 208 184.7 238 201.4 268 226 298 249.4 328 243.9 358 275 388 296.5 418 314.5 448 314.1 478 342.7 508 342.6 538 366.6 568 375.1 598 380.9 628 398.8 658 402.7 688 422.3" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>東京</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="136.3" width="4" height="4" />
+<rect x="86" y="153.1" width="4" height="4" />
+<rect x="116" y="171.7" width="4" height="4" />
+<rect x="146" y="181.9" width="4" height="4" />
+<rect x="176" y="186.8" width="4" height="4" />
+<rect x="206" y="218.3" width="4" height="4" />
+<rect x="236" y="227.3" width="4" height="4" />
+<rect x="266" y="245.4" width="4" height="4" />
+<rect x="296" y="261.9" width="4" height="4" />
+<rect x="326" y="269.7" width="4" height="4" />
+<rect x="356" y="302.2" width="4" height="4" />
+<rect x="386" y="319.1" width="4" height="4" />
+<rect x="416" y="309.1" width="4" height="4" />
+<rect x="446" y="333.3" width="4" height="4" />
+<rect x="476" y="366.3" width="4" height="4" />
+<rect x="506" y="363.8" width="4" height="4" />
+<rect x="536" y="348" width="4" height="4" />
+<rect x="566" y="379" width="4" height="4" />
+<rect x="596" y="393.7" width="4" height="4" />
+<rect x="626" y="398.9" width="4" height="4" />
+<rect x="656" y="409.5" width="4" height="4" />
+<rect x="686" y="420.7" width="4" height="4" />
+</g>
+<path d="M 58 138.3 L 88 155.1 118 173.7 148 183.9 178 188.8 208 220.3 238 229.3 268 247.4 298 263.9 328 271.7 358 304.2 388 321.1 418 311.1 448 335.3 478 368.3 508 365.8 538 350 568 381 598 395.7 628 400.9 658 411.5 688 422.7" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>神奈川</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="185.9" width="4" height="4" />
+<rect x="86" y="190.6" width="4" height="4" />
+<rect x="116" y="204.7" width="4" height="4" />
+<rect x="146" y="199.4" width="4" height="4" />
+<rect x="176" y="206.3" width="4" height="4" />
+<rect x="206" y="219.3" width="4" height="4" />
+<rect x="236" y="252.8" width="4" height="4" />
+<rect x="266" y="282.9" width="4" height="4" />
+<rect x="296" y="276.8" width="4" height="4" />
+<rect x="326" y="265.1" width="4" height="4" />
+<rect x="356" y="287.6" width="4" height="4" />
+<rect x="386" y="307.2" width="4" height="4" />
+<rect x="416" y="290.6" width="4" height="4" />
+<rect x="446" y="323.9" width="4" height="4" />
+<rect x="476" y="360.4" width="4" height="4" />
+<rect x="506" y="371.1" width="4" height="4" />
+<rect x="536" y="393.7" width="4" height="4" />
+<rect x="566" y="372.5" width="4" height="4" />
+<rect x="596" y="371" width="4" height="4" />
+<rect x="626" y="396.3" width="4" height="4" />
+<rect x="656" y="417.5" width="4" height="4" />
+<rect x="686" y="412.2" width="4" height="4" />
+</g>
+<path d="M 58 187.9 L 88 192.6 118 206.7 148 201.4 178 208.3 208 221.3 238 254.8 268 284.9 298 278.8 328 267.1 358 289.6 388 309.2 418 292.6 448 325.9 478 362.4 508 373.1 538 395.7 568 374.5 598 373 628 398.3 658 419.5 688 414.2" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>新潟</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="211.5" width="4" height="4" />
+<rect x="86" y="215.6" width="4" height="4" />
+<rect x="116" y="249.5" width="4" height="4" />
+<rect x="146" y="199.8" width="4" height="4" />
+<rect x="176" y="209.4" width="4" height="4" />
+<rect x="206" y="271.4" width="4" height="4" />
+<rect x="236" y="279.5" width="4" height="4" />
+<rect x="266" y="301" width="4" height="4" />
+<rect x="296" y="305.8" width="4" height="4" />
+<rect x="326" y="309" width="4" height="4" />
+<rect x="356" y="342.5" width="4" height="4" />
+<rect x="386" y="344.4" width="4" height="4" />
+<rect x="416" y="375.3" width="4" height="4" />
+<rect x="446" y="306.4" width="4" height="4" />
+<rect x="476" y="391" width="4" height="4" />
+<rect x="506" y="386.7" width="4" height="4" />
+<rect x="536" y="372.4" width="4" height="4" />
+<rect x="566" y="393.7" width="4" height="4" />
+<rect x="596" y="421.5" width="4" height="4" />
+<rect x="626" y="431" width="4" height="4" />
+<rect x="656" y="407.2" width="4" height="4" />
+<rect x="686" y="478" width="4" height="4" />
+</g>
+<path d="M 58 213.5 L 88 217.6 118 251.5 148 201.8 178 211.4 208 273.4 238 281.5 268 303 298 307.8 328 311 358 344.5 388 346.4 418 377.3 448 308.4 478 393 508 388.7 538 374.4 568 395.7 598 423.5 628 433 658 409.2 688 480" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>富山</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="205.9" width="4" height="4" />
+<rect x="86" y="205.7" width="4" height="4" />
+<rect x="116" y="229.3" width="4" height="4" />
+<rect x="146" y="217.1" width="4" height="4" />
+<rect x="176" y="208.8" width="4" height="4" />
+<rect x="206" y="233.1" width="4" height="4" />
+<rect x="236" y="255.8" width="4" height="4" />
+<rect x="266" y="272" width="4" height="4" />
+<rect x="296" y="292.4" width="4" height="4" />
+<rect x="326" y="301.2" width="4" height="4" />
+<rect x="356" y="337.8" width="4" height="4" />
+<rect x="386" y="313.1" width="4" height="4" />
+<rect x="416" y="352.5" width="4" height="4" />
+<rect x="446" y="364.9" width="4" height="4" />
+<rect x="476" y="362.6" width="4" height="4" />
+<rect x="506" y="371.5" width="4" height="4" />
+<rect x="536" y="386.3" width="4" height="4" />
+<rect x="566" y="415" width="4" height="4" />
+<rect x="596" y="427.1" width="4" height="4" />
+<rect x="626" y="417.7" width="4" height="4" />
+<rect x="656" y="401.2" width="4" height="4" />
+<rect x="686" y="413.4" width="4" height="4" />
+</g>
+<path d="M 58 207.9 L 88 207.7 118 231.3 148 219.1 178 210.8 208 235.1 238 257.8 268 274 298 294.4 328 303.2 358 339.8 388 315.1 418 354.5 448 366.9 478 364.6 508 373.5 538 388.3 568 417 598 429.1 628 419.7 658 403.2 688 415.4" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>石川</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="254.8" width="4" height="4" />
+<rect x="86" y="267.4" width="4" height="4" />
+<rect x="116" y="254.2" width="4" height="4" />
+<rect x="146" y="290.8" width="4" height="4" />
+<rect x="176" y="277.6" width="4" height="4" />
+<rect x="206" y="307.6" width="4" height="4" />
+<rect x="236" y="323.1" width="4" height="4" />
+<rect x="266" y="327.4" width="4" height="4" />
+<rect x="296" y="369.1" width="4" height="4" />
+<rect x="326" y="339.8" width="4" height="4" />
+<rect x="356" y="350.7" width="4" height="4" />
+<rect x="386" y="393.7" width="4" height="4" />
+<rect x="416" y="388.7" width="4" height="4" />
+<rect x="446" y="396.6" width="4" height="4" />
+<rect x="476" y="424.9" width="4" height="4" />
+<rect x="506" y="408.4" width="4" height="4" />
+<rect x="536" y="429.6" width="4" height="4" />
+<rect x="566" y="467.1" width="4" height="4" />
+<rect x="596" y="455.9" width="4" height="4" />
+<rect x="626" y="447" width="4" height="4" />
+<rect x="656" y="454.8" width="4" height="4" />
+<rect x="686" y="449.3" width="4" height="4" />
+</g>
+<path d="M 58 256.8 L 88 269.4 118 256.2 148 292.8 178 279.6 208 309.6 238 325.1 268 329.4 298 371.1 328 341.8 358 352.7 388 395.7 418 390.7 448 398.6 478 426.9 508 410.4 538 431.6 568 469.1 598 457.9 628 449 658 456.8 688 451.3" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>福井</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="200.7" width="4" height="4" />
+<rect x="86" y="192.6" width="4" height="4" />
+<rect x="116" y="266.9" width="4" height="4" />
+<rect x="146" y="281.1" width="4" height="4" />
+<rect x="176" y="264.7" width="4" height="4" />
+<rect x="206" y="273.4" width="4" height="4" />
+<rect x="236" y="297" width="4" height="4" />
+<rect x="266" y="304.6" width="4" height="4" />
+<rect x="296" y="309.4" width="4" height="4" />
+<rect x="326" y="339.8" width="4" height="4" />
+<rect x="356" y="333.7" width="4" height="4" />
+<rect x="386" y="319.9" width="4" height="4" />
+<rect x="416" y="362.9" width="4" height="4" />
+<rect x="446" y="366.6" width="4" height="4" />
+<rect x="476" y="436.2" width="4" height="4" />
+<rect x="506" y="398.3" width="4" height="4" />
+<rect x="536" y="394" width="4" height="4" />
+<rect x="566" y="434" width="4" height="4" />
+<rect x="596" y="445.7" width="4" height="4" />
+<rect x="626" y="428.5" width="4" height="4" />
+<rect x="656" y="417.6" width="4" height="4" />
+<rect x="686" y="482.9" width="4" height="4" />
+</g>
+<path d="M 58 202.7 L 88 194.6 118 268.9 148 283.1 178 266.7 208 275.4 238 299 268 306.6 298 311.4 328 341.8 358 335.7 388 321.9 418 364.9 448 368.6 478 438.2 508 400.3 538 396 568 436 598 447.7 628 430.5 658 419.6 688 484.9" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>山梨</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="320" width="4" height="4" />
+<rect x="86" y="329.9" width="4" height="4" />
+<rect x="116" y="341.4" width="4" height="4" />
+<rect x="146" y="350.8" width="4" height="4" />
+<rect x="176" y="338.9" width="4" height="4" />
+<rect x="206" y="355.1" width="4" height="4" />
+<rect x="236" y="386" width="4" height="4" />
+<rect x="266" y="380.2" width="4" height="4" />
+<rect x="296" y="419.6" width="4" height="4" />
+<rect x="326" y="390.7" width="4" height="4" />
+<rect x="356" y="418.6" width="4" height="4" />
+<rect x="386" y="434.6" width="4" height="4" />
+<rect x="416" y="442.2" width="4" height="4" />
+<rect x="446" y="445.2" width="4" height="4" />
+<rect x="476" y="455.4" width="4" height="4" />
+<rect x="506" y="485.4" width="4" height="4" />
+<rect x="536" y="468.8" width="4" height="4" />
+<rect x="566" y="474.9" width="4" height="4" />
+<rect x="596" y="494.8" width="4" height="4" />
+<rect x="626" y="477.6" width="4" height="4" />
+<rect x="656" y="528.1" width="4" height="4" />
+<rect x="686" y="525.7" width="4" height="4" />
+</g>
+<path d="M 58 322 L 88 331.9 118 343.4 148 352.8 178 340.9 208 357.1 238 388 268 382.2 298 421.6 328 392.7 358 420.6 388 436.6 418 444.2 448 447.2 478 457.4 508 487.4 538 470.8 568 476.9 598 496.8 628 479.6 658 530.1 688 527.7" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>長野</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="199.5" width="4" height="4" />
+<rect x="86" y="210.1" width="4" height="4" />
+<rect x="116" y="213.7" width="4" height="4" />
+<rect x="146" y="232.2" width="4" height="4" />
+<rect x="176" y="219.2" width="4" height="4" />
+<rect x="206" y="205" width="4" height="4" />
+<rect x="236" y="262.6" width="4" height="4" />
+<rect x="266" y="287.3" width="4" height="4" />
+<rect x="296" y="329.7" width="4" height="4" />
+<rect x="326" y="313.1" width="4" height="4" />
+<rect x="356" y="336.8" width="4" height="4" />
+<rect x="386" y="321.6" width="4" height="4" />
+<rect x="416" y="343.7" width="4" height="4" />
+<rect x="446" y="376" width="4" height="4" />
+<rect x="476" y="341.2" width="4" height="4" />
+<rect x="506" y="386" width="4" height="4" />
+<rect x="536" y="398.1" width="4" height="4" />
+<rect x="566" y="408.6" width="4" height="4" />
+<rect x="596" y="415.6" width="4" height="4" />
+<rect x="626" y="419.3" width="4" height="4" />
+<rect x="656" y="413.4" width="4" height="4" />
+<rect x="686" y="455.6" width="4" height="4" />
+</g>
+<path d="M 58 201.5 L 88 212.1 118 215.7 148 234.2 178 221.2 208 207 238 264.6 268 289.3 298 331.7 328 315.1 358 338.8 388 323.6 418 345.7 448 378 478 343.2 508 388 538 400.1 568 410.6 598 417.6 628 421.3 658 415.4 688 457.6" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>岐阜</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="220.8" width="4" height="4" />
+<rect x="86" y="215.9" width="4" height="4" />
+<rect x="116" y="246.1" width="4" height="4" />
+<rect x="146" y="218.8" width="4" height="4" />
+<rect x="176" y="244.4" width="4" height="4" />
+<rect x="206" y="244" width="4" height="4" />
+<rect x="236" y="273.9" width="4" height="4" />
+<rect x="266" y="286.2" width="4" height="4" />
+<rect x="296" y="317.5" width="4" height="4" />
+<rect x="326" y="318.8" width="4" height="4" />
+<rect x="356" y="334.3" width="4" height="4" />
+<rect x="386" y="344.5" width="4" height="4" />
+<rect x="416" y="367.1" width="4" height="4" />
+<rect x="446" y="357.9" width="4" height="4" />
+<rect x="476" y="393.3" width="4" height="4" />
+<rect x="506" y="376.2" width="4" height="4" />
+<rect x="536" y="387.4" width="4" height="4" />
+<rect x="566" y="400.8" width="4" height="4" />
+<rect x="596" y="411.7" width="4" height="4" />
+<rect x="626" y="412.3" width="4" height="4" />
+<rect x="656" y="438" width="4" height="4" />
+<rect x="686" y="437.4" width="4" height="4" />
+</g>
+<path d="M 58 222.8 L 88 217.9 118 248.1 148 220.8 178 246.4 208 246 238 275.9 268 288.2 298 319.5 328 320.8 358 336.3 388 346.5 418 369.1 448 359.9 478 395.3 508 378.2 538 389.4 568 402.8 598 413.7 628 414.3 658 440 688 439.4" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>静岡</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="171.9" width="4" height="4" />
+<rect x="86" y="156.5" width="4" height="4" />
+<rect x="116" y="180.6" width="4" height="4" />
+<rect x="146" y="179.6" width="4" height="4" />
+<rect x="176" y="209.3" width="4" height="4" />
+<rect x="206" y="216.7" width="4" height="4" />
+<rect x="236" y="217.5" width="4" height="4" />
+<rect x="266" y="265" width="4" height="4" />
+<rect x="296" y="272.1" width="4" height="4" />
+<rect x="326" y="261.6" width="4" height="4" />
+<rect x="356" y="288.7" width="4" height="4" />
+<rect x="386" y="323.2" width="4" height="4" />
+<rect x="416" y="324.5" width="4" height="4" />
+<rect x="446" y="337.1" width="4" height="4" />
+<rect x="476" y="369.2" width="4" height="4" />
+<rect x="506" y="354.9" width="4" height="4" />
+<rect x="536" y="372.9" width="4" height="4" />
+<rect x="566" y="376.8" width="4" height="4" />
+<rect x="596" y="392.9" width="4" height="4" />
+<rect x="626" y="408.4" width="4" height="4" />
+<rect x="656" y="421.3" width="4" height="4" />
+<rect x="686" y="432.8" width="4" height="4" />
+</g>
+<path d="M 58 173.9 L 88 158.5 118 182.6 148 181.6 178 211.3 208 218.7 238 219.5 268 267 298 274.1 328 263.6 358 290.7 388 325.2 418 326.5 448 339.1 478 371.2 508 356.9 538 374.9 568 378.8 598 394.9 628 410.4 658 423.3 688 434.8" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>愛知</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="234.2" width="4" height="4" />
+<rect x="86" y="240.7" width="4" height="4" />
+<rect x="116" y="248.6" width="4" height="4" />
+<rect x="146" y="244.3" width="4" height="4" />
+<rect x="176" y="247.9" width="4" height="4" />
+<rect x="206" y="232.5" width="4" height="4" />
+<rect x="236" y="318.1" width="4" height="4" />
+<rect x="266" y="292.8" width="4" height="4" />
+<rect x="296" y="334.9" width="4" height="4" />
+<rect x="326" y="325.2" width="4" height="4" />
+<rect x="356" y="349.9" width="4" height="4" />
+<rect x="386" y="368" width="4" height="4" />
+<rect x="416" y="383" width="4" height="4" />
+<rect x="446" y="390" width="4" height="4" />
+<rect x="476" y="424.6" width="4" height="4" />
+<rect x="506" y="405.1" width="4" height="4" />
+<rect x="536" y="396.3" width="4" height="4" />
+<rect x="566" y="436.3" width="4" height="4" />
+<rect x="596" y="422.7" width="4" height="4" />
+<rect x="626" y="457.9" width="4" height="4" />
+<rect x="656" y="422.6" width="4" height="4" />
+<rect x="686" y="472.1" width="4" height="4" />
+</g>
+<path d="M 58 236.2 L 88 242.7 118 250.6 148 246.3 178 249.9 208 234.5 238 320.1 268 294.8 298 336.9 328 327.2 358 351.9 388 370 418 385 448 392 478 426.6 508 407.1 538 398.3 568 438.3 598 424.7 628 459.9 658 424.6 688 474.1" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>三重</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="194.2" width="4" height="4" />
+<rect x="86" y="226.5" width="4" height="4" />
+<rect x="116" y="267.4" width="4" height="4" />
+<rect x="146" y="238.6" width="4" height="4" />
+<rect x="176" y="271.1" width="4" height="4" />
+<rect x="206" y="228.4" width="4" height="4" />
+<rect x="236" y="251.5" width="4" height="4" />
+<rect x="266" y="322" width="4" height="4" />
+<rect x="296" y="317.3" width="4" height="4" />
+<rect x="326" y="341.6" width="4" height="4" />
+<rect x="356" y="331.6" width="4" height="4" />
+<rect x="386" y="387.2" width="4" height="4" />
+<rect x="416" y="385" width="4" height="4" />
+<rect x="446" y="397.6" width="4" height="4" />
+<rect x="476" y="388.9" width="4" height="4" />
+<rect x="506" y="423.8" width="4" height="4" />
+<rect x="536" y="426.6" width="4" height="4" />
+<rect x="566" y="470.2" width="4" height="4" />
+<rect x="596" y="459.2" width="4" height="4" />
+<rect x="626" y="449.1" width="4" height="4" />
+<rect x="656" y="468.9" width="4" height="4" />
+<rect x="686" y="463.9" width="4" height="4" />
+</g>
+<path d="M 58 196.2 L 88 228.5 118 269.4 148 240.6 178 273.1 208 230.4 238 253.5 268 324 298 319.3 328 343.6 358 333.6 388 389.2 418 387 448 399.6 478 390.9 508 425.8 538 428.6 568 472.2 598 461.2 628 451.1 658 470.9 688 465.9" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>滋賀</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="185.4" width="4" height="4" />
+<rect x="86" y="166.2" width="4" height="4" />
+<rect x="116" y="180.4" width="4" height="4" />
+<rect x="146" y="150.6" width="4" height="4" />
+<rect x="176" y="190.7" width="4" height="4" />
+<rect x="206" y="174.5" width="4" height="4" />
+<rect x="236" y="240.3" width="4" height="4" />
+<rect x="266" y="222.4" width="4" height="4" />
+<rect x="296" y="285" width="4" height="4" />
+<rect x="326" y="269.7" width="4" height="4" />
+<rect x="356" y="305.8" width="4" height="4" />
+<rect x="386" y="301.7" width="4" height="4" />
+<rect x="416" y="335.1" width="4" height="4" />
+<rect x="446" y="337.9" width="4" height="4" />
+<rect x="476" y="348.6" width="4" height="4" />
+<rect x="506" y="346" width="4" height="4" />
+<rect x="536" y="369.6" width="4" height="4" />
+<rect x="566" y="369.9" width="4" height="4" />
+<rect x="596" y="393.5" width="4" height="4" />
+<rect x="626" y="392.8" width="4" height="4" />
+<rect x="656" y="443.7" width="4" height="4" />
+<rect x="686" y="448.3" width="4" height="4" />
+</g>
+<path d="M 58 187.4 L 88 168.2 118 182.4 148 152.6 178 192.7 208 176.5 238 242.3 268 224.4 298 287 328 271.7 358 307.8 388 303.7 418 337.1 448 339.9 478 350.6 508 348 538 371.6 568 371.9 598 395.5 628 394.8 658 445.7 688 450.3" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>京都</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="18.9" width="4" height="4" />
+<rect x="86" y="28.9" width="4" height="4" />
+<rect x="116" y="48.7" width="4" height="4" />
+<rect x="146" y="51.1" width="4" height="4" />
+<rect x="176" y="72.2" width="4" height="4" />
+<rect x="206" y="101.1" width="4" height="4" />
+<rect x="236" y="114.2" width="4" height="4" />
+<rect x="266" y="142" width="4" height="4" />
+<rect x="296" y="168" width="4" height="4" />
+<rect x="326" y="181.9" width="4" height="4" />
+<rect x="356" y="209.6" width="4" height="4" />
+<rect x="386" y="232.6" width="4" height="4" />
+<rect x="416" y="245.5" width="4" height="4" />
+<rect x="446" y="256.8" width="4" height="4" />
+<rect x="476" y="273.9" width="4" height="4" />
+<rect x="506" y="301.7" width="4" height="4" />
+<rect x="536" y="295.7" width="4" height="4" />
+<rect x="566" y="326" width="4" height="4" />
+<rect x="596" y="333.9" width="4" height="4" />
+<rect x="626" y="353.2" width="4" height="4" />
+<rect x="656" y="348.8" width="4" height="4" />
+<rect x="686" y="373" width="4" height="4" />
+</g>
+<path d="M 58 20.9 L 88 30.9 118 50.7 148 53.1 178 74.2 208 103.1 238 116.2 268 144 298 170 328 183.9 358 211.6 388 234.6 418 247.5 448 258.8 478 275.9 508 303.7 538 297.7 568 328 598 335.9 628 355.2 658 350.8 688 375" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>大阪</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="86.8" width="4" height="4" />
+<rect x="86" y="95.5" width="4" height="4" />
+<rect x="116" y="98.8" width="4" height="4" />
+<rect x="146" y="129.3" width="4" height="4" />
+<rect x="176" y="136.9" width="4" height="4" />
+<rect x="206" y="148.1" width="4" height="4" />
+<rect x="236" y="174.3" width="4" height="4" />
+<rect x="266" y="224.9" width="4" height="4" />
+<rect x="296" y="225.6" width="4" height="4" />
+<rect x="326" y="233.6" width="4" height="4" />
+<rect x="356" y="246.7" width="4" height="4" />
+<rect x="386" y="282.8" width="4" height="4" />
+<rect x="416" y="300.1" width="4" height="4" />
+<rect x="446" y="311.2" width="4" height="4" />
+<rect x="476" y="329.1" width="4" height="4" />
+<rect x="506" y="332.1" width="4" height="4" />
+<rect x="536" y="351.7" width="4" height="4" />
+<rect x="566" y="362.6" width="4" height="4" />
+<rect x="596" y="367.9" width="4" height="4" />
+<rect x="626" y="391.7" width="4" height="4" />
+<rect x="656" y="405.5" width="4" height="4" />
+<rect x="686" y="421.6" width="4" height="4" />
+</g>
+<path d="M 58 88.8 L 88 97.5 118 100.8 148 131.3 178 138.9 208 150.1 238 176.3 268 226.9 298 227.6 328 235.6 358 248.7 388 284.8 418 302.1 448 313.2 478 331.1 508 334.1 538 353.7 568 364.6 598 369.9 628 393.7 658 407.5 688 423.6" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>兵庫</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="141.7" width="4" height="4" />
+<rect x="86" y="163.6" width="4" height="4" />
+<rect x="116" y="146.3" width="4" height="4" />
+<rect x="146" y="151.7" width="4" height="4" />
+<rect x="176" y="199.1" width="4" height="4" />
+<rect x="206" y="206.9" width="4" height="4" />
+<rect x="236" y="223.8" width="4" height="4" />
+<rect x="266" y="247.1" width="4" height="4" />
+<rect x="296" y="263.2" width="4" height="4" />
+<rect x="326" y="266.7" width="4" height="4" />
+<rect x="356" y="270" width="4" height="4" />
+<rect x="386" y="308.7" width="4" height="4" />
+<rect x="416" y="323.7" width="4" height="4" />
+<rect x="446" y="363.6" width="4" height="4" />
+<rect x="476" y="386.5" width="4" height="4" />
+<rect x="506" y="357.9" width="4" height="4" />
+<rect x="536" y="383.6" width="4" height="4" />
+<rect x="566" y="418" width="4" height="4" />
+<rect x="596" y="398" width="4" height="4" />
+<rect x="626" y="417.4" width="4" height="4" />
+<rect x="656" y="445.7" width="4" height="4" />
+<rect x="686" y="449.7" width="4" height="4" />
+</g>
+<path d="M 58 143.7 L 88 165.6 118 148.3 148 153.7 178 201.1 208 208.9 238 225.8 268 249.1 298 265.2 328 268.7 358 272 388 310.7 418 325.7 448 365.6 478 388.5 508 359.9 538 385.6 568 420 598 400 628 419.4 658 447.7 688 451.7" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>奈良</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="123.7" width="4" height="4" />
+<rect x="86" y="100" width="4" height="4" />
+<rect x="116" y="135.1" width="4" height="4" />
+<rect x="146" y="134.3" width="4" height="4" />
+<rect x="176" y="137.6" width="4" height="4" />
+<rect x="206" y="177.2" width="4" height="4" />
+<rect x="236" y="154.3" width="4" height="4" />
+<rect x="266" y="206.5" width="4" height="4" />
+<rect x="296" y="231.3" width="4" height="4" />
+<rect x="326" y="193" width="4" height="4" />
+<rect x="356" y="235.7" width="4" height="4" />
+<rect x="386" y="232.5" width="4" height="4" />
+<rect x="416" y="245" width="4" height="4" />
+<rect x="446" y="302" width="4" height="4" />
+<rect x="476" y="314" width="4" height="4" />
+<rect x="506" y="289.2" width="4" height="4" />
+<rect x="536" y="272.2" width="4" height="4" />
+<rect x="566" y="322.6" width="4" height="4" />
+<rect x="596" y="369.4" width="4" height="4" />
+<rect x="626" y="366.4" width="4" height="4" />
+<rect x="656" y="381.9" width="4" height="4" />
+<rect x="686" y="404.4" width="4" height="4" />
+</g>
+<path d="M 58 125.7 L 88 102 118 137.1 148 136.3 178 139.6 208 179.2 238 156.3 268 208.5 298 233.3 328 195 358 237.7 388 234.5 418 247 448 304 478 316 508 291.2 538 274.2 568 324.6 598 371.4 628 368.4 658 383.9 688 406.4" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>和歌山</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="97.4" width="4" height="4" />
+<rect x="86" y="124.4" width="4" height="4" />
+<rect x="116" y="111.1" width="4" height="4" />
+<rect x="146" y="166.8" width="4" height="4" />
+<rect x="176" y="133.4" width="4" height="4" />
+<rect x="206" y="193.3" width="4" height="4" />
+<rect x="236" y="192.1" width="4" height="4" />
+<rect x="266" y="259.1" width="4" height="4" />
+<rect x="296" y="195.7" width="4" height="4" />
+<rect x="326" y="217.7" width="4" height="4" />
+<rect x="356" y="236.7" width="4" height="4" />
+<rect x="386" y="266.7" width="4" height="4" />
+<rect x="416" y="254.6" width="4" height="4" />
+<rect x="446" y="251.3" width="4" height="4" />
+<rect x="476" y="337.8" width="4" height="4" />
+<rect x="506" y="254.8" width="4" height="4" />
+<rect x="536" y="290.6" width="4" height="4" />
+<rect x="566" y="346.4" width="4" height="4" />
+<rect x="596" y="316.7" width="4" height="4" />
+<rect x="626" y="323.7" width="4" height="4" />
+<rect x="656" y="319" width="4" height="4" />
+<rect x="686" y="351.3" width="4" height="4" />
+</g>
+<path d="M 58 99.4 L 88 126.4 118 113.1 148 168.8 178 135.4 208 195.3 238 194.1 268 261.1 298 197.7 328 219.7 358 238.7 388 268.7 418 256.6 448 253.3 478 339.8 508 256.8 538 292.6 568 348.4 598 318.7 628 325.7 658 321 688 353.3" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>鳥取</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="152" width="4" height="4" />
+<rect x="86" y="148.8" width="4" height="4" />
+<rect x="116" y="226" width="4" height="4" />
+<rect x="146" y="225.6" width="4" height="4" />
+<rect x="176" y="227.3" width="4" height="4" />
+<rect x="206" y="234.5" width="4" height="4" />
+<rect x="236" y="249.8" width="4" height="4" />
+<rect x="266" y="298.8" width="4" height="4" />
+<rect x="296" y="271" width="4" height="4" />
+<rect x="326" y="263.1" width="4" height="4" />
+<rect x="356" y="273.9" width="4" height="4" />
+<rect x="386" y="317.3" width="4" height="4" />
+<rect x="416" y="311.2" width="4" height="4" />
+<rect x="446" y="311.2" width="4" height="4" />
+<rect x="476" y="386.8" width="4" height="4" />
+<rect x="506" y="383.2" width="4" height="4" />
+<rect x="536" y="395.4" width="4" height="4" />
+<rect x="566" y="360.6" width="4" height="4" />
+<rect x="596" y="387.1" width="4" height="4" />
+<rect x="626" y="375.1" width="4" height="4" />
+<rect x="656" y="389.6" width="4" height="4" />
+<rect x="686" y="399.1" width="4" height="4" />
+</g>
+<path d="M 58 154 L 88 150.8 118 228 148 227.6 178 229.3 208 236.5 238 251.8 268 300.8 298 273 328 265.1 358 275.9 388 319.3 418 313.2 448 313.2 478 388.8 508 385.2 538 397.4 568 362.6 598 389.1 628 377.1 658 391.6 688 401.1" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>島根</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="204.6" width="4" height="4" />
+<rect x="86" y="220.3" width="4" height="4" />
+<rect x="116" y="270.8" width="4" height="4" />
+<rect x="146" y="237.7" width="4" height="4" />
+<rect x="176" y="255.2" width="4" height="4" />
+<rect x="206" y="257" width="4" height="4" />
+<rect x="236" y="290.7" width="4" height="4" />
+<rect x="266" y="305.7" width="4" height="4" />
+<rect x="296" y="305.5" width="4" height="4" />
+<rect x="326" y="348.2" width="4" height="4" />
+<rect x="356" y="370.9" width="4" height="4" />
+<rect x="386" y="359.5" width="4" height="4" />
+<rect x="416" y="395.5" width="4" height="4" />
+<rect x="446" y="396.5" width="4" height="4" />
+<rect x="476" y="418.8" width="4" height="4" />
+<rect x="506" y="388.9" width="4" height="4" />
+<rect x="536" y="436.3" width="4" height="4" />
+<rect x="566" y="409.1" width="4" height="4" />
+<rect x="596" y="425.8" width="4" height="4" />
+<rect x="626" y="411.5" width="4" height="4" />
+<rect x="656" y="450.8" width="4" height="4" />
+<rect x="686" y="471.6" width="4" height="4" />
+</g>
+<path d="M 58 206.6 L 88 222.3 118 272.8 148 239.7 178 257.2 208 259 238 292.7 268 307.7 298 307.5 328 350.2 358 372.9 388 361.5 418 397.5 448 398.5 478 420.8 508 390.9 538 438.3 568 411.1 598 427.8 628 413.5 658 452.8 688 473.6" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>岡山</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="131.2" width="4" height="4" />
+<rect x="86" y="130" width="4" height="4" />
+<rect x="116" y="148.9" width="4" height="4" />
+<rect x="146" y="163.3" width="4" height="4" />
+<rect x="176" y="173.6" width="4" height="4" />
+<rect x="206" y="217.4" width="4" height="4" />
+<rect x="236" y="207.4" width="4" height="4" />
+<rect x="266" y="244.9" width="4" height="4" />
+<rect x="296" y="281.7" width="4" height="4" />
+<rect x="326" y="272.2" width="4" height="4" />
+<rect x="356" y="291.3" width="4" height="4" />
+<rect x="386" y="328.4" width="4" height="4" />
+<rect x="416" y="339.9" width="4" height="4" />
+<rect x="446" y="334.8" width="4" height="4" />
+<rect x="476" y="398.9" width="4" height="4" />
+<rect x="506" y="384.6" width="4" height="4" />
+<rect x="536" y="380.2" width="4" height="4" />
+<rect x="566" y="399.8" width="4" height="4" />
+<rect x="596" y="421.5" width="4" height="4" />
+<rect x="626" y="428.9" width="4" height="4" />
+<rect x="656" y="448" width="4" height="4" />
+<rect x="686" y="439" width="4" height="4" />
+</g>
+<path d="M 58 133.2 L 88 132 118 150.9 148 165.3 178 175.6 208 219.4 238 209.4 268 246.9 298 283.7 328 274.2 358 293.3 388 330.4 418 341.9 448 336.8 478 400.9 508 386.6 538 382.2 568 401.8 598 423.5 628 430.9 658 450 688 441" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>広島</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="145.4" width="4" height="4" />
+<rect x="86" y="181.2" width="4" height="4" />
+<rect x="116" y="162.1" width="4" height="4" />
+<rect x="146" y="160.9" width="4" height="4" />
+<rect x="176" y="189.3" width="4" height="4" />
+<rect x="206" y="179.6" width="4" height="4" />
+<rect x="236" y="219.7" width="4" height="4" />
+<rect x="266" y="226.6" width="4" height="4" />
+<rect x="296" y="259.3" width="4" height="4" />
+<rect x="326" y="240.5" width="4" height="4" />
+<rect x="356" y="251.5" width="4" height="4" />
+<rect x="386" y="279.3" width="4" height="4" />
+<rect x="416" y="292.8" width="4" height="4" />
+<rect x="446" y="348.8" width="4" height="4" />
+<rect x="476" y="311.7" width="4" height="4" />
+<rect x="506" y="325.1" width="4" height="4" />
+<rect x="536" y="331.9" width="4" height="4" />
+<rect x="566" y="358.8" width="4" height="4" />
+<rect x="596" y="378.8" width="4" height="4" />
+<rect x="626" y="404.5" width="4" height="4" />
+<rect x="656" y="387.1" width="4" height="4" />
+<rect x="686" y="390.8" width="4" height="4" />
+</g>
+<path d="M 58 147.4 L 88 183.2 118 164.1 148 162.9 178 191.3 208 181.6 238 221.7 268 228.6 298 261.3 328 242.5 358 253.5 388 281.3 418 294.8 448 350.8 478 313.7 508 327.1 538 333.9 568 360.8 598 380.8 628 406.5 658 389.1 688 392.8" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>山口</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="167.9" width="4" height="4" />
+<rect x="86" y="204.5" width="4" height="4" />
+<rect x="116" y="191" width="4" height="4" />
+<rect x="146" y="188.4" width="4" height="4" />
+<rect x="176" y="237" width="4" height="4" />
+<rect x="206" y="219.8" width="4" height="4" />
+<rect x="236" y="240.8" width="4" height="4" />
+<rect x="266" y="271.1" width="4" height="4" />
+<rect x="296" y="289.2" width="4" height="4" />
+<rect x="326" y="273.6" width="4" height="4" />
+<rect x="356" y="317.9" width="4" height="4" />
+<rect x="386" y="289.6" width="4" height="4" />
+<rect x="416" y="365.3" width="4" height="4" />
+<rect x="446" y="366.8" width="4" height="4" />
+<rect x="476" y="395.8" width="4" height="4" />
+<rect x="506" y="362.5" width="4" height="4" />
+<rect x="536" y="385.9" width="4" height="4" />
+<rect x="566" y="437.8" width="4" height="4" />
+<rect x="596" y="411.5" width="4" height="4" />
+<rect x="626" y="412.2" width="4" height="4" />
+<rect x="656" y="440.3" width="4" height="4" />
+<rect x="686" y="437.9" width="4" height="4" />
+</g>
+<path d="M 58 169.9 L 88 206.5 118 193 148 190.4 178 239 208 221.8 238 242.8 268 273.1 298 291.2 328 275.6 358 319.9 388 291.6 418 367.3 448 368.8 478 397.8 508 364.5 538 387.9 568 439.8 598 413.5 628 414.2 658 442.3 688 439.9" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>徳島</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="238.8" width="4" height="4" />
+<rect x="86" y="212.2" width="4" height="4" />
+<rect x="116" y="184.4" width="4" height="4" />
+<rect x="146" y="244.2" width="4" height="4" />
+<rect x="176" y="279.3" width="4" height="4" />
+<rect x="206" y="233.8" width="4" height="4" />
+<rect x="236" y="275.6" width="4" height="4" />
+<rect x="266" y="298.1" width="4" height="4" />
+<rect x="296" y="321.1" width="4" height="4" />
+<rect x="326" y="310.4" width="4" height="4" />
+<rect x="356" y="358.3" width="4" height="4" />
+<rect x="386" y="373.4" width="4" height="4" />
+<rect x="416" y="365.2" width="4" height="4" />
+<rect x="446" y="373.5" width="4" height="4" />
+<rect x="476" y="420.7" width="4" height="4" />
+<rect x="506" y="388.4" width="4" height="4" />
+<rect x="536" y="435.8" width="4" height="4" />
+<rect x="566" y="430.2" width="4" height="4" />
+<rect x="596" y="412.1" width="4" height="4" />
+<rect x="626" y="424" width="4" height="4" />
+<rect x="656" y="411.2" width="4" height="4" />
+<rect x="686" y="456.6" width="4" height="4" />
+</g>
+<path d="M 58 240.8 L 88 214.2 118 186.4 148 246.2 178 281.3 208 235.8 238 277.6 268 300.1 298 323.1 328 312.4 358 360.3 388 375.4 418 367.2 448 375.5 478 422.7 508 390.4 538 437.8 568 432.2 598 414.1 628 426 658 413.2 688 458.6" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>香川</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="203.5" width="4" height="4" />
+<rect x="86" y="212.9" width="4" height="4" />
+<rect x="116" y="200.7" width="4" height="4" />
+<rect x="146" y="187.2" width="4" height="4" />
+<rect x="176" y="214.6" width="4" height="4" />
+<rect x="206" y="199.6" width="4" height="4" />
+<rect x="236" y="223.7" width="4" height="4" />
+<rect x="266" y="281.8" width="4" height="4" />
+<rect x="296" y="281.2" width="4" height="4" />
+<rect x="326" y="312.4" width="4" height="4" />
+<rect x="356" y="306.2" width="4" height="4" />
+<rect x="386" y="325.4" width="4" height="4" />
+<rect x="416" y="324.8" width="4" height="4" />
+<rect x="446" y="372.2" width="4" height="4" />
+<rect x="476" y="357.2" width="4" height="4" />
+<rect x="506" y="335.3" width="4" height="4" />
+<rect x="536" y="378.7" width="4" height="4" />
+<rect x="566" y="350.6" width="4" height="4" />
+<rect x="596" y="402.8" width="4" height="4" />
+<rect x="626" y="395" width="4" height="4" />
+<rect x="656" y="398.2" width="4" height="4" />
+<rect x="686" y="384.8" width="4" height="4" />
+</g>
+<path d="M 58 205.5 L 88 214.9 118 202.7 148 189.2 178 216.6 208 201.6 238 225.7 268 283.8 298 283.2 328 314.4 358 308.2 388 327.4 418 326.8 448 374.2 478 359.2 508 337.3 538 380.7 568 352.6 598 404.8 628 397 658 400.2 688 386.8" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>愛媛</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="214.4" width="4" height="4" />
+<rect x="86" y="164.7" width="4" height="4" />
+<rect x="116" y="286.8" width="4" height="4" />
+<rect x="146" y="255.6" width="4" height="4" />
+<rect x="176" y="209.7" width="4" height="4" />
+<rect x="206" y="263.5" width="4" height="4" />
+<rect x="236" y="240.1" width="4" height="4" />
+<rect x="266" y="278.1" width="4" height="4" />
+<rect x="296" y="316.9" width="4" height="4" />
+<rect x="326" y="310.8" width="4" height="4" />
+<rect x="356" y="251.7" width="4" height="4" />
+<rect x="386" y="314.8" width="4" height="4" />
+<rect x="416" y="357.7" width="4" height="4" />
+<rect x="446" y="351.2" width="4" height="4" />
+<rect x="476" y="278.1" width="4" height="4" />
+<rect x="506" y="317.1" width="4" height="4" />
+<rect x="536" y="332.1" width="4" height="4" />
+<rect x="566" y="397.2" width="4" height="4" />
+<rect x="596" y="343.2" width="4" height="4" />
+<rect x="626" y="397.1" width="4" height="4" />
+<rect x="656" y="382.1" width="4" height="4" />
+<rect x="686" y="369.9" width="4" height="4" />
+</g>
+<path d="M 58 216.4 L 88 166.7 118 288.8 148 257.6 178 211.7 208 265.5 238 242.1 268 280.1 298 318.9 328 312.8 358 253.7 388 316.8 418 359.7 448 353.2 478 280.1 508 319.1 538 334.1 568 399.2 598 345.2 628 399.1 658 384.1 688 371.9" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>高知</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="58.4" width="4" height="4" />
+<rect x="86" y="80.1" width="4" height="4" />
+<rect x="116" y="65.9" width="4" height="4" />
+<rect x="146" y="71.5" width="4" height="4" />
+<rect x="176" y="85.9" width="4" height="4" />
+<rect x="206" y="144.2" width="4" height="4" />
+<rect x="236" y="175" width="4" height="4" />
+<rect x="266" y="185.5" width="4" height="4" />
+<rect x="296" y="202.2" width="4" height="4" />
+<rect x="326" y="207" width="4" height="4" />
+<rect x="356" y="217.7" width="4" height="4" />
+<rect x="386" y="246.7" width="4" height="4" />
+<rect x="416" y="269.4" width="4" height="4" />
+<rect x="446" y="276.4" width="4" height="4" />
+<rect x="476" y="312.3" width="4" height="4" />
+<rect x="506" y="322.8" width="4" height="4" />
+<rect x="536" y="312.6" width="4" height="4" />
+<rect x="566" y="336" width="4" height="4" />
+<rect x="596" y="347.3" width="4" height="4" />
+<rect x="626" y="353.1" width="4" height="4" />
+<rect x="656" y="362.1" width="4" height="4" />
+<rect x="686" y="380.3" width="4" height="4" />
+</g>
+<path d="M 58 60.4 L 88 82.1 118 67.9 148 73.5 178 87.9 208 146.2 238 177 268 187.5 298 204.2 328 209 358 219.7 388 248.7 418 271.4 448 278.4 478 314.3 508 324.8 538 314.6 568 338 598 349.3 628 355.1 658 364.1 688 382.3" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>福岡</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="61.1" width="4" height="4" />
+<rect x="86" y="117" width="4" height="4" />
+<rect x="116" y="91.8" width="4" height="4" />
+<rect x="146" y="100.7" width="4" height="4" />
+<rect x="176" y="119.6" width="4" height="4" />
+<rect x="206" y="141.8" width="4" height="4" />
+<rect x="236" y="200.6" width="4" height="4" />
+<rect x="266" y="210.8" width="4" height="4" />
+<rect x="296" y="216.7" width="4" height="4" />
+<rect x="326" y="214.6" width="4" height="4" />
+<rect x="356" y="203.2" width="4" height="4" />
+<rect x="386" y="262.8" width="4" height="4" />
+<rect x="416" y="219.1" width="4" height="4" />
+<rect x="446" y="267" width="4" height="4" />
+<rect x="476" y="286.6" width="4" height="4" />
+<rect x="506" y="321.1" width="4" height="4" />
+<rect x="536" y="287.6" width="4" height="4" />
+<rect x="566" y="329.1" width="4" height="4" />
+<rect x="596" y="336.7" width="4" height="4" />
+<rect x="626" y="336.7" width="4" height="4" />
+<rect x="656" y="390.5" width="4" height="4" />
+<rect x="686" y="385.8" width="4" height="4" />
+</g>
+<path d="M 58 63.1 L 88 119 118 93.8 148 102.7 178 121.6 208 143.8 238 202.6 268 212.8 298 218.7 328 216.6 358 205.2 388 264.8 418 221.1 448 269 478 288.6 508 323.1 538 289.6 568 331.1 598 338.7 628 338.7 658 392.5 688 387.8" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>佐賀</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="69.9" width="4" height="4" />
+<rect x="86" y="83.9" width="4" height="4" />
+<rect x="116" y="140.1" width="4" height="4" />
+<rect x="146" y="169.4" width="4" height="4" />
+<rect x="176" y="172.4" width="4" height="4" />
+<rect x="206" y="145.1" width="4" height="4" />
+<rect x="236" y="205.3" width="4" height="4" />
+<rect x="266" y="208" width="4" height="4" />
+<rect x="296" y="215.9" width="4" height="4" />
+<rect x="326" y="249.1" width="4" height="4" />
+<rect x="356" y="240" width="4" height="4" />
+<rect x="386" y="277.8" width="4" height="4" />
+<rect x="416" y="270.7" width="4" height="4" />
+<rect x="446" y="244" width="4" height="4" />
+<rect x="476" y="297.8" width="4" height="4" />
+<rect x="506" y="317.6" width="4" height="4" />
+<rect x="536" y="321.4" width="4" height="4" />
+<rect x="566" y="342" width="4" height="4" />
+<rect x="596" y="320.4" width="4" height="4" />
+<rect x="626" y="341.6" width="4" height="4" />
+<rect x="656" y="373" width="4" height="4" />
+<rect x="686" y="378.5" width="4" height="4" />
+</g>
+<path d="M 58 71.9 L 88 85.9 118 142.1 148 171.4 178 174.4 208 147.1 238 207.3 268 210 298 217.9 328 251.1 358 242 388 279.8 418 272.7 448 246 478 299.8 508 319.6 538 323.4 568 344 598 322.4 628 343.6 658 375 688 380.5" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>長崎</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="254.1" width="4" height="4" />
+<rect x="86" y="236.2" width="4" height="4" />
+<rect x="116" y="282.7" width="4" height="4" />
+<rect x="146" y="273.4" width="4" height="4" />
+<rect x="176" y="299.1" width="4" height="4" />
+<rect x="206" y="299.1" width="4" height="4" />
+<rect x="236" y="298.6" width="4" height="4" />
+<rect x="266" y="323.8" width="4" height="4" />
+<rect x="296" y="339.5" width="4" height="4" />
+<rect x="326" y="331.4" width="4" height="4" />
+<rect x="356" y="365.2" width="4" height="4" />
+<rect x="386" y="367.5" width="4" height="4" />
+<rect x="416" y="391.9" width="4" height="4" />
+<rect x="446" y="399.5" width="4" height="4" />
+<rect x="476" y="419.6" width="4" height="4" />
+<rect x="506" y="390" width="4" height="4" />
+<rect x="536" y="425.3" width="4" height="4" />
+<rect x="566" y="427.3" width="4" height="4" />
+<rect x="596" y="452.3" width="4" height="4" />
+<rect x="626" y="435.4" width="4" height="4" />
+<rect x="656" y="446.7" width="4" height="4" />
+<rect x="686" y="455.6" width="4" height="4" />
+</g>
+<path d="M 58 256.1 L 88 238.2 118 284.7 148 275.4 178 301.1 208 301.1 238 300.6 268 325.8 298 341.5 328 333.4 358 367.2 388 369.5 418 393.9 448 401.5 478 421.6 508 392 538 427.3 568 429.3 598 454.3 628 437.4 658 448.7 688 457.6" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>熊本</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="227.6" width="4" height="4" />
+<rect x="86" y="214.7" width="4" height="4" />
+<rect x="116" y="204" width="4" height="4" />
+<rect x="146" y="233.7" width="4" height="4" />
+<rect x="176" y="241.4" width="4" height="4" />
+<rect x="206" y="271.6" width="4" height="4" />
+<rect x="236" y="299.5" width="4" height="4" />
+<rect x="266" y="301" width="4" height="4" />
+<rect x="296" y="317.9" width="4" height="4" />
+<rect x="326" y="268.2" width="4" height="4" />
+<rect x="356" y="363.3" width="4" height="4" />
+<rect x="386" y="365.2" width="4" height="4" />
+<rect x="416" y="396.1" width="4" height="4" />
+<rect x="446" y="358.2" width="4" height="4" />
+<rect x="476" y="415.1" width="4" height="4" />
+<rect x="506" y="405.1" width="4" height="4" />
+<rect x="536" y="406.7" width="4" height="4" />
+<rect x="566" y="390.7" width="4" height="4" />
+<rect x="596" y="444.4" width="4" height="4" />
+<rect x="626" y="421.6" width="4" height="4" />
+<rect x="656" y="459.8" width="4" height="4" />
+<rect x="686" y="459.6" width="4" height="4" />
+</g>
+<path d="M 58 229.6 L 88 216.7 118 206 148 235.7 178 243.4 208 273.6 238 301.5 268 303 298 319.9 328 270.2 358 365.3 388 367.2 418 398.1 448 360.2 478 417.1 508 407.1 538 408.7 568 392.7 598 446.4 628 423.6 658 461.8 688 461.6" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>大分</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="223.3" width="4" height="4" />
+<rect x="86" y="247.3" width="4" height="4" />
+<rect x="116" y="251.9" width="4" height="4" />
+<rect x="146" y="210.6" width="4" height="4" />
+<rect x="176" y="260.5" width="4" height="4" />
+<rect x="206" y="247.2" width="4" height="4" />
+<rect x="236" y="227.6" width="4" height="4" />
+<rect x="266" y="307.1" width="4" height="4" />
+<rect x="296" y="310.4" width="4" height="4" />
+<rect x="326" y="330.5" width="4" height="4" />
+<rect x="356" y="340" width="4" height="4" />
+<rect x="386" y="354.9" width="4" height="4" />
+<rect x="416" y="379.7" width="4" height="4" />
+<rect x="446" y="314.5" width="4" height="4" />
+<rect x="476" y="355.7" width="4" height="4" />
+<rect x="506" y="367.9" width="4" height="4" />
+<rect x="536" y="388.7" width="4" height="4" />
+<rect x="566" y="382.9" width="4" height="4" />
+<rect x="596" y="396.6" width="4" height="4" />
+<rect x="626" y="439.4" width="4" height="4" />
+<rect x="656" y="398" width="4" height="4" />
+<rect x="686" y="393.2" width="4" height="4" />
+</g>
+<path d="M 58 225.3 L 88 249.3 118 253.9 148 212.6 178 262.5 208 249.2 238 229.6 268 309.1 298 312.4 328 332.5 358 342 388 356.9 418 381.7 448 316.5 478 357.7 508 369.9 538 390.7 568 384.9 598 398.6 628 441.4 658 400 688 395.2" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>宮崎</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="231.3" width="4" height="4" />
+<rect x="86" y="192.8" width="4" height="4" />
+<rect x="116" y="246.6" width="4" height="4" />
+<rect x="146" y="231.1" width="4" height="4" />
+<rect x="176" y="236.5" width="4" height="4" />
+<rect x="206" y="220.7" width="4" height="4" />
+<rect x="236" y="253.1" width="4" height="4" />
+<rect x="266" y="278.8" width="4" height="4" />
+<rect x="296" y="299.3" width="4" height="4" />
+<rect x="326" y="302.1" width="4" height="4" />
+<rect x="356" y="299" width="4" height="4" />
+<rect x="386" y="339.3" width="4" height="4" />
+<rect x="416" y="341" width="4" height="4" />
+<rect x="446" y="359.8" width="4" height="4" />
+<rect x="476" y="353.6" width="4" height="4" />
+<rect x="506" y="354.3" width="4" height="4" />
+<rect x="536" y="355.1" width="4" height="4" />
+<rect x="566" y="364.8" width="4" height="4" />
+<rect x="596" y="375.2" width="4" height="4" />
+<rect x="626" y="392.3" width="4" height="4" />
+<rect x="656" y="388.9" width="4" height="4" />
+<rect x="686" y="404.7" width="4" height="4" />
+</g>
+<path d="M 58 233.3 L 88 194.8 118 248.6 148 233.1 178 238.5 208 222.7 238 255.1 268 280.8 298 301.3 328 304.1 358 301 388 341.3 418 343 448 361.8 478 355.6 508 356.3 538 357.1 568 366.8 598 377.2 628 394.3 658 390.9 688 406.7" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>鹿児島</title>
+</g>
+<g class="gr">
+<g fill="#66ccff">
+<rect x="56" y="249.3" width="4" height="4" />
+<rect x="86" y="260.6" width="4" height="4" />
+<rect x="116" y="295.9" width="4" height="4" />
+<rect x="146" y="304.3" width="4" height="4" />
+<rect x="176" y="313.4" width="4" height="4" />
+<rect x="206" y="301.6" width="4" height="4" />
+<rect x="236" y="306.4" width="4" height="4" />
+<rect x="266" y="321.1" width="4" height="4" />
+<rect x="296" y="361.2" width="4" height="4" />
+<rect x="326" y="320.3" width="4" height="4" />
+<rect x="356" y="344.4" width="4" height="4" />
+<rect x="386" y="379.6" width="4" height="4" />
+<rect x="416" y="391.7" width="4" height="4" />
+<rect x="446" y="369.8" width="4" height="4" />
+<rect x="476" y="400.5" width="4" height="4" />
+<rect x="506" y="405.7" width="4" height="4" />
+<rect x="536" y="394.6" width="4" height="4" />
+<rect x="566" y="397.3" width="4" height="4" />
+<rect x="596" y="400.2" width="4" height="4" />
+<rect x="626" y="411.8" width="4" height="4" />
+<rect x="656" y="402.7" width="4" height="4" />
+<rect x="686" y="437.9" width="4" height="4" />
+</g>
+<path d="M 58 251.3 L 88 262.6 118 297.9 148 306.3 178 315.4 208 303.6 238 308.4 268 323.1 298 363.2 328 322.3 358 346.4 388 381.6 418 393.7 448 371.8 478 402.5 508 407.7 538 396.6 568 399.3 598 402.2 628 413.8 658 404.7 688 439.9" fill="none" stroke="#66ccff" stroke-width="2" />
+<title>沖縄</title>
+</g>
+</svg>
+</figure>
+
+<p>このSVGは次のようにして作った：</p>
+
+<pre>
+library(readxl)
+all = read_excel("pref_AllCancer_mortality(1995-2016).xls", "asr75")
+
+x1 = 1994.8
+x2 = 2016.2
+y1 = 60
+y2 = 128
+
+filename = 'test.svg'
+fx = function(x) 30 * (as.numeric(x) - x1) + 52
+fy = function(y) 8 * (y2 - as.numeric(y)) + 2
+f = function(x) formatC(x, digits=1, format="f", drop0trailing=TRUE)
+w = fx(x2) - fx(x1)
+h = fy(y1) - fy(y2)
+cat('&lt;svg width="', ceiling(fx(x2)+2), '" height="', ceiling(fy(y1)+30), '"&gt;\n', sep='', file=filename)
+cat('&lt;style&gt;\n text { font-size:16px; font-family:sans-serif; }\n .gr:hover, .gr path:hover { stroke:#ff2800; stroke-width:4; }\n&lt;/style&gt;\n', file=filename, append=TRUE)
+cat('&lt;rect x="', f(fx(x1)), '" y="', f(fy(y2)), '" width="', f(w), '" height="', f(h), '" stroke="black" fill="none" /&gt;\n', sep='', file=filename, append=TRUE)
+for (x in seq(1995,2015,5)) {
+  cat('&lt;path d="M', f(fx(x)), f(fy(y1)), 'l 0 +10" fill="none" stroke="black" stroke-width="1" /&gt;\n', file=filename, append=TRUE)
+  cat('&lt;text x="', f(fx(x)), '" y="', f(fy(y1)+25), '" text-anchor="middle"&gt;', x, '&lt;/text&gt;\n', sep='', file=filename, append=TRUE)
+}
+for (y in seq(60,120,10)) {
+  cat('&lt;path d="M', f(fx(x1)), f(fy(y)), 'l -10 0" fill="none" stroke="black" stroke-width="1" /&gt;\n', file=filename, append=TRUE)
+  cat('&lt;text x="', f(fx(x1)-15), '" y="', f(fy(y)+5), '" text-anchor="end"&gt;', y, '&lt;/text&gt;\n', sep='', file=filename, append=TRUE)
+
+}
+for (i in 2:48) {
+    cat('&lt;g class="gr"&gt;\n&lt;g fill="#66ccff"&gt;\n', file=filename, append=TRUE)
+    for (j in 4:25) {
+        cat('&lt;rect x="', f(fx(names(all[j]))-2), '" y="', f(fy(all[i,j])-2), '" width="4" height="4" /&gt;\n', sep='', file=filename, append=TRUE)
+    }
+    cat('&lt;/g&gt;\n&lt;path d="M', f(fx(names(all[4]))), f(fy(all[i,4])), 'L', file=filename, append=TRUE)
+    for (j in 5:25) {
+        cat('', f(fx(names(all[j]))), f(fy(all[i,j])), file=filename, append=TRUE)
+    }
+    cat('" fill="none" stroke="#66ccff" stroke-width="2" /&gt;\n', file=filename, append=TRUE)
+    cat('&lt;title&gt;', as.character(all[i,2]), '&lt;/title&gt;\n', sep='', file=filename, append=TRUE)
+    cat('&lt;/g&gt;\n', file=filename, append=TRUE)
+}
+cat('&lt;/svg&gt;\n', file=filename, append=TRUE)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-04-11 12:34:06</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

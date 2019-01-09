@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>LB2045の校正</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</div>
+
+<h1>LB2045の校正</h1>
+
+<p><a href="120615.html">LB2045</a>を日本分析化学会の<a href="http://www.jsac.jp/ja/node/110">放射能分析用玄米認証標準物質</a>（写真：<a href="http://www.flickr.com/photos/h_okumura/8055907538">外観</a>，<a href="http://www.flickr.com/photos/h_okumura/8055910326">容器に詰めたところ</a>，<a href="http://www.flickr.com/photos/h_okumura/8055913316">測定のようす</a>，<a href="http://www.flickr.com/photos/h_okumura/8056128918">認証書</a>）で校正した。</p>
+
+<ul>
+  <li><a href="data/121005rice.txt">玄米認証標準物質</a></li>
+  <li><a href="data/121005BaseData.txt">バックグラウンド</a></li>
+</ul>
+
+<div><img src="img/121005182624.png" alt="出力"></div>
+
+<p><a href="http://www.flickr.com/photos/h_okumura/8056128918">認証書</a>によれば <sup>137</sup>Cs は (210±13)Bq/kg，<sup>134</sup>Cs は (141±9)Bq/kg，<sup>40</sup>K は (75±7)Bq/kg で，セシウムは小さめに，カリウムは大きめに出ている。</p>
+
+<p>なお，認証書によれば2012年6月1日の値であるから，今日（10月5日）は126日を経ており，正確には次のようになり，<sup>134</sup>Cs : <sup>137</sup>Cs 比は0.603ほどである。</p>
+
+<pre>
+210 * 0.5^(126/(365.2422*30.08))
+# [1] 208.3372
+141 * 0.5^(126/(365.2422*2.0652))
+# [1] 125.584
+125.584 / 208.3372
+# [1] 0.602792
+</pre>
+
+<p>まずRでデータを読み込む：</p>
+
+<pre>
+sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/121005rice.txt",
+          skip=41, nlines=1024, comment.char=";")
+</pre>
+
+<p>測定時間は10755秒なので，10755を掛けて四捨五入してカウント値に直す：</p>
+
+<pre>
+sp = floor(10755 * sp + 0.5)
+</pre>
+
+<p>これをオレンジでプロットする：</p>
+
+<pre>
+ch = 0:1023          # チャンネル番号
+par(mgp=c(2,0.8,0))  # Rのグラフィックオプションを好みでいじる
+plot(ch, sp, type="l", xlab="Channel", ylab="Counts", xlim=c(0,400), col="#f39800")
+</pre>
+
+<p>ついでにバックグラウンドも読み込み，青で重ね書きする：</p>
+
+<pre>
+bg = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/121005BaseData.txt",
+          skip=36, nlines=1024, comment.char=";")
+bg = floor(bg * 10801 + 0.5)
+points(ch, bg*(10755/10801), type="l", col="#0068b7")
+</pre>
+
+<div><img src="img/121005a.png" alt="玄米認証標準物質のスペクトル"></div>
+
+<p>カリウムはほとんどバックグラウンドのものであることがわかる。</p>
+
+<p>これをRでフィットする：</p>
+
+<pre>
+library(nlme)
+data = data.frame(ch=ch, sp=sp)
+r = 260:450
+fit = gnls(sp ~ (c + d*(ch-350) + b*(ch-350)^2
+                   + (e1*(0.08338/0.9226)*dnorm((ch-0.9314*m1)/(0.9226*s)) +
+                      e1*(0.15373/0.9276)*dnorm((ch-0.9415*m1)/(0.9276*s)) +
+                      e1*(0.9762/0.956)*dnorm((ch-m1)/(0.956*s)) +
+                      e2*0.851*dnorm((ch-m2)/s) +
+                      e1*(0.8546/1.0967)*dnorm((ch-m3)/(1.0967*s)) +
+                      e1*(0.08688/1.101)*dnorm((ch-1.00765*m3)/(1.101*s))) / s)
+                * (ch/350)^u,
+           data=data, subset=r,
+           start=list(c=200,d=-3,b=0.02, # 初期値
+                      e1=10000,e2=10000, # 収束しないときは適宜直す
+                      m1=313,m2=342,m3=407,s=9,u=-1.2),
+           weights=varPower(fixed=0.5),
+           control=list(nlsTol=1e-4)) # 収束しないときは1e-3に直す
+a = coef(fit)
+plot(ch, sp, type="l", xlab="Channel", ylab="Counts", xlim=c(0,500), col="#f39800")
+points(ch[r], fitted(fit), type="l")
+points(ch[r], type="l",
+       (a['c']+a['d']*(ch[r]-350)+a['b']*(ch[r]-350)^2)
+       * (ch[r]/350)^a['u'])
+a
+#             c             d             b            e1            e2 
+#  9.583886e+01 -3.852270e-01  3.052728e-03  9.399035e+03  1.631090e+04 
+#            m1            m2            m3             s             u 
+#  3.161353e+02  3.442363e+02  4.100476e+02  8.995466e+00 -1.357540e+00 
+</pre>
+
+<div><img src="img/121005b.png" alt="玄米認証標準物質のスペクトルのフィット"></div>
+
+<p>肝心のcalibration factorは，</p>
+
+<pre>
+(210 * 0.377) / (sum(a['e2']*0.851*dnorm((ch[r]-a['m2'])/a['s'])/a['s']*(ch[r]/350)^a['u']) / 10755)
+# [1] 59.90988
+</pre>
+
+<p>つまり 59.9 Bq/cps である。<a href="120615.html">LB2045</a> のページで書いたように，35 Bq/cps あるいは 47 Bq/cps という値を想定していたが，それよりかなり大きめの値になった。</p>
+
+<p>なお，<sup>134</sup>Cs : <sup>137</sup>Cs 比は</p>
+
+<pre>
+a['e1']/a['e2']
+#        e1 
+# 0.5762427 
+</pre>
+
+<p>となり，最初に計算した値 0.603 より若干小さくなった。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="me">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2012-10-05 20:41:08
+<!-- hhmts end -->
+</p>
+</body>
+</html>

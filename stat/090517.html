@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>グラフの例：散布図（対話型）</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：散布図（対話型）</h1>
+
+<p>神永正博『学力低下は錯覚である』（森北出版，2008年）のp.59とp.60に，TIMSS2003の数学・理科について，数学（理科）を楽しく感じる生徒の割合と平均得点との散布図がある。2008年12月14日の朝日新聞にはTIMSS2007の数学について同様な図が載っている（<a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2312">どうして新聞は散布図を使わないか | Okumura's Blog</a>
+参照）。</p>
+
+
+<p>本家
+<a href="http://timss.bc.edu/TIMSS2007/index.html">TIMSS 2007</a>
+サイトでたくさんの資料が公開されている。日本でも国立教育政策研究所の
+<a href="http://www.nier.go.jp/timss/2007/index.html">TIMSS2007</a>
+ページに概要と問題例がある。ここでは本家で公開されている
+TIMSS2007_InternationalMathematicsReport.pdf
+というファイルに基づいて同様な図を描いてみる。</p>
+
+<p>まず，このPDFのp.457にTIMSS 2007数学（8th grade）の国ごとの平均がある（素点ではなく，平均500，標準偏差100にスケールされた一種の偏差値である）。</p>
+
+<pre>
+"Country","Mean"
+"Algeria",387
+"Armenia",499
+"Australia",496
+"Bahrain",398
+"Bosnia and Herzegovina",456
+"Botswana",364
+"Bulgaria",464
+"Chinese Taipei",598
+"Colombia",380
+"Cyprus",465
+"Czech Republic",504
+"Egypt",391
+"El Salvador",340
+"England",513
+"Georgia",410
+"Ghana",309
+"Hong Kong SAR",572
+"Hungary",517
+"Indonesia",397
+"Iran, Islamic Rep. of",403
+"Israel",463
+"Italy",480
+"Japan",570
+"Jordan",427
+"Korea, Rep. of",597
+"Kuwait",354
+"Lebanon",449
+"Lithuania",506
+"Malaysia",474
+"Malta",488
+"Morocco",381
+"Norway",469
+"Oman",372
+"Palestinian Nat'l Auth.",367
+"Qatar",307
+"Romania",461
+"Russian Federation",512
+"Saudi Arabia",329
+"Scotland",487
+"Serbia",486
+"Singapore",593
+"Slovenia",501
+"Sweden",491
+"Syrian Arab Republic",395
+"Thailand",441
+"Tunisia",420
+"Turkey",432
+"Ukraine",462
+"United States",508
+</pre>
+
+<p>また，p.176に
+Positive Affect Toward Mathematics (PATM)
+の一覧がある。ここでは High PATM の割合を使うことにする。</p>
+
+<pre>
+"Country","HighPATM"
+"Algeria",83
+"Egypt",78
+"Botswana",78
+"Oman",78
+"Tunisia",73
+"Malaysia",73
+"Jordan",72
+"Indonesia",72
+"Turkey",71
+"Syrian Arab Republic",70
+"Ghana",70
+"Colombia",69
+"El Salvador",68
+"Iran, Islamic Rep. of",64
+"Lebanon",63
+"Singapore",60
+"Bahrain",59
+"Georgia",58
+"Qatar",57
+"Thailand",57
+"Kuwait",57
+"Palestinian Nat'l Auth.",56
+"Armenia",55
+"Ukraine",54
+"Saudi Arabia",54
+"Russian Federation",53
+"Israel",49
+"Romania",47
+"Hong Kong SAR",47
+"Bulgaria",46
+"Cyprus",44
+"Malta",42
+"United States",41
+"Bosnia and Herzegovina",41
+"England",40
+"Sweden",39
+"Lithuania",38
+"Italy",38
+"Chinese Taipei",37
+"Norway",37
+"Serbia",35
+"Australia",34
+"Scotland",33
+"Korea, Rep. of",33
+"Czech Republic",31
+"Japan",30
+"Hungary",30
+"Slovenia",25
+</pre>
+
+<p>これらをそれぞれクリップボードにコピーし，Rで</p>
+
+<pre>
+X = read.csv(pipe("pbpaste")) # Mac
+X = read.csv("clipboard")     # Windows
+Y = read.csv(pipe("pbpaste")) # Mac
+Y = read.csv("clipboard")     # Windows
+</pre>
+
+<p>とすれば読み込める。これらをマージして一つの表にする：</p>
+
+<pre>
+Z = merge(X, Y)
+</pre>
+
+<p>あとは散布図を描くだけ：</p>
+
+<pre>
+# quartz(width=5, height=5) # Mac
+# par(family="Helvetica")   # Mac（特に不要）
+# par(mgp=c(2,0.8,0))       # マージンの微調整（好み）
+with(Z,
+     plot(HighPATM, Mean,
+          pch=16, las=1, xlab="High PATM (%)", ylab="",
+          col=ifelse(Country=="Japan","red","black")))
+mtext("Score", side=2, las=1, at=600, padj=-1)
+</pre>
+
+<p>最後の縦軸「600」の目盛りに対する「Score」の位置は <code>padj</code>
+と <code>adj</code> で微調整できる。</p>
+
+<figure><img src="img/090517.png"></figure>
+
+<p>これではどの点がどの国かわからない。全部書き加えると読みにくくなるので，マウスでクリックした点について国名を表示する：</p>
+
+<pre>
+with(Z, identify(HighPATM, Mean, labels=Country, xpd=TRUE))
+</pre>
+
+<p>この状態で点をクリックすればよい。いくつか調べて飽きたら右クリック（またはctrl +
+クリック）で対話を終了する。<code>xpd=TRUE</code> は，通常は不要だが，長い国名の枠の外にはみ出した部分が消えるのを防ぐためのオプションである。</p>
+
+<p>こういった対話型プロットはWeb上でFlashなどを用いてよく作られている。JavaScriptを用いた<a href="/~okumura/javascript/interactive-plot.html">対話型プロット</a>も参考にされたい。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-02-12 09:29:12</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

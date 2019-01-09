@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>時系列データ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<style>
+  td { text-align: left; }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>時系列データ</h1>
+
+<p><del>[2017-10-01 追記] macOS High SierraにしてからタイムゾーンがJSTでなく警告が出てGMTになってしまう気がします。<code>.bash_profile</code> に <code>export TZ=":/etc/localtime"</code> と書いておけばよさそうです（<a href="https://blog.packagecloud.io/eng/2017/02/21/set-environment-variable-save-thousands-of-system-calls/">How setting the TZ environment variable avoids thousands of system calls</a> 参照）。Rに限っては <code>Sys.setenv(TZ=":/etc/localtime")</code> あるいは具体的に <code>Sys.setenv(TZ="Asia/Tokyo")</code> などと打ち込むか <code>~/.Rprofile</code> に書いておくという手もありそうです。</del> ←このあたりはRのバージョンアップで直った？</p>
+
+<h2>Rでの日時の表し方</h2>
+
+<p>Rで現在の日時を調べるにはつぎのようにする。</p>
+
+<pre>
+<code>Sys.time()</code>
+[1] "2011-03-20 12:34:56 JST"
+</pre>
+
+<p>この形式がISOで決められた時間の表し方である。最後のJSTは日本標準時を表すが，自明なら <code>"2011-03-20 12:34:56"</code> のように省略してもよい。さらに秒が不要なら <code>"2011-03-20 12:34"</code> でよいし，日付だけでよければ <code>"2011-03-20"</code> でよい（これは <code>"2011-03-20 00:00"</code> と同じことである）。</p>
+
+<p>これらは文字列のように見えるが，内部表現は1970年元旦からの秒数で，POSIXct型という衣を着ている（「ct」はcalendar time）。衣（クラス）を剥がしてみれば，整数値が現れる。単に数値に変換しても同じ結果になる。</p>
+
+<pre>
+<code>unclass(Sys.time())</code>
+[1] 1300592096
+<code>as.numeric(Sys.time())</code>
+[1] 1300592096
+</pre>
+
+<p><code>"2011-03-20 12:34:56"</code> のような文字列からPOSIXct型の値に変換するには</p>
+
+<pre>
+<code>t = as.POSIXct("2011-03-20 12:34:56")</code>
+</pre>
+
+<p>のようにすればよい。<code>"2011-03-20"</code> の代わりに <code>"2011-3-20"</code> でも <code>"2011/3/20"</code> でもよい。別の方法として次のようにもできる。</p>
+
+<pre>
+<code>t = ISOdatetime(2011, 3, 20, 12, 34, 56)</code>
+</pre>
+
+<p>POSIXct型は内部では秒単位の整数であるため，秒を加算することができる。例えば時刻 <code>t</code> を起点として10分ごと1時間の数列を作るには次のようにする（最後の <code>600</code> は <code>"10 min"</code> でもよい）。</p>
+
+<pre>
+<code>seq(t, t+3600, 600)</code>
+</pre>
+
+<p>ちなみに，日本の環境では日時は日本標準時（JST）で扱われる（ただし下で述べるようにJDTという例外がある）。JSTは協定世界時（UTC）から9時間（32400秒）ずれている：</p>
+
+<pre>
+<code>as.numeric(as.POSIXct("1970-01-01 00:00:00"))</code>
+[1] -32400
+<code>as.numeric(as.POSIXct("1970-01-01 00:00:00", tz="Asia/Tokyo"))</code>
+[1] -32400
+<code>as.numeric(as.POSIXct("1970-01-01 00:00:00", tz="Japan"))</code>
+[1] -32400
+<code>as.numeric(as.POSIXct("1970-01-01 00:00:00", tz="UTC"))</code>
+[1] 0
+</pre>
+
+<p>POSIXct型以外にPOSIXlt型がある（「lt」はlocal time）。これは年月日時分秒をリストとして並べたものである。</p>
+
+<p>日時を表す文字列をPOSIXct型に変換する際に，まず <code>strptime()</code> によりPOSIXlt型に変換される。ここでシステムコールが発生し，遅い。より速く変換するには fasttime パッケージを使う（<a href="datatable.html">datatable</a> 参照）。</p>
+
+<p>日単位ならDate型を使う。これは内部的には1970-01-01からの日数である。<code>as.numeric(as.Date("1970-01-01"))</code> の値は0になる。</p>
+
+<h2>簡単な時系列グラフ</h2>
+
+<p>ここまでのまとめとして，簡単な時系列データのグラフを描いてみよう。文科省が<a href="http://www.mext.go.jp/a_menu/saigaijohou/syousai/1303723.htm">都道府県別環境放射能水準調査結果</a>［リンク切れ］で公開している福島第一原発の事故に伴う3月15日17-18時から1時間ごとの東京都新宿区で計測した放射線の量は次の通りである。</p>
+
+<pre>
+x = c(0.0941, 0.2, 0.361, 0.123, 0.0888, 0.0657, 0.0556)
+</pre>
+
+<p>このグラフは次のようにして描ける。</p>
+
+<pre>
+t0 = as.POSIXct("2011-03-15 17:00")
+t = seq(t0, by=3600, along.with=x)
+plot(t, x, type="o", pch=16, xlab="時刻", ylab="γ線（μSv/h）")
+</pre>
+
+<p>もっとデータを増やしてみよう。</p>
+
+<pre>
+x = c(0.0941, 0.2, 0.361, 0.123, 0.0888, 0.0657,
+      0.0556, 0.0538, 0.0547, 0.0672, 0.101, 0.141,
+      0.143, 0.142, 0.104, 0.0891, 0.069, 0.058,
+      0.057, 0.056, 0.055, 0.054, 0.054, 0.054)
+</pre>
+
+<p>これくらいになると，時間軸の目盛りが思うようにならない。目盛りを省略（<code>xaxt="n"</code>）して，別に目盛りだけを描くほうがよい。</p>
+
+<pre>
+plot(t, x, type="o", pch=16, xlab="時刻", ylab="γ線（μSv/h）", xaxt="n")
+axis.POSIXct(1, at=t, format="%d日%H時")
+</pre>
+
+<p>目盛りを4時間ごとにしてみよう。</p>
+
+<pre>
+plot(t, x, type="o", pch=16, xlab="時刻", ylab="γ線（μSv/h）", xaxt="n")
+r = as.POSIXct(round(range(t), "hours"))
+axis.POSIXct(1, at=seq(r[1],r[2],by="4 hours"), format="%d日%H時")
+</pre>
+
+<p>このように，POSIXct型では <code>sec(s)</code>，<code>min(s)</code>，<code>hour(s)</code>，<code>day(s)</code> という単位が使える。また，<code>format</code> の形式はRで <code>strptime</code> のヘルプを見れば出ている。よく使うものだけを挙げておく：</p>
+
+<table border="1" cellspacing="0">
+  <tbody>
+    <tr><th>%Y</th><td>年（4桁）</td></tr>
+    <tr><th>%y</th><td>年（2桁）</td></tr>
+    <tr><th>%m</th><td>月（01-12）</td></tr>
+    <tr><th>%b</th><td>月（&nbsp;1-12←日本語環境では）</td></tr>
+    <tr><th>%d</th><td>日（01-31）</td></tr>
+    <tr><th>%e</th><td>日（&nbsp;1-31）</td></tr>
+    <tr><th>%H</th><td>時（00-23）</td></tr>
+    <tr><th>%M</th><td>分（00-59）</td></tr>
+    <tr><th>%S</th><td>秒（00-61）</td></tr>
+  </tbody>
+</table>
+
+<h2>タイムゾーンについて</h2>
+
+<p>R 3.5.0/3.5.1 (Windows/Mac) で <code>as.POSIXct("1948-05-02")</code> がエラーになる：</p>
+
+<pre>
+<code>as.POSIXct("1948-05-01")</code>
+[1] "1948-05-01 JST"
+<code>as.POSIXct("1948-05-02")</code>
+ as.POSIXlt.character(x, tz, ...) でエラー: 
+   文字列は標準的な曖昧さのない書式にはなっていません 
+<code>as.POSIXct("1948-05-03")</code>
+[1] "1948-05-03 JDT"
+</pre>
+
+<p>原因はどうやら日本でも1948年〜1951年にあった夏時間（JDT）のためらしい。<code>"1948-05-02"</code> は <code>"1948-05-02 00:00:00"</code> と解釈されて，夏時間を考慮すれば存在しない時刻になるのだろう。ただ，同じコードでもLinux上ではエラーにならない：</p>
+
+<pre>
+<code>as.POSIXct("1948-05-02")</code>
+[1] "1948-05-01 23:00:00 JST"
+</pre>
+
+<p><code>as.POSIXct()</code> の第2引数は <code>tz</code> つまりタイムゾーンである。何も指定しなければシステムのタイムゾーンになる。日本語環境では <code>Asia/Tokyo</code> または同じことだが <code>Japan</code> になる。</p>
+
+<pre>
+<code>as.POSIXct("1948-05-03", "Asia/Tokyo")</code>
+[1] "1948-05-03 JDT"
+<code>as.POSIXct("1948-05-03", "UTC")</code>
+[1] "1948-05-03 UTC"
+</pre>
+
+<p><code>"Japan"</code> と書けば /usr/share/zoneinfo/Japan にある情報が使われ，<code>Asia/Tokyo</code> と書けば /usr/share/zoneinfo/Asia/Tokyo にある情報が使われるが，これらは同じものである。タイムゾーンを指定しなければ /etc/localtime の情報が使われるが，日本の環境ではこれは /usr/share/zoneinfo/Asia/Tokyo へのシンボリックリンクになっている（Macでは /var/db/timezone/zoneinfo/Asia/Tokyo へのシンボリックリンクだが，/usr/share/zoneinfo が /var/db/timezone/zoneinfo へのシンボリックリンクになっているので，結局同じことである）。これらのデータの内容は <code>zdump</code> コマンドで見ることができる：</p>
+
+<pre>
+zdump -v /usr/share/zoneinfo/Asia/Tokyo # または zdump -v Asia/Tokyo
+</pre>
+
+<p>この <code>Asia/Tokyo</code> にあたる部分にどのような選択肢があるかは，Rのコマンド <code>OlsonNames()</code> でも調べられる。</p>
+
+<p><code>as.POSIXct()</code> は，日本の環境では（あるいは明示的に <code>Asia/Tokyo</code> などと書けば）文字列を日本標準時（JST）として扱うが，1948年〜1951年の夏だけは，夏時間（JDT）として扱うので，1時間ずれる。春は進み（spring forward），秋は戻る（fall back）。春には存在しない時刻があり，エラーになるか，おかしな結果を返す。秋には同じ時刻が2回あり，結果はあいまいになる。このため，夏時間を採用している国では，時間の扱いに注意しなければならない。</p>
+
+<p>気象庁の過去データの日時はJSTで統一されているそうである。この場合，タイムゾーンとして <code>Etc/GMT-9</code> を指定すればよい：</p>
+
+<pre>
+<code>as.POSIXct("1948-05-02 00:01", tz="Etc/GMT-9")</code>
+[1] "1948-05-02 00:01:00 +09"
+</pre>
+
+<p>日本以外の例を挙げると，米国東海岸の春（EST/EDT）は，Mac上のR 3.5.1では次のようになる：</p>
+
+<pre>
+<code>as.POSIXct("2018-03-11 01:59", "US/Eastern")</code>
+[1] "2018-03-11 01:59:00 EST"
+<code>as.POSIXct("2018-03-11 02:00", "US/Eastern")</code> // 存在しない
+[1] "2018-03-11 EST"
+<code>as.POSIXct("2018-03-11 02:59", "US/Eastern")</code> // 存在しない
+[1] "2018-03-11 EST"
+<code>as.POSIXct("2018-03-11 03:00", "US/Eastern")</code>
+[1] "2018-03-11 03:00:00 EDT"
+</pre>
+
+<p>Linux上のR 3.5.1では次のようになる
+
+<pre>
+<code>as.POSIXct("2018-03-11 01:59", "US/Eastern")</code>
+[1] "2018-03-11 01:59:00 EST"
+<code>as.POSIXct("2018-03-11 02:00", "US/Eastern")</code> // 存在しない
+[1] "2018-03-11 01:00:00 EST"
+<code>as.POSIXct("2018-03-11 02:59", "US/Eastern")</code> // 存在しない
+[1] "2018-03-11 01:59:00 EST"
+<code>as.POSIXct("2018-03-11 03:00", "US/Eastern")</code>
+[1] "2018-03-11 03:00:00 EDT"
+</pre>
+
+<p><a href="https://CRAN.R-project.org/package=lubridate">lubridate</a> パッケージの <code>parse_date_time("1948-05-02", "Ymd", "Asia/Tokyo")</code> やその高速版 <code>parse_date_time2("1948-05-02", "Ymd", "Asia/Tokyo")</code> も同様である（<code>parse_date_time2()</code> はLinuxではエラーにならない）。<a href="https://CRAN.R-project.org/package=fasttime">fasttime</a> パッケージの <code>fastPOSIXct()</code> は1970年以前は扱えないようである。</p>
+
+<p><a href="https://CRAN.R-project.org/package=readr">readr</a> の <code>parse_datetime()</code> は次のようにおかしくなる：</p>
+
+<pre>
+<code>parse_datetime("1948-05-01", locale=locale(tz="Asia/Tokyo"))</code>
+[1] "1948-05-01 JST"
+<code>parse_datetime("1948-05-02", locale=locale(tz="Asia/Tokyo"))</code>
+[1] "1970-01-01 08:59:59 JST"
+<code>parse_datetime("1948-05-03", locale=locale(tz="Asia/Tokyo"))</code>
+[1] "1948-05-03 JDT"
+</pre>
+
+<p>[2018年8月追記] 2020年の東京オリンピックで+2時間の夏時間を採用して，7時開始を5時開始相当にしようという話があるらしい。夏の5時は米国西海岸では何時だろうか？ <code>as.POSIXlt()</code> も援用して</p>
+
+<pre>
+<code>as.POSIXlt(as.POSIXct("2020-07-24 05:00", tz="Asia/Tokyo"), tz="US/Pacific")</code>
+[1] "2020-07-23 13:00:00 PDT"
+</pre>
+
+<p>とすればよい（<a href="http://ill-identified.hatenablog.com/entry/2015/01/13/211024">参考</a>）。<code>as.POSIXct()</code> で統一したければ</p>
+
+<pre>
+<code>as.POSIXct(as.numeric(as.POSIXct("2020-07-24 05:00", tz="Asia/Tokyo")), origin="1970-01-01 00:00", tz="US/Pacific")</code>
+[1] "2020-07-23 13:00:00 PDT"
+</pre>
+
+<p>とすればよいのだろう。</p>
+
+<p>ちなみに，Excelにはこのような時間を扱う関数がないらしい（<a href="https://togetter.com/li/1256548">『Excelにタイムゾーンという概念がなく、サマータイムに対応しないということは』『これから未来永劫、時限サマータイムの2年間についての複雑な特別処理を仕込まないと、正しい集計ができなくなります』</a>）。実際の処理については，例えば <a href="https://excelribbon.tips.net/T012238_Automatically_Converting_to_GMT">Automatically Converting to GMT</a> 参照。</p>
+
+<h2>時系列オブジェクト</h2>
+
+<p>日時なら <code>as.POSIXct()</code>，日だけなら <code>as.Date()</code> で扱うのが基本であるが，月ごとのデータや曜日に意味がある日ごとのデータは，<code>ts()</code> で時系列オブジェクトに変換すると便利なことがある。例えば<a href="leukemia2.html">グラフの例：白血病による死亡率の推移</a>のデータの場合，</p>
+
+<pre>
+<code>leu = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/leukemia2.csv")</code>
+<code>x = ts(leu$rate, start=c(2001,1), frequency=12)</code>
+<code>x</code>
+     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
+2001 5.4 5.2 5.4 5.8 5.6 5.8 5.5 5.7 5.7 5.3 5.7 5.3
+2002 5.5 5.4 5.8 5.6 5.3 5.3 5.4 5.6 5.6 5.7 6.1 5.2
+2003 5.8 5.8 5.5 5.2 5.4 5.6 5.4 5.0 6.0 6.1 5.5 5.5
+……
+2016 7.0 7.0 7.2 7.4 6.8 7.4 6.8 7.0 6.9 7.3 7.0 6.8
+<code>class(x)</code>
+[1] "ts"
+<code>head(time(x))</code>
+[1] 2001.000 2001.083 2001.167 2001.250 2001.333 2001.417
+</pre>
+
+<p>のように「ts」というクラス（時系列クラス）のオブジェクトになる。<code>plot(x)</code> とすれば期待通りの折れ線グラフを描いてくれる。<code>plot(aggregate(x, FUN=mean))</code> とすれば年単位の平均値にまとめて描いてくれる。<code>boxplot(x ~ cycle(x))</code> とすれば月ごとの箱ひげ図を描いてくれる。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-08-15 17:49:28</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

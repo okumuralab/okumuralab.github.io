@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>グラフの例：国立の教員養成大学・学部（教員養成課程）の就職状況</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：国立の教員養成大学・学部（教員養成課程）の就職状況</h1>
+
+<p>文科省から毎年発表される。直近のものは<a href="http://www.mext.go.jp/b_menu/houdou/30/02/1401088.htm">国立の教員養成大学・学部（教員養成課程）の平成29年3月卒業者の就職状況等について</a>である。これらから抽出したデータを集めた <a href="data/kyoin.csv">kyoin.csv</a> を置いておく。</p>
+
+<p>文科省でも<a href="http://www.mext.go.jp/b_menu/houdou/30/02/__icsFiles/afieldfile/2018/02/07/1401088_06_1.pdf">国立の教員養成大学・学部(教員養成課程)卒業者の教員就職状況</a>（PDF）が公開されている。</p>
+
+<figure><img src="img/180305a.png" alt="国立の教員養成大学・学部（教員養成課程）の就職状況"></figure>
+
+<pre>
+x = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/kyoin.csv", fileEncoding="UTF-8")
+# par(mgp=c(2,0.8,0))
+t = barplot(rbind(x[,3],x[,4],x[,2]-x[,3]-x[,4]), names.arg=x[,1], las=1)
+n = length(t)
+text(t[n],
+     c(x[n,3]/2, x[n,3]+x[n,4]/2, (x[n,2]+x[n,3]+x[n,4])/2),
+     c("正規","臨任","その他"),
+     col=c("white","black","black"), srt=90)
+axis(2, labels="人", at=14000, padj=-1, las=1)
+</pre>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-03-05 13:46:13</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

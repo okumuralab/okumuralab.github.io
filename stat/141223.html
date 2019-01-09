@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>津田敏秀先生の「有病オッズ比」問題</title>
+<link rel="stylesheet" href="../style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>津田敏秀先生の「有病オッズ比」問題</h1>
+
+<p><a href="http://togetter.com/li/749069">津田敏秀さんの「有病オッズ比」は以前とまるで違う - Togetterまとめ</a> に触発されて書いた。</p>
+
+<h2>問題のまとめ</h2>
+
+<p>環境省<a href="http://www.env.go.jp/chemi/rhm/conf/conf01-08.html">第８回東京電力福島第一原子力発電所事故に伴う住民の健康管理のあり方に関する専門家会議</a>（2014-07-16）の <a href="http://www.env.go.jp/chemi/rhm/conf/conf01-08/ext04.pdf">‎（津田敏秀氏提出資料） [PDF 1,993KB]</a> のp.5表1では5%水準で有意であった4個の値が，<a href="http://csrp.jp/symposium2014/programme">第4回市民科学者国際会議</a>（2014-11-23）の<a href="http://csrp.jp/wp-content/themes/CSRP2014Ver2/slides/Tsuda_J.pdf">津田先生のスライド（PDF）</a>のp.20表3ではすべて有意でなくなっている。</p>
+
+<figure>
+  <img src="img/141223c.png" alt="2014-07-16">
+  <figcaption>2014-07-16の表</figcaption>
+</figure>
+
+<figure>
+  <img src="img/141223d.png" alt="2014-11-23">
+  <figcaption>2014-11-23の表</figcaption>
+</figure>
+
+<h2>オッズ比の信頼区間の検算</h2>
+
+<p>例えば上の「表1」で，一番下（オッズ = 1/(18327-1)）を基準とした一番上（オッズ = 14/(41981-14)）の有病オッズ比（POR: prevalence odds ratio）は (14/(41981-14)) / (1/(18327-1)) = 6.11 である。</p>
+
+<p>まず，この4つの数値をRの行列の形で表しておく：</p>
+
+<pre>
+&gt; x = matrix(c(14,1,41981-14,18327-1), ncol=2)
+&gt; x
+     [,1]  [,2]
+[1,]   14 41967
+[2,]    1 18326
+&gt; (x[1,1]/x[1,2]) / (x[2,1]/x[2,2])
+[1] 6.11347
+</pre>
+
+<p><a href="2by2.html">2×2の表</a>でオッズ比の信頼区間を計算する方法はいろいろある。<a href="fishertest.html">フィッシャーの正確検定</a>では信頼区間は [0.93, 258.25] である（ただしこの方法ではオッズ比の定義が上の計算とほんの少し違うことと，信頼区間と <i>p</i> 値を別の方法で計算していることに注意）：</p>
+
+<pre>
+&gt; fisher.test(x)
+
+	Fisher's Exact Test for Count Data
+
+data:  x
+p-value = 0.04958
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+   0.9299934 258.2508992
+sample estimates:
+odds ratio 
+  6.113568 
+</pre>
+
+<p>Epiパッケージの <code>twoby2()</code> による信頼区間は [0.80, 46.49] である：</p>
+
+<pre>
+&gt; library(Epi)
+&gt; twoby2(x)
+2 by 2 table analysis: 
+------------------------------------------------------ 
+Outcome   : Col 1 
+Comparing : Row 1 vs. Row 2 
+
+      Col 1 Col 2    P(Col 1) 95% conf. interval
+Row 1    14 41967       3e-04     2e-04    6e-04
+Row 2     1 18326       1e-04     0e+00    4e-04
+
+                                   95% conf. interval
+             Relative Risk: 6.1118    0.8038  46.4742
+         Sample Odds Ratio: 6.1135    0.8039  46.4940
+    Probability difference: 0.0003    0.0000   0.0005
+ 
+        Asymptotic P-value: 0.0803 
+------------------------------------------------------
+</pre>
+
+<p>epitoolsパッケージの <code>oddsratio.wald()</code> による信頼区間も同じ（出力が長いので信頼区間以外を省略した）：</p>
+
+<pre>
+&gt; library(epitools)
+&gt; oddsratio.wald(x)
+...
+          odds ratio with 95% C.I.
+Predictor  estimate    lower    upper
+  Exposed1  1.00000       NA       NA
+  Exposed2  6.11347 0.803856 46.49404
+...
+</pre>
+
+<p>同じくepitoolsパッケージの <code>oddsratio.midp()</code> では [1.08, 130.87] となる：</p>
+
+<pre>
+&gt; oddsratio.midp(x)
+...
+          odds ratio with 95% C.I.
+Predictor  estimate    lower    upper
+  Exposed1  1.00000       NA       NA
+  Exposed2  5.39444 1.082926 130.8747
+...
+</pre>
+
+<p>5%水準で有意となる（95%信頼区間が 1 を含まない）のは最後の <code>oddsratio.midp()</code> だけである。津田先生が使っておられるのも，おそらくこれだと思われる（一部微妙な違いがあるが，使用ソフトの違いであろう）。</p>
+
+<p>なお，<code>oddsratio.midp()</code> は良い方法であるので，津田先生がこれを選ばれたことは妥当である。</p>
+
+<p>これ以外にvcdパッケージ，fmsbパッケージについて中澤先生に教えていただいた（<a href="2by2.html">2×2の表，オッズ比，相対危険度</a>参照）。これらをまとめると次のようになる：</p>
+
+<table>
+  <tbody>
+  <tr><th>パッケージ</th><th>関数</th><th>p値</th><th>オッズ比</th><th>95%信頼区間</th></tr>
+  <tr><td>（津田）</td><td><code>-</code></td><td>-</td><td>6.11</td><td>[1.08, 130.53]</td></tr>
+  <tr><td>-</td><td><code>chisq.test()</code></td><td>0.08596</td><td>-</td><td>-</td></tr>
+  <tr><td>-</td><td><code>chisq.test(correct=FALSE)</code></td><td>0.04573</td><td>-</td><td>-</td></tr>
+  <tr><td>-</td><td><code>fisher.test()</code></td><td>0.04958</td><td>6.113568</td><td>[0.9299934, 258.2508992]</td></tr>
+  <tr><td>Epi</td><td><code>twoby2()</code></td><td>0.0803</td><td>6.1135</td><td>[0.8039, 46.4940]</td></tr>
+  <tr><td>epitools</td><td><code>oddsratio.wald()</code></td><td>-</td><td>6.11347</td><td>[0.803856, 46.49404]</td></tr>
+  <tr><td>epitools</td><td><code>oddsratio.midp()</code></td><td>0.03731035</td><td>5.39444</td><td>[1.082926, 130.8747]</td></tr>
+  <tr><td>epitools</td><td><code>oddsratio.fisher()</code></td><td>0.04957872</td><td>6.113568</td><td>[0.9299934, 258.2509]</td></tr>
+  <tr><td>epitools</td><td><code>oddsratio.small()</code></td><td>-</td><td>3.056662</td><td>[0.7858456, 22.6751]</td></tr>
+  <tr><td>vcd</td><td><code>oddsratio()</code></td><td>0.08028</td><td>6.11347</td><td>[0.803856, 46.49404]</td></tr>
+  <tr><td>fmsb</td><td><code>oddsratio()</code></td><td>0.04574</td><td>6.11347</td><td>[0.803856, 46.494045]</td></tr>
+  <tr><td>exact2x2</td><td><code>fisher.exact()</code></td><td>0.04958</td><td>6.113568</td><td>[1.0092, 127.4884]</td></tr>
+  <tr><td>exact2x2</td><td><code>blaker.exact()</code></td><td>0.04958</td><td>6.113568</td><td>[1.0092, 127.4884]</td></tr>
+  </tbody>
+</table>
+
+
+<h2>全体として有意かどうか</h2>
+
+<p>表が全体として有意か（この場合は「オッズがすべて等しい」という帰無仮説が棄却できるか）を検定する前に，特定の比較を検定することはまずいとされている。特に，この場合は各オッズ比が独立でないので，全体として有意でなくても，有意なオッズ比がいくつも出ることがある。</p>
+
+<p>まず，表全体を行列の形にする：</p>
+
+<pre>
+&gt; a = matrix(c(14,12,11,23,8,14,6,1,
+               41981-14,50773-12,17969-11,54951-23,16912-8,47519-14,25876-6,18327-1),
+             ncol=2)
+&gt; a
+     [,1]  [,2]
+[1,]   14 41967
+[2,]   12 50761
+[3,]   11 17958
+[4,]   23 54928
+[5,]    8 16904
+[6,]   14 47505
+[7,]    6 25870
+[8,]    1 18326
+</pre>
+
+<p>まずフィッシャーの正確検定。デフォルトの設定（<code>workspace=200000</code>）ではメモリが足りないといわれるので，順次増やしてみた：</p>
+
+<pre>
+&gt; fisher.test(a)
+ 以下にエラー fisher.test(a) : FEXACT error 40.
+Out of workspace.
+&gt; fisher.test(a, workspace=2000000)
+ 以下にエラー fisher.test(a, workspace = 2e+06) : FEXACT error 7.
+LDSTP is too small for this problem.
+Try increasing the size of the workspace.
+&gt; fisher.test(a, workspace=20000000)
+ 以下にエラー fisher.test(a, workspace = 2e+07) : FEXACT error 7.
+LDSTP is too small for this problem.
+Try increasing the size of the workspace.
+&gt; fisher.test(a, workspace=200000000)
+
+	Fisher's Exact Test for Count Data
+
+data:  a
+p-value = 0.05154
+alternative hypothesis: two.sided
+</pre>
+
+<p>ぎりぎり5%で有意ではない。念のため，メモリ制約を受けないカイ2乗検定もしてみる：</p>
+
+<pre>
+&gt; chisq.test(a)
+
+	Pearson's Chi-squared test
+
+data:  a
+X-squared = 13.393, df = 7, p-value = 0.06309
+</pre>
+
+<p>こちらも有意ではない。</p>
+
+<p>結論として，全体として有意ではない表から，有意な部分を探してしまったということであろう。</p>
+
+<p>念のため，「表3」のほうも有意でない：</p>
+
+<pre>
+&gt; b = matrix(c(14,12,11,23,8,19,7,9,0,
+               41813-14,50662-12,18168-11,53962-23,16457-8,47759-19,28535-7,32559-9,6151-0),
+             ncol=2)
+&gt; b
+      [,1]  [,2]
+ [1,]   14 41799
+ [2,]   12 50650
+ [3,]   11 18157
+ [4,]   23 53939
+ [5,]    8 16449
+ [6,]   19 47740
+ [7,]    7 28528
+ [8,]    9 32550
+ [9,]    0  6151
+&gt; fisher.test(b, workspace=200000000)
+
+	Fisher's Exact Test for Count Data
+
+data:  b
+p-value = 0.2181
+alternative hypothesis: two.sided
+
+&gt; chisq.test(b)
+
+	Pearson's Chi-squared test
+
+data:  b
+X-squared = 10.9629, df = 8, p-value = 0.2038
+
+ 警告メッセージ: 
+In chisq.test(b) :  カイ自乗近似は不正確かもしれません 
+</pre>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-12-30T09:51:59+09:00">2014-12-30 09:51:59</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

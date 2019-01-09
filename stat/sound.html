@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>音</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>音</h1>
+
+<p>やや古い<a href="100121b.html">音の波形</a>も参照。</p>
+
+<h2 id="Mac">準備（Mac）</h2>
+
+<p>以下では<a href="/~okumura/wavefmt.html">WAV</a>などのオーディオファイルを扱う。MacではWAVファイルなどはおそらくiTunes.appに関連付けられているが，FinderでQuickTime Player.appまたは<a href="http://www.videolan.org/vlc/">VLC.app</a>に関連付けを変更しておくと便利である。ターミナルで例えばQuickTime Player.appでWAVファイルを開くには</p>
+
+<pre>
+open -a 'QuickTime Player' *.wav
+</pre>
+
+<p>と打ち込めばよい。GUIが不要ならば</p>
+
+<pre>
+afplay *.wav
+</pre>
+
+<p>のほうが便利である。Ctrl-C で止まる。ほかに名前がaf（audio file）で始まるコマンドとして <code>afinfo</code>，<code>afconvert</code>，<code>afhash</code>，<code>afida</code> がある。いずれも <code>--help</code>（または <code>-h</code>）オプションで簡単な説明が出る。</p>
+
+<p>Rでオーディオを扱う定番のパッケージは<a href="http://cran.r-project.org/web/packages/tuneR/index.html">tuneR</a>である（2013年8月のバージョン1.0で大きく仕様が変わっている）。以下の例をRで実行するにはあらかじめ</p>
+
+<pre>
+<code>install.packages("tuneR")</code>
+<code>library(tuneR)</code>
+</pre>
+
+<p>と打ち込んでおく。このパッケージの <code>play()</code> という関数でWAVファイルなどをプレイすることができる。そのためにはあらかじめMacなら</p>
+
+<pre>
+<code>setWavPlayer("/usr/bin/afplay")</code>
+</pre>
+
+<p>と打ち込んでおく。</p>
+
+<p>以下では<a href="https://xiph.org/flac/">FLAC</a>というオープンなロスレス圧縮形式も必要になるので，適当な方法でインストールしておく。Windows用バイナリなどもダウンロードできる。</p>
+
+<div class="note">
+<p>MacでHomebrewを使っているなら <code>brew install flac</code> と打ち込むだけでインストールできる。ソースからインストールするには次のようにする：</p>
+<pre>
+tar xvzf flac-*.tar.xz
+cd flac-*
+./configure
+make
+make install
+</pre>
+</div>
+
+<h2 id="Musopen">Musopen Collection as FLAC</h2>
+
+<p><a href="https://archive.org/">Internet Archive</a>の<a href="https://archive.org/details/MusopenCollectionAsFlac">Musopen Collection as FLAC</a>は，パブリックドメインの音源で，しかもFLAC（オープンなロスレス圧縮）形式である。ここでは最初のGoldberg変奏曲のAria（FLACで13519283バイト）を使う。1997年のShelley Katzのピアノ演奏である。</p>
+
+<p>これをまずFLACでWAVに変換する：</p>
+
+<pre>
+flac -d Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.flac
+</pre>
+
+<p>77376140バイトのWAVファイルができる。</p>
+
+<p>Rでこれを読み込む：</p>
+
+<pre>
+<code>library(tuneR)</code>
+<code>bach = readWave("Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.wav")</code>
+<code>object.size(bach)</code>
+206337672 bytes
+<code>str(bach)</code>
+Formal class 'Wave' [package "tuneR"] with 6 slots
+  ..@ left     : num [1:12896016] 0 0 0 0 0 0 0 0 0 0 ...
+  ..@ right    : num [1:12896016] 0 0 0 0 0 0 0 0 0 0 ...
+  ..@ stereo   : logi TRUE
+  ..@ samp.rate: int 44100
+  ..@ bit      : int 24
+  ..@ pcm      : logi TRUE
+</pre>
+
+<p><code>readWave()</code> で読み出したオブジェクトは「Wave」というS4クラスであり，各スロットにアクセスするには <code>$</code> ではなく <code>@</code> を使う。例えば左チャンネルは <code>bach@left</code> または <code>slot(bach, "left")</code> のようにしてアクセスする。</p>
+
+<p>オブジェクトのサイズを見てわかるように（あるいは <code>left</code> や <code>right</code> が <code>num</code> であることからわかるように），各サンプル値は8バイトのnumeric型（double型）に格納されている。</p>
+
+<p>冒頭の度数分布を調べてみる：</p>
+
+<pre>
+<code>table(bach@left[1:100000])</code>
+
+-2304 -2048 -1792 -1536 -1280 -1024  -768  -512  -256     0   256   512   768 
+    5   167   353   468   830  1101  1446 13575  4101 72289  1133  1124  1117 
+ 1024  1280  1536  1792  2048  2304  2560  2816 
+  696   447   424   321   236   130    33     4 
+</pre>
+
+<p>あれあれ，すべて256の倍数だ。せっかく24ビット音だと思ったら，16ビットだ。全体を256で割ってしまおう。</p>
+
+<pre>
+bachl = as.integer(bach@left / 256)
+bachr = as.integer(bach@right / 256)
+rm(bach) # メモリが逼迫したら，もとのデータは消す
+</pre>
+
+<p>適当なところをプロットしてみる：</p>
+
+<pre>
+s = 44100*4    # 4秒後から
+t = 44100*10   # 10秒後まで
+plot  ((s:t)/44100, bachl[s:t], type="l", col="#0068b780", xlab="", ylab="")
+points((s:t)/44100, bachr[s:t], type="l", col="#f3980080")
+</pre>
+
+<figure><img src="img/150221a.png" alt=""></figure>
+
+<p><b>問</b>：波形がわかるように，例えば6秒〜6.01秒をプロットしてみよ。波形から音の振動数（周波数）を求めよ。</p>
+
+<p>全体のヒストグラムを描いてみる。左右チャンネルはアペンドする：</p>
+
+<pre>
+<code>a = append(bachl, bachr)</code>
+<code>length(a)</code>
+[1] 25792032
+<code>range(a)</code>
+[1] -9322  8909
+<code>hist(a, main="", xlab="", ylab="", col="gray")</code>
+</pre>
+
+<p>実はこのように広いヒストグラムになるのは階級の幅が広すぎるためである。階級の幅を1にして比べてみよう。もっと0に集中している。</p>
+
+<pre>
+<code>hist(a, main="", xlab="", ylab="", col="gray", breaks=20000)</code>
+</pre>
+
+<p>もっと詳しく見るために，プロットせず度数分布だけ取り出してみよう：</p>
+
+<pre>
+<code>h = hist(a, breaks=20000, plot=FALSE)</code>
+<code>str(h)</code>  # hの構造を確認
+List of 6
+ $ breaks  : num [1:18232] -9322 -9321 -9320 -9319 -9318 ...
+ $ counts  : int [1:18231] 2 0 0 0 0 0 0 0 0 0 ...
+ $ density : num [1:18231] 7.75e-08 0.00 0.00 0.00 0.00 ...
+ $ mids    : num [1:18231] -9322 -9320 -9320 -9318 -9318 ...
+ $ xname   : chr "a"
+ $ equidist: logi TRUE
+ - attr(*, "class")= chr "histogram"
+<code>sum(h$density)</code>
+[1] 1
+</pre>
+
+<div class="note">
+<p>上では分布の範囲がほぼ2万とわかっていたので <code>breaks=20000</code>
+としたが，一般には <code>breaks=-32768:32767</code> のようにすれば16ビット整数の全範囲がカバーできる。</p>
+</div>
+
+<p><code>h$density</code> に確率分布が入る。この分布のエントロピーを求めてみよう：</p>
+
+<pre>
+<code>-sum(h$density * log2(h$density), na.rm=TRUE)</code>
+[1] 11.94497
+</pre>
+
+<p>約12ビット/サンプルである。</p>
+
+<p>エントロピーを求めるだけなら <code>hist()</code> でなく <code>table()</code>
+を使ってもできる：</p>
+
+<pre>
+<code>t = table(a)</code>
+<code>p = t / sum(t)</code>
+<code>-sum(p * log2(p))</code>
+[1] 11.94497
+</pre>
+
+<p>ところで，<code>a</code> の代わりに，その差分 <code>diff(a)</code>
+を使ってみたらどうなるか？ 差分の差分（2階差分）ではどうか？ …</p>
+
+<div class="note">
+<p><a href="http://cran.r-project.org/web/packages/audio/index.html">audio</a> というパッケージにもWAVを読み書きする関数があるが，私の環境ではうまく動作しない。</p>
+</div>
+
+<div class="note">
+<p><a href="http://cran.r-project.org/web/packages/seewave/index.html">seewave</a> パッケージに，WAVとFLACを相互変換する <code>wav2flac()</code> という関数があるが，単にFLACを呼び出しているだけである。</p>
+</div>
+
+<div class="note">
+<p>別の方法として，WAVファイルを拙作<a href="/~okumura/dumpwave.c">dumpwave.c</a>でテキストに落としてから読み込む方法を紹介しておく。この方法なら，各サンプル値を4バイトのinteger型で読み込むことができる。</p>
+<pre>
+$ gcc dumpwave.c -o dumpwave
+$ ./dumpwave Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.wav &gt;x.txt
+[RIFF] (77376132 bytes)
+[WAVEfmt ] (16 bytes)
+  Data type = 1 (1 = PCM)
+  Number of channels = 2 (1 = mono, 2 = stereo)
+  Sampling rate = 44100Hz
+  Bytes / second = 264600
+  Bytes x channels = 6
+  Bits / sample = 24
+
+[data] (77376096 bytes)
+</pre>
+<p>できたテキストファイルは179573070バイト（約180MB）ある。これをRで読み込むには <code>read.table()</code> でもよいが，非常に遅いので，<a href="datatable.html">data.table</a>を使うとよい：</p>
+<pre>
+<code>library("data.table")</code>
+<code>x = fread("x.txt")</code>
+<code>dim(x)</code>
+[1] 12896016        2
+<code>head(x)</code>
+   V1 V2
+1:  0  0
+2:  0  0
+3:  0  0
+4:  0  0
+5:  0  0
+6:  0  0
+<code>object.size(x)</code>
+103169360 bytes
+# または
+<code>library(pryr)</code>
+<code>object_size(x)</code>
+103 MB
+<code>str(x)</code>
+Classes ‘data.table’ and 'data.frame':	12896016 obs. of  2 variables:
+ $ V1: int  0 0 0 0 0 0 0 0 0 0 ...
+ $ V2: int  0 0 0 0 0 0 0 0 0 0 ...
+ - attr(*, ".internal.selfref")=&lt;externalptr&gt;
+</pre>
+<p>変数名が <code>V1</code>，<code>V2</code> ではわかりにくいので，<code>L</code>，<code>R</code> に直しておく：</p>
+<pre>
+setnames(x, c("L","R"))
+# names(x) = c("L", "R") ではx全体をコピーする無駄が生じる
+# data.tableではsetnames()を使うべき
+</pre>
+</div>
+
+<h2 id="SONY">SONYサンプル音源</h2>
+
+<p>2015年2月時点で，SONYのハイレゾ用「高音質」miniSDカードが話題になっている：</p>
+
+<ul>
+  <li><a href="http://www.sony.jp/sd/products/SR-HXA/">SR-64HXA | SDメモリーカード | ソニー</a></li>
+  <li><a href="http://pc.watch.impress.co.jp/docs/news/20150219_688476.html">ソニー、“音質にこだわった”microSDカード ～技術面と品質管理からアプローチ - PC Watch</a></li>
+  <li><a href="http://www.phileweb.com/review/article/201502/19/1537.html">【速攻レビュー】ソニーの「高音質microSDカード」は本当に高音質なのか？ (1/3) - Phile-web</a></li>
+  <li><a href="http://av.watch.impress.co.jp/docs/news/20150219_688522.html">ソニー、音質にこだわったmicroSDXCカード。「ハイレゾウォークマンに最適」 - AV Watch</a></li>
+</ul>
+
+<p>上の3番目の記事の3ページ目には次のような記述がある：</p>
+
+<blockquote cite="http://www.phileweb.com/review/article/201502/19/1537_3.html">
+<p>S/Nが格段に高まり、ボーカルは透明感やディティールの見晴らしが良くなる。バックバンドによる演奏は奥行きの深みが増して、楽器固有の音色がより濃く表れるようになった。音の粒立ちが明瞭で、特に高域が煌びやかでエネルギッシュだ。その違いは、何度も聴き直せばそんな気がしてくるというレベルではなく、ファーストインプレッションでクリアにわかるレベルだった。</p>
+</blockquote>
+
+<p>4番目の記事によれば，「静かな環境下で聴き比べれば、大半の人が瞬時にわかるレベルの違いがある」。</p>
+
+<p>真相はともかく，ここではSONYの<a href="http://helpguide.sony.net/high-res/sample1/v1/ja/">サンプル音源ダウンロード</a>からダウンロードしたハイレゾデータを調べてみよう。「Blue Monday FM　“Bee Moved”より」，ZIPファイルで提供されているが，中身のFLACファイルのほうがサイズが若干小さい。展開してFLACでWAVに変換し，Rで読み込む：</p>
+
+<pre>
+<code>library(tuneR)</code>
+<code>bee = readWave("Sample_BeeMoved_96kHz24bit.wav")</code>
+<code>str(bee)</code>
+Formal class 'Wave' [package "tuneR"] with 6 slots
+  ..@ left     : num [1:3828096] -2 1 2 -8 11 -13 9 -6 7 3 ...
+  ..@ right    : num [1:3828096] 0 3 -5 8 -11 16 -10 -2 -1 7 ...
+  ..@ stereo   : logi TRUE
+  ..@ samp.rate: int 96000
+  ..@ bit      : int 24
+  ..@ pcm      : logi TRUE
+<code>range(bee@left)</code>
+[1] -8292596  8292598
+<code>range(bee@right)</code>
+[1] -8292595  8292598
+</pre>
+
+<p>24ビット（±8388607）ほぼフルに使っているところがすごい。</p>
+
+<pre>
+<code>t = table(a)</code>
+<code>p = t / sum(t)</code>
+<code>-sum(p * log2(p))</code>
+[1] 22.04475
+</pre>
+
+<p>これを48000サンプル/秒，16ビットに丸めてみる：</p>
+
+<pre>
+<code>left = floor(((bee@left[seq(1,3828096,2)] + bee@left[seq(2,3828096,2)]) / 2 + 128) / 256)</code>
+<code>right = floor(((bee@right[seq(1,3828096,2)] + bee@right[seq(2,3828096,2)]) / 2 + 128) / 256)</code>
+<code>bee2 = Wave(left, right, samp.rate=48000, bit=16)</code>
+<code>writeWave(bee2, "bee2.wav")  # あるいは play(bee2)</code>
+</pre>
+
+<p>聴き比べてみたが，再生装置がハイレゾ対応していないので当然ながらまったく同じ音に聞こえた。</p>
+
+<p><em>[追記]</em> ると <a href="https://twitter.com/cocoa_ruto">@cocoa_ruto</a> さんが <a href="http://www.tatapa.org/~takuo/resample/index.html">Rによる音声のサンプリング周波数変換</a> を書いてくださった。要は，単純に隣同士の平均をとるだけでは折り返し雑音（エイリアシング）が生じる。次のようにするのが正しい（<code>16</code> は調整可能）：</p>
+
+<pre>
+<code>library(signal)</code>
+<code>left = resample(bee@left, 1, 2, 16)</code>
+<code>right = resample(bee@right, 1, 2, 16)</code>
+<code>range(left)</code>
+[1] -8515382  8356196
+<code>range(right)</code>
+[1] -8352250  8552039
+</pre>
+
+<p>あれあれ，24ビットの範囲を超えてしまった。プロットしてみる：</p>
+
+<pre>
+t = 1257596
+r = (t-20):(t+20)
+r2 = (2*t-40):(2*t+40)
+plot(r2, bee@right[r2], type="o", pch=16, xlab="", ylab="")
+points(r*2, right[r+8], type="o", pch=1)
+</pre>
+
+<figure><img src="img/150223a.png" alt=""></figure>
+
+<p>16ビット化するときには256より少し大きい値で割る必要がある：</p>
+
+<pre>
+bee3 = Wave(floor((left + 130.5) / 261), floor((right + 130.5) / 261),
+            samp.rate=48000, bit=16)
+writeWave(bee3, "bee3.wav")  # または play(bee3)
+</pre>
+
+<p>あるいは全体の音量を変えたくないなら <code>pmax(pmin(x, 32767), -32768)</code> のような関数を通して16ビットの範囲に制限するだけでもいいかもしれない。</p>
+
+<p>ハイレゾの効果を評価する際には，圧縮音と聴き比べるのではなく，上記のような方法でサンプリングレートや量子化ビット数を（個別に・両方）通常の値に落としたものと聴き比べるべきであろう。また，ハイレゾとノーマルをランダムに切り替えて聴き比べ，後で正解と比較する二重盲検法を使うべきである。そういうコードはRで簡単に書ける。ハイレゾ再生装置をお持ちの若い方にぜひお願いしたい（私のような老人は20kHzなんてとても無理）。</p>
+
+<h2 id="artificial">人工音</h2>
+
+<p>高い音がどこまで聞こえるか確かめてみる。</p>
+
+<pre>
+<code>library(tuneR)</code>
+<code>s20k = sine(freq=20000, duration=96000*10, samp.rate=96000, bit=16, pcm=TRUE, stereo=TRUE)</code>
+<code>writeWave(s20k, "s20k.wav")</code>
+</pre>
+
+<p>のようにしてファイルに出力してから再生するか，あるいは設定さえ正しければ</p>
+
+<pre>
+play(sine(freq=10000, duration=44100*5, samp.rate=44100, bit=16, pcm=TRUE, stereo=TRUE))
+</pre>
+
+<p>でも音が出る。私の環境では，高い音は標本化周波数によって聞こえたり聞こえなかったりする。折り返し雑音みたいな音が聞こえることもある。再生装置と私の耳のどちらが効いているかわからないが，44100Hz標本化で試すと，14200〜14500Hzあたりに上限があるようだ。ちなみに，アナログテレビの時代には，雨の日は15750Hzの水平同期信号がよく聞こえた。若者だけに聞こえる17kHzあたりの「モスキート音」を使った「若者よけ」装置についてもしばしば話題になる（例：<a href="http://globe.asahi.com/feature/100719/04_2.html">「若者よけ」のモスキート音、課題は利用ルール</a>）</p>
+
+<p><em>[追記]</em> この項に関しても <a href="http://www.tatapa.org/~takuo/resample/index.html">Rによる音声のサンプリング周波数変換</a> を参照されたい。</p>
+
+<h2>周波数成分</h2>
+
+<p>このページの最初のほうで使った例（バッハ）の周波数成分を調べる：</p>
+
+<pre>
+library(tuneR)
+bach = readWave("Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.wav")
+p = periodogram(Wave(bach@left / 256))
+plot(p)
+</pre>
+
+<figure><img src="img/150301c.png" alt=""></figure>
+
+<p>1000Hz以下に集中しているように見える。</p>
+
+<pre>
+plot(p, xlim=c(0,1000))
+</pre>
+
+<figure><img src="img/150301e.png" alt=""></figure>
+
+<p>周波数の高い成分はほぼ0なので，対数グラフにしないとよく見えない。</p>
+
+<pre>
+plot(p, log="y", ylim=c(1e-13,1e-3))
+</pre>
+
+<figure><img src="img/150301f.png" alt=""></figure>
+
+<p>中音域（440Hz前後）と比べて，10kHz以上は8桁の違いがある。<code>periodogram()</code> の縦軸はエネルギーなので，振幅にすれば4桁の違い。元の音が ±10000 に収まっているので，10kHz以上は ±1 つまり量子化ノイズなのだろう。実際，サンプリング周波数を半分に <code>resample()</code> してみても，区別がつかない（私の耳 and/or 再生装置の問題も多分にある。追試してください）。</p>
+
+<h2>その他のサンプル音源</h2>
+
+<ul>
+  <li><a href="http://www.2l.no/hires/index.html">High Resolution Music DOWNLOAD services .:. FLAC in free TEST BENCH</a></li>
+  <li>eClassical.com: <a href="http://www.eclassical.com/pages/24-bit-faq.html">About audio formats FLAC and MP3</a> の下のほうにテスト用音源がある。320kbps MP3，16-bit FLAC，24-bit FLACが聴き比べられる。</li>
+</ul>
+
+<h2>追記：ALAC</h2>
+
+<p>上ではFLACを中心に扱ったが，<a href="https://macosforge.github.io/alac/">Apple Lossless Audio Codec</a>（ALAC）もオープンソースになっていた。</p>
+
+<pre>
+git clone https://github.com/macosforge/alac.git
+cd alac/convert-utility
+make
+mv alacconvert /usr/local/bin
+</pre>
+
+<p>で作れる。使い方は，エンコード <code>alacconvert in.wav out.caf</code>，デコード <code>alacconvert in.caf out.wav</code> である。</p>
+
+<p>これらも含めて <a href="http://wiki.hydrogenaud.io/index.php?title=Lossless_comparison">ここ</a> に比較がある。</p>
+
+<p>FLACはWindows 10ではサポート済み，macOS High Sierra，iOS 11からサポートされるらしい。</p>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2017-09-18 13:39:21</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

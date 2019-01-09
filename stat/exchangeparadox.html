@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="keywords" content="二封筒の問題,二つの封筒の問題,交換のパラドックス">
+<title>二封筒の問題</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>二封筒の問題</h1>
+
+<p>問題：</p>
+
+<blockquote>
+スワミ（ヒンズー教の坊さん）が，一つの封筒に $x$ 円，もう一つの封筒に $2x$ 円を入れ，一方をあなたに，もう一方を相手に渡した。どちらの封筒を渡される確率も 1/2 である。あなたが封筒を開けたら $y$ 円入っていた。相手の封筒の中身を $Y$ とする。あなたは考えた。封筒は等確率で渡されたのだから，確率 1/2 で $Y = y/2$ または $Y = 2y$ のはずだ。その期待値 $(1/2)(y/2 + 2y) = 5y/4$ は，あなたの封筒の中身 $y$ より明らかに大きい。あなたは目をキラリとさせて，相手に封筒を交換しようと持ちかけた。相手も同じ計算をして，同意した。
+</blockquote>
+
+<p>この問題は Ronald Christensen and Jessica Utts, Bayesian Resolution of the "Exchange Paradox",
+<i>The American Statistician,</i> Vol. 46, No. 4, pp. 274-276 (1992) をほぼ原文通りに訳したものである（ただし，原文の $m$, $x$ をここでは $x$, $y$ に，ドルを円に変えた）。論文によれば，この問題の起源は M. Kraitchik, <i>Mathematical Recreations</i> (Dover, 1953) に遡る。Martin Gardner, <i>Gotcha: Paradoxes to Puzzle and Delight</i> (W. H. Freeman, 1982) は Wallet Game（財布ゲーム）と呼び，S. L. Zabell, in <i>Causation, Chance, and Credence</i> (Kluwer, 1988) は Exchange Paradox（交換のパラドックス）と呼んだ。</p>
+
+<p>私はこの問題を別の本 Yudi Pawitan, <i>In All Likelihood: Statistical Modelling and Inference Using Likelihood</i> (Oxford University Press, 2001) で読んだ。答えらしいものは書いてなかった（後で，別のページに少しだけ書いてあったことに気づいた）ので，自分でいろいろ考えた（その後，Christensen and Utts の論文をちらりと見た）。</p>
+
+<p>封筒の金額 $y$ は，あなたの行動に何の関与もしていないように見える。封筒の中身を見なくても，交換したほうが得だ。交換してからもう一度同じ推論をすれば，また交換したほうが得になる。何度も交換すれば，いくらでも期待値が増えるかもしれない。まさにパラドックスである。</p>
+
+<p><a href="exchangeparadox2.html">（続き）</a></p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-01-02 10:26:38</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

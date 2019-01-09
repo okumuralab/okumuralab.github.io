@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>パソコン世帯普及率</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</div>
+
+<h1>パソコン世帯普及率</h1>
+
+<p>総務省<a href="http://www.johotsusintokei.soumu.go.jp/statistics/statistics05.html">通信利用動向調査</a>は各年末に行われる調査。郵送による調査票の配布及び回収による。</p>
+
+<p>次のPC世帯普及率データは報道発表資料の<a href="http://www.johotsusintokei.soumu.go.jp/statistics/data/090407_1.pdf">平成20年度調査</a>（PDF）による。世帯編<a href="http://www.johotsusintokei.soumu.go.jp/statistics/pdf/HR200700_001.pdf">平成19年度調査</a>（PDF）や<a href="http://www.johotsusintokei.soumu.go.jp/statistics/pdf/HR200600_001.pdf">平成18年度調査</a>（PDF）によれば2006年度の普及率は80.8%ではなく74.1%になっている。なぜ訂正されたのか不明。グラフをよく見れば，74.1%では異様に凹んでいることがわかる［追記：<a href="http://www.soumu.go.jp/johotsusintokei/statistics/seigo.html">統計調査データ：正誤情報</a> の「H21.6.25掲載」にて訂正］。</p>
+
+<pre>
+年 回答数 総数 PC世帯普及率
+2008 4515 6256 85.9
+2007 3640 6256 85.0
+2006 4999 7488 74.1 # → 80.8
+2005 3982 6400 80.5
+2004 3695 6400 77.5
+2003 3354 6400 78.2
+2002 3673 6400 71.7
+2001 3845 6400 58.0
+2000 4278 6400 50.5
+1999 3657 6400 37.7
+</pre>
+
+<p>2006年の普及率は，上の表は訂正前の74.1%で，訂正後は80.8%である。</p>
+
+<p>上の表をクリップボードにコピーして，以下のコードを実行する（Mac/Windowsのうち不要なほうは削除する）。</p>
+
+<pre>
+options(encoding="SJIS")                      # Mac
+X = read.table("clipboard", header=TRUE)      # Windows
+X = read.table(pipe("pbpaste"), header=TRUE)  # Mac
+par(family="HiraKakuPro-W3")                  # Mac
+par(las=1)              # 縦軸の文字を横向きにしない
+par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
+plot(X$年, X$PC世帯普及率, pch=16, type="o", ylim=c(30,90),
+     xlab="", ylab="", axes=FALSE)
+t = 1999:2008
+axis(1, t)
+t = seq(30, 90, 10)
+axis(2, t, paste(t, "%", sep=""))
+axis(4, t, labels=FALSE)
+arrows(2006, 74.1, 2006, 80.8, 0.1)
+points(2006, 80.8, pch=16)
+points(X$年, X$回答数/X$総数*100, type="b")
+text(2003, 82, "PC世帯普及率")
+text(2003, 48, "質問紙回収率")
+</pre>
+
+<p><img src="img/090502.png" alt="PC世帯普及率" /></p>
+
+<p>
+<code>axes=FALSE</code>
+の代わりに
+<code>xaxt="n", yaxt="n"</code>
+とすれば，<a href="/~okumura/blog/node/2406">PC普及率データ訂正？ | Okumura's Blog</a>
+にあるようにグラフ領域が長方形の枠で囲まれる。また，最後の2行の代わりに</p>
+
+<pre>
+legend(2001, 98, pch=c(16,1), legend=c("PC世帯普及率　","質問紙回収率"),
+       bty="n", horiz=TRUE, xpd=TRUE)
+</pre>
+
+<p>とすれば，凡例が上マージンに出る。</p>
+
+<hr />
+
+<p><a href="/~okumura/">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2009-11-18 13:44:49
+<!-- hhmts end -->
+</p>
+</body>
+</html>

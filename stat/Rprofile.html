@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>~/.Rprofile</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>~/.Rprofile</h1>
+
+<p>私のホームディレクトリに置いている <code>.Rprofile</code>
+というファイルです。ネットで流布しているものをコピペしてきたもので，オリジナリティはまったくありません。</p>
+
+<pre>
+Sys.setenv(TZ="Asia/Tokyo")
+options(repos="https://cran.ism.ac.jp")
+if (interactive()) {
+    if (capabilities("aqua")) {
+        options(device="quartz")
+    }
+    setHook(packageEvent("grDevices", "onLoad"),
+        function(...) {
+            if (.Platform$OS.type == "windows")
+                grDevices::windowsFonts(sans ="MS Gothic",
+                                        serif="MS Mincho",
+                                        mono ="FixedFont")
+            if (capabilities("aqua"))
+                grDevices::quartzFonts(
+                  sans=grDevices::quartzFont(
+                    c("Hiragino Kaku Gothic ProN W3",
+                      "Hiragino Kaku Gothic ProN W6",
+                      "Hiragino Kaku Gothic ProN W3",
+                      "Hiragino Kaku Gothic ProN W6")),
+                  serif=grDevices::quartzFont(
+                    c("Hiragino Mincho ProN W3",
+                      "Hiragino Mincho ProN W6",
+                      "Hiragino Mincho ProN W3",
+                      "Hiragino Mincho ProN W6")))
+            # if (capabilities("X11"))
+            #     grDevices::X11.options(
+            #         fonts=c("-kochi-gothic-%s-%s-*-*-%d-*-*-*-*-*-*-*",
+            #                 "-adobe-symbol-medium-r-*-*-%d-*-*-*-*-*-*-*"))
+            grDevices::pdf.options(family="Japan1GothicBBB")
+            grDevices::ps.options(family="Japan1GothicBBB")
+        }
+    )
+    attach(NULL, name = "JapanEnv")
+    assign("familyset_hook",
+           function() {
+                winfontdevs=c("windows","win.metafile",
+                              "png","bmp","jpeg","tiff","RStudio")
+                macfontdevs=c("quartz","quartz_off_screen","RStudio")
+                devname=strsplit(names(dev.cur()),":")[[1L]][1]
+                if ((.Platform$OS.type == "windows") &amp;&amp;
+                    (devname %in% winfontdevs))
+                        par(family="sans")
+                if (capabilities("aqua") &amp;&amp;
+                    devname %in% macfontdevs)
+                        par(family="sans")
+           },
+           pos="JapanEnv")
+    setHook("plot.new", get("familyset_hook", pos="JapanEnv"))
+    setHook("persp", get("familyset_hook", pos="JapanEnv"))
+    # http://d.hatena.ne.jp/kiwamu_i/20100808/
+    setHook(packageEvent("lattice", "attach"),
+            function(...) {
+                lattice.options(default.args = list(as.table=TRUE))
+                my.pdf.theme &lt;- standard.theme("pdf", color=TRUE)
+                my.pdf.theme$grid.pars &lt;- list(fontfamily = "sans")
+                my.pdf.theme$axis.text$fontfamily &lt;- "sans"
+                my.pdf.theme$axis.text$cex &lt;- 1
+                my.quartz.theme &lt;- standard.theme("quartz", color=FALSE)
+                my.quartz.theme$grid.pars &lt;- list(fontfamily = "sans")
+                my.quartz.theme$axis.text$fontfamily &lt;- "sans"
+                my.quartz.theme$axis.text$cex &lt;- 1
+                lattice.options(default.theme =
+                    function() {
+                        switch(EXPR = .Device,
+                               pdf = my.pdf.theme,
+                               my.quartz.theme)
+                    })
+                })
+}
+</pre>
+
+<p>上で <code>capabilities("X11")</code> をコメントアウトしているのは，これがあるだけでMacでX11が立ち上がってしまうからです。X11を使わないのであれば不要です。</p>
+
+<p>なお，最後に次のように書くことがあるようですが，MacのR.appではhistory関係は別メカニズムで行われていますので，<code>history()</code> や <code>savehistory()</code> の類はサポートされていません（<a href="http://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html">R for Mac OS X FAQ</a>の「History」参照）。</p>
+
+<pre>
+.Last = function() {
+    if (interactive()) try(savehistory("~/.Rhistory"))
+}
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2017-10-27 10:30:58</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

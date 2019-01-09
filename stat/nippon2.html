@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>日本地図: 2015年国勢調査のネット回答率</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>日本地図: 2015年国勢調査のネット回答率</h1>
+
+<p><a href="http://www.soumu.go.jp/menu_news/s-news/01toukei01_02000054.html">総務省｜平成27年国勢調査におけるオンライン調査の実施状況</a>の別紙をCSV化したもの
+<a href="data/census2015net.csv">census2015net.csv</a>
+を置いておく。これをもとに，日本地図に色付けしてみよう（同じことをすでに<a href="https://twitter.com/shanghai_ii/status/647339119266271232">上海IIさん</a>がされている）。</p>
+
+<pre>
+# install.packages("NipponMap")
+library(NipponMap)
+data = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/census2015net.csv",
+                fileEncoding="UTF-8", comment.char="#")
+x = data[,3]/data[,2] - 19175769/51950504 # 回答率から全国平均を引く
+x = (x / max(abs(x)) + 1) / 2  # [0,1]の範囲にスケール
+cols = colorRamp(c("#0080ff","white","#ff8000"))
+JapanPrefMap(col=rgb(cols(x)/255))
+</pre>
+
+<p>全国平均より高い県はオレンジ，低い県は青で，色が濃いほど全国平均から離れている。</p>
+
+<figure><img src="img/150926a.png" alt="2015国勢調査のネット回答率"></figure>
+
+<p>最高は滋賀県48.4%，最低は沖縄県22.7%，東京都26.0%は高知県25.1%に次ぐワースト3である。</p>
+
+<p>ついでに都道府県別スマホ率（スマホ回答数÷ネット回答数）も調べてみた。</p>
+
+<pre>
+x = data[,4]/data[,3] - 6630039/19175769
+x = (x / max(abs(x)) + 1) / 2  # [0,1]の範囲にスケール
+JapanPrefMap(col=rgb(cols(x)/255))
+</pre>
+
+<figure><img src="img/150926b.png" alt="2015国勢調査のネット回答スマホ率"></figure>
+
+<p>オレンジほどスマホ率が高い。全国平均は34.6%，最高は鹿児島県43.8%，最低は東京都30.0%である。</p>
+
+<p>ほかに，<a href="http://www.stat.go.jp/info/kenkyu/kokusei/houdou2.htm">2005年国勢調査</a>の「所定期間内に調査票が提出されなかった世帯の割合（%）」のデータもおもしろい：</p>
+
+<pre>
+census2005denial = c(1.5, 2.0, 1.4, 6.8, 1.7, 1.6, 3.6, 1.5, 3.9,
+  1.0, 4.3, 4.0, 13.3, 4.1, 1.8, 2.1, 3.6, 2.5, 1.4, 1.3, 1.2, 2.5, 5.0,
+  2.4, 3.5, 6.1, 5.4, 3.5, 1.8, 1.4, 2.9, 1.0, 2.1, 4.0, 2.4, 2.2, 2.8,
+  4.2, 2.1, 6.1, 1.3, 1.4, 2.1, 2.5, 2.7, 2.3, 6.6)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-07-21 12:51:40</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

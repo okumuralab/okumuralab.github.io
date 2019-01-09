@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Rでのスクリプト処理</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>Rでのスクリプト処理</h1>
+
+<p>Rubyのような言語では，例えば次のようなスクリプトでテキストファイルを処理することが多い：</p>
+
+<pre>
+#! /usr/bin/env ruby -w
+# -*- coding: utf-8 -*-
+
+while line = gets
+    puts(line)  # 標準出力に書き出す
+end
+</pre>
+
+<p>Rでも同様なことができることを示すために，<a href="160629.html">名古屋市のデータのCSV化</a>では強いてRを使った。必要な技を以下にまとめておく。</p>
+
+<p>まずは基本として，標準入力から読み込んだ各行について処理（たとえば標準出力に書き出す）をする：</p>
+
+<pre>
+#! /usr/bin/env Rscript
+
+lines = readLines("stdin")
+for (line in lines) {
+    cat(line, "\n")  # 標準出力に書き出す
+}
+</pre>
+
+<p>入力ファイル（ここでは標準入力）の最後の行に行末がなければ「不完全な最終行が見つかりました」という警告が出る（無視してよい）。</p>
+
+<p>厳密にいえば <code>cat(line, "\n")</code> では <code>line</code> と改行の間にスペースが入る。これが問題なら <code>cat(line, "\n", sep="")</code> または <code>cat(line); cat("\n")</code> とすればよい。</p>
+
+<p>Rらしくないが，1行ずつ読んで処理するには，次のようにする：</p>
+
+<pre>
+#! /usr/bin/env Rscript
+
+f = file("stdin", "r")
+while ({line = readLines(f, 1); length(line) != 0}) {
+    cat(line, "\n")
+}
+</pre>
+
+<p>あるいは <code>while (length(line &lt;- readLines(f, 1)) != 0)</code> でもよいが，こういうわかりにくい方向に行くのではなく，むしろ次のようにするほうがよいであろう：</p>
+
+<pre>
+while (TRUE) {
+    line = readLines(f, 1)
+    if (length(line) == 0) break
+    cat(line, "\n")
+}
+</pre>
+
+<p>コマンドラインからファイル名を与える場合は次のようになる：</p>
+
+<pre>
+#! /usr/bin/env Rscript
+
+args = commandArgs(trailingOnly=TRUE)
+for (arg in args) {
+    lines = readLines(arg)
+    for (line in lines) {
+        cat(line, "\n")
+    }
+}
+</pre>
+
+<p>または</p>
+
+<pre>
+#! /usr/bin/env Rscript
+
+args = commandArgs(trailingOnly=TRUE)
+for (arg in args) {
+    f = file(arg, "r")
+    while ({line = readLines(f, 1); length(line) != 0}) {
+        cat(line, "\n")
+    }
+    # close(f) # たぶん不要
+}
+</pre>
+
+<p>デフォルトでは <code>cat()</code> は標準出力に出力する。ファイルに出力するには次のようにする。</p>
+
+<pre>
+#! /usr/bin/env Rscript
+
+lines = readLines("stdin")
+f = file("out.txt", "w")
+for (line in lines) {
+    cat(line, "\n", sep="", file=f)  # ファイルに書き出す
+}
+</pre>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-07-02 14:48:11</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

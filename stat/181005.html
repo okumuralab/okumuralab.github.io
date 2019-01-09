@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>グラフの例：縦書きのラベル</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：縦書きのラベル</h1>
+
+<p><a href="090503a.html">グラフの例：都道府県別人口</a>で都道府県人口の棒グラフの例を挙げました。そこではラベルを横書きですませるため横棒グラフにしました。ここでは西原史暁さんの<a href="http://id.fnshr.info/2017/03/13/r-plot-tategaki/">Rでグラフを描くときにY軸のタイトルを縦書きにする</a>を参考にして縦書きに挑戦します。</p>
+
+<p>データの例としては<a href="prefectures.html">いろいろな都道府県別データ</a>の人口を使います。</p>
+
+<p>まず，西原さんの <code>tategaki()</code> 関数を定義しておきます：</p>
+
+<pre>
+tategaki = function(x) {
+  x = chartr("ー", "丨", x) # 長音符の処理
+  x = strsplit(split="", x)
+  sapply(x, paste, collapse="\n")
+}
+</pre>
+
+<p>実際に描くには次のようにします：</p>
+
+<pre>
+par(lheight=0.8)       # 行送りを調節
+par(las=1)             # 軸ラベルを横書きに
+par(mgp=c(1,-0.2,-1))  # 軸・軸ラベル位置調整
+par(xpd=TRUE)          # text()の描画位置を拡大
+x = barplot(population/1000000)
+axis(2, 12, "百万人", padj=-1)
+text(x, 0, tategaki(kenmei), pos=1, offset=1)
+</pre>
+
+<figure><img src="img/181005a.png" alt="都道府県の人口"></figure>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-10-05 21:55:39</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

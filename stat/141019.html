@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ここにも指数分布</title>
+<link rel="stylesheet" href="../style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>ここにも指数分布</h1>
+
+<p>矢野和男『データの見えざる手　ウエアラブルセンサが明かす人間・組織・社会の法則』（草思社，2014）に出ている話（少し改変）をRで確かめてみる。</p>
+
+<p>$[0, 1000)$ の実数の一様乱数を10万個生成し，1000個の区間 $[n, n+1)$ に分類すると，各区間に入る個数はポアソン分布する。ここまでは当然。</p>
+
+<pre>
+x = runif(100000) * 1000
+h = hist(x, breaks=0:1000, plot=FALSE)$counts
+hist(h, col="gray")
+</pre>
+
+<figure><img src="img/141019a.png" alt=""></figure>
+
+<p>さて，これら1000個の区間から2個をランダムに選び，一方の区間からもう一方の区間に一つだけ点を移す。これを延々と繰り返す。そうすると，各区間に入る個数はポアソン分布のままか，それとも正規分布に近づくか，それともまったく別の分布になるか？</p>
+
+<pre>
+for (i in 1:100000000) {
+  t = sample(1000, 2)
+  if (h[t[2]] &gt; 0) {
+    h[t[1]] = h[t[1]] + 1
+    h[t[2]] = h[t[2]] - 1
+  }
+}
+hist(h, breaks=(0:20)*50, col="gray")
+</pre>
+
+<figure><img src="img/141019b.png" alt=""></figure>
+
+<p>やってみると，指数分布になる。これは統計力学のボルツマン分布と同じ原理だという。</p>
+
+<p>元のポアソン分布が平均100であったのと同様，この指数分布も平均100になる（当然）。</p>
+
+<p>$\int_0^{\infty} k e^{-kx} dx = 1$，$\int_0^{\infty} x \cdot k e^{-kx} dx = \frac{1}{k}$
+より $k = \frac{1}{100}$ で，密度関数は $\frac{1}{100} e^{-x/100}$ である。この曲線は上のグラフとよく合っている。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-06-03 13:06:41</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

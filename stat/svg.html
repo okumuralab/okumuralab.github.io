@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>SVG画像</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>SVG画像</h1>
+
+<p>[2016-01-25] svglite，rsvgを追加しました。</p>
+
+<p>[2016-11-15] svglite 1.2.0についての情報を追加しました。</p>
+
+<p>[2018-04-08] rvgを追加しました。</p>
+
+<h2>はじめに</h2>
+
+<p>グラフを<a href="/~okumura/html5/svg.html">SVG形式</a>で描くには，ほぼR標準（cairo）の <code>svg()</code> を使うか，RSVGTipsDeviceパッケージの <code>devSVGTips()</code> を使うという選択肢がありました。2015年末にはHadley Wickhamが新しい <a href="https://cran.r-project.org/web/packages/svglite/index.html">svglite</a> というパッケージを作りました（<a href="http://blog.rstudio.org/2015/12/10/svglite-1-0-0/">アナウンス</a>，GitHubの <a href="https://github.com/hadley/svglite">hadley/svglite</a>）。</p>
+
+<p>cairo版では，文字も図形になり，ビューアに依存しないので安心ですが，日本語を使う場合は下の例のように日本語のフォント名を指定する必要があります。RSVGTipsDevice版では，SVGの <code>&lt;text&gt;</code> を使ってそのままUTF-8の文字列を書き込みますので，表示はビューアに依存しますが，文字列は検索・コピー可能になります。ツールチップ（マウスを乗せると現れる吹き出し）を埋め込むこともできます。svglite版はファイルサイズが他よりずっと小さいSVGを出力します。</p>
+
+<h2>例</h2>
+
+<p>Macで普通に画面に描いてスクリーンショットをとります：</p>
+
+<pre>
+quartz(width=7, height=4)
+par(mgp=c(2,0.8,0))
+curve(dnorm(x), xlim=c(-3,3), main="正規分布")
+</pre>
+
+<figure><img src="img/dnorm-quartz.png" alt="Quartzグラフィックの例"></figure>
+
+<p>標準（cairo）の <code>svg()</code> を使います：</p>
+
+<pre>
+svg("dnorm-cairo.svg", family="Japan1GothicBBB", width=7, height=4)
+par(mgp=c(2,0.8,0))
+curve(dnorm(x), xlim=c(-3,3), main="正規分布")
+dev.off()
+</pre>
+
+<figure><img src="img/dnorm-cairo.svg" alt="CairoのSVGの例"></figure>
+
+<p>RSVGTipsDevice の <code>devSVGTips()</code> を使います：</p>
+
+<pre>
+library(RSVGTipsDevice)
+devSVGTips("dnorm-svgtips.svg", width=7, height=4)
+par(mgp=c(2,0.8,0))
+curve(dnorm(x), xlim=c(-3,3), main="正規分布")
+dev.off()
+</pre>
+
+<figure><img src="img/dnorm-svgtips.svg" alt="RSVGTipsDeviceのSVGの例"></figure>
+
+<p>svglite の <code>svglite()</code> を使います：</p>
+
+<pre>
+library(svglite)
+svglite("dnorm-svglite.svg", width=7, height=4)
+par(mgp=c(2,0.8,0))
+curve(dnorm(x), xlim=c(-3,3), main="正規分布")
+dev.off()
+</pre>
+
+<p>生成された図は幅情報がなく，画面幅いっぱいに出力されてしまうので，ここでは <code>&lt;img src="..." width="600" alt=""&gt;</code> のように幅を指定しています。</p>
+
+<figure><img src="img/dnorm-svglite.svg" width="600" alt="svgliteのSVGの例"></figure>
+
+<p>日本語の部分だけ位置がおかしくなってしまいました。気になるなら</p>
+
+<pre>
+&lt;text x='266.40' y='34.67' style='font-size: 14.40pt; font-weight: bold;
+  font-family: Arial;'&gt;正規分布&lt;/text&gt;
+</pre>
+
+<p>を</p>
+
+<pre>
+&lt;text x='266.40' y='34.67' style='font-size: 14.40pt; font-weight: bold;
+  font-family: sans-serif;' text-anchor="middle"&gt;正規分布&lt;/text&gt;
+</pre>
+
+<p>に直せばよさそうです。ついでですので，<code>Arial</code> になっているところを全部 <code>sans-serif</code> に直し，dnorm(x) と書いてあるところだけ <code>monospace</code> に直してみました（以下参照）。</p>
+
+<p>[2016-11-15追記] svglite 1.2.0 が<a href="https://blog.rstudio.org/2016/11/14/svglite-1-2-0/">出ました</a>。CJK supportを謳っているのですが，文字幅の取得にたいへん時間がかかり，しかもあまり美しくありません：</p>
+
+<figure><img src="img/dnorm-svglite120.svg" width="600" alt="svglite 1.2.0のSVGの例"></figure>
+
+<pre>
+&lt;text x='245.40' y='34.53' style='font-size: 14.40px; font-weight: bold; font-family: Arial;'
+  textLength='42.00px' lengthAdjust='spacingAndGlyphs'&gt;正規分布&lt;/text&gt;
+</pre>
+
+<p>単純に中央揃えをサポートしてくれたほうがよかったのに。</p>
+
+<p>[2018-04-08] <a href="https://github.com/davidgohel/rvg">rvg</a> という新しいパッケージがCRANに入ったようなので，試してみます：</p>
+
+<pre>
+library(rvg)
+dsvg("dnorm-rvg.svg", width=7, height=4)
+par(mgp=c(2,0.8,0))
+curve(dnorm(x), xlim=c(-3,3), main="正規分布")
+dev.off()
+</pre>
+
+<figure><img src="img/dnorm-rvg.svg" alt="rvgのSVGの例"></figure>
+
+<h2>rsvgによる変換</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Librsvg">librsvg</a>はGNOMEプロジェクトの一環として開発されているSVGライブラリです（当初の開発者はRaph Levien）。これをRから使えるようにしたのが <a href="https://cran.r-project.org/web/packages/rsvg/index.html">rsvg</a> パッケージです。これを使えばSVG画像をPDFや任意解像度のビットマップ画像に変換できます。</p>
+
+<p>以下では，前節の最後に書いたように修正したsvglite出力を使います。</p>
+
+<pre>
+library(rsvg)
+bitmap = rsvg("dnorm-svglite.svg", width=600)
+png::writePNG(bitmap, "dnorm-svglite.png")
+</pre>
+
+<figure><img src="img/dnorm-svglite.png" alt="svgliteのSVGをrsvgでpngにしたもの"></figure>
+
+<p>PDFに変換するには次のようにします：</p>
+
+<pre>
+rsvg_pdf("dnorm-svglite.svg", "dnorm-svglite.pdf")
+</pre>
+
+<p>変換したPDFはちゃんとフォントが埋め込まれています：</p>
+
+<figure><img src="img/160125b.png" alt="svgliteのSVGをrsvgでPDFにしたもののフォント"></figure>
+
+<p><code>sans-serif</code> を <code>serif</code> に直したり <code>font-weight: bold;</code> を外したりしてみると，Mac（El Capitan）では欧文にHelveticaやTimes-RomanやCourier，和文にHiraginoSans-W3，HiraginoSans-W6，HiraMinProN-W3，HiraMinProN-W6が使われることがわかりました。</p>
+
+<p>Windowsで同様にやってみると，和文CairoFont-1-1，欧文DejaVuSans，DejaVuSansMonoが埋め込まれるようです。</p>
+
+<p>Linux（CentOS 7）でもやってみました。あらかじめ <code>yum install librsvg2-devel</code> してからrsvgをインストールします。フォントは和文CairoFont-1-1，欧文DejaVuSans，DejaVuSansMono，数字VL-Gothic-Regularが埋め込まれます。VL Gothicの数字は0に斜線が入ります。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-04-08 16:23:03</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

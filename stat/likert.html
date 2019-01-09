@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>グラフの例：リッカート型データ</title>
+<link rel="stylesheet" href="/~okumura/style6.css" />
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：リッカート型データ</h1>
+
+<h2>はじめに</h2>
+
+<p>リッカート型データとは，何段階か（たとえば「大反対」「やや反対」「どちらでもない」「やや賛成」「大賛成」）で答えるアンケートの回答数データである。</p>
+
+<p>次は従来型とICT利用型の授業を受けた感想を尋ねた架空のデータである。</p>
+
+<pre>
+         最悪 悪い 普通 良い 最高
+従来型      4    5    6    3    2
+ICT利用型   1    4    3    6    6
+</pre>
+
+<p>これがテキストファイル <code>result.txt</code> に入っているとして，次のようにしてRで読むことができる（保存の場所によってはパス指定が必要。クリップボード経由でも可）。</p>
+
+<pre>
+&gt; data = read.table("result.txt")
+</pre>
+
+<p><code>data</code> とだけ打ち込んでEnterを押して，正しく読めているか確認する。</p>
+
+<h2>普通の棒グラフ</h2>
+
+<p>普通の積み重ね棒グラフ（(stacked|divided) bar (plot|chart)）を描いてみよう。</p>
+
+<pre>
+&gt; rowSums(data)  # 行ごとに和を求める
+   従来型 ICT利用型 
+       20        20 
+&gt; ratio = data / rowSums(data)  # 行ごとに和で割る
+&gt; ratio
+          最悪 悪い 普通 良い 最高
+従来型    0.20 0.25 0.30 0.15  0.1
+ICT利用型 0.05 0.20 0.15 0.30  0.3
+&gt; barplot(t(ratio)) # 積み重ね棒グラフ
+&gt; barplot(t(ratio), horiz=TRUE)   # 横向けに
+&gt; par(las=1)               # 字を横書きに
+&gt; par(mgp=c(2,0.8,0))      # 目盛り位置調整
+&gt; par(mar=c(5,7,4,2)+0.1)  # マージン調整（元は c(5,4,4,2)+0.1）
+&gt; barplot(t(ratio), horiz=TRUE) # 再描画
+&gt; # ラベルを描くのはちょっと難しい
+&gt; t = as.numeric(ratio[2,])
+&gt; mtext(names(data), at=cumsum(t)-t/2)
+</pre>
+
+<figure>
+<img src="img/120811a.png" alt="リッカート型データの棒グラフの例">
+</figure>
+
+<p>某の順序が下から上になるのが嫌なら，あらかじめ <code>data = data[2:1,]</code>
+で逆順にすればよい。</p>
+
+<p>色が寂しい場合は，例えば次のように色を設定する。</p>
+
+<pre>
+cols = c("#CA0020", "#F4A582", "gray90", "#92C5DE", "#0571B0")
+barplot(t(ratio), horiz=TRUE, col=cols)
+</pre>
+
+<p>これらの色は次のようにして計算した。</p>
+
+<pre>
+library(RColorBrewer)
+cols = brewer.pal(5, "RdBu")
+cols[3] = "gray90"
+</pre>
+
+<p><del>これが次のHHパッケージのデフォルト色である。</del></p>
+
+<p>これに次のHHパッケージの技も含めてまとめると次のようになる：</p>
+
+<pre>
+data = data[2:1,]        # 逆順に
+par(las=1)               # 字を横書きに
+par(mgp=c(2.4,0.8,0.4))  # 目盛り位置調整
+par(mar=c(5,6,4,4)+0.1)  # マージン調整（元は c(5,4,4,2)+0.1）
+off = -(data[,1] + data[,2] + 0.5 * data[,3]) # センタリング用オフセット
+cols = c("#CA0020", "#F4A582", "gray90", "#92C5DE", "#0571B0")
+barplot(t(data), horiz=TRUE, offset=off, col=cols, xlab="人数")
+t = as.numeric(data[2,])
+mtext(names(data), at=cumsum(t)-t/2 + off[2])
+</pre>
+
+<figure>
+<img src="img/150209a.png" alt="リッカート型データの棒グラフの例">
+</figure>
+
+<h2>HHパッケージによる棒グラフ</h2>
+
+<!-- <p><em>[追記]</em> 久しぶりにHHパッケージをアップデートしてみたら，要XQuartzで，とても重くなっている。ちょっと好みでないかも。デフォルトの色も下に示したものと少し異なる。ちなみにHHの本 Richard M. Heiberger and Burt Holland, <i>Statistical Analysis and Data Display</i> は2015年中に第2版が出るようだ。</p> -->
+
+<p>中央の階級の真ん中を中心として両側に伸びた積み重ね棒グラフ（(diverging|staggered|centered) stacked bar (plot|chart)）である。3つ以上あるときは，ずれの順（あるいはリッカート値の平均の順）に並べるとわかりやすい。</p>
+
+<p><a href="http://cran.r-project.org/web/packages/HH/index.html">HH</a>パッケージがインストールされていない場合はあらかじめ：</p>
+
+<pre>
+install.packages("HH")
+</pre>
+
+<p>HHパッケージを読み込む：</p>
+
+<pre>
+library("HH")
+</pre>
+
+<p>あとは簡単。</p>
+
+<pre>
+plot.likert(data, main="アンケート結果", xlab="人数")
+</pre>
+
+<figure>
+<!-- <img src="img/120811b.png" alt="HHパッケージのplot.likertの例"> -->
+<img src="img/180409a.png" alt="HHパッケージのplot.likertの例">
+</figure>
+
+<p>HHパッケージのグラフィックはRの標準グラフィックではなくlatticeを使っている。日本語が文字化けする場合は
+<a href="Rprofile.html">~/.Rprofile</a>
+を参考に設定する。</p>
+
+<h2>参考</h2>
+
+<ul>
+  <li>Naomi B. Robbins and Richard M. Heiberger,
+      "Plotting Likert and Other Rating Scales",
+      <a href="http://www.amstat.org/membersonly/proceedings/2011/papers/300784_64164.pdf">http://www.amstat.org/membersonly/proceedings/2011/papers/300784_64164.pdf</a></li>
+  <li>Stephen Few (Perceptual Edge):
+      <a href="http://www.perceptualedge.com/example9.php">Design Example</a></li>
+  <li>Data Revelations:
+      <ul>
+	<li><a href="http://www.datarevelations.com/the-likert-question-question.html">The Likert Question Question</a></li>
+	<li><a href="http://www.datarevelations.com/a-little-more-on-likert-scale-questions.html">A little more on Likert scale questions</a></li>
+	<li><a href="http://www.datarevelations.com/likert-scale-nirvana.html">Likert Scale Nirvana</a></li>
+	<li><a href="http://www.datarevelations.com/likert-scales-the-final-word.html">Likert Scales — The Final Word?</a></li>
+      </ul></li>
+  <li><a href="http://stats.stackexchange.com/questions/25109/visualizing-likert-responses-using-r-or-spss">Visualizing Likert responses using R or SPSS</a></li>
+  <li><a href="http://jason.bryer.org/likert/">likert: An R package analyzing and visualizing Likert items</a></li>
+  <li><a href="http://cran.r-project.org/web/packages/sjPlot/index.html">CRAN - Package sjPlot</a></li>
+</ul>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-04-09 10:28:41</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

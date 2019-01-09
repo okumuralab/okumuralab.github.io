@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>モルトかブレンドか</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<h1>モルトかブレンドか</h1>
+
+<p><a href="http://kashino.exblog.jp/8248401/">柏野雄太氏のブログ</a>に紹介されていた
+Stephen D Chadwick and Hugh A F Dudley,
+"Can malt whisky be discriminated from blended whisky? 
+The proof. A modification of Sir Ronald Fisher's 
+hypothetical tea tasting experiment",
+<a href="http://www.bmj.com/content/vol287/issue6409/">British Medical Journal, Vol 287, No 6409</a>, pp.1912-1913
+を調べてみた。</p>
+
+<p>8人の被験者（著者たちの同僚）を，ウイスキーをよく飲む群4人と，そうでない群4人とに分けて，目隠しをして，モルトウイスキー3種とブレンドウイスキー3種を各6回ずつ順不同に飲んでもらう。各群で4×6×6=144回の結果を表にしたところ，次のようになった。</p>
+
+<p>よく飲む群</p>
+
+<table border="1">
+<tr><th></th><th>モルト</th><th>ブレンド</th><th>わからない</th></tr>
+<tr><th>全回答</th><td>57</td><td>84</td><td>3</td></tr>
+<tr><th>正解</th><td>36</td><td>48</td><td></td></tr>
+</table>
+
+<p>あまり飲まない群</p>
+
+<table border="1">
+<tr><th></th><th>モルト</th><th>ブレンド</th><th>わからない</th></tr>
+<tr><th>全回答</th><td>64</td><td>79</td><td>1</td></tr>
+<tr><th>正解</th><td>32</td><td>40</td><td></td></tr>
+</table>
+
+<p>「わからない」（Don't know）という答えを原論文では誤答と扱っているが，以下では計算から外すことにする。</p>
+
+<p>よく飲む群</p>
+
+<table border="1">
+<tr><th>実際＼回答</th><th>モルト</th><th>ブレンド</th></tr>
+<tr><th>モルト</th><td>36</td><td>36</td></tr>
+<tr><th>ブレンド</th><td>21</td><td>48</td></tr>
+</table>
+
+<p>あまり飲まない群</p>
+
+<table border="1">
+<tr><th>実際＼回答</th><th>モルト</th><th>ブレンド</th></tr>
+<tr><th>モルト</th><td>32</td><td>39</td></tr>
+<tr><th>ブレンド</th><td>32</td><td>40</td></tr>
+</table>
+
+<p>あまり飲まない群は明らかに差がないが，よく飲む群は微妙。Rで計算すると次のようになる。</p>
+
+<pre>
+&gt; fisher.test(matrix(c(36,21,36,48),nrow=2))
+
+	Fisher's Exact Test for Count Data
+
+data:  matrix(c(36, 21, 36, 48), nrow = 2) 
+p-value = 0.02535
+alternative hypothesis: true odds ratio is not equal to 1 
+95 percent confidence interval:
+ 1.086013 4.843828 
+sample estimates:
+odds ratio 
+  2.272047 
+</pre>
+
+<p><i>p</i> = 0.02535 で，5%水準で有意ということになる。</p>
+
+<p>「わからない」を誤答に直して計算すれば，<i>p</i> = 0.06257
+となり，5%水準では有意でなくなる。ただし，よく考えないとおかしいことになる。<a href="http://kashino.exblog.jp/8248401/">柏野雄太氏のブログ</a>でも「あまり飲まない群」でモルトが71杯，ブレンドが73杯あったことになってしまっている（実際はどちらも72杯）。</p>
+
+<hr />
+
+<p><a href="/~okumura/">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2009-08-09 19:40:11
+<!-- hhmts end -->
+</p>
+</body>
+</html>

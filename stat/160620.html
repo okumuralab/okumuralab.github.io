@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ポアソン分布のシミュレーション</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<style>
+#board {
+  width: 1050px;
+  height: 800px;
+}
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>ポアソン分布のシミュレーション</h1>
+
+<div id="board"></div>
+
+<script>
+var n = [], h = [], t = 0, id;
+var board = document.getElementById("board");
+init();
+
+function init() {
+  var i, a;
+  for (i = 0; i < 50; i++) {
+    n[i] = 0;  h[i] = 0;
+    a = document.createElement("span");
+    a.appendChild(document.createTextNode("😃"));
+    board.appendChild(a);
+    a.style.position = 'absolute';
+    a.style.left = 50 + (i * 20) + 'px';
+    a.style.top  = '360px';
+  }
+  id = setInterval(f1, 50);
+}
+
+function f1() {
+  var x, a;
+  x = Math.floor(Math.random() * 50);
+  n[x]++;
+  a = document.createElement("span");
+  a.appendChild(document.createTextNode("💰"));
+  board.appendChild(a);
+  a.style.position = 'absolute';
+  a.style.left = 50 + (x * 20) + 'px';
+  a.style.top  = (350 - 10 * n[x]) + 'px';
+  if (++t == 500) {
+    clearInterval(id); f2();
+  }
+}
+
+function f2() {
+  var i, j, a;
+  for (i = 0; i < 50; i++) h[n[i]]++;
+  for (i = 0; i < 25; i++) {
+    for (j = 0; j < i; j++) {
+      a = document.createElement("span");
+      a.appendChild(document.createTextNode("💰"));
+      board.appendChild(a);
+      a.style.position = 'absolute';
+      a.style.left = 50 + (i * 20) + 'px';
+      a.style.top  = (600 + 10 * j) + 'px';
+    }
+    for (j = 0; j < h[i]; j++) {
+      a = document.createElement("span");
+      a.appendChild(document.createTextNode("😃"));
+      board.appendChild(a);
+      a.style.position = 'absolute';
+      a.style.left = 50 + (i * 20) + 'px';
+      a.style.top  = (580 - 10 * j) + 'px';
+    }
+  }
+}
+
+</script>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-06-20 20:49:10</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

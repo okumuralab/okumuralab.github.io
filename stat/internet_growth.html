@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>インターネットの規模の拡大</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：インターネットの規模の拡大</h1>
+
+<h2>インターネットのホスト数</h2>
+
+<p>Wikipediaの
+<a href="http://en.wikipedia.org/wiki/History_of_the_Internet">History of the Internet</a>
+に載っているインターネットのホスト数のグラフは，すでに消えているがInternet Archiveに残っているISCの
+<a href="https://web.archive.org/web/20130510163127/https://www.isc.org/solutions/survey/history">Internet host count history</a>
+のページに載っている。より新しいデータは
+<a href="https://www.isc.org/services/survey/">ISC Domain Survey</a>
+に載っている。これらを合わせたものを
+<a href="data/hosts.csv">hosts.csv</a>に収めた。</p>
+
+<pre>
+hosts = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/hosts.csv",
+                 comment.char="#", as.is=TRUE)
+t = as.POSIXct(paste(hosts[,1],"/01",sep=""))
+par(mgp=c(2,0.8,0))
+plot(t, hosts[,2], type="o", pch=16, xlab="", ylab="", xaxt="n", yaxt="n")
+u = c("1981","1985","1990","1995","2000","2005","2010","2014")
+axis(1, as.POSIXct(paste(u,"/01/01",sep="")), u)
+axis(2, c(0,2e8,4e8,6e8,8e8,10e8), c("0","2億","4億","6億","8億","10億"), las=1)
+</pre>
+
+<figure><img src="img/140927a.png" alt="インターネットのホスト数の推移"></figure>
+
+<p>縦軸だけ対数にしてみる：</p>
+
+<pre>
+plot(t, hosts[,2], type="o", pch=16, xlab="", ylab="",
+     xaxt="n", yaxt="n", log="y", ylim=range(c(100,hosts[,2])))
+u = c("1981","1985","1990","1995","2000","2005","2010","2014")
+axis(1, as.POSIXct(paste(u,"/01/01",sep="")), u)
+axis(2, c(1e2,1e3,1e4,1e5,1e6,1e7,1e8,1e9),
+     c("100","1000","1万","10万","100万","1000万","1億","10億"), las=1)
+</pre>
+
+<figure><img src="img/140927b.png" alt="インターネットのホスト数の推移"></figure>
+
+<h2>インターネットのトラフィック</h2>
+
+<p>Wikipediaの
+<a href="http://en.wikipedia.org/wiki/Internet_traffic">Internet traffic</a>
+に載っている表は，リンク先が変わってしまっているので，元データが見つからない。とりあえずそのままプロットする：</p>
+
+<pre>
+with(data,
+     plot(Year, PB.month, type="o", pch=16, log="y", xlab="", ylab="", yaxt="n"))
+axis(2, c(0.001,0.01,0.1,1,10,100,1000,10000),
+     c("0.001","0.01","0.1","1","10","100","1000","10000"), las=1)
+</pre>
+
+<figure><img src="img/140927d.png" alt="インターネットのホスト数の推移"></figure>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-09-27T22:21:42+09:00">2014-09-27 22:21:42</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

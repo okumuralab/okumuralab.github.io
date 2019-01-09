@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>グラフの例：都道府県別人口・面積</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</div>
+
+<p><img src="img/points.png" alt="pchで指定できる点の種類" class="right" /></p>
+
+<h1>グラフの例：都道府県別人口・面積</h1>
+
+<p>データの例として
+<a href="prefectures.html">いろいろな都道府県別データ</a>
+の人口と面積を使います。</p>
+
+<p>横軸に人口，縦軸に面積をとった散布図（scatterplot）を描いてみましょう。基本的には</p>
+
+<pre>
+plot(population, area)
+</pre>
+
+<p>でいいのですが，見栄えを調整し，ついでにxもyも対数目盛りにします。</p>
+
+<pre>
+# par(family="HiraKakuPro-W3")  # Mac
+par(las=1)          # 縦軸の文字を横向きにしない
+par(mgp=c(2,0.7,0)) # マージンの調節（デフォルト: c(3,1,0)）
+plot(population/1000, area/10000, xlab="人口（百万人）",
+     ylab="", pch=16, log="xy")
+</pre>
+
+<p>この <code>pch=16</code> は点を黒丸にするためのものです。この 16
+などの番号は右図のように決まっています。19 は 16
+にボーダーを付けたもので，20 は 19 の小型版です。<code>pch=kenmei</code>
+とすると，県名の1文字でプロットします。</p>
+
+<p>一般にプロットは上下左右に外向きの目盛りを付けるほうがよいとされています。ここでも数値なしの目盛りを上と右に付けておきましょう。</p>
+
+<pre>
+axis(3, labels=FALSE)
+axis(4, labels=FALSE)
+</pre>
+
+<p>図の中に文字を書き込みましょう。最初の二つの値は座標で，<code>pos</code>
+は1，2，3，4がそれぞれ下，左，上，右を表します。</p>
+
+<pre>
+text(population[kenmei=="東京都"]/1000,
+     area[kenmei=="東京都"]/10000,
+     "東京", pos=3)
+text(population[kenmei=="北海道"]/1000,
+     area[kenmei=="北海道"]/10000,
+     "北海道", pos=1)
+</pre>
+
+<p>最後に標題を付けます。また，上では空にしてあったy軸のラベルをきれいに付けます。これらは
+<code>plot()</code>
+の中で
+<code>main=...</code>
+や
+<code>ylab=...</code>
+としてもよかったのですが，個別にフォントや位置を指定するために別にしました。</p>
+
+<pre>
+title("都道府県の人口と面積", family="HiraKakuPro-W6")
+title(ylab=expression(paste("面積（万", km^2, "）")), line=2.5)
+</pre>
+
+<p><img src="img/090509b.png" alt="" /></p>
+
+<hr />
+
+<p><a href="/~okumura/">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2009-05-10 06:59:37
+<!-- hhmts end -->
+</p>
+</body>
+</html>

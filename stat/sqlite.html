@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>RからSQLiteを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>RからSQLiteを使う</h1>
+
+<p><a href="http://www.sqlite.org">SQLite</a> はパブリックドメインのリレーショナルデータベース管理システムである。非常に軽く，小規模のデータベース構築によく使われる。Macにも /usr/bin/sqlite3 というコマンドが入っている。</p>
+
+<p>リレーショナルデータベースやSQLに疎いかたは私の<a href="../php/db.html">データベース</a>のページを参照されたい。</p>
+
+<p>RからSQLiteを使うには <a href="https://cran.r-project.org/web/packages/RSQLite/">RSQLite</a> パッケージを使う。現在は Hadley Wickham がメンテナンスしており，開発版はGitHubの <a href="https://github.com/hadley/RSQLite">hadley/RSQLite</a> にある。</p>
+
+<pre>
+<code>install.packages("RSQLite")</code>
+<code>library("RSQLite")</code>
+<code>con = dbConnect(SQLite(), "tmp.db", synchronous="off")</code>
+</pre>
+
+<p><code>dbConnect()</code> の最初の引数は必ず <code>SQLite()</code> とする。2番目の引数はデータベースファイルのファイル名（パス）である。ただし，空文字列 <code>""</code> はテンポラリファイルで自動消去される。<code>":memory:"</code> はメモリ上に作成される。オプション <code>synchronous="off"</code> を付けておくとSQLiteへの書き込みがかなり速くなる可能性がある。</p>
+
+<pre>
+<code>dbSendQuery(con, "create table hoge(hinmei text, nedan int)")</code>
+<code>dbListTables(con)</code>
+[1] "hoge"
+<code>dbListFields(con, "hoge")</code>
+[1] "hinmei" "nedan"
+<code>dbSendQuery(con, "insert into hoge values('りんご', 500)")</code>
+<code>dbSendQuery(con, "insert into hoge values('みかん', 300);")</code>
+<code>dbGetQuery(con, "select * from hoge")</code>
+  hinmei nedan
+1 りんご   500
+2 みかん   300
+<code>dbSendQuery(con, "update hoge set nedan=200 where hinmei='みかん'")</code>
+<code>dbGetQuery(con, "select * from hoge")</code>
+  hinmei nedan
+1 りんご   500
+2 みかん   200
+<code>dbReadTable(con, "hoge")</code>
+  hinmei nedan
+1 りんご   500
+2 みかん   200
+<code>dbWriteTable(con, "iris", iris)</code>
+[1] TRUE
+<code>dbListTables(con)</code>
+[1] "hoge" "iris"
+<code>dbGetQuery(con, "select * from iris order by 'Sepal.Length' limit 3")</code>
+  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+3          4.7         3.2          1.3         0.2  setosa
+<code>dbDisconnect(con)</code>
+</pre>
+
+<p><code>dbGetQuery()</code> や <code>dbReadTable()</code> の返す値は data.frame であるが，文字列を自動で factor に変換することはない。</p>
+
+<p><code>dbDisconnect()</code> でRからの接続は切れるが，ファイル（上の例では <code>tmp.db</code>）は残っているので，Mac（またはLinux）のターミナルで <code>sqlite3 tmp.db</code> と打ち込むとデータベースを開くことができる。逆に <code>sqlite3</code> コマンドで作ったデータベースをRSQLiteで開くことも当然できる。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-02-20 22:00:44</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

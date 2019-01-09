@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>タイタニック号沈没事故，(Cochran-)Mantel-Haenszel検定，Simpsonのパラドックス</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>タイタニック号沈没事故，(Cochran-)Mantel-Haenszel検定，Simpsonのパラドックス</h1>
+
+<h2>Titanic データ</h2>
+
+<p>豪華客船タイタニック号は，1912年，イギリスからアメリカに向かう処女航海で，氷山に衝突し，沈没した。詳しくは，ウィキペディアの<a href="https://ja.wikipedia.org/wiki/%E3%82%BF%E3%82%A4%E3%82%BF%E3%83%8B%E3%83%83%E3%82%AF%E5%8F%B7%E6%B2%88%E6%B2%A1%E4%BA%8B%E6%95%85">タイタニック号沈没事故</a>や，<a href="https://www.encyclopedia-titanica.org">Encyclopedia Titanica</a> を参照されたい。</p>
+
+<p>タイタニック号の生存統計（諸説あるがそのうちの一つ）がRの <code>Titanic</code> というデータセットに収められている。このデータ構造を <code>str()</code> 関数で調べてみよう：</p>
+
+<pre>
+<code>str(Titanic)</code>
+ 'table' num [1:4, 1:2, 1:2, 1:2] 0 0 35 0 0 0 17 0 118 154 ...
+ - attr(*, "dimnames")=List of 4
+  ..$ Class   : chr [1:4] "1st" "2nd" "3rd" "Crew"
+  ..$ Sex     : chr [1:2] "Male" "Female"
+  ..$ Age     : chr [1:2] "Child" "Adult"
+  ..$ Survived: chr [1:2] "No" "Yes"
+</pre>
+
+<p>これからわかるように，<code>Titanic</code> は4個の添字を持つ人数の表（$4 \times 2 \times 2 \times 2$ の表）で，各添字は，乗客クラス（ファーストクラス，セカンドクラス，サードクラス，乗組員），性別（男，女），年齢（子ども，大人），生存（No，Yes）を表す。</p>
+
+<pre>
+<code>sum(Titanic)</code> # 全員
+[1] 2201
+<code>sum(Titanic[,,,"Yes"])</code> # 生存者
+[1] 711
+<code>sum(Titanic[,,,"No"])</code> # 死亡者
+[1] 1490
+</pre>
+
+<p>これと同じことは <code>margin.table()</code> 関数でもできる：</p>
+
+<pre>
+<code>margin.table(Titanic)</code>
+[1] 2201
+<code>margin.table(Titanic, 4)</code>
+Survived
+  No  Yes 
+1490  711 
+</pre>
+
+<p><code>margin.table()</code> は次のようなこともできる：</p>
+
+<pre>
+<code>margin.table(Titanic, c(2,4))</code>
+        Survived
+Sex        No  Yes
+  Male   1364  367
+  Female  126  344
+<code>margin.table(Titanic, c(2,4,1))</code>
+, , Class = 1st
+
+        Survived
+Sex       No Yes
+  Male   118  62
+  Female   4 141
+
+, , Class = 2nd
+
+        Survived
+Sex       No Yes
+  Male   154  25
+  Female  13  93
+
+, , Class = 3rd
+
+        Survived
+Sex       No Yes
+  Male   422  88
+  Female 106  90
+
+, , Class = Crew
+
+        Survived
+Sex       No Yes
+  Male   670 192
+  Female   3  20
+</pre>
+
+<p>これを見れば，全体として，男性の多くが死に，女性の多くは助かったことがわかる。しかし，サードクラスでは女性も死者のほうが多い。</p>
+
+<p>男と比べた女の生存者の多さは，例えばオッズ比（odds ratio）という指標で表せる（<a href="2by2.html">2×2の表，オッズ比，相対危険度</a> 参照）。オッズ比を計算する関数はいろいろなパッケージで定義されているが，自前で作っても，次のように1行でできる：</p>
+
+<pre>
+oddsratio = function(x) (x[2,2]/x[2,1])/(x[1,2]/x[1,1])
+</pre>
+
+<p>これを使えば，全体のオッズ比は</p>
+
+<pre>
+<code>oddsratio(margin.table(Titanic, c(2,4)))</code>
+[1] 10.14697
+</pre>
+
+<p>乗客クラスごとのオッズ比は</p>
+
+<pre>
+<code>for (i in 1:4) cat(i, oddsratio(margin.table(Titanic, c(2,4,1))[,,i]), "\n")</code>
+1 67.08871 
+2 44.06769 
+3 4.071612 
+4 23.26389 
+</pre>
+
+<p>またはもっとRらしく</p>
+
+<pre>
+<code>apply(margin.table(Titanic, c(2,4,1)), 3, oddsratio)</code>
+      1st       2nd       3rd      Crew 
+67.088710 44.067692  4.071612 23.263889 
+</pre>
+
+<p>つまり，ファーストクラスでは紳士的に女性の生存が優先されたが，クラスが下がるにつれその傾向が減っていることがわかる。</p>
+
+<h2>(Cochran-)Mantel-Haenszel 検定</h2>
+
+<p>個数を表す $2 \times 2$ の表，あるいは一般に $I \times J$ の表で，行と列の独立性を調べるには，<a href="chisqtest.html">カイ2乗検定</a>または<a href="fishertest.html">Fisherの正確検定</a>を使う。例えばタイタニック号での生存が性別によらないという帰無仮説を検定するには，次のようにすればよい：</p>
+
+<pre>
+<code>chisq.test(margin.table(Titanic, c(2,4)))</code>
+
+	Pearson's Chi-squared test with Yates' continuity correction
+
+data:  margin.table(Titanic, c(2, 4))
+X-squared = 454.5, df = 1, p-value &lt; 2.2e-16
+</pre>
+
+<p>あるいは</p>
+
+<pre>
+<code>fisher.test(margin.table(Titanic, c(2,4)))</code>
+
+	Fisher's Exact Test for Count Data
+
+data:  margin.table(Titanic, c(2, 4))
+p-value < 2.2e-16
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+  7.97665 12.92916
+sample estimates:
+odds ratio 
+   10.1319 
+</pre>
+
+<p>このオッズ比が <code>oddsratio(margin.table(Titanic, c(2,4)))</code> の結果 10.14697 と若干異なるのは，<a href="fishertest.html">Fisherの正確検定</a>に書いた（conditional MLE あたり）。</p>
+
+<p>しかし，生存と性別の関係は乗客クラスに依存するので，乗客クラスを無視した解析は正しくない。正しくは，乗客クラスごとに調べた結果を（重み付き）平均しなければならない。</p>
+
+<p>添字が3個ある（$2 \times 2 \times K$ の）人数のデータを $n_{ijk}$ とする。一つの添字について合計した値を例えば $n_{i.k} = \sum_j n_{ijk}$ のように表す。このとき，</p>
+
+\[ \frac{(\sum_k (n_{11k} - \mu_{11k}))^2}{\sum_k \mathrm{var}(n_{11k})} \]
+
+<p>は自由度1のカイ2乗分布に従う。ここで</p>
+
+\[ \mu_{11k} = n_{1.k} n_{.1k} / n_{..k} \]
+
+<p>である。分散 $\mathrm{var}(n_{11k})$ は</p>
+
+\[ \mathrm{var}(n_{11k}) = n_{1.k} n_{2.k} n_{.1k} n_{.2k} / (n_{..k}^2 (n_{..k} - 1)) \]
+
+<p>で推定できる（Mantel and Haenszel, 1959）。これに先立って Cochran (1954) も同様の提案をしているが，$\mathrm{var}(n_{11k})$ の分母を $n_{..k}^3$ としている。この類の検定を (Cochran-)Mantel-Haenszel（（コクラン・）マンテル・ヘンツェル）検定という。</p>
+
+<p>Rには標準で <code>mantelhaen.test()</code> という関数が備わっている。これは $2 \times 2 \times K$ の表に対して，（デフォルトでは連続性の補正をした）Mantel-Haenszel 検定を行う：</p>
+
+<pre>
+<code>mantelhaen.test(margin.table(Titanic, c(2,4,1)))</code>
+
+	Mantel-Haenszel chi-squared test with continuity correction
+
+data:  margin.table(Titanic, c(2, 4, 1))
+Mantel-Haenszel X-squared = 360.33, df = 1, p-value < 2.2e-16
+alternative hypothesis: true common odds ratio is not equal to 1
+95 percent confidence interval:
+  8.232629 14.185153
+sample estimates:
+common odds ratio 
+         10.80653 
+</pre>
+
+<p>このデータについては，Mantel-Haenszel で求めた common odds ratio 10.80653 は，<code>oddsratio(margin.table(Titanic, c(2,4)))</code> で求めた 10.14697 とあまり違わない。どんな場合にもそうであろうか，というのが次節の話題である。</p>
+
+<p>ちなみに，<code>mantelhaen.test()</code> はオプション <code>exact=TRUE</code> でFisherの正確検定に対応する厳密な方法を行う。この場合，common odds ratio も conditional MLE になる。</p>
+
+<h2>Simpsonのパラドックス</h2>
+
+<p>次のようなコマンドで作られる $2 \times 2 \times 2$ の表を考えよう。</p>
+
+<pre>
+x = array(c(21, 2,71,42,
+            18,70, 1,32),
+          dim=c(2,2,2),
+          dimnames=list(Treatment=c("Treated","Untreated"),
+                        Survival=c("Alive","Dead"),
+                        Sex=c("Male","Female")))
+</pre>
+
+<p>これは，男女について，ある治療をした結果を表す：</p>
+
+<pre>
+<code>x</code>
+, , Sex = Male
+
+           Survival
+Treatment   Alive Dead
+  Treated      21   71
+  Untreated     2   42
+
+, , Sex = Female
+
+           Survival
+Treatment   Alive Dead
+  Treated      18    1
+  Untreated    70   32
+</pre>
+
+<p>男女をまとめて1つの表にしてしまおう：</p>
+
+<pre>
+<code>y = margin.table(x, c(1,2))</code>
+<code>y</code>
+           Survival
+Treatment   Alive Dead
+  Treated      39   72
+  Untreated    72   74
+<code>oddsratio(y)</code>
+[1] 0.556713
+</pre>
+
+<p>これを見ると，治療しなければ生死はほぼ等しいのに，治療したら死亡のほうが増えてしまうという，まずい治療の例のようである。Fisherの正確検定をしてみる：</p>
+
+<pre>
+<code>fisher.test(y)</code>
+
+	Fisher's Exact Test for Count Data
+
+data:  y
+p-value = 0.03049
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.3242247 0.9524200
+sample estimates:
+odds ratio 
+ 0.5579833 
+</pre>
+
+<p>オッズ比が 1 であるという帰無仮説は棄却される（$p = 0.03$）。</p>
+
+<p>しかし，男女別にオッズ比を計算すれば，</p>
+
+<pre>
+apply(x, 3, oddsratio)
+    Male   Female 
+6.211268 8.228571 
+</pre>
+
+<p>どちらもオッズ比は 1 より大きく，治療したほうがよい。Mantel-Haenszel 検定は</p>
+
+<pre>
+<code>mantelhaen.test(x)</code>
+
+	Mantel-Haenszel chi-squared test with continuity correction
+
+data:  x
+Mantel-Haenszel X-squared = 11.222, df = 1, p-value = 0.0008084
+alternative hypothesis: true common odds ratio is not equal to 1
+95 percent confidence interval:
+  2.062906 23.283520
+sample estimates:
+common odds ratio 
+         6.930492 
+</pre>
+
+<p>となり，オッズ比はやはり 1 より大きい（$p = 0.0008$）。</p>
+
+<p>このように，層別に分けた結果と，分けない結果とでは，結果が逆になることがある（Simpsonのパラドックス）。この場合は層別の結果を使うべきである。</p>
+
+<h2>文献</h2>
+
+<ul lang="en">
+  <li>Alan Agresti, <i>Categorical Data Analysis, 3rd ed.</i>, pp.225-- (Wiley, 2013).</li>
+  <li>N. Mantel and W. Haenszel, Statistical aspects of the analysis of data from retrospective studies of disease, <i>J. Natl. Cancer Inst.</i> <b>22</b>, 719--748 (1959).</li>
+  <li>W. G. Cochran, Some methods of strengthening the common $\chi^2$ tests, <i>Biometrics</i> <b>10</b>, 417--451 (1954).</li>
+</ul>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-09 10:26:02</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

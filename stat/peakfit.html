@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>スペクトルのフィット2</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>スペクトルのフィット2</h1>
+
+<p>いろいろご教示をいただきました。ありがとうございます。まだまだ不十分なところがありますが，これからも見直していきたいと思いますので，お気づきのことがありましたらお知らせいただければ幸いです。とりあえず現段階でのお薦めの方法は<a href="#nlme">nlmeパッケージによる非線形最小二乗法</a>です。</p>
+
+<p>だんだんごたごたしてきましたので，主にコベル法を扱う<a href="covell.html">スペクトルのフィット1</a>からこのページを独立させました。それでもごたごたしてきたので，先に実例を見ていただくほうがいいかもしれません：<a href="111220.html">例1</a>，<a href="111220a.html">例2</a>，<a href="111230a.html">例3</a>，<a href="120110.html">例4</a></p>
+
+<h2>非線形最小二乗法でフィット</h2>
+
+<p>同じ問題を非線形の重み付き最小二乗法で解いてみます。Rには <code>nls()</code>
+という非線形最小二乗法の関数が含まれています（デフォルトのアルゴリズムはGauss-Newton法）。重みは分散の逆数を与えればいいのですが，ポアソン分布の性質から分散はカウント値の期待値に等しいので，これを実際のカウント値で代用します。</p>
+
+<pre>
+fit = nls(sp ~ c + d*ch + e*dnorm((ch-m)/s),
+          start=list(c=50,d=-0.2,e=100,m=50,s=5), weights=1/sp)
+</pre>
+
+<p>結果の概略を見るには単に <code>fit</code> と打ち込みます：</p>
+
+<pre>
+&gt; fit
+Nonlinear regression model
+  model:  sp ~ c + d * ch + e * dnorm((ch - m)/s) 
+   data:  parent.frame() 
+       c        d        e        m        s 
+ 49.6647  -0.2189 114.3944  49.9199   4.7445 
+ weighted residual sum-of-squares: 79.94
+
+Number of iterations to convergence: 5 
+Achieved convergence tolerance: 4.857e-06
+</pre>
+
+<p>係数とピークのカウントは次のようにして求められます。</p>
+
+<pre>
+&gt; a = coef(fit)
+&gt; a
+          c           d           e           m           s 
+ 49.6647224  -0.2188877 114.3944350  49.9199274   4.7445441 
+&gt; sum(a['e']*dnorm((ch-a['m'])/a['s']))
+[1] 542.7494
+</pre>
+
+<p>各パラメータの推定誤差などは <code>summary()</code> で調べられます：</p>
+
+<pre>
+&gt; summary(fit)
+
+Formula: sp ~ c + d * ch + e * dnorm((ch - m)/s)
+
+Parameters:
+   Estimate Std. Error t value Pr(&gt;|t|)    
+c  49.66472    1.30837   37.96   &lt;2e-16 ***
+d  -0.21889    0.02011  -10.89   &lt;2e-16 ***
+e 114.39443    8.60629   13.29   &lt;2e-16 ***
+m  49.91993    0.36836  135.52   &lt;2e-16 ***
+s   4.74454    0.36406   13.03   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+Residual standard error: 0.9222 on 94 degrees of freedom
+
+Number of iterations to convergence: 5 
+Achieved convergence tolerance: 4.857e-06 
+</pre>
+
+<p>共分散行列は <code>vcov()</code> です：</p>
+
+<pre>
+&gt; vcov(fit)
+            c             d            e             m             s
+c  1.71184306 -0.0227252330 -0.890443698  0.0346645848 -0.0919897866
+d -0.02272523  0.0004042742  0.004565929 -0.0006519183  0.0003569787
+e -0.89044370  0.0045659288 74.068175203 -0.0212548830 -1.6485651131
+m  0.03466458 -0.0006519183 -0.021254883  0.1356873238 -0.0009086423
+s -0.09198979  0.0003569787 -1.648565113 -0.0009086423  0.1325383070
+</pre>
+
+<p>これから単純に誤差を求めると次のように約40になります：</p>
+
+<pre>
+&gt; v = vcov(fit)
+&gt; a = coef(fit)
+&gt; 542.7494 * sqrt(v[3,3]/a[3]^2 + v[5,5]/a[5]^2 + 2*v[3,5]/(a[3]*a[5]))
+       e 
+40.15244 
+</pre>
+
+<p>この最後の式は<a href="150622.html">積の誤差</a>の考え方を使ったものです。</p>
+
+<h2>シミュレーションで非線形最小二乗法の誤差を推定する</h2>
+
+<p>非線形最小二乗法で求めたカウントの誤差の程度を推定するために，簡単なシミュレーションをしてみましょう。最小化の計算が収束しない場合でもシミュレーション全体が終了しないように，<code>nls()</code> に <code>warnOnly=TRUE</code> というオプションを与えておきます。</p>
+
+<pre>
+bg = function(x) { 50 - 0.2 * x }
+pe = function(x) { 100 * dnorm((x-50)/5) }
+foo = function() {
+  sp = rpois(99, bg(ch)+pe(ch))
+  fit = nls(sp ~ c + d*ch + e*dnorm((ch-m)/s),
+            start=list(c=50,d=-0.2,e=100,m=50,s=5), weights=1/sp,
+            control=list(warnOnly=TRUE))
+  a = coef(fit)
+  sum(a['e']*dnorm((ch-a['m'])/a['s']))
+}
+r = replicate(10000, foo()) # 10000回繰り返す
+mean(r)
+sd(r)
+</pre>
+
+<p>平均505程度，標準偏差46程度のようです。想定した正解より少しだけ大きいのが気になります。</p>
+
+<h2>ブートストラップ法で非線形最小二乗法の誤差を推定する</h2>
+
+<p>正しいモデルがわかっていなくても，得られたデータからのリサンプリングによりシミュレーションをする<a href="bootstrap.html">ブートストラップ法</a>で誤差を推定してみます。</p>
+
+<pre>
+library(boot)
+data = data.frame(ch=ch, sp=sp)
+foo = function(data, k) {
+  fit = nls(sp[k] ~ c + d*ch[k] + e*dnorm((ch[k]-m)/s), data,
+            start=list(c=50,d=-0.2,e=100,m=50,s=5), weights=1/sp[k],
+            control=list(warnOnly=TRUE))
+  a = coef(fit)
+  sum(a['e']*dnorm((ch-a['m'])/a['s']))
+}
+b = boot(data, foo, R=999)
+b
+</pre>
+
+<p>途中で「繰り返し数が最大値 50 を超えました」という警告が何度か出ますが，無視します。結果は次のようになりました（乱数によるシミュレーションですので結果は毎回異なります）：</p>
+
+<pre>
+ORDINARY NONPARAMETRIC BOOTSTRAP
+
+
+Call:
+boot(data = data, statistic = foo, R = 999)
+
+
+Bootstrap Statistics :
+    original   bias    std. error
+t1* 542.7494 6.508727    46.50908
+</pre>
+
+<p>誤差は46.5程度であることがわかります。今回は正しいモデルを使ったシミュレーションの結果とたまたま良く一致しましたが，一般にはおおまかな推定値としてとらえてください。</p>
+
+<p>ついでに <code>plot(b)</code> と打ち込んでブートストラップシミュレーションの結果をプロットしてみます：</p>
+
+<figure>
+  <img src="img/111211a.png" alt="Bootstrap result">
+</figure>
+
+<h2>より簡単なシミュレーションによる誤差の推定</h2>
+
+<p>わざわざブートストラップ法を使わなくても，測定データをポアソン乱数で置き換えるだけでも同様な誤差推定ができそうです。</p>
+
+<pre>
+foo = function() {
+  sp1 = rpois(99, sp)
+  fit = nls(sp1 ~ c + d*ch + e*dnorm((ch-m)/s),
+            start=list(c=50,d=-0.2,e=100,m=50,s=5), weights=1/sp,
+            control=list(warnOnly=TRUE))
+  a = coef(fit)
+  sum(a['e']*dnorm((ch-a['m'])/a['s']))
+}
+r = replicate(1000, foo())
+sd(r)
+</pre>
+
+<p>この方法で得た誤差は 44.8 でした（乱数によるシミュレーションですから毎回異なります）。こちらのほうがブートストラップ法と比べて極端なデータが出にくいので，非線形最小二乗法が収束しないトラブルも起こりにくいように思います。</p>
+
+<h2 id="nlme">nlmeパッケージによる非線形最小二乗法</h2>
+
+<p>非線形最小二乗法の重みは，上の <code>nls()</code> を使った例では，測定されたカウント数の逆数を使いました。しかし，本来はフィットした関数値の逆数にするほうが理にかなっています。確率変数 <i>X</i> の分散 <i>V</i>(<i>X</i>) に等しいのは <i>X</i> の実現値ではなく期待値 <i>E</i>(<i>X</i>) ですから。しかしこれは <code>nls()</code> では簡単にできません。強いてするなら次のようにループを使わなければなりません。</p>
+
+<pre>
+w = 1 / sp
+for (i in 1:10) {
+  fit = nls(sp ~ c + d*ch + e*dnorm((ch-m)/s),
+            start=list(c=50,d=-0.2,e=100,m=50,s=5), weights=w,
+            control=list(warnOnly=TRUE))
+  a = coef(fit)
+  print(a)
+  w = 1 / (a['c'] + a['d']*ch + a['e']*dnorm((ch-a['m'])/a['s']))
+}
+</pre>
+
+<div class="note">
+<p>このループは厳密には <code>sum((sp - fitted(fit))^2 / fitted(fit))</code>
+を最小化するものではありません（TODO：考察）。</p>
+</div>
+
+<div class="note">
+<p><code>start</code> の値も毎回更新すると収束が速くなる理屈ですが，実際には数値微分が失敗するようです。数値微分ではなく数式微分を使うこともできます（<code>deriv</code> のヘルプ参照）。</p>
+</div>
+
+<p>これと同じことをするのがnlme（nonlinear mixed effects）パッケージの <code>gnls()</code>（generalized nonlinear least-squares）という関数です（文献 [1]）。重みとして <code>varPower(fixed=0.5)</code> を与えればフィットした値を分散と仮定します（つまりフィットした値の逆数を重みとした非線形最小二乗法になります）。</p>
+
+<pre>
+library(nlme)
+data = data.frame(sp=sp, ch=ch)
+fit2 = gnls(sp ~ c + d*ch + e*dnorm((ch-m)/s), data=data,
+            start=list(c=50,d=-0.2,e=100,m=50,s=5),
+            weights=varPower(fixed=0.5),
+            control=list(nlsTol=1e-4))
+</pre>
+
+<p>係数や誤差を求めます：</p>
+
+<pre>
+&gt; a = coef(fit2) # 係数
+&gt; a
+          c           d           e           m           s 
+ 50.4241404  -0.2186549 113.5275437  49.8477760   4.8125038 
+&gt; sum(a['e']*dnorm((ch-a['m'])/a['s']))
+[1] 546.3517
+&gt; v = vcov(fit2) # 共分散行列
+&gt; sqrt(v['e','e']/a['e']^2 + v['s','s']/a['s']^2 + 2*v['e','s']/(a['e']*a['s']))
+        e 
+0.0740356     # 正味の計数の相対誤差（1σ相当）
+&gt; 546.3517 * 0.0740356
+[1] 40.44948  # 正味の計数の誤差（1σ相当）
+</pre>
+
+<p>誤差の分散については，山の高さ <code>v['e','e']/a['e']^2</code> と幅 <code>v['s','s']/a['s']^2</code> と負の共分散 <code>2*v['e','s']/(a['e']*a['s'])</code> の絶対値とがほぼ等しいので，例えば幅を固定して山の高さの誤差だけを考えても良さそうです。</p>
+
+<p>この方法のおもしろい点は，総カウント数 <code>sum(sp)</code> とフィットした値の合計 <code>sum(fitted(fit2))</code> が（数値計算の誤差範囲内で）一致することです。これは，ピークの正確な形より総カウント数に意味がある場合に，非常に有利な条件となります（一般にある条件を満たすPoisson回帰でこれは成り立ちます。例えば文献[3]のp.183練習問題9.1参照）。</p>
+
+<p>ただ，現バージョンの <code>gnls()</code> は収束の判定が少し甘いようです。上の計算では少し条件を厳しくするために <code>gnls()</code> に <code>control=list(nlsTol=1e-4)</code> というオプションを与えています（デフォルト値は <code>nlsTol=1e-3</code>）。ただ，こうすると収束しなくなることがあるので，適宜加減してください。</p>
+
+<p>次の図は，いろいろな <code>varPower(fixed=?)</code> の値について，フィットした値の合計を示したものです。黒丸はデフォルトの収束条件，青丸は収束条件を厳しくした場合です。たまたま0.25を境にして反復数が変わるようで，段差ができていますが，実用上問題になるような計算誤差ではありません。</p>
+
+<figure>
+  <img src="img/111224a.png" alt="sum(fitted) vs varPower(fixed=?)">
+</figure>
+
+<p>上の図は次のようにして描きました：</p>
+
+<pre>
+foo = function(x) {
+  fit = gnls(sp ~ c + d*ch + e*dnorm((ch-m)/s), data=data,
+             start=list(c=50,d=-0.2,e=100,m=50,s=5),
+             weights=varPower(fixed=x))
+  return(sum(fitted(fit)))
+}
+r = replicate(100, { t = runif(1,-0.1,0.6); list(t,foo(t)) })
+plot(r[1,], r[2,], xlab="varPower(fixed=?)", ylab="sum(fitted(fit))")
+abline(h=4456)
+abline(v=0)
+abline(v=0.5)
+
+foo = function(x) {
+  fit = gnls(sp ~ c + d*ch + e*dnorm((ch-m)/s), data=data,
+             start=list(c=50,d=-0.2,e=100,m=50,s=5),
+             weights=varPower(fixed=x),
+             control=list(nlsTol=ifelse(x&lt;0.2, 1e-3, 1e-4)))
+  return(sum(fitted(fit)))
+}
+r = replicate(100, { t = runif(1,-0.1,0.6); list(t,foo(t)) })
+points(r[1,], r[2,], col="#0068b7")  # 青丸
+</pre>
+
+<h2>シミュレーションでgnls()の誤差を推定する</h2>
+
+<p>nlmeパッケージの非線形最小二乗法 <code>gnls()</code> で求めたカウントの誤差の程度を推定するために，簡単なシミュレーションをしてみましょう。</p>
+
+<pre>
+bg = function(x) { 50 - 0.2 * x }
+pe = function(x) { 100 * dnorm((x-50)/5) }
+foo = function() {
+  sp = rpois(99, bg(ch)+pe(ch))
+  data = data.frame(sp=sp, ch=ch)
+  fit = gnls(sp ~ c + d*ch + e*dnorm((ch-m)/s),
+             data=data,
+             start=list(c=50,d=-0.2,e=100,m=50,s=5),
+             weights=varPower(fixed=0.5),
+             control=list(nlsTol=1e-4))
+  a = coef(fit)
+  sum(a['e']*dnorm((ch-a['m'])/a['s']))
+}
+r = replicate(10000, foo()) # 10000回繰り返す
+mean(r)
+# [1] 502.1784
+sd(r)
+# [1] 44.76659
+</pre>
+
+<p>平均500程度，標準偏差45程度です。他の方法より若干良いようです。</p>
+
+<h2>他の方法</h2>
+
+<p>他の方法として，ポアソン分布を正規分布に近い形に変形する変換（variance stabilizing transform）も使えそうです。具体的には sqrt(x + 3/8) のような変換がよく使われています。</p>
+
+<p>ピークの幅と位置が定まれば，単純な（線形）Poisson回帰の問題になり，<code>glm()</code> で解けます。この場合，定数項は自動的に入りますので，モデル式 <code>sp ~ ...</code> には入れません。</p>
+
+<pre>
+fit = glm(sp ~ ch + dnorm((ch-50)/5), data=data, family=poisson(link="identity"))
+</pre>
+
+<p><code>summary(fit)</code> と打ち込むと，係数や誤差などたくさん出力されます。ピークカウントを出すために必要なのは3番目の係数（1番目は定数項，2番目は <code>ch</code> の係数）ですので，それだけを見るためには <code>summary(fit)$coefficients[3,]</code>
+とすればいいのですが，この中でさらに1番目の要素が係数，2番目の要素が誤差ですので，この二つだけが欲しいなら <code>summary(fit)$coefficients[3,1:2]</code>
+とします。それに <code>dnorm((ch-50)/5)</code> の積分値を掛ければ実際のピークカウントと誤差が得られます：</p>
+
+<pre>
+&gt; summary(fit)$coefficients[3,1:2]*sum(dnorm((ch-50)/5))
+  Estimate Std. Error 
+  556.0018    38.7522 
+</pre>
+
+<p>Estimate や Std. Error という名前が出力されるのが邪魔な場合は <code>as.numeric(...)</code>
+で囲めばいいでしょう。</p>
+
+<p>Rには，より一般的な最小化のための <code>optim()</code> という関数もあります。また，パッケージ minpack.lm には，Levenberg-Marquardt法を使った <code>nls.lm()</code> という関数があります。</p>
+
+<p>次の例は <code>optim()</code> を使ってPoisson回帰の対数尤度を最大にするパラメータを求めています。</p>
+
+<pre>
+foo = function(x) {
+  c = x[1]
+  d = x[2]
+  e = x[3]
+  m = x[4]
+  s = x[5]
+  y = c + d * ch + e * dnorm((ch-m)/s)
+  -sum(sp * log(y) - y, na.rm=TRUE)
+}
+optim(c(50,-0.2,110,50,5), foo)
+# [1]  50.434828  -0.218678 113.557225  49.848596   4.806925
+optim(c(50,-0.2,110,50,5), foo, control=list(maxit=10000, reltol=1e-16))
+# [1]  50.4241695  -0.2186555 113.5276389  49.8477594   4.8125010
+</pre>
+
+<p>次の例は <code>optim()</code> を使ってPoisson回帰でdeviance（逸脱度）を最小にするピークの中心と幅を求めています。</p>
+
+<pre>
+foo = function(x) {
+  m = x[1]
+  s = x[2]
+  fit = glm(sp ~ ch + dnorm((ch-m)/s), data=data, family=poisson(link="identity"))
+  fit$deviance # 逸脱度を返す
+}
+optim(c(50,5), foo)
+</pre>
+
+<p>なお，<code>glm()</code> が収束しないときは，オプションで初期値を <code>start=c(定数項,第1の係数,第2の係数)</code> の要領で与えます：</p>
+
+<pre>
+fit = glm(sp ~ ch + dnorm((ch-m)/s), data=data, family=poisson(link="identity"),
+          start=c(50,-0.2,100))
+</pre>
+
+<p>これらの方法は本当にポアソン分布を最尤法でフィットするので，個々のビン（階級）の統計をかせぐためにビンを荒くするような前処理は不要です。例として，100倍に薄めて0のビンも多数含むようにしたデータをフィットしてみても，うまくいきます：</p>
+
+<pre>
+sp100 = numeric(9900)
+for (i in 1:99) {
+  sp100[(100*i-99):(100*i)] =
+    hist(sample(1:100, sp[i], replace=TRUE), plot=FALSE, breaks=0:100)$counts
+}
+data = data.frame(sp=sp100, ch=1:9900)
+fit = glm(sp ~ ch + dnorm((ch-5000)/500), data=data,
+          family=poisson(link="identity"))
+# あるいは
+# fit = gnls(sp ~ c + d*ch + e*dnorm((ch-5000)/500), data=data,
+#            start=list(c=0.5,d=0,e=1), weights=varPower(fixed=0.5))
+</pre>
+
+<figure>
+  <img src="img/120101a.png" alt="fitting sparse events">
+</figure>
+
+<h2>極端な場合の比較</h2>
+
+<p>正解のわかっている意地悪な矩形ピークのフィットを比較してみましょう。</p>
+
+<figure>
+  <img src="img/120105a.png" alt="">
+</figure>
+
+<pre>
+ch = 1:99  # チャンネル番号は1から99まで
+sp = c(rep(0,39),rep(10,21),rep(0,39)) # 0が39，10が21，0が39
+sum(sp)  # 正解は210
+plot(ch, sp, type="h", col="#f39800", lwd=2, lend=1, ylim=c(0,15),
+     xlab="Channel", ylab="Count")  # 上の橙色のグラフ
+fit = nls(sp ~ e*dnorm((ch-50)/s), start=list(e=10,s=5)) # 通常の最小2乗法
+sum(fitted(fit))  # 222.9805 大きすぎる
+fit = nls(sp ~ e*dnorm((ch-50)/s), start=list(e=10,s=5), weights=1/sp) # エラー
+fit = nls(sp ~ e*dnorm((ch-50)/s), start=list(e=10,s=5), weights=1/(sp+1))
+sum(fitted(fit))  # 171.9977 # 小さすぎる
+library(nlme)
+data = data.frame(ch=ch, sp=sp)
+fit = gnls(sp ~ e*dnorm((ch-50)/s), data=data,
+           start=list(e=10,s=5),
+           weights=varPower(fixed=0.5),
+           control=list(nlsTol=1e-4))
+sum(fitted(fit))  # 210 正解！
+a = coef(fit)
+a
+#         e         s 
+# 34.680374  6.055298  # 係数
+v = vcov(fit) # 共分散行列
+sqrt(v['e','e']/a['e']^2 + v['s','s']/a['s']^2 + 2*v['e','s']/(a['e']*a['s']))
+#          e 
+# 0.05793257  # 相対誤差の推定値はやや小さめ
+points(ch, fitted(fit), type="l")
+fit = glm(sp ~ dnorm((ch-50)/5)-1, data=data, family=poisson(link="identity"))
+sum(fitted(fit))  # 210 正解！
+fit = glm(sp ~ dnorm((ch-50)/6)-1, data=data, family=poisson(link="identity"))
+sum(fitted(fit))  # 210 正解！
+fit = glm(sp ~ dnorm((ch-50)/7)-1, data=data, family=poisson(link="identity"))
+sum(fitted(fit))  # 210 正解！
+</pre>
+
+<p>ご覧のように <code>gnls()</code> では正解ですが誤差の評価がやや甘くなっています。<code>glm()</code> は幅を指定する必要がありますが，指定した幅にかかわらず正解になり，しかも誤差（<code>summary(fit)</code>
+で出る）も正解（210<sup>-1/2</sup>）です。</p>
+
+<h2>なぜ総カウント数が保存されるのか</h2>
+
+<p>ポアソン分布を仮定した最尤法によるフィッティングでは，なぜ総カウント数が保存されるのでしょうか。</p>
+
+<p><a href="poisson.html">ポアソン分布</a>のところでも述べたように，</p>
+
+\[ p_k = \frac{\lambda^k e^{-\lambda}}{k!} \]
+
+<p>がポアソン分布です。ピークフィットでは各チャンネルのカウント数がポアソン分布でチャンネルごとに独立と仮定するので，確率は積</p>
+
+\[ \prod \frac{{\lambda_i}^{k_i} e^{-\lambda_i}}{k_i!} \]
+
+<p>になります。各チャンネルの観測されたカウント数 $k_i$ を定数と見なしたときの上の式の値（尤度）を最大にする $\lambda_i$ を求めるのが最尤法ですが，計算しやすいように，尤度の対数から定数を省略したもの</p>
+
+\[ \sum (k_i \log \lambda_i - \lambda_i) \]
+
+<p>を最大にします。また，$\lambda_i$ はチャンネルごとに自由に選べるのではなく，少数のパラメータで特徴づけられる滑らかな曲線です。代表的なパラメータを $x$ とすると，尤度最大の点ではそのパラメータについての導関数が 0 となるはずですので，</p>
+
+\[ \sum \lambda_i'(x) \left( \frac{k_i}{\lambda_i(x)} - 1 \right) = 0 \]
+
+<p>となります。特に $x$ が曲線全体の高さを決めるパラメータであるならば，$\lambda_i(x) = a_i x$ と置けば，尤度最大の点では</p>
+
+\[ \sum a_i x = \sum k_i \]
+
+<p>となります。つまり，この条件を満たしながら他のパラメータを調節して対数尤度が最小になるようにすればいいわけです。</p>
+
+<h2>参考文献</h2>
+
+<ol>
+  <li>José C. Pinheiro and Douglas M. Bates, <i>Mixed-Effects Models in S and S-PLUS</i> (Springer, 2000) これもAmazonのKindle Storeで電子書籍として買える。</li>
+  <li>J. A. Cooper, "Factors determining the ultimate detection sensitivity of Ge(Li) gamma-ray spectrometers", <i>Nuclear Instruments and Methods</i> <b>82</b>, 273--277 (1970). Cooperは $3\sigma$ と書いているわけではなく，$A\sigma$ で $A$ は通常1から10だとしているだけです。</li>
+  <li>Annette J. Dobson and Adrian G. Barnett, <i>An Introduction to Generalized Linear Models, 3rd ed.</i> (CRC Press, 2008)</li>
+</ol>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-09 10:28:29</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>RをIPython Notebookから使う</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>RをIPython Notebookから使う</h1>
+
+<h2>はじめに</h2>
+
+<p>プログラミング言語<a href="https://www.python.org">Python</a>には<a href="http://ipython.org/">IPython</a>という対話型のシェルがあり，さらにこれをWebブラウザから使う<a href="http://ipython.org/notebook.html">IPython Notebook</a>という仕組みがあります（Mathematica Notebookみたいなもの）。ここで取り上げるのはIPython 2のNotebookですが，IPython 3が開発中で，さらに次世代の<a href="http://jupyter.org/">Jupyter Project</a>が始まりました。「Jupyter」の名前に含まれるJulia，Python，Rが便利に使えるシェルになると思われます。</p>
+
+<p>ここでは普通のIPython 2.xからRを使う方法を説明します。</p>
+
+<h2>準備</h2>
+
+<p>まずはPython，IPythonを<a href="/~okumura/python3/install.html">インストール</a>する必要があります。また，<a href="http://rpy.sourceforge.net/rpy2.html">rpy2</a>というPythonのパッケージが必要です。Pythonがインストールされたシステムであれば <code>pip</code> コマンド（Python 3なら <code>pip3</code>）で簡単にインストールできます：</p>
+
+<pre>
+sudo pip3 install rpy2
+</pre>
+
+<p>使い方の詳細は<a href="http://rpy.sourceforge.net/rpy2/doc-2.5/html/overview.html">rpy2 documentation</a>をご覧ください。IPythonの<a href="http://ipython.org/ipython-doc/2/config/extensions/rmagic.html">rmagic</a>のページにも簡単にまとめられています。最低限のことは以下の例で説明します。</p>
+
+<h2>簡単な例</h2>
+
+<p>ターミナルを開いて，適当な作業用ディレクトリに移動し，そこでIPython Notebookを起動します：</p>
+
+<pre>
+ipython notebook
+</pre>
+
+<p>これで自マシンの8888番ポート（つまり <a href="http://localhost:8888">http://localhost:8888</a>）でWebサーバが起動し，標準のWebブラウザが開いてそこに接続します。ブラウザはWebSocketをサポートする必要があります（IEなら10以降）。このブラウザの画面の右にある [New Notebook] ボタンをクリックし，新しいNotebookを作成します（デフォルトのNotebook名は <code>Untitled0.ipynb</code> ですが File メニューから Rename できます）。</p>
+
+<p>ブラウザ（Notebook）の In&nbsp;[&nbsp;]: の右に，Rと連携させるための仕組みをロードするために，次のように打ち込んで，Shift + Enter します（昔の <code>rmagic</code> は今は <code>rpy2.ipython</code> にしたほうがよいようです）：</p>
+
+<pre>
+%load_ext rpy2.ipython
+</pre>
+
+<p>次のセルからは，Rの命令であれば頭に <code>%%R</code> という行を付けます（これを付けなければPythonの命令になります）。セル内の改行は Enter，セルを実行するには Shift + Enter です。</p>
+
+<figure><img src="img/150108a.png" alt="IPython NotebookでR" style="border:1px solid"></figure>
+
+<p>セルの内容は遡って変更できます。例えば上の <code>hist(x)</code> を <code>hist(x, col="gray")</code> に変更すると，グラフの色が変わります。また，グラフ出力では，先頭行に <code>%%R -w 500 -h 300</code> のように横・縦のピクセル数でサイズを指定することができます。</p>
+
+<p>Notebookの内容はときどき自動保存されますが，保存ボタン（フロッピーディスクのマーク）をクリックしても保存されます。シェル（ブラウザ）を閉じても再接続して <code>*.ipynb</code> ファイルを開けば，作業を続行できます。</p>
+
+<p><code>*.ipynb</code> ファイルはJSON形式のテキストファイルです。画像はテキスト化（Base64）されて埋め込まれます。</p>
+
+<p>セルの型は標準では「Code」となっていますが，「Markdown」とすれば，<a href="http://ja.wikipedia.org/wiki/Markdown">Markdown</a>という記法でリッチテキストが挿入できます。<code>$...$</code> や <code>$$...$$</code> でインライン・別行の数式をLaTeX記法で書けます（MathJaxでレンダリングします）。</p>
+
+<p>IPython NotebookをHTMLに変換するには次のようにします（あらかじめpipで pygments パッケージをインストールしておきます）：</p>
+
+<pre>
+ipython nbconvert --to html Untitled0.ipynb 
+</pre>
+
+<p>画像は<a href="http://ja.wikipedia.org/wiki/Data_URI_scheme">data URI scheme</a>でHTMLファイルに埋め込まれます。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2015-01-10T11:05:45+09:00">2015-01-10 11:05:45</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

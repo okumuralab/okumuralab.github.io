@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ツイート数の推移</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>ツイート数の推移</h1>
+
+<p>2013年3月から，Twitterの自分の全ツイート（リツイートを含む）がダウンロードできるようになった。2013年3月22日にさっそく取得したときは19629ツイートであったが，2017年7月30日朝に再取得したら68366ツイートになっていた。</p>
+
+<p>ダウンロードしたzipファイルには全ツイートがCSVやJSON形式で収められている（画像は含まれない）。Rで処理するにはCSVファイルが便利である。例えば月ごとのツイート数の推移をグラフにしてみよう：</p>
+
+<pre>
+data = read.csv("tweets.csv", as.is=TRUE)
+t = as.POSIXct(data$timestamp) + 9*60*60  # convert to JST
+hist(t, breaks="month", col="gray", freq=TRUE, xaxt="n", xlab="", ylab="tweets/month", main="")
+a = 2009:2018
+b = paste0(a, "-01-01")
+axis(1, at=as.POSIXct(b), labels=a)
+</pre>
+
+<figure>
+<img src="img/170730a.png" alt="">
+</figure>
+
+<p><code>read.csv()</code> のオプション <code>as.is=TRUE</code>（余計な変換はしない）は，なくてもいいが，あるほうが少し速く読めるはずである（数値または文字列として読む）。</p>
+
+<p>2行目で <code>9*60*60</code>（9時間）を足しているのは日本標準時に直すためのハックである。</p>
+
+<p>3行目の <code>hist()</code> で月ごとのヒストグラムを描く。時間についてのヒストグラムはデフォルトでは密度表示（件数/全件数/秒）になる。これを件数表示にするために <code>freq=TRUE</code> を付けている。これは本来はちょっとまずいことで，ヒストグラムは1月（31日）の幅より2月（28日）の幅のほうが狭く描かれるのに高さは件数に比例して描くと，面積比が少しだけ正しくないことになる。たいした違いでないので，ここではツイート数がわかりやすいように件数表示にしている。ここで本来ならば <code>xaxt="n"</code>（横軸目盛を付けない）は不要であるが，後で横軸目盛を思い通りに付け直すためにこのようにしてある。</p>
+
+<p>残りの3行が横軸目盛を思い通りに付ける部分である。ここでは年ごとに目盛っている。</p>
+
+<p>グラフから2011年3〜5月のツイートが増えていることがわかるが，それ以降も増え続けている。リツイートも含むので，自分のツイート数はもっと少ないはずである。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2017-07-30 10:04:22</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

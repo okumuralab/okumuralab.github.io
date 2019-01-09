@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>漢数字</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+</head>
+<body>
+
+<h1>漢数字</h1>
+
+<p><a href="http://www.dnc.ac.jp/modules/center_exam/content0232.html">平成22年度の入試センター試験問題</a>「情報関係基礎」第3問をRで解いてみましょう。</p>
+
+<pre>
+kansuji = function(n) {
+  Suji = c("","二","三","四","五","六","七","八","九")
+  KuraiMoji = c("","十","百","千")
+  kurai = 1000
+  for (keta in 4:1) {
+    d = n %/% kurai
+    if (d != 0) {
+      if (d == 1 &amp;&amp; keta == 1) {
+        cat("一")
+      } else {
+        cat(Suji[d])
+        cat(KuraiMoji[keta])
+      }
+    }
+    n = n %% kurai
+    kurai = kurai %/% 10
+  }
+}
+</pre>
+
+<p><code>%/%</code> は整数の割り算，<code>%%</code> は割り算の余り，<code>cat(...)</code>
+は出力を意味します。</p>
+
+<hr />
+
+<p><a href="/~okumura/" rel="me">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2010-06-21 12:38:35
+<!-- hhmts end -->
+</p>
+</body>
+</html>

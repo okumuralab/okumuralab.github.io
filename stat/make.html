@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Makefile</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<h1>Makefile</h1>
+
+<p>一つのプロジェクトに関連するファイルは一つのディレクトリ（フォルダ）に入れておくのは常識だが，最終産物（PDFファイル）を生成するための処理手順を Makefile というファイル名のファイルに書き込んでおくとよい。例えば ronbun.pdf を ronbun.tex から生成するのであれば，Makefile に</p>
+
+<pre>
+ronbun.pdf: ronbun.tex
+        platex ronbun.tex
+        dvipdfmx ronbun.dvi
+</pre>
+
+<p>と書いておく。半角スペース8個に見えるところは，実際にはタブ1個を入れる（半角スペースでは機能しない）。こうしておいて，Makefile や ronbun.tex の入っているディレクトリにいるターミナルで</p>
+
+<pre>
+make
+</pre>
+
+<p>と打ち込むと，もし ronbun.pdf が存在しないか，あるいは存在しても ronbun.tex より古ければ，次の <code>platex ronbun.tex</code> および <code>dvipdfmx ronbun.dvi</code> という命令を実行する。</p>
+
+<p>なお，ronbun.tex から zu1.pdf，zu2.pdf，zu3.pdf を読み込んでいるのであれば，それらのうち一つでも ronbun.pdf より新しければ再コンパイルが必要であるので，</p>
+
+<pre>
+all: ronbun.pdf
+
+PDFS= zu1.pdf zu2.pdf zu3.pdf
+
+ronbun.pdf: ronbun.tex $(PDFS)
+        platex ronbun.tex
+        dvipdfmx ronbun.dvi
+</pre>
+
+<p>のように書く。1行目はここでは特に必要ないが，ターゲットが ronbun.pdf であることが見やすくなる。</p>
+
+<p>ところで，zu1.pdf，zu2.pdf，zu3.pdf がそれぞれ zu1.R，zu2.R，zu3.R から生成されたものであるなら，</p>
+
+<pre>
+all: ronbun.pdf
+
+PDFS= zu1.pdf zu2.pdf zu3.pdf
+
+ronbun.pdf: ronbun.tex $(PDFS)
+        platex ronbun.tex
+        dvipdfmx ronbun.dvi
+
+.SUFFIXES: .pdf .R
+
+.R.pdf:
+	Rscript $&lt;
+</pre>
+
+<p>のようにしておくと，例えば zu3.pdf が存在しないか zu3.R より古ければ，<code>Rscript zu3.R</code> というコマンドで生成してくれる。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-11-06T21:05:54+09:00">2014-11-06 21:05:54</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

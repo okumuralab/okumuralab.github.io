@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>やさしお</title>
+<link rel="stylesheet" type="text/css" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>やさしお</h1>
+
+<p><a href="http://www.ajinomoto.co.jp/yasashio/">やさしお</a>はNaCl（塩化ナトリウム：通常の塩）の半分をKCl（塩化カリウム）で置き換えたものです。100g中では27.6gがカリウムです。</p>
+
+<p>カリウム（元素記号K，英語ではpotassium）の大部分は安定な <sup>39</sup>K
+ですが，放射性の <sup>40</sup>K も約0.0117%だけ含まれています。この <sup>40</sup>K
+は半減期 1.251×10<sup>9</sup> 年（12.51億年）で壊変し，89.1%は1.311MeVのβ線を出し，10.7%は1.461MeVのγ線を出します（数値はすべて『アイソトープ手帳』11版によりました）。</p>
+
+<p>半減期とは物質が半分になるまでの時間です。放射性物質は指数関数 $y = e^{-x}$ のグラフのように減っていきます。この横軸を時間と考えて，$\log 2$ となっているところを <sup>40</sup>K では12.51億年に読み替えます。</p>
+
+<figure><img src="img/111210a.png" alt="指数関数と半減期"></figure>
+
+<p>念のため，この図を描いたRのプログラムです（やや手抜き）。</p>
+
+<pre>
+par(family="serif")
+par(xpd=NA)
+curve(exp(-x), xlim=c(0,3), ylim=c(0,1.1),
+      axes=FALSE, xlab="", ylab="", lwd=2, asp=1)
+arrows(-0.1, 0, 3, 0, length=0.1, angle=15)
+arrows(0, -0.1, 0, 1.1, length=0.1, angle=15)
+text(3, 0, expression(italic(x)), pos=1)
+text(0, 1.05, expression(italic(y)), pos=2)
+text(-0.05, -0.05, "O")
+segments(0, 0.5, log(2), 0.5)
+segments(log(2), 0.5, log(2), 0)
+text(0, 0.5, "0.5", pos=2)
+text(log(2), 0, "log 2", pos=1)
+</pre>
+
+<p>秒数を $t$ とすれば，壊変によって物質が減っていく様子は</p>
+
+\[ y = \exp \left( -\frac{t \log 2}{1.251 \times 10^9 \times 365.2422 \times 24 \times 60 \times 60} \right) \]
+
+<p>のように表せますので，$t = 0$ における減少率は，これを微分して</p>
+
+\[ \left. \frac{dy}{dt} \right|_{t=0} = -\frac{\log 2}{1.251 \times 10^9 \times 365.2422 \times 24 \times 60 \times 60} \]
+
+<p>となります。</p>
+
+<p>やさしお1kgには276gのカリウムが含まれ，この0.0117%が <sup>40</sup>K
+であるということは，1kg中に0.032292gの <sup>40</sup>K
+が含まれることになります。<sup>40</sup>K は約40gが1モルですから，0.032292gでは0.0008073モルになり，アボガドロ数 6.022×10<sup>23</sup> を掛ければ 4.86×10<sup>20</sup> 個になります。これに上の減少率を掛ければ毎秒約8500回の壊変が起こることになります。つまり約8500Bq/kgです：</p>
+
+<pre>
+&gt; 276 * 0.000117/40 * 6.022e23 * log(2) / (1.251e9 * 365.2422 * 24 * 60 * 60)
+[1] 8535.897
+</pre>
+
+<p>人間の体にも1人あたり6000Bqほどの放射性物質が含まれています（うち4000Bqほどが <sup>40</sup>K）が，まったく心配する必要はありません。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-09-17T13:23:38+09:00">2014-09-17 13:23:38</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

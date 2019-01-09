@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>名古屋市のデータのCSV化</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>名古屋市のデータのCSV化</h1>
+
+<p>[2018-02-10追記] 名古屋市のURLが変更されていた：<a href="http://www.city.nagoya.jp/kenkofukushi/page/0000088972.html">名古屋市:子宮頸がん予防接種調査の結果を報告します（暮らしの情報）</a></p>
+
+<h2>はじめに</h2>
+
+<p><a href="http://www.city.nagoya.jp/kenkofukushi/page/0000073419.html">名古屋市:子宮頸がん予防接種調査の結果を報告します（暮らしの情報）</a>でデータがPDFで公開された。「ご意見」フォームで「ExcelかCSVで」とお願いしたが，別の方が問い合わせされて名古屋市からは「改竄を防ぐためpdfのみ」という回答があったという。あかん。これはPDFからデータを抽出するしかない。</p>
+
+<p>匿名の方からPDFを変換した<a href="data/Nagoya-HPVV-data-contributed.zip">CSVファイル</a>をいただいた。ただ，「項目番号 220, 223, 229 は読み取ることができないファイルがいくつかあったため，全部欠損値にしました」とのことである［以下の私のデータと若干異なっている。1箇所だけ元データと照合したが私のほうが正しいみたいだった］。</p>
+
+<p>私もその後少しだけやってみた。以下はそのメモである。</p>
+
+<p>このデータを使った解析法の例は<a href="160702.html">名古屋市のHPVVデータの解析</a>として別ページにまとめた。</p>
+
+<h2>方法</h2>
+
+<p>データは上記ページに「調査回答データ（00001から06000）」「調査回答データ（06001から12000）」「調査回答データ（12001から18000）」「調査回答データ（18001から24000）」「調査回答データ（24001から30793）」の5つに分けてPDFで公開されている。ファイル名は kaitodeta1.pdf から kaitodeta5.pdf までである。例えば kaitodeta1.pdf は2429ページあるが，1-155ページが一番左の部分，156-311ページがその右，…と続く。</p>
+
+<p>各列の詳しい説明は detanyuuryokuhoushiki.pdf というファイルに納められている。
+
+<p>一つの方法は，まずこれらを1-155ページ，156-311ページと分割し，それぞれに対してAcrobatでExcel形式に変換し，Excelで編集して一つにまとめることである。もう一つの方法はpdftotextを使う方法である：</p>
+
+<pre>
+for x in kaitodeta*.pdf; do
+  pdftotext -raw $x
+done
+</pre>
+
+<p>これで kaitodeta1.txt から kaitodeta5.txt までができる。これを次のすごくいいかげんなRスクリプトで処理する（<a href="rscript.html">Rでのスクリプト処理</a>参照）：</p>
+
+<pre>
+#! /usr/bin/env Rscript
+
+args = commandArgs(trailingOnly=TRUE)
+if (length(args) != 1) {
+    cat("./do.R filename\n")
+    quit()
+}
+# basename = sub("\\.[^.]*$", "", args[1])
+f = file(args[1], "r")
+line = gsub("\x0c", "", readLines(con=f, n=1))
+cols = 0
+for (num in 1:99) {
+    outfile = paste0("data", formatC(num, width=2, flag="0"), ".csv")
+    while (length(line) != 0) {
+        a = strsplit(line, " ")[[1]]
+        len = length(a)
+        if (len &gt; 0 &amp;&amp; all(a == seq(from=cols+1, by=1, length.out=len))) break
+        line = gsub("\x0c", "", readLines(con=f, n=1))
+    }
+    cols = cols + len
+    while (length(line) != 0) {
+        a = strsplit(line, " ")[[1]]
+        len = length(a)
+        if (len &gt; 0 &amp;&amp; all(a == seq(from=cols+1, by=1, length.out=len))) break
+        cat(a, sep=",", file=outfile, append=TRUE)
+        cat("\n", file=outfile, append=TRUE)
+        line = gsub("\x0c", "", readLines(con=f, n=1))
+    }
+    cat(outfile, cols, "\n")
+    if (length(line) == 0) break
+}
+</pre>
+
+<p>上のファイルを do.R という名前で作り，実行許可を与え，</p>
+
+<pre>
+./do.R kaitodeta1.txt
+</pre>
+
+<p>とすると，data??.csv というファイルがたくさんできる（?? は 01 から始まる連番）。これを一つずつ目で見て頭のゴミを取り除いてから，次のスクリプトで行数・列数をチェックする：</p>
+
+<pre>
+#! /usr/bin/env Rscript
+
+args = commandArgs(trailingOnly=TRUE)
+for (arg in args) {
+    f = file(arg, "r")
+    maxlen = 0
+    minlen = 999999
+    lineno = 0
+    while (TRUE) {
+        line = readLines(con=f, n=1)
+        if (length(line) == 0) break
+        a = strsplit(line, ",")[[1]]
+        len = length(a)
+        if (len &gt; maxlen) maxlen = len
+        if (len &lt; minlen) minlen = len
+        lineno = lineno + 1
+    }
+    cat(arg, lineno, minlen, maxlen, "\n")
+}
+</pre>
+
+<p>列数がおかしいものは，次のスクリプトで修正する。コマンドライン引数として，CSVファイル名と，空の場合はNAを埋める列番号を与える。</p>
+
+<pre>
+#! /usr/bin/env Rscript
+
+args = commandArgs(trailingOnly=TRUE)
+nargs = length(args)
+if (nargs &lt; 2) {
+    cat("./fix.R filename.csv pos1 [pos2 ...]\n")
+    quit()
+}
+f = file(args[1], "r")
+lines = readLines(con=f)
+nlines = length(lines)
+for (i in 1:nlines) {
+    a = strsplit(lines[i], ",")[[1]]
+    len = length(a)
+    for (j in 2:nargs) {
+        pos = as.numeric(args[j])
+        if (pos &gt; len || grepl("^[\x21-\x7e]+$", a[pos])) {
+            a = append(a, NA, after=pos-1)
+            len = len + 1
+        }
+    }
+    lines[i] = paste(a, collapse=",")
+}
+close(f)
+f = file(args[1], "w")
+writeLines(lines, con=f, sep="\n")
+</pre>
+
+<p>できた data??.csv を次のスクリプトで横方向にアペンドする（もうちょっとRらしくできるはずであるが手抜きした）：</p>
+
+<pre>
+#! /usr/bin/env Rscript
+
+args = commandArgs(trailingOnly=TRUE)
+nargs = length(args)
+if (nargs &lt; 1) {
+    cat("./append.R file1 [file2 ...] &gt;file\n")
+    quit()
+}
+block = vector("list", nargs)
+for (i in 1:nargs) {
+    f = file(args[i], "r")
+    block[[i]] = readLines(con=f)
+    len = length(block[[i]])
+    close(f)
+}
+for (j in 1:len) {
+    for (i in 1:nargs) {
+        cat(block[[i]][j])
+        if (i &lt; nargs) cat(",")
+    }
+    cat("\n")
+}
+</pre>
+
+<p>上のスクリプト append.R を使って</p>
+
+<pre>
+./append.R data??.csv &gt;kaito1.csv
+</pre>
+
+<p>のようにして横方向にまとめる。こうしてできた kaito1.csv 〜 kaito5.csv を今度は縦方向にまとめる。こちらはOSのコマンド cat でできる：</p>
+
+<pre>
+cat kaito?.csv &gt;kaito.csv
+</pre>
+
+<p>最後の列275は無理なので諦めた。また，列229は，2〜4番目のファイル（006001-024000）では同じページに必須列がないのでpdftotextでは切り分け不能で，この部分だけNA（欠損値）にした。</p>
+
+<p>最終的なCSVファイルは<a href="data/Nagoya-HPVV-data-01.zip">ここ</a>に置いておく。間違いがないとはいえないので，ご寄付いただいた別バージョンのものでも解析して同じ結果が出ることを確認されることをお勧めする。</p>
+
+<h2>確認</h2>
+
+<p>できたCSVを読み出す：</p>
+
+<pre>
+<code>kaito = read.csv("kaito.csv", header=FALSE, colClasses="character", fileEncoding="UTF-8")</code>
+<code>dim(kaito)</code>
+[1] 30793   274
+<code>head(kaito)</code>
+      V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12  V13 V14 V15 V16 V17 V18 V19  V20
+1 000001  0  0  1  0  0  0  1  0   0   0   0 0000   0   0   0   0   0   2 0000
+2 000002  0  1  0  0  0  0  0  0   1   0   1 0000   0   0   0   0   0   1 0000
+3 000003  0  1  0  0  1  0  0  0   0   0   2 0000   2   0   1   0   0   1 0000
+4 000004  0  0  1  0  0  0  0  0   0   1   1 0000   0   0   0   0   0   1 0000
+5 000005  0  0  1  0  0  0  0  1   0   0   2 2610   1   1   0   0   0   2 2610
+6 000006  1  0  0  0  1  0  0  0   0   0   1 0000   0   0   0   0   0   1 0000
+……
+</pre>
+
+<p>いただいたCSVファイルのほうも読み出してみる：</p>
+
+<pre>
+<code>kaito2 = read.csv("all.csv", colClasses="character")</code>
+<code>dim(kaito2)</code>
+[1] 30793   274
+<code>head(kaito2)</code>
+  X1 X2 X3 X4 X5 X6 X7 X8 X9 X10 X11 X12  X13 X14 X15 X16 X17 X18 X19  X20 X21
+1  1  0  0  1  0  0  0  1  0   0   0   0    0   0   0   0   0   0   2    0   0
+2  2  0  1  0  0  0  0  0  0   1   0   1    0   0   0   0   0   0   1    0   0
+3  3  0  1  0  0  1  0  0  0   0   0   2    0   2   0   1   0   0   1    0   0
+4  4  0  0  1  0  0  0  0  0   0   1   1    0   0   0   0   0   0   1    0   0
+5  5  0  0  1  0  0  0  0  1   0   0   2 2610   1   1   0   0   0   2 2610   1
+6  6  1  0  0  0  1  0  0  0   0   0   1    0   0   0   0   0   0   1    0   0
+……
+</pre>
+
+<p>いただいたファイルのほうはleading zerosはsuppressされている（これは問題ない）。</p>
+
+<p>二つのファイルを数値として比較してみる。比較には <a href="http://www.cookbook-r.com/Manipulating_data/Comparing_vectors_or_factors_with_NA/">Comparing vectors or factors with NA</a> にある compareNA() を使った。</p>
+
+<pre>
+compareNA = function(v1, v2) {
+    same = (v1 == v2) | (is.na(v1) &amp; is.na(v2))
+    same[is.na(same)] = FALSE
+    return(same)
+}
+for (j in 1:274) {
+    d = !compareNA(as.numeric(kaito[,j]),as.numeric(kaito2[,j]))
+    s = sum(d)
+    if (s != 0) {
+        cat("●変数", j, "に", s, "個の相違あり\n")
+        cat(kaito[d,j], "\n")
+        cat(kaito2[d,j], "\n")
+    }
+}
+</pre>
+
+<p>結果は次の通り：</p>
+
+<pre>
+●変数 180 に 1 個の相違あり
+NA 
+1 
+●変数 181 に 1 個の相違あり
+1 
+0 
+●変数 187 に 1 個の相違あり
+0 
+不正出血 
+●変数 188 に 106 個の相違あり
+NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA 不正出血 NA NA NA NA NA NA NA NA NA NA NA 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 2 1 0 0 0 0 0 0 0 0 0 0 
+●変数 189 に 106 個の相違あり
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 2 1 0 0 0 0 0 0 0 0 0 0 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+●変数 221 に 1 個の相違あり
+1 
+0 
+●変数 222 に 1 個の相違あり
+00 
+進路変更のため 
+</pre>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-02-10 11:04:31</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

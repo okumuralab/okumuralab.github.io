@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>統計グラフの色</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>統計グラフの色</h1>
+
+<h2>はじめに</h2>
+
+<p>統計グラフに色を付けることは広く行われています。しかし，色は万人に共通のものではありません。日本人男性の5%，白人男性の8%は，RGB（赤緑青）のうち赤と緑の区別がうまくできません。その内訳は1:3で赤の感受性がないP型（1型，protanopia）と緑の感受性がないD型（2型，deuteranopia）に分かれます。青を感じない人や，RGBのうち2色以上を感じない人もいます。少数ですが女性にもあります。RGBをすべて区別できることを前提とした統計グラフは避けなければなりません。形やパターンを併用するなどの工夫が必要です。その上で，できるだけ多くの人に見分けやすく快い色遣いをしましょう。</p>
+
+<h2>Rでの色指定</h2>
+
+<p>Rの多くの描画関数では <code>col="red"</code> のようなオプションで色が指定できます。<code>"red"</code> のように名前が付いたものは数百色あり，Rのコンソールに <code>colors()</code> と打ち込めば列挙されます。より便利な指定法はHTMLと同じ16進6桁または8桁の <code>"#rrggbb"</code> または <code>"#rrggbbaa"</code> という書き方です（<code>aa</code> は不透明度を表すアルファ値）。あるいは0〜1の実数値を使って
+<code>rgb(</code><i>r</i><code>,</code><i>g</i><code>,</code><i>b</i><code>)</code>
+あるいは
+<code>rgb(</code><i>r</i><code>,</code><i>g</i><code>,</code><i>b</i><code>,</code><i>a</i><code>)</code>
+と書くこともできます。例えば <code>"red"</code> は <code>"#FF0000"</code> や <code>"#FF0000FF"</code> や <code>rgb(1,0,0)</code> や <code>rgb(1,0,0,1)</code> と同じです。</p>
+
+<p><code>rgb()</code>
+以外に
+<code>hsv()</code>
+や
+<code>hcl()</code>
+でも指定できます。色の変換には
+<code>col2rgb()</code>，<code>convertColor()</code>，<code>adjustcolor()</code>
+といった関数が用意されています。詳しくはヘルプをご覧ください（コンソールに例えば
+<code>?hcl</code>
+と打ち込みます）。</p>
+
+<p>モノクロ印刷物の場合は <code>gray(0)</code>（黒）から <code>gray(1)</code>（白）までの実数値による指定が便利でしょう。カラー印刷物に使われるCMYKについては下で説明します。</p>
+
+<h2>パレットの選び方</h2>
+
+<p>色を名前やRGB値で指定するより，色の集合すなわちパレットを用意しておき，そこから選んで使うほうが便利です。</p>
+
+<figure><img src="img/rgbcolors.png" class="right" alt="色見本"></figure>
+
+<p>Rでデフォルトのパレット <code>palette()</code>
+は <code>black</code>, <code>red</code>, <code>green3</code>, <code>blue</code>, <code>cyan</code>, <code>magenta</code>, <code>yellow</code>, <code>gray</code> の8色です：</p>
+
+<pre>
+# png("rgbcolors.png", 400, 200)
+# par(mar=c(0,0,0,0))
+barplot(rep(1,8), col=palette(), axes=FALSE)
+# dev.off()
+</pre>
+
+<p>上のような原色は，目が痛くなるので，なるべく使わないようにしましょう。</p>
+
+<p><code>rainbow()</code> を使えば任意の個数の色が作れますが，やはり原色に近く，明暗の差があるのでカテゴリーデータに向かないという説もあります。<code>colorspace</code> パッケージの <code>rainbow_hcl()</code> を使えば，できるだけ同じ明度・彩度の色になります。</p>
+
+<figure><img src="img/colors.png" class="right" alt="色見本"></figure>
+
+<pre>
+library(colorspace)
+# png("colors.png", 400, 200)
+# par(mar=c(0,0,0,0))
+plot(NULL, xlim=c(0,7), ylim=c(0,2),
+     axes=FALSE, xlab="", ylab="")
+rect(0:6, 1.1, 1:7, 2, col=rainbow(7))
+rect(0:6, 0, 1:7, 0.9, col=rainbow_hcl(7, c=100))
+# dev.off()
+</pre>
+
+<p>この <code>rainbow_hcl()</code>
+はHCL色空間で一定のC（chroma，彩度），L（luminance，明度）を保ちながらH（hue，色相）だけを変えて色を作ります。デフォルトでは彩度 c = 50，明度 l = 70 ですが，上の例では彩度を少し上げています。</p>
+
+<p>印刷にはRGBベースではなくCMYKベースの色を使います。有名な W. S. Cleveland
+の <i>The Elements of Graphing Data</i>
+という本ではCMYKをベースに次の5色をカテゴリーデータ用に薦めています。</p>
+
+<table>
+  <tbody>
+    <tr><th>(c,m,y,k)</th><th>#rrggbb (R)</th><th>#rrggbb (Photoshop)</th><th>色名</th></tr>
+    <tr><td>(1,0,0,0)</td><td style="color:#00ffff">#00ffff</td><td>#00a0e9</td><td style="color:#00a0e9">cyan</td></tr>
+    <tr><td>(0,1,0,0)</td><td style="color:#ff00ff">#ff00ff</td><td>#e4007f</td><td style="color:#e4007f">magenta</td></tr>
+    <tr><td>(1,0,1,0)</td><td style="color:#00ff00">#00ff00</td><td>#009944</td><td style="color:#009944">green</td></tr>
+    <tr><td>(0,0.5,1,0)</td><td style="color:#ff8000">#ff8000</td><td>#f39800</td><td style="color:#f39800">orange</td></tr>
+    <tr><td>(1,0.5,0,0)</td><td style="color:#0080ff">#0080ff</td><td>#0068b7</td><td style="color:#0068b7">royal blue</td></tr>
+  </tbody>
+</table>
+
+<p>最後の色をClevelandはlight blueと書いていますが，ここではより適切と思われるroyal blueを使いました。</p>
+
+<p>上の表でPhotoshopのRGB値はPhotoshop CS5でJapan Color 2001 CoatedからsRGBに変換したものです。一方，RではRGB→CMYKを便宜上次のような簡単なアルゴリズムで変換しています：</p>
+
+<pre>
+c = 1.0 - r
+m = 1.0 - g
+y = 1.0 - b
+k = min(c, m, y)
+if (k == 1.0) {
+  c = m = y = 0.0
+} else {
+  c = (c-k)/(1-k)
+  m = (m-k)/(1-k)
+  y = (y-k)/(1-k)
+}
+</pre>
+
+<p>CMYKのPDFを出力するには，</p>
+
+<pre>
+pdf("hoge.pdf", width=7, height=4, colormodel="cmyk")  # グレースケールなら "gray"
+...
+dev.off()
+</pre>
+
+<p>のようにします。<code>"cyan"</code>，<code>"magenta"</code>，<code>"yellow"</code>，<code>"black"</code> のようにしてCMYKを指定します。あるいは，上のアルゴリズムを逆に計算したRGB値を使って色を指定します。例えばオレンジ (c,m,y,k) = (0,0.5,1,0) を使いたいなら <code>rgb(1,0.5,0)</code>，紺 (c,m,y,k) = (1,0.5,0,0) を使いたいなら <code>rgb(0,0.5,1)</code> を指定します。</p>
+
+<figure><img src="img/cyan-magenta-sRGB.png" class="right" alt="色見本"></figure>
+
+<p>ちなみにClevelandは連続量をcyanとmagentaの濃淡で表す右図のような方法も提案しています。</p>
+
+<div style="clear:both"></div>
+
+<figure><img src="img/blue-orange-sRGB.png" class="right" alt="色見本"></figure>
+
+<p>私がよく使うのは紺（#0068b7）からオレンジ（#f39800）にかけての色です。オレンジはRGBのうち赤と緑を含み，紺は青を多く含むので，赤または緑の感受性を持たない人にも見分けやすいというわけです。</p>
+
+<div style="clear:both"></div>
+
+<figure><img src="img/brewer.png" class="right" alt="display.brewer.all() の出力"></figure>
+
+<p>より現代的な色の選択を提案するサイトとして，<a href="http://colorbrewer2.org/">Colorbrewer: Color Advice for Maps</a> があります。RのパッケージRColorBrewerも開発されています。右図はRColorBrewerパッケージのサンプル</p>
+
+<pre>
+display.brewer.all()
+</pre>
+
+<p>の出力です。3段に分かれています。上のグループは順次的（sequential）と呼ばれるもので，小さい量から大きい量までの段階を表すのに使われます。真ん中のグループは定性的（qualitative）と呼ばれるもので，大小関係のないカテゴリー（名義尺度）を表すのに使われます。下のグループは発散的（diverging）と呼ばれるもので，正負の両側に延びる量を表すのに使われます。</p>
+
+<p>例えばこの中のDark2というものに興味があれば，</p>
+
+<pre>
+display.brewer.pal(8, "Dark2")
+</pre>
+
+<p>でこの8色だけサンプル出力します。実際の色を取り出すには，例えば</p>
+
+<pre>
+cols = brewer.pal(8, "Dark2")
+</pre>
+
+<p>とすれば <code>cols[1]</code> から <code>cols[8]</code> までに色が入ります。</p>
+
+<p style="clear:both">自前でこのようなパレットを作るには <code>colorRampPalette()</code>
+関数を使います。</p>
+
+<pre>
+# png("110905d.png", 450, 80)
+# par(mar=c(0,0,0,0))
+cols = colorRampPalette(c("#0068b7","white","#f39800"))
+plot(NULL, xlim=c(0,10), ylim=c(0,1),
+     axes=FALSE, xlab="", ylab="")
+rect(0:9, 0, 1:10, 1, col=cols(10))
+# dev.off()
+</pre>
+
+<figure><img src="img/110905d.png" alt="colorRampPalette() の例"></figure>
+
+<h2>連続色</h2>
+
+<p>0から1までの実数に色を対応させる関数を作るには，例えば次のようにします。</p>
+
+<pre>
+cols = colorRamp(c("#0080ff","white","#ff8000"))
+</pre>
+
+<p>これで <code>cols(0)</code> が <code>#0080ff</code>，<code>cols(1)</code>
+が <code>#ff8000</code> に対応するような0〜255の三つ組を返す関数 <code>cols()</code>
+が生成されます。これを使って何か描いてみましょう。</p>
+
+<pre>
+# png("110905b.png", 450, 80)
+# par(mar=c(0,0,0,0))
+plot(NULL, xlim=c(0,100), ylim=c(0,1), axes=FALSE, xlab="", ylab="")
+rect(0:99, 0, 1:100, 1, col=rgb(cols(0:99/99)/255), border=NA)
+# dev.off()
+</pre>
+
+<figure><img src="img/110905b.png" alt="連続色の例1"></figure>
+
+<p><code>colorRamp()</code> にいろいろな色を与えてやってみてください。例：</p>
+
+<pre>
+cols = colorRamp(c("#004080","#0080ff","white","#ff8000","#804000"))
+</pre>
+
+<figure><img src="img/110905c.png" alt="連続色の例2"></figure>
+
+<p>（追記）corrplot パッケージのデフォルト色がオレンジ（負）〜紺（正）であることに気づきました：</p>
+
+<pre>
+colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
+                   "#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))
+</pre>
+
+<figure><img src="img/140419.png" alt="corrplotのデフォルト色"></figure>
+
+<h2>scales パッケージ</h2>
+
+<p><a href="http://scales.r-lib.org">scales</a> パッケージにも色を作る関数がいろいろあります。<code>help(package="scales")</code> で出てくる <code>何々_pal</code> という関数がそれです。例：</p>
+
+<pre>
+cols = dichromat_pal("BluetoOrange.10")(10)
+show_col(gradient_n_pal(cols)(seq(0, 1, length.out = 30)))
+</pre>
+
+<figure><img src="img/180811a.png" alt="scalesパッケージの例"></figure>
+
+<h2>カラーユニバーサルデザインについて</h2>
+
+<p>色覚バリアフリーまたはカラーユニバーサルデザインの考え方について少し補足しておきます。</p>
+
+<p>まず必要なことは，自分以外の色覚の人がどのように見えるかを把握することです。CS4以降のAdobe PhotoshopやAdobe IllustratorにはP型・D型の見え方に変換する機能があります。Adobe Photoshop CS5の場合，「表示」→「校正設定」→「P型（1型）色覚」または「D型（2型）色覚」を選びます（CS4では「表示」が「ビュー」になります）。</p>
+
+<figure><img src="img/110921a-sRGB.png" alt="Adobe Photoshop CS5の色覚校正"></figure>
+
+<div class="note">
+<p>同様なことをするMac用の無料ソフト <a href="https://itunes.apple.com/ca/app/sim-daltonism/id693112260">Sim Daltonism</a> を教えていただきました。</p>
+<p>GIMP（Mac，Windows，Linux）でも，［表示］→［ディスプレイフィルター］で「色覚障害の視覚」フィルターをアクティブにして選択すれば，1型〜3型の色覚がシミュレートできます。</p>
+</div>
+
+<p>例えば<a href="http://fukushima-radioactivity.jp/">福島県放射能測定マップ</a>の色分けは次のようになっています：</p>
+
+<figure><img src="img/110922a-sRGB.png" alt="福島県放射能測定マップの色分け"></figure>
+
+<p>これをPhotoshop CS5で「D型（2型）色覚」にしてみます：</p>
+
+<figure><img src="img/110922b-sRGB.png" alt="福島県放射能測定マップの色分け・D型色覚"></figure>
+
+<p>緑とオレンジが同じような色になってしまうことがわかります。そうでなくてもこの色分けは明るい色（黄）を中心に両側に暗い色があるので，これでマップを作ると明るい色の輪に見えてしまうことが，下に挙げた“Escaping RGBland”論文でも指摘されています。正の値が大きいか小さいかを表すにはsequentialな色分けが適当ですが，その前に一つ予備知識。</p>
+
+<p>Rでカラーユニバーサルデザインの考え方に基づいて作られたパッケージに <code>dichromat</code>
+があります。</p>
+
+<figure><img src="img/dichromat.png" alt="dichromatパッケージの例"></figure>
+
+<pre>
+library(dichromat)
+# png("dichromat.png", 400, 200)
+# par(mar=c(0,0,0,0))
+plot(NULL, xlim=c(0,12), ylim=c(0,2),
+     axes=FALSE, xlab="", ylab="")
+rect(0:11, 1.1, 1:12, 2, col=colorschemes$Categorical.12)
+rect(0:11, 0, 1:12, 0.9, col=dichromat(colorschemes$Categorical.12))
+# dev.off()
+</pre>
+
+<p><code>colorschemes$Categorical.12</code> は12色のカテゴリカル用の色です。このパッケージに含まれる色に限らず，どんな色でも <code>dichromat()</code> 関数を通せば色覚を変化させることができます（オプション <code>type="deutan"</code>，<code>type="protan"</code> が指定できます。デフォルトは前者）。</p>
+
+<p>そこで，先ほどの福島県放射能測定マップの色分けですが，色そのものはRColorBrewerの適当なsequentialな色分けを使うのでよいと思います。<code>dichromat()</code> 関数でD型色覚の見え方も調べてみましょう。</p>
+
+<figure><img src="img/110922c.png" alt="RColorBrewerのYlOrBrの8色とD型色覚"></figure>
+
+<pre>
+# library(RColorBrewer)
+# library(dichromat)
+# png("110922c.png", 400, 200)
+# par(mar=c(0,0,0,0))
+cols = brewer.pal(8, "YlOrBr")
+plot(NULL, xlim=c(0,8), ylim=c(0,2),
+     axes=FALSE, xlab="", ylab="")
+rect(0:7, 1.1, 1:8, 2, col=cols)
+rect(0:7, 0, 1:8, 0.9, col=dichromat(cols))
+# dev.off()
+</pre>
+
+<p>もっとも，これはグレースケールだけで判別できるので，調べるまでもなかったのですが。</p>
+
+<p>RGBをグレースケールに変換する一番簡単な式は 0.3<i>r</i> + 0.59<i>g</i> + 0.11<i>b</i>
+です。これとdichromatパッケージを使ってD型・P型・グレイスケールへの変換結果を表示するには次のようにすればいいでしょう。</p>
+
+<pre>
+library(dichromat)
+
+rgb2gray = function(col) {
+  m = matrix(c(rep(0.3,3),rep(0.59,3),rep(0.11,3)), nrow=3)
+  rgb(t((m/255) %*% col2rgb(col)))
+}
+
+rects = function(col) {
+  n = length(col)
+  oldpar = par(mar=c(0,0,0,0))
+  plot(NULL, xlim=c(0,n), ylim=c(0,4.6), axes=FALSE, xlab="", ylab="")
+  rect(0:(n-1), 3.6, 1:n, 4.6, col=col)
+  rect(0:(n-1), 2.4, 1:n, 3.4, col=dichromat(col,type="deutan"))
+  rect(0:(n-1), 1.2, 1:n, 2.2, col=dichromat(col,type="protan"))
+  rect(0:(n-1), 0.0, 1:n, 1.0, col=rgb2gray(col))
+  par(oldpar)
+}
+</pre>
+
+<p>最後に，<a href="http://jfly.iam.u-tokyo.ac.jp/colorset/">カラーユニバーサルデザイン推奨配色セット</a>にあるアクセントカラー・ベースカラー・無彩色の <code>#rrggbb</code> 値を載せておきます。</p>
+
+<table><tr style="vertical-align:top"><td>
+<table>
+  <tr><td style="background-color:#ff2800">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>赤</td><td><code>#ff2800</code></td></tr>
+  <tr><td style="background-color:#faf500">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>黄色</td><td><code>#faf500</code></td></tr>
+  <tr><td style="background-color:#35a16b">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>緑</td><td><code>#35a16b</code></td></tr>
+  <tr><td style="background-color:#0041ff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>青</td><td><code>#0041ff</code></td></tr>
+  <tr><td style="background-color:#66ccff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>空色</td><td><code>#66ccff</code></td></tr>
+  <tr><td style="background-color:#ff99a0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>ピンク</td><td><code>#ff99a0</code></td></tr>
+  <tr><td style="background-color:#ff9900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>オレンジ</td><td><code>#ff9900</code></td></tr>
+  <tr><td style="background-color:#9a0079">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>紫</td><td><code>#9a0079</code></td></tr>
+  <tr><td style="background-color:#663300">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>茶</td><td><code>#663300</code></td></tr>
+</table>
+</td><td>
+<table>
+  <tr><td style="background-color:#ffd1d1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>明るいピンク</td><td><code>#ffd1d1</code></td></tr>
+  <tr><td style="background-color:#ffff99">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>クリーム</td><td><code>#ffff99</code></td></tr>
+  <tr><td style="background-color:#cbf266">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>明るい黄緑</td><td><code>#cbf266</code></td></tr>
+  <tr><td style="background-color:#b4ebfa">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>明るい空色</td><td><code>#b4ebfa</code></td></tr>
+  <tr><td style="background-color:#edc58f">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>ベージュ</td><td><code>#edc58f</code></td></tr>
+  <tr><td style="background-color:#87e7b0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>明るい緑</td><td><code>#87e7b0</code></td></tr>
+  <tr><td style="background-color:#c7b2de">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>明るい紫</td><td><code>#c7b2de</code></td></tr>
+</table>
+</td><td>
+<table>
+  <tr><td style="background-color:#ffffff;border:1px solid #000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>白</td><td><code>#ffffff</code></td></tr>
+  <tr><td style="background-color:#c8c8cb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>明るいグレー</td><td><code>#c8c8cb</code></td></tr>
+  <tr><td style="background-color:#7f878f">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>グレー</td><td><code>#7f878f</code></td></tr>
+  <tr><td style="background-color:#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>黒</td><td><code>#000000</code></td></tr>
+</table>
+</td></tr>
+</table>
+
+<p>Rの <code>pdf(colormodel="cmyk")</code> でPDFにする際の指定は次の通りです：
+
+<table><tr style="vertical-align:top"><td>
+<table>
+  <tr><td style="background-color:#ff2800">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>赤</td><td><code>rgb(1,0.25,0.05)</code></td></tr>
+  <tr><td style="background-color:#faf500">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>黄色</td><td><code>rgb(1,1,0)</code></td></tr>
+  <tr><td style="background-color:#35a16b">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>緑</td><td><code>rgb(0.25,1,0.35)</code></td></tr>
+  <tr><td style="background-color:#0041ff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>青</td><td><code>rgb(0,0.55,1)</code></td></tr>
+  <tr><td style="background-color:#66ccff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>空色</td><td><code>rgb(0.45,1,1)</code></td></tr>
+  <tr><td style="background-color:#ff99a0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>ピンク</td><td><code>rgb(1,0.45,0.65)</code></td></tr>
+  <tr><td style="background-color:#ff9900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>オレンジ</td><td><code>rgb(1,0.55,0)</code></td></tr>
+  <tr><td style="background-color:#9a0079">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>紫</td><td><code>rgb(0.7,0.05,1)</code></td></tr>
+  <tr><td style="background-color:#663300">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>茶</td><td><code>rgb(0.45,0.1,0)</code> (注)</td></tr>
+</table>
+</td><td>
+<table>
+  <tr><td style="background-color:#ffd1d1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>明るいピンク</td><td><code>rgb(1,0.75,0.85)</code></td></tr>
+  <tr><td style="background-color:#ffff99">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>クリーム</td><td><code>rgb(1,1,0.6)</code></td></tr>
+  <tr><td style="background-color:#cbf266">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>明るい黄緑</td><td><code>rgb(0.75,1,0.2)</code></td></tr>
+  <tr><td style="background-color:#b4ebfa">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>明るい空色</td><td><code>rgb(0.7,1,1)</code></td></tr>
+  <tr><td style="background-color:#edc58f">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>ベージュ</td><td><code>rgb(1,0.75,0.55)</code></td></tr>
+  <tr><td style="background-color:#87e7b0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>明るい緑</td><td><code>rgb(0.55,1,0.55)</code></td></tr>
+  <tr><td style="background-color:#c7b2de">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>明るい紫</td><td><code>rgb(0.75,0.7,1)</code></td></tr>
+</table>
+</td></tr>
+</table>
+
+<p>(注) これでCMYK値は (0%,77%,100%,45%) になり，推奨値 (55%,90%,100%,0%) と違ってしまいますが，仕様上しかたないようです。</p>
+
+<h2>色の変換</h2>
+
+<p>Webで見ている分にはどうでもいいことでも，印刷が関係すると，いろいろ厄介な問題が生じます。このあたりに詳しくない人は，ぜひ<a href="http://getnavi.jp/comic/166389/">「4色」って言っただけで印刷会社の社員がうなだれた……でも、なんで? 『今日も下版はできません!』第21話</a>という漫画をお読みください。</p>
+
+<p>印刷用途にスクリーンショットなどを使う際には，もちろんJPEGでなくPNGを使うことになりますが，RGBのPNGをグレイスケールに変換する必要が生じます。この話は<a href="http://okumuralab.org/bibun7/">［改訂第7版］LaTeX2e 美文書作成入門</a>のpp.138--139にも書きましたが，ImageMagickのconvert（最近のバージョンではmagick）コマンドを使って</p>
+
+<pre>
+for x in *.png
+do
+  convert $x -colorspace Gray ${x%.png}-gray.png
+done
+</pre>
+
+<p>のようにして一括変換できます。</p>
+
+<p>Rで生成したPDFをインクルードして印刷に回す際にも，<code>pdf()</code> 関数なら，上に書いたように <code>colormodel="cmyk"</code> または <code>colormodel="gray"</code> のオプションが使えますが，Macで任意のシステムフォントを埋め込むために <code>quartz(type="pdf")</code> を使う場合には，どうしてもRGBになってしまいますので，後でグレイスケールに変換する必要が生じます。これは，Ghostscriptを使って</p>
+
+<pre>
+gs \
+   -sDEVICE=pdfwrite \
+   -sProcessColorModel=DeviceGray \
+   -sColorConversionStrategy=Gray \
+   -sColorConversionStrategyForImages=Gray \
+   -dAutoRotatePages=/None \
+   -o hoge-gray.pdf \
+   hoge.pdf
+</pre>
+
+<p>のようにできます。<code>Gray</code> の部分は必要に応じて <code>CMYK</code> にします。Ghostscript 8 では <code>-dUseCIEColor</code> のようなオプションが必要かもしれません。逆に Ghostscript 9 では <code>-dOverrideICC</code> が必要かもしれません。うまく変換されたか Acrobat の印刷工程の出力プレビューでチェックしましょう。R で <code>col=gray(0.9)</code> と指定したら K 10% になるのが正しいのですが，RGB経由の変換では例えば K 13% のようになるかもしれません。</p>
+
+<h2>参考文献・サイト</h2>
+
+<ul>
+  <li>Ross Ihaka (2003), Colour for Presentation Graphics.
+      <a href="http://www.ci.tuwien.ac.at/Conferences/DSC-2003/Proceedings/">DSC 2003</a></li>
+  <li>Achim Zeileis, Kurt Hornik and Paul Murrell (2009),
+      <a href="http://dx.doi.org/10.1016/j.csda.2008.11.033">Escaping RGBland: Selecting colors for statistical graphics</a>.
+      Computational Statistics &amp; Data Analysis,
+      Volume 53, Issue 9, pp.3259-3270.
+      ほぼ同じものが<a href="http://eeecon.uibk.ac.at/~zeileis/">Zeileis</a>のサイト内の<a href="http://eeecon.uibk.ac.at/~zeileis/papers/Zeileis+Hornik+Murrell-2009.pdf">ここ</a>にもある。ちなみにこのペーパーは文献リストにWikipediaの記事が二つもある。Wikipediaなんか論文で引用してはいけませんよということをよく聞くが，そうでもないようだ。なお，この論文の図を描くRのコードは，Rのコンソールに
+      <code>vignette("hcl-colors", package="colorspace")</code>
+      と打ち込むと見られる。</li>
+  <li>A. Light and P.J. Bartlein (2004),
+      <a href="http://geography.uoregon.edu/datagraphics/EOS/index.htm">The end of the rainbow? Color schemes for improved data graphics.</a>
+      Eos Transactions of the American Geophysical Union 85(40):385</li>
+  <li><a href="http://www.cudo.jp/">NPO法人カラーユニバーサルデザイン機構</a></li>
+  <li><a href="http://jfly.iam.u-tokyo.ac.jp/color/tsunami/">見分けやすい津波警報の配色・色調の策定（全テレビ局で統一）</a></li>
+  <li>奥村曉さんのブログ：<a href="http://d.hatena.ne.jp/oxon/20101119">ROOT で使われる色をプレゼンで見やすく変更しよう</a></li>
+  <li><a href="http://www.jma.go.jp/jma/press/1205/24a/120524hpcolor.html">気象庁ホームページにおける気象情報の色合いの統一について</a> (気象庁, 2012-05-24)</li>
+  <li><a href="http://d.hatena.ne.jp/hoxo_m/20120704/p1">R で Excel っぽい色を出す</a></li>
+  <li><a href="http://www.city.kawasaki.jp/e-news/info3518/index.html">公文書作成におけるカラーユニバーサルデザイン・ガイドライン</a> (川崎市)</li>
+  <li><a href="http://jfly.iam.u-tokyo.ac.jp/colorset/">カラーユニバーサルデザイン推奨配色セット</a> (東京大学分子細胞生物学研究所 脳神経回路研究分野 伊藤啓先生ほか)</li>
+  <li><a href="http://www.slideshare.net/saucerjp/ss-14902681">ノンデザイナーのための配色理論</a></li>
+  <li><a href="http://hue360.herokuapp.com/">[ HUE / 360 ] The Color Scheme Application</a></li>
+  <li><a href="http://www.perceptualedge.com/library.php">Perceptual Edge - Library</a>:
+      <a href="http://www.perceptualedge.com/articles/visual_business_intelligence/rules_for_using_color.pdf">Practical Rules for Using Color in Charts</a> (PDF) by Stephen Few (Feb 2008)</li>
+  <li><a href="http://qiita.com/hoxo_b/items/c569da6dbf568032e04a">ggplot2のデフォルトの色を知りたい</a></li>
+</ul>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-08-11 21:13:45</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

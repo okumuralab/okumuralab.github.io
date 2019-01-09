@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Fisherの正確検定かカイ2乗検定か</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>Fisherの正確検定かカイ2乗検定か</h1>
+
+<p>[2017-09-19] 黒木玄さんが追試をしてくださって，このページの <code>ECDF for chisq.test(correct=T)</code> の図が微妙に違うと教えていただきました。図のタイムスタンプは 2009-01-25 ですが，<del><code>chisq.test()</code> の仕様が変わったとも考えられず，おそらく私のミスだと思われます</del><ins>じゃなく本当に仕様変更でした</ins>。それを除いても，図の見栄えが今のRの出力と微妙に違います。そもそもHTMLも5になってなかったし，数式もMathJaxでなかったので，全面的に書き直しました。</p>
+
+<p>[2017-09-20] 黒木玄さんが解決してくださいました。本当にRの <code>chisq.test()</code> の仕様が変わったのでした（<a href="http://www.okadajp.org/RWiki/?なんでも掲示板アーカイブ（５）#j1895ac4">ここ</a>参照）。黒木さんはほかにもいろいろ貴重なことを書いてくださっていますので<a href="https://twitter.com/genkuroki/status/910360137256325121">このツイート</a>の前後の連鎖をご覧ください（私もまだ消化しきれていません）。</p>
+
+<p>[2017-10-31] r-statistics-fanさんの<a href="http://r-statistics-fan.hatenablog.com/entry/2017/10/31/170112">Fisher's exact testが"正確”かどうか</a>も参考になります。</p>
+
+<h2>例</h2>
+
+<p>次のような2×2分割表を考えましょう。</p>
+
+<table border="1">
+  <tbody>
+  <tr><td>$a$</td><td>$b$</td><th>20</th></tr>
+  <tr><td>$c$</td><td>$d$</td><th>30</th></tr>
+  <tr><th>15</th><th>35</th><th>50</th></tr>
+  </tbody>
+</table>
+
+<p>このような表の各行・各列が独立かどうかを検定する際の帰無仮説として，次の二つを考えます：</p>
+
+<ul>
+  <li>全体として50個であることだけ固定して，上・下に入る確率，左・右に入る確率を表の通りとする（つまり各セルに入る確率を 0.12，0.18，0.28，0.42 とする）</li>
+  <li>周辺度数（表の20，30，15，35）まで表の通りに固定する</li>
+</ul>
+
+<p>以下では，上の場合を条件なし（unconditional），下の場合を条件付き（conditional）と呼んでいます。これ以外に，右の周辺度数（20，30）だけ固定し，下の周辺度数は固定しないなども考えられます。</p>
+
+<p>このような分割表の検定としては，<a href="fishertest.html">Fisherの正確検定</a>と<a href="chisqtest.html">カイ2乗検定</a>がよく使われています。前者は条件付きの場合に正確な $p$ 値を与える方法です。</p>
+
+<p>これらの場合について，それぞれ $n$ 回シミュレーションし，</p>
+
+\[
+  F_n(x) = \text{($p$ 値が $x$ 以下の回数)} / n
+\]
+
+<p>を求めてみましょう。この $F_n(x)$ を経験分布関数または経験累積分布関数（ECDF，empirical cumulative distribution function）といいます。</p>
+
+<p>グラフは次のようになります。横軸は $x$，縦軸は $F_n(x)$ です。</p>
+
+<figure>
+<img src="img/ecdf-fisher.png" alt="ECDF for fisher.test()">
+<img src="img/ecdf-fisher-c.png" alt="ECDF for fisher.test() -- conditional">
+</figure>
+
+<figure>
+<img src="img/ecdf-chisq-F.png" alt="ECDF for chisq.test(correct=F)">
+<img src="img/ecdf-chisq-F-c.png" alt="ECDF for chisq.test(correct=F) -- conditional">
+</figure>
+
+<figure>
+<img src="img/ecdf-chisq-T.png" alt="ECDF for chisq.test(correct=T)">
+<img src="img/ecdf-chisq-T-c.png" alt="ECDF for chisq.test(correct=T) -- conditional">
+</figure>
+
+<p>ECDFは，斜め45度の線上にあるのが理想です。条件付きの2×2分割表は非常に離散的で，いくつかの $p$
+値しかとりません。グラフではぎざぎざになっていますが，可能な場合（黒丸の点）については完全に斜め45度の線上にありますので，条件付きの場合はFisherの方法が最適です。これを近似するものとして連続性の補正をしたカイ2乗検定があります。</p>
+
+<p>問題は条件なしの場合で，Fisherの方法は，下に寄ってしまいます。$p \leq 0.05$ となる確率は 0.03〜0.04 程度です。全体の形としては，補正なしのカイ2乗検定が最も良くなります。</p>
+
+<p>これは条件付き・条件なしの本質的な違いではなく，単に条件付きの場合は可能な点が少ないのでより離散的になるためです。サンプルのサイズ（この例では50）をもっと増やせば違いはなくなります。</p>
+
+<p>練習問題として，片側だけ条件付きの場合もやってみてください（条件なしの場合とほぼ同じ図になります）。</p>
+
+<h2>Rのプログラム</h2>
+
+<p>条件なしの場合：</p>
+
+<pre>
+prob = c(0.12,0.18,0.28,0.42)
+ni = 100000
+pfis = pchi = pchic = numeric(ni)
+for (i in 1:ni) {
+  k = sample(1:4, 50, replace=TRUE, prob=prob)
+  na = sum(k == 1)
+  nb = sum(k == 2)
+  nc = sum(k == 3)
+  nd = sum(k == 4)
+  a = matrix(c(na, nb, nc, nd), nrow=2)
+  pfis[i] = fisher.test(a)$p.value
+  pchi[i] = chisq.test(a, correct=FALSE)$p.value
+  pchic[i] = chisq.test(a, correct=TRUE)$p.value
+}
+
+plot(ecdf(pfis), asp=1, xlab="", ylab="", xlim=c(0,1), ylim=c(0,1),
+     verticals=TRUE, main="ECDF for fisher.test()")
+abline(0,1)
+</pre>
+
+<p>条件付きの場合は上の <code>k = ...</code> を次のようにします：</p>
+
+<pre>
+  k = sample(c(rep(1,15),rep(3,35))) + sample(c(rep(0,20),rep(1,30)))
+</pre>
+
+</article>
+<hr>
+<footer>
+<p><a href="/~okumura/">奥村晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-09 10:29:14</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

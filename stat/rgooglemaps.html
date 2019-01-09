@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>RgoogleMapsを使った放射線地図</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>RgoogleMapsを使った放射線地図</h1>
+
+<p><a href="http://cran.r-project.org/web/packages/RgoogleMaps/">RgoogleMaps</a>
+はGoogle MapsをRから使うためのパッケージです。</p>
+
+<pre>
+options(repos="http://cran.ism.ac.jp") # 適当にCRANミラーを指定
+update.packages()                      # 念のため
+install.packages("RgoogleMaps")        # RgoogleMapsをインストール
+install.packages("RColorBrewer")       # RColorBrewerをインストール
+</pre>
+
+<p><del>Googleのスタティックな地図を取得する関数 <code>GetMap()</code>
+で言語指定するための <code>hl</code> オプションが壊れているので修正した
+<a href="data/GetMap.R">GetMap.R</a>
+を置いておきます。作者には連絡済みで，次のバージョンでは直るはずです。</del></p>
+
+<p>@nnistar さんのまとめられた<a href="http://www.nnistar.com/gmap/fukushima.html">福島県のデータ</a>を全部取得して放射線地図を描いてみましょう。CSVで取得したら一つにつなげて
+<a href="data/clean.rb">clean.rb</a>
+のようなものできれいにしておきます。42万数千行ありますので，時間順にソートして，新しいデータが上に描かれるようにします。念のため <a href="http://oku.edu.mie-u.ac.jp/~okumura/stat/data/">ここ</a>に fukushima.csv という名前で置いておきました（データそのものは賞味期限切れです）。</p>
+
+<p>下の「高速化」のところも，あとでお読みください。</p>
+
+<pre>
+library(RgoogleMaps)
+library(RColorBrewer)
+<del># source("GetMap.R") # 古いRgoogleMapsの場合。今は不要</del>
+fukushima = read.csv("fukushima.csv", as.is=TRUE)
+t = as.POSIXct(fukushima$datetime)
+o = order(t)
+cols=c("white",brewer.pal(9, "YlOrRd"),rep("black",100))
+FukushimaMap = GetMap(c(37.38,140.2), destfile="fukushima.png",
+                      zoom=9, sensor="false", hl="ja", maptype="terrain")
+# ここでURLが表示されるが無視。まだ地図は表示されない
+tmp = PlotOnStaticMap(FukushimaMap, lat=fukushima$lat[o],
+                      lon=fukushima$lon[o], pch=16,
+                      col=cols[floor(fukushima$radiation[o]*2)+1])
+# この時点で地図が表示されるはず
+tmp = PlotOnStaticMap(FukushimaMap, lat=37.422778,
+                      lon=141.032339, pch="×", cex=2,
+                      add=TRUE) # 福島第一原発
+legend(-300, -290, xjust=0, yjust=0,
+       legend=paste("≧",format((10:0)/2,digits=2,nsmall=1),"μSv/h",sep=""),
+       fill=cols[11:1], bg="white")
+</pre>
+
+<div><img src="img/fukushima.png" alt="福島県の放射線地図"></div>
+
+<p>現在の <code>GetMap()</code> は <code>maptype="roadmap"</code>
+がデフォルトです。デフォルトのほうが地図らしくなります。</p>
+
+<p>別のサンプルも載せておきます。</p>
+
+<div><img src="img/110829d.png" alt="福島市の放射線地図"></div>
+
+<p>描くものは点に限りません。文字列を描くには
+<code>PlotOnStaticMap(..., FUN=text, labels=..., col=..., cex=...)</code>
+のようにします。<code>labels</code> に文字列のベクトルを与え，<code>cex</code>
+に文字サイズ（標準は1）を与えます。</p>
+
+<h2>data.tableを使って書き直す</h2>
+
+<p>上のコードで</p>
+
+<pre>
+fukushima = read.csv("fukushima.csv", as.is=TRUE)
+t = as.POSIXct(fukushima$datetime)
+</pre>
+
+<p>のところが非常に時間がかかっています。<a href="datatable.html">data.table</a>
+のところにも書きましたが，次のようにするとずっと速くなります。</p>
+
+<pre>
+library(data.table)
+library(fasttime)
+
+fukushima = fread("fukushima.csv")
+t = fastPOSIXct(fukushima$datetime) - 9*3600
+</pre>
+
+<p>ちなみに，元データの日付が YYYY/MM/DD だったり YYYY/M/D だったりするので，文字列のソートでは正しい順番に並びません。</p>
+
+<p>どうせ data.table を使うなら，もうちょっとそれらしくしてみましょう。</p>
+
+<pre>
+fukushima = fread("fukushima.csv")
+fukushima$datetime = fastPOSIXct(fukushima$datetime) - 9*3600
+setkey(fukushima, datetime)
+</pre>
+
+<p>これで fukushima という data.table は datetime 欄をキーに設定しました。こうすると，並び順が datetime の昇順になりますので，<code>o = order(t)</code> を求める必要がなく，その後の部分でも <code>[o]</code> がすべて不要になります。</p>
+
+<h2>日本測地系と世界測地系</h2>
+
+<p>国の発表資料は日本測地系の場合がありますが，Google Mapsは世界測地系です。東京付近なら東経から12秒引き北緯に12秒足すと世界測地系になります。詳しくは国土地理院の<a href="http://www.gsi.go.jp/LAW/G2000-g2000-h3.htm">日本測地系と世界測地系</a>をご覧ください。Web上で変換するツールが，陸域は<a href="http://vldb.gsi.go.jp/sokuchi/tky2jgd/about.html">国土地理院のページ</a>，海域は<a href="http://www1.kaiho.mlit.go.jp/KOHO/eisei/sokuchi/html/henkan_chu.html">海上保安庁のページ</a>で提供されています。また，緯度 x' = x - 0.00010695 * x + 0.000017464 * y + 0.0046017，経度 y' = y - 0.000046038 * x - 0.000083043 * y + 0.01004 で近似計算できるそうです（Thanks: @nnistar さん）。</p>
+
+<p>国土地理院が提供するTKY2JGDはWeb上・Windows上のツールですが，Macで使えるものとして
+<a href="http://www.hi-ho.ne.jp/sato-akira/blconverter/index.html">BLconverter</a>
+があります（Thanks: @Ishihara_Y さん）。GUIツールですがCUIでも使えます。
+
+<h2>参考サイト（工事中）</h2>
+
+<ul>
+  <li><a href="http://newspat.csis.u-tokyo.ac.jp/geocode/">Geocoding Tools &amp; Utilities - 位置参照技術を用いたツールとユーティリティ</a></li>
+</ul>
+
+<div class="note">
+<p>RgoogleMapsより新しいものにggmapパッケージがあります。</p>
+</div>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-03-30T22:32:13+09:00">2014-03-30 22:32:13</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>振り子の等時性？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>振り子の等時性？</h1>
+
+<p>[2018-07-01] 以下を最初に書いたのは2016-06-03であるが，わかりにくかったので，文科省の資料の話と数学の説明とを逆にした。</p>
+
+<p>文科省サイトの<a href="http://www.mext.go.jp/a_menu/shotou/new-cs/senseiouen/1304651.htm">小学校理科の観察，実験の手引き詳細</a>にある<a href="http://www.mext.go.jp/component/a_menu/education/micro_detail/__icsFiles/afieldfile/2012/01/12/1304649_18_1.pdf">小学校理科の観察，実験の手引き　第5学年A（2）　振り子の運動</a>というPDFファイルには次のように書かれている（<em>強調</em>は奥村による）。</p>
+
+<blockquote style="text-indent:1em">
+<p>ここでは，糸におもりをつるして，おもりの1往復する時間を，おもりの重さ，糸の長さ，振れ幅を変えながら測定し，糸につるしたおもりの1往復する時間はおもりの重さや<em>振れ幅によっては変わらない</em>が，糸の長さによって変わることをとらえるようにする。おもりの重さが，おもりが1往復する時間を変化させる要因になるかを調べるためには，糸の長さや振れ幅を一定にして，おもりの重さだけを変えて調べるようにする。このように，変える条件と変えない条件について，条件を制御しながら計画的に実験できるようにすることが大切である。</p>
+<p>また，実験では時間のはかり方や実験装置の不備などによって，結果に誤差が生じやすい。おもりの重さや<em>振れ幅が，おもりの1往復する時間に関係すると予想や仮説をもった児童の中には，実験の誤差をおもりの1往復する時間が変化したととらえる児童がいる。これは，自分の予想や仮説に合うようにデータを処理しているからである。</em>正確な実験に取り組ませる一方で，データ処理の仕方についても指導することが大切である。特に今回の実験では実験結果を表に整理するだけではなく，グラフなどを用いて表現させると誤差と変化の違いに気付かせることができる。本単元を通して，誤差の考え方を指導するとともに，実験には誤差が生じることを理解させ，誤差をふまえながらデータを処理し，結果を正しく解釈する力を身に付けさせるようにする。
+</p>
+</blockquote>
+
+<p>これを書いた先生は，振り子の等時性は厳密な法則であると思い込んでいるようである。ところが，下に示すように，振り子を±45度振ると，小振幅の場合と比べて，周期は4%延びる。±90度なら18%延びる。4%とか18%とか伸びたなら，小学5年生ならそれを見つける子がいても不思議でない。そのような優れた児童に「それは<em>自分の予想や仮説に合うようにデータを処理しているから</em>だよ」という先生のほうが思い込みに支配されているように思う。</p>
+
+<hr>
+
+<p>以下は数学的な説明である。</p>
+
+<p>質量 $m$，長さ $l$ の振り子の運動は</p>
+
+\[ ml \frac{d^2\theta}{dt^2} = -mg\sin\theta \]
+
+<p>で表される。$g \approx 9.8\,\mathrm{m/s^2}$ は重力加速度である。</p>
+
+<p>振れの角度 $\theta$（ラジアン単位）が小さいなら $\sin\theta \approx \theta$
+と近似できる。その場合は $\theta = \theta_0 \sin(2\pi/T)t$
+という単振動の解が存在する。これを代入して周期 $T$ について解けば，周期は</p>
+
+\[ T = 2\pi \sqrt{\frac{l}{g}} \]
+
+<p>となり，一定である。これが振り子の等時性である。</p>
+
+<p>ただ，$\sin\theta \approx \theta$ はあくまでも近似であり，現実の振り子の周期は最大の振れ角度 $\theta_0$ に依存する。これは第1種の完全楕円積分</p>
+
+\[ K(m) = \int_0^{\pi/2} \frac{dt}{\sqrt{1 - m \sin^2 t}} \]
+
+<p>を使えば $\theta_0 \approx 0$ での周期の $(2/\pi)K(\sin^2(\theta_0/2))$ 倍になる。</p>
+
+<p>Rでは例えば pracma パッケージの <code>ellipke()</code> 関数で完全楕円積分 $K(m)$，$E(m)$
+が求められる。$K(m)$ は <code>ellipke(m)$k</code> として求める。</p>
+
+<pre>
+<code>library(pracma)</code>
+<code>f = function(x) { 2 / pi * ellipke(sin(x*pi/360)^2)$k }</code>
+<code>f(45)</code>
+[1] 1.039973
+<code>f(90)</code>
+[1] 1.180341
+</pre>
+
+<p>つまり，±45度まで振ると周期は4%伸び，±90度までだと18%伸びる。</p>
+
+<p>0度から90度までの周期の相対値をプロットしてみよう。</p>
+
+<pre>
+x = 0:90
+plot(x, f(x), type="l", xlab="振幅（度）", ylab="周期")
+</pre>
+
+<figure><img src="img/160602b.png" alt="振り子の周期"></figure>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-10-29 20:11:06</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

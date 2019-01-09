@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Excelファイルの集計</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Excelファイルの集計</h1>
+
+<p>大量のExcelファイルから必要な部分を抜き出してCSVファイルに書き出す方法を説明する。題材としては，国立教育政策研究所の<a href="http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/">平成28年度　全国学力・学習状況調査　調査結果資料 【都道府県別】</a>の46都道府県（熊本は実施せず）の小学校・中学校の「調査結果概要」Excelファイル 46×2=92 個である。</p>
+
+<p>まず全ファイルをダウンロードする（あらかじめスクレーピング等により全ファイルのURLを調べる）。ダウンロードには <code>wget</code> コマンドを使った（<code>curl -O</code> でもかまわない）：</p>
+
+<pre>
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/01_hokkaido/01p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/02_aomori/02p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/03_iwate/03p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/04_miyagi/04p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/05_akita/05p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/06_yamagata/06p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/07_fukushima/07p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/08_ibaraki/08p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/09_tochigi/09p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/10_gunma/10p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/11_saitama/11p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/12_chiba/12p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/13_tokyo/13p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/14_kanagawa/14p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/15_niigata/15p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/16_toyama/16p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/17_ishikawa/17p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/18_fukui/18p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/19_yamanashi/19p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/20_nagano/20p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/21_gifu/21p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/22_shizuoka/22p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/23_aichi/23p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/24_mie/24p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/25_shiga/25p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/26_kyoto/26p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/27_osaka/27p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/28_hyougo/28p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/29_nara/29p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/30_wakayama/30p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/31_tottori/31p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/32_shimane/32p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/33_okayama/33p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/34_hiroshima/34p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/35_yamaguchi/35p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/36_tokushima/36p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/37_kagawa/37p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/38_ehime/38p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/39_kouchi/39p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/40_fukuoka/40p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/41_saga/41p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/42_nagasaki/42p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/44_ohita/44p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/45_miyazaki/45p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/46_kagoshima/46p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/47_okinawa/47p_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/01_hokkaido/01m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/02_aomori/02m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/03_iwate/03m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/04_miyagi/04m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/05_akita/05m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/06_yamagata/06m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/07_fukushima/07m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/08_ibaraki/08m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/09_tochigi/09m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/10_gunma/10m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/11_saitama/11m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/12_chiba/12m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/13_tokyo/13m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/14_kanagawa/14m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/15_niigata/15m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/16_toyama/16m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/17_ishikawa/17m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/18_fukui/18m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/19_yamanashi/19m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/20_nagano/20m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/21_gifu/21m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/22_shizuoka/22m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/23_aichi/23m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/24_mie/24m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/25_shiga/25m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/26_kyoto/26m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/27_osaka/27m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/28_hyougo/28m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/29_nara/29m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/30_wakayama/30m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/31_tottori/31m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/32_shimane/32m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/33_okayama/33m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/34_hiroshima/34m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/35_yamaguchi/35m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/36_tokushima/36m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/37_kagawa/37m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/38_ehime/38m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/39_kouchi/39m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/40_fukuoka/40m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/41_saga/41m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/42_nagasaki/42m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/44_ohita/44m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/45_miyazaki/45m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/46_kagoshima/46m_16r.xlsx
+wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/47_okinawa/47m_16r.xlsx
+</pre>
+
+<p>このようにして集めたExcelファイルを読んで，必要な部分を書き出す。ここでは<a href="exceldata.html">RでExcelのデータを読む方法</a>で紹介したreadxlパッケージを使う。シートを <code>x</code> に読んで例えば2行目Cのセルに格納されているものを取り出すには <code>x[2,3]</code> とする（仮にA，Bがセル結合されていてもCは3列目と数える）。小数第1位に丸める操作は不要と思ったが，やってみると小学校ファイルに丸めが必要な値がけっこう含まれていたので，追加した。</p>
+
+<pre>
+library(readxl)
+
+r = function(x) round(as.numeric(x), 1) # 小数第1位に丸める
+
+# 小学校
+cat("番号,都道府県,国語A,国語B,算数A,算数B\n", file="p.csv")
+for (i in 1:47) {
+    f = dir(".", sprintf("^%02dp", i))  # 01pなどで始まるファイル名を取得（正規表現）
+    if (length(f) == 1) {
+        x = read_excel(f, 1, col_names=FALSE)  # シート1
+        y = read_excel(f, 2, col_names=FALSE)  # シート2
+        cat(i, x[9,2], r(x[9,10]), r(x[53,10]), r(y[9,10]), r(y[53,10]), sep=",", file="p.csv", append=TRUE)
+        cat("\n", file="p.csv", append=TRUE)
+    }
+}
+
+# 中学校
+cat("番号,都道府県,国語A,国語B,数学A,数学B\n", file="m.csv")
+for (i in 1:47) {
+    f = dir(".", sprintf("^%02dm", i))  # 01mなどで始まるファイル名を取得（正規表現）
+    if (length(f) == 1) {
+        x = read_excel(f, 1, col_names=FALSE)
+        y = read_excel(f, 2, col_names=FALSE)
+        cat(i, x[8,2], r(x[8,9]), r(x[55,9]), r(y[8,9]), r(y[55,9]), sep=",", file="m.csv", append=TRUE)
+        cat("\n", file="m.csv", append=TRUE)
+    }
+}
+</pre>
+
+<p>ほぼ同じことをして作ったファイル <a href="data/atest2016p.csv">atest2016p.csv</a>，<a href="data/atest2016m.csv">atest2016m.csv</a> を置いておく。文字コードはSJISである。</p>
+
+<p>なお，<code>dir()</code> はディレクトリリストを返す関数である。例えば上の中学校の部分は次のようにもできる。こちらのほうが素直かもしれない。</p>
+
+<pre>
+d = dir(".", "^..m.*\\.xlsx$")  # 正規表現（"^\\d\\dm" などでもよい）
+for (f in d) {
+    i = as.numeric(substr(f, 1, 2))
+    x = read_excel(f, 1, col_names=FALSE)
+    y = read_excel(f, 2, col_names=FALSE)
+    cat(i, x[8,2], r(x[8,9]), r(x[55,9]), r(y[8,9]), r(y[55,9]), sep=",", file="m.csv", append=TRUE)
+    cat("\n", file="m.csv", append=TRUE)
+}
+</pre>
+
+<p><code>dir()</code> の最初の引数（ディレクトリ）が <code>"."</code>（現在のディレクトリ）でない場合は <code>full.names=TRUE</code> オプションを付ければディレクトリ名が付いた形が返る。</p>
+
+<p><code>dir()</code> の2番目の引数（ファイル名の正規表現）の部分については，正規表現を勉強する必要がある。<code>^</code> がファイル名の先頭，<code>$</code> がファイル名の末尾，<code>.</code> が任意の1文字，<code>*</code> が直前の文字の任意個の繰返し，<code>\\.</code> がピリオド，<code>\\d</code> が数字，といったことがわかればよい。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-11-23 16:01:17</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

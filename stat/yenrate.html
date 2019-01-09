@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>グラフの例：円相場</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：円相場</h1>
+
+<p>日本銀行の<a href="http://www.stat-search.boj.or.jp/">時系列統計データ検索サイト</a>から<a href="http://www.stat-search.boj.or.jp/ssi/mtshtml/d.html">日次</a>データを取得し，対ドル円相場をプロットする。</p>
+
+<pre>
+d = read.csv("http://www.stat-search.boj.or.jp/ssi/mtshtml/csv/d.csv",
+             header=FALSE, skip=6, fileEncoding="SJIS", strip.white=TRUE)
+t = as.POSIXct(d$V1)
+plot(t, d$V4, type="l", xlab="", ylab="Yen/USD") # 17時時点
+</pre>
+
+<figure><img src="img/160601a.png" alt="Yen/USD rate"></figure>
+
+<p><a href="http://www.stat-search.boj.or.jp/ssi/mtshtml/m.html">月次データ</a>にはもう少し古いデータも入っている。</p>
+
+<pre>
+m = read.csv("http://www.stat-search.boj.or.jp/ssi/mtshtml/csv/m.csv",
+             header=FALSE, skip=6, fileEncoding="SJIS", strip.white=TRUE)
+t = as.POSIXct(paste0(m$V1, "/15"))  # 毎月15日とする
+plot(t, m$V14, type="l", xlab="", ylab="Yen/USD")  # 17時時点/月中平均
+</pre>
+
+<figure><img src="img/160601b.png" alt="Yen/USD rate"></figure>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-06-01 14:33:22</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

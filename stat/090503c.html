@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>グラフの例：地球温暖化</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：地球温暖化</h1>
+
+<p><a href="http://www.data.jma.go.jp/cpdinfo/temp/list/an_wld.html">気象庁 | 世界の年平均気温偏差（℃）</a>
+にある世界全体の平均気温をプロットする。</p>
+
+<p>データを取得する：</p>
+
+<pre>
+data = read.csv("http://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv", fileEncoding="CP932")
+</pre>
+
+<p>まずは「世界全体」だけを描く。簡単には</p>
+
+<pre>
+plot(data$年, data$世界全体, type="l")
+</pre>
+
+<p>とすればよいが，もう少し手をかけてみる：</p>
+
+<pre>
+par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
+par(las=1)              # 縦軸の文字を横向きにしない
+plot(data$年, data$世界全体, type="o", pch=16, xlab="", ylab="", xaxt="n")
+t = c(1891, seq(1900,max(data$年)-8,20), max(data$年))
+axis(1, t, t)
+axis(4, labels=FALSE)
+</pre>
+
+<p>ついでに回帰直線も加える：</p>
+
+<pre>
+r = lm(data$世界全体 ~ data$年)
+abline(r, col="gray")
+</pre>
+
+<figure><img src="img/180814a.png" alt="地球の平均気温の変化"></figure>
+
+<p>北半球と南半球に分けて描く：</p>
+
+<pre>
+matplot(data$年, data[c("北半球","南半球")], type="o", lty=1,
+        pch=c(16,15), col=c("#66ccff","#ff9900"), xlab="", ylab="", xaxt="n")
+t = c(1891, seq(1900,max(data$年)-8,20), max(data$年))
+axis(1, t, t)
+axis(4, labels=FALSE)
+legend("topleft", legend=c("北半球","南半球"), pch=c(16,15), col=c("#66ccff","#ff9900"))
+</pre>
+
+<figure><img src="img/180814b.png" alt="地球の平均気温の変化"></figure>
+
+<p>中澤港先生の
+<a href="http://minato.sip21c.org/temperature.R">これ</a>
+や
+<a href="http://minato.sip21c.org/temperaturets.R">これ</a>
+も参照。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-08-14 16:51:39</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

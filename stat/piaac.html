@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>PIAACデータ解析</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>PIAACデータ解析</h1>
+
+<p>労働時間と知的好奇心に強い負の相関があるという<a href="https://twitter.com/tmaita77/status/930020451899678720">ツイート</a>があり，それに対して<a href="https://twitter.com/kohske/status/930218156508946432">疑問の声</a>があった。</p>
+
+<p>OECDの<a href="http://www.oecd.org/skills/piaac/">PIAAC</a>のページからデータをダウンロードしてみる。CSVだと国別31ファイルに分かれている。OECDサイトからのダウンロードが非常に重いので，念のため圧縮してまとめたものをこのサイトに置いておく（<a href="data/piaac.zip">piaac.zip</a>）。</p>
+
+<p>まずこれを <code>cat prg*.csv &gt; all.csv</code> のようにして一つにまとめてRで読む。</p>
+
+<pre>
+&gt; library(data.table)
+&gt; data = fread("all.csv")
+Read 200618 rows and 1328 (of 1328) columns from 0.656 GB file in 00:03:31
+ 50 件以上の警告がありました (最初の 50 個の警告を見るには warnings() を使って下さい) 
+&gt; object.size(data)
+3512730392 bytes
+&gt; dim(data)
+[1] 200618   1328
+</pre>
+
+<p>メモリ3.5Gを占める大きなデータである。</p>
+
+<p>冒頭の問題に関係すると思われる変数は次の二つである：</p>
+
+<ul>
+  <li>[D_Q10] あなたは通常週に何時間その仕事に従事しますか。残業時間は手当の有無にかかわらず含めてください。ただし、昼休みなどの休憩時間は除きます。</li>
+  <li>[I_Q04d] 私は新しいことを学ぶのが好きだ。（01 全く当てはまらない / 02 ほとんど当てはまらない / 03 ある程度当てはまる / 04 当てはまる / 05 非常に当てはまる）</li>
+</ul>
+
+<p>これらを数値として別の変数に収め，箱ひげ図を描いてみる：</p>
+
+<pre>
+&gt; wh = as.numeric(data$D_Q10)  # 週あたり仕事時間
+&gt; ll = as.numeric(data$I_Q04d) # 新しいことを学ぶのが好き
+boxplot(wh ~ ll)
+</pre>
+
+<figure><img src="img/171114a.png" alt=""></figure>
+
+<p>まったく相関がないように見える。ただ，強引に相関係数を求めて検定してみると，</p>
+
+<pre>
+&gt; cor.test(wh, ll)
+
+	Pearson's product-moment correlation
+
+data:  wh and ll
+t = -8.2082, df = 127970, p-value = 2.265e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.02841479 -0.01746276
+sample estimates:
+        cor 
+-0.02293946 
+</pre>
+
+<p>-0.02 という非常に小さな負の相関があり，非常に小さいにもかかわらずp値はほぼ0で非常に有意である。このあたりが大量のデータを扱う上での落とし穴である。</p>
+
+<p>この落とし穴をもうちょっと詳しく調べてみよう。例えば日本（392）だけに限って調べる。</p>
+
+<pre>
+&gt; cntry = as.numeric(data$CNTRYID)
+&gt; boxplot(wh[cntry==392] ~ ll[cntry==392])
+&gt; cor.test(wh[cntry==392], ll[cntry==392])
+
+	Pearson's product-moment correlation
+
+data:  wh[cntry == 392] and ll[cntry == 392]
+t = 2.575, df = 3848, p-value = 0.01006
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.009897807 0.072968199
+sample estimates:
+       cor 
+0.04147432 
+</pre>
+
+<p>やはり目で見ても顕著ではないが，正の小さな相関 0.04 があり，p = 0.01 で有意である。</p>
+
+<p>では，知的好奇心が労働時間と国の両方に関係しているというモデルで調べてみよう。</p>
+
+<pre>
+&gt; summary(lm(ll ~ wh + factor(cntry)))
+
+Call:
+lm(formula = ll ~ wh + factor(cntry))
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.2990 -0.4787  0.0961  0.7243  1.8896 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       3.785101   0.016566 228.482  &lt; 2e-16 ***
+wh                0.001243   0.000180   6.904 5.08e-12 ***
+factor(cntry)124  0.043631   0.016299   2.677 0.007431 ** 
+factor(cntry)152 -0.458062   0.020939 -21.876  &lt; 2e-16 ***
+factor(cntry)196  0.398174   0.022319  17.840  &lt; 2e-16 ***
+...
+</pre>
+
+<p>労働時間が1時間増えるごとに知的好奇心は 0.001 増える。非常に有意（p = 5e-12）である。</p>
+
+<p>これらは個人レベルの話であるが，国レベルではどうなるか。</p>
+
+<pre>
+&gt; whc = tapply(wh, factor(cntry), function(x)mean(x,na.rm=TRUE))
+&gt; llc = tapply(ll, factor(cntry), function(x)mean(x,na.rm=TRUE))
+&gt; plot(whc, llc)
+&gt; cor.test(whc, llc)
+
+	Pearson's product-moment correlation
+
+data:  whc and llc
+t = -3.7742, df = 28, p-value = 0.0007672
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.7781612 -0.2787273
+sample estimates:
+       cor 
+-0.5806858 
+</pre>
+
+<p>驚くべきことに，国レベルでは -0.58 という非常に大きな負の相関があり，非常に有意（p &lt; 0.001）である。散布図からもよくわかる。</p>
+
+<p>結論：国レベルでは，労働時間が増えるほど知的好奇心は減る。個人レベルでは，労働時間が増えるほど知的好奇心は増える。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2017-11-15 13:15:29</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

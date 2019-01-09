@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>積の誤差</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  CommonHTML: { matchFontHeight: false },
+  tex2jax: {
+    inlineMath: [['$','$'], ['\(','\)']],
+    processEscapes: true
+  }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>積の誤差</h1>
+
+<p>ランダムに変動する量 $X$ を考える。その期待値を $E(X)$ とし，$X/E(X) = 1 + x$ と書く。明らかに $E(x) = 0$ である。同様に $Y/E(Y) = 1 + y$ も考える。これらの積の期待値は</p>
+
+\[ E((1+x)(1+y)) = E(1 + x + y + xy) = 1 + E(xy) \]
+
+<p>である。また，$(1+x)(1+y)$ の分散は</p>
+
+\[ \begin{align}
+  E(((1+x)(1+y) - E((1+x)(1+y)))^2) &= E(((1+x)(1+y) - (1+E(xy)))^2) \\
+                                    &= E((x+y+xy-E(xy))^2) \\
+                                    &= E(x^2+y^2+x^2y^2+(E(xy))^2+2xy+2x^2y+2xy^2-2xyE(xy))
+\end{align} \]
+
+<p>であるが，微小量 $x$, $y$ の2次の項まで残すと</p>
+
+\[ E(x^2+y^2+2xy) = E(x^2) + E(y^2) + 2E(xy) \]
+
+<p>だけになる。</p>
+
+\[ E(x^2) = E((X-E(X))^2)/(E(X))^2 \]
+
+<p>は $X$ の分散を $X$ の期待値の2乗で割ったものである。</p>
+
+\[ E(xy) = E((X-E(X))(Y-E(Y)))/(E(X)E(Y)) \]
+
+<p>は $X$, $Y$ の共分散を $X$, $Y$ の期待値の積で割ったものである。</p>
+
+<p>まとめると，相対値の積 $(X/E(X))(Y/E(Y))$ の誤差分散は，$X$ の分散を $(E(X))^2$ で割ったものと，$Y$ の分散を $(E(Y))^2$ で割ったものと，$X$, $Y$ の共分散の2倍を $E(X)E(Y)$ で割ったものの和である。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2015-06-22 21:20:22</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

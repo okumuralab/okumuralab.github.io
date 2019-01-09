@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>B型の彼氏</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</div>
+
+<h1>B型の彼氏</h1>
+
+<p>このページの内容は次の論文に基づきます（著者たちは韓国人です）：
+Beom Jun Kim, Dong Myeong Lee, Sung Hun Lee, Wan-Suk Gim, ``Blood-type distribution'',
+<i>Physica A</i> <b>373</b>, 533-540 (2007).</p>
+
+<p>292組の夫婦のABO血液型を尋ねました：</p>
+
+<table border="1">
+<tr><th></th><th>女A </th><th>女B </th><th>女AB</th><th>女O </th></tr>
+<tr><th>男A </th><td>27</td><td>26</td><td> 9</td><td>17</td></tr>
+<tr><th>男B </th><td>28</td><td>23</td><td> 6</td><td>31</td></tr>
+<tr><th>男AB</th><td> 9</td><td>10</td><td> 1</td><td>16</td></tr>
+<tr><th>男O </th><td>31</td><td>22</td><td>11</td><td>25</td></tr>
+</table>
+
+<p>血液型の組合せはランダムでしょうか。これを調べるにはカイ2乗検定を使います。</p>
+
+<pre>
+x = matrix(c(27,26,9,17,28,23,6,31,9,10,1,16,31,22,11,25),nrow=4,byrow=TRUE)
+chisq.test(x)
+</pre>
+
+<p><i>p</i> 値は 0.2964 で，統計的に有意な血液型による相性はなかったようです。</p>
+
+<div class="note">
+<p>時間がかかってもいいなら，<a href="fishertest.html">Fisherの正確検定</a>のほうが正確です。</p>
+<pre>
+fisher.test(x, workspace=8000000)
+</pre>
+<p><i>p</i> 値は 0.3115 です。</p>
+</div>
+
+<p>次に，MBTIという性格検査をしてみます。MBTIは次のように性格を類型化します：</p>
+
+<ul>
+  <li>内向・外向（Introversion/Extraversion）</li>
+  <li>感覚・直感（Sensing/iNtuition）</li>
+  <li>思考・感情（Thinking/Feeling）</li>
+  <li>判断的態度・知覚的態度（Judging/Perceiving）</li>
+</ul>
+
+<p>例えば内向・外向と血液型とをクロス集計すると次のようになりました：</p>
+
+<table border="1">
+<tr><th></th><th>内向</th><th>外向</th></tr>
+<tr><th>A</th><td>195</td><td>102</td></tr>
+<tr><th>B</th><td>123</td><td>82</td></tr>
+<tr><th>AB</th><td>61</td><td>38</td></tr>
+<tr><th>O</th><td>144</td><td>107</td></tr>
+</table>
+
+<p>これ以外の結果も含め，Rで書くと次のようになります：</p>
+
+<pre>
+IE = matrix(c(195,123,61,144,102,82,38,107),nrow=4)
+SN = matrix(c(200,111,63,178,97,94,36,73),nrow=4)
+TF = matrix(c(181,121,67,149,116,84,32,102),nrow=4)
+JP = matrix(c(140,75,42,109,157,130,57,142),nrow=4)
+</pre>
+
+<p>これらを
+<a href="fishertest.html">Fisherの正確検定</a>
+で調べると，SN（感覚・直感）だけ <i>p</i> = 0.001818
+で非常に有意です。</p>
+
+<p>SNをさらに男女別に見てみると，次のようになります：</p>
+
+<pre>
+SNM = matrix(c(146,70,49,125,72,67,27,57),nrow=4)
+SNF = matrix(c(54,41,14,53,25,27,9,16),nrow=4)
+</pre>
+
+<p>すると，男だけ有意です（<i>p</i> = 0.007）。</p>
+
+<p>さらに各血液型を見ていくと，B型とそれ以外で分けたときだけ有意になります：</p>
+
+<pre>
+fisher.test(matrix(c(70,67,390-70,223-67),nrow=2))
+</pre>
+
+<p>この <i>p</i> = 0.000837 です。B型の男は感覚派（五感に基づいて行動する現実派）より直感派（空想派？）が多いということです。</p>
+
+<p>これって
+<a href="http://www.kadokawa-pictures.co.jp/official/b_kare/">B型の彼氏</a>
+の影響？</p>
+
+<p>[追記] 菊池先生の<a href="http://www.cp.cmc.osaka-u.ac.jp/~kikuchi/weblog/index.php?UID=1257697263">Physicaの血液型論文</a>も併せてお読みください。</p>
+
+<p>[追記] <a href="https://www.jstage.jst.go.jp/article/jjpsy/advpub/0/advpub_85.13016/_article/-char/ja/">血液型と性格の無関連性――日本と米国の大規模社会調査を用いた実証的論拠――</a>という論文を紹介いただきました。</p>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-09 10:31:12</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>時系列データの相関</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>時系列データの相関</h1>
+
+<p><a href="http://tylervigen.com/">Spurious Correlations</a> のようなネタは多い。時系列データの相関係数について書かなきゃ，と思っていたところに，裏RjpWikiに<a href="http://blog.goo.ne.jp/r-de-r/e/568bbf843fa38dffff5895f9b61ecdac">時系列データと時間の相関について</a>という記事が出たので，私もやってみた。</p>
+
+<p>要は，時系列データは <code>rnorm(n)</code> のようなホワイトノイズではなく，<code>cumsum(rnorm(n))</code> のようなランダムウォークに近いので，大きな相関係数が出やすくなる。</p>
+
+<pre>
+sim1 = function(n=40) { x = rnorm(n); y = rnorm(n); cor(x, y) }
+sim2 = function(n=40) { x = cumsum(rnorm(n)); y = cumsum(rnorm(n)); cor(x, y) }
+r1 = replicate(1000000, sim1())
+r2 = replicate(1000000, sim2())
+hist(r1, col="#0068b780", freq=FALSE, xlim=c(-1,1), xlab="", ylab="", main="")
+hist(r2, col="#f3980080", freq=FALSE, add=TRUE, breaks=40, xlab="", ylab="", main="")
+</pre>
+
+<figure><img src="img/150209b.png" alt=""></figure>
+
+<p>横軸が相関係数，青はホワイトノイズ，オレンジはランダムウォークである。</p>
+
+<p>実際の時系列データはさらに長期のトレンドがある（例えばインターネットの普及率は増え続ける）。したがって，大きな相関係数はこれよりさらに出やすくなるであろう。なお，上記の裏RjpWiki記事は片方が完全にトレンドだけのデータ <code>x = 1:n</code> である。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<!-- hhmts start -->
+Last modified: <time>2015-02-09 17:07:48</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

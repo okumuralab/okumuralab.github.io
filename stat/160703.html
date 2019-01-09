@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Cauchy分布のパラメタ推定</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<article>
+<h1>Cauchy分布のパラメタ推定</h1>
+
+<p>Cauchy分布の乱数を100個生成し，その中心の値をどうすれば正確に求められるかを試してみる。</p>
+
+<pre>
+sim = function() {
+    r = rcauchy(100)
+    m1 = mean(r)                  # 平均
+    m2 = median(r)                # 中央値
+    f = function(par) {
+        -sum(dcauchy(r, par[1], par[2], log=TRUE))
+    }
+    m3 = optim(c(0,1), f)$par[1]  # 最尤推定値
+    c(m1, m2, m3)
+}
+
+r = replicate(100000, sim())
+</pre>
+
+<p>それぞれの誤差を求めてみる：</p>
+
+<pre>
+<code>sqrt(mean(r[1,]^2))</code>
+[1] 451.953
+<code>sqrt(mean(r[2,]^2))</code>
+[1] 0.158399
+<code>sqrt(mean(r[3,]^2))</code>
+[1] 0.1432506
+<code>max(abs(r[1,]))</code>
+[1] 131453.7
+<code>max(abs(r[2,]))</code>
+[1] 0.7711901
+<code>max(abs(r[3,]))</code>
+[1] 0.677196
+</pre>
+
+<p>最後の方法が一番正確だが，中央値とは僅差である。</p>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-07-03 21:02:47</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

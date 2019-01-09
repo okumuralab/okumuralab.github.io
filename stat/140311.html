@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>福島県の「新発見」放射線データ</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>福島県の「新発見」放射線データ</h1>
+
+<img src="img/140316b.jpg" alt="双葉町上羽鳥MPの2011年3月12日の線量率" style="float:right; margin:0 0 1em 2em;">
+
+<p>大震災から3年目の2014年3月11日，19時からのNHKニュース7で<a href="http://www3.nhk.or.jp/news/html/20140311/t10015898971000.html">原発事故 克明な放射線量データ判明</a>というニュースが放送された。「３年がたって初めて明らかになったデータ」で，「福島県が管理するモニタリングポスト」の「１４か所で、事故後数日の２０秒ごとの放射線量の値が記録されていたことが、ＮＨＫの取材で分かりました」とのことである。重要な部分を引用すると，</p>
+
+<blockquote>
+<p>福島県によりますと、事故直後の詳しい放射線量のデータは電源が失われるまで自動観測が行われたモニタリングポストのメモリーに記録されていました。</p>
+<p>公開するには、データを変換し、時系列が分かるように取りまとめる必要があります。</p>
+<p>しかし、事故のあとは停電で、各地の放射線量は職員が回って計測しなければならず、集めた毎日のデータを住民に提供するのが精いっぱいだったということです。</p>
+<p>このため、メモリーに記録された事故直後のデータまで手が回らず、これまでは１時間ごとの値をおととし９月に公表するにとどまっていました。</p>
+<p>事故後の混乱で埋もれたデータはほかにもあると考えられ、十分な検証のためにも、早急な掘り起こしが必要です。</p>
+</blockquote>
+
+<p>ということで，2012年9月に1時間値を発表するも20秒値まで手が回らなかったようである。</p>
+
+<p>このニュースのすぐ後，<a href="http://www.atom-moc.pref.fukushima.jp/top.html">福島県原子力センター</a>の<a href="http://www.atom-moc.pref.fukushima.jp/monitoring/monitoring201103/201103_mpdata.html">平成23年3月の空間線量率測定結果</a>ページで公開されていることをツイッターで教えていただいた。このページの上のほうの1時間値は2012年10月12日のタイムスタンプだが，下のほうの20秒値は2014年2月13日〜3月6日のタイムスタンプである。うれしいことに，ネ申Excel化したものではなく，生データのテキストファイルである（これを取り出すのに1年半かかったのか…）。</p>
+
+<p>詳細は2014年3月16日の<a href="http://www.nhk.or.jp/special/detail/2014/0316/index.html">NHKスペシャル｜メルトダウン　File.４放射能"大量放出"の真相</a>で放送されるようだ。</p>
+
+<p>とりあえず，2014年3月11日のNHKニュースで紹介された双葉町上羽鳥のモニタリングポスト（福島第一原発の北西5.6km）の20秒値 201103_recdat25_kamihatori.txt を見ると，先頭29行をスキップしたデータは次のCSV形式である：</p>
+
+<ol>
+  <li>Date（2011/03/11）</li>
+  <li>Time（00:00:00）</li>
+  <li>Sec（0.000）</li>
+  <li>CH001（低 DOSE）MIN</li>
+  <li>CH001（低 DOSE）MAX</li>
+  <li>CH002（低 C-DOSE）MIN</li>
+  <li>CH002（低 C-DOSE）MAX</li>
+  <li>CH003（低 S-DOSE）MIN</li>
+  <li>CH003（低 S-DOSE）MAX</li>
+  <li>CH004（高 LIN）MIN</li>
+  <li>CH004（高 LIN）MAX</li>
+  <li>CH005（高 LOG1）MIN</li>
+  <li>CH005（高 LOG1）MAX</li>
+  <li>CH006（高 LOG2）MIN</li>
+  <li>CH006（高 LOG2）MAX</li>
+  <li>CH007（低 検出部温度）MIN</li>
+  <li>CH007（低 検出部温度）MAX</li>
+  <li>CH008（高 検出部温度）MIN</li>
+  <li>CH008（高 検出部温度）MAX</li>
+</ol>
+
+<p>C-DOSE，S-DOSEについては <a href="http://www.pref.fukushima.jp/j/mpsokutei01.pdf">http://www.pref.fukushima.jp/j/mpsokutei01.pdf</a> および仕様 <a href="http://www.pref.fukushima.jp/shinsa/koukoku/20101112-1168/siyou.pdf">http://www.pref.fukushima.jp/shinsa/koukoku/20101112-1168/siyou.pdf</a> に詳しい。以下では無視する。</p>
+
+<p>グラフにするためにRで読み込む。話題の<a href="datatable.html">data.table</a>を使ってみる。</p>
+
+<pre>
+library(data.table)
+library(fasttime)
+x = fread("201103_recdat25_kamihatori.txt", skip=29)
+x[, t:=fastPOSIXct(paste(V1,V2))-9*3600]
+</pre>
+
+<p>ニュースでやっていた14:40:40の値は <code>x[t==as.POSIXct("2011-03-12 14:40:40")]</code>
+で調べられる。CH006 MIN（14列目），MAX（15列目）はそれぞれ4.4463mGy/h，4.6132mGy/hで，4.6mSv/hはMAXを丸めて単位をGy→Svに読み替えたもののようである。</p>
+
+<p>プルームが来る前から最大値のあたりまで片対数でプロットしてみる：</p>
+
+<pre>
+x1 = subset(x, t &gt;= as.POSIXct("2011-03-12 08:00:00") &amp;
+               t &lt;= as.POSIXct("2011-03-12 16:00:00"))
+plot(x1$t, x1$V4, type="n", log="y",
+     ylim=range(c(x1$V15,x1$V4)), xlab="", ylab="nGy/h")
+points(x1$t, x1$V4, type="l", col="#35a16b")    # CH001MIN緑
+points(x1$t, x1$V5, type="l", col="#35a16b")    # CH001MAX緑
+points(x1$t, x1$V12, type="l", col="#0041ff80") # CH005MIN青
+points(x1$t, x1$V13, type="l", col="#0041ff80") # CH005MAX青
+points(x1$t, x1$V14, type="l", col="#ff280080") # CH006MIN赤
+points(x1$t, x1$V15, type="l", col="#ff280080") # CH006MAX赤
+</pre>
+
+<img src="img/140316d.png" alt="双葉町上羽鳥MPの2011年3月12日の線量率">
+
+<p>CH006は1μGy/h以上，CH005は1mGy/h以下，CH001は100μGy/h以下がレンジのようである。</p>
+
+<p>NHKの図と同じようにリニアに描いてみる：</p>
+
+<pre>
+x1 = subset(x, t &gt;= as.POSIXct("2011-03-12 14:00:00") &amp;
+               t &lt;= as.POSIXct("2011-03-12 15:36:00"))
+plot(x1$t, x1$V15, type="n",
+     ylim=range(c(x1$V15,0)), xlab="", ylab="nGy/h")
+points(x1$t, x1$V4, type="l", col="#35a16b")    # CH001MIN緑
+points(x1$t, x1$V5, type="l", col="#35a16b")    # CH001MAX緑
+points(x1$t, x1$V12, type="l", col="#0041ff80") # CH005MIN青
+points(x1$t, x1$V13, type="l", col="#0041ff80") # CH005MAX青
+points(x1$t, x1$V14, type="l", col="#ff280080") # CH006MIN赤
+points(x1$t, x1$V15, type="l", col="#ff280080") # CH006MAX赤
+</pre>
+
+<img src="img/140316e.png" alt="双葉町上羽鳥MPの2011年3月12日の線量率">
+
+<p>ついでに最初の小さなピークの見える時間から：</p>
+
+<img src="img/140316f.png" alt="双葉町上羽鳥MPの2011年3月12日の線量率">
+
+<h2>参考</h2>
+
+<ul>
+  <li><a href="http://togetter.com/li/641050">「原発事故 克明な放射線量データ判明」ニュースについて上海ＩＩさんが検証 - Togetterまとめ</a></li>
+  <li><a href="http://togetter.com/li/641941">2011年3月11-16日の福島県下のモニタリングポストデータの可視化 - Togetterまとめ</a></li>
+  <li><a href="http://togetter.com/li/644673">2011年3月11-16日の福島県下のモニタリングポストデータの可視化（短縮版） - Togetterまとめ</a></li>
+  <li><a href="http://togetter.com/li/377621">2011/3/12の福島第一原発周辺MPの放射線量を時系列で並べてみた - Togetterまとめ</a></li>
+</ul>
+
+<hr>
+
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time itemprop="dateModified" datetime="2014-03-21T08:40:50+09:00">2014-03-21 08:40:50</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

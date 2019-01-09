@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>PCI手術は有効か？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { text-align: right; padding: 0.2em 0.7em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>PCI手術は有効か？</h1>
+
+<p><i>The Lancet</i> に掲載された論文 <a href="https://doi.org/10.1016/S0140-6736(17)32714-9">Percutaneous coronary intervention in stable angina (ORBITA): a double-blind, randomised controlled trial</a>（安定狭心症における経皮的冠動脈インターベンション（ORBITA）: 二重盲検ランダム化比較試験）が注目を浴びている。同誌のコメント <a href="https://doi.org/10.1016/S0140-6736(17)32757-5">Last nail in the coffin for PCI in stable angina?</a> や New York Times の記事 <a href="https://www.nytimes.com/2017/11/02/health/heart-disease-stents.html">‘Unbelievable’: Heart Stents Fail to Ease Chest Pain</a>（「信じられない」：心臓のステントは胸の痛みを和らげない），日本語の解説 <a href="http://itoshino-naika.com/diarypro02/diary.cgi?no=147">愛し野塾　第144回　経皮冠動脈インターベンションのターニングポイント</a> も参照されたい。</p>
+
+<p>狭心症の治療のためにカテーテルを挿入してステントを留置する<a href="https://ja.wikipedia.org/wiki/%E7%B5%8C%E7%9A%AE%E7%9A%84%E5%86%A0%E5%8B%95%E8%84%88%E5%BD%A2%E6%88%90%E8%A1%93">経皮的冠動脈インターベンション（PCI）</a>という手術が全世界で毎年50万回行われている。その有効性を調べるため，200人をランダムにほぼ半々に分け，一方（PCI群）には本物のPCI手術を，他方（プラセボ群）には「偽の手術」を行い，効果を比較した。これだけの規模で偽の手術を行うのは異例である。</p>
+
+<p>このような試験では，<i>p</i> ハッキングを避けるため，どういう項目を調べるかを，あらかじめ登録しておく。この ORBITA 試験は ClinicalTrials.gov に <a href="https://clinicaltrials.gov/show/NCT02062593">Objective Randomised Blinded Investigation With Optimal Medical Therapy of Angioplasty in Stable Angina (ORBITA)</a> として登録されている。それによれば，主要評価項目（the primary endpoint）はPCI群・プラセボ群のトレッドミルでの運動時間の増加の差である。これ以外にも，副次的評価項目（secondary endpoints）としていろいろ調べるが，たくさん調べて一つでも統計的に有意（<i>p</i> &lt; 0.05）な項目があれば，事後的に最初からそれを調べたかったのだということにして「有意な差が見られた」と報告するのが <i>p</i> ハッキングである。こういうことを避けるため，事前に何を主要評価項目とするかを公的な機関に登録しておくのが正しい流儀である。</p>
+
+<p>結果は次の通りであった（時間の単位は秒）：</p>
+
+<table>
+  <tbody>
+  <tr><th></th><th>PCI</th><th>プラセボ</th></tr>
+  <tr><th>人数</th><td>104</td><td>90</td></tr>
+  <tr><th>処置前</th><td>528.0 (SD: 178.7)</td><td>490.0 (SD: 195.0)</td></tr>
+  <tr><th>処置後</th><td>556.3 (SD: 178.7)</td><td>501.8 (SD: 190.9)</td></tr>
+  <tr><th>増加</th><td>28.4 (95% CI [11.6, 45.1])</td><td>11.8 (95% CI [-7.8, 31.3])</td></tr>
+  <tr><th>増加の差</th><td colspan="2">16.6 (95% CI [-8.9, 42.0])</td></tr>
+  <tr><th><i>p</i> 値</th><td colspan="2">0.200</td></tr>
+  </tbody>
+</table>
+
+<p>さて，この論文の統計的手法に，有名な統計学者 Gelman 先生たちが，いちゃもんをつけている：<a href="http://www.stat.columbia.edu/~gelman/research/unpublished/Stents_submitted.pdf">ORBITA and coronary stents: A case study in the analysis and reporting of clinical trials</a>。ポイントは，統計的に有意な差がないことと効果がないこととは違うだろうということだが，その中で Gelman 先生たちはこの <i>p</i> 値を 0.200 から 0.09 に「改良」する方法を示している。おもしろいので，試してみた。</p>
+
+<p>生データは与えられていないので，上の結果に合致するデータを作ってみる。四捨五入の関係でPCI群の増加が 28.4 にならないので，処置後 556.3 は 556.4 と改変した：</p>
+
+<pre>
+set.seed(180210)
+d = 0.5423874  # 後述
+x1 = rnorm(104)
+y1 = x1 + rnorm(104, 0, d)
+x2 = rnorm(90)
+y2 = x2 + rnorm(90, 0, d)
+x1 = (x1 - mean(x1)) / sd(x1) * 178.7 + 528.0
+x2 = (x2 - mean(x2)) / sd(x2) * 195.0 + 490.0
+y1 = (y1 - mean(y1)) / sd(y1) * 178.7 + 556.4
+y2 = (y2 - mean(y2)) / sd(y2) * 190.9 + 501.8
+</pre>
+
+<p><code>d</code> の値は <i>p</i> 値がちょうど 0.200 になるように決めた：</p>
+
+<pre>
+f = function(d) {
+    set.seed(180210)
+    x1 = rnorm(104)
+    y1 = x1 + rnorm(104, 0, d)
+    x2 = rnorm(90)
+    y2 = x2 + rnorm(90, 0, d)
+    x1 = (x1 - mean(x1)) / sd(x1) * 178.7 + 528.0
+    x2 = (x2 - mean(x2)) / sd(x2) * 195.0 + 490.0
+    y1 = (y1 - mean(y1)) / sd(y1) * 178.7 + 556.4
+    y2 = (y2 - mean(y2)) / sd(y2) * 190.9 + 501.8
+    t.test(y1-x1, y2-x2)$p.value - 0.2
+}
+uniroot(f, c(0,1))
+</pre>
+
+<p>これで <code>t.test(y1-x1, y2-x2)</code> を計算してみれば，確かに <i>p</i> 値は 0.2 になる：</p>
+
+<pre>
+<code>t.test(y1-x1, y2-x2)</code>
+
+	Welch Two Sample t-test
+
+data:  y1 - x1 and y2 - x2
+t = 1.286, df = 189.46, p-value = 0.2
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -8.861419 42.061419
+sample estimates:
+mean of x mean of y 
+     28.4      11.8 
+</pre>
+
+<p>さて，Gelman 先生たちは，この <i>p</i> 値を 0.09 に改良する。おそらく次のようにやったのではないかと思われる：</p>
+
+<pre>
+x = c(x1, x2)
+y = c(y1, y2)
+z = c(rep(1,104), rep(0,90))
+r = lm(y ~ x + z)
+</pre>
+
+<p>結果は次のようになる：</p>
+
+<pre>
+<code>summary(r)</code>
+
+Call:
+lm(formula = y ~ x + z)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-238.326  -58.680   -3.507   57.322  231.587 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 73.87740   18.86142   3.917 0.000125 ***
+x            0.87331    0.03365  25.956  &lt; 2e-16 ***
+z           21.41417   12.57851   1.702 0.090300 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 86.92 on 191 degrees of freedom
+Multiple R-squared:  0.7839,	Adjusted R-squared:  0.7816 
+F-statistic: 346.4 on 2 and 191 DF,  p-value: &lt; 2.2e-16
+</pre>
+
+<p>確かに <code>z</code> の係数の <i>p</i> 値は 0.09 になる。そして，こちらのほうがもっともらしい。</p>
+
+<p>では後者のほうが検出力が大きい（<i>p</i> 値が小さくなる傾向がある）といえるか？ 同様な問題を何度も解いて試してみる：</p>
+
+<pre>
+f = function() {
+    x1 = rnorm(100)
+    y1 = (x1 + rnorm(100, 0, 0.5)) / sqrt(1.25) + 0.05
+    x2 = rnorm(100)
+    y2 = (x2 + rnorm(100, 0, 0.5)) / sqrt(1.25) + 0.15
+    p1 = t.test(y1-x1, y2-x2)$p.value  # 前者のp値
+    x = c(x1, x2)
+    y = c(y1, y2)
+    z = c(rep(1,100), rep(0,100))
+    r = lm(y ~ x + z)
+    p2 = summary(r)$coefficients[3,4]  # 後者のp値
+    c(p1, p2)
+}
+a = replicate(1000, f())
+median(a[1,])
+median(a[2,])
+mean(a[1,] > a[2,])
+</pre>
+
+<p>どちらかといえば後者の <i>p</i> 値が小さい傾向が見られるが，顕著ではない。</p>
+
+<p>今回はたまたま処置群の処置前の値が高い方にゆらいでいたので，それが「平均への回帰」で低い方に動くことで，処置群の変化が大きくなり，<i>p</i> 値が減ったのであろう。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-02-16 17:04:38</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>RでJSONを読む</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>RでJSONを読む</h1>
+
+<h2>はじめに</h2>
+
+<p>ここではRの <a href="http://cran.r-project.org/web/packages/jsonlite/">jsonlite</a> というパッケージを使う（この中で curl というパッケージも呼び出される）。次のようにしてインストールしておく。</p>
+
+<pre>
+install.packages("jsonlite")
+install.packages("curl")
+</pre>
+
+<h2>例：放射線モニタリング</h2>
+
+<p>例として，原子力規制委員会の<a href="http://radioactivity.nsr.go.jp/map/ja/">東日本大震災関連情報 放射線モニタリング測定結果等</a>をとりあげる。</p>
+
+<p>まずは <a href="http://radioactivity.nsr.go.jp/data/ja/master/prefectures.json">http://radioactivity.nsr.go.jp/data/ja/master/prefectures.json</a> にアクセスしてみる。三重県は <a href="http://radioactivity.nsr.go.jp/data/ja/master/prefecture_24.json">http://radioactivity.nsr.go.jp/data/ja/master/prefecture_24.json</a> であることがわかる。同様にして，<a href="http://radioactivity.nsr.go.jp/data/ja/master/area_24000.json">http://radioactivity.nsr.go.jp/data/ja/master/area_24000.json</a> に行き，四日市市の県保健環境研究所（緯度34.991940，経度136.485000，高さ1860.000000cm）の実データが <a href="http://radioactivity.nsr.go.jp/data/ja/real/area_24000/2401_trend.json">http://radioactivity.nsr.go.jp/data/ja/real/area_24000/2401_trend.json</a> にあることがわかる。</p>
+
+<pre>
+library(jsonlite)
+x = fromJSON("http://radioactivity.nsr.go.jp/data/ja/real/area_24000/2401_trend.json")
+</pre>
+
+<p>これで <code>x$last$airF$time</code> に最終時刻（例：<code>"2015/04/15 16:30"</code>），<code>x$last$airF$value</code> に値（例：<code>0.062</code>，単位μSv/h）が入る。</p>
+
+<p>現在時刻 <code>x$time</code> を最終時刻とする10分刻みの24時間の実測値（6×24=144個）が <code>x$day$airF$value</code> に入る。ただし <code>0</code> は欠測値。</p>
+
+<p><code>airF</code> ではなく <code>airM</code> や単なる <code>air</code> の地点もある。固定型モニタリングポスト（fixed），可搬型モニタリングポスト（mobile？），それ以外（リアルタイム線量測定システム）の違いかと思われる。地点によっては地上1mの推定値が <code>est</code> に入る。</p>
+
+<p>24時間の実測値をプロットする例（Rでは単に <code>air</code> とすれば，なければ <code>airF</code> や <code>airM</code> を拾う）：</p>
+
+<pre>
+v = x$day$air$value
+v = ifelse(v == 0, NA, v)
+t = seq(from=as.POSIXct(x$time)-24*3600+600, by=600, length.out=24*6)
+plot(t, v, type="o", pch=16, las=1, xlab="", ylab="", ylim=range(c(0,v),na.rm=TRUE))
+</pre>
+
+<div class="note">
+<p>福島県は次のように分類されている：</p>
+
+<ul>
+  <li>福島：いわき <a href="http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07A.json">http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07A.json</a>
+      <ul>
+	<li>いわき市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07204.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07204.json</a>
+      </ul>
+  </li>
+  <li>福島：相双 <a href="http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07B.json">http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07B.json</a>
+      <ul>
+	<li>相馬市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07209.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07209.json</a></li>
+	<li>南相馬市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07212.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07212.json</a></li>
+	<li>広野町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07541.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07541.json</a></li>
+	<li>楢葉町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07542.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07542.json</a></li>
+	<li>富岡町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07543.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07543.json</a></li>
+	<li>川内村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07544.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07544.json</a></li>
+	<li>大熊町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07545.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07545.json</a></li>
+	<li>双葉町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07546.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07546.json</a></li>
+	<li>浪江町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07547.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07547.json</a></li>
+	<li>葛尾村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07548.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07548.json</a></li>
+	<li>新地町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07561.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07561.json</a></li>
+	<li>飯舘村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07564.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07564.json</a></li>
+      </ul>
+  </li>
+  <li>福島：県北 <a href="http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07C.json">http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07C.json</a>
+      <ul>
+	<li>福島市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07201.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07201.json</a></li>
+	<li>二本松市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07210.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07210.json</a></li>
+	<li>伊達市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07213.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07213.json</a></li>
+	<li>本宮市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07214.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07214.json</a></li>
+	<li>桑折町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07301.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07301.json</a></li>
+	<li>国見町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07303.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07303.json</a></li>
+	<li>川俣町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07308.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07308.json</a></li>
+	<li>大玉村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07322.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07322.json</a></li>
+      </ul>
+  </li>
+  <li>福島：県中 <a href="http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07D.json">http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07D.json</a>
+      <ul>
+        <li>郡山市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07203.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07203.json</a></li>
+        <li>須賀川市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07207.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07207.json</a></li>
+        <li>田村市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07211.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07211.json</a></li>
+        <li>鏡石町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07342.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07342.json</a></li>
+        <li>天栄村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07344.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07344.json</a></li>
+        <li>石川町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07501.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07501.json</a></li>
+        <li>玉川村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07502.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07502.json</a></li>
+        <li>平田村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07503.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07503.json</a></li>
+        <li>浅川町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07504.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07504.json</a></li>
+        <li>古殿町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07505.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07505.json</a></li>
+        <li>三春町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07521.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07521.json</a></li>
+        <li>小野町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07522.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07522.json</a></li>
+      </ul>
+  </li>
+  <li>福島：県南 <a href="http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07E.json">http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07E.json</a>
+      <ul>
+	<li>白河市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07205.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07205.json</a></li>
+	<li>西郷村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07461.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07461.json</a></li>
+	<li>泉崎村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07464.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07464.json</a></li>
+	<li>中島村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07465.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07465.json</a></li>
+	<li>矢吹町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07466.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07466.json</a></li>
+	<li>棚倉町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07481.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07481.json</a></li>
+	<li>矢祭町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07482.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07482.json</a></li>
+	<li>塙町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07483.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07483.json</a></li>
+	<li>鮫川村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07484.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07484.json</a></li>
+      </ul>
+  </li>
+  <li>福島：南会津 <a href="http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07F.json">http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07F.json</a>
+      <ul>
+	<li>下郷町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07362.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07362.json</a></li>
+	<li>檜枝岐村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07364.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07364.json</a></li>
+	<li>只見町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07367.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07367.json</a></li>
+	<li>南会津町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07368.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07368.json</a></li>
+      </ul>
+  </li>
+  <li>福島：会津 <a href="http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07G.json">http://radioactivity.nsr.go.jp/data/ja/master/prefecture_07G.json</a>
+      <ul>
+	<li>会津若松市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07202.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07202.json</a></li>
+	<li>喜多方市 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07208.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07208.json</a></li>
+	<li>北塩原村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07402.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07402.json</a></li>
+	<li>西会津町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07405.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07405.json</a></li>
+	<li>磐梯町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07407.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07407.json</a></li>
+	<li>猪苗代町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07408.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07408.json</a></li>
+	<li>会津坂下町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07421.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07421.json</a></li>
+	<li>湯川村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07422.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07422.json</a></li>
+	<li>柳津町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07423.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07423.json</a></li>
+	<li>三島町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07444.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07444.json</a></li>
+	<li>金山町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07445.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07445.json</a></li>
+	<li>昭和村 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07446.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07446.json</a></li>
+	<li>会津美里町 <a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07447.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07447.json</a></li>
+      </ul>
+  </li>
+</ul>
+</div>
+
+<div class="note">
+<p>上の一覧で例えば福島市については，次の三つのファイルがある。</p>
+<ul>
+  <li><a href="http://radioactivity.nsr.go.jp/data/ja/master/area_07201.json">http://radioactivity.nsr.go.jp/data/ja/master/area_07201.json</a>: code, name, lat, lng, zoom, height, ...</li>
+  <li><a href="http://radioactivity.nsr.go.jp/data/ja/real/area_07201/summary.json">http://radioactivity.nsr.go.jp/data/ja/real/area_07201/summary.json</a>: code, time, air, note</li>
+  <li><a href="http://radioactivity.nsr.go.jp/data/ja/cont/area_07201/summary.json">http://radioactivity.nsr.go.jp/data/ja/cont/area_07201/summary.json</a>: 不明</li>
+</ul>
+</div>
+
+<h2>例：Google標高API</h2>
+
+<p><a href="http://d.hatena.ne.jp/LaclefYoshi/20110219/1298095299">RでJSONデータを処理する (rjson) - DiaryException</a> の例である（若干改変した）。</p>
+
+<pre>
+library(jsonlite)
+m = fromJSON("http://maps.google.com/maps/api/elevation/json?path=43.0,141.4|26.2,127.7&amp;samples=500&amp;sensor=false")
+e = m$results$elevation
+l = m$results$location$lng
+plot(l, e, type="l", xlab="経度", ylab="標高（m）")
+</pre>
+
+<p>（……続く……）</p>
+
+<h2>参考</h2>
+
+<ul>
+  <li><a href="http://quantifyingmemory.blogspot.co.uk/2014/02/web-scraping-basics.html">Quantifying Memory: Web-Scraping: the Basics</a></li>
+</ul>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-06-13 10:09:44</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

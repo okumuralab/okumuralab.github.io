@@ -1,0 +1,73 @@
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r98520000029qrf.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 13846  1729   355
+
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r9852000002cew1.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 18112  2548   411
+
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r9852000002fcx5.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 20088  1620   223
+
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r9852000002hglg.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 21828  1293   140
+
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r9852000002k70j.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 18465  1351   150
+
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r9852000002l8gj.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 21169  1630   115
+
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r9852000002o2v2.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 26747  3902   217
+
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r9852000002qlh3.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 34251  3531   242
+
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r9852000002snsr.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 32620  2553   165
+
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r9852000002uxt6.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 21577  1373   115
+
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r9852000002zjw3.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 23719   954    83
+
+data = readWorksheetFromFile("/usr/local/junk/2013-04-11/2r9852000002zjw9.xls", 1, startRow=2)
+x = as.numeric(data$Cs合計)
+c(length(x), sum(!is.na(x)), sum(x > 100, na.rm=TRUE))
+# [1] 26057  1196   174
+
+       総数   非ND   >100
+2012-04 13846  1729   355
+2012-05 18112  2548   411
+2012-06 20088  1620   223
+2012-07 21828  1293   140
+2012-08 18465  1351   150
+2012-09 21169  1630   115
+2012-10 26747  3902   217
+2012-11 34251  3531   242
+2012-12 32620  2553   165
+2013-01 21577  1373   115
+2013-02 23719   954    83
+2013-03 26057  1196   174
