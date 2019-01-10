@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>rstanのインストール</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Rで楽しむStan</a> &gt;
+</nav>
+
+<h1>rstanのインストール</h1>
+
+<p><a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan Getting Started</a> またはその<a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Japanese)">松浦健太郎さんによる日本語版</a>の冒頭に詳しく書かれていますが，まずは C++ コンパイラのインストールが必要です。</p>
+
+<p>C++コンパイラとして，Windowsの場合は，<a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a>を入れるのが簡単です。</p>
+
+<p>Macの場合は，Xcodeのインストールを勧めている記述もありますが，これは一般の方にはお勧めしません。Xcodeは，使わないならディスク容量の無駄になるだけでなく，しばしばアップデートされる際に，大きいのでなかなかダウンロードできないことがあります。Xcodeそのものを使わないなら，ゴミ箱にドラッグ＆ドロップして捨ててしまってかまいません。代わりに「コマンドラインツール」をインストールしましょう。これは簡単で，ターミナルに</p>
+
+<pre>
+xcode-select --install
+</pre>
+
+<p>と打ち込むだけでインストールが始まります（<code>gcc</code> などと打ち込んでもインストールするか聞かれるかもしれません）。</p>
+
+<p>これが終わったら，Rで<a href="https://CRAN.R-project.org/package=rstan">rstan</a>パッケージをインストールするために，お好きなR環境（生のR，RStudio，ESSなど）で次のように打ち込みます：</p>
+
+<pre>
+install.packages("rstan")
+</pre>
+
+<p>これでインストールは終わりです。あとは，次のようにしてRに読み込みます：</p>
+
+<pre>
+library(rstan)
+</pre>
+
+<p>この後で，一般には次のような設定をすることが推奨されています：</p>
+
+<pre>
+rstan_options(auto_write=TRUE)             # コンパイルした結果を保存する
+options(mc.cores=parallel::detectCores())  # 複数コアを使う（メモリが十分にある場合）
+</pre>
+
+<p>今どきのコンピュータはたいてい4コアくらいありますので，4本のシミュレーションを並行して実行することができます。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-01-30 12:17:56</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

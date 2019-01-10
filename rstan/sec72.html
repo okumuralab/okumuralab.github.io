@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>7.2　1次元の簡単なMCMC</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Rで楽しむStan</a> &gt;
+</nav>
+
+<h1>7.2　1次元の簡単なMCMC</h1>
+
+<h2>Rによる例</h2>
+
+<p>密度関数が $1/(1+x^2)$ に比例する乱数（独立である必要はない）を10万個作る問題です。『Rで楽しむベイズ統計入門』に載っているRのプログラムは（ここで使わない採択を数えるカウンタは省略して）次のようになっていました：</p>
+
+<pre>
+N = 100000              # 繰返し回数
+a = numeric(N)          # 値を保存するための長さNの配列
+x = 0                   # 初期値
+p = 1 / (1 + x^2)       # 確率
+for (i in 1:N) {
+  y = rnorm(1, x, 1)    # 候補（選び方は対称なら何でもよい）
+  q = 1 / (1 + y^2)     # 確率
+  if (runif(1) &lt; q/p) { # 更新
+    x = y
+    p = q
+  }
+  a[i] = x
+}
+</pre>
+
+<p>実際にこれをRにコピペしてやってみるとわかるように，今どきのコンピュータなら10万個の計算はほぼ一瞬で終わります。</p>
+
+<p>得られた乱数のヒストグラムを描いてみましょう：</p>
+
+<pre>
+hist(a, freq=FALSE, breaks=seq(-1000,1000,0.2), xlim=c(-5,5), col="gray")
+</pre>
+
+<p>コーシー分布の密度関数を重ね書きしてみましょう：</p>
+
+<pre>
+curve(dcauchy(x), add=TRUE)
+</pre>
+
+<p>ぴったり重なるはずです。結果は，本書の図7.3右のようになります。</p>
+
+<h2>Stanを使ってみる</h2>
+
+<p>同じことをStanでやってみましょう。</p>
+
+<p>まず，次のようなStanコードを作り，例えば <code>ex72.stan</code> という名前で，Rの作業ディレクトリに保存します。</p>
+
+<pre>
+parameters {
+    real x;
+}
+
+model {
+    target += -log(1 + square(x));
+}
+</pre>
+
+<p>テキストエディタで最後の <code>}</code> を打ち込んだ後に Enter キーを打って，カーソルが <code>}</code> の次の行の先頭に行く状態にして，保存してください。</p>
+
+<div class="note">
+<p>改行で終わらない行は <span lang="en">incomplete line</span> と呼ばれ，プログラミングの世界では嫌われます。Stan でもときどき <span lang="en">make sure Stan code ends with a blank line</span> というメッセージが出ます。</p>
+</div>
+
+<p>上のコードは，パラメータとして実数（<code>real</code> は C++ の <code>double</code> に相当）の <code>x</code> を使うことと，モデルとして確率密度の対数（定数項を除く）が $-\log(1+x^2)$ であることを表します。<code>target +=</code> は確率密度の対数を追加する命令です。決まり文句ですので，<code>target = target - log(1 + square(x))</code> とか <code>target -= log(1 + square(x))</code> とかに書き直してはいけません。<code>square(x)</code> は <code>x * x</code> や <code>x^2</code> と同じことです。</p>
+
+<p>そして，例えば次のようにRに打ち込みます：</p>
+
+<pre>
+fit = stan("ex72.stan")
+</pre>
+
+<p>この <code>stan()</code> という関数は，デフォルトでは4本のシミュレーションを（可能なら並行して）実行します（<code>chains=4</code>）。1本あたり，デフォルトでは2000回繰り返しますが，その半分はウォームアップ（バーンイン）です。つまり，1本あたり1000個のサンプル値を作りますので，全部で4000個が得られます。</p>
+
+<p>これを打ち込むと，C++への変換とコンパイルでかなり長い無反応な時間が続きますが，その後で計算の経過が出力されます。最後に警告メッセージも出るかもしれませんが，とりあえず無視します。</p>
+
+<p><code>rstan_options(auto_write=TRUE)</code> にしている場合，<code>ex72.stan</code> をコンパイルした結果は <code>ex72.rds</code> というファイルに入ります。<code>ex72.stan</code>（のハッシュ値）が変わったら，コンパイルし直してくれるはずです。</p>
+
+<p><code>fit</code> に代入された結果を表示します：</p>
+
+<pre>
+<code>fit</code>
+Inference for Stan model: ex72.
+4 chains, each with iter=2000; warmup=1000; thin=1; 
+post-warmup draws per chain=1000, total post-warmup draws=4000.
+
+      mean se_mean    sd   2.5%   25%   50%   75% 97.5% n_eff Rhat
+x    -0.66    0.47 12.54 -11.53 -1.11 -0.05  0.81  8.57   722 1.00
+lp__ -1.25    0.08  1.60  -5.96 -1.64 -0.81 -0.17  0.00   379 1.01
+
+Samples were drawn using NUTS(diag_e) at Sun Feb  4 17:32:10 2018.
+For each parameter, n_eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor on split chains (at 
+convergence, Rhat=1).
+</pre>
+
+<p><code>x</code>（と <code>lp__</code> つまり対数事後分布 log posterior）について，平均とその標準誤差，標準偏差，％点，有効サンプルサイズ $n_{\text{eff}}$，それに $\hat{R}$ という統計量が出力されます。これらの詳しい定義は <i lang="en">Bayesian Data Analysis, 3rd edition</i> の11.4〜11.5に書かれています。$\hat{R} \approx 1$ なら収束したと考えられます。$n_{\text{eff}}$ が小さければ，そのパラメータの推定誤差が大きいので，後述のようにサンプルサイズを増します。</p>
+
+<p>警告メッセージについては，説明へのリンクがありますので，そちらを見て，対処できるものは対処すればよいでしょう。例えば <span lang="en">There were XXX transitions after warmup that exceeded the maximum treedepth. Increase max_treedepth above 10. See <a href="http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded">http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded</a></span> と出たら，リンクをたどって問題点を見つけ，</p>
+
+<pre>
+fit = stan("ex72.stan", control=list(max_treedepth=20))
+</pre>
+
+<p>のようにオプションでパラメータを変更します。ただ，うまく収束しなかったり警告が出たりすることは，必ずしもパラメータの変更で解消できるわけではありません。</p>
+
+<h2>サンプルサイズを増やしてヒストグラムを描く</h2>
+
+<p>とりあえずうまくいくようなら，サンプルサイズを大きくしてみましょう。このページの最初に挙げたRコードでは10万でしたので，それに合わせるために，シミュレーション1本あたりの（ウォームアップを含む）繰返し数 <code>iter</code> とウォームアップ（バーンイン）の数 <code>warmup</code> を調整します。例えば</p>
+
+<pre>
+fit = stan("ex72.stan", iter=26000, warmup=1000, control=list(max_treedepth=20))
+</pre>
+
+<p>とすれば，1本あたりのサンプルサイズが 25000 になりますので，4本でちょうど10万個が得られます。</p>
+
+<p>より詳しく調べるために，4本のシミュレーション（ウォームアップを除く）の結果をつなぎ合わせた100000個の <code>x</code> や <code>lp__</code> の値を取り出しましょう：</p>
+
+<pre>
+e = extract(fit)
+</pre>
+
+<p>これで <code>e$x</code> に100000個の <code>x</code> の値が取り出されます。</p>
+
+<p>本書と同様にヒストグラム表示してみましょう。とてつもなく絶対値の大きな値が混じっていることがあるので，どんな場合にもうまくいくように，少し工夫しています。</p>
+
+<pre>
+x = ifelse(abs(e$x) &lt; 100, e$x, 100)  # 絶対値を100以内に止める
+hist(x, freq=FALSE, breaks=seq(-100,100,0.2), xlim=c(-5,5), col="gray")
+curve(dcauchy(x), add=TRUE)
+</pre>
+
+<p>結果のグラフは本書のRコードによる結果（図7.3右）と同じです。コーシー分布ですから，ときどきとてつもなく絶対値の大きな値が混じります。この部分が，本書のRコードより上のStanの結果のほうが正確です。これは，本書のRコードで次の候補を選ぶ <code>y = rnorm(1, x, 1)</code> の跳び幅が狭く，あまり絶対値の大きな値が出にくいためです。</p>
+
+<p><code>extract()</code> で取り出したサンプルは，デフォルトではランダムにシャフルされています。シャフルしないそのままの順番で4本のシミュレーション結果をつないだものを得るには，<code>extract()</code> に <code>permuted=FALSE</code> というオプションを付けるか，あるいは</p>
+
+<pre>
+e = as.data.frame(fit)
+</pre>
+
+<p>とします。ウォームアップを含むまったくの生の値は <code>fit@sim$samples[[1]]$x</code> から <code>fit@sim$samples[[4]]$x</code> までに入っています（<code>chains=4</code> の場合）。</p>
+
+<h2>その他の注意</h2>
+
+<p>関数 <code>stan()</code> の実行は，最初はコンパイルの時間が長くかかりますが，次からはずっと速くなります。ただ，<code>stan()</code> を別の関数の中で使うと，毎回コンパイルが起こってしまい，遅くなります。その場合は例えば</p>
+
+<pre>
+model = stan_model("ex72.stan")
+
+f = function(data) {
+  fit = sampling(model, iter=26000, warmup=1000)
+  mean(extract(fit)$x)
+}
+</pre>
+
+<p>のように <code>stan_model()</code> と <code>sampling()</code> に分けて計算します。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-02-05 18:02:50</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

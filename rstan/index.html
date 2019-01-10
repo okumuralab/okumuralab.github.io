@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Rで楽しむStan</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+</nav>
+
+<h1>Rで楽しむStan（工事中）</h1>
+
+<h2>はじめに</h2>
+
+<p><a href="https://github.com/okumuralab/bayesbook">『Rで楽しむベイズ統計入門』</a>は，ベイズ統計の考え方と，Rを使った基本的な計算のしかたを，丁寧に説明した本です。最後のMCMCの章も，JAGSやStanなどの使い方については一切触れず，MCMCアルゴリズムを素直にRで実行して結果を調べるところまでで止めています。近年はStanが人気ですので，Stanの使い方を含めたい気持ちはありましたが，開発が進行中のソフトですので，現時点での使い方を書いても，すぐに古くなってしまう可能性があります。</p>
+
+<p>そこで，StanについてはWebで補足することにしました。</p>
+
+<p>Stanのアルゴリズム（HMC法）については本書でも概要を説明しましたが，かなり複雑です。実装についても，StanのコードをC++に変換してコンパイルして実行するという複雑な仕組みになっています。そのような複雑な仕組みは，複雑な問題で初めて威力を発揮するもので，本書の例題程度の規模の問題では，（C++へのコンパイルも含めれば）Stanのほうがずっと遅いと感じられるかもしれません。しかし，長い目で見れば，Stanのような強力なソフトを使わない手はありません。</p>
+
+<p>以下の7.2〜7.7は<a href="https://github.com/okumuralab/bayesbook">『Rで楽しむベイズ統計入門』</a>の対応するセクションと並行してお読みください。</p>
+
+<h2>お品書き</h2>
+
+<ul>
+  <li><a href="install.html">インストール</a></li>
+  <li><a href="sec72.html">7.2　1次元の簡単なMCMC</a></li>
+  <li><a href="sec73.html">7.3　正規分布の平均と分散のベイズ推定</a></li>
+  <li><a href="sec74.html">7.4　階層モデル</a></li>
+  <li><a href="sec75.html">7.5　回帰分析</a></li>
+  <li><a href="sec76.html">7.6　ポアソンデータのピークフィット</a></li>
+  <li><a href="sec77.html">7.7　打切りデータの回帰分析</a></li>
+</ul>
+
+<hr>
+
+<p><a href="http://creativecommons.org/licenses/by/4.0/" rel="license"><img src="../img/88x31.png" alt="Creative Commons License" style="border:none; position:relative; top:3px" width="88" height="31"></a>
+&nbsp;&nbsp;
+<a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-10 15:42:58</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

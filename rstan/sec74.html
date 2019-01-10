@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>7.4　階層モデル</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Rで楽しむStan</a> &gt;
+</nav>
+
+<h1>7.4　階層モデル</h1>
+
+<p>階層モデル $y_i \sim \mathcal{N}(\theta_i, \sigma_i^2)$，$\theta_i \sim \mathcal{N}(\mu, \tau^2)$ を解く問題です。本書のRコードのこの問題に固有な部分は次のようになっています：</p>
+
+<pre>
+ydata = c(11, 13, 16)         # データ（例）
+s2data = c(1, 1, 4)           # それぞれのデータの誤差分散（例）
+n = length(ydata)             # データの個数
+s2bar = 1 / mean(1/s2data)    # 平均の誤差分散
+logpost = function(m, u) {    # 事後分布の対数
+  t2 = exp(u) - s2bar
+  if (t2 &lt; 0) return(-Inf)
+  (log(sum(1/(t2+s2data)^2)) - sum((ydata-m)^2/(t2+s2data)) - sum(log(t2+s2data))) / 2 + u
+}
+</pre>
+
+<p>この後に通常のメトロポリスのアルゴリズムが来ます。</p>
+
+<p>これをそのままStanにすると，次のようになります：</p>
+
+<pre>
+// ex74a.stan
+
+data {
+    int n;
+    real ydata[n];
+    real s2data[n];
+    real s2bar;
+}
+
+parameters {
+    real m;
+    real&lt;lower=log(s2bar)&gt; u;
+}
+
+model {
+    real t2 = exp(u) - s2bar;
+    real z1 = 0;
+    real z2 = 0;
+    for (i in 1:n) z1 += 1/square(t2+s2data[i]);
+    for (i in 1:n) z2 += square(ydata[i]-m)/(t2+s2data[i]) + log(t2+s2data[i]);
+    target += (log(z1) - z2) / 2 + u;
+}
+</pre>
+
+<p>Rコードは次の通りです：</p>
+
+<pre>
+ydata = c(11, 13, 16)
+s2data = c(1, 1, 4)
+n = length(ydata)             # データの個数
+s2bar = 1 / mean(1/s2data)    # 平均の誤差分散
+data = list(n=n, ydata=ydata, s2data=s2data, s2bar=s2bar)
+fit = stan("ex74a.stan", data=data)
+e = extract(fit)
+hist(e$m, freq=FALSE, col="gray")
+</pre>
+
+<p>しかし，Stanではむしろ次のように書くのが自然です：</p>
+
+<pre>
+// ex74b.stan
+
+data {
+    int n;
+    real y[n];
+    real sigma[n];
+}
+
+parameters {
+    real theta[n];
+    real mu;
+    real&lt;lower=0&gt; tau;
+}
+
+model {
+    real p = 0;
+    for (i in 1:n) p += 1 / square(square(tau) + square(sigma[i]));
+    target += 0.5 * log(p) + log(tau);  // Jeffreys prior
+    y ~ normal(theta, sigma);
+    theta ~ normal(mu, tau);
+}
+</pre>
+
+<p>こちらの場合，Rでは次のように打ち込みます。</p>
+
+<pre>
+data = list(n=3, y=c(11,13,16), sigma=c(1,1,2))
+fit = stan("ex74b.stan", data=data)
+</pre>
+
+<p>実行すると <span lang="en">There were XXX divergent transitions after warmup. Increasing adapt_delta above 0.8 may help. See <a href="http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup">http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</a></span> という警告が出ます。オプション <code>control=list(adapt_delta=0.99)</code> を付けてみましょう。</p>
+
+<pre>
+fit = stan("ex74b.stan", data=data, control=list(adapt_delta=0.99))
+</pre>
+
+<p>それでも警告は出ますが，divergent transitions の数は減ります。</p>
+
+<p>本書pp.140--141のbayesmetaパッケージの結果と比較するために，繰返し数を100万回にしてやってみましょう：</p>
+
+<pre>
+data = list(n=3, y=c(11,13,16), sigma=c(1,1,2))
+fit = stan("ex74b.stan", data=data, iter=251000, warmup=1000, control=list(adapt_delta=0.99))
+</pre>
+
+<p>結果はこんな具合です：</p>
+
+<pre>
+<code>fit</code>
+Inference for Stan model: ex74b.
+4 chains, each with iter=251000; warmup=1000; thin=1; 
+post-warmup draws per chain=250000, total post-warmup draws=1e+06.
+
+          mean se_mean   sd   2.5%   25%   50%   75% 97.5%  n_eff Rhat
+theta[1] 11.41    0.00 0.99   9.43 10.75 11.43 12.10 13.30 382182    1
+theta[2] 12.94    0.00 0.94  11.13 12.31 12.93 13.56 14.80 361743    1
+theta[3] 14.59    0.00 1.89  11.36 13.20 14.44 15.84 18.59 214759    1
+mu       13.01    0.03 4.70   7.53 11.84 12.85 14.01 19.04  35265    1
+tau       3.68    0.03 7.20   0.40  1.38  2.36  4.04 14.64  48606    1
+lp__     -5.44    0.01 2.11 -10.57 -6.55 -5.07 -3.93 -2.43 111021    1
+</pre>
+
+<p><code>model { ... }</code> の中の5行のうち頭3行を消せば $\tau$ について一様な事前分布になります。いろいろお試しください。</p>
+
+<p>最後に，本書でも取り上げた現実的な問題（BCGワクチンのメタアナリシス）を試してみましょう。データが13個もあるので，かなり安定な計算ができます（<code>AS</code> を <code>OR</code> にすると対数オッズ比になります）。</p>
+
+<pre>
+library(metafor)
+es = escalc(measure="AS", ai=tpos, bi=tneg, ci=cpos, di=cneg, data=dat.bcg)
+data = list(n=dim(es)[1], y=es$yi, sigma=sqrt(es$vi))
+fit = stan("ex74b.stan", data=data, iter=26000, warmup=1000)
+</pre>
+
+<p>結果は次のようになりました：</p>
+
+<pre>
+Inference for Stan model: ex74b.
+4 chains, each with iter=26000; warmup=1000; thin=1; 
+post-warmup draws per chain=25000, total post-warmup draws=1e+05.
+
+           mean se_mean   sd  2.5%   25%   50%   75% 97.5%  n_eff Rhat
+theta[1]  -0.08    0.00 0.05 -0.17 -0.11 -0.08 -0.05  0.01 100000    1
+theta[2]  -0.14    0.00 0.04 -0.21 -0.16 -0.14 -0.11 -0.07 100000    1
+theta[3]  -0.09    0.00 0.04 -0.17 -0.12 -0.09 -0.07 -0.02 100000    1
+theta[4]  -0.07    0.00 0.01 -0.08 -0.08 -0.07 -0.07 -0.06 100000    1
+theta[5]  -0.01    0.00 0.01 -0.03 -0.02 -0.01  0.00  0.01 100000    1
+theta[6]  -0.17    0.00 0.02 -0.21 -0.18 -0.17 -0.16 -0.14 100000    1
+theta[7]  -0.07    0.00 0.02 -0.11 -0.08 -0.07 -0.05 -0.03 100000    1
+theta[8]   0.00    0.00 0.00  0.00  0.00  0.00  0.00  0.01 100000    1
+theta[9]  -0.02    0.00 0.01 -0.03 -0.02 -0.02 -0.01  0.00 100000    1
+theta[10] -0.10    0.00 0.02 -0.13 -0.11 -0.10 -0.08 -0.06 100000    1
+theta[11] -0.01    0.00 0.00 -0.02 -0.01 -0.01 -0.01  0.00 100000    1
+theta[12]  0.01    0.00 0.01 -0.02  0.00  0.01  0.01  0.03 100000    1
+theta[13]  0.00    0.00 0.01 -0.01  0.00  0.00  0.00  0.01 100000    1
+mu        -0.06    0.00 0.02 -0.10 -0.07 -0.06 -0.05 -0.02 100000    1
+tau        0.07    0.00 0.02  0.04  0.05  0.06  0.07  0.11 100000    1
+lp__      23.87    0.01 2.82 17.44 22.20 24.20 25.90 28.37  38953    1
+</pre>
+
+<p>なお，<i lang="en">Bayesian Data Analysis, 3rd edition</i> によれば，次のように $\theta_i = \mu + \tau \eta_i$ と分解するほうがStanでは効率が良いとのことです：</p>
+
+
+<pre>
+data {
+    int n;
+    real y[n];
+    real sigma[n];
+}
+
+parameters {
+    real mu;
+    real&lt;lower=0&gt; tau;
+    vector[n] eta;
+}
+
+transformed parameters {
+    vector[n] theta = mu + tau * eta;
+}
+
+model {
+    eta ~ normal(0, 1);
+    y ~ normal(theta, sigma);
+}
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-02-05 16:06:46</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

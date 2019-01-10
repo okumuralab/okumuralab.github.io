@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>7.3　正規分布の平均と分散のベイズ推定</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Rで楽しむStan</a> &gt;
+</nav>
+
+<h1>7.3　正規分布の平均と分散のベイズ推定</h1>
+
+<p>正規分布に従うと考えられるデータ（下の例では3個の値 1, 2, 3）を与えて，その正規分布 $\mathcal{N}(\mu,\sigma^2)$ のパラメータ（平均 $\mu$ と分散 $\sigma^2$）の事後分布を求める問題です。事前分布は reference prior（ここではパラメータごとの Jeffreys の事前分布）を使っています。つまり，$\mu$ および $\log \sigma^2$ について一様な事前分布を仮定しています。本書のサンプルコードは次の通りです：</p>
+
+<pre>
+y = 1:3         # データ
+n = length(y)
+ybar = mean(y)
+s2 = var(y)
+logpost = function(x1, x2) {
+  -0.5 * (n*x2 + ((n-1)*s2+n*(ybar-x1)^2) / exp(x2))
+}
+x1 = ybar      # 適当な初期値
+x2 = log(s2)   # 適当な初期値
+lp = logpost(x1, x2)  # 現在の事後分布の対数
+N = 100000     # 繰返し数（とりあえず10万）
+x1trace = x2trace = numeric(N)  # 事後分布のサンプルを格納する配列
+for (i in 1:N) {
+  y1 = rnorm(1, x1, 1)  # 次の候補
+  y2 = rnorm(1, x2, 1)  # 次の候補
+  lq = logpost(y1, y2)  # 次の候補の事後分布の対数
+  if (lp - lq &lt; rexp(1)) {  # メトロポリスの更新（対数版）
+    x1 = y1
+    x2 = y2
+    lp = lq
+  }
+  x1trace[i] = x1  # 配列に格納
+  x2trace[i] = x2  # 配列に格納
+}
+</pre>
+
+<p>データが与えられるところが前の例と違います。これをそのままStanコードにすれば，次のようになります：</p>
+
+<pre>
+// ex73a.stan
+
+data {
+    int n;
+    real ybar;
+    real s2;
+}
+
+parameters {
+    real x1;
+    real x2;
+}
+
+model {
+    target += -0.5 * (n*x2 + ((n-1)*s2+n*(ybar-x1)^2) / exp(x2));
+}
+</pre>
+
+<p>つまり，<code>target +=</code> で事後分布の対数を指定するだけです。</p>
+
+<p>Rコードは次のようになります：</p>
+
+<pre>
+y = 1:3   # データの例
+n = length(y)
+ybar = mean(y)
+s2 = var(y)
+data = list(n=n, ybar=ybar, s2=s2)
+fit = stan("ex73a.stan", data=data, iter=26000, warmup=1000)
+</pre>
+
+<p>本書の図7.4左・右を描くには次のようにします：</p>
+
+<pre>
+e = extract(fit)
+
+hist((e$x1-ybar)/sqrt(s2/n), col="gray", freq=FALSE, xlim=c(-5,5), breaks=seq(-1000,1000,0.2))
+curve(dt(x,n-1), add=TRUE)
+
+hist((n-1)*s2/exp(e$x2), col="gray", freq=FALSE, xlim=c(0,10), breaks=(0:500)/5)
+curve(dchisq(x,n-1), add=TRUE)
+</pre>
+
+<p>上の方法は，この場合の十分統計量であるデータの平均と分散だけを与えるので，効率が良いのですが，直感的ではありません。</p>
+
+<p>より直感的な書き方として，Stanでは次のような書き方ができます：</p>
+
+<pre>
+// ex73b.stan
+
+data {
+    int n;
+    real y[n];
+}
+
+parameters {
+    real mu;
+    real logsigma;
+}
+
+model {
+    y ~ normal(mu, exp(logsigma));
+}
+</pre>
+
+<p>ここではパラメータとして <code>mu</code> ($= \mu$) と <code>logsigma</code> ($= \log \sigma = \frac{1}{2} \log \sigma^2$) を使っています。Stanはデフォルトでは各パラメータについて一様な事前分布を仮定します。<code>y ~ normal(mu, exp(logsigma))</code> は <code>y</code> が平均 <code>mu</code>，標準偏差 <code>exp(logsigma)</code> の正規分布に従うモデルの尤度の対数を <code>target +=</code> することと同じ働きをします。結果はさきほどと同じ結果になります（さきほどは2番目のパラメータを $\log \sigma^2$ としましたが，こちらは $\log \sigma = \frac{1}{2} \log \sigma^2$ である点だけ異なります。このようにパラメータが定数倍だけ違っても，どちらも reference prior で，実質的な違いはありません）。</p>
+
+<p>別の事前分布を試してみましょう。分散 <code>sigma</code> について $0 \leq \sigma \leq 10$ の範囲で一様としてみます：</p>
+
+<pre>
+// ex73c.stan
+
+data {
+    int n;
+    real y[n];
+}
+
+parameters {
+    real mu;
+    real&lt;lower=0,upper=10&gt; sigma;
+}
+
+model {
+    y ~ normal(mu, sigma);
+}
+</pre>
+
+<p>結果のヒストグラムを描いてみてください。さきほどの reference prior のように $\mu$ の事後分布が古典的な統計学の $\bar{y}$ と同じ $t$ 分布に従うといった便利な性質はなくなります（古典的な統計学は $\mu$ を固定して $\bar{y}$ の分布を考え，ベイズ統計学はその逆になります）。この意味で，reference prior（1次元なら Jeffreys' prior）は一つのキャリブレーションポイントとなるので，私の本でも省略せず説明してあります。</p>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-02-05 18:08:43</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

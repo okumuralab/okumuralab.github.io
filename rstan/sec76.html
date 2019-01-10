@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>7.6　ポアソンデータのピークフィット</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Rで楽しむStan</a> &gt;
+</nav>
+
+<h1>7.6　ポアソンデータのピークフィット</h1>
+
+<p>問題は次の通りです：</p>
+
+<blockquote>
+エネルギー $i = (1,2,\ldots,20)$ における粒子の個数データ
+\[ y = c(11,4,13,10,4,8,6,16,7,12,10,13,6,5,1,4,2,0,0,1) \]
+を得た。データは $y_i \sim \mathrm{Poisson}(x_i)$，$x_i = ae^{-(i-10)^2/(2 \cdot 3^2)} + be^{-i/10}$ に従うとして，$a$，$b$ の事後分布を推定したい。
+</blockquote>
+
+<p>Stanコードはとりあえず次のように書けます。Rのつもりで <code>1/18</code> と書くと，整数の範囲で計算して 0 になります。</p>
+
+<pre>
+// ex76.stan
+
+data {
+    int n;
+    int y[n];
+}
+
+parameters {
+    real a;
+    real b;
+}
+
+model {
+    for (i in 1:n) {
+        real x = a * exp((-1.0/18.0)*square(i-10)) + b * exp(-0.1*i);
+        target += -0.5 * log(x);  // Jeffreys prior
+        y[i] ~ poisson(x);
+    }
+}
+</pre>
+
+<p>ベクトルをうまく使えばループをなくすことができます：</p>
+
+<pre>
+// ex76.stan
+
+data {
+    int n;
+    int y[n];
+}
+
+transformed data {
+    vector[n] p;
+    vector[n] q;
+    for (i in 1:n) {
+        p[i] = exp((-1.0/18.0) * square(i - 10));
+        q[i] = exp(-0.1 * i);
+    }
+}
+
+parameters {
+    real a;
+    real b;
+}
+
+model {
+    vector[n] x = a * p + b * q;
+    target += -0.5 * sum(log(x));  // Jeffreys prior
+    y ~ poisson(x);
+}
+</pre>
+
+<p>Rコードは次の通りです：</p>
+
+<pre>
+ydata = c(11,4,13,10,4,8,6,16,7,12,10,13,6,5,1,4,2,0,0,1)
+data = list(n=length(ydata), y=ydata)
+fit = stan("ex76.stan", data=data, iter=26000, warmup=1000)
+fit
+</pre>
+
+<p>本書の図7.8を描くには次のようにします：</p>
+
+<pre>
+poissonci = function(y) {
+    if (y == 0) {
+        qgamma(c(0,0.95), 0.5)
+    } else {
+        qgamma(c(0.025,0.975), y+0.5)
+    }
+}
+ci = sapply(1:20, function(i) poissonci(ydata[i]))
+plot(1:20, ydata, type="p", pch=16, xlab="", ylab="", ylim=range(ci))
+arrows(1:20, ci[1,], 1:20, ci[2,], length=0.03, angle=90, code=3)
+e = extract(fit)
+a = median(e$a)
+b = median(e$b)
+f = function(x) a * exp(-(x-10)^2/(2*3^2)) + b * exp(-x/10)
+curve(f, add=TRUE)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-02-01 15:34:01</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

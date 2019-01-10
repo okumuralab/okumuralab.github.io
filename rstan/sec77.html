@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>7.7　打切りデータの回帰分析</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Rで楽しむStan</a> &gt;
+</nav>
+
+<h1>7.7　打切りデータの回帰分析</h1>
+
+<p>次のような問題でした：</p>
+
+<blockquote>
+  $x = (1,2,3,4,5,6)$ のとき $y = (\mathrm{ND},\mathrm{ND},3,5,4,6)$
+  になった。ただしNDは測定値が2未満を意味する。このデータを1次式 $y \sim ax + b$
+  でフィットしたい。
+</blockquote>
+
+<p>これにさらに真値が負でない（$ax_i + b \geq 0$）という制約を付けて解いています。本書のRコードでこの問題に関する部分は</p>
+
+<pre>
+xdata = c(1, 2, 3, 4, 5, 6)    # データ
+ydata = c(NA, NA, 3, 5, 4, 6)  # データ
+iy = is.na(ydata)              # NA
+jy = !iy                       # NA以外
+ny = sum(jy)                   # NA以外の個数
+logpost = function(a, b, t) {  # 事後分布の対数
+  if (any(a*xdata+b &lt; 0)) return(-Inf)
+  sum(pnorm(2, a*xdata[iy]+b, exp(t/2), log.p=TRUE)) -
+  0.5 * (ny*t + sum((a*xdata[jy]+b-ydata[jy])^2)/exp(t))
+}
+</pre>
+
+<p>です。事前分布は $a$，$b$，$t = \log \sigma^2$ について一様としています。このあとに通常のメトロポリスのアルゴリズムが続きます。</p>
+
+<p>つまり，NDでなければ通常の正規分布ですが，ND（$< 2$）であれば正規分布の密度関数を $-\infty$ から $2$ まで積分した（累積）分布関数 cumulative distribution function が尤度になります。</p>
+
+<p>Stanには正規分布の（累積）分布関数の対数 $\mathrm{normal\_lcdf}(x | \mu, \sigma)$ および 1 から（累積）分布関数を引いた値の対数 $\mathrm{normal\_lccdf}(x | \mu, \sigma)$ が備わっていますので，これを使えば簡単です：</p>
+
+<pre>
+// ex77.stan
+
+data {
+    int n;
+    real x[n];
+    real y[n];
+}
+
+parameters {
+    real a;
+    real b;
+    real logsigma;
+}
+
+model {
+    for (i in 1:n) {
+        if (a * x[i] + b &lt; 0) {
+            target += negative_infinity();
+        } else if (y[i] &gt;= 2) {
+            y[i] ~ normal(a*x[i]+b, exp(logsigma));
+        } else {
+            target += normal_lcdf(2 | a*x[i]+b, exp(logsigma));
+        }
+    }
+}
+</pre>
+
+<p>Rコードは次のようになります。StanにはRの <code>NA</code> のようなものがないので 0 で代用しています。</p>
+
+<pre>
+xdata = c(1, 2, 3, 4, 5, 6)    # データ
+ydata = c(NA, NA, 3, 5, 4, 6)  # データ
+data = list(n=length(xdata), x=xdata, y=ifelse(is.na(ydata), 0, ydata))
+fit = stan("ex77.stan", data=data, iter=26000, warmup=1000)
+</pre>
+
+<p>図7.9を描くには次のようにします。</p>
+
+<pre>
+e = extract(fit)
+plot(xdata, ydata, ylim=c(0,6), pch=16, xlab="x", ylab="y")
+abline(mean(e$b), mean(e$a))
+points(1:2, c(2,2), pch=1)
+arrows(1,2, 1,0, length=0.1, angle=20)
+arrows(2,2, 2,0, length=0.1, angle=20)
+abline(lm(ydata ~ xdata), lty=2)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-01-31 15:14:49</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
