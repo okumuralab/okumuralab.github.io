@@ -1,14 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<!DOCTYPE html>
+<html lang="ja">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
 <title>グラフの例：実行時間の比較</title>
-<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="breadcrumbs">
-<a href="/~okumura/">ホーム</a> &gt;
+<a href="../">ホーム</a> &gt;
 <a href="./">統計・データ解析</a> &gt;
 <a href="graphs.html">グラフの描き方</a> &gt;
 </div>
@@ -95,24 +96,24 @@ curve(b*x*log(x), add=TRUE)
 title("選択ソートとクイックソートの実行時間", family="HiraKakuPro-W6")
 </pre>
 
-<p><img src="img/090607a.png" alt="" /></p>
+<p><img src="img/090607a.png" alt=""></p>
 
 <p>これではクイックソートが速すぎて見えない。縦軸だけ対数目盛りにしてみる。<code>plot()</code>
 に <code>log="y"</code>
 というオプションを入れる：</p>
 
-<p><img src="img/090607b.png" alt="" /></p>
+<p><img src="img/090607b.png" alt=""></p>
 
 <p>横軸も縦軸も対数目盛りにするには <code>plot()</code>
 のオプションを <code>log="xy"</code>
 にする。ただ，範囲に0が含まれると対数にできないので，<code>xlim=range(N)</code>
 にする必要がある。</p>
 
-<p><img src="img/090607c.png" alt="" /></p>
+<p><img src="img/090607c.png" alt=""></p>
 
-<hr />
+<hr>
 
-<p><a href="/~okumura/">奥村晴彦</a></p>
+<p><a href="../">奥村晴彦</a></p>
 
 <p>
 <!-- hhmts start -->

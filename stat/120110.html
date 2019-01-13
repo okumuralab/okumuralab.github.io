@@ -1,14 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<!DOCTYPE html>
+<html lang="ja">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
 <title>スペクトルのフィット：例4</title>
-<link rel="stylesheet" type="text/css" href="/~okumura/style6.css" />
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="breadcrumbs">
-<a href="/~okumura/">ホーム</a> &gt;
+<a href="../">ホーム</a> &gt;
 <a href="./">統計・データ解析</a> &gt;
 <a href="covell.html">スペクトルのフィット</a> &gt;
 </div>
@@ -35,7 +36,7 @@ plot(ch, sp, type="l", col="#f39800",
 
 <p>次の図のオレンジの線がデータで，黒い線が下の方法でフィットしたものです。</p>
 
-<div><img src="img/120110d.png" alt="" /></div>
+<div><img src="img/120110d.png" alt=""></div>
 
 <p>フィットは直線＋正規分布で，R の <code>nlme</code> パッケージの <code>gnls()</code>
 を使いました。モデルとデータが合っていないので，初期値をうまく選ばないと収束しません。初期値の正規分布の幅を実際より広くとるのがコツのようです。</p>
@@ -98,9 +99,9 @@ sqrt(sum(sp[30:60]) + (31/40)^2*(sum(sp[10:29])+sum(sp[61:80])))
 
 <p>しかし，グラフを詳しく見ればわかるように，本当のバックグラウンド（オレンジの線の周辺部分）よりも，フィットした値（黒の曲線）がやや上に来てしまっています。これは，ピークの左側の高い裾（指数分布的な部分）の影響で，バックグラウンドをやや過大評価してしまったために，つじつまを合わせるためにピークをやや過小評価することになったと考えられます。</p>
 
-<hr />
+<hr>
 
-<p><a href="/~okumura/" rel="me">奥村晴彦</a></p>
+<p><a href="../" rel="author">奥村晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
