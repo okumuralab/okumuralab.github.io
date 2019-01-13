@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>お引越し</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<article>
+<h1>お引越し</h1>
+
+<p>定年間近。定年後は大学の奥村研究室のサーバを継続利用できるかどうか微妙だ。そこで，定年後の引越し先の整備を兼ねて，以前から借りていた<a href="https://www.sakura.ad.jp/">さくら</a>のレンタルサーバライトから，さくらのVPS（1G）に引っ越した。ドメインは以前から持っていたokumuralab.orgをそのまま使う。</p>
+
+<p>さくらのVPSにはCentOS 7をインストールした。レンタルサーバライトからVPSへのokumuralab.orgドメイン移行が最初よくわからず，さくらの質問フォームで問い合わせたが，回答がいまいち。ふと気づいて，まずレンタルサーバライト側でokumuralab.orgを削除したら，VPS側で設定することができた。</p>
+
+<p>あとは大学の研究室のサーバからの引越しである。これは急ぐ必要がないので，少しずつやればよい。</p>
+
+<p>安いVPSのプランゆえ，リソースが限られているので，MySQLを使ったコンテンツはなるべく避けたい。特に，古いブログはDrupal 6で作ってあり，凍結してスタティックなページに移行したい。</p>
+
+<p>サイトのコンテンツをそのままコピーするにはいつもwgetを使っている。</p>
+
+<pre>
+wget --mirror --no-parent --no-clobber --adjust-extension --convert-links --page-requisites http://...
+</pre>
+
+<p>のような感じでやればよい。ただ，Drupalの個別URLには拡張子が付かない。<code>--adjust-extension</code>（wget 1.12から <code>--html-extension</code> が改名）を付けるとURLに <code>.html</code> が付き，今までのURLと変わってしまう。そこで，このオプションを外してアーカイブする。<code>.html</code> が付かなくてもtext/htmlで送り出される。問題が起こるのは <code>node?page=1</code> のようなファイルで，これをGETしようとすると <code>?</code> 以下が無視されて <code>node</code> ディレクトリのリスティングが送られてくる。これを避けるには <code>node?page=1</code> へのリンクを <code>node%3Fpage=1</code> へのリンクに書き換えればよい（ファイル名は <code>?</code> を含むままでよい）。</p>
+
+<p>リンクやURLの書き換えは，次のようなRubyスクリプトで一度にできる：</p>
+
+<pre>
+ARGV.each do |file|
+  buf = File.open(file, "r") do |f|
+    f.read
+  end
+  buf.gsub!(/href="http:\/\/oku\.edu\.mie-u\.ac\.jp\//, 'href="/')
+  buf.gsub!(/src="http:\/\/oku\.edu\.mie-u\.ac\.jp\//, 'src="/')
+  buf.gsub!(/action="http:\/\/oku\.edu\.mie-u\.ac\.jp\//, 'action="/')
+  buf.gsub!(/href="node\?/, 'href="node%3F')
+  buf.gsub!(/href="index\.html"/, 'href="./"')
+  buf.gsub!(/href="..\/index\.html"/, 'href="../"')
+  File.open(file, "w") do |f|
+    f.write(buf)
+  end
+end
+</pre>
+
+<p>これ以外に <code>.css</code> や <code>.js</code> だけをコピーするにはrsyncが使える：</p>
+
+<pre>
+rsync -avm --include='*.css' -f 'hide,! */' src/ dest
+rsync -avm --include='*.js' -f 'hide,! */' src/ dest
+</pre>
+
+<p>あとは試行錯誤でやっているうちに，引越しができたようである。</p>
+</article>
+
+<hr>
+
+<p>[2016-09-20追記] wget に <code>--convert-links</code> を付けると，せっかくリロケータブルになるように相対URLにしてあるものが，絶対URLになってしまう。また，上記の方法では Drupal の node/ 以下が全部取得できるわけではない。単純に</p>
+
+<pre>
+for i in `seq 1 2586`; do
+  wget http://oku.edu.mie-u.ac.jp/~okumura/blog/node/$i
+done
+</pre>
+
+<p>で node/ 以下を取得するだけのほうが確実だ。</p>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-09-20 15:38:37</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>CentOS 7でRuby 2.4を最速インストール</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<h1>CentOS 7でRuby 2.4を最速インストール</h1>
+
+<p>最新のgemがCentOS 7標準のRubyでインストールできない！ そこで，Ruby 2.4を，従来の環境を壊さず最速でインストールする：</p>
+
+<pre>
+yum -y install centos-release-scl-rh centos-release-scl
+yum --enablerepo=centos-sclo-rh -y install rh-ruby24 rh-ruby24-ruby-devel
+scl enable rh-ruby24 bash
+</pre>
+
+<p>新しいRubyを使うための環境を整えた新しい bash が起動する。ここで <code>gem install ...</code> などをし，最後に <code>exit</code> して元の環境に戻る。</p>
+
+<p>cronで動くスクリプトなどについては，</p>
+
+<pre>
+/usr/bin/scl enable rh-ruby24 -- bash -c 'コマンド'
+</pre>
+
+<p>のようにして実行すればよいであろう。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+Permanent ID of this document: 03719fac2f417ee6629ff53e194b95ab<br>
+<!-- hhmts start -->
+Last modified: <time>2017-09-25 18:31:16</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

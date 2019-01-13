@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>音</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>音</h1>
+
+<p style="color:red">説明不足なのでそのうち直す。</p>
+
+<p>音の物理は簡単なようでややこしく，2018年1月6日・12日には<a href="http://www.osaka-u.ac.jp/ja/news/topics/2018/01/12_01">阪大</a>，2018年2月1日には<a href="http://www.kyoto-u.ac.jp/ja/admissions/events_news/office/kyoiku-suishin-gakusei-shien/nyushi-kikaku/news/2017/180201_2.html">京大</a>が，いずれも音を扱った昨年の物理の入試問題の間違いを認めた。</p>
+
+<p>大学の物理屋は音といえば疎密波（圧力波）をイメージするが，高校や予備校で音を詳しく学ぶ場合，音は疎密波であると同時に変位波として扱われる。壁で反射する場合，疎密波として考えれば自由端反射（位相が変わらない），変位波として考えれば固定端反射（位相が反転）となる。壁に垂直に入射する音は，壁ぎわで疎密波は強まり，変位波は弱まる。定在波（定常波）についても，疎密波と変位波で節と腹が異なる。人間の耳や密閉型のマイクは圧力の変化に感じるが，前後開放型の<a href="https://en.wikipedia.org/wiki/Ribbon_microphone">リボンマイク</a>は変位の変化に感じる。</p>
+
+<p>われわれの周囲の気圧は1気圧（1013.25 hPa（ヘクトパスカル）つまり 101325 Pa（パスカル））程度だが，それが例えば $P = P_0 + a \sin \omega t$ のように時間 $t$ とともに変化すると音と感じる。周波数 $f = \omega / (2\pi)$ は，若者なら 20 Hz（ヘルツ）から 20000 Hz くらいの範囲が聞こえる。年齢とともに高い音は聞きにくくなる。音楽では，中央の A（ラ）の音の基準は 440 Hz である（これよりずらして調律することも多い）。$a$ は振幅だが，音の大きさについていうときは実効値（RMS値）$a/\sqrt{2}$ を考える。この実効値が 1000 Hz で $20\,\mu\mathrm{Pa}$（マイクロパスカル）あたりがぎりぎり聞こえる音なので，通常これを 0 dB（デシベル）の音と定める。実効値がこの10倍の音が 20 dB，100倍の音が 40 dB，1000倍の音が 60 dB である。日常の音（テレビから 1 m 離れたくらいの音）は 60 dB くらい，つまり実効値 $20\,\mathrm{mPa}$（ミリパスカル）程度である。聴力検査ではオージオメーターという機械で一般に 1000 Hz 30 dB，4000 Hz 40 dB の音をヘッドホンで聞く。</p>
+
+<p>音による空気の密度 $\rho$，圧力 $P$，変位 $\chi$ の関係は，Feynman Lectures on Physics の <a href="http://www.feynmanlectures.caltech.edu/I_47.html">47 Sound</a> の 47.2 以下で初等的に詳しく扱われている。</p>
+
+<p>音による圧力の変化 $\Delta P$ と密度の変化 $\Delta \rho$ には比例関係</p>
+
+\[ \Delta P = \kappa \Delta \rho \]
+
+<p>がある。$x$ 軸方向に伝わる音を考えると，空気分子の $x$ 軸方向の変位 $\chi(x)$ が $x$ とともに変化すれば，密度 $\rho$ は</p>
+
+\[ \Delta \rho = - \rho \frac{\partial \chi}{\partial x} \]
+
+<p>だけ変化する。これと，運動方程式</p>
+
+\[ \rho \frac{\partial^2 \chi}{\partial t^2} = - \frac{\partial P}{\partial x} \]
+
+<p>から，波動方程式</p>
+
+\[
+  \frac{\partial^2 \chi}{\partial x^2} = \frac{1}{v^2} \frac{\partial^2 \chi}{\partial t^2},
+  \qquad \frac{1}{v^2} = \kappa
+\]
+
+<p>を得る（$v$ は音速，常温で約 340 m/s）。この解は，例えば</p>
+
+\[ \chi = a\sin(\omega(t \pm x/v)) \]
+
+<p>である。</p>
+
+<p>理想気体では $PV = nRT$ の関係があり，温度一定なら圧力 $P$ と体積 $V$ は反比例する。密度 $\rho$ は体積に反比例するので $P \propto \rho$ という比例関係があると Newton は考えたが，Laplace はこれが間違いであることを示した。実際，空気中の分子の平均自由行程は <a href="https://en.wikipedia.org/wiki/Mean_free_path">Wikipedia の mean free path</a> によれば 68 nm（ナノメートル）ほどだが，音の波長はこれよりずっと長く，等温過程ではなく断熱過程と考えられる。この場合，$P \propto \rho^{\gamma}$ という関係になる。したがって</p>
+
+\[ v^2 = \frac{\gamma P}{\rho} \]
+
+<p>空気中の音速を入れて計算すれば，$\gamma \approx 1.4$ である。正弦波の解を入れて振幅を調べれば</p>
+
+\[ \frac{\Delta P / P}{(\partial \chi / \partial t) / v} = \gamma \]
+
+<p>を得る。$\Delta P / P$ が実効値で $20\,\mathrm{mPa} / 10^5\,\mathrm{Pa} = 2 \times 10^{-7}$
+程度とすれば，空気の変位の速度も音速の $10^{-7}$ 倍のオーダーである。</p>
+
+<p>このことを表すアニメーションを<a href="/~okumura/stat/180203.html">こちら</a>で試し中だが，あまりうまくできていない。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-02-07 10:16:30</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

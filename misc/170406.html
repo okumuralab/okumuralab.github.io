@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>MathJaxのCDNサーバ変更</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<h1>MathJaxのCDNサーバ変更</h1>
+
+<p><a href="../javascript/mathjax.html">MathJax</a>のCDNが変更になる。古いページには</p>
+
+<pre>
+&lt;script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"&gt;
+&lt;/script&gt;
+</pre>
+
+<p>や</p>
+
+<pre>
+&lt;script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"&gt;
+&lt;/script&gt;
+</pre>
+
+<p>や，あるいは1行で</p>
+
+<pre>
+&lt;script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML"&gt;&lt;/script&gt;
+</pre>
+
+<p>のような記述をしたものがたくさんある。これを</p>
+
+<pre>
+&lt;script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"&gt;&lt;/script&gt;
+</pre>
+
+<p>に書き直したい。そのため，次のようなスクリプト（fix.rb）を用意した：</p>
+
+<pre>
+#! /usr/bin/ruby
+# coding: utf-8
+
+ARGV.each do |file|
+  x = File.open(file, "r") do |f|
+    f.read
+  end
+  y = x.sub(%r|&lt;script (async )?src="https://cdn.mathjax.org/mathjax/latest/MathJax.js\?config=TeX-AMS_CHTML"&gt;\n?&lt;/script&gt;|m, %q|&lt;script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"&gt;&lt;/script&gt;|)
+  if y != x
+    File.open(file, "w") do |f|
+      f.write(y)
+    end
+  end
+end
+</pre>
+
+<p>これで</p>
+
+<pre>
+./fix.rb *.html
+</pre>
+
+<p>とすれば一斉に書き直しできる。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2017-04-06 15:59:40</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

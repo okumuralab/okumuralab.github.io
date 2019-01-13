@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>エンコード</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<article>
+
+<h1>エンコード</h1>
+
+<p>動画などをエンコードするツールでは <a href="https://ffmpeg.org/">ffmpeg</a> が定番である。例えば</p>
+
+<pre>
+ffmpeg -i hoge.mov hoge.mp4
+</pre>
+
+<p>とか，あるいはさらにいろいろオプションを付けて</p>
+
+<pre>
+ffmpeg -i hoge.ts -ss 4 -f mp4 -aspect 16:9 -s 960x540 hoge.mp4
+</pre>
+
+<p>などとする。動画だけでなく音声にも使える。</p>
+
+<p>さて，かみさんの車のオーディオプレーヤーにUSBメモリを差し込んで聴いている曲で，再生できるものとできないものがあるという。見てみると，再生できないというものはだいたい1曲10MB以上の <code>*.m4a</code> のようだ。ファイルサイズというか，おそらくビットレートが問題なのであろう。そこで，10MB以上の曲をffmpegで128kbpsに再エンコードすることにした。大量にあるので手動でやるのはたいへんだ。そこで，おおよそ次のようなシェルスクリプトを使うことにした：</p>
+
+<pre>
+#! /bin/bash
+
+for x in *.m4a; do
+    s=`stat -f%z "$x"`   # これはMacの場合。Linuxでは-f%zを-c%sにする
+    if [[ $s -gt 10000000 ]]; then
+        ffmpeg -i "$x" -b 128k x.m4a
+        mv x.m4a "$x"
+    fi
+done
+</pre>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-04-29 13:39:12</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

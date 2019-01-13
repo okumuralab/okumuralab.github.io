@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>リンク切れ，DOI，Document ID</title>
+<link rel="stylesheet" href="style.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<h1>リンク切れ，DOI，Document ID</h1>
+
+<p>国立国会図書館「<a href="http://warp.ndl.go.jp/contents/reccommend/collection/linkrot.html">国の機関サイトの残存率</a>」によれば，2010年の国の機関サイトURLの60%が5年間でなくなっている。</p>
+
+<p>意図的に消されたものは残念としか言いようがないが，それ以外に，サイトのリニューアルと称してURLを変更するサイトがよくある。Webを考案したTim Berners-Leeは，<a href="https://www.w3.org/Provider/Style/URI.html">Cool URIs don't change</a>（邦訳：<a href="http://www.kanzaki.com/docs/Style/URI">クールなURIは変わらない</a>）を書いて，安易なURL（URI）の変更を戒めている。</p>
+
+<p>消えるページ・変更されるURLの問題への対策として，<a href="https://archive.org">Internet Archive</a>，<a href="http://warp.ndl.go.jp">国立国会図書館インターネット資料収集保存事業</a>（WARP）のようなアーカイブ事業がある。オンデマンドでアーカイブを保存する民間のサービスもある。</p>
+
+<p>残念なことに，国立国会図書館は，当該組織の許諾がなければアーカイブをネット公開できない。震災以降の<a href="http://warp.ndl.go.jp/waid/1217">福島県のアーカイブ</a>も「館内限定公開」である（国立国会図書館内でしか閲覧できない）。</p>
+
+<p>学術界では，論文などの出版元変更などによるリンク切れ問題に対処するため，論文などにDOI（Digital Object Identifier，デジタルオブジェクト識別子）という一意的なIDを付与している。例えば doi:10.2197/ipsjjip.22.566 というDOIの論文を探したければ，頭に https://doi.org/ を付けて <a href="https://doi.org/10.2197/ipsjjip.22.566">https://doi.org/10.2197/ipsjjip.22.566</a> というURLにアクセスすれば，適切なURLに転送される（昔は http://dx.doi.org/ だったが今は https://doi.org/ が推奨である）。</p>
+
+<p>DOIのような仕組みを使えばリンク切れ問題が解決できるかもしれないが，文書にIDを付与するだけでなく，IDとURLとの対応を中央で一律管理するという面倒な作業が必要である。</p>
+
+<p>それならば，文書IDは任意に付けて，URLとの対応は検索エンジンに任せればいいのではないか。<a href="https://twitter.com/h_okumura/status/859297605590802432">そういうアイデア</a>をツイートしたところ，すでにD. J. Bernstein（「djb」）が <a href="https://cr.yp.to/bib/documentid.html">Document IDs</a> というものを提案していると<a href="https://twitter.com/SaitoAtsushi/status/859298895104364545">教えていただいた</a>。</p>
+
+<p>djbは</p>
+<pre>
+head /dev/urandom | md5     # BSD（Macなど）
+</pre>
+<p>または</p>
+<pre>
+head /dev/urandom | md5sum  # Linuxなど
+</pre>
+<p>でユニークなIDを生成すればよいとしている。私が当初考えたアイデアは，IDを生成する時点でのURLのハッシュ値をIDとするというものであった。例えば http://oku.edu.mie-u.ac.jp/~okumura/misc/170503.html であれば</p>
+<pre>
+echo -n 'http://oku.edu.mie-u.ac.jp/~okumura/misc/170503.html' | md5
+</pre>
+<p>とすれば 03719fac2f417ee6629ff53e194b95ab というハッシュ値を得る。</p>
+
+<p>いずれにしても，それを</p>
+<blockquote>
+Permanent ID of this document: 03719fac2f417ee6629ff53e194b95ab
+</blockquote>
+<p>という形式で文書中に書いておけば，検索でその文書を探すことができる。文書の内容を改訂してもIDは変更しない。最終更新日を別途付けておけば，同じIDの文書のどれが最新かもわかる。</p>
+
+<p>"Permanent ID of this document:" でGoogle検索してみると，2017年5月3日時点で約3,090件見つかる。最初のものはdjbによる上記の提案である。2番目のものはdjbによる論文を含むEUROCRYPT 2005論文集のGoogle Booksページで，論文の最初のページの脚注に次のように書かれている：</p>
+
+<figure><img src="img/170503a.png" alt=""></figure>
+
+<p>ちなみに，メールにはユニークな Message-ID が自動的に付く。</p>
+
+<p>[2017-05-04] このページを作ったのは昨日だが，もうGoogleで "Permanent ID of this document: 03719fac2f417ee6629ff53e194b95ab" でも単に 03719fac2f417ee6629ff53e194b95ab でも検索できるようになっている。</p>
+
+<p>[2017-05-04] 石田修二先生の<a href="https://twitter.com/ishidashuji/status/859956201307594752">調査</a>によれば，三重県・県内29市町のWebページにIDが割り振られているのは四日市市，いなべ市，伊賀市，木曽岬町の4市町だそうである。四日市市は「問い合わせ番号」，いなべ市は「ページ番号」，伊賀市と木曽岬町は「ID」という名前で，いずれも更新日とともに示されている。</p>
+
+<p>[2017-05-06] 言わずもがなであるが，URLをどうしても変更しなければならない際には，古いURLから新しいURLに<a href="/~okumura/html5/redirect.html">リダイレクト</a>するのが望ましい。</p>
+
+<p>[2018-04-10] 全般にわたって記述を見直した。</p>
+
+<p>[2018-04-10] <a href="http://www.itmedia.co.jp/news/articles/1804/02/news108.html">国税庁Webサイト、全URL変更で混乱　サイト内検索も役立たず、「無限ループ」状態に</a> → <a href="http://www.itmedia.co.jp/news/articles/1804/03/news075.html">「国税庁URL変換器」個人が開発　旧URLから新ページにアクセス　リニューアルの混乱受け</a> → <a href="http://www.itmedia.co.jp/news/articles/1804/05/news089.html">「困ってる人が助かれば」――「リニューアル後の国税庁サイト検索サービス」マネーフォワードが公開</a></p>
+
+<p>[2018-04-10] 公文書の隠蔽・消滅・書き換えの問題が国会で取り上げられている。Web上の文書の問題もこれと同根か。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+Permanent ID of this document: 03719fac2f417ee6629ff53e194b95ab<br>
+<!-- hhmts start -->
+Last modified: <time>2018-04-10 13:08:19</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
