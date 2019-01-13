@@ -1,4 +1,3 @@
 # okumuralab.github.io
 
-[私の公式サイト](https://oku.edu.mie-u.ac.jp/~okumura/)の主要コンテンツのバックアップです。
-[okumuralab.github.io](https://okumuralab.github.io/)で見ることができます。
+昔はJekyllのテストを兼ねていくつかの小ネタの提供に使っていましたが，今は[私の公式サイト](https://oku.edu.mie-u.ac.jp/~okumura/)の主要コンテンツの[バックアップサイト](https://okumuralab.github.io/)のソースを置いています。
