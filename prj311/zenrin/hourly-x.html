@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ゼンリン混雑度データ・毎時間</title>
+<link rel="stylesheet" href="style.css">
+<script type="text/javascript">
+function foo(x) {
+  x = String(x);  // 文字列に
+  var i = document.getElementById("img");
+  i.src = x + ".png";
+  var t = document.getElementById("time");
+  t.innerHTML = x.substr(0,2) + "日" + x.substr(2,4) + "時";
+}
+function slide() {
+  var s = document.getElementById("slider").value;
+  var d = Math.floor(s / 24) + 11;
+  var h = s % 24;
+  foo(100 * d + h);
+}
+function hoge(e) {
+  
+</script>
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="../../">ホーム</a> &gt;
+<a href="../">Project 311</a> &gt;
+<a href="./">ゼンリン混雑度データ</a> &gt;
+</div>
+
+<h1>ゼンリン混雑度データ・毎時間</h1>
+
+<p>日付にマウスオーバーまたはクリックすると，各点（メッシュ）での混雑度（人口密度）を緑の円の面積で示す。そのメッシュにまったく人がいなければ何も表示しないが，少しでもいれば緑の点を表示する。</p>
+
+<p>うんざりするボタンの行列：<br>
+<button type="button" onclick="foo(1100)" onmouseover="foo(1100)">11日00時</button>
+<button type="button" onclick="foo(1101)" onmouseover="foo(1101)">11日01時</button>
+<button type="button" onclick="foo(1102)" onmouseover="foo(1102)">11日02時</button>
+<button type="button" onclick="foo(1103)" onmouseover="foo(1103)">11日03時</button>
+<button type="button" onclick="foo(1104)" onmouseover="foo(1104)">11日04時</button>
+<button type="button" onclick="foo(1105)" onmouseover="foo(1105)">11日05時</button>
+<button type="button" onclick="foo(1106)" onmouseover="foo(1106)">11日06時</button>
+<button type="button" onclick="foo(1107)" onmouseover="foo(1107)">11日07時</button>
+<button type="button" onclick="foo(1108)" onmouseover="foo(1108)">11日08時</button>
+<button type="button" onclick="foo(1109)" onmouseover="foo(1109)">11日09時</button>
+<button type="button" onclick="foo(1110)" onmouseover="foo(1110)">11日10時</button>
+<button type="button" onclick="foo(1111)" onmouseover="foo(1111)">11日11時</button><br>
+<button type="button" onclick="foo(1112)" onmouseover="foo(1112)">11日12時</button>
+<button type="button" onclick="foo(1113)" onmouseover="foo(1113)">11日13時</button>
+<button type="button" onclick="foo(1114)" onmouseover="foo(1114)">11日14時</button>
+<button type="button" onclick="foo(1115)" onmouseover="foo(1115)">11日15時</button>
+<button type="button" onclick="foo(1116)" onmouseover="foo(1116)">11日16時</button>
+<button type="button" onclick="foo(1117)" onmouseover="foo(1117)">11日17時</button>
+<button type="button" onclick="foo(1118)" onmouseover="foo(1118)">11日18時</button>
+<button type="button" onclick="foo(1119)" onmouseover="foo(1119)">11日19時</button>
+<button type="button" onclick="foo(1120)" onmouseover="foo(1120)">11日20時</button>
+<button type="button" onclick="foo(1121)" onmouseover="foo(1121)">11日21時</button>
+<button type="button" onclick="foo(1122)" onmouseover="foo(1122)">11日22時</button>
+<button type="button" onclick="foo(1123)" onmouseover="foo(1123)">11日23時</button><br>
+<button type="button" onclick="foo(1200)" onmouseover="foo(1200)">12日00時</button>
+<button type="button" onclick="foo(1201)" onmouseover="foo(1201)">12日01時</button>
+<button type="button" onclick="foo(1202)" onmouseover="foo(1202)">12日02時</button>
+<button type="button" onclick="foo(1203)" onmouseover="foo(1203)">12日03時</button>
+<button type="button" onclick="foo(1204)" onmouseover="foo(1204)">12日04時</button>
+<button type="button" onclick="foo(1205)" onmouseover="foo(1205)">12日05時</button>
+<button type="button" onclick="foo(1206)" onmouseover="foo(1206)">12日06時</button>
+<button type="button" onclick="foo(1207)" onmouseover="foo(1207)">12日07時</button>
+<button type="button" onclick="foo(1208)" onmouseover="foo(1208)">12日08時</button>
+<button type="button" onclick="foo(1209)" onmouseover="foo(1209)">12日09時</button>
+<button type="button" onclick="foo(1210)" onmouseover="foo(1210)">12日10時</button>
+<button type="button" onclick="foo(1211)" onmouseover="foo(1211)">12日11時</button><br>
+<button type="button" onclick="foo(1212)" onmouseover="foo(1212)">12日12時</button>
+<button type="button" onclick="foo(1213)" onmouseover="foo(1213)">12日13時</button>
+<button type="button" onclick="foo(1214)" onmouseover="foo(1214)">12日14時</button>
+<button type="button" onclick="foo(1215)" onmouseover="foo(1215)">12日15時</button>
+<button type="button" onclick="foo(1216)" onmouseover="foo(1216)">12日16時</button>
+<button type="button" onclick="foo(1217)" onmouseover="foo(1217)">12日17時</button>
+<button type="button" onclick="foo(1218)" onmouseover="foo(1218)">12日18時</button>
+<button type="button" onclick="foo(1219)" onmouseover="foo(1219)">12日19時</button>
+<button type="button" onclick="foo(1220)" onmouseover="foo(1220)">12日20時</button>
+<button type="button" onclick="foo(1221)" onmouseover="foo(1221)">12日21時</button>
+<button type="button" onclick="foo(1222)" onmouseover="foo(1222)">12日22時</button>
+<button type="button" onclick="foo(1223)" onmouseover="foo(1223)">12日23時</button><br>
+<button type="button" onclick="foo(1300)" onmouseover="foo(1300)">13日00時</button>
+<button type="button" onclick="foo(1301)" onmouseover="foo(1301)">13日01時</button>
+<button type="button" onclick="foo(1302)" onmouseover="foo(1302)">13日02時</button>
+<button type="button" onclick="foo(1303)" onmouseover="foo(1303)">13日03時</button>
+<button type="button" onclick="foo(1304)" onmouseover="foo(1304)">13日04時</button>
+<button type="button" onclick="foo(1305)" onmouseover="foo(1305)">13日05時</button>
+<button type="button" onclick="foo(1306)" onmouseover="foo(1306)">13日06時</button>
+<button type="button" onclick="foo(1307)" onmouseover="foo(1307)">13日07時</button>
+<button type="button" onclick="foo(1308)" onmouseover="foo(1308)">13日08時</button>
+<button type="button" onclick="foo(1309)" onmouseover="foo(1309)">13日09時</button>
+<button type="button" onclick="foo(1310)" onmouseover="foo(1310)">13日10時</button>
+<button type="button" onclick="foo(1311)" onmouseover="foo(1311)">13日11時</button><br>
+<button type="button" onclick="foo(1312)" onmouseover="foo(1312)">13日12時</button>
+<button type="button" onclick="foo(1313)" onmouseover="foo(1313)">13日13時</button>
+<button type="button" onclick="foo(1314)" onmouseover="foo(1314)">13日14時</button>
+<button type="button" onclick="foo(1315)" onmouseover="foo(1315)">13日15時</button>
+<button type="button" onclick="foo(1316)" onmouseover="foo(1316)">13日16時</button>
+<button type="button" onclick="foo(1317)" onmouseover="foo(1317)">13日17時</button>
+<button type="button" onclick="foo(1318)" onmouseover="foo(1318)">13日18時</button>
+<button type="button" onclick="foo(1319)" onmouseover="foo(1319)">13日19時</button>
+<button type="button" onclick="foo(1320)" onmouseover="foo(1320)">13日20時</button>
+<button type="button" onclick="foo(1321)" onmouseover="foo(1321)">13日21時</button>
+<button type="button" onclick="foo(1322)" onmouseover="foo(1322)">13日22時</button>
+<button type="button" onclick="foo(1323)" onmouseover="foo(1323)">13日23時</button><br>
+<button type="button" onclick="foo(1400)" onmouseover="foo(1400)">14日00時</button>
+<button type="button" onclick="foo(1401)" onmouseover="foo(1401)">14日01時</button>
+<button type="button" onclick="foo(1402)" onmouseover="foo(1402)">14日02時</button>
+<button type="button" onclick="foo(1403)" onmouseover="foo(1403)">14日03時</button>
+<button type="button" onclick="foo(1404)" onmouseover="foo(1404)">14日04時</button>
+<button type="button" onclick="foo(1405)" onmouseover="foo(1405)">14日05時</button>
+<button type="button" onclick="foo(1406)" onmouseover="foo(1406)">14日06時</button>
+<button type="button" onclick="foo(1407)" onmouseover="foo(1407)">14日07時</button>
+<button type="button" onclick="foo(1408)" onmouseover="foo(1408)">14日08時</button>
+<button type="button" onclick="foo(1409)" onmouseover="foo(1409)">14日09時</button>
+<button type="button" onclick="foo(1410)" onmouseover="foo(1410)">14日10時</button>
+<button type="button" onclick="foo(1411)" onmouseover="foo(1411)">14日11時</button><br>
+<button type="button" onclick="foo(1412)" onmouseover="foo(1412)">14日12時</button>
+<button type="button" onclick="foo(1413)" onmouseover="foo(1413)">14日13時</button>
+<button type="button" onclick="foo(1414)" onmouseover="foo(1414)">14日14時</button>
+<button type="button" onclick="foo(1415)" onmouseover="foo(1415)">14日15時</button>
+<button type="button" onclick="foo(1416)" onmouseover="foo(1416)">14日16時</button>
+<button type="button" onclick="foo(1417)" onmouseover="foo(1417)">14日17時</button>
+<button type="button" onclick="foo(1418)" onmouseover="foo(1418)">14日18時</button>
+<button type="button" onclick="foo(1419)" onmouseover="foo(1419)">14日19時</button>
+<button type="button" onclick="foo(1420)" onmouseover="foo(1420)">14日20時</button>
+<button type="button" onclick="foo(1421)" onmouseover="foo(1421)">14日21時</button>
+<button type="button" onclick="foo(1422)" onmouseover="foo(1422)">14日22時</button>
+<button type="button" onclick="foo(1423)" onmouseover="foo(1423)">14日23時</button><br>
+<button type="button" onclick="foo(1500)" onmouseover="foo(1500)">15日00時</button>
+<button type="button" onclick="foo(1501)" onmouseover="foo(1501)">15日01時</button>
+<button type="button" onclick="foo(1502)" onmouseover="foo(1502)">15日02時</button>
+<button type="button" onclick="foo(1503)" onmouseover="foo(1503)">15日03時</button>
+<button type="button" onclick="foo(1504)" onmouseover="foo(1504)">15日04時</button>
+<button type="button" onclick="foo(1505)" onmouseover="foo(1505)">15日05時</button>
+<button type="button" onclick="foo(1506)" onmouseover="foo(1506)">15日06時</button>
+<button type="button" onclick="foo(1507)" onmouseover="foo(1507)">15日07時</button>
+<button type="button" onclick="foo(1508)" onmouseover="foo(1508)">15日08時</button>
+<button type="button" onclick="foo(1509)" onmouseover="foo(1509)">15日09時</button>
+<button type="button" onclick="foo(1510)" onmouseover="foo(1510)">15日10時</button>
+<button type="button" onclick="foo(1511)" onmouseover="foo(1511)">15日11時</button><br>
+<button type="button" onclick="foo(1512)" onmouseover="foo(1512)">15日12時</button>
+<button type="button" onclick="foo(1513)" onmouseover="foo(1513)">15日13時</button>
+<button type="button" onclick="foo(1514)" onmouseover="foo(1514)">15日14時</button>
+<button type="button" onclick="foo(1515)" onmouseover="foo(1515)">15日15時</button>
+<button type="button" onclick="foo(1516)" onmouseover="foo(1516)">15日16時</button>
+<button type="button" onclick="foo(1517)" onmouseover="foo(1517)">15日17時</button>
+<button type="button" onclick="foo(1518)" onmouseover="foo(1518)">15日18時</button>
+<button type="button" onclick="foo(1519)" onmouseover="foo(1519)">15日19時</button>
+<button type="button" onclick="foo(1520)" onmouseover="foo(1520)">15日20時</button>
+<button type="button" onclick="foo(1521)" onmouseover="foo(1521)">15日21時</button>
+<button type="button" onclick="foo(1522)" onmouseover="foo(1522)">15日22時</button>
+<button type="button" onclick="foo(1523)" onmouseover="foo(1523)">15日23時</button><br>
+<button type="button" onclick="foo(1600)" onmouseover="foo(1600)">16日00時</button>
+<button type="button" onclick="foo(1601)" onmouseover="foo(1601)">16日01時</button>
+<button type="button" onclick="foo(1602)" onmouseover="foo(1602)">16日02時</button>
+<button type="button" onclick="foo(1603)" onmouseover="foo(1603)">16日03時</button>
+<button type="button" onclick="foo(1604)" onmouseover="foo(1604)">16日04時</button>
+<button type="button" onclick="foo(1605)" onmouseover="foo(1605)">16日05時</button>
+<button type="button" onclick="foo(1606)" onmouseover="foo(1606)">16日06時</button>
+<button type="button" onclick="foo(1607)" onmouseover="foo(1607)">16日07時</button>
+<button type="button" onclick="foo(1608)" onmouseover="foo(1608)">16日08時</button>
+<button type="button" onclick="foo(1609)" onmouseover="foo(1609)">16日09時</button>
+<button type="button" onclick="foo(1610)" onmouseover="foo(1610)">16日10時</button>
+<button type="button" onclick="foo(1611)" onmouseover="foo(1611)">16日11時</button><br>
+<button type="button" onclick="foo(1612)" onmouseover="foo(1612)">16日12時</button>
+<button type="button" onclick="foo(1613)" onmouseover="foo(1613)">16日13時</button>
+<button type="button" onclick="foo(1614)" onmouseover="foo(1614)">16日14時</button>
+<button type="button" onclick="foo(1615)" onmouseover="foo(1615)">16日15時</button>
+<button type="button" onclick="foo(1616)" onmouseover="foo(1616)">16日16時</button>
+<button type="button" onclick="foo(1617)" onmouseover="foo(1617)">16日17時</button>
+<button type="button" onclick="foo(1618)" onmouseover="foo(1618)">16日18時</button>
+<button type="button" onclick="foo(1619)" onmouseover="foo(1619)">16日19時</button>
+<button type="button" onclick="foo(1620)" onmouseover="foo(1620)">16日20時</button>
+<button type="button" onclick="foo(1621)" onmouseover="foo(1621)">16日21時</button>
+<button type="button" onclick="foo(1622)" onmouseover="foo(1622)">16日22時</button>
+<button type="button" onclick="foo(1623)" onmouseover="foo(1623)">16日23時</button><br>
+<button type="button" onclick="foo(1700)" onmouseover="foo(1700)">17日00時</button>
+<button type="button" onclick="foo(1701)" onmouseover="foo(1701)">17日01時</button>
+<button type="button" onclick="foo(1702)" onmouseover="foo(1702)">17日02時</button>
+<button type="button" onclick="foo(1703)" onmouseover="foo(1703)">17日03時</button>
+<button type="button" onclick="foo(1704)" onmouseover="foo(1704)">17日04時</button>
+<button type="button" onclick="foo(1705)" onmouseover="foo(1705)">17日05時</button>
+<button type="button" onclick="foo(1706)" onmouseover="foo(1706)">17日06時</button>
+<button type="button" onclick="foo(1707)" onmouseover="foo(1707)">17日07時</button>
+<button type="button" onclick="foo(1708)" onmouseover="foo(1708)">17日08時</button>
+<button type="button" onclick="foo(1709)" onmouseover="foo(1709)">17日09時</button>
+<button type="button" onclick="foo(1710)" onmouseover="foo(1710)">17日10時</button>
+<button type="button" onclick="foo(1711)" onmouseover="foo(1711)">17日11時</button><br>
+<button type="button" onclick="foo(1712)" onmouseover="foo(1712)">17日12時</button>
+<button type="button" onclick="foo(1713)" onmouseover="foo(1713)">17日13時</button>
+<button type="button" onclick="foo(1714)" onmouseover="foo(1714)">17日14時</button>
+<button type="button" onclick="foo(1715)" onmouseover="foo(1715)">17日15時</button>
+<button type="button" onclick="foo(1716)" onmouseover="foo(1716)">17日16時</button>
+<button type="button" onclick="foo(1717)" onmouseover="foo(1717)">17日17時</button>
+<button type="button" onclick="foo(1718)" onmouseover="foo(1718)">17日18時</button>
+<button type="button" onclick="foo(1719)" onmouseover="foo(1719)">17日19時</button>
+<button type="button" onclick="foo(1720)" onmouseover="foo(1720)">17日20時</button>
+<button type="button" onclick="foo(1721)" onmouseover="foo(1721)">17日21時</button>
+<button type="button" onclick="foo(1722)" onmouseover="foo(1722)">17日22時</button>
+<button type="button" onclick="foo(1723)" onmouseover="foo(1723)">17日23時</button>
+</p>
+
+<p>HTML5対応のブラウザなら次のスライダーのほうが便利：<br>
+<input id="slider" type="range" min="0" max="167" onchange="slide()">
+<span id="time">11日0時</span></p>
+
+<div><img id="img" src="1100.png" alt="" onmousemove="hoge()"></div>
+
+<hr>
+
+<p><a href="../../" rel="author">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2012-09-25 14:47:04
+<!-- hhmts end -->
+</p>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ゼンリン混雑度データ</title>
+<link rel="stylesheet" href="style.css">
+<script type="text/javascript">
+function foo(x) {
+  var i = document.getElementById("img");
+  i.src = x + ".png";
+  var d = document.getElementById("day");
+  d.innerHTML = x;
+}
+</script>
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="../../">ホーム</a> &gt;
+<a href="../">Project 311</a> &gt;
+</div>
+
+<h1>ゼンリン混雑度データ</h1>
+
+<h2>全体的なこと</h2>
+
+<p>ゼンリンの混雑度データは，関東（甲信越は含まず，東京都の島嶼を含む）・東北の250mメッシュの混雑度を，2011年3月8〜17日について1時間ごとに与えたものである。データの行は例えば次のようになっている：</p>
+
+<pre>
+2011-03-08,0,95895000,511762500,95902500,511773750,161
+</pre>
+
+<p>各欄は，年月日，時，左下隅の緯度・経度，右上隅の緯度・経度，混雑度である。緯度・経度は1/1000秒単位（60×60×1000で割れば度になる）で，混雑度はそのメッシュ内の人数（小数部分は切り捨て）らしい。メッシュ内にまったく人がいなければメッシュそのものがなく，0.999人が滞在していたならば0人のメッシュとなる。</p>
+
+<p>@tmir1010 さんに指摘していただいたことであるが，全データをプロットすると，平常は真夜中の2時台にピークがあり，<del>通勤時刻の</del>7時台と18時台にディップがある。通勤時刻かと思ったが，交通量のデータを見る限り，通勤時刻は8時台と17時台が中心のようだ。むしろ止まっていると減っていき，移動すると増えていくような変化である。<a href="http://k-tai.impress.co.jp/docs/news/20091110_327757.html">この記事</a>などによればオートGPSは加速度センサーやバッテリー容量と連動して働くので，これと関係するかもしれない。</p>
+
+<div><img src="all.png" alt="ゼンリン混雑度データ"></div>
+
+<p>福島第一原発5km圏内〜50km圏内（5km刻み）の混雑度合計は次のようになる。</p>
+
+<div><img src="near.png" alt="ゼンリン混雑度データ，福島第一原発近く"></div>
+
+<p>各メッシュの混雑度は整数で0〜58780の範囲である。早野先生からすでにご指摘があったように，度数分布にいくつかの山が見える。主なピークは1，13，145，159，178-184，200等々にある。これらのピークの2倍のところにも相似なピークが見える。</p>
+
+<div><img src="hist1.png" alt="ゼンリン混雑度データの度数分布"></div>
+
+<p>ところで，250mメッシュというものの，メッシュの緯度の幅は7500，経度の幅は11250（いずれも1/1000秒単位）であり，面積は緯度によって異なる。地球半径を6371kmとすれば緯度差7.5秒は232m，経度差11.25秒は緯度35度地点では285mである。つまりメッシュ面積は cos(緯度) に比例する。そこで，混雑度データ（人）を cos(緯度) で割ってから度数分布を描くと，次のようになる。こちらのほうがピークが見やすいかもしれない。</p>
+
+<div><img src="hist2.png" alt="ゼンリン混雑度データの度数分布，補正あり"></div>
+
+<h2>福島の混雑度の推移</h2>
+
+<p><em>[New]</em> <a href="hourly.html">毎時間版</a></p>
+
+<p>日付にマウスオーバーまたはクリックすると，各点（メッシュ）での混雑度（人口密度）を白→赤→黒で表す。そのメッシュにまったく人がいなければ何も表示しないが，少しでもいれば白の点を表示する。ゼンリンのデータは毎時のものだが，ここでは日ごとに合計したものを表示している。</p>
+
+<p>
+<button type="button" onclick="foo(11)" onmouseover="foo(11)">11日</button>
+<button type="button" onclick="foo(12)" onmouseover="foo(12)">12日</button>
+<button type="button" onclick="foo(13)" onmouseover="foo(13)">13日</button>
+<button type="button" onclick="foo(14)" onmouseover="foo(14)">14日</button>
+<button type="button" onclick="foo(15)" onmouseover="foo(15)">15日</button>
+<button type="button" onclick="foo(16)" onmouseover="foo(16)">16日</button>
+<button type="button" onclick="foo(17)" onmouseover="foo(17)">17日</button>
+</p>
+
+<div><img id="img" src="11.png" alt=""><br><span id="day">11</span>日</div>
+
+<hr>
+
+<p>ちゃんとしたユーザインターフェースのものは早野先生と渡邉先生が構築中なので，ここでは手抜きのやりかたを説明しておく。</p>
+
+<p>まずゼンリンのデータはCSVでdate,hour_no,minlat,minlon,maxlat,maxlon,densityの形式である。緯度（latitude）と経度（longitude）は60×60×1000を掛けて整数にしたもので，densityは混雑度（人数）でやはり整数で，「0」は1未満を表す。まったくの0の場合はデータ（メッシュ）そのものがない。</p>
+
+<p>上のような福島県東部の地図に限定して取り出すには，例えばminlatが37.0*60*60*1000以上，maxlatが37.8*60*60*1000以下，minlonが140.2*60*60*1000以上，maxlonが141.1*60*60*1000以下のものを使えば十分である。時間ごと（hour_no=0..23）に分けてもいいし，合計してもいい。合計するのであれば，Rubyなら次のようにすればよい。</p>
+
+<pre>
+h = Hash.new(0)
+while line = gets()
+  if line =~ /^.*?,.*?,(.*?,.*?,.*?,.*?),(.*?)$/
+    h[$1] += $2.to_i
+  end
+end
+h.sort_by { |k,v| k }.each do |k,v|
+  print k, ",", v, "\n"
+end
+</pre>
+
+<p>Rで上のような地図を描くには
+<a href="/~okumura/stat/rgooglemaps.html">RgoogleMaps</a>
+を使って例えば次のようにする。</p>
+
+<pre>
+library(RgoogleMaps)
+library(RColorBrewer)
+source("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/GetMap.R") # パッチ
+FukushimaMap = GetMap(c(37.4,140.7), destfile="fukushima.png", zoom=10, sensor="false", hl="ja")
+cols=c("white",brewer.pal(9, "YlOrRd"),rep("black",100))
+data = read.csv("上のRubyコードで出力したCSV", header=FALSE)
+lat = (data[,1]+data[,3])/(60*60*1000*2)
+lon = (data[,2]+data[,4])/(60*60*1000*2)
+dd = data[,5]
+tmp = PlotOnStaticMap(FukushimaMap, lat=lat, lon=lon, pch=16, cex=0.5, col=cols[dd/1000+1])
+</pre>
+
+<p>位置や大きさが変わらなければ <code>GetMap()</code>
+は1度だけ実行すればよい。<code>GetMap()</code>
+にオプション <code>maptype="roadmap"</code>
+を付けるほうが見慣れた地図になるが，点が目立ちにくくなる。点の代わりに円にするには，例えば次のようにする。</p>
+
+<pre>
+tmp = PlotOnStaticMap(FukushimaMap)
+XY = LatLon2XY.centered(FukushimaMap, lat, lon)
+symbols(XY$newX, XY$newY, circles=sqrt((dd+1)/100), inches=FALSE, add=TRUE, fg="#009944")
+tmp = PlotOnStaticMap(FukushimaMap, lat=37.422778, lon=141.032339,
+                      pch="×", col="red", cex=2, add=TRUE) # 福島第一原発
+</pre>
+
+<p>こうして作った複数の図を切り替えるJavaScriptの仕組みは，このページのソースを見ていただけば一目瞭然である。スマホにはマウスオーバーの概念がないので，クリックにも対応させるのがポイントである。</p>
+
+<p><a href="hourly.html">毎時間版</a>（表示範囲狭く，密度表示は円）も作った。</p>
+
+<hr>
+
+<p><a href="../../" rel="author">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: 2012-10-21 11:38:35
+<!-- hhmts end -->
+</p>
+</body>
+</html>
