@@ -9,7 +9,7 @@
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
+    inlineMath: [['$','$']],
     processEscapes: true
   },
   CommonHTML: { matchFontHeight: false }
@@ -307,6 +307,18 @@ common odds ratio
 </pre>
 </div>
 
+<div class="note">
+<p><a href="meta.html">メタアナリシス</a>のように考えることもできる：</p>
+<pre>
+library(metafor)
+y = matrix(as.numeric(x), ncol=4, byrow=TRUE)
+dat = escalc(measure="OR", ai=y[,1], bi=y[,2], ci=y[,3], di=y[,4])
+res = rma(yi, vi, data=dat)
+forest(res, slab=c("Male","Female"))
+</pre>
+<figure><img src="img/190114a.png" alt=""></figure>
+</div>
+
 <h2>文献</h2>
 
 <ul lang="en">
@@ -322,7 +334,7 @@ common odds ratio
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-14 16:28:00</time>
+Last modified: <time>2019-01-14 20:52:54</time>
 <!-- hhmts end -->
 </p>
 </footer>
