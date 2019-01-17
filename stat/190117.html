@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>がんの分布</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>がんの分布</h1>
+
+<p>2019年1月17日，厚労省の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/gan/gan_toroku.html">がん登録</a>に2016年速報（PDF）が掲載された（厚労省の<a href="https://www.mhlw.go.jp/stf/new-info/">新着情報</a>にはまだ掲載されていない）。例によって，データを抽出しにくいPDFでのデータ公開だ。とりあえず上皮内がんを除く全部位の都道府県データをCSV化した <a href="data/gansokuhou2016.csv">gansokuhou2016.csv</a> を置いておく（UTF-8，行末LF）。都道府県ごとの年齢調整罹患率（日本人口，総数）を色で表す：</p>
+
+<pre>
+data = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/gansokuhou2016.csv", fileEncoding="UTF-8")
+x = data$年齢調整罹患率日本総数[2:48]
+x = (x - min(x)) / (max(x) - min(x))
+cols = colorRamp(c("#0080ff","white","#ff8000"))
+library(NipponMap)
+JapanPrefMap(col=rgb(cols(x)/255))
+</pre>
+
+<figure><img src="img/190117a.png" alt="がん年齢調整罹患率"></figure>
+
+<p>（続く）</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-17 13:40:19</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
