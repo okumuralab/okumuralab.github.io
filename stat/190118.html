@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>福島県を描く</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<style>
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>福島県を描く</h1>
+
+<p><a href="http://nlftp.mlit.go.jp/ksj/">国土数値情報</a>サイトの「行政区域」から福島県を選ぶ。平成29年が5.46MBだったのが，平成30年は9.10MBになっている。簡単な質問に答えるとダウンロードできる。ファイル名 N03-180101_07_GML.zip である。これを展開すると N03-180101_07_GML というフォルダの中にいくつかのファイルができる。</p>
+
+<pre>
+library(sf)
+options(stringsAsFactors=FALSE)
+fukushima = st_read("N03-180101_07_GML/", options="ENCODING=CP932")
+par(mar=c(0,0,0,0))
+plot(st_geometry(fukushima))  # 福島県の白地図が描かれる
+date = subset(fukushima, N03_004=="伊達市")
+plot(st_geometry(date))  # 伊達市だけ描かれる
+</pre>
+
+<p>この図に<a href="https://emdb.jaea.go.jp/emdb/">放射性物質モニタリングデータの情報公開サイト</a>のデータを描き込んでみよう。例えば，空間線量率→<a href="https://emdb.jaea.go.jp/emdb/selects/b10103/">航空機モニタリング</a>→<a href="https://emdb.jaea.go.jp/emdb/portals/b1010301/">放射性物質の分布状況等調査による航空機モニタリング</a>→データダウンロード→H29.11.16→CSV（UTF-8）→福島県のメッシュデータをダウンロードし，解凍してCSVファイルを取り出して，描いてみる。色は適当である：</p>
+
+<pre>
+mesh = read.csv("1010301015_07.csv")
+mesh[,8] = as.numeric(ifelse(grepl("<",mesh[,8]),"0",mesh[,8]))
+cols = colorRamp(c("white","#ff8000"))
+plot(st_geometry(fukushima))
+points(mesh[,6], mesh[,5], pch=".", col=rgb(cols(pmin(mesh[,8],1))/255))
+plot(st_geometry(fukushima), add=TRUE)
+</pre>
+
+<p>伊達市だけなら次のようになる：</p>
+
+<pre>
+plot(st_geometry(date))
+points(mesh[,6], mesh[,5], pch=16, cex=0.8, col=rgb(cols(pmin(mesh[,8],1))/255))
+plot(st_geometry(fukushima), add=TRUE)
+</pre>
+
+<figure><img src="img/190118a.png" alt="伊達市の放射線量分布"></figure>
+
+<p>（続く）</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-18 21:50:16</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

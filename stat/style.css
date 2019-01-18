@@ -65,6 +65,8 @@ hr { clear: both }
 
 blockquote > p { margin: 0 }
 
+figure { margin-left: 0em; margin-right: 0em }
+
 @media print {
   body { margin: 0%; }
   h2 {
