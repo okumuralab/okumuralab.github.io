@@ -217,7 +217,7 @@ for (i in 1:n) {
     k = which.min(d)           # 最近接のメッシュ点を探す
     avi[i] = mesh[k,8]         # メッシュ点の航空機データ
     d = (lat[i] - mp[,8])^2 + (lon[i] - mp[,7])^2
-    k = which.min(d)           # 最近接のメッシュ点を探す
+    k = which.min(d)           # 最近接のモニタリングポストを探す
     if (d[k] &lt; 0.00001) mak[i] = mp[k,10]
 }
 plot(avi, rad, log="xy", xlim=c(0.03,26), ylim=c(0.03,26), asp=1,
@@ -233,7 +233,7 @@ abline(0, 1)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-20 15:32:44</time>
+Last modified: <time>2019-01-20 16:47:09</time>
 <!-- hhmts end -->
 </p>
 </footer>
