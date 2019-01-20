@@ -223,9 +223,14 @@ for (i in 1:n) {
 plot(avi, rad, log="xy", xlim=c(0.03,26), ylim=c(0.03,26), asp=1,
      pch = ifelse(is.na(mak),1,4), xlab="航空機モニタリング", ylab="地上1m")
 abline(0, 1)
+curve(0.7*x, col="gray", add=TRUE)  # 追加
+curve(0.5*x, col="gray", add=TRUE)  # 追加
+points(avi, rad, pch=4, col=ifelse(is.na(mak),"#00000000","#ff2800")) # 追加
 </pre>
 
 <figure><img src="img/190120c.png" alt="航空機モニタリングと地上1mの線量率の比較"></figure>
+
+<p>（修正：さきほどの図は「×」が見にくかったので色を変えた。航空機に比べて地上が0.7倍，0.5倍の灰色の線を書き加えた。）</p>
 
 <hr>
 
@@ -233,7 +238,7 @@ abline(0, 1)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-20 16:47:09</time>
+Last modified: <time>2019-01-20 20:29:48</time>
 <!-- hhmts end -->
 </p>
 </footer>
