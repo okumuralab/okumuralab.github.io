@@ -19,11 +19,11 @@ dt { float: left ; clear: left; margin-left:0.8em }
 
 <h1>空間線量率の航空機モニタリング</h1>
 
-<p>図は航空機モニタリングにより推定された平成29年（2017年）11月16日時点の福島県の空間放射線量率の分布である。</p>
+<p>図は航空機モニタリングにより推定された2017年（平成29年）11月16日時点の福島県の空間放射線量率の分布である。</p>
 
 <figure><img src="img/190119a.png" alt="航空機モニタリングによる福島県の空間放射線量率分布"></figure>
 
-<p>図からわかるように，除染が進み，かなりの領域（空色）で目標値0.23μSv/h以下が達成されている。航空機モニタリングは600m程度の解像度しかないが，きめ細かな除染が居住地周辺で行われているので，居住地ではこの図よりさらに線量率が低い傾向がある（と言われているが，それ以上にバイアスがあるかもしれない。下の方の図参照）。</p>
+<p>図からわかるように，除染が進み，かなりの領域（空色）で目標値0.23μSv/h以下が達成されている。航空機モニタリングは600m程度の解像度しかないが，きめ細かな除染が居住地周辺で行われているので，居住地ではこの図よりさらに線量率が低い傾向がある（と言われているが，除染の効果以外にも，人工物はセシウムの保持力が低いという理由もありそう）。同じ場所のリアルタイム線量測定システムやモニタリングポストと比較した図を，このページの下のほうに載せた。</p>
 
 <p>この0.23μSv/hという値は，次のようにして算出されたものである。事故による追加被曝線量を年1mSv（1000μSv）以下にするためには，1時間あたり 1000÷365÷24 ≒ 0.114 μSv以下にする必要がある。1日のうち8時間を屋外で過ごし，16時間を遮蔽効果0.4の木造屋内で過ごすとすると，平均して空間線量の (8 + 0.4×16) / 24 = 0.6 倍を被曝することになる。0.114÷0.6 = 0.19 であるので，空間線量が0.19μSv/h以下ならこの条件を満たすことができる。もともとあった自然放射線の量を0.04μSv/hとすれば，合計して0.23μSv/h以下にすればよいことになる。</p>
 
@@ -141,12 +141,13 @@ plot(st_geometry(date), add=TRUE)
 
 <p>航空機モニタリングと，地上1mのリアルタイム線量測定システム・モニタリングポストの値とを，比較してみよう。</p>
 
-<p>地上1mの線量率は<a href="https://emdb.jaea.go.jp/emdb/">放射性物質モニタリングデータ</a>→空間線量率→<a href="https://emdb.jaea.go.jp/emdb/selects/b10104/">モニタリングポスト・リアルタイム線量計</a>→<a href="https://emdb.jaea.go.jp/emdb/portals/b1010403/">全国及び福島県の空間線量測定結果（日次平均値）</a>のデータダウンロードで，期間が重なる「全国及び福島県の空間線量測定結果（リアルタイム配信）日次平均値 ( H29.4～H30.3 )」の「福島県」をダウンロードし，解凍する。たくさんのCSVファイルが出てくる。それらを <code>1010403007_07</code> というフォルダに入れたとする。</p>
+<p>地上1mの線量率は<a href="https://emdb.jaea.go.jp/emdb/">放射性物質モニタリングデータ</a>→空間線量率→<a href="https://emdb.jaea.go.jp/emdb/selects/b10104/">モニタリングポスト・リアルタイム線量計</a>→<a href="https://emdb.jaea.go.jp/emdb/portals/b1010403/">全国及び福島県の空間線量測定結果（日次平均値）</a>のデータダウンロードで，期間が重なる「全国及び福島県の空間線量測定結果（リアルタイム配信）日次平均値 ( H29.4～H30.3 )」の「福島県」をダウンロードし，解凍する。たくさんのCSVファイルが出てくる。それらを <code>1010403007_07</code> というフォルダに入れる。また，リアルタイム線量測定システムとモニタリングポストを区別するために，jsdfq43wtrさんの <a href="http://www.jsdfq43wtr.net/monitoring-post/status/mp-maker-memo.csv">mp-maker-memo.csv</a> に掲載されているものと位置情報が同じならモニタリングポストと判断する。</p>
 
 <pre>
+mplist = read.csv("mp-maker-memo.csv", header=FALSE)
 files = dir(path="1010403007_07", pattern="*.csv", full.names=TRUE, recursive=TRUE)
 n = length(files)
-lat = lon = rad = avi = rep(NA, n)
+lat = lon = rad = avi = mp = rep(NA, n)
 for (i in 1:n) {
     a = read.csv(files[i], fileEncoding="UTF-8")
     a = subset(a, 測定日 &gt;= "2017-11-01" &amp; 測定日 &lt;= "2017-11-30")  # 2017年11月分を抜き出す
@@ -157,24 +158,30 @@ for (i in 1:n) {
     d = (lat[i] - mesh[,5])^2 + (lon[i] - mesh[,6])^2
     k = which.min(d)           # 最近接のメッシュ点を探す
     avi[i] = mesh[k,8]         # メッシュ点の航空機データ
+    d = (lat[i] - mplist[,8])^2 + (lon[i] - mplist[,7])^2
+    k = which.min(d)           # 最近接のモニタリングポストを探す
+    mp[i] = (d[k] &lt; 0.00001)
 }
-plot(avi, rad, log="xy", xlim=c(0.0297,17), ylim=c(0.0297,17), asp=1,
-     xlab="航空機モニタリング", ylab="地上1m")
+plot(avi[!mp], rad[!mp], log="xy", xlim=c(0.0297,17), ylim=c(0.0297,17), asp=1, xlab="航空機モニタリング", ylab="地上1m")  # リアルタイム線量測定システム
+points(avi[mp], rad[mp], pch=4, col="#ff2800")  # モニタリングポスト
 abline(0, 1)
+curve(0.7*x, col="gray", add=TRUE)
+curve(0.5*x, col="gray", add=TRUE)
 </pre>
 
-<figure><img src="img/190119b.png" alt="航空機モニタリングと地上1mの線量率の比較"></figure>
+<figure><img src="img/190121a.png" alt="航空機モニタリングと地上1mの線量率の比較"></figure>
 
-<p>航空機モニタリングのほうがかなり大きめの値を示すことがわかる（ただし，ここで使った地上のデータにはリアルタイム線量測定システムとモニタリングポストの区別が書かれていないので両方を同等と扱った）。</p>
+<p>灰色の直線は航空機モニタリングの0.7倍，0.5倍を示す。航空機モニタリングに比べて地上の線量が小さいことがわかる。</p>
 
 <p>ちなみに，この期間に地上1mで線量率を測定しているリアルタイム線量測定システムおよびモニタリングポストの分布は次のようにして図示できる：</p>
 
 <pre>
 plot(st_geometry(fukushima), border="gray")
-points(lon, lat)
+points(lon[!mp], lat[!mp])
+points(lon[mp], lat[mp], pch=4, col="#ff2800")
 </pre>
 
-<figure><img src="img/190119c.png" alt="リアルタイム線量測定システムおよびモニタリングポストの分布"></figure>
+<figure><img src="img/190121b.png" alt="リアルタイム線量測定システムおよびモニタリングポストの分布"></figure>
 
 <hr>
 
@@ -199,13 +206,12 @@ legend("bottomleft", bg="white",
 
 <figure><img src="img/190120a.png" alt="第10次航空機モニタリング，飯舘村"></figure>
 
-<p>地上のデータとの比較であるが，リアルタイム線量測定システム（単位: μSv/h）とモニタリングポスト（単位: μGy/h）では微妙に違う可能性があるので，ここではjsdfq43wtrさんの <a href="http://www.jsdfq43wtr.net/monitoring-post/status/mp-maker-memo.csv">mp-maker-memo.csv</a> に掲載されているものと緯度・経度が一致すればモニタリングポストとして「×」でプロットすることにした：</p>
+<p>地上のデータとの比較：</p>
 
 <pre>
-mp = read.csv("mp-maker-memo.csv", header=FALSE)
 files = dir(path="1010403005_07", pattern="*.csv", full.names=TRUE, recursive=TRUE)
 n = length(files)
-lat = lon = rad = avi = rep(NA, n)
+lat = lon = rad = avi = mp = rep(NA, n)
 for (i in 1:n) {
     a = read.csv(files[i], fileEncoding="UTF-8")
     a = subset(a, 測定日 &gt;= "2015-09-12" &amp; 測定日 &lt;= "2015-11-04")
@@ -216,21 +222,18 @@ for (i in 1:n) {
     d = (lat[i] - mesh[,5])^2 + (lon[i] - mesh[,6])^2
     k = which.min(d)           # 最近接のメッシュ点を探す
     avi[i] = mesh[k,8]         # メッシュ点の航空機データ
-    d = (lat[i] - mp[,8])^2 + (lon[i] - mp[,7])^2
+    d = (lat[i] - mplist[,8])^2 + (lon[i] - mplist[,7])^2
     k = which.min(d)           # 最近接のモニタリングポストを探す
-    if (d[k] &lt; 0.00001) mak[i] = mp[k,10]
+    mp[i] = (d[k] &lt; 0.00001)
 }
-plot(avi, rad, log="xy", xlim=c(0.03,26), ylim=c(0.03,26), asp=1,
-     pch = ifelse(is.na(mak),1,4), xlab="航空機モニタリング", ylab="地上1m")
+plot(avi[!mp], rad[!mp], log="xy", xlim=c(0.03,26), ylim=c(0.03,26), asp=1, xlab="航空機モニタリング", ylab="地上1m")  # リアルタイム線量測定システム
+points(avi[mp], rad[mp], pch=4, col="#ff2800")  # モニタリングポスト
 abline(0, 1)
-curve(0.7*x, col="gray", add=TRUE)  # 追加
-curve(0.5*x, col="gray", add=TRUE)  # 追加
-points(avi, rad, pch=4, col=ifelse(is.na(mak),"#00000000","#ff2800")) # 追加
+curve(0.7*x, col="gray", add=TRUE)
+curve(0.5*x, col="gray", add=TRUE)
 </pre>
 
 <figure><img src="img/190120c.png" alt="航空機モニタリングと地上1mの線量率の比較"></figure>
-
-<p>（修正：さきほどの図は「×」が見にくかったので色を変えた。航空機に比べて地上が0.7倍，0.5倍の灰色の線を書き加えた。）</p>
 
 <hr>
 
@@ -238,7 +241,7 @@ points(avi, rad, pch=4, col=ifelse(is.na(mak),"#00000000","#ff2800")) # 追加
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-20 20:29:48</time>
+Last modified: <time>2019-01-21 09:26:13</time>
 <!-- hhmts end -->
 </p>
 </footer>
