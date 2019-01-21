@@ -5,7 +5,6 @@
 <title>グラフの例：地球温暖化</title>
 <meta name="viewport" content="width=device-width">
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
@@ -26,6 +25,27 @@
 <pre>
 data = read.csv("http://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv", fileEncoding="CP932")
 </pre>
+
+<div class="note">
+<p>[2019-01-21追記] ツイッターで教えていただいたが，おそらく一時的なものだと思うが，昨年末，このファイルに2018年の項目が付け加わった際に，</p>
+<pre>
+2018,+0.30*,+0.41*,+0.20*
+</pre>
+<p>のようにゴミ（<code>*</code> 印）が付いた。<a href="http://www.data.jma.go.jp/cpdinfo/temp/list/an_wld.html">気象庁</a>によれば，「*：1月から11月までの月平均気温の偏差をもとに算出した速報値」とのことである。この余計な文字のおかげで，列全体が文字列と見なされる。さらにRの <code>read.csv()</code> などはデフォルトで文字列をファクター（列挙型のようなもの）として扱い，内部的に整数で保存される。これを <code>plot()</code> で使うと，強制的に数値に変換される際に，ファクターの内部表現としての整数値が使われてしまうため，次のようなでたらめなグラフになってしまう。</p>
+<figure><img src="img/190121c.png" alt="地球の平均気温の変化（間違い）"></figure>
+<p>これは少なくともエラーになったほうがいいので，文字列をファクターにしないためのおまじない</p>
+<pre>
+options(stringsAsFactors=FALSE)
+</pre>
+<p>を冒頭で実行しておくほうが安全であろう。そうすれば，2018年の値は「強制変換により NA が生成されました」という警告メッセージが出て <code>NA</code> に変換され，無視される。もし2018年の値も使いたいなら，さらに</p>
+<pre>
+for (i in 1:dim(data)[2]) {
+    data[,i] = as.numeric(gsub("[^0123456789.-]", "", data[,i]))
+}
+</pre>
+<p>とすればよい。これは <code>"[^0123456789.-]"</code> すなわち0〜9・ピリオド・マイナス以外を空文字列で置き換える。ここでは <code>data[,i]</code> は文字列として扱われるので，数値でも問題ないし，ファクターでもその内部表現ではなく文字列として扱われるので，意図通りに変換される。</p>
+<p><code>readr</code> パッケージの <code>read_csv()</code> を使えば，ファクターには変換されず，この場合は文字列になる。ただし <code>data[,i]</code> は <code>data[[i]]</code> にする必要がある。</p>
+</div>
 
 <p>まずは「世界全体」だけを描く。簡単には</p>
 
@@ -74,12 +94,13 @@ legend("topleft", legend=c("北半球","南半球"), pch=c(16,15), col=c("#66ccf
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-08-14 16:51:39</time>
+Last modified: <time>2019-01-21 22:19:48</time>
 <!-- hhmts end -->
 </p>
+</footer>
 </body>
 </html>
