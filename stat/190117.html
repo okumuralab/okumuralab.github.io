@@ -16,7 +16,7 @@
 
 <h1>がんの分布</h1>
 
-<p>2019年1月17日，厚労省の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/gan/gan_toroku.html">がん登録</a>に2016年速報（PDF）が掲載された（厚労省の<a href="https://www.mhlw.go.jp/stf/new-info/">新着情報</a>にはまだ掲載されていない）。例によって，データを抽出しにくいPDFでのデータ公開だ。とりあえず上皮内がんを除く全部位の都道府県データをCSV化した <a href="data/gansokuhou2016.csv">gansokuhou2016.csv</a> を置いておく（UTF-8，行末LF）。都道府県ごとの年齢調整罹患率（日本人口，総数）を色で表す：</p>
+<p>2019年1月17日，厚労省の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/gan/gan_toroku.html">がん登録</a>に2016年速報（PDF）が掲載された（厚労省の<a href="https://www.mhlw.go.jp/stf/new-info/">新着情報</a>にはまだ掲載されていない）。例によって，データを抽出しにくいPDFでのデータ公開だ。とりあえず上皮内がんを除く全部位の都道府県データをCSV化した <a href="data/gansokuhou2016.csv">gansokuhou2016.csv</a> を置いておく（UTF-8，行末LF）。都道府県ごとの年齢調整罹患率（日本人口，総数）を色で表す（がんが多い県ほど赤，少ない県ほど青）：</p>
 
 <pre>
 data = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/gansokuhou2016.csv", fileEncoding="UTF-8")
@@ -37,7 +37,7 @@ JapanPrefMap(col=rgb(cols(x)/255))
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-17 13:40:19</time>
+Last modified: <time>2019-01-17 14:11:52</time>
 <!-- hhmts end -->
 </p>
 </footer>
