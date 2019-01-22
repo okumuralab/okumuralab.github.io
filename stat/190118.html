@@ -173,6 +173,38 @@ curve(0.5*x, col="gray", add=TRUE)
 
 <p>灰色の直線は航空機モニタリングの0.7倍，0.5倍を示す。航空機モニタリングに比べて地上の線量が小さいことがわかる。</p>
 
+<p>あまり意味があるか疑問であるが，地上 / 航空機 の比の累積分布を描いてみよう：</p>
+
+<pre>
+avi = ifelse(avi==0, NA, avi)  # 0の値はNAに変える
+plot(ecdf(rad/avi), log="x", xlim=range(rad/avi, na.rm=TRUE), xlab="地上/航空機", ylab="累積割合", main="")
+m = median(rad/avi, na.rm=TRUE)  # 中央値0.5714286
+segments(m, -0.1, m, 0.5)
+segments(0.01, 0.5, m, 0.5)
+</pre>
+
+<figure><img src="img/190122a.png" alt="地上/航空機の比の累積分布"></figure>
+
+<p>中央値 <code>m</code> は 0.57 ほどである。</p>
+
+<p>この図の縦軸を正規分布の分布関数の逆で変換した図（対数正規分布なら直線になる）：</p>
+
+<pre>
+x = na.omit(rad/avi)
+p = c(0.001,0.01,0.1,0.5,0.9,0.99,0.999)
+q = c(0.1,0.2,0.5,1,2)
+n = length(x)
+plot(sort(x), qnorm((1:n)/n), type="s", xlab="rad/avi", ylab="cumulative prob.",
+     log="x", xaxt="n", yaxt="n", xlim=c(0.1,2), ylim=qnorm(c(0.0005,0.9995)),
+     panel.first=abline(h=qnorm(p),v=q,col="lightgray"))
+axis(2, qnorm(p), p)
+axis(1, q, q)
+m = median(x)  # 0.5714286
+segments(m, -4, m, 0, col="lightgray")
+</pre>
+
+<figure><img src="img/190122b.png" alt="地上/航空機の比の累積分布"></figure>
+
 <p>ちなみに，この期間に地上1mで線量率を測定しているリアルタイム線量測定システムおよびモニタリングポストの分布は次のようにして図示できる：</p>
 
 <pre>
@@ -235,13 +267,15 @@ curve(0.5*x, col="gray", add=TRUE)
 
 <figure><img src="img/190120c.png" alt="航空機モニタリングと地上1mの線量率の比較"></figure>
 
+<p>こちらの地上 / 航空機の比の中央値は 0.61 ほど（0.605998）である。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-21 11:08:22</time>
+Last modified: <time>2019-01-22 14:47:34</time>
 <!-- hhmts end -->
 </p>
 </footer>
