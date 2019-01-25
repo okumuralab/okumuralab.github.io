@@ -54,13 +54,11 @@ par(mar=c(0,0,0,0))           # 地図を描く場合は余白をゼロにする
 plot(st_geometry(fukushima))  # 福島県の白地図が描かれる
 </pre>
 
-<p><em>以下のH29.11.16データは減衰補正日に誤記があり現在修正中のようである。</em></p>
-
 <p>放射線のデータは，<a href="https://emdb.jaea.go.jp/emdb/">放射性物質モニタリングデータの情報公開サイト</a>から取得する。具体的には，空間線量率→<a href="https://emdb.jaea.go.jp/emdb/selects/b10103/">航空機モニタリング</a>→<a href="https://emdb.jaea.go.jp/emdb/portals/b1010301/">放射性物質の分布状況等調査による航空機モニタリング</a>→データダウンロード→H29.11.16→CSV（UTF-8）→福島県のメッシュデータをダウンロードし，解凍してCSVファイルを取り出す。項目は</p>
 
 <ol>
   <li>メッシュコード</li>
-  <li>補正基準日（2017-09-25）</li>
+  <li>補正基準日（<del>2017-09-25</del><ins>2017-11-16</ins>）［2019-01-25: 誤記があり<a href="https://emdb.jaea.go.jp/emdb/histories.html#history_00">修正された</a>。本稿の計算では使っていないので，再ダウンロードの必要はない］</li>
   <li>都道府県（福島県）</li>
   <li>市町村（例：相馬市）</li>
   <li>測定座標メッシュ中心北緯(10進法)</li>
@@ -295,7 +293,7 @@ curve(0.5*x, col="gray", add=TRUE)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-25 15:28:47</time>
+Last modified: <time>2019-01-25 19:30:59</time>
 <!-- hhmts end -->
 </p>
 </footer>
