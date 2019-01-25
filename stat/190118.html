@@ -209,7 +209,7 @@ segments(m, -4, m, 0, col="lightgray")
 
 <figure><img src="img/190122b.png" alt="地上/航空機の比の累積分布"></figure>
 
-<p>ちなみに，この期間に地上1mで線量率を測定しているリアルタイム線量測定システムおよびモニタリングポストの分布は次のようにして図示できる：</p>
+<p>ちなみに，この期間に地上1mで線量率を測定しているリアルタイム線量測定システム（黒○）およびモニタリングポスト（赤×）の分布は次の通りである：</p>
 
 <pre>
 plot(st_geometry(fukushima), border="gray")
@@ -218,6 +218,20 @@ points(lon[mp], lat[mp], pch=4, col="#ff2800")
 </pre>
 
 <figure><img src="img/190121b.png" alt="リアルタイム線量測定システムおよびモニタリングポストの分布"></figure>
+
+<p>地上/航空の比で色分けすれば次のようになる（航空 &lt;0.1 は除いてある）：</p>
+
+<pre>
+plot(st_geometry(fukushima), border="gray")
+points(lon, lat, pch=ifelse(mp, 4, 1),
+       col=ifelse(rad/avi >= 1, "#ff280080", ifelse(rad/avi >= 0.5, "#35a16b80", "#0041ff80")))
+par(family="Helvetica")
+legend("bottomleft",
+       legend=c("gnd/air ≥ 1","gnd/air ≥ 0.5","gnd/air < 0.5"),
+       fill=c("#ff280080","#35a16b80","#0041ff80"), bg="white")
+</pre>
+
+<figure><img src="img/190125a.png" alt="リアルタイム線量測定システムおよびモニタリングポストの分布，地上/航空の比で色分け"></figure>
 
 <hr>
 
@@ -279,7 +293,7 @@ curve(0.5*x, col="gray", add=TRUE)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-24 09:46:56</time>
+Last modified: <time>2019-01-25 09:38:18</time>
 <!-- hhmts end -->
 </p>
 </footer>
