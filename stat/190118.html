@@ -289,11 +289,48 @@ curve(0.5*x, col="gray", add=TRUE)
 
 <hr>
 
+<p>では，地上・航空機の両者が揃っている一番古いデータではどうか。<a href="https://emdb.jaea.go.jp/emdb/portals/b1010301/">放射性物質の分布状況等調査による航空機モニタリング</a>の「第4次航空機モニタリングの空間線量率の測定結果 ( H23.11.5換算 )」の福島県と，<a href="https://emdb.jaea.go.jp/emdb/portals/b1010403/">全国及び福島県の空間線量測定結果（日次平均値）</a>の最古の「全国及び福島県の空間線量測定結果（リアルタイム配信）日次平均値 ( H23.9～H24.3 )」を取得して，プロットしてみる。</p>
+
+<pre>
+options(stringsAsFactors=FALSE)
+mplist = read.csv("mp-maker-memo.csv", header=FALSE, fileEncoding="UTF-8")
+mesh = read.csv("1010301004_07.csv")
+mesh[,8] = as.numeric(ifelse(grepl("<",mesh[,8]), "0", mesh[,8]))
+files = dir(path="1010403001_07", pattern="*.csv", full.names=TRUE, recursive=TRUE)
+n = length(files)
+lat = lon = rad = avi = mp = rep(NA, n)
+for (i in 1:n) {
+    a = read.csv(files[i], fileEncoding="UTF-8")
+    a = subset(a, 測定日 == "2011-11-05")  # 2011年11月5日だけを選び出す
+    if (dim(a)[1] == 0) next   # 空であれば次に
+    lat[i] = mean(a[,5])
+    lon[i] = mean(a[,6])
+    rad[i] = mean(a[,8])       # 1ヶ月分の平均線量率
+    d = (lat[i] - mesh[,5])^2 + (lon[i] - mesh[,6])^2
+    k = which.min(d)           # 最近接のメッシュ点を探す
+    avi[i] = mesh[k,8]         # メッシュ点の航空機データ
+    d = (lat[i] - mplist[,8])^2 + (lon[i] - mplist[,7])^2
+    k = which.min(d)           # 最近接のモニタリングポストを探す
+    mp[i] = (d[k] < 0.00001)
+}
+plot(avi, rad, log="xy", xlim=c(0.067,20), ylim=c(0.067,20), asp=1,
+     xlab="航空機モニタリング", ylab="地上1m", pch=ifelse(mp, 4, 1))
+abline(0, 1)
+</pre>
+
+<figure><img src="img/190128a.png" alt="航空機モニタリングと地上1mの線量率の比較"></figure>
+
+<p>該当するデータが20点しかないが，地上/航空比はすべて1以下で，中央値は0.60（0.6031915）である。一番下の外れ値（地上/航空比 0.09305556）は，南会津郡南会津町「びわのかげ運動公園」（37.199049, 139.759041）である。</p>
+
+<p>
+
+<hr>
+
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-25 19:30:59</time>
+Last modified: <time>2019-01-28 11:00:32</time>
 <!-- hhmts end -->
 </p>
 </footer>
