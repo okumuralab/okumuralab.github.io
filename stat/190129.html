@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>グラフの例：物理論文風グラフ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+<a href="graphs.html">グラフの描き方</a> &gt;
+</nav>
+
+<h1>グラフの例：物理論文風グラフ</h1>
+
+<p>この記事は<a href="https://qiita.com/umireon/items/0231594d59f8dce6997b">PGFPlotsでキホン的なグラフを書く</a>に触発されて書いた。次のようなグラフを描きたい：</p>
+
+<figure><img src="img/190129b.png" alt="グラフの例"></figure>
+
+<p>上は次のようにして描いた。コメント（<code>#</code> の右側）に詳しく説明を書いた。1〜2行目と最後の行はコメントアウトしたままで実行し，微調整した上で，Macなら2行目と最後の行頭の <code>#</code> を外して実行すると <code>example.pdf</code> ができる（上の図はそれをPNGに変換したもの）。Windowsでは試していないが，1行目と最後の行頭の <code>#</code> を外して実行するとできるかもしれない。</p>
+
+<pre>
+# pdf("example.pdf", width=5, height=4)  # Rから直接PDF出力（幅・高さの単位はインチ）
+# quartz(type="pdf", file="example.pdf", width=5, height=4)  # MacのQuartz経由でPDF出力
+par(mar=c(3,3,1,1))  # 下・左・上・右マージン（単位：行）
+par(family="Times")  # フォント（機種依存）
+plot(NULL,           # とりあえず何も描かないグラフ
+     log="y",        # y軸だけ対数目盛
+     xlim=c(0,40), ylim=c(1e-5,1), # xとyの範囲
+     xaxs="i", yaxs="i",  # x軸もy軸も "internal"（上で示した範囲通りのサイズにする）
+     xaxt="n", yaxt="n",  # x軸もy軸も描かない（後で描く）
+     xlab="", ylab="")    # x軸もy軸もラベルを書かない（後で書く）
+mtext("Average CNR [dB]", side=1, line=1.5) # 下（side=1）のテキスト（lineは位置）
+mtext("Bit Error Rate", side=2, line=2)     # 左（side=2）のテキスト
+axis(side=1, at=seq(0,40,10), labels=seq(0,40,10),  # 下に0から40まで10刻みでラベル出力
+     tck=0.04, mgp=c(1,0.5,0))  # ティックの長さ，ラベル位置
+axis(side=1, at=seq(0,40,5), labels=FALSE, tck=0.02) # 同じく5刻みでラベルなし，短いティック
+axis(side=3, at=seq(0,40,10), labels=FALSE, tck=0.04) # 上に10刻みでラベルなし，長いティック
+axis(side=3, at=seq(0,40,5), labels=FALSE, tck=0.02)  # 5刻みでラベルなし，短いティック
+axis(side=2, at=10^(-5:0),  # 左に10^-5から10^0まで次の数式ラベルを描く
+     labels=c(expression(10^{-5}),expression(10^{-4}),expression(10^{-3}),expression(10^{-2}),expression(10^{-1}),1),
+     tck=0.04, las=1,  # 長いティック，ラベルスタイル（las）は1（常に水平）
+     mgp=c(3.5,0.5,0)) # ラベル位置
+axis(side=2,   # 左に
+     at=sapply(-5:-1, function(x)(2:9)*10^x),  # (2:9)*10^(-5) 〜 (2:9)*10^(-1)
+     labels=FALSE, tck=0.02)  # ラベルなし，短いティック
+axis(side=4, at=10^(-5:0), labels=FALSE, tck=0.04, las=1)
+axis(side=4, at=sapply(-5:-1, function(x)(2:9)*10^x), labels=FALSE, tck=0.02)
+f = function(x) (1-1/sqrt(1+2/(10^(x/10))))/2   # 関数を定義
+curve(f(x), 0, 40, add=TRUE)   # 理論曲線を上書き
+x = seq(0, 40, 4)              # データ点
+points(x, f(x), type="o",      # 点を描く。type="o"は線の上に点をoverplotする
+       pch=24, bg="white",   # pch=24は△（中抜きの部分の色をbgで指定可能）
+       col="red", lty=2, xpd=NA)  # lty=2は破線，xpd=NAは領域外に出た部分も描く
+legend("topright", bty="n", c("Theory","Simulation"),  # 右上レジェンド。bty="n"は枠なし
+       inset=c(0.02,0.02),  # 角からのx，y距離の微調整
+       lty=c(1,2), # 線のタイプは1（実線），2（破線）
+       pch=c(NA,24),  # 点の文字はNA（なし），24（△）
+       pt.bg="white", # △の内側は白
+       col=c("black","red"))  # 色
+legend("bottomleft", bty="n", inset=c(-0.02,0.02),  # 同じく左下のレジェンド
+       c("QPSK","Rayleigh fading","Perfect channel estimation"))
+# dev.off()   # 書き出し終了
+</pre>
+
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-01-29 15:34:51</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

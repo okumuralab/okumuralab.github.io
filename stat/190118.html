@@ -330,13 +330,21 @@ axis.Date(1, as.Date(x[,1]), format="%Y-%m-%d")
 
 <figure><img src="img/190129a.png" alt="南会津郡南会津町 びわのかげ運動公園"></figure>
 
+<p>2011年12月27日に線量が急に減っている（除染？積雪？）。こういうグラフで具体的な日付を調べるには</p>
+
+<pre>
+identify(as.Date(x[,1]), x[,8], labels=as.Date(x[,1]))
+</pre>
+
+<p>と打ち込んでマウスで激減前後の点をクリックする。終了は右クリック（MacならCtrl+クリック）。終了時にコンソール出力されるのは連番である。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-29 10:22:34</time>
+Last modified: <time>2019-01-29 13:10:19</time>
 <!-- hhmts end -->
 </p>
 </footer>
