@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>Rの初歩</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
@@ -1164,6 +1163,8 @@ data()
 
 <p>と打ち込むと，現在読み込まれているデータ一覧が表示されます。</p>
 
+<p><code>install.packages("パッケージ名")</code> の逆は <code>remove.packages("パッケージ名")</code> です。<code>library("パッケージ名")</code> の逆は <code>detach("package:パッケージ名")</code> です。</p>
+
 <h2>プログラムの作成・読み込み・実行</h2>
 
 <p>ひとまとまりの処理をするプログラム（Rソース）を作ったなら，それを拡張子 <code>R</code>
@@ -1266,7 +1267,7 @@ nohup R CMD BATCH hoge.R &amp;
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-07-22 13:49:12</time>
+Last modified: <time>2019-02-03 13:57:46</time>
 <!-- hhmts end -->
 </p>
 </footer>

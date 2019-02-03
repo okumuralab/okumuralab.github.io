@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>データ作法</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
@@ -181,6 +180,10 @@ text/csv; charset=Shift_JIS; header=absent
 <p>RでURL指定で試してみたが，charsetもheaderも見ていないようである。</p>
 </div>
 
+<div class="note">
+<p>[2019-02-03追記] 上述のように，ExcelでCSVファイルを編集すると，<code>0123</code> が 123 に，<code>(1)</code> が -1 に，<code>1-2-3</code> が 2001/2/3 に，<code>123456789012</code> が 1.23457E+11 に，<code>Oct-4</code> が 4-Oct になり，危険である。私は Emacs の CSV モードを使って編集することがよくあるが，有料であるが「EmEditor Professional」が便利そうである（<a href="https://forest.watch.impress.co.jp/docs/special/1166478.html">「Excel」でCSV編集はNG？ 脱エクセルを実現する「EmEditor」の実力を徹底検証</a>）。別の方法として，Twitterでご指摘いただいたが（このページの上のほうにも書いてあったが）拡張子を「.txt」に変えてExcelの「開く」メニューから開き，ダイヤログで区切り文字を指定し，すべての列を選択して「文字列」として読み込む方法がある。データ入力の際にもすべてのセルを選択し「文字列」にすれば余計な解釈をされない。</p>
+</div>
+
 <h3>例2</h3>
 
 <p><a href="http://www.city.nagareyama.chiba.jp/10763/index.html">流山市オープンデータトライアル</a>から<a href="http://www.city.nagareyama.chiba.jp/10763/011144.html">年齢別・男女別人口</a>の平成24年4月1日現在のものを取り上げる。</p>
@@ -306,13 +309,13 @@ DateTime,uGy/h
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a> (<a href="http://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
-
-
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-08-11 16:46:10</time>
+Last modified: <time>2019-02-03 16:28:44</time>
 <!-- hhmts end -->
 </p>
+</footer>
 </body>
 </html>
