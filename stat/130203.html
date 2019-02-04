@@ -16,70 +16,70 @@
 
 <h1>データ作法</h1>
 
+<p><em>[2019-02-04]</em> 改訂中。</p>
+
 <h2>はじめに</h2>
 
-<p><a href="http://www.e-stat.go.jp/">政府統計の総合窓口（e-Stat）</a>にはたくさんのデータが収められているが，その<a href="http://www.e-stat.go.jp/estat/html/spec.html">ご利用にあたって</a>には「商用目的で複製する場合は、予め個々の情報に関する著作権を有している各府省等までご相談下さい」と書かれており，一定の制約があるようである。このような制約をなくして，商用目的も含めて自由に使えるようにした「オープンデータ」が増えつつある。オープンデータを提供するサイトとしては，米国の<a href="http://www.data.gov/">Data.gov</a>，英国の<a href="http://data.gov.uk/">data.gov.uk</a>が有名であるが，日本でも<a href="http://datameti.go.jp/">Open DATA METI</a>や，流山市の<a href="http://www.city.nagareyama.chiba.jp/10763/index.html">オープンデータトライアル</a>，鯖江市の<a href="http://www.city.sabae.fukui.jp/pageview.html?id=11552">データシティ鯖江</a>などが知られている。</p>
+<p><a href="http://www.e-stat.go.jp/">政府統計の総合窓口（e-Stat）</a>にはたくさんのデータが収められているが，その<a href="http://www.e-stat.go.jp/estat/html/spec.html">ご利用にあたって</a>には「商用目的で複製する場合は、予め個々の情報に関する著作権を有している各府省等までご相談下さい」と<del>書かれており，一定の制約があるようである。</del><ins>かつて書かれていた（現状については下記参照）。</ins>このような制約をなくして，商用目的も含めて自由に使えるようにした「オープンデータ」が増えつつある。オープンデータを提供するサイトとしては，米国の<a href="https://www.data.gov/">Data.gov</a>，英国の<a href="https://data.gov.uk/">data.gov.uk</a>が有名であるが，<del>日本でも<a href="http://datameti.go.jp/">Open DATA METI</a>や，流山市の<a href="http://www.city.nagareyama.chiba.jp/10763/index.html">オープンデータトライアル</a>，鯖江市の<a href="http://www.city.sabae.fukui.jp/pageview.html?id=11552">データシティ鯖江</a>などが知られている。</del><ins>日本でもオープンデータを銘打ったサイトがいろいろ現れては消えた。</ins></p>
 
-<p>オープンデータについての詳細は<a href="http://opendatahandbook.org/en/">The Open Data Handbook</a>（和訳：<a href="http://opendatahandbook.org/ja/">オープンデータ・ハンドブック</a>）を参照されたい。オープンデータのライセンスとしては，クリエイティブ・コモンズの分類ではCC0またはCC BY，最もきつい条件でもCC BY-SAが限度である（WikipediaのライセンスがCC BY-SAである）。NC（非営利）では企業の利用が難しく，ND（改変禁止）ではそもそもマッシュアップ（他のデータと組み合わせて新しい価値を生み出すこと）ができない。</p>
+<p>オープンデータへの動きは<a href="http://www.kantei.go.jp/jp/singi/it2/densi/">電子行政オープンデータ実務者会議</a>において着実に進められ，そこからリンクされている2015年12月の「政府標準利用規約（第2.0版）」（後述のCC BY 4.0と互換性がある）に結実した。現在の<a href="https://www.e-stat.go.jp/">政府統計の総合窓口（e-Stat）</a>の<a href="https://www.e-stat.go.jp/terms-of-use">利用規約</a>はこれに合わせて書き直されている。つまり，e-Statにある国のデータは今やすべてオープンデータである。このページを書き始めたころと比べれば，大きな進歩である。</p>
+
+<p>オープンデータについての詳細は<a href="http://opendatahandbook.org/guide/en/">The Open Data Handbook</a>（和訳：<a href="http://opendatahandbook.org/guide/ja/">オープンデータ・ハンドブック</a>）を参照されたい。オープンデータのライセンスとしては，<a href="https://creativecommons.org">Creative Commons</a>の分類ではCC0またはCC BY，最もきつい条件でもCC BY-SAが限度である（WikipediaのライセンスがCC BY-SAである）。NC（非営利）では企業の利用が難しく，ND（改変禁止）ではそもそもマッシュアップ（他のデータと組み合わせて新しい価値を生み出すこと）ができない。</p>
 
 <ul>
-  <li><a href="http://creativecommons.org/publicdomain/zero/1.0/">CC0</a>（パブリックドメイン：まったく制約なしで利用できる）</li>
-  <li><a href="http://creativecommons.org/licenses/by/2.1/jp/">CC BY</a>：表示 — あなたは原著作者のクレジットを表示しなければなりません。</li>
-  <li><a href="http://creativecommons.org/licenses/sa/2.0/jp/">CC SA</a>：継承 — もしあなたがこの作品を改変、変形または加工した場合、あなたはその結果生じた作品をこの作品と同一の許諾条件の下でのみ頒布することができます。</li>
+  <li><a href="https://creativecommons.org/publicdomain/">CC0</a>（パブリックドメイン：まったく制約なしで利用できる）</li>
+  <li><a href="https://creativecommons.org/licenses/by/4.0/">CC BY</a>（<a href="https://creativecommons.org/licenses/by/4.0/deed.ja">表示</a>） — 「あなたは適切なクレジットを表示し、ライセンスへのリンクを提供し、変更があったらその旨を示さなければなりません」</li>
+  <li><a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA</a>（<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.ja">表示 - 継承</a>） — 上に加えて「もしあなたがこの資料をリミックスしたり、改変したり、加工した場合には、あなたはあなたの貢献部分を元の作品と同じライセンスの下に頒布しなければなりません」</li>
 </ul>
-
-<p>個人的な意見としては，オープンデータにはCC0が似合う。CC0については，サイエンス・コモンズ翻訳プロジェクトの<a href="http://sciencecommons.jp/cc0">CC0について</a>も参照されたい。</p>
 
 <p>オープンデータを提供するファイル形式としては，CSVまたはTSV，JSON，XML，RDF（右に行くほど難易度が高くなる！）のようなテキストベースのオープンかつ単純な形式（機械可読な形式）が望ましい。</p>
 
-<p>以上のことについて，Tim Berners-Leeの考え方を図解でまとめた<a href="http://5stardata.info/">5 star Open Data</a>（和訳：<a href="http://5stardata.info/ja/">5つ星オープンデータ）</a>というページがわかりやすい。</p>
+<p>以上のことについて，Tim Berners-Leeの考え方を図解でまとめた<a href="https://5stardata.info/en/">5 ★ OPEN DATA</a>（和訳：<a href="https://5stardata.info/ja/">5 ★ オープンデータ）</a>というサイトがわかりやすい。</p>
 
-<div><a href="http://5stardata.info/ja/"><img src="img/5star-steps-small.png" alt="5-star steps by example" style="border-style:none"></a></div>
+<figure><a href="https://5stardata.info/ja/"><img src="img/5star-steps-small.png" alt="5-star steps by example" style="border-style:none"></a></figure>
 
 <p>この5段階を誰がどこまで登るかについての楠さんたちとの議論を<a href="http://togetter.com/li/451134">オープンデータ☆5段階を誰がどこまで昇るのか - Togetter</a>にまとめていただいた。</p>
 
 <h2>オープンデータのフォーマット</h2>
 
-<p>上のTim Berners-Leeの考え方では，<span style="color:gold">★</span>はPDFなど，<span style="color:gold">★★</span>はExcelなど，<span style="color:gold">★★★</span>は「非独占の形式」（CSVなど）となっている。一方，Excelの新しい保存形式*.xlsxはOffice Open XML（OOXML）としてISO/IEC規格になったので「非独占の形式」ではないという反論がある（OpenOffice.orgのOpenDocument Format（ODF）もISO/IEC規格である）。それは確かにそうであるが，Rなどでネイティブに（Javaプログラムなどを介さず）読めるフォーマットでないという点では，うれしくない。</p>
+<p>上のTim Berners-Leeの考え方では，<span style="color:gold">★</span>はPDFなど，<span style="color:gold">★★</span>はExcelなど，<span style="color:gold">★★★</span>は「非独占の形式」（CSVなど）となっている。一方，Excelの新しい保存形式*.xlsxはOffice Open XML（OOXML）としてISO/IEC規格になったので「非独占の形式」ではないという反論がある（OpenOffice.orgのOpenDocument Format（ODF）もISO/IEC規格である）。<del>それは確かにそうであるが，Rなどでネイティブに（Javaプログラムなどを介さず）読めるフォーマットでないという点では，うれしくない。</del><ins>Rでも，readxl パッケージを使えばExcelファイルを（CSVファイルと同程度に）読めるようになった。</ins></p>
 
 <div class="note">
-<p><a href="exceldata.html">RでExcelのデータを読む方法</a>参照。読んだ結果がライブラリによって微妙に異なることに注意。</p>
+<p><a href="exceldata.html">RでExcelのデータを読む方法</a>参照。</p>
 </div>
 
-<p>Tim Berners-Leeのいう「非独占の形式」の例としてはCSV（Comma-Separated Values）形式が挙げられている。これは値をコンマで区切っただけの非常に簡単な形式で，ExcelからもCSV形式で保存できる。Excelをインストールした環境では拡張子*.csvはExcelに関連付けられるので，ダブルクリックしただけでExcelで開けるという利点もある。英国の<a href="http://data.gov.uk/">data.gov.uk</a>では大量のデータがCSV形式で公開されている。</p>
+<p>Tim Berners-Leeのいう「非独占の形式」の例としてはCSV（Comma-Separated Values）形式が挙げられている。これは値をコンマで区切っただけの非常に簡単な形式で，ExcelからもCSV形式で保存できる。Excelをインストールした環境では拡張子*.csvはExcelに関連付けられるので，ダブルクリックしただけでExcelで開けるという利点もある。英国の<a href="https://data.gov.uk/">data.gov.uk</a>では大量のデータがCSV形式で公開されている。</p>
 
 <p>CSV（コンマ区切り）と同様なTSV（タブ区切り，Tab-Separated Values）形式もあるが，Excelに関連づけられた拡張子がない（「開く」メニューからは開ける）ということもあり，CSVのほうがポピュラーである［しかし下の「新事実発見」参照］。</p>
 
-<p>CSVやTSVは，「セルの結合」を許さないという点で，自動的に第1正規形になるという利点がある。</p>
+<p>CSVやTSVは，Excelのような「セルの結合」ができないので，機械的に処理しやすいデータを強制できるという利点もある。</p>
 
 <p>TSVの拡張として，フィールド（項目，列）の名前や個数を行ごとに自由に変えられる
 <a href="http://ltsv.org/">Labeled Tab-separated Values (LTSV)</a>
 という形式も提案されている（<a href="http://d.hatena.ne.jp/naoya/20130209/1360381374">LTSV FAQ - LTSV って何? どういうところが良いの?</a> 参照）。さらに柔軟な，木構造のデータも許すJSONやXMLといった形式が，近年よく使われている。</p>
 
-<p>HTMLのテーブルも，「セルの結合」をしていない素直なものなら，簡単にパースできる。Excelから保存したHTMLなら，「セルの結合」やフォント情報も含めて，Excelで読み込むことができる。</p>
-
 <h2>震災データのオープン化への取り組み</h2>
 
 <p>震災後の放射線などのデータが自動処理しにくい形で提供されていたことはすでに指摘した（<a href="/~okumura/blog/node/2578">データは自動処理可能な形で提供してほしい</a>）。同様な指摘が多方面からされていたことが<a href="http://www.kantei.go.jp/jp/singi/it2/denshigyousei/dai14/gijisidai.html">高度情報通信ネットワーク社会推進戦略本部第14回　電子行政に関するタスクフォース　議事次第</a>の資料1，p.8からわかる：</p>
 
-<div><img src="img/130216a.png" alt="政府機関における震災後の行政情報の公開・提供等の取組事例について p.8"></div>
+<figure><img src="img/130216a.png" alt="政府機関における震災後の行政情報の公開・提供等の取組事例について p.8"></figure>
 
 <ul>
-  <li>LASDEC：<a href="https://www.lasdec.or.jp/cms/12,22060,84.html">国民へ発信する重要情報のファイル形式について</a></li>
+  <li>LASDEC：<a href="https://web.archive.org/web/20110330033811/https://www.lasdec.or.jp/cms/12,22060,84.html">国民へ発信する重要情報のファイル形式について</a>（アーカイブ）［地方自治情報センター（LASDEC）は2014年4月1日に地方公共団体情報システム機構（J-LIS）へと組織変更された。旧サイトのコンテンツは引き継がれていないようである］</li>
   <li>経済産業省：<a href="http://www.meti.go.jp/policy/mono_info_service/joho/other/2011/0330.html">東北地方太平洋沖地震等に係る情報提供のデータ形式について</a></li>
 </ul>
 
-<p>この後日談など話せば尽きない。例えば，現時点でも厚労省は「食品中の放射性物質の検査結果について（第ＸＸＸ報）」というPDFを毎日掲載しており，私が毎日CSV化して<a href="http://oku.edu.mie-u.ac.jp/~okumura/stat/data/mhlw/">ここ</a>に置き，<a href="http://oku.edu.mie-u.ac.jp/food/">食品の放射能データ検索</a>で検索できるようにしている。</p>
+<p>この後日談など話せば尽きない。例えば，現時点でも厚労省は「食品中の放射性物質の検査結果について（第ＸＸＸ報）」というPDFを毎日掲載しており，私が毎日CSV化して<a href="http://oku.edu.mie-u.ac.jp/~okumura/stat/data/mhlw/">ここ</a>に置き，<a href="http://oku.edu.mie-u.ac.jp/food/">食品の放射能データ検索</a>で検索できるようにしている［←2012〜2013年の話。現在は厚労省の委託により国立保健医療科学院が<a href="http://www.radioactivity-db.info">食品中の放射性物質検査データ</a>サイトを運営している］。</p>
 
 <h2>ケーススタディ</h2>
 
-<p>以下ではオープンデータとしてとりあえず妥当なファイル形式と考えられるCSV形式を例に，機械に理解しやすいデータの作り方を解説する。</p>
+<p>以下ではオープンデータとしてとりあえず妥当なファイル形式と考えられるCSV形式を例に，機械で処理しやすいデータの作り方を解説する。</p>
 
 <h3>例1</h3>
 
 <p>ここでは，たまたまこれを書き始めた2013年1月に<a href="http://www.e-stat.go.jp/">e-Stat</a>の新着情報に出ていた労働力調査のデータをクリーンなCSVにしてみる。元データ（Excelファイル）のURLは長ったらしくて永続性があるかわからないのでリンクは省略するが，メニューで「労働力調査」→「基本集計　全都道府県」→「長期時系列データ」→「月別結果―全国」→「労働力人口 1953年1月〜」でたどれるExcelファイルの「原数値（既公表値）」シートは次のようになっている：</p>
 
-<div><img src="img/130203a.png" alt="労働力人口 長期時系列表"></div>
+<figure><img src="img/130203a.png" alt="労働力人口 長期時系列表"></figure>
 
 <p>人間が読みやすいように罫線を引いたりセルを結合したり空セルを入れたりして苦労しているが，自動処理には向かない。これを，1行目に列の名前，2行目からデータの並んだ標準形式に直す。</p>
 
@@ -92,18 +92,18 @@
 <p>余分な行・列を削除する。「男女計」のように他のデータから簡単に求められる値も削除する。日付以外の列は「セルの書式設定」で「標準」に揃える（これで3桁ごとのコンマも外れる）。</p>
 
 <div class="note">
-<p>ここではないが，もし欠測値（missing values）があれば，空セルのままにしておくか，「NA」（Not Availableの略）または「-」など一定の文字列を入れておく。ExcelやCSVでは欠測値は空セルでよいが，ExcelからPDFにしてPDFだけ公開する場合は，PDFをpdftotextコマンドでテキストに変換するとき，空セルと空白の区別がつかなくなる。</p>
+<p>ここではないが，もし欠測値（missing values）があれば，空セルのままにしておくか，「NA」（Not Availableの略）または「-」など一定の文字列を入れておく。ExcelやCSVでは欠測値は空セルでよいが，ExcelからPDFにしてPDFだけ公開する場合は，PDFをpdftotextコマンドでテキストに変換するとき，空セルと列ずれの区別がつかなくなる。</p>
 </div>
 
 <div class="note">
 <p>Excelで「NA」に相当するものは <code>#N/A</code> である。CSVファイルに <code>#N/A</code> と書いておけばよい。出力も <code>#N/A</code> になる。ただし，CSVで <code>#</code> をコメント開始文字としている場合は，<code>"#N/A"</code> とする必要がある。</p>
 </div>
 
-<div><img src="img/130203b.png" alt="労働力人口 長期時系列表"></div>
+<figure><img src="img/130203b.png" alt="労働力人口 長期時系列表"></figure>
 
 <p>この時点でセルA2の内容は「2005/10/1」（または「2005-10-1」）になっているはずである。Excelで処理をする際に，もし各月の中央がよければ，最初の二つを「2005/10/15」「2005/11/15」に直し，選択してフィルハンドルを下にドラッグする。CSV出力するだけなら1日でも15日でも同じ結果になる。</p>
 
-<p>これをExcelから「ファイル」→「名前を付けて保存...」→「CSV」で保存すると，次のようなCSV形式のテキストファイルになる。</p>
+<p>これをExcelから「ファイル」→「名前を付けて保存...」→「CSV (コンマ区切り)」で保存すると，次のようなCSV形式のテキストファイルになる。</p>
 
 <pre>
 年/月,男,女
@@ -115,20 +115,21 @@
 ……
 </pre>
 
-<p>文字コードはShift_JIS（Windows-31J）になる。行末はMacのExcelではCR，WindowsのExcelではCRLFになるが，CSVの決まり（後述）ではCRLFを使うことになっているのでCRLFに統一するほうがよいであろう（Mac上のExcelやRで読み込む場合もCRLFで問題ない）。文字コードは，時代の流れからすればUTF-8が好ましいが，日本語環境のExcelでは文字化けすることがある。</p>
+<p>文字コードはShift_JIS（Windows-31J）になる。行末は<del>MacのExcelではCR，WindowsのExcelでは</del>CRLFになる。昔のMacのExcelはCRであったが，CSVの決まり（後述）ではCRLFを使うことになっているので統一されたのかもしれない（Rで読み込む場合は行末はCR/LF/CRLFどれでもよい）。文字コードは，時代の流れからすればUTF-8が好ましいが，日本語環境のExcelでは文字化けすることがある［新しいExcelではBOM付きUTF-8なら化けないようである］。</p>
 
 <div class="note">
-<p>「文字化けすることがある」と書いたが，拡張子を「.txt」に変えてExcelの「開く」メニューから開けば，テキストファイルウィザードが現れて，Windows版Excelではうまくいくようである（どういうわけかMac版ではうまくいかない）。ダブルクリックして開く場合は，Windows版Excel 2010以降はBOM付きUTF-8なら文字化けせず開けるが，Mac版Excel 2011ではShift_JIS以外うまくいかない。英語（ASCII文字）で統一すれば文字コードの問題は生じず，海外の人にも使ってもらいやすくなるので一挙両得であるが，ここでは文字コードの問題を顕在化させるために，あえて日本語を使った。</p>
+<p>「文字化けすることがある」と書いたが，拡張子を「.txt」に変えてExcelの「開く」メニューから開けば，テキストファイルウィザードが現れて，<del>Windows版Excelでは</del>うまくいくようである<del>（どういうわけかMac版ではうまくいかない）</del>。ダブルクリックして開く場合は，Windows版Excel 2010以降はBOM付きUTF-8なら文字化けせず開けるが，Mac版Excel 2011ではShift_JIS以外うまくいかない［Mac版Excel 2016でBOM付きUTF-8のCSVが開けるようになった］。英語（ASCII文字）で統一すれば文字コードの問題は生じず，海外の人にも使ってもらいやすくなるので一挙両得であるが，ここでは文字コードの問題を顕在化させるために，あえて日本語を使った。</p>
 
 <p>なお，上のCSVファイルをExcelで再度開くと，私の環境では日付部分が「Oct-05」のような英語表記になってしまう。とりあえず列全体を選択し「セルの書式設定」の「ユーザー定義」で「yyyy/mm」に直せば戻る。あるいは，「セルの書式設定」で「日付」の「2005年3月」の形式を選んでから保存すれば，再度読み込んでも日本語のままだが，海外の人が使いにくい。</p>
 </div>
 
 <div class="note">
-<p><em>[新事実発見]</em> 文字コードをUTF-16LEにしたタブ区切り（TSV）の拡張子をcsv（またはxls）に偽装すれば，何とWindowsでもMacでもダブルクリックでExcelで正常に開ける。セル中にコンマがあってもダブルクォートで囲まなくても大丈夫 → <a href="http://qiita.com/items/0d0b9bbb0f4a6cca620c">Win/Mac どちらの Excel でも正しく開ける Unicode な csv の出力方法</a></p>
+<p><em>[2013-02-18(?)]</em> 文字コードをUTF-16LEにしたタブ区切り（TSV）の拡張子をcsv（またはxls）に偽装すれば，何とWindowsでもMacでもダブルクリックでExcelで正常に開ける。セル中にコンマがあってもダブルクォートで囲まなくても大丈夫 → <a href="http://qiita.com/items/0d0b9bbb0f4a6cca620c">Win/Mac どちらの Excel でも正しく開ける Unicode な csv の出力方法</a></p>
 </div>
 
 <div class="note">
-<p><em>[追記]</em> MacのExcel 2016では，Windows版と同様，BOM付きUTF-8のCSVファイルなら文字化けせず開けるようになった。また，Mac版・Windows版とも，Excelで「CSV UTF-8 (コンマ区切り) (*.csv)」（Windows版），「CSV UTF-8 (コンマ区切り) (.csv)」（Mac版）という保存形式がサポートされた（いずれもBOM付き）。これでExcel→CSV，CSV→Excelとも問題なくできるようになった（日付と解釈される文字列だけは要注意）。</p>
+<p><em>[2016-10-23(?)]</em> MacのExcel 2016では，Windows版と同様，BOM付きUTF-8のCSVファイルなら文字化けせず開けるようになった。また，Mac版・Windows版とも，Excelで「CSV UTF-8 (コンマ区切り) (*.csv)」（Windows版），「CSV UTF-8 (コンマ区切り) (.csv)」（Mac版）という保存形式がサポートされた（いずれもBOM付き）。これでExcel→CSV，CSV→Excelとも問題なくできるようになった（日付と解釈される文字列だけは要注意）。</p>
+<p><em>[2019-02-04]</em> 「CSV UTF-8 (コンマ区切り) (.csv)」（Mac版）が知らないうちに消えていた。読むほうはBOM付きUTF-8ならまだ大丈夫そうである。</p>
 </div>
 
 <p>このように不要部分を削ったCSVファイルは，それだけでは何のデータかわからないので，説明ページを別途用意しておく。あるいは，CSVの決まりごとには定められていないが，行頭に「#」などの目印を付けて注釈を書いておくこともしばしば行われる。Rの <code>read.csv()</code> 関数で読み込む場合はオプション <code>comment.char="#"</code> を付けると「#」で始まる行を無視する。</p>
@@ -166,9 +167,7 @@ Year/Month,Male,Female
 <div class="note">
 <p>CSV形式の欠点は，データに型が指定できないことである。特にExcelでダブルクリックで開く場合にこの欠点が顕在化し，例えば <code>"001"</code> は数値 1 に，<code>"1-2-3"</code> は日付 2001/2/3 に，<code>"1E3"</code> は指数表示の数 1.00E+03 に，STAP細胞で有名になった遺伝子名 <code>"Oct4"</code> は日付 4-Oct になる（これらはExcelに手入力した場合と同じ振舞いである）。遺伝子関係の論文の2割くらいがこの罠に引っかかっているそうである（<a href="http://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1044-7">Gene name errors are widespread in the scientific literature</a>）。対策としては，拡張子をtxtに変えてExcelの「開く」メニューで開き，ウィザードで各列の「データ形式」を「文字列」に指定する。あるいは <code>="001"</code> のように <code>="…"</code> で囲むという奥の手もある。</p>
 
-<p>[2018-08-11追記] Excelで遺伝子はOct4に限らずFeb，Mar，Apr，Jun，Aug，Sep，Oct，Nov，Decが危ないとのこと。あと化学のCASナンバーや，住所の「番地」でも問題が生じ得る。電話番号やクレジットカード番号は数値と解釈されて先頭の0が落ちたり16桁を超えると右の桁が0になったりする。</p>
-
-<p>なお，Rでは <code>read.csv()</code> に <code>colClasses=c("character","numeric")</code> のようなオプションで列ごとに型を指定する。</p>
+<p><em>[2018-08-11]</em> Excelで遺伝子はOct4に限らずFeb，Mar，Apr，Jun，Aug，Sep，Oct，Nov，Decが危ないとのこと。あと化学のCASナンバーや，住所の「番地」でも問題が生じ得る。電話番号やクレジットカード番号は数値と解釈されて先頭の0が落ちたり16桁を超えると右の桁が0になったりする。</p>
 </div>
 
 <div class="note">
@@ -181,14 +180,15 @@ text/csv; charset=Shift_JIS; header=absent
 </div>
 
 <div class="note">
-<p>[2019-02-03追記] 上述のように，ExcelでCSVファイルを編集すると，<code>0123</code> が 123 に，<code>(1)</code> が -1 に，<code>1-2-3</code> が 2001/2/3 に，<code>123456789012</code> が 1.23457E+11 に，<code>Oct-4</code> が 4-Oct になり，危険である。私は Emacs の CSV モードを使って編集することがよくあるが，有料であるが「EmEditor Professional」が便利そうである（<a href="https://forest.watch.impress.co.jp/docs/special/1166478.html">「Excel」でCSV編集はNG？ 脱エクセルを実現する「EmEditor」の実力を徹底検証</a>）。別の方法として，Twitterでご指摘いただいたが（このページの上のほうにも書いてあったが）拡張子を「.txt」に変えてExcelの「開く」メニューから開き，ダイヤログで区切り文字を指定し，すべての列を選択して「文字列」として読み込む方法がある。データ入力の際にもすべてのセルを選択し「文字列」にすれば余計な解釈をされない。</p>
+<p><em>[2019-02-03]</em> 上述のように，ExcelでCSVファイルを編集すると，<code>0123</code> が 123 に，<code>(1)</code> が -1 に，<code>1-2-3</code> が 2001/2/3 に，<code>123456789012</code> が 1.23457E+11 に，<code>Oct-4</code> が 4-Oct になり，危険である。私は Emacs の CSV モードを使って編集することがよくあるが，有料であるが「EmEditor Professional」が便利そうである（<a href="https://forest.watch.impress.co.jp/docs/special/1166478.html">「Excel」でCSV編集はNG？ 脱エクセルを実現する「EmEditor」の実力を徹底検証</a>）。別の方法として，Twitterでご指摘いただいたが（このページの上のほうにも書いてあったが）拡張子を「.txt」に変えてExcelの「開く」メニューから開き，ダイヤログで区切り文字を指定し，すべての列を選択して「文字列」として読み込む方法がある。データ入力の際にもすべてのセルを選択し「文字列」にすれば余計な解釈をされない。</p>
+<p><em>[2019-02-04]</em> 秀丸にもCSVモードがあるらしい。</p>
 </div>
 
 <h3>例2</h3>
 
 <p><a href="http://www.city.nagareyama.chiba.jp/10763/index.html">流山市オープンデータトライアル</a>から<a href="http://www.city.nagareyama.chiba.jp/10763/011144.html">年齢別・男女別人口</a>の平成24年4月1日現在のものを取り上げる。</p>
 
-<div><img src="img/130205b.png" alt="流山市の年齢別・男女別人口"></div>
+<figure><img src="img/130205b.png" alt="流山市の年齢別・男女別人口"></figure>
 
 <p>紙への印刷を考えて途中で列を分けている。このままでは機械処理が難しい。一つにつなげて，簡単に計算できるものを省くと，次のようになる。</p>
 
@@ -212,16 +212,16 @@ Age,Male,Female
 
 <p><a href="h24nenreibetsudanjobetsu.csv">最終的なCSVファイル</a></p>
 
-<p>このCSVファイルから人口ピラミッドを描くには，Rで（あらかじめpyramidパッケージをインストールしておき）次のように打ち込む：</p>
+<p>このCSVファイルから人口ピラミッドを描くには，Rで（あらかじめpyramidパッケージをインストールしておき）次のように打ち込む（<code>CP932</code> はSJISのWindows拡張）：</p>
 
 <pre>
 library(pyramid)
-data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/h24nenreibetsudanjobetsu.csv",
-                comment.char="#")
+data = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/h24nenreibetsudanjobetsu.csv",
+                fileEncoding="CP932", comment.char="#")
 pyramids(data$Male, data$Female, data$Age, Cstep=10)
 </pre>
 
-<p>ところで，こういう毎年更新されるデータを提供するには，例えば http://example.jp/nagareyama/population/by_age/2012.csv のようにURLで年が指定できれば，年を入力すればその年の人口ピラミッドを描くアプリケーションが作りやすくなる。動的に生成する場合も，例えば ...data?city=nagareyama&amp;year=2012 のように引数を渡せばよい。年の代わりに new のような文字列を与えれば最新のデータにリダイレクトされるのもいいかもしれない。毎年予測不可能なURLで新データを提供するシステムが多いのは困ったものである（それ以前に古いデータのURLもしょっちゅう変わることがある）。</p>
+<p>ところで，こういう毎年更新されるデータを提供するには，例えば https://example.jp/nagareyama/population/by_age/2012.csv のようにURLで年が指定できれば，年を入力すればその年の人口ピラミッドを描くアプリケーションが作りやすくなる。動的に生成する場合も，例えば ...data?city=nagareyama&amp;year=2012 のように引数を渡せばよい。年の代わりに new のような文字列を与えれば最新のデータにリダイレクトされるのもいいかもしれない。毎年予測不可能なURLで新データを提供するシステムが多いのは困ったものである（それ以前に古いデータのURLもしょっちゅう変わることがある）。</p>
 
 <h3>東電の電力データ</h3>
 
@@ -313,7 +313,7 @@ DateTime,uGy/h
 <p><a href="../" rel="author">奥村 晴彦</a> (<a href="http://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-02-03 16:28:44</time>
+Last modified: <time>2019-02-04 21:09:27</time>
 <!-- hhmts end -->
 </p>
 </footer>
