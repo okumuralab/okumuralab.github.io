@@ -4,11 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
 <title>血液型と性格</title>
-<link rel="stylesheet" href="/~okumura/style6.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
 
 <h1>血液型と性格</h1>
 
@@ -61,14 +65,14 @@ x$ABO = tbl[x[[1]]]                           # 表現型を表に追加
                 Df   Pillai approx F num Df den Df Pr(>F)
 `Blood types`    5 0.027593   1.1241     35   7090 0.2822
 Residuals     1420                                       
-<code>r = manova(cbind(NS,HA,RD,P,SD,C,ST) ~ ABO, data=x)</code>
-<code>summary(r)</code>
+<code>r2 = manova(cbind(NS,HA,RD,P,SD,C,ST) ~ ABO, data=x)</code>
+<code>summary(r2)</code>
             Df  Pillai approx F num Df den Df Pr(>F)
 ABO          3 0.01985   1.3493     21   4254 0.1318
 Residuals 1422                                      
 </pre>
 
-<p>いずれも有意ではない（Pillai以外の方法については <code>manova()</code> のマニュアル参照）。</p>
+<p>いずれも有意ではない（Pillai 以外の方法については <code>manova()</code> のマニュアル参照）。</p>
 
 <p>論文では特に Persistence（「持続」）が血液型と有意に関係するとされているので，それを計算してみる：</p>
 
@@ -90,6 +94,18 @@ F = 2.5906, num df = 3.0, denom df = 483.5, p-value = 0.05222
 
 <p>論文ではそれぞれ <i>p</i> = 0.020, 0.032 だが，年齢・性別でコントロールしていないためか，ここでの計算結果は <i>p</i> = 0.028, 0.052 となった。しかし，多重性まで考えれば，有意な結果が得られたとは言い難い。</p>
 
+<p>Persistence の度数分布は次の通りである。これを見てもあまり意味のある差がありそうにない。</p>
+
+<figure><img src="img/190206c.png" alt="Persistence の度数分布"></figure>
+
+<pre>
+a = "B"; t = table(subset(x, ABO==a)$P); plot(t/sum(t), type="b", pch=a, ylab="")
+a = "A"; t = table(subset(x, ABO==a)$P); points(t/sum(t), type="b", pch=a)
+a = "O"; t = table(subset(x, ABO==a)$P); points(t/sum(t), type="b", pch=a)
+a = "AB"; t = table(subset(x, ABO==a)$P); points(t/sum(t), type="b", pch=' ')
+text(0:8, t/sum(t), 'AB')
+</pre>
+
 <hr>
 
 <footer>
@@ -97,7 +113,7 @@ F = 2.5906, num df = 3.0, denom df = 483.5, p-value = 0.05222
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-02-06 16:43:06</time>
+Last modified: <time>2019-02-06 21:12:12</time>
 <!-- hhmts end -->
 </p>
 </footer>
