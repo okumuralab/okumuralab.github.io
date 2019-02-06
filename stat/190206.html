@@ -12,8 +12,83 @@
 
 <h1>血液型と性格</h1>
 
-<p>Shoko Tsuchimine, Junji Saruwatari, Ayako Kaneda, Norio Yasui-Furukori, <a href="https://doi.org/10.1371/journal.pone.0126983">"ABO Blood Type and Personality Traits in Healthy Japanese Subjects"</a>, PLOS ONE, 2015
-</p>
+<p>以下ではABO血液型（表現型，遺伝子型）と性格に有意な関係を示したとする次の論文を紹介する：</p>
+
+<ul lang="en">
+  <li>Shoko Tsuchimine, Junji Saruwatari, Ayako Kaneda, Norio Yasui-Furukori, “ABO Blood Type and Personality Traits in Healthy Japanese Subjects”, <i>PLOS ONE</i> (2015) <a href="https://doi.org/10.1371/journal.pone.0126983">DOI:10.1371/journal.pone.0126983</a></li>
+</ul>
+
+<p>論文にはデータのExcelファイルが付いていて，これを使えば検証できる？と思ったけれど，論文では年齢・性別でコントロールしてあり，年齢・性別はExcelファイルには含まれていない。</p>
+
+<p>まずはデータを読み込んでみる：</p>
+
+<pre>
+library(readxl)
+x = read_excel("journal.pone.0126983.s001.XLSX")
+</pre>
+
+<p>1573×36の表である（論文には1572とある）。<code>names(x)</code> で項目名が一覧できる。以下で使うのは血液型と性格検査の7項目であるので，それだけを抜き出す：</p>
+
+<pre>
+x = x[,c(4,6,11,16,20,21,27,33)]
+</pre>
+
+<p>性格検査の7項目はそれぞれ
+NS (Novelty Seeking),
+HA (Harm Avoidance),
+RD (Reward Dependence),
+P (Persistence),
+SD (Self-directedness),
+C (Cooperativeness),
+ST (Self-transcendence)
+である。</p>
+
+<p><code>sum(complete.cases(x))</code> で調べてみると，欠損値を一つも含まない行は1426ある（論文では1427とされている）。</p>
+
+<p>この表の「Blood types」は遺伝子型（AA, AB, AO, BB, BO, OO）で，これらに対応する表現型はそれぞれ A, AB, A, B, B, O である。遺伝子型を表現型に変換するには，Rではいろいろなやりかたがあるが，@hoxo_m さんの<a href="https://qiita.com/hoxo_m/items/b526d174d9d0291c7264">Rでハッシュテーブルの速度比較</a>を参考に，ここでは一番簡単な名前付きベクトルを使うことにする：</p>
+
+<pre>
+tbl = c("A","AB","A","B","B","O")             # 表現型
+names(tbl) = c("AA","AB","AO","BB","BO","OO") # 遺伝子型
+x$ABO = tbl[x[[1]]]                           # 表現型を表に追加
+</pre>
+
+<p>論文では年齢・性別でコントロールしたMANCOVAが使われているが，年齢・性別がわからないので，ここでは単なるMANOVAを使ってみる：</p>
+
+<pre>
+<code>r1 = manova(cbind(NS,HA,RD,P,SD,C,ST) ~ `Blood types`, data=x)</code>
+<code>summary(r1)</code>
+                Df   Pillai approx F num Df den Df Pr(>F)
+`Blood types`    5 0.027593   1.1241     35   7090 0.2822
+Residuals     1420                                       
+<code>r = manova(cbind(NS,HA,RD,P,SD,C,ST) ~ ABO, data=x)</code>
+<code>summary(r)</code>
+            Df  Pillai approx F num Df den Df Pr(>F)
+ABO          3 0.01985   1.3493     21   4254 0.1318
+Residuals 1422                                      
+</pre>
+
+<p>いずれも有意ではない（Pillai以外の方法については <code>manova()</code> のマニュアル参照）。</p>
+
+<p>論文では特に Persistence（「持続」）が血液型と有意に関係するとされているので，それを計算してみる：</p>
+
+<pre>
+<code>oneway.test(P ~ `Blood types`, data=x)</code>
+
+	One-way analysis of means (not assuming equal variances)
+
+data:  P and `Blood types`
+F = 2.5518, num df = 5.00, denom df = 288.18, p-value = 0.02799
+
+<code>oneway.test(P ~ ABO, data=x)</code>
+
+	One-way analysis of means (not assuming equal variances)
+
+data:  P and ABO
+F = 2.5906, num df = 3.0, denom df = 483.5, p-value = 0.05222
+</pre>
+
+<p>論文ではそれぞれ <i>p</i> = 0.020, 0.032 だが，年齢・性別でコントロールしていないためか，ここでの計算結果は <i>p</i> = 0.028, 0.052 となった。しかし，多重性まで考えれば，有意な結果が得られたとは言い難い。</p>
 
 <hr>
 
@@ -22,7 +97,7 @@
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-02-06 09:19:25</time>
+Last modified: <time>2019-02-06 16:43:06</time>
 <!-- hhmts end -->
 </p>
 </footer>

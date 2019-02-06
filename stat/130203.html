@@ -16,7 +16,7 @@
 
 <h1>データ作法</h1>
 
-<p><em>[2019-02-04]</em> 改訂中。</p>
+<p><em>[2019-02-04]</em> ざっと改訂した。</p>
 
 <h2>はじめに</h2>
 
@@ -156,7 +156,7 @@ Year/Month,Male,Female
 </div>
 
 <div class="note">
-<p>Excelで作ったCSVには，よくわからない理由で余分な行や列が入ってしまうことがある。必ず最終的なCSVファイルをテキストエディタでチェックするべきである。</p>
+<p><del>Excelで作ったCSVには，よくわからない理由で余分な行や列が入ってしまうことがある。必ず最終的なCSVファイルをテキストエディタでチェックするべきである。</del></p>
 </div>
 
 <div class="note">
@@ -185,7 +185,7 @@ text/csv; charset=Shift_JIS; header=absent
 
 <h3>例2</h3>
 
-<p><a href="http://www.city.nagareyama.chiba.jp/10763/index.html">流山市オープンデータトライアル</a>から<a href="http://www.city.nagareyama.chiba.jp/10763/011144.html">年齢別・男女別人口</a>の平成24年4月1日現在のものを取り上げる。</p>
+<p><a href="http://www.city.nagareyama.chiba.jp/10763/index.html">流山市オープンデータトライアル</a>［現在はリンク切れ］から<a href="http://www.city.nagareyama.chiba.jp/10763/011144.html">年齢別・男女別人口</a>［現在はリンク切れ］の平成24年4月1日現在のものを取り上げる。</p>
 
 <figure><img src="img/130205b.png" alt="流山市の年齢別・男女別人口"></figure>
 
@@ -215,10 +215,12 @@ Age,Male,Female
 
 <pre>
 library(pyramid)
-data = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/h24nenreibetsudanjobetsu.csv",
+data = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>h24nenreibetsudanjobetsu.csv",
                 fileEncoding="CP932", comment.char="#")
 pyramids(data$Male, data$Female, data$Age, Cstep=10)
 </pre>
+
+<script>document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];</script>
 
 <p>ところで，こういう毎年更新されるデータを提供するには，例えば https://example.jp/nagareyama/population/by_age/2012.csv のようにURLで年が指定できれば，年を入力すればその年の人口ピラミッドを描くアプリケーションが作りやすくなる。動的に生成する場合も，例えば ...data?city=nagareyama&amp;year=2012 のように引数を渡せばよい。年の代わりに new のような文字列を与えれば最新のデータにリダイレクトされるのもいいかもしれない。毎年予測不可能なURLで新データを提供するシステムが多いのは困ったものである（それ以前に古いデータのURLもしょっちゅう変わることがある）。</p>
 
@@ -270,9 +272,9 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 
 <h3 id="KawauchiMP2">川内村診療所の放射線データ</h3>
 
-<p>2013年3月22日に福島第一原発事故初期の新たなデータが公表された（→<a href="http://wwwcms.pref.fukushima.jp/pcp_portal/PortalServlet?DISPLAY_ID=DIRECT&NEXT_DISPLAY_ID=U000004&CONTENTS_ID=34791">事故初期の可搬型モニタリングポストについて</a>の<a href="http://wwwcms.pref.fukushima.jp/download/1/jikoshokinokahanMPdate.pdf">可搬型モニタリングポスト未公表データ一覧表について（PDF形式　638KB）</a>）。PDF形式であるだけでなく，たとえExcel形式でも機械的な処理が難しい並べ方になってしまっている。</p>
+<p>2013年3月22日に福島第一原発事故初期の新たなデータが公表された（→<a href="http://wwwcms.pref.fukushima.jp/pcp_portal/PortalServlet?DISPLAY_ID=DIRECT&NEXT_DISPLAY_ID=U000004&CONTENTS_ID=34791">事故初期の可搬型モニタリングポストについて</a>［現在はリンク切れ］の<a href="http://wwwcms.pref.fukushima.jp/download/1/jikoshokinokahanMPdate.pdf">可搬型モニタリングポスト未公表データ一覧表について（PDF形式　638KB）</a>［現在はリンク切れ］）。PDF形式であるだけでなく，たとえExcel形式でも機械的な処理が難しい並べ方になってしまっている。</p>
 
-<div><img src="img/130323a.png" alt="可搬型モニタリングポスト未公表データ一覧表（川内村診療所：石川県可搬型MP2-1）" style="border:1px solid"></div>
+<figure><img src="img/130323a.png" alt="可搬型モニタリングポスト未公表データ一覧表（川内村診療所：石川県可搬型MP2-1）" style="border:1px solid"></figure>
 
 <p>縦に長くなって印刷しにくいのでこのようにしたのであろうが，グラフを描くためには縦に並べるしかない。</p>
 
@@ -289,7 +291,7 @@ DateTime,uGy/h
 
 <p>このような形にした<a href="data/KawauchiMP2.csv">KawauchiMP2.csv</a>を置いておく。これで次のようなグラフを描くのは簡単になる。</p>
 
-<div><img src="img/130323b.png" alt="川内村診療所MP2グラフ"></div>
+<figure><img src="img/130323b.png" alt="川内村診療所MP2グラフ"></figure>
 
 <p>元のPDFは，未公開だった部分を背景色で示している（川内村診療所MP2はすべて未公開）。未公開分と既公開分を区別するのであれば，列を一つ余分に作って，そこに「既公開」「未公開」（または「0」「1」）と入れればよい。</p>
 
@@ -298,7 +300,7 @@ DateTime,uGy/h
 <h2>参考</h2>
 
 <ul>
-  <li><a href="first.html">Rの初歩</a>でExcelのxls/xlsxファイルの読み方についても触れている。</li>
+  <li><a href="first.html">Rの初歩</a>でもExcelのxls/xlsxファイルの読み方について触れている。</li>
   <li><a href="xml.html">XMLデータの扱い方</a>にRのXMLパッケージを使ったXMLファイルの読み方の解説がある。</li>
   <li><a href="/~okumura/html5/toward_semantic_web.html">セマンティック・ウェブに向かって</a></li>
   <li><a href="http://logd.tw.rpi.edu/tutorial/understanding_logd_data">Understanding LOGD Data</a></li>
@@ -312,7 +314,7 @@ DateTime,uGy/h
 <p><a href="../" rel="author">奥村 晴彦</a> (<a href="http://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-02-05 08:21:44</time>
+Last modified: <time>2019-02-05 11:07:32</time>
 <!-- hhmts end -->
 </p>
 </footer>
