@@ -77,6 +77,10 @@
 [1] 0.9999999
 </pre>
 
+<div class="note">
+<p>C言語などでは整数の割り算は整数に切り捨てますが，Rでは <code>/</code> は実数（浮動小数点数）の範囲で計算します。Rでは整数の除算は <code>%/%</code> を使います。除算の余りは <code>%%</code> です。例えば <code>7 %/% 3</code> は 2 になり，<code>7 %% 3</code> は 1 になります。</p>
+</div>
+
 <p>値は <code>x</code> や <code>hoge</code> のような変数に代入することができます。</p>
 
 <pre>
@@ -90,7 +94,7 @@
 </div>
 
 <div class="note">
-<p><code>x = 1/3</code> のようにスペースを空けなくても <code>x=1/3</code> のように詰めて書いてもまったく同じです。ただ，例えば <code>x &lt;- 1/3</code> を <code>x&lt;-1/3</code> のように書くと <code>x &lt; -1/3</code> と視覚的に紛らわしいといったようなことがあるので，見やすいように適宜余分なスペースを入れましょう。</p>
+<p><code>x = 1/3</code> のようにスペースを空けなくても <code>x=1/3</code> のように詰めて書いてもまったく同じです。ただ，例えば <code>x &lt;- 1/3</code> を <code>x&lt;-1/3</code> のように書くと <code>x &lt; -1/3</code> と視覚的に紛らわしいので，見やすいように適宜余分なスペースを入れましょう。</p>
 </div>
 
 <p>この <code>x</code> のようなものを一般に「変数」と呼びますが，Rでは「オブジェクト」と呼びます。オブジェクト名は，大文字と小文字を区別します。</p>
@@ -109,17 +113,17 @@
 [1] 3.141593
 &gt; print(pi)   # これでもいいかな
 [1] 3.141593
-&gt; print(pi, digits=16) # 桁数を増やしたい
+&gt; print(pi, digits=16) # 出力する桁数を増やしたい
 [1] 3.141592653589793
 </pre>
 
 <div class="note">
 <p>デフォルトの表示桁数を例えば16桁にしたければ <code>options(digits=16)</code>
-のように打ち込みます。元に戻すには <code>options(digits=7)</code> です。</p>
+と打ち込みます。元に戻すには <code>options(digits=7)</code> です。</p>
 </div>
 
 <div class="note">
-<p>標準のRでは，浮動小数点数の精度は16ビット程度です。<a href="http://cran.r-project.org/web/packages/Rmpfr/index.html">Rmpfr</a> パッケージを使えば任意精度の数値が扱えます。例えば <code>PI</code> に1000ビット精度の円周率を代入し，それでいろいろ計算してみます：</p>
+<p>標準のRでは，浮動小数点数の精度は53ビット（ほぼ十進16桁）程度です。<a href="https://CRAN.R-project.org/package=Rmpfr">Rmpfr</a> パッケージを使えば任意精度の数値が扱えます。例えば <code>PI</code> に1000ビット精度の円周率を代入し，それでいろいろ計算してみます：</p>
 <pre>
 install.packages("Rmpfr")   # Rmpfrのインストール
 library("Rmpfr")            # このセッションでRmpfrを使う
@@ -127,9 +131,10 @@ PI = Const("pi", prec=1000) # 1000ビット精度の円周率
 PI
 sin(PI / 2)
 </pre>
+<p>任意精度の整数なら <a href="https://CRAN.R-project.org/package=openssl">openssl</a> パッケージの <code>bignum()</code> が便利です。</p>
 </div>
 
-<p>Rのコンソールへの入力は，ヒストリー（履歴）機能が使えます。［↑］キー，［↓］キーで履歴を前後できます（Emacs中では <code>M-p</code>，<code>M-n</code>）。</p>
+<p>Rのコンソールへの入力は，ヒストリー（履歴）機能が使えます。［↑］キー，［↓］キーで履歴を前後できます（Emacsの中では <code>M-p</code>，<code>M-n</code>）。</p>
 
 <pre>
 &gt; pi = 3      # いたずらをしてやろう
@@ -170,15 +175,15 @@ sin(PI / 2)
 <p>このように，続きの入力を促すプロンプト <code>+</code> が出ます。その右側に，入れ忘れた <code>)</code> を入力してEnterを押します。あるいは，わけがわからなくなったなら「Esc」（エスケープ）キーを押せば通常のプロンプト <code>&gt;</code> に戻ります。場合によっては Control+C で止まります（Emacs中では Control-C を2回）。</p>
 
 <div class="note">
-<p>こういった書き間違いの修正は面倒です。複雑な入力の際には，Rのコンソールに直接入力するのではなく，RStudioの左上のペイン（ソースエディタ）に書き，実行したい行の中にカーソルがある状態，あるいは複数行を選択した状態で，「Run」ボタン（またはCtrl+Enter，Macでは⌘+Enterでもいい）を押すのが便利です。このソースエディタに書き込んだ内容は，RStudioを終了しても保持されますが，ファイルに保存しておけば安心です。ファイル名は <code>何々.R</code> のようにするのが習慣です。Rスクリプトの <code>#</code> から行末までは無視されますので，<code>#</code> を使って説明を書いておけば，後で見直すときに便利です。</p>
+<p>こういった書き間違いの修正は面倒です。複雑な入力の際には，Rのコンソールに直接入力するのではなく，RStudioの左上のペイン（ソースエディタ）に書き，実行したい行の中にカーソルがある状態，あるいは複数行を選択した状態で，「Run」ボタン（またはCtrl+Enter，Macでは⌘+Enterでもいい）を押すのが便利です。このソースエディタに書き込んだ内容は，RStudioを終了しても保持されますが，ファイルに保存しておけば安心です。ファイル名は <code>何々.R</code> のようにするのが習慣です。Rスクリプトの <code>#</code> から行末までは無視されますので，<code>#</code> を使って説明を書いておけば，後で見直すときに便利です。Emacs（ESS）の場合は，別ファイル（<code>*.R</code>）に書いたソースを1行ずつ実行するのは C-RET（つまりCtrl+Enter），選択範囲を実行するのは C-c C-r，バッファ（ファイル）全体を実行するのは C-c C-b です。</p>
 </div>
 
 <div class="note">
-<p>入力の履歴は，右上ペインの「History」に残ります。「History」の中の行をダブルクリックすればコンソールに入力され，Shift+ダブルクリックすればソースエディタに入力されます。</p>
+<p>RStudioでは，入力の履歴は右上ペインの「History」に残ります。「History」の中の行をダブルクリックすればコンソールに入力され，Shift+ダブルクリックすればソースエディタに入力されます。</p>
 </div>
 
 <div class="note">
-<p>RStudioでペイン間を移動するには，ショートカットを使うのが便利です。Ctrl+1でソースエディタ，Ctrl+2でコンソールに移動します。詳しくはRStudioの「Help」→「Keyboard Shortcuts」をご覧ください。ただ，Macでは，半角英数入力モードでも，この機能がうまく使えないことがあります。解決策としては，「環境設定」→「キーボード」→「入力ソース」の左側で「+」をクリックして「英語」→U.S. International（例えば）を追加し，「日本語」（または「ことえり」）の入力モードの「英字」をオフにするといいでしょう。あるいは「Google日本語入力」を使うという手もあります。</p>
+<p>RStudioでペイン間を移動するには，ショートカットを使うのが便利です。Ctrl+1でソースエディタ，Ctrl+2でコンソールに移動します。詳しくはRStudioの「Help」→「Keyboard Shortcuts」をご覧ください。ただ，Macでは，半角英数入力モードでも，この機能がうまく使えないことがあります。解決策としては，「環境設定」→「キーボード」→「入力ソース」の左側で「+」をクリックして「英語」→U.S. International（例えば）を追加し，「日本語」（旧「ことえり」）の入力モードの「英字」をオフにするといいでしょう。あるいは「Google日本語入力」を使うという手もあります。</p>
 </div>
 
 <p>ところで，答えの前にいつも出る <code>[1]</code> とは何でしょう？
@@ -235,11 +240,11 @@ sin(PI / 2)
 <div class="note">
 <p>例えば <code>c(3,4,5,6)</code> は <code>3:6</code>
 と書けます。また，<code>c(3,5,7,9)</code> は <code>seq(3,9,2)</code>
-のように始値，終値，増分を指定することもできます。</p>
+のように始値，終値，増分で指定することもできます。</p>
 </div>
 
 <div class="note">
-<p>5段階のアンケート結果のように，1が2個，2が3個，…といったデータを入れるには，次のように <code>rep()</code> を使うのが簡単です。</p>
+<p><code>c(1,1,1,1,1)</code> は <code>rep(1,5)</code> と書けます。同様に，5段階のアンケート結果のように，1が2個，2が3個，…といったデータを入れるには，次のようにできます：</p>
 <pre>
 &gt; x = rep(1:5, c(2,3,4,3,2))  # 1,2,3,4,5がそれぞれ2,3,4,3,2個
 &gt; x
@@ -469,9 +474,9 @@ x = scan("clipboard")
 
 <h2 id="readtabulardata">表形式データの読み込ませ方</h2>
 
-<p><a href="data/atest2017.xlsx">atest2017.xlsx</a> は2017年度（平成29年度）の全国学力・学習状況調査の都道府県別正答率を収めたものです。元データは<a href="http://www.nier.go.jp/">国立教育政策研究所</a>の<a href="http://www.nier.go.jp/17chousakekkahoukoku/index.html">平成29年度　全国学力・学習状況調査　報告書・調査結果資料</a>にあります。このデータをRに読み込んでみましょう。</p>
+<p><a href="data/atest2018.xlsx">atest2018.xlsx</a> は2018年度（平成30年度）の全国学力・学習状況調査の都道府県別正答率を収めたものです。元データは<a href="http://www.nier.go.jp/">国立教育政策研究所</a>の<a href="http://www.nier.go.jp/18chousakekkahoukoku/index.html">平成30年度　全国学力・学習状況調査　報告書・調査結果資料</a>にあります。このデータをRに読み込んでみましょう。</p>
 
-<p>まずは上述の <a href="data/atest2017.xlsx">atest2017.xlsx</a> をダウンロード（保存）しましょう。ブラウザによりますが，デフォルトでは多分ホームディレクトリ直下の「ダウンロード」という名前のフォルダに保存されます。このままでもいいですが，プロジェクトを作成している（特定のディレクトリで仕事をしている）場合は，もしやりかたがわかるなら，データはそのプロジェクトのフォルダに保存するほうが便利です。</p>
+<p>まずは上述の <a href="data/atest2018.xlsx">atest2018.xlsx</a> をダウンロード（保存）しましょう。ブラウザによりますが，デフォルトでは多分ホームディレクトリ直下の「ダウンロード」という名前のフォルダに保存されます。このままでもいいですが，プロジェクトを作成している（特定のディレクトリで仕事をしている）場合は，もしやりかたがわかるなら，データはそのプロジェクトのフォルダに保存するほうが便利です。</p>
 
 <p>Excelで開いて，どのようなデータかを確認しましょう。</p>
 
@@ -487,34 +492,36 @@ x = scan("clipboard")
 <p>同じ作業をRのコマンドで行うには，次のようにします：</p>
 <pre>
 library(readxl)
-atest2017 = read_excel("atest2017.xlsx")
+atest2018 = read_excel("atest2018.xlsx")
 </pre>
 </div>
 
 <div class="note">
 <p>実は，ダウンロードもRから行うことができます：</p>
 <pre>
-download.file("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/atest2017.xlsx", "atest2017.xlsx")
-atest2017 = read_excel("atest2017.xlsx")
+download.file("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/atest2018.xlsx", "atest2018.xlsx")
+atest2018 = read_excel("atest2018.xlsx")
 </pre>
 <p>これが一番簡単です。</p>
 </div>
 
+<script>document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];</script>
+
 <p>左上ペインにデータが表示されます。</p>
 
-<p>1列目は「番号」（JIS X 0401「都道府県コード」），2列目は「都道府県」で，3列目から10列目が実際のデータです。</p>
+<p>1列目は「番号」（JIS X 0401「都道府県コード」），2列目は「都道府県」で，3列目から12列目が実際のデータです。</p>
 
-<p>Excelファイルの1行目が，列名（変数名）になっています。実際のデータはExcelファイルの2行目から始まります。47都道府県あります。つまり，atest2017というデータは，47行10列のベクトルになっており，実際のデータ（正答率）は3〜10列目に入っています。</p>
+<p>Excelファイルの1行目が，列名（変数名）になっています。実際のデータはExcelファイルの2行目から始まります。47都道府県あります。つまり，atest2018というデータは，47行12列の行列になっており，実際のデータ（正答率）は3〜12列目に入っています。</p>
 
 <p>全体の相関図をプロットするには，Rコンソール（左下ペイン）に次のように打ち込みます：</p>
 
 <pre>
-plot(atest2017[,3:10])
+plot(atest2018[,3:12])
 </pre>
 
-<p><code>[,3:10]</code> は3〜10列目という意味です。このような指定が面倒であれば，ダウンロードしたatest2017.xlsxをExcelで編集して1列目・2列目を削除したものをRStudioで再び読み込めば，単に <code>plot(atest2017)</code> だけで相関図がプロットできます。</p>
+<p><code>[,3:12]</code> は3〜10列目という意味です。このような指定が面倒であれば，ダウンロードしたatest2018.xlsxをExcelで編集して1列目・2列目を削除したものをRStudioで再び読み込めば，単に <code>plot(atest2018)</code> だけで相関図がプロットできます。</p>
 
-<p>問：箱ひげ図を描いてみましょう（<code>boxplot(atest2017[,3:10])</code>）。科目名が全部表示されない場合は，グラフの横幅をマウスで広げてみましょう。</p>
+<p>問：箱ひげ図を描いてみましょう（<code>boxplot(atest2018[,3:12])</code>）。科目名が全部表示されない場合は，グラフの横幅をマウスで広げてみましょう。</p>
 
 <p>問：全科目の平均正答率を都道府県ごとにExcelで求め，東日本（上半分）と西日本（下半分）で統計的に有意な差があるか調べてみましょう。</p>
 
@@ -1012,7 +1019,7 @@ par(mar=c(4.2,4.1,0.4,0.5))
 \includegraphics[width=10cm,trim=125 130 150 150]{hoge.pdf}
 </pre>
 
-<p>Rの<a href="http://cran.r-project.org/web/packages/tikzDevice/index.html">tikzDevice</a>を使えばTikZ形式で出力することも可能です。これをLaTeX文書に挿入すれば，本文と同じフォントで統一できますし，図にTeXの数式を含めることもできます。</p>
+<p>Rの<a href="https://CRAN.R-project.org/package=tikzDevice">tikzDevice</a>を使えばTikZ形式で出力することも可能です。これをLaTeX文書に挿入すれば，本文と同じフォントで統一できますし，図にTeXの数式を含めることもできます。</p>
 
 <h2>細かいこと</h2>
 
@@ -1032,7 +1039,8 @@ b = 5 - 3
 <p>と同じ意味です。</p>
 
 <p>数値は <code>3</code> と書いても <code>3.0</code>
-と書いても倍精度実数として扱われます。<code>3+0i</code>
+と書いても倍精度実数として扱われます。整数として扱いたいなら <code>3L</code>
+とします。<code>3+0i</code>
 は複素数 3 + 0<i>i</i> になります。値の型は <code>typeof()</code> 関数で調べられます：</p>
 
 <pre>
@@ -1040,6 +1048,8 @@ b = 5 - 3
 [1] "double"
 &gt; typeof(3.0)
 [1] "double"
+&gt; typeof(3L)
+[1] "integer"
 &gt; typeof(3+0i)
 [1] "complex"
 </pre>
@@ -1267,7 +1277,7 @@ nohup R CMD BATCH hoge.R &amp;
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-02-03 13:57:46</time>
+Last modified: <time>2019-02-07 16:22:21</time>
 <!-- hhmts end -->
 </p>
 </footer>

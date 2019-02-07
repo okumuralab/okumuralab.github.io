@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>相関（と回帰）</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -110,14 +109,14 @@ plot(組織率, 正答率合計, pch=16, xlab="組織率（%）")
 <p>Rで相関係数を求める関数は <code>cor()</code> です。</p>
 
 <pre>
-&gt; cor(組織率, 正答率合計)
+<code>cor(組織率, 正答率合計)</code>
 [1] 0.4251695
 </pre>
 
 <p>$p$ 値や信頼区間まで求める関数は <code>cor.test()</code> です：</p>
 
 <pre>
-&gt; cor.test(組織率, 正答率合計)
+<code>cor.test(組織率, 正答率合計)</code>
 
 	Pearson's product-moment correlation
 
@@ -148,9 +147,9 @@ sample estimates:
 <p>上のようなプロットにどうやって「えいやっ」と直線を引くかは，通常は，直線と点との鉛直距離の2乗の和を最小にする「最小2乗法」を使います。そのためのRの関数が <code>lm()</code> です（linear modelから来ています）。</p>
 
 <pre>
-&gt; r = lm(正答率合計 ~ 組織率)
-&gt; abline(r)   # 上で描いたプロットに直線を重ね書きする
-&gt; summary(r)
+<code>r = lm(正答率合計 ~ 組織率)</code>
+<code>abline(r)</code>   # 上で描いたプロットに直線を重ね書きする
+<code>summary(r)</code>
 
 Call:
 lm(formula = 正答率合計 ~ 組織率)
@@ -173,6 +172,23 @@ F-statistic: 2.427 on 1 and 11 DF,  p-value: 0.1475
 
 <p>これは，正答率合計 = 0.3351 × 組織率 + 233.5486 という式で予測できることを示しています。ただし，$p$ 値はさきほどと同じ 0.1475 です。相関係数が 0 であるという帰無仮説と，回帰分析したとき傾きが 0 であるという帰無仮説とは，同じことだからです。</p>
 
+<div class="note">
+<p>後で使うために係数だけ取り出したい場合は <code>coef()</code> 関数を使います（<code>r$coefficients</code> でも同じです）：</p>
+<pre>
+<code>coef(r)</code>
+(Intercept)      組織率 
+  233.54856     0.33506 
+</pre>
+<p>係数の信頼区間は <code>confint()</code> 関数で取り出せます：</p>
+<pre>
+<code>confint(r)</code>
+                  2.5 %      97.5 %
+(Intercept) 210.0633470 257.0337801
+組織率       -0.1382923   0.8084123
+</pre>
+<p>ほかに <code>predict()</code> 関数や <code>residuals()</code> 関数，<code>rstudent()</code> 関数も便利です。<code>plot()</code> は4通りの診断プロットを出力します。4通りを1枚にまとめるには <code>par(mfrow=c(2,2)); plot(r)</code> とします。</p>
+</div>
+
 <h2>息抜き体操</h2>
 
 <p>「準備体操」のプロットに直線をあてはめてみましょう：</p>
@@ -194,16 +210,16 @@ x = rnorm(40); y = rnorm(40); plot(x, y, pch=16, main=cor(x,y)); abline(lm(y ~ x
 <p>相関係数と名の付くものは上のピアソンの相関係数以外にもいくつかあり，Rでは後述のケンドールの順位相関係数，スピアマンの順位相関係数が同じ <code>cor()</code> で計算できます：</p>
 
 <pre>
-&gt; cor(組織率, 正答率合計, method="kendall")
+<code>cor(組織率, 正答率合計, method="kendall")</code>
 [1] 0.3736324
-&gt; cor(組織率, 正答率合計, method="spearman")
+<code>cor(組織率, 正答率合計, method="spearman")</code>
 [1] 0.5076522
 </pre>
 
 <p>$p$ 値や信頼区間まで求める関数はやはり <code>cor.test()</code> です：</p>
 
 <pre>
-&gt; cor.test(組織率, 正答率合計, method="kendall")
+<code>cor.test(組織率, 正答率合計, method="kendall")</code>
 
 	Kendall's rank correlation tau
 
@@ -217,7 +233,7 @@ sample estimates:
 Warning message:
 In cor.test.default(組織率, 正答率合計, method = "kendall") :
    タイのため正確な p 値を計算することができません 
-&gt; cor.test(組織率, 正答率合計, method="spearman")
+<code>cor.test(組織率, 正答率合計, method="spearman")</code>
 
 	Spearman's rank correlation rho
 
@@ -297,9 +313,9 @@ $Y_3 = 2$
 の相関係数を求めるには，次のようにします。</p>
 
 <pre>
-&gt; x = c(1,2,3)    # x = 1:3 でも同じ
-&gt; y = c(1,3,2)
-&gt; cor(x, y)
+<code>x = c(1,2,3)</code>    # x = 1:3 でも同じ
+<code>y = c(1,3,2)</code>
+<code>cor(x, y)</code>
 </pre>
 
 <p>これで $r = 0.5$ が求まります。</p>
@@ -313,18 +329,18 @@ $Y_3 = 2$
 <p>さきほどの例で計算すると，</p>
 
 <pre>
-&gt; x = c(1, 2, 3)  # x = 1:3 でも同じ
-&gt; y = c(1, 3, 2)
-&gt; r = cor(x, y)   # r = 0.5 になる
-&gt; n = 3
-&gt; t = r * sqrt(n-2) / sqrt(1 - r^2)  # t = 0.5773503
-&gt; 2 * pt(-t, n-2) # 0.6666667 と表示される
+<code>x = c(1, 2, 3)</code>  # x = 1:3 でも同じ
+<code>y = c(1, 3, 2)</code>
+<code>r = cor(x, y)</code>   # r = 0.5 になる
+<code>n = 3</code>
+<code>t = r * sqrt(n-2) / sqrt(1 - r^2)</code>  # t = 0.5773503
+<code>2 * pt(-t, n-2)</code> # 0.6666667 と表示される
 </pre>
 
 <p>となります。より簡単には <code>cor.test(x, y)</code> と打ち込めば相関係数と $p$ 値などが出力されます。</p>
 
 <pre>
-&gt; cor.test(x, y)
+<code>cor.test(x, y)</code>
 
 	Pearson's product-moment correlation
 
@@ -426,30 +442,31 @@ mean(abs(a) >= abs(t)) # 両側確率
 </pre>
 <p>このページの最初に挙げた例では $p = 0.08366$ でしたが，100万回のシミュレーションでは $p = 0.095$ ほどです。ただし，気をつけなければならないのは，ケンドールの $\tau$ が飛び飛びの値をとることです。このため，値をコピー＆ペーストして使っても四捨五入のために正しくない結果を生じることがあります：</p>
 <pre>
-&gt; t
+<code>t</code>
 [1] 0.3736324
-&gt; mean(abs(a) &gt;= t)
+<code>mean(abs(a) &gt;= t)</code>
 [1] 0.095084
-&gt; mean(abs(a) &gt;= 0.3736324)
+<code>mean(abs(a) &gt;= 0.3736324)</code>
 [1] 0.07212
-&gt; mean(abs(a) &gt;= 0.3736323)
+<code>mean(abs(a) &gt;= 0.3736323)</code>
 [1] 0.095084
 </pre>
 <p>この場合は $p = 0.095$ のほうが正しいのですが，少しずらすと $p = 0.072$ になります。正規分布による近似 $p = 0.08366$ はこのほぼ真ん中の値になっています。ちなみに，100万個の中にユニークな値は67個しかありません：</p>
 <pre>
-&gt; length(unique(a))
+<code>length(unique(a))</code>
 [1] 67
 </pre>
 </div>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
 <p>
 <!-- hhmts start -->
-Last modified: <time>2015-03-27 10:29:37</time>
+Last modified: <time>2019-02-07 17:35:40</time>
 <!-- hhmts end -->
 </p>
+</footer>
 </body>
 </html>
