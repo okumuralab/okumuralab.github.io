@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>血液型と性格</title>
+<title>またまた血液型と性格</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -14,13 +14,15 @@
 <a href="./">統計・データ解析</a> &gt;
 </nav>
 
-<h1>血液型と性格</h1>
+<h1>またまた血液型と性格</h1>
 
 <p>以下ではABO血液型（表現型，遺伝子型）と性格に有意な関係を示したとする次の論文を紹介する：</p>
 
-<ul lang="en">
-  <li>Shoko Tsuchimine, Junji Saruwatari, Ayako Kaneda, Norio Yasui-Furukori, “ABO Blood Type and Personality Traits in Healthy Japanese Subjects”, <i>PLOS ONE</i> (2015) <a href="https://doi.org/10.1371/journal.pone.0126983">DOI:10.1371/journal.pone.0126983</a></li>
-</ul>
+<blockquote lang="en">
+Shoko Tsuchimine, Junji Saruwatari, Ayako Kaneda, Norio Yasui-Furukori, “ABO Blood Type and Personality Traits in Healthy Japanese Subjects”, <i>PLOS ONE</i> (2015) <a href="https://doi.org/10.1371/journal.pone.0126983">DOI:10.1371/journal.pone.0126983</a>
+</blockquote>
+
+<p>これは2015年当時ネットで話題になったが，豊田秀樹編著『たのしいベイズモデリング』（北大路書房，2018年）の第2章でも取り上げられている。</p>
 
 <p>論文にはデータのExcelファイルが付いていて，これを使えば検証できる？と思ったけれど，論文では年齢・性別でコントロールしてあり，年齢・性別はExcelファイルには含まれていない。</p>
 
@@ -47,7 +49,13 @@ C (Cooperativeness),
 ST (Self-transcendence)
 である。</p>
 
-<p><code>sum(complete.cases(x))</code> で調べてみると，欠損値を一つも含まない行は1426ある（論文では1427とされている）。</p>
+<p>これら全変数が揃っているものだけ抜き出そう：</p>
+
+<pre>
+x = subset(x, complete.cases(x))
+</pre>
+
+<p>これで1426行に減る（論文では1427とされている）。</p>
 
 <p>この表の「Blood types」は遺伝子型（AA, AB, AO, BB, BO, OO）で，これらに対応する表現型はそれぞれ A, AB, A, B, B, O である。遺伝子型を表現型に変換するには，Rではいろいろなやりかたがあるが，@hoxo_m さんの<a href="https://qiita.com/hoxo_m/items/b526d174d9d0291c7264">Rでハッシュテーブルの速度比較</a>を参考に，ここでは一番簡単な名前付きベクトルを使うことにする：</p>
 
@@ -82,29 +90,43 @@ Residuals 1422
 	One-way analysis of means (not assuming equal variances)
 
 data:  P and `Blood types`
-F = 2.5518, num df = 5.00, denom df = 288.18, p-value = 0.02799
+F = 2.5173, num df = 5.00, denom df = 285.15, p-value = 0.02993
 
 <code>oneway.test(P ~ ABO, data=x)</code>
 
 	One-way analysis of means (not assuming equal variances)
 
 data:  P and ABO
-F = 2.5906, num df = 3.0, denom df = 483.5, p-value = 0.05222
+F = 2.714, num df = 3.00, denom df = 483.28, p-value = 0.04434
 </pre>
 
-<p>論文ではそれぞれ <i>p</i> = 0.020, 0.032 だが，年齢・性別でコントロールしていないためか，ここでの計算結果は <i>p</i> = 0.028, 0.052 となった。しかし，多重性まで考えれば，有意な結果が得られたとは言い難い。</p>
+<p>論文ではそれぞれ <i>p</i> = 0.020, 0.032 だが，年齢・性別でコントロールしていないためか，ここでの計算結果は <i>p</i> = 0.030, 0.044 となった。しかし，7変数のうち1変数である。多重性まで考えれば，有意な結果が得られたとは言い難い。</p>
 
 <p>Persistence の度数分布は次の通りである。これを見てもあまり意味のある差がありそうにない。</p>
 
+<pre>
+a = names(table(x$ABO))
+p = sapply(a, function(b) { t = table(subset(x, ABO==b)$P); t / sum(t) })
+matplot(0:8, p, type="b", pch=" ", col="black", xlab="Persistence", ylab="")
+sapply(a, function(b) text(0:8, p[,b], b))
+</pre>
+
 <figure><img src="img/190206c.png" alt="Persistence の度数分布"></figure>
 
+<p>血液型ごとに平均±標準誤差をエラーバーで表してみる：</p>
+
 <pre>
-a = "B"; t = table(subset(x, ABO==a)$P); plot(t/sum(t), type="b", pch=a, ylab="")
-a = "A"; t = table(subset(x, ABO==a)$P); points(t/sum(t), type="b", pch=a)
-a = "O"; t = table(subset(x, ABO==a)$P); points(t/sum(t), type="b", pch=a)
-a = "AB"; t = table(subset(x, ABO==a)$P); points(t/sum(t), type="b", pch=' ')
-text(0:8, t/sum(t), 'AB')
+n = table(x$ABO)
+m = sapply(names(n), function(a) mean(subset(x, ABO==a)$P))
+s = sapply(names(n), function(a) sd(subset(x, ABO==a)$P))
+se = s / sqrt(n)
+plot(1:4, m, pch=16, xlim=c(0.5,4.5), ylim=range(c(m+se,m-se)),
+     xaxt="n", xlab="Phenotype", ylab="Persistence")
+arrows(1:4, m-se, 1:4, m+se, length=0.05, angle=90, code=3)
+axis(1, at=1:4, labels=names(n))
 </pre>
+
+<figure><img src="img/190207a.png" alt="Persistence の度数分布"></figure>
 
 <hr>
 
@@ -113,7 +135,7 @@ text(0:8, t/sum(t), 'AB')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-02-06 21:12:12</time>
+Last modified: <time>2019-02-07 09:24:23</time>
 <!-- hhmts end -->
 </p>
 </footer>
