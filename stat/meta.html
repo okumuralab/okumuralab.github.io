@@ -65,6 +65,10 @@ MathJax.Hub.Config({
 <p><a href="http://ja.wikipedia.org/wiki/%E5%87%BA%E7%89%88%E3%83%90%E3%82%A4%E3%82%A2%E3%82%B9">出版バイアス</a>（publication bias，お蔵入り問題，file drawer problem）といって，有意な結果は出版されやすいけれども，そうでない結果は出版されずに，研究者のファイル入れに留まる傾向があります。つまり，出版された研究結果には偏りがあります。したがって，出版された結果だけを集めてメタアナリシスしても正しい結果は得られないという議論があります。ただ，出版されていない有意でない結果がたくさんあったとしても，それらを含めると有意でなくなるとは限りません。むしろ，さらに有意になる可能性もあります。</p>
 </div>
 
+<div class="note">
+<p><em>[TODO]</em> 出版バイアスを避けるための方法（プレレジ，results-free reviewなど）をどこかに書く。</p>
+</div>
+
 <h2>Rでメタアナリシス</h2>
 
 <p>Rでメタアナリシスを行うパッケージには <a href="http://cran.r-project.org/web/packages/meta/">meta</a>，<a href="http://cran.r-project.org/web/packages/rmeta/">rmeta</a>，<a href="http://cran.r-project.org/web/packages/metafor/">metafor</a> などがあります（レビュー：<a href="http://cran.r-project.org/web/views/MetaAnalysis.html">CRAN Task View: Meta-Analysis</a>）。ここではmetaforを解説します。詳細は <a href="http://www.metafor-project.org/">metafor</a> サイトやJSS論文 <a href="http://www.jstatsoft.org/v36/i03/">Conducting Meta-Analyses in R with the metafor Package</a> を参照してください。</p>
@@ -133,12 +137,13 @@ par(op)
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-14 20:28:32</time>
+Last modified: <time>2019-02-09 16:40:42</time>
 <!-- hhmts end -->
 </p>
+</footer>
 </body>
 </html>
