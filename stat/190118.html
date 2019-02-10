@@ -372,13 +372,21 @@ abline(0, 1)
 
 <p>地上/航空機の中央値 <code>median(rad/avi, na.rm=TRUE)</code> は 0.6128889 である。</p>
 
+<p>中央値の統計誤差を<a href="bootstrap.html">ブートストラップ</a>で求めてみよう：</p>
+
+<pre>
+ratio = (rad/avi)[!is.na(rad/avi)]  # または ratio = na.omit(rad/avi)
+r = replicate(100000, median(sample(ratio, replace=TRUE)))
+sd(r)   # だいたい 0.054 くらい
+</pre>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-02-09 10:10:07</time>
+Last modified: <time>2019-02-10 20:23:38</time>
 <!-- hhmts end -->
 </p>
 </footer>
