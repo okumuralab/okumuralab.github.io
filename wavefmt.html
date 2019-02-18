@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>WAVE file format</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+</nav>
+
+<h1>WAVE (.WAV) file format</h1>
+
+<ul>
+  <li>4バイト  'R' 'I' 'F' 'F'</li>
+  <li>4バイト  これ以下のバイト数 (= ファイルサイズ - 8)</li>
+  <li>8バイト  'W' 'A' 'V' 'E' 'f' 'm' 't' ' '(←スペース)</li>
+  <li>4バイト  WAVEfmt欄のバイト数</li>
+  <li>2バイト  データ形式 (PCM: 01 00) [<a href="https://tools.ietf.org/html/rfc2361">RFC 2361</a>]</li>
+  <li>2バイト  チャネル数 (モノ: 01 00  ステレオ: 02 00)</li>
+  <li>4バイト  サンプリングレート (44100Hz なら 44 AC 00 00)</li>
+  <li>4バイト  バイト／秒 (44100Hz ステレオ 16ビット なら 10 B1 02 00)</li>
+  <li>2バイト  バイト／サンプル×チャネル数 (ステレオ 16ビット なら 04 00)</li>
+  <li>2バイト  ビット／サンプル (16ビット なら 10 00)</li>
+  <li>「WAVEfmt欄のバイト数」-16バイト  拡張部分</li>
+  <li>4バイト  欄の名前 ('d' 'a' 't' 'a'，'f' 'a' 'c' 't' など)</li>
+  <li>4バイト  この欄のバイト数 n</li>
+  <li>nバイト  欄の内容</li>
+</ul>
+
+<p>欄は 'd' 'a' 't' 'a' だけが必須。
+欄 'd' 'a' 't' 'a' の内容には次の形式でデータが入っている。</p>
+
+<ul>
+  <li>ステレオなら L R L R ... の順</li>
+  <li>8ビットデータは 0〜255 (無信号は 128)</li>
+  <li>16ビットデータは -32768〜+32767 (無信号は 0)</li>
+</ul>
+
+<p>数値はすべて Intel バイトオーダで並べる。</p>
+
+<ul>
+  <li>WAVE ファイルの内容を調べる拙作プログラム
+      <a href="dumpwave.c">dumpwave.c</a><br>
+      [2009-06-12] Windowsの「サウンドレコーダー」の形式に対応しました。ヘッダ情報は標準エラー出力にしました。標準出力に出るのは音のPCMデータだけで，左右チャンネルの区切りはタブにしましたので，Excelへの取り込みが多少楽になったと思います。<br>
+      [2009-06-19] バグフィックス。<br>
+      [2015-02-02] 24ビット，32ビットに対応。
+  </li>
+</ul>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-02-18 16:57:04</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
