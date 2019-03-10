@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>Brunner-Munzel検定</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -28,6 +27,8 @@ MathJax.Hub.Config({
 <h1>Brunner-Munzel検定</h1>
 
 <p><em>[2019-02-16追記]</em> <a href="https://twitter.com/TA25140989">@TA25140989</a> さんが <a href="https://github.com/toshi-ara/brunnermunzel">brunnermunzel</a> パッケージを作られました。これは，内部を Fortran で高速化し，並べ替え Brunner-Munzel 検定もできる優れものです。</p>
+
+<p><em>[2019-03-10追記]</em> 上記パッケージがCRANに入りました: <a href="https://CRAN.R-project.org/package=brunnermunzel">brunnermunzel: (Permuted) Brunner-Munzel Test</a>。「lawstatパッケージに由来する<a href="https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q14184344664">不具合</a>は次回更新時に修正します（GitHubでは対応済）」とのことです。</p>
 
 <h2>はじめに</h2>
 
@@ -137,6 +138,30 @@ P(X&lt;Y)+.5*P(X=Y)
         0.788961
 </pre>
 
+<p>新しい<a href="https://CRAN.R-project.org/package=brunnermunzel">brunnermunzel</a>パッケージでは次のようになります：</p>
+
+<pre>
+install.packages("brunnermunzel")
+library(brunnermunzel)
+x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
+y = c(3,3,4,3,1,2,3,1,1,5,4)
+brunnermunzel.test(x, y)
+</pre>
+
+<p>結果：</p>
+
+<pre>
+	Brunner-Munzel Test
+
+data:  x and y
+Brunner-Munzel Test Statistic = 3.1375, df = 17.683, p-value = 0.005786
+95 percent confidence interval:
+ 0.5952169 0.9827052
+sample estimates:
+P(X&lt;Y)+.5*P(X=Y) 
+        0.788961 
+</pre>
+
 <h2>並べ替えBrunner-Munzel検定</h2>
 
 <p>サンプルが非常に小さい場合には，Brunner-Munzelの統計量に並べ替え検定を適用すれば，もっと正確に計算できます。この方法（permuted Brunner-Munzel test）は次の文献で評価されています：</p>
@@ -164,6 +189,17 @@ mean(abs(z) &gt;= abs(bm))
 </pre>
 
 <p>結果は <code>0.008037645</code> となりました。</p>
+
+<p>新しい<a href="https://CRAN.R-project.org/package=brunnermunzel">brunnermunzel</a>パッケージでは次のように簡単かつ高速にできます：</p>
+
+<pre>
+<code>brunnermunzel.permutation.test(x, y)</code>
+
+	permuted Brunner-Munzel Test
+
+data:  x and y
+p-value = 0.008038
+</pre>
 
 <h2>t検定との関係</h2>
 
@@ -201,7 +237,7 @@ abline(0, 1)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-02-16 22:15:42</time>
+Last modified: <time>2019-03-10 10:29:38</time>
 <!-- hhmts end -->
 </p>
 </footer>
