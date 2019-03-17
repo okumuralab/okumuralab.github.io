@@ -87,12 +87,73 @@ write.csv(all, "atest2017.csv", quote=FALSE, row.names=FALSE)
 
 <hr>
 
+<p>おまけ：<a href="http://tmaita77.blogspot.com/2011/06/blog-post_12.html" rel="nofollow">通塾と学力の相関</a>という記事を見かけたので，このデータで検証してみる：</p>
+
+<pre>
+library(readxl)
+names = dir(pattern="^\\d\\dp_17a.xlsx$", full.names=TRUE, recursive=TRUE)
+f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="C60:U60")) # 学習塾
+x = sapply(names, f)
+juku = sapply(1:47, function(i) 1 - as.numeric(x[9,i])/sum(as.numeric(x[c(9:13,18:19),i])))
+#  [1] 0.3686093 0.2828586 0.2601114 0.3804514 0.2224544 0.2851136 0.3339514
+#  [8] 0.4145688 0.4176955 0.4422374 0.4563553 0.5127072 0.5820875 0.5739025
+# [15] 0.3572296 0.3739383 0.3719183 0.3828915 0.4184482 0.3981113 0.4716042
+# [22] 0.4755472 0.4976620 0.5011098 0.4903206 0.5062606 0.5113585 0.5480711
+# [29] 0.5427592 0.5320781 0.3610875 0.3233766 0.4661890 0.4581543 0.4285054
+# [36] 0.4930064 0.4432964 0.4654696 0.4648547 0.3999904 0.3711454 0.3745027
+# [43] 0.3569343 0.3980394 0.3356785 0.3263963 0.3836275
+a = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/atest2017.csv")
+kenmei = c("北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
+   "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山", "石川",
+   "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重", "滋賀", "京都",
+   "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根", "岡山", "広島", "山口",
+   "徳島", "香川", "愛媛", "高知", "福岡", "佐賀", "長崎", "熊本", "大分",
+   "宮崎", "鹿児島", "沖縄")
+plot(juku, rowSums(a[,2:5]), type="n", xlab="通塾率", ylab="成績")
+text(juku, rowSums(a[,2:5]), kenmei)
+cor.test(juku, rowSums(a[,2:5]))
+
+#         Pearson's product-moment correlation
+# 
+# data:  juku and rowSums(a[, 2:5])
+# t = -1.8927, df = 45, p-value = 0.06484
+# alternative hypothesis: true correlation is not equal to 0
+# 95 percent confidence interval:
+#  -0.51829704  0.01694128
+# sample estimates:
+#        cor 
+# -0.2715466 
+</pre>
+
+<figure><img src="img/190317a.png" alt="通塾率と成績"></figure>
+
+<p>総得点とは負の相関があるように見える（統計的に有意ではない）。科目ごとに見れば，国A・算Aとは統計的に有意な負の相関がある。</p>
+
+<p>これは県レベルの相関であるが，個人レベルの相関はこれではわからない。<a href="http://www.nier.go.jp/17chousakekkahoukoku/factsheet/17primary/">ここ</a>の下のほうにある「クロス集計表(児童質問紙－教科)全国【表】」というExcel表（ファイル名 17p_424.xlsx）に個人レベルのクロス集計が記されている。同じ塾でも，「学校の勉強より進んだ内容や，難しい内容を勉強している」塾と「学校の勉強でよく分からなかった内容を勉強している」塾で正反対の傾向が見えるが，機械的に人数で重みづけて平均してみる：</p>
+
+<pre>
+ju = read_excel("17p_424.xlsx", 17, col_names=FALSE, range="G13:O17")
+ju = ju[,c(1,2,3,5,7,9)]
+matplot(1:2, sapply(3:6, function(i) c(ju[1,i], sum(ju[2:5,i] * ju[2:5,1]) / sum(ju[2:5,1]))),
+        pch=16, col="black", type="o", lty=1, xlim=c(0.7,2.3), xaxt="n",
+        xlab="", ylab="平均正答率")
+text(2, sapply(3:6, function(i) sum(ju[2:5,i] * ju[2:5,1]) / sum(ju[2:5,1])),
+     labels=c("国A","国B","算A","算B"), pos=4)
+axis(1, at=1:2, labels=c("通塾なし","通塾あり"))
+</pre>
+
+<figure><img src="img/190317b.png" alt="通塾と成績"></figure>
+
+<p>どの科目についても，個人レベルでは通塾ありのほうが成績が良い。県レベルで見えた負の相関から個人レベルの相関を推測するのは正しくなさそうである（生態学的誤謬。同様な例は<a href="piaac.html">PIAACデータ解析</a>，<a href="181020.html">地域の大人に勉強を教えてもらうと成績が下がる？</a>参照）。</p>
+
+<hr>
+
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2017-08-29 13:48:04</time>
+Last modified: <time>2019-03-17 22:16:39</time>
 <!-- hhmts end -->
 </p>
 </footer>
