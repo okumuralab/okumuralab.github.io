@@ -2,10 +2,9 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>グラフの例：白血病による死亡率の推移</title>
+<title>白血病による死亡率・罹患率の推移</title>
 <meta name="viewport" content="width=device-width">
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
@@ -13,14 +12,13 @@
 <nav id="breadcrumbs">
 <a href="../">ホーム</a> &gt;
 <a href="./">統計・データ解析</a> &gt;
-<a href="graphs.html">グラフの描き方</a> &gt;
 </nav>
 
-<h1>グラフの例：白血病による死亡率の推移</h1>
+<h1>白血病による死亡率・罹患率の推移</h1>
 
-<p><em>[2018-12-29]</em> 2017年のデータを追加した。</p>
+<p><em>[2019-03-24]</em> 大幅にアップデートした。</p>
 
-<p>以前書いた<a href="leukemia.html">グラフの例：白血病による死亡数の推移</a>のアップデート版である。</p>
+<h2>死亡率</h2>
 
 <p>e-Stat の <a href="http://www.e-stat.go.jp/SG1/estat/GL08020101.do?_toGL08020101_&amp;tstatCode=000001028897&amp;requestSender=dsearch">人口動態調査 &gt; 人口動態統計</a>
 の
@@ -50,16 +48,57 @@ ts.plot(cbind(y$trend, y$trend+y$seasonal), lty=1:2, xlab="年", ylab="死亡率
 
 <figure><img src="img/181229b.png" alt="白血病による死亡率の推移"></figure>
 
-<p>原発事故（2011年3月）が起こる前から徐々に増えているが，急増している様子はない。</p>
+<h2>年齢調整死亡率</h2>
 
-<hr>
+<p>死亡率の増加の原因の一つは高齢化である。高齢化の影響を差し引くには，年齢調整をしなければならない。国立がん研究センター<a href="https://ganjoho.jp/reg_stat/statistics/dl/index.html">がんに関する統計データのダウンロード</a>の死亡データ <code>cancer_mortality(1958-2017).xls</code> には年齢調整した値が収められている。</p>
 
-<p>2011年11月に「各都道府県の国公立医師会病院の統計によると、今年の4月から10月にかけて、「白血病」と診断された患者数が、昨年の約7倍にのぼったことが21日に判明した。これを受けて、日本医師会会長原中勝征は、原発事故との因果関係は不明として、原因が判明次第発表するとした」というコピペがネットで多数見られた。ソースは新聞だとされたが，そのような報道は見つからない。日本医師会も<a href="https://web.archive.org/web/20111129155750/http://www.med.or.jp/people/info/people_info/000614.html">否定する声明</a>（アーカイブ）を出した。</p>
+<pre>
+library(readxl)
+y = 1958:2017
+data = read_excel("cancer_mortality(1958-2017).xls", "asr", col_types=c(rep("text",8),rep("numeric",length(y))))
+leu = subset(data, 部位=="白血病" & 性別=="男女計" & 標準人口=="昭和60年モデル人口")
+z = as.numeric(leu[as.character(y)])
+# quartz(width=7, height=5, type="png", file="190324c.png")
+# par(mar=c(3,3,1,1), mgp=c(2,0.8,0))
+plot(y, z, type="o", pch=16, xlab="年", ylab="全国年齢調整死亡率（対10万人）", panel.first=grid())
+# dev.off()
+</pre>
+
+<figure><img src="img/190324c.png" alt="白血病の年齢調整死亡率の推移"></figure>
+
+<p>1987年をピークに減っていることがわかる。比較のため，「白血病」を「全部位」に直した図も挙げておく：</p>
+
+<figure><img src="img/190324d.png" alt="がんの年齢調整死亡率の推移"></figure>
+
+<h2>罹患率</h2>
+
+<p>上と同様に，国立がん研究センター<a href="https://ganjoho.jp/reg_stat/statistics/dl/index.html">がんに関する統計データのダウンロード</a>から罹患データ（全国推計値）のファイル <code>cancer_incidence(1975-2014).xls</code> をいただいてくる。</p>
+
+<pre>
+library(readxl)
+data = read_excel("cancer_incidence(1975-2014).xls", "asr")
+leu = subset(data, 部位=="白血病" & 性別=="男女計" & 標準人口=="昭和60年モデル人口")
+y = 1975:2014
+z = as.numeric(leu[as.character(y)])
+# quartz(width=7, height=5, type="png", file="190324a.png")
+# par(mar=c(3,3,1,1), mgp=c(2,0.8,0))
+plot(y, z, type="o", pch=16, xlab="年", ylab="全国推定年齢調整罹患率（対10万人）", panel.first=grid())
+# dev.off()
+</pre>
+
+<figure><img src="img/190324a.png" alt="白血病罹患率の推移"></figure>
+
+<p>比較のため，上の「白血病」を「全部位」に変えたものを挙げておく：</p>
+
+<figure><img src="img/190324b.png" alt="がん（全部位）罹患率の推移"></figure>
+
+<p>死亡率が減少しているのに，罹患率は少しずつ上昇している。理由を考えてみよう。</p>
+
+<h2>デマ</h2>
+
+<p>2011年11月に「各都道府県の国公立医師会病院の統計によると、今年の4月から10月にかけて、「白血病」と診断された患者数が、昨年の約7倍にのぼったことが21日に判明した。これを受けて、日本医師会会長原中勝征は、原発事故との因果関係は不明として、原因が判明次第発表するとした」というコピペがネットで出回った。ソースは新聞だとされたが，そのような報道は見つからない。日本医師会も<a href="https://web.archive.org/web/20111129155750/http://www.med.or.jp/people/info/people_info/000614.html">否定する声明</a>（アーカイブ）を出した。</p>
 
 <p>同様なデマは現在に至っても健在である。</p>
-
-<p>なお，罹患率は死亡率のように精度のよいデータが出ていないが，<a href="http://ganjoho.jp/reg_stat/statistics/stat/annual.html">がん情報サービス &gt; 統計 &gt; がん統計 &gt; 年次推移</a>
-の2番目の表によれば，近年の白血病の年齢調整罹患率は男女とも「横ばい」である。</p>
 
 <hr>
 
@@ -67,7 +106,7 @@ ts.plot(cbind(y$trend, y$trend+y$seasonal), lty=1:2, xlab="年", ylab="死亡率
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-12-29 14:49:12</time>
+Last modified: <time>2019-03-24 17:55:19</time>
 <!-- hhmts end -->
 </p>
 </body>
