@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>日本人の死因</title>
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>日本人の死因</h1>
+
+<p>e-Stat の <a href="http://www.e-stat.go.jp/SG1/estat/GL08020101.do?_toGL08020101_&amp;tstatCode=000001028897&amp;requestSender=dsearch">人口動態調査 &gt; 人口動態統計</a>
+の
+確定数 &gt; 死亡 &gt; 年次
+の5-12「死因年次推移分類別にみた性別死亡数及び率（人口10万対）」の「CSV」をクリックすると <code>mc120000.csv</code> というCSVファイル（SJIS）が落ちてくる。CSVといっても自由記述に近いところがあるので，先頭の16行をスキップし，残りの先頭116行だけを読み込む。欠測値は <code>...</code> で表されているほか，戦時中の1944〜1946年はすべて欠測値となっているので，注意が必要である。</p>
+
+<pre>
+mc120000 = read.csv("mc120000.csv", fileEncoding="CP932", header=FALSE, skip=16, nrows=116, na.strings="...")
+d = data.frame(V1=seq(min(mc120000[,1]),max(mc120000[,1])))
+d = merge(d, mc120000, all=TRUE)
+</pre>
+
+<p>とりあえず全体の死亡率と，そのうち悪性新生物（がん）による死亡率だけをプロットする：</p>
+
+<pre>
+# quartz(width=7, height=7, type="png", file="190326a.png")
+# par(mar=c(3,3,1,1), mgp=c(2,0.8,0))
+plot(d[,1], d[,3], type="l", ylim=c(0, 1.02*max(data[,3])), yaxs="i", xlab="年", ylab="死亡率（対10万）", panel.first=grid())
+points(d[,1], d[,7], type="l")
+rows = dim(d)[1]
+text(d[rows,1], d[rows,3], "総数", adj=c(1,-0.2))
+text(d[rows,1], d[rows,7], "悪性新生物", adj=c(1,-0.2))
+# dev.off()
+</pre>
+
+<figure><img src="img/190326a.png", alt="日本人の死因"></figure>
+
+<p>2017年に日本人の死亡者の約1/3が悪性新生物により死亡していることがわかる。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-03-26 13:29:41</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
