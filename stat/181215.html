@@ -16,10 +16,10 @@
 
 <h1>医学部医学科の男女別合格率</h1>
 
-<p>医学部の入試不正を受けて，文科省は<a href="http://www.mext.go.jp/a_menu/koutou/senbatsu/1409128.htm">医学部医学科の入学者選抜における公正確保等に係る緊急調査について</a>というページで随時情報を発信している。この中の<a href="http://www.mext.go.jp/component/a_menu/education/detail/__icsFiles/afieldfile/2018/09/10/1409128_002_1.pdf">緊急調査結果速報  （PDF:395KB）</a>（2018-09-04付，タイムスタンプ: 2018-09-10）に含まれる81大学の過去6年間の男女別合格率をプロットしてみる。このPDFの3〜4ページの表を収めた <a href="data/1409128_002_1a.csv">1409128_002_1a.csv</a> を使う：</p>
+<p>医学部の入試不正を受けて，文科省は<a href="http://www.mext.go.jp/a_menu/koutou/senbatsu/1409128.htm">医学部医学科の入学者選抜における公正確保等に係る緊急調査について</a>というページで随時情報を発信している。この中の<a href="http://www.mext.go.jp/component/a_menu/education/detail/__icsFiles/afieldfile/2018/09/10/1409128_002_1.pdf">緊急調査結果速報  （PDF:395KB）</a>（2018-09-04付，タイムスタンプ: 2018-09-10）に含まれる81大学の過去6年間の男女別合格率をプロットしてみる。このPDFの3〜4ページの表を収めた <a href="data/1409128_002_1a.csv">1409128_002_1a.csv</a>（文字コードBOM付きUTF-8，改行CRLF）を使う：</p>
 
 <pre>
-x = read.csv("1409128_002_1a.csv")
+x = read.csv("1409128_002_1a.csv", fileEncoding="UTF-8")
 par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 plot(x$男, x$女, col=ifelse(x$番号==62,"red","black"), xlim=c(0,45), ylim=c(0,45), asp=1,
      xlab="最近6年の男性合格率 (%)", ylab="最近6年の女性合格率 (%)")
@@ -34,7 +34,7 @@ abline(0,1,col="lightgray")
 
 <p>[2019-04-14] 以上の計算をしたのは2018-12-15である。結果のグラフを<a href="https://twitter.com/h_okumura/status/1073854449578237952">ツイート</a>したが，作業メモを公開するのを忘れていた。</p>
 
-<p><a href="https://www.u-tokyo.ac.jp/ja/about/president/b_message31_03.html">上野千鶴子さんの平成31年度東京大学学部入学式祝辞</a>により，医学部の男女差別問題が再び注目された。東大理IIIの合格率の比1.03を巡って @nebutalab さんが<a href="https://qiita.com/nebutalab/items/ef214efc7d92df47887d">東大理IIIは本当に男子の合格率が高いのか？</a>という解説を書かれた。そこでは上述の文科省緊急調査結果速報PDFの後半をCSV化したもの（<a href="https://gist.github.com/nebuta/4a8a9968adc10be3700dbb723c5bf027">これ</a>）が使われていた（ここでは文科省サイトのPDFではなく内閣府男女共同参画局の<a href="http://www.gender.go.jp/kaigi/senmon/jyuuten_houshin/sidai/jyu17-s.html">男女共同参画会議　重点方針専門調査会（第17回）議事次第</a>の配布資料にある資料15のPDFが使われていたが，実質的に同じもののようである）。これに追加することは何もないが，念のため私のところで生成した後半データの年齢階層を除いたCSVを<a href="data/1409128_002_1b.csv">1409128_002_1b.csv</a>として置いておく。</p>
+<p><a href="https://www.u-tokyo.ac.jp/ja/about/president/b_message31_03.html">上野千鶴子さんの平成31年度東京大学学部入学式祝辞</a>により，医学部の男女差別問題が再び注目された。東大理IIIの合格率の比1.03を巡って @nebutalab さんが<a href="https://qiita.com/nebutalab/items/ef214efc7d92df47887d">東大理IIIは本当に男子の合格率が高いのか？</a>という解説を書かれた。そこでは上述の文科省緊急調査結果速報PDFの後半をCSV化したもの（<a href="https://gist.github.com/nebuta/4a8a9968adc10be3700dbb723c5bf027">これ</a>）が使われていた（ここでは文科省サイトのPDFではなく内閣府男女共同参画局の<a href="http://www.gender.go.jp/kaigi/senmon/jyuuten_houshin/sidai/jyu17-s.html">男女共同参画会議　重点方針専門調査会（第17回）議事次第</a>の配布資料にある資料15のPDFが使われていたが，実質的に同じもののようである）。これに追加することは何もないが，念のため私のところで生成した後半データの年齢階層を除いたCSVを<a href="data/1409128_002_1b.csv">1409128_002_1b.csv</a>（文字コードBOM付きUTF-8，改行CRLF）として置いておく。</p>
 
 <hr>
 
@@ -42,7 +42,7 @@ abline(0,1,col="lightgray")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-14 21:49:59</time>
+Last modified: <time>2019-04-14 22:30:01</time>
 <!-- hhmts end -->
 </p>
 </body>
