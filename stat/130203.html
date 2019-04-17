@@ -138,6 +138,10 @@
 <p><em>[2016-10-23(?)]</em> MacのExcel 2016では，Windows版と同様，BOM付きUTF-8のCSVファイルなら文字化けせず開けるようになった。また，Mac版・Windows版とも，Excelで「CSV UTF-8 (コンマ区切り) (*.csv)」（Windows版），「CSV UTF-8 (コンマ区切り) (.csv)」（Mac版）という保存形式がサポートされた（いずれもBOM付き）。これでExcel→CSV，CSV→Excelとも問題なくできるようになった（日付と解釈される文字列だけは要注意）。</p>
 </div>
 
+<div class="note">
+<p>BOMについて追記： R 3.0.0から <code>read.csv("...", fileEncoding="UTF-8-BOM")</code> というエンコード指定ができるようになった。ただし <code>"UTF-8"</code> だけでも問題なく読めるようである。書き出す際には <code>"UTF-8-BOM"</code> 指定はできないので，<code>readr::write_excel_csv()</code> を使うのが便利。</p>
+</div>
+
 <p>このように不要部分を削ったCSVファイルは，それだけでは何のデータかわからないので，説明ページを別途用意しておく。あるいは，CSVの決まりごとには定められていないが，行頭に「#」などの目印を付けて注釈を書いておくこともしばしば行われる。Rの <code>read.csv()</code> 関数で読み込む場合はオプション <code>comment.char="#"</code> を付けると「#」で始まる行を無視する。</p>
 
 <pre>
@@ -321,7 +325,7 @@ DateTime,uGy/h
 <p><a href="../" rel="author">奥村 晴彦</a> (<a href="http://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-13 22:53:22</time>
+Last modified: <time>2019-04-17 21:05:25</time>
 <!-- hhmts end -->
 </p>
 </footer>
