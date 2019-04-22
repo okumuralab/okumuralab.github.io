@@ -816,26 +816,66 @@ write.csv(data1, "data1.csv", row.names=FALSE, fileEncoding="CP932", eol="\r\n")
 
 <p>ここでは一般的な解説をします。具体的な例については<a href="graphs.html">グラフの描き方</a>をご覧ください。</p>
 
-<p>正規分布の密度関数 <code>dnorm(x)</code>
-のグラフを描いてみましょう。曲線を描く関数 <code>curve()</code>
-を使います。<i>x</i> の範囲（<code>xlim</code>）や <i>y</i> の範囲（<code>ylim</code>）は指定しなければ適当に判断してくれますが，ここでは <i>x</i> の範囲だけ -3 ≦ <i>x</i> ≦ 3
-と指定して描くことにします。</p>
+<p><i>y</i> = <i>x</i><sup>2</sup> のグラフを描いてみましょう。曲線を描く関数 <code>curve()</code> を使います。</p>
 
 <pre>
-curve(dnorm(x), xlim=c(-3,3))
+curve(x^2)
 </pre>
 
-<p>どうでしょうか。私にはちょっと軸まわりが離れ過ぎのように見えます（<a href="ggplot2.html">ggplot2</a> の出力と比較してください）。<code>mgp</code> というパラメータを微調整してから描き直してみましょう：</p>
+<p><i>x</i> の範囲が微妙ですね。<i>x</i> の範囲を -2 ≦ <i>x</i> ≦ 2 と指定して描き直しましょう。</p>
+
+<pre>
+curve(x^2, -2, 2)
+</pre>
+
+<p>今度は <i>y</i> = sin(<i>x</i>) です。範囲は -π ≦ <i>x</i> ≦ π とします。</p>
+
+<pre>
+curve(sin(x), -pi, pi)
+</pre>
+
+<p>これにコサインのグラフを重ね書き（<code>add=TRUE</code>）しましょう。区別するため，色は青（<code>col="blue"</code>）にします。</p>
+
+<pre>
+curve(cos(x), col="blue", add=TRUE)
+</pre>
+
+<p><i>x</i> 軸，<i>y</i> 軸を加えます。</p>
+
+<pre>
+abline(h=0)   # h は horizontal (水平)
+abline(v=0)   # v は vertical (垂直)
+</pre>
+
+<p>タンジェントのグラフはちょっと難しいですね。明示的に <i>x</i> の範囲（<code>xlim</code>）や <i>y</i> の範囲（<code>ylim</code>）を指定するといいでしょう。</p>
+
+<pre>
+curve(tan(x), -pi/2+0.01, pi/2-0.01, xlim=c(-pi,pi), ylim=c(-2,2))
+curve(tan(x), -3*pi/2+0.01, -pi/2-0.01, add=TRUE)
+curve(tan(x), pi/2+0.01, 3*pi/2-0.01, add=TRUE)
+abline(h=0, v=0)
+abline(v=c(-pi/2,pi/2), lty=2)  # lty=2 は破線
+</pre>
+
+<p>もっと数学の教科書っぽくする方法は<a href="100121a.html">こちら</a>をご覧ください。</p>
+
+<p>正規分布を習った人は，正規分布の密度関数 <code>dnorm(x)</code> のグラフを描いてみましょう。</p>
+
+<pre>
+curve(dnorm(x), -3, 3)
+</pre>
+
+<p>少しずつ見栄えも調整してみましょう。Rのデフォルトのグラフは，私にはちょっと軸まわりが離れ過ぎのように見えます（<a href="ggplot2.html">ggplot2</a> の出力と比較してください）。<code>mgp</code> というパラメータを微調整してから描き直してみましょう：</p>
 
 <pre>
 par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
-curve(dnorm(x), xlim=c(-3,3))
+curve(dnorm(x), -3, 3)
 </pre>
 
 <p>日本語でメインタイトル（<code>main</code>）を書き加えてみましょう。</p>
 
 <pre>
-curve(dnorm(x), xlim=c(-3,3), main="正規分布")
+curve(dnorm(x), -3, 3, main="正規分布")
 </pre>
 
 <p>日本語部分がトーフ（□□□□）にならないことを確認してください。</p>
@@ -844,7 +884,7 @@ curve(dnorm(x), xlim=c(-3,3), main="正規分布")
 <p>Macで，もし日本語部分がトーフになったら，</p>
 <pre>
 par(family="HiraKakuProN-W3")  # ヒラギノ角ゴシックProN W3
-curve(dnorm(x), xlim=c(-3,3), main="正規分布")
+curve(dnorm(x), -3, 3, main="正規分布")
 </pre>
 <p>のように，フォント名を指定してください。フォント名としては <code>Osaka</code>，<code>HiraMinProN-W3</code>，<code>HiraMinProN-W6</code>，<code>HiraKakuProN-W3</code>，<code>HiraKakuProN-W6</code>，<code>HiraMaruProN-W4</code> などが使えます。<code>Hira</code> が付くのはヒラギノフォントで，<code>Min</code> は明朝，<code>Kaku</code> は角ゴシック，<code>Maru</code> は丸ゴシック，<code>W</code> の後の数字は大きいほど線が太くなります。古い OS X では <code>ProN</code> がないので <code>Pro</code> にします。<code>ProN</code> はJIS X 0213の2004年改正に準拠した字形になっています。こういった設定は，Rの初期化ファイル <a href="Rprofile.html">~/.Rprofile</a> に書いておくと便利です。</p>
 </div>
@@ -852,7 +892,7 @@ curve(dnorm(x), xlim=c(-3,3), main="正規分布")
 <div class="note">
 <p>上のようにすると，すべてのフォントがヒラギノ角ゴシックになってしまいます。タイトル以外を例えばHelveticaにするには，次のようにすればよいでしょう。</p>
 <pre>
-curve(dnorm(x), xlim=c(-3,3), family="Helvetica")
+curve(dnorm(x), -3, 3, family="Helvetica")
 title(main="正規分布", family="HiraKakuProN-W3", font.main=1)
 </pre>
 <p><code>title()</code> の <code>font.main=</code> や，<code>text()</code> の <code>font=</code> は，1が標準，2がボールド，3がイタリック，4がボールドイタリックを表します。日本語フォントの場合は1を選ぶのが無難です（<code>Meiryo</code> はボールドバージョンを持っているのでデフォルトの <code>font.main=2</code> のままでもかまいません）。</p>
@@ -865,7 +905,7 @@ title(main="正規分布", family="HiraKakuProN-W3", font.main=1)
 <p>線の太さ <code>lwd</code> をデフォルトの1から2に変更してみます：</p>
 
 <pre>
-curve(dnorm(x), xlim=c(-3,3), main="正規分布", lwd=2)
+curve(dnorm(x), -3, 3, main="正規分布", lwd=2)
 </pre>
 
 <p>同じ座標軸にさらに曲線を書き加えるときは <code>add=TRUE</code>
@@ -945,7 +985,7 @@ dev.copy2eps(file="hoge.eps")   # EPSに出力したい場合
 <pre>
 cairo_pdf("hoge.pdf", width=7, height=5, family="Meiryo")  # 幅・高さをインチ単位で指定
 par(mgp=c(2,0.8,0))
-curve(dnorm(x), xlim=c(-3,3), main="正規分布", lwd=2)
+curve(dnorm(x), -3, 3, main="正規分布", lwd=2)
 dev.off() # ファイルを閉じる
 </pre>
 
@@ -954,7 +994,7 @@ dev.off() # ファイルを閉じる
 <pre>
 quartz(type="pdf", width=7, height=5, file="hoge.pdf")
 par(mgp=c(2,0.8,0))
-curve(dnorm(x), xlim=c(-3,3), lwd=2, family="Helvetica")
+curve(dnorm(x), -3, 3, lwd=2, family="Helvetica")
 title(main="正規分布", family="HiraKakuProN-W3", font.main=1)
 dev.off()
 </pre>
@@ -1277,7 +1317,7 @@ nohup R CMD BATCH hoge.R &amp;
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-02-07 16:22:21</time>
+Last modified: <time>2019-04-22 14:21:33</time>
 <!-- hhmts end -->
 </p>
 </footer>
