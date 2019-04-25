@@ -18,13 +18,31 @@
 
 <p>プロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a> を使います。</p>
 
+<p>matplotlib でグラフを描画するためには，適当な TrueType フォントを指定します。日本語も使うなら，<a href="https://ipafont.ipa.go.jp">こちら</a>から IPAex ゴシックをいただいてきてシステムにインストールし，<code>~/.matplotlib/matplotlibrc</code> に次のように書きます（もし古い <code>~/.matplotlib/font*</code> のようなフォントのキャッシュファイルがあれば消しておきます）。Mac なら IPAexGothic の代わりに AppleGothic も使えます。</p>
+
+<pre>
+backend: TkAgg
+font.family: IPAexGothic
+</pre>
+
+<p>グラフのメニューから PDF で保存する場合，TrueType フォントは Type 3 形式でサブセット埋め込みされます。OpenType の Source Han Sans などは日本語表示には使えますが，サブセット化できず，丸ごと埋め込まれてしまい，ファイルサイズが巨大になります。</p>
+
+<p>雛形の <code>matplotlibrc</code> の位置は Python で次のコマンドを実行すれば表示されます：</p>
+
+<pre>
+import matplotlib
+matplotlib.matplotlib_fname()
+</pre>
+
+<p>簡単なプロットで試してみましょう：</p>
+
 <pre>
 import matplotlib.pyplot as plt
 plt.plot([1,2,3,4], [1,3,2,4])
 plt.xlabel('x-axis')
 plt.ylabel('y-axis')
 plt.title('日本語タイトル')
-plt.show(block=False)
+plt.show()   # 対話的に使うには plt.show(block=False)
 </pre>
 
 <p>詳しいヘルプは例えば <code>?plt.plot</code> と打ち込めば現れます。</p>
@@ -35,11 +53,11 @@ plt.show(block=False)
 plt.style.use('ggplot')
 </pre>
 
-<p>とすれば R の ggplot のスタイルになります。スタイルは <code>plt.style.available</code> で一覧できます。もっと細かい設定は <code>plt.rcParams</code> と打ち込めば一覧できます。</p>
+<p>とすれば R の ggplot のスタイルになります。スタイルは <code>plt.style.available</code> で一覧できます。もっと細かい設定は <code>plt.rcParams</code> と打ち込めば一覧できます。フォントも</p>
 
 <pre>
 plt.rcParams['font.family'] = 'IPAexGothic'
-mpl.rcParams['font.size'] = 12
+plt.rcParams['font.size'] = 12
 </pre>
 
 <p>のようにして変更できます。デフォルト状態に戻すには <code>matplotlib.rcdefaults()</code> と打ちます。フォントは次のように関数にオプションで与えることもできます：</p>
@@ -54,7 +72,7 @@ plt.title('日本語タイトル', fontfamily='IPAexGothic')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-25 20:22:13</time>
+Last modified: <time>2019-04-25 21:29:58</time>
 <!-- hhmts end -->
 </p>
 </body>

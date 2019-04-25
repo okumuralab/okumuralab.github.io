@@ -18,19 +18,19 @@
 
 <p>いろいろな方法があります。私は今のところ Miniconda を使っています。</p>
 
-<h2>Python.org からのインストール</h2>
+<h3>Python.org からのインストール</h3>
 
 <p><a href="https://www.python.org/download/">Download Python</a> から，ご自分の環境に合った最新のインストーラをダウンロードし，インストールします。</p>
 
-<h2>Anaconda によるインストール</h2>
+<h3>Anaconda によるインストール</h3>
 
 <p><a href="https://www.anaconda.com/distribution/">Anaconda Distribution</a> からご自分の環境に合った最新のインストーラをダウンロードし，インストールします。何でも入りなので，たいへん大きいパッケージです。</p>
 
-<h2>Homebrew によるインストール（Mac）</h2>
+<h3>Homebrew によるインストール（Mac）</h3>
 
 <p><code>brew install python</code> で入れる方法と，<code>brew install pyenv</code> でまず pyenv を入れてから pyenv 経由で各種 Python を入れる方法などがあります。</p>
 
-<h2>Miniconda によるインストール</h2>
+<h3>Miniconda によるインストール</h3>
 
 <p><a href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a> から最新の Python 3.x 版インストーラをダウンロードし，実行します。私は Mac や CentOS で bash installer を使いました：</p>
 
@@ -48,7 +48,7 @@ conda list
 conda install ipython numpy scipy matplotlib pandas
 </pre>
 
-<h2>ソースからのインストール</h2>
+<h3>ソースからのインストール</h3>
 
 <p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し，その中で次のように打ち込みます：</p>
 
@@ -61,31 +61,13 @@ make install
 
 <p>実行ファイルは /usr/local/bin に入りますので，そこにパスを通しておきます。</p>
 
-<h2>設定</h2>
-
-<p>matplotlib でグラフを描画するためには，日本語も使うなら，<a href="https://ipafont.ipa.go.jp">こちら</a>から IPAex ゴシックをいただいてきてインストールし，<code>~/.matplotlib/matplotlibrc</code> に次のように書きます（もし古い <code>~/.matplotlib/fontlist*.json</code> のようなファイルがあれば消しておきます）：</p>
-
-<pre>
-backend: TkAgg
-font.family: IPAexGothic
-</pre>
-
-<p>PDF で保存する場合，IPAex ゴシックは Type 3 形式でサブセット埋め込みされます。Source Han Sans なども使えますが，サブセット化できず，丸ごと埋め込まれてしまい，ファイルサイズが巨大になります。</p>
-
-<p>雛形の <code>matplotlibrc</code> の位置は Python で次のコマンドを実行すれば表示されます：</p>
-
-<pre>
-import matplotlib
-matplotlib.matplotlib_fname()
-</pre>
-
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-25 17:50:52</time>
+Last modified: <time>2019-04-25 21:25:42</time>
 <!-- hhmts end -->
 </p>
 </footer>
