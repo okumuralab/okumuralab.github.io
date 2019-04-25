@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Python 3 インストール</title>
+<link rel="stylesheet" href="/~okumura/style6.css">
+<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python 3</a> &gt;
+</nav>
+
+<h1>Python 3 インストール</h1>
+
+<p><a href="https://store.continuum.io/cshop/anaconda/">Anaconda</a> のようなパッケージ製品（無償）をインストールするのが最も簡単です。以下では <a href="https://www.python.org/">Python.org</a> のものをインストールする方法を説明します。</p>
+
+<h2>Windowsへのインストール</h2>
+
+<p><a href="https://www.python.org/download/">Download Python</a> からWindows用インストーラ（32ビット用・64ビット用）をダウンロードしてインストールします。</p>
+
+<h2>Macへのインストール</h2>
+
+<p>Macの開発環境はPython 2.7を含んでいます。開発環境が入ってない場合は，ターミナルに <code>xcode-select --install</code> と打ち込むのが早いようです。CコンパイラやRuby，Pythonが含まれます。このPython 2.7を使わない場合でも，開発環境がないといろいろ不便ですので，ぜひ入れておきましょう。</p>
+
+<p>開発環境を入れたMacで，ターミナルに</p>
+
+<pre>
+python --version
+</pre>
+
+<p>と打ち込むと，「Python 2.7.10」などと出力されます。</p>
+
+<p>Python 3.xを入れるにはいくつかの方法がありますが，ここでは <a href="https://www.python.org/download/">Download Python</a> のOS X用のインストーラを使います。インストールすると，例えばPython 3.5なら，/Library/Frameworks/Python.framework/Versions/3.5/bin/ に実行ファイルが入り，/usr/local/bin/ からシンボリックリンクされます（シンボリックリンクは ../../../Library/… という相対リンクなので，/usr/local の実体によってはうまくリンクされないかもしれません）。また，~/.bash_profile に次のようなパス設定がアペンドされます：</p>
+
+<pre>
+# Setting PATH for Python 3.5
+# The orginal version is saved in .bash_profile.pysave
+PATH="/Library/Frameworks/Python.framework/Versions/3.5/bin:${PATH}"
+export PATH
+</pre>
+
+<p>元の .bash_profile .bash_profile.pysave とリネームされて残ります。ターミナルをすでに起動している場合には，<code>source ~/.bash_profile</code> と打ち込んで，この設定を生かさなければなりません。うまくいったかどうか確かめるには，ターミナルに</p>
+
+<pre>
+python3 --version
+</pre>
+
+<p>と打ち込みます。「Python 3.5.1」などと出ればOKです。ついでに</p>
+
+<pre>
+which python3
+</pre>
+
+<p>と打ち込めば，/Library/Frameworks/Python.framework/Versions/3.5/bin/python3 であることがわかります。</p>
+
+<p>インストールされるコマンドは，<code>python3</code> のほかに，パッケージ管理ツール <code>pip3</code> や，Python 2のコードをPython 3に変換する <code>2to3</code> などがあります。</p>
+
+<p>「アプリケーション」フォルダにも Python 3.x というフォルダができます。この中にPythonのIDE（統合開発環境）「IDLE」などが入ります。</p>
+
+<p>IPythonやpandasなど追加でよく使うものをインストールするには，ターミナルに</p>
+
+<pre>
+sudo pip3 install ipython pandas matplotlib pyzmq jinja2
+</pre>
+
+<p>のように打ち込みます（一般ユーザの場合はあらかじめ <code>su 管理者の名前</code> と打ち込んで管理者に昇格します）。どれだけインストールできたかは，</p>
+
+<pre>
+pip3 list
+</pre>
+
+<p>で確かめられます。あるいは</p>
+
+<pre>
+pip3 list --outdated
+</pre>
+
+<p>で古いものだけリストできます。更新するには，例えば</p>
+
+<pre>
+sudo pip3 install --upgrade ipython pandas
+</pre>
+
+<p>のようにします。</p>
+
+<p>プロットライブラリmatplotlibで使うフォントの設定については，<a href="http://nbviewer.ipython.org/gist/mkatsura/6129979">このページ</a>が参考になります。具体的には，ターミナルに</p>
+
+<pre>
+mkdir ~/.matplotlib
+cp /Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/matplotlib/mpl-data/matplotlibrc ~/.matplotlib/
+</pre>
+
+<p>と打ち込み，~/.matplotlib/matplotlibrc というテキストファイルをテキストエディタで開いて，</p>
+
+<pre>
+#font.family         : sans-serif
+</pre>
+
+<p>と書かれた行を見つけます。標準フォントを例えばヒラギノ角ゴシックProNにするには，この行の下あたりに</p>
+
+<pre>
+font.family	     : Hiragino Kaku Gothic ProN
+</pre>
+
+<p>と書き加えます。ただし，PDF出力にはTrueTypeフォントしか使えないようなので，PDF出力をよく使うなら，<a href="http://ipafont.ipa.go.jp/">IPAexフォント/IPAフォント</a>のサイトから例えばIPAexゴシックをダウンロードして展開し，</p>
+
+<pre>
+sudo cp -a ipaexg.ttf /Library/Frameworks/Python.framework/Versions/3.4/lib/python3.4/site-packages/matplotlib/mpl-data/fonts/ttf/
+</pre>
+
+<p>のようにしてコピーまたは移動し，~/.matplotlib/matplotlibrc には</p>
+
+<pre>
+font.family	     : IPAexGothic
+</pre>
+
+<p>と書いておきます（もしうまく読み込めないようなら ~/.matplotlib/fontList.py3k.cache をいったん消します）。</p>
+
+<h2>Linux/Unixへのインストール</h2>
+
+<p>ソースからインストールするには，<a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し，その中で次のように打ち込むだけです。</p>
+
+<pre>
+./configure
+make
+make test
+make install
+</pre>
+
+<p>実行ファイルは /usr/local/bin に入りますので，そこにパスを通しておきます。</p>
+
+<div class="note">
+<p>現時点では make test で <code>socket.gethostbyname('испытание.python.org')</code> がエラーになります。</p>
+</div>
+
+<hr>
+
+<footer>
+<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2016-01-14 22:20:06</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

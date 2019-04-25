@@ -372,6 +372,22 @@ conda install ipython numpy scipy matplotlib pandas
 
 <p>環境を変えるのは今は <code>source activate/deactivate</code> ではなく <code>conda activate/deactivate</code> が推奨。最初にこれをやってメッセージが出たときは <code>conda init bash</code> すると <code>~/.bash_profile</code> に追記されるので <code>source ~/.bash_profile</code> してから <code>conda activate 〜</code> する。</p>
 
+<p>コンソールで図を描くには，日本語も使うならIPAexゴシックをインストールし，<code>~/.matplotlib/matplotlibrc</code> に次のように書く（すでに同じ場所にフォントキャッシュがあれば自動生成されるので消しておく）：</p>
+
+<pre>
+backend: TkAgg
+font.family: IPAexGothic
+</pre>
+
+<p>IPAexゴシックはType 3になるがサブセット埋め込みされる。一方，Source Han Sansなどは，丸ごと埋め込まれてしまい，ファイルサイズが巨大になる。</p>
+
+<p>雛形の <code>matplotlibrc</code> の位置はPythonで次のコマンドを実行すれば得られる：</p>
+
+<pre>
+import matplotlib
+matplotlib.matplotlib_fname()
+</pre>
+
 <h2>X11</h2>
 
 <p>今はMacにX11はほぼ必要ないが，どうしても必要な場合は <a href="https://www.xquartz.org/">XQuartz</a> をインストールする。</p>
@@ -516,7 +532,7 @@ Host *
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-02-28 14:01:10</time>
+Last modified: <time>2019-04-25 17:42:49</time>
 <!-- hhmts end -->
 </p>
 </footer>
