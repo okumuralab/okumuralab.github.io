@@ -28,10 +28,9 @@ font.family: IPAexGothic
 <p>グラフのメニューから PDF で保存する場合，TrueType フォントは Type 3 形式でサブセット埋め込みされます。OpenType の Source Han Sans などは，日本語表示には使えますが，サブセット化できず，丸ごと埋め込まれてしまい，PDF のファイルサイズが巨大になります。</p>
 
 <div class="note">
-<p>雛形の <code>matplotlibrc</code> の位置は Python で次のコマンドを実行すれば表示されます：</p>
+<p><code>~/.matplotlib/matplotlibrc</code> を作る前の，システムの <code>matplotlibrc</code> の位置は，ターミナルに次のコマンドを打ち込めば表示されます：</p>
 <pre>
-import matplotlib
-matplotlib.matplotlib_fname()
+python -c "import matplotlib; print(matplotlib.matplotlib_fname())"
 </pre>
 <p>おそらく <code>.../miniconda3/lib/python3.7/site-packages/matplotlib/mpl-data/matplotlibrc</code> のような位置にあります。</p>
 </div>
@@ -85,7 +84,7 @@ plt.title('日本語タイトル', fontfamily='IPAexGothic')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-27 15:48:30</time>
+Last modified: <time>2019-04-27 22:42:02</time>
 <!-- hhmts end -->
 </p>
 </body>
