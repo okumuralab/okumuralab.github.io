@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>実行</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python 3</a> &gt;
+</nav>
+
+<h1>実行</h1>
+
+<p>Python の実行には，いくつかの方法があります。</p>
+
+<p>まず，Python のバージョンをチェックします：</p>
+
+<pre>
+python --version
+</pre>
+
+<p>これで Python 2.*.* と出るなら，次のコマンドを試します：</p>
+
+<pre>
+python3 --version
+</pre>
+
+<p>こちらのほうで Python 3.*.* と出るなら，以下では <code>python</code> や <code>ipython</code> の代わりに <code>python3</code> や <code>ipython3</code> としてください。</p>
+
+<h3>python コマンド（REPL）</h3>
+
+<p>ターミナルに</p>
+
+<pre>
+python
+</pre>
+
+<p>とだけ打ち込むと，<code>&gt;&gt;&gt;</code> というプロンプトが現れますので，その右側に Python の命令を打ち込みます。例えば</p>
+
+<pre>
+print("こんにちは")
+</pre>
+
+<p>と打ち込めば，ターミナルに「こんにちは」と現れます。</p>
+
+<p>もうちょっと長いものを打ち込んでみましょう：</p>
+
+<pre>
+for i in range(3):
+    print("大事なので3回言います")
+</pre>
+
+<p>Python はインデント（字下げ）でブロック構造を表すので，インデントを省略しないでください。</p>
+
+<p>ターミナルに戻るには，<code>quit()</code> または <code>exit()</code> と打ち込みます。</p>
+
+<h3>iPython</h3>
+
+<p>iPython なら，もう少し対話的に（interactive に）Python を使えます。ターミナルに</p>
+
+<pre>
+ipython
+</pre>
+
+<p>と打ち込みます（Emacs の <code>M-x shell</code> 内なら <code>ipython --simple-prompt</code>）。</p>
+
+<p>ヘルプを見るには，例えば <code>?print</code> のように打ち込みます（このヘルプの終了は <code>q</code>）。</p>
+
+<p><code>quit</code> と打ち込めば終了します。</p>
+
+<h3>スクリプト</h3>
+
+<p>Python プログラム，例えば</p>
+
+<pre>
+for i in range(3):
+    print("大事なので3回言います")
+</pre>
+
+<p>は，ファイルに納めておくことができます。ファイル名は <code>test.py</code> のように拡張子を <code>py</code> にします。実行は</p>
+
+<pre>
+python test.py
+</pre>
+
+<p>と打ち込みます。</p>
+
+<p>実行可能なスクリプトにするには，先頭に <code>#! /usr/bin/env python</code> を付けます：</p>
+
+<pre>
+#! /usr/bin/env python
+
+for i in range(3):
+    print("大事なので3回言います")
+</pre>
+
+<p>文字コードは UTF-8 にします（BOM を付けないようにします）。実行可能にするには，ターミナルで</p>
+
+<pre>
+chmod 755 test.py
+</pre>
+
+<p>のように打ち込みます。これで，ターミナルに</p>
+
+<pre>
+./test.py
+</pre>
+
+<p>と打ち込めば実行されます。</p>
+
+<p>もしどうしても別の文字コード，例えば Shift JIS にしたいなら，</p>
+
+<pre>
+#! /usr/bin/env python
+# -*- coding: shift_jis -*-
+
+for i in range(3):
+    print("大事なので3回言います")
+</pre>
+
+<p>のようにします。</p>
+
+<h3>Jupyter Notebook</h3>
+
+<p>ターミナルに</p>
+
+<pre>
+jupyter notebook &amp;
+</pre>
+
+<p>と打ち込むと，Web ブラウザが立ち上がって，カレントディレクトリのファイル名一覧が表示されます。もし拡張子が ipynb のファイルがあれば，それを開けば前回の続きの計算ができます。新しいノートブックを開くには，この画面で [New ▼] ボタンを押し Python 3 を選びます。一番上の Untitled をクリックすると，ノートブックの名前が変えられます。</p>
+
+<p>In [ ]: の右の箱に Python のコマンドを打ち込みます。何行かまとめて入れることもできます。実行するには Shift + Enter します。</p>
+
+<p>[Code ↕︎] ボタンを [Markdown ↕︎] に切り替えれば，Markdown 形式で説明が書けます。<code>$E = mc^2$</code> のように <code>$</code> で挟んで数式を書くこともできます。</p>
+
+<p>終了は File → Close and Halt です。右上の [Quit] で Web サーバが終了します。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-04-27 17:33:15</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

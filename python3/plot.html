@@ -18,36 +18,49 @@
 
 <p>プロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a> を使います。</p>
 
-<p>matplotlib でグラフを描画するためには，適当な TrueType フォントを指定します。日本語も使うなら，<a href="https://ipafont.ipa.go.jp">こちら</a>から IPAex ゴシックをいただいてきてシステムにインストールし，<code>~/.matplotlib/matplotlibrc</code> に次のように書きます（もし古い <code>~/.matplotlib/font*</code> のようなフォントのキャッシュファイルがあれば消しておきます）。Mac なら IPAexGothic の代わりに AppleGothic も使えます。</p>
+<p>matplotlib でグラフを描画するためには，適当な TrueType フォントを指定します。日本語も使うなら，<a href="https://ipafont.ipa.go.jp">こちら</a>から IPAex ゴシックをいただいてきてシステムにインストールし，<code>~/.matplotlib/matplotlibrc</code> に次のように書きます（もし古い <code>~/.matplotlib/font*</code> のようなフォントのキャッシュファイルがあれば消しておきます）。Mac なら IPAexGothic 以外に AppleGothic も使えます。</p>
 
 <pre>
 backend: TkAgg
 font.family: IPAexGothic
 </pre>
 
-<p>グラフのメニューから PDF で保存する場合，TrueType フォントは Type 3 形式でサブセット埋め込みされます。OpenType の Source Han Sans などは日本語表示には使えますが，サブセット化できず，丸ごと埋め込まれてしまい，ファイルサイズが巨大になります。</p>
+<p>グラフのメニューから PDF で保存する場合，TrueType フォントは Type 3 形式でサブセット埋め込みされます。OpenType の Source Han Sans などは，日本語表示には使えますが，サブセット化できず，丸ごと埋め込まれてしまい，PDF のファイルサイズが巨大になります。</p>
 
+<div class="note">
 <p>雛形の <code>matplotlibrc</code> の位置は Python で次のコマンドを実行すれば表示されます：</p>
-
 <pre>
 import matplotlib
 matplotlib.matplotlib_fname()
 </pre>
+<p>おそらく <code>.../miniconda3/lib/python3.7/site-packages/matplotlib/mpl-data/matplotlibrc</code> のような位置にあります。</p>
+</div>
 
-<p>簡単なプロットで試してみましょう。Jupyter Notebook の環境なら，あらかじめ <code>%matplotlib inline</code> という行を打ち込んでおきます。</p>
+<p>簡単なプロットで試してみましょう。ターミナルで iPython を使うなら <code>ipython --matplotlib</code> として起動します。iPython を Emacs の <code>M-x shell</code> 内で動かすなら <code>ipython --simple-prompt --matplotlib</code> と打ち込みます。Jupyter Notebook の環境なら</p>
+
+<pre>
+%matplotlib inline
+</pre>
+
+<p>という1行をまず打ち込みます。そして，次のように打ち込みます：</p>
 
 <pre>
 import matplotlib.pyplot as plt
-plt.plot([1,2,3,4], [1,3,2,4])
-plt.xlabel('x-axis')
-plt.ylabel('y-axis')
+plt.plot([1,2,3,4], [-2,1,-1,2])
 plt.title('日本語タイトル')
-plt.show()   # ターミナルで対話的に使うには plt.show(block=False)
 </pre>
 
-<p>詳しいヘルプは例えば <code>?plt.plot</code> と打ち込めば現れます。</p>
+<p>これでもしグラフが出ないなら <code>plt.show()</code> と打ち込みます。日本語タイトルも軸のマイナスも化けずに出れば合格です。もし日本語が出てもマイナスが化ける場合は <code>~/.matplotlib/matplotlibrc</code> に次の1行を追加します：</p>
 
-<p>スタイルはいろいろ選べます。例えば</p>
+<pre>
+axes.unicode_minus: False
+</pre>
+
+<p>環境によっては，<code>plt.show()</code> でグラフが出ても，グラフの窓を閉じない限り，次に進めなくなります。この状態を「ブロック」といいます。ブロックしないようにするには <code>plt.show(block=False)</code> のようにオプションを付けます。</p>
+
+<p>iPython では，詳しいヘルプは例えば <code>?plt.plot</code> のように打ち込めば現れます。</p>
+
+<p>プロットのスタイルはいろいろ選べます。例えば</p>
 
 <pre>
 plt.style.use('ggplot')
@@ -60,7 +73,7 @@ plt.rcParams['font.family'] = 'IPAexGothic'
 plt.rcParams['font.size'] = 12
 </pre>
 
-<p>のようにして変更できます。デフォルト状態に戻すには <code>matplotlib.rcdefaults()</code> と打ちます。フォントは次のように関数にオプションで与えることもできます：</p>
+<p>のようにして変更できます。デフォルト状態に戻すには <code>plt.rcdefaults()</code> と打ちます。フォントは次のように関数にオプションで与えることもできます：</p>
 
 <pre>
 plt.title('日本語タイトル', fontfamily='IPAexGothic')
@@ -72,7 +85,7 @@ plt.title('日本語タイトル', fontfamily='IPAexGothic')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-25 22:48:09</time>
+Last modified: <time>2019-04-27 15:48:30</time>
 <!-- hhmts end -->
 </p>
 </body>
