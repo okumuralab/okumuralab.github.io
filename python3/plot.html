@@ -16,7 +16,7 @@
 
 <h1>プロット</h1>
 
-<p>プロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a> を使います。</p>
+<p>プロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a> を使います。これは MATLAB ライクなライブラリです。</p>
 
 <p>matplotlib でグラフを描画するためには，適当な TrueType フォントを指定します。日本語も使うなら，<a href="https://ipafont.ipa.go.jp">こちら</a>から IPAex ゴシックをいただいてきてシステムにインストールし，<code>~/.matplotlib/matplotlibrc</code> に次のように書きます（もし古い <code>~/.matplotlib/font*</code> のようなフォントのキャッシュファイルがあれば消しておきます）。Mac なら IPAexGothic 以外に AppleGothic も使えます。</p>
 
@@ -35,7 +35,7 @@ python -c "import matplotlib; print(matplotlib.matplotlib_fname())"
 <p>おそらく <code>.../miniconda3/lib/python3.7/site-packages/matplotlib/mpl-data/matplotlibrc</code> のような位置にあります。</p>
 </div>
 
-<p>簡単なプロットで試してみましょう。ターミナルで iPython を使うなら <code>ipython --matplotlib</code> として起動します。iPython を Emacs の <code>M-x shell</code> 内で動かすなら <code>ipython --simple-prompt --matplotlib</code> と打ち込みます。Jupyter Notebook の環境なら</p>
+<p>簡単なプロットで試してみましょう。ターミナルで IPython を使うなら <code>ipython --matplotlib</code> として起動します。IPython を Emacs の <code>M-x shell</code> 内で動かすなら <code>ipython --simple-prompt --matplotlib</code> と打ち込みます。Jupyter Notebook の環境なら</p>
 
 <pre>
 %matplotlib inline
@@ -57,7 +57,7 @@ axes.unicode_minus: False
 
 <p>環境によっては，<code>plt.show()</code> でグラフが出ても，グラフの窓を閉じない限り，次に進めなくなります。この状態を「ブロック」といいます。ブロックしないようにするには <code>plt.show(block=False)</code> のようにオプションを付けます。</p>
 
-<p>iPython では，詳しいヘルプは例えば <code>?plt.plot</code> のように打ち込めば現れます。</p>
+<p>IPython では，詳しいヘルプは例えば <code>?plt.plot</code> のように打ち込めば現れます。</p>
 
 <p>プロットのスタイルはいろいろ選べます。例えば</p>
 
@@ -84,7 +84,7 @@ plt.title('日本語タイトル', fontfamily='IPAexGothic')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-27 22:42:02</time>
+Last modified: <time>2019-04-28 14:54:34</time>
 <!-- hhmts end -->
 </p>
 </body>

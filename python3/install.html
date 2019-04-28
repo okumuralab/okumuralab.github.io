@@ -22,6 +22,12 @@
 
 <p><a href="https://www.python.org/download/">Download Python</a> から，ご自分の環境に合った最新のインストーラをダウンロードし，インストールします。</p>
 
+<p>いろいろなパッケージのインストールは pip コマンド（pip3 コマンド）を使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
+
+<pre>
+pip install ipython numpy scipy matplotlib pandas
+</pre>
+
 <h3>Anaconda によるインストール</h3>
 
 <p><a href="https://www.anaconda.com/distribution/">Anaconda Distribution</a> からご自分の環境に合った最新のインストーラをダウンロードし，インストールします。何でも入りなので，たいへん大きいパッケージです。</p>
@@ -45,7 +51,7 @@ bash Miniconda3-latest-*-x86_64.sh
 <pre>
 conda update --all
 conda list
-conda install ipython numpy scipy matplotlib pandas
+conda install ipython numpy scipy matplotlib pandas scikit-learn
 </pre>
 
 <h3>ソースからのインストール</h3>
@@ -77,7 +83,7 @@ print("Hello, world!")
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-27 21:24:24</time>
+Last modified: <time>2019-04-28 11:16:03</time>
 <!-- hhmts end -->
 </p>
 </footer>
