@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>データの読み込み</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python 3</a> &gt;
+</nav>
+
+<h1>データの読み込み</h1>
+
+<p>Python でデータを読み込むときは <a href="https://pandas.pydata.org/">pandas</a> というライブラリを使います。</p>
+
+<pre>
+import pandas as pd
+data = pd.read_csv("filename.csv")
+data.head()   # 頭の5行だけ表示
+</pre>
+
+<p>ファイル名は URL でもかまいません。</p>
+
+<p><code>read_csv()</code> でよく使うオプションは，Shift JIS の CSV を読むための <code>encoding="cp932"</code>，特定の文字（例えば <code>#</code>）以下をコメントと解釈するための <code>comment="#"</code> です。</p>
+
+<p>Excel ファイル（xls，xlsx）を読むには xlrd というライブラリが必要です。別途 <code>conda install xlrd</code> または <code>pip(3) install xlrd</code> などとしてインストールしておきます。<code>read_excel()</code> を使うと自動的に import されます。</p>
+
+<pre>
+data = pd.read_excel("filename.xlsx")
+</pre>
+
+<p><code>read_csv()</code> や <code>read_excel()</code> などの詳細は <a href="http://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">pandas の IO Tools</a> のページ，あるいは IPython で <code>?pd.read_csv</code> と打ち込むと出てくるヘルプをご覧ください。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-04-29 22:24:59</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

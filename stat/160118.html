@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>アイスクリームの売れ方</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
@@ -58,8 +57,8 @@
 <p>ここでは整形したデータを読む方法を書いておく：</p>
 
 <pre>
-icecream = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/icecream.csv", comment.char="#")
-tokyo = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo-weather-2003-2012.csv")
+icecream = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/icecream.csv", comment.char="#", fileEncoding="CP932")
+tokyo = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo-weather-2003-2012.csv", fileEncoding="CP932")
 </pre>
 
 <p>データによっては日あたりの量に直す必要があるので，年・月を与えるとその月の日数を求める関数が必要になる。例えば次のようにすればよい。</p>
@@ -67,7 +66,7 @@ tokyo = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo-weather-20
 <pre>
 days = function(year, month) {
     m = c(31,28,31,30,31,30,31,31,30,31,30,31)
-    m[month] + ((month == 2) && ((year %% 4 == 0) && (year %% 100 != 0) || (year %% 400 == 0)))
+    m[month] + ((month == 2) &amp;&amp; ((year %% 4 == 0) && (year %% 100 != 0) || (year %% 400 == 0)))
 }
 </pre>
 
@@ -101,7 +100,7 @@ z$月 = gsub(".*/", "", z$V1)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2016-03-24 10:33:39</time>
+Last modified: <time>2019-04-29 22:46:29</time>
 <!-- hhmts end -->
 </p>
 </footer>

@@ -143,13 +143,26 @@ jupyter notebook &amp;
 
 <p>終了は File → Close and Halt です。右上の [Quit] で Web サーバが終了します。</p>
 
+<h3>Emacs 内で IPython を動かす</h3>
+
+<p>いろいろな方法があるようですが，デフォルトの python.el で提供される Python モードでの方法を説明します。</p>
+
+<p><code>~/.emacs.d/init.el</code> には次のように書いておきます：</p>
+
+<pre>
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "--simple-prompt --matplotlib -i")
+</pre>
+
+<p>拡張子 <code>py</code> のファイルを開くと，自動的に Python モードになります。まずは C-c C-p (run-python) で IPython プロセスを起動します。バッファ全体を実行するには C-c C-c (python-shell-send-buffer)，選択したリージョンを実行するには C-c C-r (python-shell-send-region) とします。詳しくは，M-x help の次に m と打つと，モードのヘルプが現れます。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-28 13:16:32</time>
+Last modified: <time>2019-04-29 12:01:08</time>
 <!-- hhmts end -->
 </p>
 </body>
