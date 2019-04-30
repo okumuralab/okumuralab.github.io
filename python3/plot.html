@@ -78,13 +78,50 @@ plt.rcParams['font.size'] = 12
 plt.title('日本語タイトル', fontfamily='IPAexGothic')
 </pre>
 
+<p>R では ggplot2 というライブラリが人気ですが，Python では <a href="https://seaborn.pydata.org/">seaborn</a> というデータ視覚化ライブラリが人気です。<code>conda install seaborn</code> などとしてインストールしておきましょう。seaborn は matplotlib の上で動いているので，いずれにしても matplotlib の設定は必要です。seaborn については Kaggle で <a href="https://www.kaggle.com/learn/data-visualization-from-non-coder-to-coder">Data Visualization: from Non-Coder to Coder</a> という初心者向けの無料講座があるようです。</p>
+
+<p>下は seaborn の簡単な例です：</p>
+
+<pre>
+import seaborn as sns
+iris = sns.load_dataset("iris")
+sns.pairplot(iris)
+</pre>
+
+<figure><img src="img/seaborn_iris.png" alt="Iris"></figure>
+
+<p>スタイルの設定やフォントの設定は次のようにします：</p>
+
+<pre>
+sns.set_style("darkgrid", {'font.family': ['IPAexGothic']})
+</pre>
+
+<p>ファイルへの保存は，メニューからも，プログラムでもできます：</p>
+
+<pre>
+fig.savefig('filename.png', dpi=80, bbox_inches="tight")
+plt.savefig('filename.pdf', bbox_inches="tight")
+plt.savefig('filename.pgf', bbox_inches="tight")
+</pre>
+
+<p>最後のPGF（Portable Graphics Format）はTeXのTi<i>k</i>Zのベースとなるグラフィック言語です。これは次のような形のLaTeXファイルを <code>lualatex</code> でコンパイルすることによってPDFに変換できます：</p>
+
+<pre>
+\documentclass{standalone}
+\usepackage{pgf}
+\usepackage{fontspec}
+\begin{document}
+\input{filename.pgf}
+\end{document}
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-29 11:50:06</time>
+Last modified: <time>2019-04-30 20:23:19</time>
 <!-- hhmts end -->
 </p>
 </body>

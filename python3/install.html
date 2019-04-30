@@ -36,6 +36,57 @@ pip install ipython numpy scipy matplotlib pandas
 
 <p><code>brew install python</code> で入れる方法と，<code>brew install pyenv</code> でまず pyenv を入れてから pyenv 経由で各種 Python を入れる方法などがあります。</p>
 
+<p>前者では（デフォルトでは）<code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンドが入ります。また，<code>/usr/local/opt/python/libexec/bin</code> にも <code>python</code> などが入りますが，これは <code>python3</code> へのシンボリックリンクです。</p>
+
+<p>後者では，まず <code>~/.bash_profile</code> に次を書き込みます：</p>
+
+<pre>
+PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+</pre>
+
+<p>次のコマンドでインストール可能なバージョンを確認します：</p>
+
+<pre>
+pyenv install --list
+</pre>
+
+<p>例えば Python 3.7.3 をインストールしたいなら</p>
+
+<pre>
+pyenv install 3.7.3
+</pre>
+
+<p>と打ち込みます。<code>pyenv versions</code> でバージョンを確認します。おそらく <code>system</code> と <code>3.7.3</code> があり，デフォルトでは前者になっているので，新しいほうに替えます：</p>
+
+<pre>
+pyenv global 3.7.3
+pyenv rehash
+</pre>
+
+<p><code>python --version</code> でバージョンを確認します。</p>
+
+<p>要らなくなったバージョンは <code>pyenv uninstall 3.7.2</code> のようにして消せます。</p>
+
+<p>あとは pip で追加インストールします。例：</p>
+
+<pre>
+pip install ipython numpy scipy matplotlib pandas
+</pre>
+
+<p>インストールされたものを確認します：</p>
+
+<pre>
+pip list
+</pre>
+
+<p>例えば pip を更新するには次のようにします：</p>
+
+<pre>
+pip install --upgrade pip
+</pre>
+
 <h3>Miniconda によるインストール</h3>
 
 <p><a href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a> から最新の Python 3.x 版インストーラをダウンロードし，実行します。私は Mac や CentOS で bash installer を使いました：</p>
@@ -44,7 +95,7 @@ pip install ipython numpy scipy matplotlib pandas
 bash Miniconda3-latest-*-x86_64.sh
 </pre>
 
-<p>いろいろ聞いてくるので答えます。</p>
+<p>まずは ENTER を押せと言ってきます。Enter を押すと，ライセンスを表示して，アクセプトするかと聞いてくるので，<code>yes</code> と答えます。次に，インストールの場所は <code>~/miniconda3</code> で良いかと聞いてくるので，それで良ければ Enter を，別の場所（例えば <code>/usr/local/miniconda3</code>）に変えたければその場所を打ち込みます。最後に <code>conda init</code> を実行するかと聞いてくるので，<code>yes</code> と打つと，Mac では <code>~/.bash_profile</code> の最後に，Linux では <code>~/.bashrc</code> の最後に，コードが追加されます。シェルを開き直すか <code>~/.bash何々</code> を再読み込みすると，Mac なら自動でプロンプトの最初に <code>(base)</code> が出て，基本設定の Miniconda 環境が使えるようになります。Linux では安全のため毎回 <code>conda activate</code> と打たないと Miniconda 環境になりません。元の環境（システムの <code>/usr/bin/python</code> を使う）に戻すには <code>conda deactivate</code> します。Mac でも自動アクティベートをオフにしたければ <code>conda config --set auto_activate_base false</code> と打ち込みます（<code>~/.condarc</code> に <code>auto_activate_base: false</code> と書き込まれます）。</p>
 
 <p>パッケージ管理は <code>conda</code> コマンドで行います：</p>
 
@@ -65,7 +116,7 @@ make test
 make install
 </pre>
 
-<p>実行ファイルは /usr/local/bin に入りますので，そこにパスを通しておきます。</p>
+<p>実行ファイルは（デフォルトでは）<code>/usr/local/bin</code> に入りますので，そこにパスを通しておきます。</p>
 
 <h3>Google Collab を使う</h3>
 
@@ -83,7 +134,7 @@ print("Hello, world!")
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-28 11:16:03</time>
+Last modified: <time>2019-04-30 09:45:46</time>
 <!-- hhmts end -->
 </p>
 </footer>
