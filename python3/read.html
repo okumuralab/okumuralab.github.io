@@ -36,13 +36,28 @@ data = pd.read_excel("filename.xlsx")
 
 <p><code>read_csv()</code> や <code>read_excel()</code> などの詳細は <a href="http://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">pandas の IO Tools</a> のページ，あるいは IPython で <code>?pd.read_csv</code> と打ち込むと出てくるヘルプをご覧ください。</p>
 
+<p>読み込んだデータは <code>DataFrame</code> オブジェクトです：</p>
+
+<pre>
+In [ ]: type(data)
+Out[ ]: pandas.core.frame.DataFrame
+</pre>
+
+<p>pandas の DataFrame は R のデータフレームとほぼ同じです。簡単な解説が <a href="http://pandas.pydata.org/pandas-docs/stable/getting_started/10min.html">10 Minutes to pandas</a> にあります。</p>
+
+<p>各列の名前を表示するには <code>data.columns</code>，各列の名前とデータ型を表示するには <code>data.dtypes</code> と打ち込みます。これ以外に行の名前（デフォルトでは 0 から始まる行番号）を格納する <code>data.index</code> があります。</p>
+
+<p><code>data.describe()</code> と打ち込めば，数値を含む行について記述統計量を表示します。</p>
+
+<p>データの（0から数えて）例えば2行目から4行目を選択するには <code>data[2:5]</code> のようにします。データの一部の列を選択するには <code>data.列名</code> あるいは <code>data['列名']</code> あるいは <code>data[['列名1','列名2']]</code> のようにします。データ全体を行列のように行名・列名で選ぶには <code>data.loc['行名','列名']</code>，行番号・列番号で選ぶには <code>data.iloc[行番号,列番号]</code> とします。番号はすべて0から数えます。複数与えるには <code>[2,3,4]</code> のようにリストにするか，<code>2:5</code> のように範囲で表します。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-01 11:08:45</time>
+Last modified: <time>2019-05-03 10:38:59</time>
 <!-- hhmts end -->
 </p>
 </body>
