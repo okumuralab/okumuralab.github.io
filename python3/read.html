@@ -49,7 +49,7 @@ Out[ ]: pandas.core.frame.DataFrame
 
 <p><code>data.describe()</code> と打ち込めば，数値を含む行について記述統計量を表示します。</p>
 
-<p>データの（0から数えて）例えば2行目から4行目を選択するには <code>data[2:5]</code> のようにします。データの一部の列を選択するには <code>data.列名</code> あるいは <code>data['列名']</code> あるいは <code>data[['列名1','列名2']]</code> のようにします。データ全体を行列のように行名・列名で選ぶには <code>data.loc['行名','列名']</code>，行番号・列番号で選ぶには <code>data.iloc[行番号,列番号]</code> とします。番号はすべて0から数えます。複数与えるには <code>[2,3,4]</code> のようにリストにするか，<code>2:5</code> のように範囲で表します。</p>
+<p>データの（0から数えて）例えば2行目から4行目を選択するには <code>data[2:5]</code> のようにします。データの一部の列を選択するには <code>data.列名</code> あるいは <code>data['列名']</code> あるいは <code>data[['列名1','列名2']]</code> のようにします。行列のように行名・列名で選ぶには <code>data.loc['行名','列名']</code>，行番号・列番号で選ぶには <code>data.iloc[行番号,列番号]</code> とします。複数与えるには <code>[2,3,4]</code> のようにリストにするか，<code>2:5</code> のように範囲で表します（Pythonでは番号は0から数え，<code>2:5</code> のような範囲は最後の5を含まないことに注意）。</p>
 
 <hr>
 
@@ -57,7 +57,7 @@ Out[ ]: pandas.core.frame.DataFrame
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-03 10:38:59</time>
+Last modified: <time>2019-05-04 09:16:36</time>
 <!-- hhmts end -->
 </p>
 </body>
