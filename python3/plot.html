@@ -18,7 +18,7 @@
 
 <h2>matplotlib</h2>
 
-<p>プロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a> を使います。これは MATLAB ライクなライブラリです。</p>
+<p>プロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a> という MATLAB ライクなライブラリを使います。</p>
 
 <p>もし，例えば</p>
 
@@ -28,21 +28,35 @@ plt.plot([1,2,3,4], [-2,1,-1,2])
 plt.show()
 </pre>
 
-<p>と打ち込んで何も出ないようなら，<code>~/.matplotlib/matplotlibrc</code> にバックエンドの名前を指定します。Macなら次のようにすれば動きました：</p>
+<p>でエラーになるなら，<code>~/.matplotlib/matplotlibrc</code> にバックエンドの名前を指定します。Macの場合は，macOSアプリ（フレームワーク）としてのPythonなら</p>
+
+<pre>
+backend: MacOSX
+</pre>
+
+<p>そうでないなら</p>
 
 <pre>
 backend: TkAgg
 </pre>
 
-<p>デフォルトのフォントは DejaVu Sans という優れものですが，日本語が出ません。日本語を多用するなら，システムにインストールされている適当な TrueType フォント名を指定します。日本語も使うなら，<a href="https://ipafont.ipa.go.jp">こちら</a>から IPAex ゴシックをいただいてきてシステムにインストールし，さきほどの <code>~/.matplotlib/matplotlibrc</code> に次のように書き加えます：</p>
+<p>とすればよさそうです。</p>
+
+<p>デフォルトのフォントでは日本語が出ません。デフォルトで日本語を出したいなら，システムにインストールされている適当な TrueType フォント名を <code>~/.matplotlib/matplotlibrc</code> に書き加えます。Macなら例えば</p>
+
+<pre>
+font.family: AppleGothic
+</pre>
+
+<p>でよさそうです。あるいは，<a href="https://ipafont.ipa.go.jp">こちら</a>から IPAex ゴシックをいただいてきてシステムにインストールし，次のように書き加えます：</p>
 
 <pre>
 font.family: IPAexGothic
 </pre>
 
-<p>その際，もし古い <code>~/.matplotlib/font*</code> のようなフォントのキャッシュファイルがあれば消しておきます。Mac なら IPAexGothic 以外に AppleGothic も使えます。</p>
+<p>その際，もし古い <code>~/.matplotlib/font*</code> のようなフォントのキャッシュファイルがあれば消しておきます。</p>
 
-<p><code>font.family</code> のデフォルト値は <code>sans-serif</code> で，DejaVu Sans が使われます。<code>serif</code> と指定すれば DejaVu Serif になります。</p>
+<p>なお，<code>font.family</code> のデフォルト値は <code>sans-serif</code> で，DejaVu Sans が使われます。<code>serif</code> と指定すれば DejaVu Serif になります。DejaVu は Bitstream Vera ベースの良質なフォントです。</p>
 
 <p>PDF で保存する場合，TrueType フォントは Type 3 形式でサブセット埋め込みされます。OpenType の Source Han Sans などは，日本語表示には使えますが，サブセット化できず，丸ごと埋め込まれてしまい，PDF のファイルサイズが巨大になります。</p>
 
@@ -67,13 +81,15 @@ plt.plot([1,2,3,4], [-2,1,-1,2])
 plt.title('日本語タイトル')
 </pre>
 
-<p>これでもしグラフが出ないなら <code>plt.show()</code> と打ち込みます。日本語タイトルも軸のマイナスも化けずに出れば合格です。もし日本語が出てもマイナスが化ける場合は <code>~/.matplotlib/matplotlibrc</code> に次の1行を追加します：</p>
+<p>これでもしグラフが出ないなら <code>plt.show()</code> と打ち込みます。日本語タイトルも軸のマイナスも化けずに出れば合格です。もし日本語が出てもマイナスが化ける場合は，フォントに MINUS SIGN (U+2212) がないのでしょう。マイナスを HYPHEN-MINUS (U+002D) で代用するために <code>~/.matplotlib/matplotlibrc</code> に次の1行を追加します：</p>
 
 <pre>
 axes.unicode_minus: False
 </pre>
 
-<p>環境によっては，<code>plt.show()</code> でグラフが出ても，グラフの窓を閉じない限り，次に進めなくなります。この状態を「ブロック」といいます。ブロックしないようにするには <code>plt.show(block=False)</code> のようにオプションを付けます。</p>
+<p>環境によっては，<code>plt.show()</code> でグラフが出ても，グラフの窓を閉じない限り，次に進めなくなります。この状態を「ブロック」といいます。ブロックしないようにするには <code>plt.show(block=False)</code> のようにオプションを付けます。対話型環境でないスクリプト中でこれをすると，グラフがすぐ消えてしまいます。</p>
+
+<p>最後に描いたプロットを消すのは <code>plt.close()</code> です。全部のプロットを消すには <code>plt.close("all")</code> とします。</p>
 
 <p>IPython では，詳しいヘルプは例えば <code>?plt.plot</code> のように打ち込めば現れます。</p>
 
@@ -146,16 +162,27 @@ plt.savefig('filename.pgf', bbox_inches="tight")
 \end{document}
 </pre>
 
-<h2>LaTeXを使う</h2>
+<p>PDFの場合は，次のようにすることもできます：</p>
 
-<p>軸の文字やタイトル・キャプションなどをLaTeX経由で出力することができます。</p>
+<pre>
+from matplotlib.backends.backend_pdf import PdfPages
+
+with PdfPages('foo.pdf') as pdf:
+    # ここで図を描く
+    pdf.savefig(fig)
+</pre>
+
+<h2>文字だけLaTeXを使う</h2>
+
+<p>軸の文字やタイトル・キャプションなどの数式は，LaTeX風に <code>$</code> で囲んで書けば，ちゃんと解釈してくれます。その際に，文字列は <code>r'...'</code> のように <code>r</code> を付けて書けば，<code>\</code> を特別扱いしない「生の」（raw）文字列として扱われます。</p>
+
+<p><code>latex</code>，<code>dvipng</code>，<code>dvips</code>，<code>gs</code> コマンドが使える環境では，次のように <code>text.usetex</code> を <code>True</code> にすれば，本当に文字部分だけLaTeXを起動して，きれいな出力を得ることができます。</p>
 
 <pre>
 import matplotlib.pyplot as plt
 import numpy as np
 
 plt.rcParams['text.usetex'] = True
-plt.rcParams['text.latex.preamble'] = r'\usepackage{tgtermes},\usepackage{newtxmath}'  # プリアンブルの設定例
 
 x = np.linspace(-5,5,101)
 y = 1 / (1 + np.exp(-x))
@@ -163,14 +190,67 @@ plt.figure(figsize=(5, 3))
 plt.plot(x, y, 'k')
 plt.xlabel(r'$x$')
 plt.ylabel(r'$y$')
-plt.title("sigmoid function")
+plt.title("Sigmoid Function")
 plt.legend([r'$y = \frac{1}{1+e^{-x}}$'])
 plt.savefig("sigmoid.pdf", bbox_inches="tight")
 </pre>
 
-<p><code>~/.matplotlib/tex.cache</code> にLaTeXファイルやdviファイルがたくさんできます。</p>
+<p>デフォルトではComputer Modernフォント（数式はcmrやcmmi，タイトルはcmss）になります（PDFにはフォントがType 1形式で埋め込まれます）が，次のようにしてフォントを指定できます：</p>
 
-<p>LaTeXのコマンドを含む文字列を <code>r'...'</code> のように書くのは，<code>\</code> を特別扱いしない「生の」（raw）文字列にするためです。</p>
+<pre>
+plt.rcParams['font.family'] = 'serif' # あるいは 'sans-serif' など
+plt.rcParams['font.serif'] = 'times'  # あるいは 'palatino' など
+plt.rcParams['font.sans-serif'] = 'helvetica'
+</pre>
+
+<p>Timesでは <code>\usepackage{mathptmx}</code>，Palatinoでは <code>\usepackage{mathpazo}</code>，Helveticaでは <code>\usepackage{helvet}</code> がプリアンブルに書き込まれます。実際に処理されるLaTeXファイルは例えば次のようになります：</p>
+
+<pre>
+\documentclass{article}
+\usepackage{type1cm}
+\usepackage{mathpazo} % Palatino指定で入る
+\usepackage{helvet}   % Helvetica指定で入る
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+% ここに別途指定したプリアンブルが入る
+\usepackage[papersize={72in,72in},body={70in,70in},margin={1in,1in}]{geometry}
+\pagestyle{empty}
+\begin{document}
+\fontsize{10.000000}{12.500000}{\rmfamily $y = \frac{1}{1+e^{-x}}$}
+\end{document}
+</pre>
+
+<p>次のようにしてプリアンブルを直接指定することもできます：</p>
+
+<pre>
+plt.rcParams['text.latex.preamble'] = r'\usepackage{tgtermes},\usepackage{newtxmath}'
+</pre>
+
+<p>プリアンブルを指定する場合は，他のコードと衝突してエラーにならないように，十分注意が必要です。上の例では，<code>\usepackage{newtxtext}</code> を指定するとエラーになったので，<code>\usepackage{tgtermes}</code> にしました。</p>
+
+<p><code>~/.matplotlib/tex.cache</code> にLaTeXファイルやdviファイルがたくさんできます。消してもかまいませんが，同じ文字列が出てきたら再利用されますので，特に消す必要はありません。</p>
+
+<h2>その他</h2>
+
+<p>軸の最小値・最大値を指定する：</p>
+
+<pre>
+plt.xlim(最小値,最大値)
+plt.ylim(最小値,最大値)
+</pre>
+
+<p>対数目盛：</p>
+
+<pre>
+plt.xscale('log')
+plt.yscale('log')
+</pre>
+
+<p>グリッド描画：</p>
+
+<pre>
+plt.grid()
+</pre>
 
 <hr>
 
@@ -178,7 +258,7 @@ plt.savefig("sigmoid.pdf", bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-04 20:26:13</time>
+Last modified: <time>2019-05-05 11:34:28</time>
 <!-- hhmts end -->
 </p>
 </body>
