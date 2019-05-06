@@ -47,6 +47,16 @@ Out[5]: 6.019999999999999e+23
 
 <p>Python 2では，C言語などと同様に，整数の割り算は整数に切り捨てましたが，Python 3では <code>/</code> は実数（浮動小数点数）の範囲で計算します。Python 3では整数の除算は <code>//</code> を使います。除算の余りは <code>%</code> です。例えば <code>7 // 3</code> は 2 になり，<code>7 % 3</code> は 1 になります。</p>
 
+<p>おもしろいことに，文字列を足し算，掛け算することもできます：</p>
+
+<pre>
+In [ ]: "ほげ" + "げほ"
+Out[ ]: 'ほげげほ'
+
+In [ ]: "ほげ" * 3
+Out[ ]: 'ほげほげほげ'
+</pre>
+
 <p>値は <code>x</code> や <code>hoge</code> のような変数に代入することができます。</p>
 
 <pre>
@@ -75,17 +85,44 @@ NameError: name 'X' is not defined
 
 <p>この <code>NameError</code> は関数名などを間違えたときにも出ます。</p>
 
-<pre>
-In [10]: sin(pi/2)
----------------------------------------------------------------------------
-NameError                                 Traceback (most recent call last)
-&lt;ipython-input-48-8aec7303ce5c&gt; in &lt;module&gt;
-----&gt; 1 sin(pi/2)
+<p>対話型環境ならこのように式を打ち込めばそのまま答えが表示されますが，対話型でないプログラム中では <code>print()</code> 関数を使わないと出力されません（以下では入力の行番号は省略します）：</p>
 
+<pre>
+In [ ]: print("Hello")
+Hello
+</pre>
+
+<p><code>print</code> のような関数と同じ名前の変数を作ることもできます（お勧めしません）：</p>
+
+<pre>
+In [ ]: print = 3
+
+In [ ]: print
+Out[ ]: 3
+
+In [ ]: print("Hello")
+...
+TypeError: 'int' object is not callable
+</pre>
+
+<p>あらら！ 元に戻すには，自分の作った <code>print</code> を削除します：</p>
+
+<pre>
+In [ ]: del print
+
+In [ ]: print("Hello")
+Hello
+</pre>
+
+<p>ほかにどういう関数があるのでしょうか。三角関数は？</p>
+
+<pre>
+In [ ]: sin(pi/2)
+...
 NameError: name 'sin' is not defined
 </pre>
 
-<p>数学関数はいくつかのライブラリで定義されていますが，ここでは <a href="https://www.numpy.org">NumPy</a>（ナムパイ）というライブラリを使うことにします（ほかに <code>math</code> や <code>scipy</code> でも定義されています）。これを読み込むには，次のようにします（以下では入力の行番号は省略します）：</p>
+<p>駄目ですね。数学関数はいくつかのライブラリで定義されていますが，ここでは <a href="https://www.numpy.org">NumPy</a>（ナムパイ）というライブラリを使うことにします（ほかに <code>math</code> や <code>scipy</code> でも定義されています）。これを読み込むには，次のようにします：</p>
 
 <pre>
 In [ ]: import numpy as np
@@ -248,7 +285,7 @@ def collatz(n):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-01 17:43:23</time>
+Last modified: <time>2019-05-06 16:10:31</time>
 <!-- hhmts end -->
 </p>
 </body>

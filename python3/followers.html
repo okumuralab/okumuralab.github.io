@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ツイッターのフォロワー数の推移をプロット</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python 3</a> &gt;
+</nav>
+
+<h1>ツイッターのフォロワー数の推移をプロット</h1>
+
+<p>Rで描いた<a href="../stat/followers.html">グラフの例：Twitterのフォロワー数</a>のPython版である。</p>
+
+<p>上と同様にしてソースからデータをファイルにコピーする。</p>
+
+<pre>
+var ar_data = [];
+ar_data[1] = [...];
+ar_data[2] = [...];
+ar_data[3] = [...];
+ar_data[4] = [...];
+ar_data[5] = [...];
+ar_data[6] = [...];
+ar_data[7] = [...];
+ar_data[8] = [...];
+var ar_lbl = [];
+ar_lbl[1] = [...];
+ar_lbl[2] = [...];
+ar_lbl[3] = [...];
+ar_lbl[4] = [...];
+ar_lbl[5] = [...];
+ar_lbl[6] = [...];
+</pre>
+
+<p>ここでPythonなら <code>var ar_data = [];</code> を <code>ar_data = [None] * 9</code>，<code>var ar_lbl = [];</code> を <code>ar_lbl = [None] * 7</code> に書き換えればそのまま使える。</p>
+
+<pre>
+import pandas as pd
+
+t = [pd.to_datetime(x, format="%y%m%d") for x in ar_lbl[6]]
+df = pd.DataFrame(index=t, data={'followers':ar_data[7]})
+df.plot()
+</pre>
+
+<figure><img src="img/190506c.png" alt="ツイッターのフォロワー数の推移"></figure>
+
+<p>あとはいろいろ工夫する。例えば</p>
+
+<pre>
+df1 = df[df.index >= "2019-04-01"]
+df1.plot(color="black", marker="o")
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-06 20:49:01</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

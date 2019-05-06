@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ROC曲線とPR曲線</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python 3</a> &gt;
+</nav>
+
+<article>
+<h1>ROC曲線とPR曲線</h1>
+
+<p><a href="../stat/ROC.html">ROC曲線</a>をPythonで描いてみよう。まずデータ：</p>
+
+<pre>
+import numpy as np
+
+s = np.array([16,15,14,13,12,11,10, 9, 8, 8, 8, 8, 7, 6, 5])
+t = np.array([ 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0])
+</pre>
+
+<p>真陽性率と偽陽性率を求める簡単な関数：</p>
+
+<pre>
+# TP / (TP + FN) = sensitivity = recall
+def tpr(x):
+    return sum(t[s >= x]) / sum(t)
+
+# FP / (FP + TN) = 1 - specificity
+def fpr(x):
+    return sum(t[s >= x] == 0) / sum(t == 0)
+</pre>
+
+<p>スコアに ∞ をアペンドして，ソートしユニークなものだけ選ぶ：</p>
+
+<pre>
+u = np.unique(np.append(s, np.inf))
+</pre>
+
+<p>グラフを描く：</p>
+
+<pre>
+import matplotlib.pyplot as plt
+
+plt.plot([fpr(x) for x in u], [tpr(x) for x in u], "ko-")
+plt.axis("scaled")  # アスペクト比を1にする
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.savefig('190506a.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190506a.png" alt="ROC曲線"></figure>
+
+<p>どの点がどの閾値に対応するかも書き込みたければ次のようにする：</p>
+
+<pre>
+for x in u:
+    plt.text(fpr(x), tpr(x), format(x,'g'),
+             verticalalignment='top', horizontalalignment='left')
+</pre>
+
+<p><code>verticalalignment</code> は <code>'center'</code>, <code>'top'</code>, <code>'bottom'</code>, <code>'baseline'</code>, <code>'center_baseline'</code> から，<code>horizontalalignment</code> <code>'center'</code>, <code>'right'</code>, <code>'left'</code> から選ぶ。</p>
+
+<p>真陽性率は，検診では感度 sensitivity，機械学習では再現率 recall とも呼ばれる。一方，検診で陽性適中率 positive predictive value と呼ばれる次の値は，機械学習では適合率 precision と呼ばれる：</p>
+
+<pre>
+# TP / (TP + FP) = PPV = precision
+def ppv(x):
+    return sum(t[s >= x]) / sum(s >= x)
+</pre>
+
+<p>横軸に再現率，縦軸に適合率をとったグラフを，機械学習ではPR曲線（precision-recall curve）と呼び，よく使われる。</p>
+
+<pre>
+plt.plot([tpr(x) for x in u], [ppv(x) for x in u], "ko-")  # PR
+plt.axis('scaled')
+plt.xlim(-0.05, 1.05)
+plt.ylim(-0.05, 1.05)
+plt.xlabel("Recall")
+plt.ylabel("Precision")
+plt.savefig('190506b.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190506b.png" alt="PR曲線"></figure>
+
+<p>判断の閾値を上げていくと，再現率（「見逃さない率」）はどんどん下がっていく。一方，適合率は上下に変動しながら次第に上がっていく傾向があるが，分母が次第に小さくなって，値が不安定になっていき，最終的には 0/0 になり，定義できなくなる（気にせず 0/0 = 1 として描くのが普通らしいが，上の図では描いていない）。</p>
+
+</article>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-06 18:36:16</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
