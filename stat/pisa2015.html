@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>PISA 2015データを読む</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
@@ -70,6 +69,25 @@ data = read_csv("CY6_MS_CMB_STU_QQQ.csv")  # 4分50秒
 library(data.table)
 data = fread("CY6_MS_CMB_STU_QQQ.csv")     # 1分40秒
 </pre>
+
+<div class="note">
+<p>[2019-05-07追記] 新しい Mac mini 3.6GHz Core i3 で Python でもやってみた：</p>
+<pre>
+import pandas as pd
+import time
+
+t1 = time.time()
+df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv")
+t2 = time.time()
+print(t2 - t1)
+</pre>
+<p>1回目68.6秒，2回目50.9秒であった。警告 "DtypeWarning: Columns (52,53,54) have mixed types. Specify dtype option on import or set low_memory=False." が出たが，これは</p>
+<pre>
+df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'object'})
+</pre>
+<p>として文字列として読み込むのが正解らしい。</p>
+<p>ちなみに，同じマシンで R の data.table でやってみたところ，13秒だった！</p>
+</div>
 
 <h2>回答の分析</h2>
 
@@ -136,7 +154,7 @@ data = fread("CY6_MS_CMB_STU_QQQ.csv")     # 1分40秒
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2017-07-24 16:12:01</time>
+Last modified: <time>2019-05-07 22:58:17</time>
 <!-- hhmts end -->
 </p>
 </footer>
