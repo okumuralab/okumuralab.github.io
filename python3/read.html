@@ -16,6 +16,8 @@
 
 <h1>データの読み込み</h1>
 
+<h2>pandasの基本</h2>
+
 <p>Python でデータを読み込むときは <a href="https://pandas.pydata.org/">pandas</a> というライブラリを使います。</p>
 
 <pre>
@@ -51,13 +53,103 @@ Out[ ]: pandas.core.frame.DataFrame
 
 <p>データの（0から数えて）例えば2行目から4行目を選択するには <code>data[2:5]</code> のようにします。データの一部の列を選択するには <code>data.列名</code> あるいは <code>data['列名']</code> あるいは <code>data[['列名1','列名2']]</code> のようにします。行列のように行名・列名で選ぶには <code>data.loc['行名','列名']</code>，行番号・列番号で選ぶには <code>data.iloc[行番号,列番号]</code> とします。複数与えるには <code>[2,3,4]</code> のようにリストにするか，<code>2:5</code> のように範囲で表します（Pythonでは番号は0から数え，<code>2:5</code> のような範囲は最後の5を含まないことに注意）。</p>
 
+<h2>データ型の指定</h2>
+
+<p>この節については，いしおさんのブログ<a href="https://ishitonton.hatenablog.com/entry/2019/01/04/190748">DataFrameのメモリサイズを節約する</a>が参考になります。</p>
+
+<p>例えば <a href="https://oku.edu.mie-u.ac.jp/~okumura/stat/data/shinjuku.csv">shinjuku.csv</a> というCSVファイルを読み込むとしましょう。</p>
+
+<pre>
+import matplotlib.pyplot as plt
+import pandas as pd
+import sys
+
+url = "https://oku.edu.mie-u.ac.jp/~okumura/stat/data/shinjuku.csv"
+df1 = pd.read_csv(url)
+df1.shape           # (25705, 4)
+sys.getsizeof(df1)  # 2493489
+</pre>
+
+<p><code>df1.head()</code> の結果は次のようになります：</p>
+
+<pre>
+           datetime     max     min     avg
+0  2011/03/01 00:00  0.0370  0.0316  0.0338
+1  2011/03/01 01:00  0.0368  0.0324  0.0342
+2  2011/03/01 02:00  0.0357  0.0325  0.0340
+3  2011/03/01 03:00  0.0371  0.0322  0.0343
+4  2011/03/01 04:00  0.0363  0.0321  0.0342
+</pre>
+
+<p>まず，日付はインデックスに移動してみましょう：</p>
+
+<pre>
+df2 = pd.read_csv(url, index_col='datetime')
+df2.shape           # (25705, 3)
+sys.getsizeof(df2)  # 2493409
+</pre>
+
+<p>サイズの節約にはなりませんでした。<code>df2.head()</code> は次のようになります：</p>
+
+<pre>
+                     max     min     avg
+datetime                                
+2011/03/01 00:00  0.0370  0.0316  0.0338
+2011/03/01 01:00  0.0368  0.0324  0.0342
+2011/03/01 02:00  0.0357  0.0325  0.0340
+2011/03/01 03:00  0.0371  0.0322  0.0343
+2011/03/01 04:00  0.0363  0.0321  0.0342
+</pre>
+
+<p>日付が文字列で読み込まれてしまうのがサイズを大きくする原因です。日時データは <code>parse_dates</code> に指定して，pandasの64ビットの「Timestamp」型にします。この型は1970年元旦を起点としたナノ秒単位の整数で，1677年から2262年まで使えます（<code>pd.Timestamp.min</code>，<code>pd.Timestamp.max</code>）。残りの列は特に何もする必要はないのですが，ここではメモリが逼迫していると仮定して，32ビットの浮動小数点型にしてみます：</p>
+
+<pre>
+df3 = pd.read_csv(url, index_col='datetime', parse_dates=['datetime'],
+                  dtype={'max':'float32', 'min':'float32', 'avg':'float32'})
+sys.getsizeof(df3)  # 514124
+</pre>
+
+<p>列指定は番号でもかまいません：</p>
+
+<pre>
+df4 = pd.read_csv(url, index_col=0, parse_dates=[0],
+                  dtype={1:'float32', 2:'float32', 3:'float32'})
+sys.getsizeof(df4)  # 514124
+</pre>
+
+<p>インデックス以外の列指定が同じなら，次のようにしてもかまいません：</p>
+
+<pre>
+df5 = pd.read_csv(url, index_col=0, parse_dates=[0], dtype='float32')
+sys.getsizeof(df5)  # 514124
+</pre>
+
+<p>データ型としては，符号付き整数 <code>'int8'</code>，<code>'int16'</code>，<code>'int32'</code>，<code>'int64'</code>，符号なし整数 <code>'uint8'</code>，<code>'uint16'</code>，<code>'uint32'</code>，<code>'uint64'</code>，浮動小数点型 <code>'float16'</code>，<code>'float32'</code>，<code>'float64'</code>，<code>'float128'</code>，論理型 <code>'bool'</code>（<code>True</code> または <code>False</code>）などが使えるはずです。次のような簡単なプログラムで確認できます：</p>
+
+<pre>
+from io import StringIO
+data = ("A,B\n1,1.5\n2,2.5")
+df = pd.read_csv(StringIO(data), dtype={0:'int8', 1:'float16'})
+sys.getsizeof(df)
+df.head()
+</pre>
+
+<p>真偽値の文字列は <code>True</code>，<code>False</code> がデフォルトですが，<code>true_values=['Yes'], false_values=['No']</code> のようなオプションで指定できます。欠測値は <code>NaN</code> と表示されますが，デフォルトでは次の文字列が欠測値と判断されます：</p>
+
+<pre>
+'#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan',
+'1.#IND', '1.#QNAN', 'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null'
+</pre>
+
+<p>これ以外が必要なときは <code>na_values</code> と <code>keep_default_na</code> で指定できます。詳しくは pandas の <a href="http://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">IO Tools</a> のドキュメントをご覧ください。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-04 09:16:36</time>
+Last modified: <time>2019-05-07 15:38:58</time>
 <!-- hhmts end -->
 </p>
 </body>
