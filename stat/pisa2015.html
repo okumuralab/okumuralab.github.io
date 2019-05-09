@@ -85,7 +85,7 @@ print(t2 - t1)
 <pre>
 df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'object'})
 </pre>
-<p>として文字列として読み込むのが正解らしい。</p>
+<p>として文字列として読み込むのが正解らしい。オプション <code>low_memory=False</code> を付けた場合は1回目124.7秒，2回目94.3秒であった。</p>
 <p>ちなみに，同じマシンで R の readr でやってみたところ，1回目1分21秒，2回目1分17秒。data.table でやってみたところ，1回目21秒，2回目14秒だった。</p>
 <p>読み込んだオブジェクトのサイズは，pandas が 4089336830，readr が 5068092632，data.table が 3760255424 であった（Python は <code>import sys; sys.getsizeof()</code>，R は <code>object.size()</code> で調べた）。</p>
 </div>
@@ -155,7 +155,7 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-08 17:34:16</time>
+Last modified: <time>2019-05-09 22:41:10</time>
 <!-- hhmts end -->
 </p>
 </footer>
