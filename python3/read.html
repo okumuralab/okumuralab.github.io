@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>データの読み込み</title>
+<title>データの読み書き</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -14,9 +14,9 @@
 <a href="./">Python 3</a> &gt;
 </nav>
 
-<h1>データの読み込み</h1>
+<h1>データの読み書き</h1>
 
-<h2>pandasの基本</h2>
+<h2>データの読み込み</h2>
 
 <p>Python でデータを読み込むときは <a href="https://pandas.pydata.org/">pandas</a> というライブラリを使います。</p>
 
@@ -141,7 +141,21 @@ df.head()
 '1.#IND', '1.#QNAN', 'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null'
 </pre>
 
-<p>これ以外が必要なときは <code>na_values</code> と <code>keep_default_na</code> で指定できます。詳しくは pandas の <a href="http://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">IO Tools</a> のドキュメントをご覧ください。</p>
+<p>これ以外が必要なときは <code>na_values</code> と <code>keep_default_na</code>（デフォルトは <code>True</code>）で指定できます。詳しくは pandas の <a href="http://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">IO Tools</a> のドキュメントをご覧ください。</p>
+
+<h2>データの書き出し</h2>
+
+<p>データフレームのCSV形式での書き出しは <code>pandas.DataFrame.to_csv()</code> を使います。デフォルトはUTF-8ですが，Excel互換のBOM付きUTF-8（行末CRLF）でインデックスを付けずに保存するには次のようにします：</p>
+
+<pre>
+df.to_csv("filename.csv", index=False, encoding="utf_8_sig", line_terminator="\r\n")
+</pre>
+
+<p>Excel形式での書き出しは <code>pandas.DataFrame.to_excel()</code> です。エンジンは openpyxl または xlsxwriter が指定できます。前者のほうが多機能のようです。あらかじめ <code>conda install openpyxl</code> などと打ち込んでインストールしておきます。</p>
+
+<pre>
+df.to_excel("filename.xlsx")
+</pre>
 
 <hr>
 
@@ -149,7 +163,7 @@ df.head()
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-07 15:38:58</time>
+Last modified: <time>2019-05-10 17:10:38</time>
 <!-- hhmts end -->
 </p>
 </body>
