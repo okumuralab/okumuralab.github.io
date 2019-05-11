@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>scikit-learnによる機械学習</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python 3</a> &gt;
+</nav>
+
+<h1>scikit-learnによる機械学習</h1>
+
+<p><a href="https://scikit-learn.org/">scikit-learn</a>（サイキット・ラーン）は標準的な機械学習ライブラリである。インストールは，例えば conda なら，次のように打ち込む：</p>
+
+<pre>
+conda install scikit-learn
+</pre>
+
+<p>簡単な例として，多層パーセプトロン（MLP）による数字の識別を試す。データとしては，有名な MNIST ではなく，scikit-learn にサンプルとして入っている8×8ピクセル1797個の画像を使う。ピクセル値は0から16までの整数である。元々の出所は<a href="http://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits">こちら</a>で，MNIST の元となった NIST のデータベースからの抜粋である。</p>
+
+<pre>
+import numpy as np
+from sklearn.datasets import load_digits
+
+digits = load_digits()
+digits
+</pre>
+
+<p><code>digits</code> に入っている画像をいくつか表示させてみよう：</p>
+
+<pre>
+digits.images[0]
+
+import matplotlib.pyplot as plt
+
+plt.gray()
+plt.matshow(digits.images[0])
+</pre>
+
+<p>この <code>digits.images[0]</code> とまったく同じものが <code>digits.data[0]</code> にも入っている。前者は8×8行列，後者は64要素の配列である。これが <code>digits.data[1796]</code> まで続く。このそれぞれがどの数字に対応するかの正解が <code>digits.target</code> に入っている。</p>
+
+<p>まずはこれら1797組をトレーニング用とテスト用に分ける。以下では行列を大文字，ベクトルを小文字で表し，データを <code>X</code>，ターゲット（正解）を <code>y</code> としている。全体の3割をテスト用にする：</p>
+
+<pre>
+from sklearn.model_selection import train_test_split
+
+X = digits.data
+y = digits.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
+</pre>
+
+<p>実際に分類してみよう。幅20の隠れ層を1層だけ使う。</p>
+
+<pre>
+from sklearn.neural_network import MLPClassifier
+
+model = MLPClassifier(hidden_layer_sizes=(20,), max_iter=500)
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+</pre>
+
+<p>正解率（accuracy）を求める：</p>
+
+<pre>
+from sklearn.metrics import accuracy_score
+
+accuracy_score(y_test, y_pred)
+</pre>
+
+<p>混同行列を求める：</p>
+
+<pre>
+from sklearn.metrics import confusion_matrix
+
+confusion_matrix(y_test, y_pred)
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-11 20:10:11</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

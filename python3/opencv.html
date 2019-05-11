@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>OpenCVによる画像処理</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python 3</a> &gt;
+</nav>
+
+<h1>OpenCVによる画像処理</h1>
+
+<h2>基本</h2>
+
+<p><a href="https://opencv.org">OpenCV</a> は画像を扱うためのライブラリである。</p>
+
+<pre>
+conda install opencv
+</pre>
+
+<p>現時点（2019-05-11）では OpenCV 3.4.2 が入る（<code>conda install -c conda-forge opencv</code> や <code>pip install opencv-python</code> なら 4.1.0 が入る）。</p>
+
+<p>まずは適当な画像を読み込んでみる：</p>
+
+<pre>
+import numpy as np
+import cv2
+
+img = cv2.imread("画像ファイル名")
+type(img)   # numpy.ndarray
+img.shape   # (縦ピクセル数, 横ピクセル数, チャンネル数)
+</pre>
+
+<p>これでエラーが出ればうまく読めていないことになる。私の環境では  URL や <code>~/</code> で始まるパス名やはうまくいかなかった。</p>
+
+<p>IPython などの対話型の環境で画像を表示するには，次のようにするのがよさそうだ：</p>
+
+<pre>
+cv2.startWindowThread()
+cv2.namedWindow("Image")  # ウィンドウ名は何でもよい
+cv2.imshow("Image", img)
+</pre>
+
+<p>別のやりかたとして例えば <code>cv2.imshow("Image", img); cv2.waitKey(5000)</code> のようにすれば5秒間ブロックして表示する。表示ウィンドウをすべて閉じるには <code>cv2.destroyAllWindows()</code> と打ち込む。</p>
+
+<p>画像は NumPy の ndarray で，成分は <code>'uint8'</code> である。チャンネルは [B,G,R] の順に入る。例えば青だけの縦150，横100の画像は次のようにして生成できる：</p>
+
+<pre>
+img = np.array([[[255,0,0] for x in range(100)] for y in range(150)], dtype='uint8')
+</pre>
+
+<p>保存する：</p>
+
+<pre>
+cv2.imwrite("hoge.png", img)
+</pre>
+
+<div class="note">
+<p>Matplotlib でも画像を読み書きできるが，チャンネルは RGB の順である。デフォルトで読めるのは PNG だけだが，<a href="http://pillow.readthedocs.io/">Pillow</a> をインストール（<code>conda install pillow</code>）すれば他の画像形式も読める。</p>
+<pre>
+import matplotlib.pyplot as plt
+img = plt.imread("画像ファイル名")
+plt.imshow(img)
+plt.imsave("hoge.png", img)
+</pre>
+</div>
+
+<h2>画像の加工</h2>
+
+<p>いろいろな加工ができる。例：</p>
+
+<pre>
+img2 = cv2.GaussianBlur(img, (9,9), 0)  # カーネルサイズは奇数に
+</pre>
+
+<p>（未完）</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-11 20:09:04</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
