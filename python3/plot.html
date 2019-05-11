@@ -18,7 +18,7 @@
 
 <h2>matplotlib</h2>
 
-<p>プロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a> という MATLAB ライクなライブラリを使います。</p>
+<p>プロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a>（マットプロットリブ）という MATLAB ライクなライブラリを使います。</p>
 
 <p>もし，例えば</p>
 
@@ -42,7 +42,7 @@ backend: TkAgg
 
 <p>とすればよさそうです。</p>
 
-<p>デフォルトのフォントでは日本語が出ません。デフォルトで日本語を出したいなら，システムにインストールされている適当な TrueType フォント名を <code>~/.matplotlib/matplotlibrc</code> に書き加えます。Macなら例えば</p>
+<p>デフォルトのフォントでは日本語が出ません。デフォルトで日本語を出したいなら，システムにインストールされている適当な TrueType フォント名を <code>~/.matplotlib/matplotlibrc</code> に書き加えます（matplotlib 3.1.0 で ttc にも対応）。Macなら例えば</p>
 
 <pre>
 font.family: AppleGothic
@@ -276,7 +276,7 @@ plt.axis('scaled')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-10 20:59:00</time>
+Last modified: <time>2019-05-11 20:39:06</time>
 <!-- hhmts end -->
 </p>
 </body>

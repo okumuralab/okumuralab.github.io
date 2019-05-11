@@ -18,40 +18,80 @@
 
 <h2>データの読み込み</h2>
 
-<p>Python でデータを読み込むときは <a href="https://pandas.pydata.org/">pandas</a> というライブラリを使います。</p>
+<p>Python でデータを読み込むときは <a href="https://pandas.pydata.org/">pandas</a>（パンダズ）というライブラリを使います。</p>
+
+<h3>CSV ファイルの読み込み</h3>
+
+<p>ファイル名または URL を指定して CSV ファイルを読み込みます：</p>
 
 <pre>
 import pandas as pd
-data = pd.read_csv("filename.csv")
-data.head()   # 頭の5行だけ表示
+
+df = pd.read_csv("filename.csv")
+df.head()   # 頭の5行だけ表示
 </pre>
-
-<p>ファイル名は URL でもかまいません。</p>
-
-<p><code>read_csv()</code> でよく使うオプションは，Shift JIS の CSV を読むための <code>encoding="cp932"</code>，特定の文字（例えば <code>#</code>）以下をコメントと解釈するための <code>comment="#"</code> です。</p>
-
-<p>Excel ファイル（xls，xlsx）を読むには xlrd というライブラリが必要です。別途 <code>conda install xlrd</code> または <code>pip(3) install xlrd</code> などとしてインストールしておきます。<code>read_excel()</code> を使うと自動的に import されます。</p>
-
-<pre>
-data = pd.read_excel("filename.xlsx")
-</pre>
-
-<p><code>read_csv()</code> や <code>read_excel()</code> などの詳細は <a href="http://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">pandas の IO Tools</a> のページ，あるいは IPython で <code>?pd.read_csv</code> と打ち込むと出てくるヘルプをご覧ください。</p>
 
 <p>読み込んだデータは <code>DataFrame</code> オブジェクトです：</p>
 
 <pre>
-In [ ]: type(data)
+In [ ]: type(df)
 Out[ ]: pandas.core.frame.DataFrame
 </pre>
 
+<p><code>read_csv()</code> でよく使うオプション：</p>
+
+<ul>
+  <li><code>header=None</code>: ヘッダ行なし</li>
+  <li><code>encoding="cp932"</code>: Shift JIS の CSV を読む</li>
+  <li><code>comment="#"</code>: <code>#</code> 以下をコメントと解釈する</li>
+</ul>
+
+<p>デフォルトでは次の文字列が欠測値（<code>NaN</code>）と判断されます：</p>
+
+<pre>
+'#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan',
+'1.#IND', '1.#QNAN', 'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null'
+</pre>
+
+<p>これ以外が必要なときは <code>na_values</code> と <code>keep_default_na</code>（デフォルトは <code>True</code>）で指定できます。空欄だけを欠測値としたい場合は次のようにします：</p>
+
+<pre>
+df = pd.read_csv("finename.csv", na_values="", keep_default_na=False)
+</pre>
+
+<h3>Excel ファイルの読み込み</h3>
+
+<p>Excel ファイル（xls，xlsx）を読むには xlrd というライブラリが必要です。別途 <code>conda install xlrd</code> または <code>pip(3) install xlrd</code> などとしてインストールしておきます。<code>read_excel()</code> を使うと自動的に import されます。</p>
+
+<pre>
+df = pd.read_excel("filename.xlsx")
+</pre>
+
+<p><code>read_csv()</code> や <code>read_excel()</code> などの詳細は <a href="http://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">pandas の IO Tools</a> のページ，あるいは IPython で <code>?pd.read_csv</code> と打ち込むと出てくるヘルプをご覧ください。</p>
+
+<h2>DataFrame の操作</h2>
+
 <p>pandas の DataFrame は R のデータフレームとほぼ同じです。簡単な解説が <a href="http://pandas.pydata.org/pandas-docs/stable/getting_started/10min.html">10 Minutes to pandas</a> にあります。</p>
 
-<p>各列の名前を表示するには <code>data.columns</code>，各列の名前とデータ型を表示するには <code>data.dtypes</code> と打ち込みます。これ以外に行の名前（デフォルトでは 0 から始まる行番号）を格納する <code>data.index</code> があります。</p>
+<pre>
+df          # 全体を表示
+df.head()   # 頭の5行だけ表示
+df.tail()   # 末尾の5行だけ表示
+df.columns  # 各列の名前
+df.dtypes   # 各列の名前とデータ型を表示
+df.index    # 行の名前（デフォルトでは 0 から始まる行番号）
+df.describe() # 記述統計量を表示
+df1 = df.dropna() # 欠測値のある行を外す
+df2 = df.fillna(0) # 欠測値を0で置き換える
+df2 = df.fillna(method="ffill") # 欠測値を直前の行で置き換える
+</pre>
 
-<p><code>data.describe()</code> と打ち込めば，数値を含む行について記述統計量を表示します。</p>
+<p>データの（0から数えて）例えば2行目から4行目を選択するには <code>df[2:5]</code> のようにします。データの一部の列を選択するには <code>df.列名</code> あるいは <code>df['列名']</code> あるいは <code>df[['列名1','列名2']]</code> のようにします。行列のように行名・列名で選ぶには <code>df.loc['行名','列名']</code>，行番号・列番号で選ぶには <code>df.iloc[行番号,列番号]</code> とします。複数与えるには <code>[2,3,4]</code> のようにリストにするか，<code>2:5</code> のように範囲で表します（Pythonでは番号は0から数え，<code>2:5</code> のような範囲は最後の5を含まないことに注意）。</p>
 
-<p>データの（0から数えて）例えば2行目から4行目を選択するには <code>data[2:5]</code> のようにします。データの一部の列を選択するには <code>data.列名</code> あるいは <code>data['列名']</code> あるいは <code>data[['列名1','列名2']]</code> のようにします。行列のように行名・列名で選ぶには <code>data.loc['行名','列名']</code>，行番号・列番号で選ぶには <code>data.iloc[行番号,列番号]</code> とします。複数与えるには <code>[2,3,4]</code> のようにリストにするか，<code>2:5</code> のように範囲で表します（Pythonでは番号は0から数え，<code>2:5</code> のような範囲は最後の5を含まないことに注意）。</p>
+<pre>
+df['列名'].value_counts()  # 列の度数分布表を出力
+df['列名'].mean()  # 列の平均（median(), var(), std() なども同様）
+</pre>
 
 <h2>データ型の指定</h2>
 
@@ -134,14 +174,7 @@ sys.getsizeof(df)
 df.head()
 </pre>
 
-<p>真偽値の文字列は <code>True</code>，<code>False</code> がデフォルトですが，<code>true_values=['Yes'], false_values=['No']</code> のようなオプションで指定できます。欠測値は <code>NaN</code> と表示されますが，デフォルトでは次の文字列が欠測値と判断されます：</p>
-
-<pre>
-'#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan',
-'1.#IND', '1.#QNAN', 'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null'
-</pre>
-
-<p>これ以外が必要なときは <code>na_values</code> と <code>keep_default_na</code>（デフォルトは <code>True</code>）で指定できます。詳しくは pandas の <a href="http://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">IO Tools</a> のドキュメントをご覧ください。</p>
+<p>真偽値の文字列は <code>True</code>，<code>False</code> がデフォルトですが，<code>true_values=['Yes'], false_values=['No']</code> のようなオプションで指定できます。</p>
 
 <h2>データの書き出し</h2>
 
@@ -157,13 +190,23 @@ df.to_csv("filename.csv", index=False, encoding="utf_8_sig", line_terminator="\r
 df.to_excel("filename.xlsx")
 </pre>
 
+<h2>全部メモリに入れないで処理する</h2>
+
+<p>全体を DataFrame に読み込まず行単位で操作するには</p>
+
+<pre>
+import csv
+</pre>
+
+<p>として <code>csv.reader</code>，<code>csv.writer</code> を使います。詳細はヘルプを見てください。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-10 17:10:38</time>
+Last modified: <time>2019-05-11 20:31:34</time>
 <!-- hhmts end -->
 </p>
 </body>
