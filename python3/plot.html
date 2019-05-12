@@ -89,7 +89,7 @@ axes.unicode_minus: False
 
 <p>環境によっては，<code>plt.show()</code> でグラフが出ても，グラフの窓を閉じない限り，次に進めなくなります。この状態を「ブロック」といいます。ブロックしないようにするには <code>plt.show(block=False)</code> のようにオプションを付けます。対話型環境でないスクリプト中でこれをすると，グラフがすぐ消えてしまいます。</p>
 
-<p>最後に描いたプロットを消すのは <code>plt.close()</code> です。全部のプロットを消すには <code>plt.close("all")</code> とします。</p>
+<p>現在のプロットの中身をクリアするのは <code>plt.clf()</code>，最後に描いたプロットを消すのは <code>plt.close()</code> です。全部のプロットを消すには <code>plt.close("all")</code> とします。</p>
 
 <p>IPython では，詳しいヘルプは例えば <code>?plt.plot</code> のように打ち込めば現れます。</p>
 
@@ -119,26 +119,6 @@ plt.rc('font', 'family'='IPAexGothic', 'size'=12)
 <pre>
 plt.title('日本語タイトル', fontfamily='IPAexGothic')
 plt.xlabel('日本語のx軸タイトル', fontfamily='IPAexGothic')
-</pre>
-
-<h2>seaborn</h2>
-
-<p>R では ggplot2 というライブラリが人気ですが，Python では <a href="https://seaborn.pydata.org/">seaborn</a> というデータ視覚化ライブラリが人気です。<code>conda install seaborn</code> などとしてインストールしておきましょう。seaborn は matplotlib の上で動いているので，いずれにしても matplotlib の設定は必要です。seaborn については Kaggle で <a href="https://www.kaggle.com/learn/data-visualization-from-non-coder-to-coder">Data Visualization: from Non-Coder to Coder</a> という初心者向けの無料講座があるようです。</p>
-
-<p>下は seaborn の簡単な例です：</p>
-
-<pre>
-import seaborn as sns
-iris = sns.load_dataset("iris")
-sns.pairplot(iris)
-</pre>
-
-<figure><img src="img/seaborn_iris.png" alt="Iris"></figure>
-
-<p>スタイルの設定やフォントの設定は次のようにします：</p>
-
-<pre>
-sns.set_style("darkgrid", {'font.family': ['IPAexGothic']})
 </pre>
 
 <h2>ファイルへの保存</h2>
@@ -232,6 +212,12 @@ plt.rcParams['text.latex.preamble'] = r'\usepackage{tgtermes},\usepackage{newtxm
 
 <h2>その他</h2>
 
+<p>図の大きさを指定する：</p>
+
+<pre>
+plt.figure(figsize=[6.4, 4.8])  # デフォルトは6.4×4.8インチ
+</pre>
+
 <p>軸の最小値・最大値を指定する：</p>
 
 <pre>
@@ -270,13 +256,32 @@ plt.axis('equal')
 plt.axis('scaled')
 </pre>
 
+<p>プロットをクリア：</p>
+
+<pre>
+plt.clf()
+</pre>
+
+<p>全プロットを閉じる：</p>
+
+<pre>
+plt.close("all")
+</pre>
+
+<h2>参考</h2>
+
+<ul>
+  <li><a href="https://matplotlib.org/api/colors_api.html">色</a></li>
+  <li><a href="https://matplotlib.org/api/markers_api.html">マーカー一覧</a></li>
+</ul>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-11 20:39:06</time>
+Last modified: <time>2019-05-12 15:10:04</time>
 <!-- hhmts end -->
 </p>
 </body>
