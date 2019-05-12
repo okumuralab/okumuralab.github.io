@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>あやめ（iris）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python 3</a> &gt;
+</nav>
+
+<h1>あやめ（iris）</h1>
+
+<p>Fisher の有名な「あやめ」のデータをプロットしてみます。まず，データをロードします：</p>
+
+<pre>
+from sklearn.datasets import load_iris
+
+iris = load_iris()
+</pre>
+
+<p>ざっとプロットしてみます：</p>
+
+<pre>
+plt.scatter(iris.data[:,0], iris.data[:,1], c=iris.target)
+</pre>
+
+<p>もっと丁寧に：</p>
+
+<pre>
+plt.clf()  # クリア
+markers = ['o', '^', 'v']
+for i in range(3):
+    d = iris.data[iris.target == i, :]
+    plt.plot(d[:,0], d[:,1], 'o', fillstyle='none', marker=markers[i])
+plt.xlabel('sepal length (cm)')
+plt.ylabel('sepal width (cm)')
+plt.legend(iris.target_names)
+</pre>
+
+<p>印刷用には <code>'o'</code> を <code>'ko'</code> にすれば黒になります。</p>
+
+<p>主成分分析（<a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA">PCA</a>）で2次元にしてからプロットしてみます：</p>
+
+<pre>
+from sklearn.decomposition import PCA
+
+x = PCA(n_components=2).fit_transform(iris.data)
+
+plt.clf()
+for i in range(3):
+    d = x[iris.target == i, :]
+    plt.plot(d[:,0], d[:,1], 'o', fillstyle='none', marker=markers[i])
+plt.xlabel('1st')
+plt.ylabel('2nd')
+plt.legend(iris.target_names)
+</pre>
+
+<figure><img src="img/iris.png" alt="あやめ"></figure>
+
+<p>PCAする前に変数ごとに標準化するか，あるいは<a href="https://scikit-learn.org/stable/modules/preprocessing.html">ここ</a>の「Scaling vs Whitening」にあるように <code>PCA(n_components=2, whiten=True)</code> するといいかもしれなせん。</p>
+
+<p>3次元ならどうなるでしょうか：</p>
+
+<pre>
+x = PCA(n_components=3).fit_transform(iris.data)
+
+from mpl_toolkits.mplot3d import Axes3D
+
+fig = plt.figure(figsize=(8,6))
+ax = Axes3D(fig, elev=-150, azim=110)
+ax.scatter(x[:,0], x[:,1], x[:,2], c=iris.target)
+ax.set_xlabel("1st")
+ax.set_ylabel("2nd")
+ax.set_zlabel("3rd")
+</pre>
+
+<p>マウスでぐりぐりできます。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-12 14:19:47</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

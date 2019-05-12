@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>メキシカンハット</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python 3</a> &gt;
+</nav>
+
+<h1>メキシカンハット</h1>
+
+<p>3次元で <a href="https://en.wikipedia.org/wiki/Mexican_hat_wavelet">Mexican hat</a> を描いてみます：</p>
+
+<pre>
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+def hat(x, y):
+    r = x**2 + y**2
+    return(np.exp(-r/2) * (1 - r/2) / np.pi)
+
+t = np.linspace(-4, 4)
+x, y = np.meshgrid(t, t)
+z = hat(x, y)
+
+fig = plt.figure(figsize=(8,5))
+ax = Axes3D(fig)
+ax.plot_surface(x, y, z)
+
+plt.savefig('mexican.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/mexican.png" alt="Mexican hat"></figure>
+
+<p>マウスでぐりぐりできます。</p>
+
+<p><code>Axes3D</code> をインポートしないでも，<code>ax = ...</code> の行を</p>
+
+<pre>
+ax = fig.gca(projection='3d')
+</pre>
+
+<p>または</p>
+
+<pre>
+ax = fig.add_subplot(111, projection='3d')
+</pre>
+
+<p>のようにするだけでも3次元になります。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-12 17:11:56</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
