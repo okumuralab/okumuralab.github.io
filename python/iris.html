@@ -11,7 +11,7 @@
 
 <nav id="breadcrumbs">
 <a href="/~okumura/">ホーム</a> &gt;
-<a href="./">Python 3</a> &gt;
+<a href="./">Python</a> &gt;
 </nav>
 
 <h1>あやめ（iris）</h1>
@@ -84,11 +84,29 @@ ax.set_zlabel("3rd")
 
 <hr>
 
+<p>細かな操作のためには pandas のデータフレームに変換するほうが扱いやすいかもしれません：</p>
+
+<pre>
+import pandas as pd
+
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df['species'] = iris.target  # または df['species'] = iris.target_names[iris.target]
+df.shape
+df.info()
+df.head()
+df.describe()
+df.isnull().sum()  # 列ごとの欠測値の数を調べる
+df.groupby('species').size()
+df.corr()
+</pre>
+
+<hr>
+
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-12 14:19:47</time>
+Last modified: <time>2019-05-14 16:05:06</time>
 <!-- hhmts end -->
 </p>
 </body>

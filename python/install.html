@@ -11,7 +11,7 @@
 
 <nav id="breadcrumbs">
 <a href="/~okumura/">ホーム</a> &gt;
-<a href="./">Python 3</a> &gt;
+<a href="./">Python</a> &gt;
 </nav>
 
 <h1>Python 3 インストール</h1>
@@ -22,11 +22,29 @@
 
 <p><a href="https://www.python.org/download/">Download Python</a> から，ご自分の環境に合った最新のインストーラをダウンロードし，インストールします。Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。</p>
 
-<p>いろいろなパッケージのインストールは pip コマンド（pip3 コマンド）を使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
+<p>インストールすると，Mac では <code>~/.bash_profile</code> にパスが付け加えられます。</p>
+
+<p><code>python3</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
+
+<p>いろいろなパッケージのインストールは pip（<code>pip3</code> コマンド）を使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
 
 <pre>
-pip install ipython numpy scipy matplotlib pandas
+sudo pip3 install ipython numpy scipy matplotlib pandas
 </pre>
+
+<p>アップデートの必要なパッケージは</p>
+
+<pre>
+pip3 list --outdated
+</pre>
+
+<p>で調べられます。実際のアップデートは</p>
+
+<pre>
+sudo pip3 install --upgrade パッケージ名
+</pre>
+
+<p>です。</p>
 
 <h3>Anaconda によるインストール</h3>
 
@@ -138,7 +156,7 @@ print("Hello, world!")
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-09 10:21:16</time>
+Last modified: <time>2019-05-14 12:47:42</time>
 <!-- hhmts end -->
 </p>
 </footer>
