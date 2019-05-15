@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Web API</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Web API</h1>
+
+<p>文科省<a href="http://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">高等学校情報科「情報Ⅰ」教員研修用教材</a>の第3章に簡単なWeb APIをPythonで叩く例が載っていたので，試してみる。使うのは株式会社アイビスが提供している<a href="http://zipcloud.ibsnet.co.jp/doc/api">郵便番号検索API</a>。</p>
+
+<pre>
+import requests
+import json
+
+url = "http://zipcloud.ibsnet.co.jp/api/search"
+param = {"zipcode": "5140007"}
+res = requests.get(url, param)
+data = json.loads(res.text)
+address = data["results"][0]
+print(address["address1"] + address["address2"] + address["address3"])
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-15 22:29:45</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
