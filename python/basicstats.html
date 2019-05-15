@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>基本統計量</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>基本統計量</h1>
+
+<p>Python は R のように標準で統計計算をサポートしているわけではありません。パッケージによって扱い方も違います。</p>
+
+<h2>パッケージなしの場合</h2>
+
+<p>まずはパッケージなしでやってみます。データを与えます：</p>
+
+<pre>
+x = [2, 3, 4, 5]
+</pre>
+
+<p>これは他のプログラミング言語でいう配列に近いもので，Python では list（リスト）といいます。単に <code>x</code> と打ち込めばデータがそのまま表示されます。これの和は</p>
+
+<pre>
+sum(x)
+</pre>
+
+<p>で求められます。平均を求める関数はないので，和を長さで割って</p>
+
+<pre>
+sum(x) / len(x)
+</pre>
+
+<p>で平均がわかります。</p>
+
+<p>リスト以外に，Python には tuple（タプルまたはテュープルと読む）という1次元の配列のようなものがあります。<code>[ ]</code> を使えばリスト，<code>( )</code> を使えばタプルです：</p>
+
+<pre>
+t = (2, 3, 4, 5)
+sum(t) / len(t)
+</pre>
+
+<p>要素1つのリストは <code>[2]</code> のように書きますが，タプルの場合は <code>(2)</code> ではなく特例として <code>(2,)</code> のように書きます。</p>
+
+<h2>statistics パッケージ</h2>
+
+<p>次に，<code>statistics</code> という標準パッケージを使ってみます。</p>
+
+<pre>
+import statistics as st
+</pre>
+
+<p>これで試してみましょう：</p>
+
+<pre>
+st.mean(x)      # 平均
+st.median(x)    # 中央値
+st.variance(x)  # n-1 で割る方式の分散
+st.pvariance(x) # n で割る方式の分散
+st.stdev(x)     # n-1 で割る方式の標準偏差
+st.pstdev(x)    # n で割る方式の標準偏差
+</pre>
+
+<p>たいした機能はないですね。あまり使わないと思います。</p>
+
+<h2>NumPy パッケージ</h2>
+
+<p>NumPy パッケージはベクトルや行列を扱う科学技術計算に不可欠なものです。</p>
+
+<pre>
+import numpy as np
+</pre>
+
+<p>これで，例えば平均を求める <code>np.mean()</code> 関数が使えます：</p>
+
+<pre>
+np.mean(x)        # 平均
+np.median(x)      # 中央値
+np.var(x)         # n で割る方式の分散
+np.var(x, ddof=1) # n-1 で割る方式の分散
+np.std(x)         # n で割る方式の標準偏差
+np.std(x, ddof=1) # n-1 で割る方式の標準偏差
+np.quantile(x, [0, 0.25, 0.5, 0.75, 1])  # 四分位数など
+</pre>
+
+<p>NumPy の本当の威力を発揮するには，データを次のようにして作ります：</p>
+
+<pre>
+x = np.array([2, 3, 4, 5])
+</pre>
+
+<p>こうすると，標準の <code>list</code> 型ではなく，<code>numpy.ndarray</code> 型になります。この型のものは</p>
+
+<pre>
+x.mean()   # np.mean(x) と同じ
+</pre>
+
+<p>のような書き方もできます。これだけならどうでもいいことですが，</p>
+
+<pre>
+np.sqrt(x)  # x の一つ一つの要素について平方根を求める
+</pre>
+
+<p>のように，ベクトルや行列の個々の要素に対する計算が一度にできます。</p>
+
+<p><code>np.*</code> の形のものの一覧を挙げておきます：</p>
+
+<pre>
+np.ALLOW_THREADS                np.AxisError                    np.BUFSIZE
+np.CLIP                         np.ComplexWarning               np.DataSource
+np.ERR_CALL                     np.ERR_DEFAULT                  np.ERR_IGNORE
+np.ERR_LOG                      np.ERR_PRINT                    np.ERR_RAISE
+np.ERR_WARN                     np.FLOATING_POINT_SUPPORT       np.FPE_DIVIDEBYZERO
+np.FPE_INVALID                  np.FPE_OVERFLOW                 np.FPE_UNDERFLOW
+np.False_                       np.Inf                          np.Infinity
+np.MAXDIMS                      np.MAY_SHARE_BOUNDS             np.MAY_SHARE_EXACT
+np.MachAr                       np.ModuleDeprecationWarning     np.NAN
+np.NINF                         np.NZERO                        np.NaN
+np.PINF                         np.PZERO                        np.RAISE
+np.RankWarning                  np.SHIFT_DIVIDEBYZERO           np.SHIFT_INVALID
+np.SHIFT_OVERFLOW               np.SHIFT_UNDERFLOW              np.ScalarType
+np.Tester                       np.TooHardError                 np.True_
+np.UFUNC_BUFSIZE_DEFAULT        np.UFUNC_PYVALS_NAME            np.VisibleDeprecationWarning
+np.WRAP                         np.abs                          np.absolute
+np.absolute_import              np.add                          np.add_docstring
+np.add_newdoc                   np.add_newdoc_ufunc             np.alen
+np.all                          np.allclose                     np.alltrue
+np.amax                         np.amin                         np.angle
+np.any                          np.append                       np.apply_along_axis
+np.apply_over_axes              np.arange                       np.arccos
+np.arccosh                      np.arcsin                       np.arcsinh
+np.arctan                       np.arctan2                      np.arctanh
+np.argmax                       np.argmin                       np.argpartition
+np.argsort                      np.argwhere                     np.around
+np.array                        np.array2string                 np.array_equal
+np.array_equiv                  np.array_repr                   np.array_split
+np.array_str                    np.asanyarray                   np.asarray
+np.asarray_chkfinite            np.ascontiguousarray            np.asfarray
+np.asfortranarray               np.asmatrix                     np.asscalar
+np.atleast_1d                   np.atleast_2d                   np.atleast_3d
+np.average                      np.bartlett                     np.base_repr
+np.binary_repr                  np.bincount                     np.bitwise_and
+np.bitwise_not                  np.bitwise_or                   np.bitwise_xor
+np.blackman                     np.block                        np.bmat
+np.bool                         np.bool8                        np.bool_
+np.broadcast                    np.broadcast_arrays             np.broadcast_to
+np.busday_count                 np.busday_offset                np.busdaycalendar
+np.byte                         np.byte_bounds                  np.bytes0
+np.bytes_                       np.c_                           np.can_cast
+np.cast                         np.cbrt                         np.cdouble
+np.ceil                         np.cfloat                       np.char
+np.character                    np.chararray                    np.choose
+np.clip                         np.clongdouble                  np.clongfloat
+np.column_stack                 np.common_type                  np.compare_chararrays
+np.compat                       np.complex                      np.complex128
+np.complex256                   np.complex64                    np.complex_
+np.complexfloating              np.compress                     np.concatenate
+np.conj                         np.conjugate                    np.convolve
+np.copy                         np.copysign                     np.copyto
+np.core                         np.corrcoef                     np.correlate
+np.cos                          np.cosh                         np.count_nonzero
+np.cov                          np.cross                        np.csingle
+np.ctypeslib                    np.cumprod                      np.cumproduct
+np.cumsum                       np.datetime64                   np.datetime_as_string
+np.datetime_data                np.deg2rad                      np.degrees
+np.delete                       np.deprecate                    np.deprecate_with_doc
+np.diag                         np.diag_indices                 np.diag_indices_from
+np.diagflat                     np.diagonal                     np.diff
+np.digitize                     np.disp                         np.divide
+np.division                     np.divmod                       np.dot
+np.double                       np.dsplit                       np.dstack
+np.dtype                        np.e                            np.ediff1d
+np.einsum                       np.einsum_path                  np.emath
+np.empty                        np.empty_like                   np.equal
+np.errstate                     np.euler_gamma                  np.exp
+np.exp2                         np.expand_dims                  np.expm1
+np.extract                      np.eye                          np.fabs
+np.fastCopyAndTranspose         np.fft                          np.fill_diagonal
+np.find_common_type             np.finfo                        np.fix
+np.flatiter                     np.flatnonzero                  np.flexible
+np.flip                         np.fliplr                       np.flipud
+np.float                        np.float128                     np.float16
+np.float32                      np.float64                      np.float_
+np.float_power                  np.floating                     np.floor
+np.floor_divide                 np.fmax                         np.fmin
+np.fmod                         np.format_float_positional      np.format_float_scientific
+np.format_parser                np.frexp                        np.frombuffer
+np.fromfile                     np.fromfunction                 np.fromiter
+np.frompyfunc                   np.fromregex                    np.fromstring
+np.full                         np.full_like                    np.fv
+np.gcd                          np.generic                      np.genfromtxt
+np.geomspace                    np.get_array_wrap               np.get_include
+np.get_printoptions             np.getbufsize                   np.geterr
+np.geterrcall                   np.geterrobj                    np.gradient
+np.greater                      np.greater_equal                np.half
+np.hamming                      np.hanning                      np.heaviside
+np.histogram                    np.histogram2d                  np.histogram_bin_edges
+np.histogramdd                  np.hsplit                       np.hstack
+np.hypot                        np.i0                           np.identity
+np.iinfo                        np.imag                         np.in1d
+np.index_exp                    np.indices                      np.inexact
+np.inf                          np.info                         np.infty
+np.inner                        np.insert                       np.int
+np.int0                         np.int16                        np.int32
+np.int64                        np.int8                         np.int_
+np.int_asbuffer                 np.intc                         np.integer
+np.interp                       np.intersect1d                  np.intp
+np.invert                       np.ipmt                         np.irr
+np.is_busday                    np.isclose                      np.iscomplex
+np.iscomplexobj                 np.isfinite                     np.isfortran
+np.isin                         np.isinf                        np.isnan
+np.isnat                        np.isneginf                     np.isposinf
+np.isreal                       np.isrealobj                    np.isscalar
+np.issctype                     np.issubclass_                  np.issubdtype
+np.issubsctype                  np.iterable                     np.ix_
+np.kaiser                       np.kron                         np.lcm
+np.ldexp                        np.left_shift                   np.less
+np.less_equal                   np.lexsort                      np.lib
+np.linalg                       np.linspace                     np.little_endian
+np.load                         np.loads                        np.loadtxt
+np.log                          np.log10                        np.log1p
+np.log2                         np.logaddexp                    np.logaddexp2
+np.logical_and                  np.logical_not                  np.logical_or
+np.logical_xor                  np.logspace                     np.long
+np.longcomplex                  np.longdouble                   np.longfloat
+np.longlong                     np.lookfor                      np.ma
+np.mafromtxt                    np.mask_indices                 np.mat
+np.math                         np.matmul                       np.matrix
+np.matrixlib                    np.max                          np.maximum
+np.maximum_sctype               np.may_share_memory             np.mean
+np.median                       np.memmap                       np.meshgrid
+np.mgrid                        np.min                          np.min_scalar_type
+np.minimum                      np.mintypecode                  np.mirr
+np.mod                          np.modf                         np.moveaxis
+np.msort                        np.multiply                     np.nan
+np.nan_to_num                   np.nanargmax                    np.nanargmin
+np.nancumprod                   np.nancumsum                    np.nanmax
+np.nanmean                      np.nanmedian                    np.nanmin
+np.nanpercentile                np.nanprod                      np.nanquantile
+np.nanstd                       np.nansum                       np.nanvar
+np.nbytes                       np.ndarray                      np.ndenumerate
+np.ndfromtxt                    np.ndim                         np.ndindex
+np.nditer                       np.negative                     np.nested_iters
+np.newaxis                      np.nextafter                    np.nonzero
+np.not_equal                    np.nper                         np.npv
+np.numarray                     np.number                       np.obj2sctype
+np.object                       np.object0                      np.object_
+np.ogrid                        np.oldnumeric                   np.ones
+np.ones_like                    np.outer                        np.packbits
+np.pad                          np.partition                    np.percentile
+np.pi                           np.piecewise                    np.place
+np.pmt                          np.poly                         np.poly1d
+np.polyadd                      np.polyder                      np.polydiv
+np.polyfit                      np.polyint                      np.polymul
+np.polynomial                   np.polysub                      np.polyval
+np.positive                     np.power                        np.ppmt
+np.print_function               np.printoptions                 np.prod
+np.product                      np.promote_types                np.ptp
+np.put                          np.put_along_axis               np.putmask
+np.pv                           np.quantile                     np.r_
+np.rad2deg                      np.radians                      np.random
+np.rank                         np.rate                         np.ravel
+np.ravel_multi_index            np.real                         np.real_if_close
+np.rec                          np.recarray                     np.recfromcsv
+np.recfromtxt                   np.reciprocal                   np.record
+np.remainder                    np.repeat                       np.require
+np.reshape                      np.resize                       np.result_type
+np.right_shift                  np.rint                         np.roll
+np.rollaxis                     np.roots                        np.rot90
+np.round                        np.round_                       np.row_stack
+np.s_                           np.safe_eval                    np.save
+np.savetxt                      np.savez                        np.savez_compressed
+np.sctype2char                  np.sctypeDict                   np.sctypeNA
+np.sctypes                      np.searchsorted                 np.select
+np.set_numeric_ops              np.set_printoptions             np.set_string_function
+np.setbufsize                   np.setdiff1d                    np.seterr
+np.seterrcall                   np.seterrobj                    np.setxor1d
+np.shape                        np.shares_memory                np.short
+np.show_config                  np.sign                         np.signbit
+np.signedinteger                np.sin                          np.sinc
+np.single                       np.singlecomplex                np.sinh
+np.size                         np.sometrue                     np.sort
+np.sort_complex                 np.source                       np.spacing
+np.split                        np.sqrt                         np.square
+np.squeeze                      np.stack                        np.std
+np.str                          np.str0                         np.str_
+np.string_                      np.subtract                     np.sum
+np.swapaxes                     np.sys                          np.take
+np.take_along_axis              np.tan                          np.tanh
+np.tensordot                    np.test                         np.testing
+np.tile                         np.timedelta64                  np.trace
+np.tracemalloc_domain           np.transpose                    np.trapz
+np.tri                          np.tril                         np.tril_indices
+np.tril_indices_from            np.trim_zeros                   np.triu
+np.triu_indices                 np.triu_indices_from            np.true_divide
+np.trunc                        np.typeDict                     np.typeNA
+np.typecodes                    np.typename                     np.ubyte
+np.ufunc                        np.uint                         np.uint0
+np.uint16                       np.uint32                       np.uint64
+np.uint8                        np.uintc                        np.uintp
+np.ulonglong                    np.unicode                      np.unicode_
+np.union1d                      np.unique                       np.unpackbits
+np.unravel_index                np.unsignedinteger              np.unwrap
+np.ushort                       np.vander                       np.var
+np.vdot                         np.vectorize                    np.version
+np.void                         np.void0                        np.vsplit
+np.vstack                       np.warnings                     np.where
+np.who                          np.zeros                        np.zeros_like
+</pre>
+
+<h2>pandas パッケージ</h2>
+
+<p><code>pandas</code> は一番 R に近い機能を提供するパッケージです。</p>
+
+<pre>
+import pandas as pd
+</pre>
+
+<p>pandas での1次元配列に相当するものは Series というデータ型です。これは <code>numpy.ndarray</code> 型を拡張したもので，ベクトルというよりは，1個の列だけのデータフレーム（2次元データ）です：</p>
+
+<pre>
+s = pd.Series([1,2,3,4])
+s.sum()       # 和 pd.Series.sum(s) と同じ（以下同）
+s.mean()      # 平均
+s.median()    # 中央値
+s.var()       # n-1 で割る方式の分散
+s.var(ddof=0) # n で割る方式の分散
+s.std()       # n-1 で割る方式の標準偏差
+s.std(ddof=0) # n で割る方式の標準偏差
+s.quantile(x, [0, 0.25, 0.5, 0.75, 1])  # 四分位数など
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-15 15:31:28</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
