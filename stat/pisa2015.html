@@ -90,6 +90,10 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 <p>読み込んだオブジェクトのサイズは，pandas が 4089336830，readr が 5068092632，data.table が 3760255424 であった（Python は <code>import sys; sys.getsizeof()</code>，R は <code>object.size()</code> で調べた）。</p>
 </div>
 
+<div class="note">
+<p>[2019-05-16追記] <a href="https://github.com/r-lib/vroom">vroom</a> が速いと聞いてやってみたが，1回目1分34秒，2回目38秒。あまり速くない。</p>
+</div>
+
 <h2>回答の分析</h2>
 
 <p>ファイルのデータ構造は上記ページ「Codebooks for the main files」からExcel形式でダウンロードできる。主なメタデータは次の通りである：</p>
@@ -155,7 +159,7 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-09 22:41:10</time>
+Last modified: <time>2019-05-16 21:07:31</time>
 <!-- hhmts end -->
 </p>
 </footer>

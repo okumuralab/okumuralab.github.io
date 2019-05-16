@@ -67,12 +67,14 @@ plt.contour(x, y, z) # 塗りつぶすなら plt.contourf(x, y, z)
 <pre>
 cs = plt.contour(x, y, z, levels=[-0.06,-0.04,-0.02,0,0.1,0.2,0.3])
 plt.axis("scaled")  # または plt.axis("equal")
-cs.clabel()  # ラベルを書き込む
+cs.clabel()  # あるいは例えば cs.clabel([-0.04,0,0.2], fmt="%g")
 
 plt.savefig('mexican2.png', bbox_inches="tight")
 </pre>
 
 <figure><img src="img/mexican2.png" alt="Mexican hat"></figure>
+
+<p><code>fmt=...</code> オプションは，例えば <code>"%.2f"</code> なら小数第2位までに揃えて表示，<code>"%g"</code> なら精度を保ちできるだけ短い表示にします。</p>
 
 <hr>
 
@@ -80,7 +82,7 @@ plt.savefig('mexican2.png', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-16 16:12:16</time>
+Last modified: <time>2019-05-16 18:02:03</time>
 <!-- hhmts end -->
 </p>
 </body>
