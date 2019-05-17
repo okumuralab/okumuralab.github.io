@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>正規分布の密度関数を描く</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>正規分布の密度関数を描く</h1>
+
+<p>Python と R の性格を比較するために，R なら</p>
+
+<pre>
+curve(dnorm(x), -3, 3)
+</pre>
+
+<p>で描ける正規分布の密度関数のグラフを Python で描いてみます。R では標準で済んでしまうものが，Python では Matplotlib，NumPy，SciPy という三つのパッケージが必要です。Rの <code>dnorm()</code> に相当する正規分布の密度関数は，Python では <code>scipy.stats.norm.pdf()</code> を使います。</p>
+
+<pre>
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import norm
+
+x = np.linspace(-3, 3, 101)  # 区間[-3,3]を100等分する101点
+plt.plot(x, norm.pdf(x))
+</pre>
+
+<figure><img src="img/dnormcurve.png" alt="正規分布の密度関数"></figure>
+
+<p>他の統計関数については <a href="https://docs.scipy.org/doc/scipy/reference/stats.html">scipy.stats</a> を，特に正規分布については <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html">scipy.stats.norm</a> を参照してください。</p>
+
+<ul>
+  <li>R の <code>dnorm(x)</code> は Python では <code>norm.pdf(x)</code> (probability density function)</li>
+  <li>R の <code>pnorm(x)</code> は Python では <code>norm.cdf(x)</code> (cumulative distribution function)</li>
+  <li>R の <code>qnorm(p)</code> は Python では <code>norm.ppf(x)</code> (percent point function)</li>
+</ul>
+
+<p>R と同程度の統計計算をしたいなら <a href="https://www.statsmodels.org/">StatsModels</a> というライブラリが便利そうです。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-17 17:17:00</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
