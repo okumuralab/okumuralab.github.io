@@ -147,13 +147,21 @@ rsvg_pdf("dnorm-svglite.svg", "dnorm-svglite.pdf")
 
 <p>Linux（CentOS 7）でもやってみました。あらかじめ <code>yum install librsvg2-devel</code> してからrsvgをインストールします。フォントは和文CairoFont-1-1，欧文DejaVuSans，DejaVuSansMono，数字VL-Gothic-Regularが埋め込まれます。VL Gothicの数字は0に斜線が入ります。</p>
 
+<p>なお，Macでは <code>brew install librsvg</code>，CentOS 7では <code>yum install librsvg2-tools</code> で入る <code>rsvg-convert</code> コマンドを使えばRを使わなくてもSVG→PNG/PDF変換ができます。ターミナルで</p>
+
+<pre>
+rsvg-convert --format=pdf --output=hoge.pdf hoge.svg
+</pre>
+
+<p>のようにして使います。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-04-08 16:23:03</time>
+Last modified: <time>2019-05-17 15:29:43</time>
 <!-- hhmts end -->
 </p>
 </body>

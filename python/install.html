@@ -48,15 +48,30 @@ sudo pip3 install --upgrade パッケージ名
 
 <h3>Anaconda によるインストール</h3>
 
-<p><a href="https://www.anaconda.com/distribution/">Anaconda Distribution</a> からご自分の環境に合った最新のインストーラをダウンロードし，インストールします。何でも入りなので，たいへん大きいパッケージです。</p>
+<p><a href="https://www.anaconda.com/distribution/">Anaconda Distribution</a> からご自分の環境に合った最新のインストーラをダウンロードし，インストールします。全部入りなので，たいへん大きいパッケージです。最小限のインストールから始めて少しずつ足していくほうが好みの人は，下にある Miniconda を使うほうがいいでしょう。</p>
 
 <h3>Homebrew によるインストール（Mac）</h3>
 
-<p><code>brew install python</code> で入れる方法と，<code>brew install pyenv</code> でまず pyenv を入れてから pyenv 経由で各種 Python を入れる方法などがあります。</p>
+<p><code>brew install python</code> で入ります。簡単です。</p>
 
-<p>前者では（デフォルトでは）<code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンドが入ります。また，<code>/usr/local/opt/python/libexec/bin</code> にも <code>python</code> などが入りますが，これは <code>python3</code> へのシンボリックリンクです。</p>
+<p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンド（シンボリックリンク）が入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
-<p>後者では，まず <code>~/.bash_profile</code> に次を書き込みます：</p>
+<p>conda 版と違って macOS フレームワーク版ですので，<code>~/.matplotlib/matplotlibrc</code> は <code>backend: MacOSX</code> で大丈夫です。また，Python.org のインストーラと違って，管理者権限（sudo）なしで <code>pip3 install</code> コマンドが使えます。例えば</p>
+
+<pre>
+pip3 install --upgrade pip
+pip3 install ipython matplotlib
+</pre>
+
+<p>のようにターミナルに打ち込みます。</p>
+
+<p>これで <code>python</code> と打ち込むと macOS 側の Python 2 が，<code>python3</code> と打ち込むと Homebrew 側の Python 3 が動くことになります。<code>ipython</code> は macOS 側にないので <code>3</code> を付ける必要はありません。<code>python</code> と打ち込んで Python 3 が動くようにしたければ，<code>/usr/local/opt/python/libexec/bin</code> のパスを <code>/usr/bin</code> より先に設定します。</p>
+
+<h3>Homebrew による pyenv 経由のインストール（Mac）</h3>
+
+<p><code>brew install pyenv</code> でまず pyenv を入れてから pyenv 経由で各種 Python を入れる方法です。</p>
+
+<p>まず <code>~/.bash_profile</code> に次を書き込みます：</p>
 
 <pre>
 PYENV_ROOT="$HOME/.pyenv"
@@ -127,22 +142,31 @@ conda list
 conda install ipython numpy scipy matplotlib pandas scikit-learn
 </pre>
 
-<h3>Homebrew によるインストール</h3>
-
-<p>Mac なら <code>brew install python</code> するのが簡単かもしれません。</p>
-
 <h3>ソースからのインストール</h3>
 
 <p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し，その中で次のように打ち込みます：</p>
 
 <pre>
-./configure
+./configure --enable-optimizations
 make
-make test
 make install
 </pre>
 
-<p>実行ファイルは（デフォルトでは）<code>/usr/local/bin</code> に入りますので，そこにパスを通しておきます。</p>
+<div class="note">
+<p>CentOS 7 上で Python 3.7.3 をインストールしようとしたら <code>make install</code> で次のようなエラーに遭遇：</p>
+<pre>
+  File "/usr/local/src/Python-3.7.3/Lib/ctypes/__init__.py", line 7, in <module>
+    from _ctypes import Union, Structure, Array
+ModuleNotFoundError: No module named '_ctypes'
+make: *** [install] エラー 1
+</pre>
+<p>次のようにして <code>libffi-devel</code> をインストールして再度 <code>make install</code> したらうまくいった：</p>
+<pre>
+# yum install libffi-devel
+</pre>
+</div>
+
+<p>実行ファイル <code>python3</code>，<code>pip3</code> などが（デフォルトでは）<code>/usr/local/bin</code> に入りますので，そこにパスを通しておきます。Linux では <code>python</code> コマンドで Python 2 が動くことが想定されていることがあるので，<code>python3</code> という名前はそのままにしておくほうがよさそうです。</p>
 
 <h3>Google Collab を使う</h3>
 
@@ -160,7 +184,7 @@ print("Hello, world!")
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-16 22:36:48</time>
+Last modified: <time>2019-05-17 11:42:55</time>
 <!-- hhmts end -->
 </p>
 </footer>
