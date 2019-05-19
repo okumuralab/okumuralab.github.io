@@ -213,6 +213,24 @@ In [ ]: print("Hello", end=''); print(" World")
 Hello World
 </pre>
 
+<p><code>?</code> または <code>??</code> を前置または後置することでヘルプが表示される IPython の機能は，自分の作ったオブジェクト等にも適用されます：</p>
+
+<pre>
+In [ ]: x = [2, 3, 4, 5]
+
+In [ ]: ?x
+Type:        list
+String form: [2, 3, 4, 5]
+Length:      4
+Docstring:  
+Built-in mutable sequence.
+
+If no argument is given, the constructor creates a new empty list.
+The argument must be an iterable if specified.
+</pre>
+
+<p>このほか，Tab キーによる補完，<code>%pwd</code> や <code>%cd 何々</code> によるディレクトリ表示や移動，環境変数を表示する <code>%env</code>，実行時間を計測する <code>%timeit 何々</code>，シェルでコマンドを実行する <code>!<i>command</i></code> など，豊富な命令が使えます。詳しくは，<code>?</code> だけ打ち込むと出てくる IPython のヘルプ，<code>%magic</code> と打ち込むと出てくるマジックコマンドのヘルプをご覧ください。</p>
+
 <h2>終了のしかた</h2>
 
 <p>Pythonは <code>quit()</code> または <code>exit()</code> で終了します。IPythonは <code>quit</code> または <code>exit</code> でもかまいません。</p>
@@ -285,7 +303,7 @@ def collatz(n):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-14 12:13:25</time>
+Last modified: <time>2019-05-18 14:05:51</time>
 <!-- hhmts end -->
 </p>
 </body>

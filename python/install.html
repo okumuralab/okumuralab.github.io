@@ -144,6 +144,8 @@ conda install ipython numpy scipy matplotlib pandas scikit-learn
 
 <h3>ソースからのインストール</h3>
 
+<p>CentOS 7 なら <code>yum install libffi-devel sqlite-devel</code> しておきます。</p>
+
 <p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し，その中で次のように打ち込みます：</p>
 
 <pre>
@@ -152,8 +154,9 @@ make
 make install
 </pre>
 
+<!--
 <div class="note">
-<p>CentOS 7 上で Python 3.7.3 をインストールしようとしたら <code>make install</code> で次のようなエラーに遭遇：</p>
+<p>ある CentOS 7 マシンで Python 3.7.3 をインストールしようとしたら <code>make install</code> で次のようなエラーに遭遇：</p>
 <pre>
   File "/usr/local/src/Python-3.7.3/Lib/ctypes/__init__.py", line 7, in <module>
     from _ctypes import Union, Structure, Array
@@ -165,6 +168,7 @@ make: *** [install] エラー 1
 # yum install libffi-devel
 </pre>
 </div>
+-->
 
 <p>実行ファイル <code>python3</code>，<code>pip3</code> などが（デフォルトでは）<code>/usr/local/bin</code> に入りますので，そこにパスを通しておきます。Linux では <code>python</code> コマンドで Python 2 が動くことが想定されていることがあるので，<code>python3</code> という名前はそのままにしておくほうがよさそうです。</p>
 
@@ -178,13 +182,32 @@ print("Hello, world!")
 
 <p>と打ち込んで Shift + Enter してみましょう。</p>
 
+<h3>Google Collab のようなサーバを立ち上げる</h3>
+
+<p>サーバ側に Python をインストールし，jupyter 等を入れておきます。サーバ側で <code>jupyter notebook --generate-config</code> を実行し，生成された <code>~/.jupyter/jupyter_notebook_config.py</code> を編集してリモートからの接続を許可します。</p>
+
+<pre>
+c.NotebookApp.allow_remote_access = True
+c.NotebookApp.ip = '許すIPアドレス（すべて許すなら * ）'
+c.NotebookApp.open_browser = False
+c.NotebookApp.port = 8888
+</pre>
+
+<p>パスワードを設定するには，Python で <code>from notebook.auth import passwd; passwd()</code> を実行し，パスワードを打ち込み，表示されるパスワードのハッシュを <code>~/.jupyter/jupyter_notebook_config.py</code> に記入します：</p>
+
+<pre>
+c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea58f8d'
+</pre>
+
+<p>これで，サーバ側で，重要なものの入っていないディレクトリの中で <code>nohup jupyter notebook &amp;</code> を実行し，リモートのブラウザで <code>http://ホスト名:8888</code> をアクセスします。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-17 11:42:55</time>
+Last modified: <time>2019-05-18 15:45:13</time>
 <!-- hhmts end -->
 </p>
 </footer>
