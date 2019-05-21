@@ -188,7 +188,7 @@ print("Hello, world!")
 
 <pre>
 c.NotebookApp.allow_remote_access = True
-c.NotebookApp.ip = '許すIPアドレス（すべて許すなら * ）'
+c.NotebookApp.ip = '*'
 c.NotebookApp.open_browser = False
 c.NotebookApp.port = 8888
 </pre>
@@ -201,13 +201,19 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 
 <p>これで，サーバ側で，重要なものの入っていないディレクトリの中で <code>nohup jupyter notebook &amp;</code> を実行し，リモートのブラウザで <code>http://ホスト名:8888</code> をアクセスします。</p>
 
+<p>パスワードを設定しない場合は，jupyter 起動時に出るトークンを含んだ URL にアクセスします。</p>
+
+<p>このままではローカルユーザの権限ですべてのファイルにアクセスできてしまいますので，不特定多数の人に使ってもらう際には要注意です。</p>
+
+<p>もっと本格的にやるには <a href="https://jupyterhub.readthedocs.io/">JupyterHub</a> を立ち上げましょう。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-18 15:45:13</time>
+Last modified: <time>2019-05-21 11:08:21</time>
 <!-- hhmts end -->
 </p>
 </footer>

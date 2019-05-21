@@ -30,7 +30,7 @@ python --version
 python3 --version
 </pre>
 
-<p>こちらのほうで Python 3.*.* と出るなら，以下では <code>python</code> や <code>ipython</code> の代わりに <code>python3</code> や <code>ipython3</code> としてください。</p>
+<p>こちらのほうで Python 3.*.* と出るなら，以下では <code>python</code> の代わりに <code>python3</code> としてください。<code>ipython</code> のほうは古いものがシステムに入っていることはあまりなさそうなので <code>ipython3</code> としなくても多分大丈夫です（起動時のメッセージでどの Python が立ち上がっているのかわかります）。</p>
 
 <h3>python コマンド（REPL）</h3>
 
@@ -132,16 +132,18 @@ for i in range(3):
 <p>ターミナルに</p>
 
 <pre>
-jupyter notebook &amp;
+jupyter notebook
 </pre>
 
-<p>と打ち込むと，Web ブラウザが立ち上がって，カレントディレクトリのファイル名一覧が表示されます。もし拡張子が ipynb のファイルがあれば，それを開けば前回の続きの計算ができます。新しいノートブックを開くには，この画面で [New ▼] ボタンを押し Python 3 を選びます。一番上の Untitled をクリックすると，ノートブックの名前が変えられます。</p>
+<p>と打ち込むと，Web ブラウザが立ち上がって，カレントディレクトリのファイル名一覧が表示されます（Mac や Linux なら <code>jupyter notebook &amp;</code> と打ち込めばバックグラウンド動作になります）。もし拡張子が ipynb のファイルがあれば，それを開けば前回の続きの計算ができます。新しいノートブックを開くには，この画面で [New ▼] ボタンを押し Python 3 を選びます。一番上の Untitled をクリックすると，ノートブックの名前が変えられます。ちなみに，拡張子 ipynb は，Jupyter Notebook が IPython Notebook と呼ばれていたころの名残りです。</p>
 
 <p>In [ ]: の右の箱に Python のプログラムを打ち込みます。何行かまとめて入れることもできます。最後の行の値が（<code>print()</code> を使わないでも）表示されます。Shift + Enter で，実行し次の箱に移動します（または Ctrl + Enter で，実行し次の箱に移動しません）。</p>
 
 <p>[Code ↕︎] ボタンを [Markdown ↕︎] に切り替えれば，Markdown 形式で説明が書けます。<code>$E = mc^2$</code> のように <code>$</code> で挟んで数式を書くこともできます。</p>
 
 <p>終了は File → Close and Halt です。右上の [Quit] で Web サーバが終了します。</p>
+
+<p>拡張子 ipynb のファイルを GitHub にプッシュすれば，ドキュメントとコードと実行結果が公開できます。この方法によるドキュメント作成は GitHub 上で数式を表示するための便利な方法でもあります（Markdown 形式では数式はうまく表示できません）。</p>
 
 <h3>Emacs 内で IPython を動かす</h3>
 
@@ -154,7 +156,7 @@ jupyter notebook &amp;
       python-shell-interpreter-args "--simple-prompt --matplotlib -i")
 </pre>
 
-<p>拡張子 <code>py</code> のファイルを開くと，自動的に Python モードになります。まずは C-c C-p (run-python) で IPython プロセスを起動します。バッファ全体を実行するには C-c C-c (python-shell-send-buffer)，選択したリージョンを実行するには C-c C-r (python-shell-send-region) とします。詳しくは，M-x help の次に m と打つと，モードのヘルプが現れます。</p>
+<p>拡張子 <code>py</code> のファイルを開くと，自動的に Python モードになります。まずは C-c C-p (run-python) で IPython プロセスを起動します（拡張子 <code>py</code> のファイルを開かなくても直接 M-x run-python でも起動できます）。バッファ全体を実行するには C-c C-c (python-shell-send-buffer)，選択したリージョンを実行するには C-c C-r (python-shell-send-region) とします。詳しくは，M-x help の次に m と打つと，モードのヘルプが現れます。</p>
 
 <hr>
 
@@ -162,7 +164,7 @@ jupyter notebook &amp;
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-14 12:15:20</time>
+Last modified: <time>2019-05-21 15:37:45</time>
 <!-- hhmts end -->
 </p>
 </body>
