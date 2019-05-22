@@ -24,11 +24,12 @@
 
 <pre>
 import matplotlib.pyplot as plt
-plt.plot([1,2,3,4], [-2,1,-1,2])
+
+plt.plot([-1,1])
 plt.show()
 </pre>
 
-<p>でエラーになるなら，<code>~/.matplotlib/matplotlibrc</code> にバックエンドの名前を指定します。Macの場合は，macOSアプリ（フレームワーク）としてのPythonなら</p>
+<p>でエラーになるなら，<code>~/.matplotlib/matplotlibrc</code> にバックエンドの名前を指定します。Macの場合は，macOS アプリ（フレームワーク）としての Python なら</p>
 
 <pre>
 backend: MacOSX
@@ -42,7 +43,7 @@ backend: TkAgg
 
 <p>とすればよさそうです。</p>
 
-<p>デフォルトのフォントでは日本語が出ません。デフォルトで日本語を出したいなら，システムにインストールされている適当な TrueType フォント名を <code>~/.matplotlib/matplotlibrc</code> に書き加えます（matplotlib 3.1.0 で ttc にも対応）。Macなら例えば</p>
+<p>デフォルトのフォントでは日本語が出ません。デフォルトで日本語を出したいなら，システムにインストールされている適当な TrueType フォント名を <code>~/.matplotlib/matplotlibrc</code> に書き加えます（matplotlib 3.1.0 で ttc にも対応しました）。Macなら例えば</p>
 
 <pre>
 font.family: AppleGothic
@@ -58,7 +59,7 @@ font.family: IPAexGothic
 
 <p>なお，<code>font.family</code> のデフォルト値は <code>sans-serif</code> で，DejaVu Sans が使われます。<code>serif</code> と指定すれば DejaVu Serif になります。DejaVu は Bitstream Vera ベースの良質なフォントです。</p>
 
-<p>PDF で保存する場合，TrueType フォントは Type 3 形式でサブセット埋め込みされます。OpenType の Source Han Sans などは，日本語表示には使えますが，サブセット化できず，丸ごと埋め込まれてしまい，PDF のファイルサイズが巨大になります。</p>
+<p>PDF で保存する場合，TrueType フォントは Type 3 形式でサブセット埋め込みされます。OpenType の Source Han Sans などは，日本語表示には使えますが，サブセット化できず，丸ごと埋め込まれてしまい，PDF のファイルサイズが巨大になります。また，今のところ，ttc フォントは PDF 保存に対応していないようです。</p>
 
 <div class="note">
 <p><code>~/.matplotlib/matplotlibrc</code> を作る前の，システムの <code>matplotlibrc</code> の位置は，ターミナルに次のコマンドを打ち込めば表示されます：</p>
@@ -77,7 +78,8 @@ python -c "import matplotlib; print(matplotlib.matplotlib_fname())"
 
 <pre>
 import matplotlib.pyplot as plt
-plt.plot([1,2,3,4], [-2,1,-1,2])
+
+plt.plot([-1,1])
 plt.title('日本語タイトル')
 </pre>
 
@@ -117,7 +119,7 @@ plt.rc('font', 'family'='IPAexGothic', 'size'=12)
 <p>タイトルやラベルに日本語のフォントを使う程度なら，特にデフォルトのフォントを変えなくても，次のように関数にオプションで与えることもできます：</p>
 
 <pre>
-plt.title('日本語タイトル', fontfamily='IPAexGothic')
+plt.title('日本語タイトル', fontfamily='IPAexGothic', fontsize=20)
 plt.xlabel('日本語のx軸タイトル', fontfamily='IPAexGothic')
 </pre>
 
@@ -281,7 +283,7 @@ plt.close("all")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-14 12:15:00</time>
+Last modified: <time>2019-05-22 21:03:33</time>
 <!-- hhmts end -->
 </p>
 </body>
