@@ -26,7 +26,7 @@
 
 <p><code>python3</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
 
-<p>いろいろなパッケージのインストールは pip（<code>pip3</code> コマンド）を使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
+<p>いろいろなパッケージのインストールは pip（<code>pip3</code> コマンド）を使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです（以下では <code>sudo</code> が必要かどうかはインストール形態によります）。</p>
 
 <pre>
 sudo pip3 install ipython numpy scipy matplotlib pandas
@@ -56,14 +56,12 @@ sudo pip3 install --upgrade パッケージ名
 
 <p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンド（シンボリックリンク）が入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
-<p>conda 版と違って macOS フレームワーク版ですので，<code>~/.matplotlib/matplotlibrc</code> は <code>backend: MacOSX</code> で大丈夫です。また，Python.org のインストーラと違って，管理者権限（sudo）なしで <code>pip3 install</code> コマンドが使えます。例えば</p>
+<p>パッケージのインストールや更新は，次のようにターミナルに打ち込みます：</p>
 
 <pre>
 pip3 install --upgrade pip
 pip3 install ipython matplotlib
 </pre>
-
-<p>のようにターミナルに打ち込みます。</p>
 
 <p>これで <code>python</code> と打ち込むと macOS 側の Python 2 が，<code>python3</code> と打ち込むと Homebrew 側の Python 3 が動くことになります。<code>ipython</code> は macOS 側にないので <code>3</code> を付ける必要はありません。<code>python</code> と打ち込んで Python 3 が動くようにしたければ，<code>/usr/local/opt/python/libexec/bin</code> のパスを <code>/usr/bin</code> より先に設定します。</p>
 
@@ -209,11 +207,11 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 
 <h3>その他の学習用環境</h3>
 
+<p>オンラインで種々の言語の実行環境を提供するサービスがいくつかあるようです。<a href="https://cocalc.com">CoCalc</a> とか <a href="https://repl.it">repl.it</a> とか。</p>
+
 <p>初心者の学習用に作られた<a href="https://bitarrow.eplang.jp">オンラインプログラミング環境　ビットアロー（Bit Arrow）</a>では，ブラウザ上で JavaScript，ドリトル，簡易C，DNCL，Python が使えます。Python はブラウザの JavaScript で実行することも，サーバ側の Python 3 を実行することもできます。後者の場合は <code>matplotlib</code> の最小限の機能も使えます。</p>
 
 <p><a href="http://pypy.org">PyPy</a> という JavaScript の JIT コンパイラがあり，ブラウザ上で実行できます（お試しサイト <a href="https://pypyjs.org">pypyjs.org</a>）。グラフィックスはできないようです。</p>
-
-<p>オンラインで種々の言語の実行環境を提供する <a href="https://repl.it">repl.it</a> でも何種類かの Python が使えるようです（ページ下の「Languages」一覧参照）。</p>
 
 <hr>
 
@@ -221,7 +219,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-22 16:47:09</time>
+Last modified: <time>2019-05-23 11:16:46</time>
 <!-- hhmts end -->
 </p>
 </footer>

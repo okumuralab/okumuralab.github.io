@@ -29,21 +29,21 @@ plt.plot([-1,1])
 plt.show()
 </pre>
 
-<p>でエラーになるなら，<code>~/.matplotlib/matplotlibrc</code> にバックエンドの名前を指定します。Macの場合は，macOS アプリ（フレームワーク）としての Python なら</p>
+<p>でエラーになるなら，<code>~/.matplotlib/matplotlibrc</code> にバックエンドの名前を指定します。Macの場合は</p>
 
 <pre>
 backend: MacOSX
 </pre>
 
-<p>そうでないなら</p>
+<p>でうまくいかなければ</p>
 
 <pre>
 backend: TkAgg
 </pre>
 
-<p>とすればよさそうです。</p>
+<p>とします。</p>
 
-<p>デフォルトのフォントでは日本語が出ません。デフォルトで日本語を出したいなら，システムにインストールされている適当な TrueType フォント名を <code>~/.matplotlib/matplotlibrc</code> に書き加えます（matplotlib 3.1.0 で ttc にも対応しました）。Macなら例えば</p>
+<p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら，システムにインストールされている適当な TrueType（matplotlib 3.1.0 以降は TrueType Collection も可）または OpenType フォント名を <code>~/.matplotlib/matplotlibrc</code> に書き加えます（後述のように単純な TrueType が推奨です）。Macなら例えば</p>
 
 <pre>
 font.family: AppleGothic
@@ -59,7 +59,7 @@ font.family: IPAexGothic
 
 <p>なお，<code>font.family</code> のデフォルト値は <code>sans-serif</code> で，DejaVu Sans が使われます。<code>serif</code> と指定すれば DejaVu Serif になります。DejaVu は Bitstream Vera ベースの良質なフォントです。</p>
 
-<p>PDF で保存する場合，TrueType フォントは Type 3 形式でサブセット埋め込みされます。OpenType の Source Han Sans などは，日本語表示には使えますが，サブセット化できず，丸ごと埋め込まれてしまい，PDF のファイルサイズが巨大になります。また，今のところ，ttc フォントは PDF 保存に対応していないようです。</p>
+<p>PDF で保存する場合，TrueType フォントは Type 3 形式でサブセット埋め込みされます。OpenType の Source Han Sans などは，日本語表示には使えますが，サブセット化できず，丸ごと埋め込まれてしまい，PDF のファイルサイズが巨大になります。また，今のところ，TrueType Collection は PDF 保存に対応していないようです。</p>
 
 <div class="note">
 <p><code>~/.matplotlib/matplotlibrc</code> を作る前の，システムの <code>matplotlibrc</code> の位置は，ターミナルに次のコマンドを打ち込めば表示されます：</p>
@@ -283,7 +283,7 @@ plt.close("all")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-22 21:03:33</time>
+Last modified: <time>2019-05-23 12:32:16</time>
 <!-- hhmts end -->
 </p>
 </body>
