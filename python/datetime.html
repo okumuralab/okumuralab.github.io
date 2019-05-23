@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>日時</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>日時</h1>
+
+<p>時間計測には IPython の <code>%timeit</code> 機能が便利：</p>
+
+<pre>
+In [ ]: %timeit x = 0; x = x + 1
+29.7 ns ± 0.049 ns per loop (mean ± std. dev. of 7 runs, 10000000 loops each)
+
+In [ ]: %timeit x = 0; x += 1
+31.9 ns ± 0.0136 ns per loop (mean ± std. dev. of 7 runs, 10000000 loops each)
+</pre>
+
+<p>（あれ，<code>x += 1</code> より <code>x = x + 1</code> の方が若干速いんだ。）</p>
+
+<p><code>time.time()</code> は現在時刻を1970年からの秒数で返す（<code>float</code> 型）：</p>
+
+<pre>
+import time
+
+t1 = time.time()
+time.sleep(1)
+t2 = time.time()
+print(t2 - t1)
+</pre>
+
+<p><code>datetime.datetime</code> 型は，年月日時分秒，マイクロ秒，タイムゾーン情報を持つ構造体である：</p>
+
+<pre>
+import datetime
+
+x = datetime.datetime.now()
+print(x)  # datetime.datetime(2019, 5, 23, 13, 59, 25, 7133)
+# しばらく経って・・・
+y = datetime.datetime.now()
+y - x     # datetime.timedelta(seconds=65, microseconds=674158)
+</pre>
+
+<p>例えば2019年5月1日で始まる32日分の配列：</p>
+
+<pre>
+import numpy as np
+import matplotlib.pyplot as plt
+
+t = [datetime.datetime(2019,5,1) + datetime.timedelta(days=i) for i in range(32)]
+x = np.cumsum(np.random.randn(32))
+plt.plot(t, x)
+</pre>
+
+<p>これでは見にくいので，少し工夫：</p>
+
+<pre>
+import matplotlib.dates as mdates
+
+ax = plt.subplot(1,1,1)
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.plot(t, x)
+</pre>
+
+<p>NumPy の <a href="https://www.numpy.org/devdocs/reference/arrays.datetime.html"><code>datetime64</code></a> は最も柔軟な日時型である。年（<code>Y</code>），月（<code>M</code>），週（<code>W</code>），日（<code>D</code>），時（<code>h</code>），分（<code>m</code>），秒（<code>s</code>），ミリ秒（<code>ms</code>）などの単位で64ビット整数で表したものである。日時の起点は1970年1月1日頭である。タイムゾーンは考えない。一番大きい単位 <code>Y</code> を使った <code>datetime64[Y]</code> 型は ±9.2×10<sup>18</sup> 年まで表せる（宇宙の年齢は 1.38×10<sup>10</sup> 年ほど）。</p>
+
+<pre>
+import numpy as np
+
+np.datetime64("2019")  # np.datetime64("2019", "Y") と同じ
+np.datetime64("2019-05")  # np.datetime64("2019-05", "M") と同じ
+np.datetime64("2019-05-01")  # np.datetime64("2019-05-01", "D") と同じ
+np.datetime64("2019-05-01 12:34:56")  # np.datetime64("2019-05-01 12:34:56", "s") と同じ
+</pre>
+
+<p>日時の差は <code>timedelta64()</code> で表す：</p>
+
+<pre>
+t = np.array([np.datetime64("2019-05-01") + np.timedelta64(i,"D") for i in range(32)])
+</pre>
+
+<p>これは次のようにも書ける：</p>
+
+<pre>
+t = np.arange(np.datetime64("2019-05-01"), np.datetime64("2019-06-02"))
+</pre>
+
+<p>pandas は NumPy の <code>datetime64[ns]</code>（ナノ秒単位）に限定しているので，1677年から2262年くらいまでしか扱えない。<a href="read.html">データの読み書き</a>参照。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-23 22:06:27</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
