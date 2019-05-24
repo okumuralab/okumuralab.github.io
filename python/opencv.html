@@ -21,10 +21,8 @@
 <p><a href="https://opencv.org">OpenCV</a> は画像を扱うためのライブラリである。</p>
 
 <pre>
-conda install opencv
+conda install opencv  # または pip3 install opencv-python
 </pre>
-
-<p>現時点（2019-05-11）では OpenCV 3.4.2 が入る（<code>conda install -c conda-forge opencv</code> や <code>pip install opencv-python</code> なら 4.1.0 が入る）。</p>
 
 <p>まずは適当な画像を読み込んでみる：</p>
 
@@ -53,6 +51,7 @@ cv2.imshow("Image", img)
 
 <pre>
 img = np.array([[[255,0,0] for x in range(100)] for y in range(150)], dtype='uint8')
+# または img = np.array([[[255,0,0]] * 100] * 150, dtype="uint8")
 </pre>
 
 <p>保存する：</p>
@@ -62,7 +61,7 @@ cv2.imwrite("hoge.png", img)
 </pre>
 
 <div class="note">
-<p>Matplotlib でも画像を読み書きできるが，チャンネルは RGB の順である。デフォルトで読めるのは PNG だけだが，<a href="http://pillow.readthedocs.io/">Pillow</a> をインストール（<code>conda install pillow</code>）すれば他の画像形式も読める。</p>
+<p>Matplotlib でも画像を読み書きできるが，チャンネルは RGB の順である。デフォルトで読めるのは PNG だけだが，<a href="http://pillow.readthedocs.io/">Pillow</a> をインストール（<code>conda install pillow</code> または <code>pip3 install pillow</code>）すれば他の画像形式も読める。</p>
 <pre>
 import matplotlib.pyplot as plt
 img = plt.imread("画像ファイル名")
@@ -87,7 +86,7 @@ img2 = cv2.GaussianBlur(img, (9,9), 0)  # カーネルサイズは奇数に
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-14 12:14:53</time>
+Last modified: <time>2019-05-24 20:28:23</time>
 <!-- hhmts end -->
 </p>
 </body>
