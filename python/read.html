@@ -61,7 +61,7 @@ df = pd.read_csv("finename.csv", na_values="", keep_default_na=False)
 
 <h3>Excel ファイルの読み込み</h3>
 
-<p>Excel ファイル（xls，xlsx）を読むには xlrd というライブラリが必要です。別途 <code>conda install xlrd</code> または <code>pip(3) install xlrd</code> などとしてインストールしておきます。<code>read_excel()</code> を使うと自動的に import されます。</p>
+<p>Excel ファイル（xls，xlsx）を読むには xlrd というライブラリが必要です。別途 <code>conda install xlrd</code> または <code>pip3 install xlrd</code> などとしてインストールしておきます。<code>read_excel()</code> を使うと自動的に import されます。</p>
 
 <pre>
 df = pd.read_excel("filename.xlsx")
@@ -184,10 +184,30 @@ df.head()
 df.to_csv("filename.csv", index=False, encoding="utf_8_sig", line_terminator="\r\n")
 </pre>
 
-<p>Excel形式での書き出しは <code>pandas.DataFrame.to_excel()</code> です。エンジンは openpyxl または xlsxwriter が指定できます。前者のほうが多機能のようです。あらかじめ <code>conda install openpyxl</code> などと打ち込んでインストールしておきます。</p>
+<p>Excel形式での書き出しは <code>pandas.DataFrame.to_excel()</code> です。エンジンは openpyxl または xlsxwriter が指定できます。前者のほうが多機能のようです。あらかじめ <code>conda install openpyxl</code> または <code>pip3 install openpyxl</code> などと打ち込んでインストールしておきます。</p>
 
 <pre>
 df.to_excel("filename.xlsx")
+</pre>
+
+<p>JSON形式での書き出しは <code>to_json()</code> です：</p>
+
+<pre>
+df = pd.DataFrame({"A":[1,2],"B":[1.5,2.5]})
+df.to_json()  #==&gt; '{"A":{"0":1,"1":2},"B":{"0":1.5,"1":2.5}}'
+df.to_json(orient="records")
+#==&gt; '[{"A":1,"B":1.5},{"A":2,"B":2.5}]'
+</pre>
+
+<p>なかなか簡潔なJSONになりません。次のような奥の手もあるようです：</p>
+
+<pre>
+import json
+
+json.dumps(df.to_dict(orient="list"))
+#==&gt; '{"A": [1, 2], "B": [1.5, 2.5]}'
+json.dumps(df.to_dict(orient="list"), separators=(',',':'))
+#==&gt; '{"A":[1,2],"B":[1.5,2.5]}'
 </pre>
 
 <h2>全部メモリに入れないで処理する</h2>
@@ -206,7 +226,7 @@ import csv
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-14 12:15:07</time>
+Last modified: <time>2019-05-28 08:34:05</time>
 <!-- hhmts end -->
 </p>
 </body>
