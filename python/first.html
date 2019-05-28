@@ -85,6 +85,16 @@ NameError: name 'X' is not defined
 
 <p>この <code>NameError</code> は関数名などを間違えたときにも出ます。</p>
 
+<p>特別な変数 <code>_</code> には一つ前の出力結果が入ります：</p>
+
+<pre>
+In [ ]: 2 ** 16
+Out[ ]: 65536
+
+In [ ]: _ ** 2      # この場合 65536 ** 2 と同じ
+Out[ ]: 4294967296
+</pre>
+
 <p>対話型環境ならこのように式を打ち込めばそのまま答えが表示されますが，対話型でないプログラム中では <code>print()</code> 関数を使わないと出力されません：</p>
 
 <pre>
@@ -312,7 +322,7 @@ collatz(n)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-23 11:01:35</time>
+Last modified: <time>2019-05-28 22:02:43</time>
 <!-- hhmts end -->
 </p>
 </body>
