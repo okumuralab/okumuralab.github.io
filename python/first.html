@@ -20,7 +20,7 @@
 
 <p>Pythonに慣れるため，当分の間は電卓がわりにPythonを使ってみましょう。<a href="run.html">実行</a>を見て，お好きな方法でPythonを起動してください。</p>
 
-<p>まず足し算です。生のPython（<code>python</code> コマンド）ならプロンプト <code>&gt;&gt;&gt;</code> の右側に，IPython（<code>ipython</code> コマンド）ならプロンプト <code>In [1]:</code> の右側に，Jupyter Notebookなら最初の枠内に，<code>123+456</code> と打ち込んでEnterキーを打ちます（Jupyter Notebookなら Shift + Enter です）。次の行に答えが出ます。以下ではIPythonの表示を示します。</p>
+<p>まず足し算です。生のPython（<code>python</code> コマンドまたは <code>python3</code> コマンド）ならプロンプト <code>&gt;&gt;&gt;</code> の右側に，IPython（<code>ipython</code> コマンドまたは <code>ipython3</code> コマンド）ならプロンプト <code>In [1]:</code> の右側に，Jupyter Notebookなら最初の枠内に，<code>123+456</code> と打ち込んでEnterキーを打ちます（Jupyter Notebookなら Shift + Enter です）。次の行に答えが出ます。以下ではIPythonの表示を示します。</p>
 
 <pre>
 In [1]: 123+456
@@ -66,7 +66,7 @@ In [ ]: x*3
 Out[ ]: 1.0
 </pre>
 
-<p><code>x = 1/3</code> のようにスペースを空けなくても <code>x=1/3</code> のように詰めて書いてもまったく同じです。ここでは，見やすいように，適宜余分なスペースを入れています。</p>
+<p><code>x = 1/3</code> のようにスペースを空けなくても <code>x=1/3</code> のように詰めて書いてもまったく同じですが，多くのプログラマは，見やすいように，<code>x = 1/3</code> または <code>x = 1 / 3</code> のようにスペースを入れて，ゆったりと書きます。</p>
 
 <p>この <code>x</code> のようなものを「変数」と呼びます。変数名は，大文字と小文字を区別します。</p>
 
@@ -83,9 +83,9 @@ NameError                                 Traceback (most recent call last)
 NameError: name 'X' is not defined
 </pre>
 
-<p>この <code>NameError</code> は関数名などを間違えたときにも出ます。</p>
+<p>この <code>NameError</code> は変数名などを間違えたときに出ます。</p>
 
-<p>特別な変数 <code>_</code> には一つ前の出力結果が入ります：</p>
+<p>対話型の環境では，一つ前の出力結果が，特別な変数 <code>_</code> に入ります：</p>
 
 <pre>
 In [ ]: 2 ** 16
@@ -95,7 +95,9 @@ In [ ]: _ ** 2      # この場合 65536 ** 2 と同じ
 Out[ ]: 4294967296
 </pre>
 
-<p>対話型環境ならこのように式を打ち込めばそのまま答えが表示されますが，対話型でないプログラム中では <code>print()</code> 関数を使わないと出力されません：</p>
+<p>上の例では <code>_ ** 2</code> は <code>65536 ** 2</code> と同じです。</p>
+
+<p>対話型の環境なら，これまでの例で示したように，式を打ち込めばそのまま答えが表示されますが，対話型でないプログラム中では <code>print()</code> 関数を使わないと出力されません：</p>
 
 <pre>
 In [ ]: print("Hello")
@@ -216,10 +218,10 @@ flush: whether to forcibly flush the stream.
 Type:      builtin_function_or_method
 </pre>
 
-<p>これで改行をなくすには <code>end=''</code> とすればよいことが推測できます：</p>
+<p>これで改行をなくすには <code>end=''</code> または <code>end=""</code> とすればよいことが推測できます（Python ではシングルクォート <code>'</code> とダブルクォート <code>"</code> はまったく同じ意味です）：</p>
 
 <pre>
-In [ ]: print("Hello", end=''); print(" World")
+In [ ]: print("Hello", end=""); print(" World")
 Hello World
 </pre>
 
@@ -243,7 +245,7 @@ The argument must be an iterable if specified.
 
 <h2>終了のしかた</h2>
 
-<p>Pythonは <code>quit()</code> または <code>exit()</code> で終了します。IPythonは <code>quit</code> または <code>exit</code> でもかまいません。</p>
+<p>Pythonは <code>quit()</code> または <code>exit()</code> で終了します。IPythonは <code>quit</code> または <code>exit</code> でも終了します。</p>
 
 <h2>ひつじがnひき</h2>
 
@@ -307,6 +309,12 @@ def collatz(n):
 
 <p>いろいろな数から出発して，Collatzの予想が正しいかどうか確かめてください。Pythonの整数はどんな大きな数でも扱えますので，桁あふれする心配はありません。</p>
 
+<p>なお，<code>n = n // 2</code> は <code>n //= 2</code> と書くこともできます。同様に，<code>n = n + 1</code> は <code>n += 1</code> と書けます。</p>
+
+<div class="note">
+<p><code>n = n + 1</code> と <code>n += 1</code> では，前者は <code>n</code> を2回評価し，後者は <code>n</code> を1回しか評価しないという違いがあります。評価することによって副作用が生じる場合は，結果が違うことがありますが，上のような単純な例では，まったく違いがないと考えて差し支えありません。<code>n += 1</code> のほうが必ずしも実行が速いというわけでもありません。</p>
+</div>
+
 <p>入力を促すためには次のようにします：</p>
 
 <pre>
@@ -314,7 +322,7 @@ n = int(input('正の整数を入力してください: '))
 collatz(n)
 </pre>
 
-<p>ちなみに，<code>n = n // 2</code> は <code>n //= 2</code> と書くこともできます。同様に，<code>n = n + 1</code> は <code>n += 1</code> と書けます。</p>
+<p>関数 <code>input()</code> はキーボード入力を文字列として読み込みます。整数にしたいときは <code>int()</code>，浮動小数点数にしたいときは <code>float()</code> で変換します。</p>
 
 <hr>
 
@@ -322,7 +330,7 @@ collatz(n)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-28 22:02:43</time>
+Last modified: <time>2019-05-29 10:00:12</time>
 <!-- hhmts end -->
 </p>
 </body>
