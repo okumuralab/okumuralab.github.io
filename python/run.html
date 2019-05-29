@@ -18,26 +18,21 @@
 
 <p>Python の実行には，いくつかの方法があります。</p>
 
-<p>まず，Python のバージョンをチェックします：</p>
+<p>以下では Python 3 を起動するコマンドは <code>python3</code> であると仮定します。システムによっては <code>python3</code> ではなく <code>python</code> かもしれません。</p>
+
+<p>念のため，<code>python</code> あるいは <code>python3</code> で起動する Python のバージョンを確認しておきましょう：</p>
 
 <pre>
 python --version
-</pre>
-
-<p>これで Python 2.*.* と出るなら，次のコマンドを試します：</p>
-
-<pre>
 python3 --version
 </pre>
-
-<p>こちらのほうで Python 3.*.* と出るなら，以下では <code>python</code> の代わりに <code>python3</code> としてください。<code>ipython</code> のほうは古いものがシステムに入っていることはあまりなさそうなので <code>ipython3</code> としなくても多分大丈夫です（起動時のメッセージでどの Python が立ち上がっているのかわかります）。</p>
 
 <h3>python コマンド（REPL）</h3>
 
 <p>ターミナルに</p>
 
 <pre>
-python
+python3
 </pre>
 
 <p>とだけ打ち込むと，<code>&gt;&gt;&gt;</code> というプロンプトが現れますので，その右側に Python の命令を打ち込みます。例えば</p>
@@ -67,7 +62,11 @@ for i in range(3):
 ipython
 </pre>
 
-<p>と打ち込みます（Emacs の <code>M-x shell</code> 内なら <code>ipython --simple-prompt</code>）。</p>
+<p>と打ち込みます。もし古い Python 2 が出てくるようなら，<code>ipython3</code> と打ち込みます。</p>
+
+<div class="note">
+<p>Emacs の <code>M-x shell</code> 内なら <code>ipython --simple-prompt</code> のようにオプションを付けて立ち上げます。</p>
+</div>
 
 <p>ヘルプを見るには，例えば <code>?print</code> のように打ち込みます（このヘルプの終了は <code>q</code>）。</p>
 
@@ -82,24 +81,24 @@ for i in range(3):
     print("大事なので3回言います")
 </pre>
 
-<p>は，ファイルに納めておくことができます。ファイル名は <code>test.py</code> のように拡張子を <code>py</code> にします。実行は</p>
+<p>は，ファイルに納めておくことができます。ファイル名は <code>test.py</code> のように拡張子を <code>py</code> にします。保存の際の文字コードは UTF-8 にします。実行は</p>
 
 <pre>
-python test.py
+python3 test.py
 </pre>
 
-<p>と打ち込みます。</p>
+<p>と打ち込みます。文字化けする場合は，文字コードが UTF-8 になっているか確認してください。</p>
 
-<p>実行可能なスクリプトにするには，先頭に <code>#! /usr/bin/env python</code> を付けます：</p>
+<p>Linux や Mac などの UNIX 環境で実行可能なスクリプトにするには，先頭に <code>#! /usr/bin/env python3</code> を付けます：</p>
 
 <pre>
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 for i in range(3):
     print("大事なので3回言います")
 </pre>
 
-<p>文字コードは UTF-8 にします（<code>#!</code> で始まるファイルは BOM を付けないようにします）。実行可能にするには，ターミナルで</p>
+<p>この場合も文字コードは UTF-8 ですが，特に <code>#!</code> で始まる場合は BOM を付けないように注意する必要があります。実行可能にするには，ターミナルで</p>
 
 <pre>
 chmod 755 test.py
@@ -116,7 +115,7 @@ chmod 755 test.py
 <p>もしどうしても別の文字コード，例えば Shift JIS にしたいなら，</p>
 
 <pre>
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: shift_jis -*-
 
 for i in range(3):
@@ -128,7 +127,7 @@ for i in range(3):
 <p>スクリプトとして実行する場合は，コマンドライン引数が <code>sys.argv</code> というリストに入ります。次のような簡単なスクリプトで実験できます：</p>
 
 <pre>
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 import sys
 
@@ -183,7 +182,7 @@ jupyter notebook
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-29 10:13:59</time>
+Last modified: <time>2019-05-29 18:53:36</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -20,7 +20,7 @@
 
 <p>Pythonに慣れるため，当分の間は電卓がわりにPythonを使ってみましょう。<a href="run.html">実行</a>を見て，お好きな方法でPythonを起動してください。</p>
 
-<p>まず足し算です。生のPython（<code>python</code> コマンドまたは <code>python3</code> コマンド）ならプロンプト <code>&gt;&gt;&gt;</code> の右側に，IPython（<code>ipython</code> コマンドまたは <code>ipython3</code> コマンド）ならプロンプト <code>In [1]:</code> の右側に，Jupyter Notebookなら最初の枠内に，<code>123+456</code> と打ち込んでEnterキーを打ちます（Jupyter Notebookなら Shift + Enter です）。次の行に答えが出ます。以下ではIPythonの表示を示します。</p>
+<p>まず足し算です。生のPython（<code>python</code> または <code>python3</code> コマンド）ならプロンプト <code>&gt;&gt;&gt;</code> の右側に，IPython（<code>ipython</code> または <code>ipython3</code> コマンド）ならプロンプト <code>In [1]:</code> の右側に，Jupyter Notebookなら最初の枠内に，<code>123+456</code> と打ち込んでEnterキーを打ちます（Jupyter Notebookなら Shift + Enter です）。次の行に答えが出ます。以下ではIPythonの表示を示します。</p>
 
 <pre>
 In [1]: 123+456
@@ -134,64 +134,60 @@ In [ ]: sin(pi/2)
 NameError: name 'sin' is not defined
 </pre>
 
-<p>駄目ですね。数学関数はいくつかのライブラリで定義されていますが，ここでは <a href="https://www.numpy.org">NumPy</a>（ナムパイ）というライブラリを使うことにします（ほかに <code>math</code> や <code>scipy</code> でも定義されています）。これを読み込むには，次のようにします：</p>
+<p>駄目ですね。数学関数はいくつかのライブラリで定義されていますが，ここでは標準ライブラリ <code>math</code> のものを使います（ほかに <a href="https://www.numpy.org">NumPy</a> や <a href="https://www.scipy.org">SciPy</a> でも定義されています）。ライブラリ <code>math</code> を使うには，次のようにインポートします：</p>
 
 <pre>
-In [ ]: import numpy as np
+In [ ]: import math
 </pre>
 
-<p>これは <code>numpy</code> を <code>np</code> という省略名で読み込む（インポートする）ことを意味します。よく使うライブラリには伝統的な省略名があるので，それに従いましょう。</p>
+<p>これで <code>math.</code> で始まる定数や関数が使えるようになります：</p>
 
 <pre>
-In [ ]: np.pi   # 円周率
+In [ ]: math.pi   # 円周率
 Out[ ]: 3.141592653589793
 
-In [ ]: np.e    # 自然対数の底
+In [ ]: math.e    # 自然対数の底
 Out[ ]: 2.718281828459045
 </pre>
 
 <p>いげた印 <code>#</code> より右側はコメント（説明のための注釈）です。以下では説明のためにコメントをいろいろ書いていますが，実際に打ち込むときはコメントは必要ありません。</p>
 
 <pre>
-In [ ]: np.sin(np.pi / 2)
+In [ ]: math.sin(math.pi / 2)
 Out[ ]: 1.0
 
-In [ ]: np.sin(np.pi)
+In [ ]: math.sin(math.pi)
 Out[ ]: 1.2246467991473532e-16
 </pre>
 
 <p>数値計算の誤差のため sin(π) は 0 にならず，1.22 × 10<sup>-16</sup> という小さな値になりました。</p>
 
 <div class="note">
-<p>標準の <code>math</code> ライブラリで定義されているものと違って，NumPy で定義されているものは配列の形で引数を与えることができます。</p>
+<p>NumPy で定義されているものは配列の形で引数を与えることもできます。NumPy を読み込むには</p>
+<pre>
+In [ ]: import numpy as np
+</pre>
+<p>とします。これは <code>numpy</code> を <code>np</code> という省略名で読み込む（インポートする）ことを意味します。よく使うライブラリには伝統的な省略名があるので，それに従いましょう。</p>
 <pre>
 In [ ]: np.sin(0.1)
 Out[ ]: 0.09983341664682815
 
 In [ ]: np.sin([0.1,0.2,0.3])
 Out[ ]: array([0.09983342, 0.19866933, 0.29552021])
-
-In [ ]: import math
-
-In [ ]: math.sin(0.1)
-Out[ ]: 0.09983341664682815
-
-In [ ]: math.sin([0.1,0.2,0.3])
-TypeError: must be real number, not list
 </pre>
 </div>
 
 <p>C言語と同様の書式指定の出力もできます。</p>
 
 <pre>
-In [ ]: print("円周率はだいたい %.4f です。" % np.pi)
+In [ ]: print("円周率はだいたい %.4f です。" % math.pi)
 円周率はだいたい 3.1416 です。
 </pre>
 
 <p>関数の括弧を閉じないとどうなるでしょうか。</p>
 
 <pre>
-In [ ]: np.sin(np.pi/2
+In [ ]: math.sin(math.pi/2
    ...: )
 Out[ ]: 1.0
 </pre>
@@ -281,6 +277,17 @@ def hitsuji(n):
 
 <p>これで <code>hitsuji(100)</code> と打てば，ひつじが100ひき数えられます。</p>
 
+<h2>フィボナッチ数列</h2>
+
+<p>Python では複数の代入を並行して行うことができます。このことを使えば，フィボナッチ数列の生成が次のように少しだけ簡単に書けます：</p>
+
+<pre>
+a, b = 1, 1
+while a < 100:
+    print(a)
+    a, b = b, a+b
+</pre>
+
 <h2>Collatzの問題</h2>
 
 <p>1937年にドイツの数学者Collatz（コラッツ）が，「ある数が偶数なら2で割り，奇数なら3倍して1を足す。これを繰り返すとすべての数は1になるだろう」と予想しましたが，だれもそれを証明することができていません。</p>
@@ -330,7 +337,7 @@ collatz(n)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-29 10:00:12</time>
+Last modified: <time>2019-05-29 20:18:33</time>
 <!-- hhmts end -->
 </p>
 </body>

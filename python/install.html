@@ -20,7 +20,7 @@
 
 <h3>Python.org からのインストール</h3>
 
-<p><a href="https://www.python.org/download/">Download Python</a> から，ご自分の環境に合った最新のインストーラをダウンロードし，インストールします。Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。</p>
+<p><a href="https://www.python.org/download/">Download Python</a> から，Windows 用または Mac 用の最新のインストーラをダウンロードし，インストールします。Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。</p>
 
 <p>インストールすると，Mac では <code>~/.bash_profile</code> にパスが付け加えられます。</p>
 
@@ -28,23 +28,27 @@
 
 <p>いろいろなパッケージのインストールは pip（<code>pip3</code> コマンド）を使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです（以下では <code>sudo</code> が必要かどうかはインストール形態によります）。</p>
 
-<pre>
-sudo pip3 install ipython numpy scipy matplotlib pandas jupyter statsmodels linearmodels scikit-learn
-</pre>
-
-<p>アップデートの必要なパッケージは</p>
+<p>まずは，アップデートの必要なパッケージを，次のコマンドで調べます：</p>
 
 <pre>
 pip3 list --outdated
 </pre>
 
-<p>で調べられます。実際のアップデートは</p>
+<p>例えば pip そのものをアップデートするには，ターミナルに次のように打ち込みます：</p>
 
 <pre>
-sudo pip3 install --upgrade パッケージ名
+pip3 install --upgrade pip
 </pre>
 
-<p>です。</p>
+<p>Mac で「権限がない」というエラーになった場合は，<code>sudo pip3 install --upgrade pip</code> のように，頭に <code>sudo</code> を付けます。このとき，パスワードを聞いてきます。Mac で一般ユーザ（非 sudoers）の場合は <code>sudo</code> が使えません。そのときは <code>su 管理者名</code> で管理者になってから行います。</p>
+
+<p>これ以外に必要なパッケージは，その都度インストールします。例：</p>
+
+<pre>
+pip3 install ipython numpy scipy matplotlib pandas jupyter
+</pre>
+
+<!-- statsmodels linearmodels scikit-learn -->
 
 <h3>Anaconda によるインストール</h3>
 
@@ -52,18 +56,18 @@ sudo pip3 install --upgrade パッケージ名
 
 <h3>Homebrew によるインストール（Mac）</h3>
 
-<p><code>brew install python</code> で入ります。簡単です。</p>
+<p>Homebrew を使っている Mac ユーザは，<code>brew install python</code> で簡単に入ります。入るものは Python.org からインストールするものと同等のものです。</p>
 
 <p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンド（シンボリックリンク）が入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
-<p>パッケージのインストールや更新は，次のようにターミナルに打ち込みます：</p>
+<p>パッケージのインストールや更新は，Python.org から入れたものと同様に行います。Homebrew の場合は <code>pip3</code> コマンドに <code>sudo</code> を付ける必要はありません：</p>
 
 <pre>
 pip3 install --upgrade pip
-pip3 install ipython matplotlib
+pip3 install ipython numpy scipy matplotlib pandas jupyter
 </pre>
 
-<p>これで <code>python</code> と打ち込むと macOS 側の Python 2 が，<code>python3</code> と打ち込むと Homebrew 側の Python 3 が動くことになります。<code>ipython</code> は macOS 側にないので <code>3</code> を付ける必要はありません。<code>python</code> と打ち込んで Python 3 が動くようにしたければ，<code>/usr/local/opt/python/libexec/bin</code> のパスを <code>/usr/bin</code> より先に設定します。</p>
+<p>これで <code>python</code> と打ち込むと macOS 側の Python 2 が，<code>python3</code> と打ち込むと Homebrew 側の Python 3 が動くことになります。<code>ipython</code> は macOS 側にないので <code>3</code> を付ける必要はありません（付けてもかまいません）。<code>python</code> と打ち込んで Python 3 が動くようにしたければ，<code>/usr/local/opt/python/libexec/bin</code> のパスを <code>/usr/bin</code> より先に設定します。</p>
 
 <h3>Homebrew による pyenv 経由のインストール（Mac）</h3>
 
@@ -100,22 +104,12 @@ pyenv rehash
 
 <p>要らなくなったバージョンは <code>pyenv uninstall 3.7.2</code> のようにして消せます。</p>
 
-<p>あとは pip で追加インストールします。例：</p>
+<p>あとは pip で更新・追加インストールします。例：</p>
 
 <pre>
-pip install ipython numpy scipy matplotlib pandas
-</pre>
-
-<p>インストールされたものを確認します：</p>
-
-<pre>
-pip list
-</pre>
-
-<p>例えば pip を更新するには次のようにします：</p>
-
-<pre>
+pip list --outdated
 pip install --upgrade pip
+pip install ipython numpy scipy matplotlib pandas jupyter
 </pre>
 
 <h3>Miniconda によるインストール</h3>
@@ -219,7 +213,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-24 12:44:19</time>
+Last modified: <time>2019-05-29 18:34:41</time>
 <!-- hhmts end -->
 </p>
 </footer>
