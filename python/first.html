@@ -95,7 +95,7 @@ In [ ]: _ ** 2      # この場合 65536 ** 2 と同じ
 Out[ ]: 4294967296
 </pre>
 
-<p>上の例では <code>_ ** 2</code> は <code>65536 ** 2</code> と同じです。同様に，二つ前は <code>__</code>，三つ前は <code>___</code> です（四つ前はありません）。</p>
+<p>上の例では <code>_ ** 2</code> は <code>65536 ** 2</code> と同じです。IPython では <code>__</code> が二つ前，<code>___</code> が三つ前です（四つ前はありません）。</p>
 
 <p>対話型の環境なら，これまでの例で示したように，式を打ち込めばそのまま答えが表示されますが，対話型でないプログラム中では <code>print()</code> 関数を使わないと出力されません：</p>
 
@@ -176,13 +176,6 @@ In [ ]: np.sin([0.1,0.2,0.3])
 Out[ ]: array([0.09983342, 0.19866933, 0.29552021])
 </pre>
 </div>
-
-<p>C言語と同様の書式指定の出力もできます。</p>
-
-<pre>
-In [ ]: print("円周率はだいたい %.4f です。" % math.pi)
-円周率はだいたい 3.1416 です。
-</pre>
 
 <p>関数の括弧を閉じないとどうなるでしょうか。</p>
 
@@ -277,6 +270,23 @@ def hitsuji(n):
 
 <p>これで <code>hitsuji(100)</code> と打てば，ひつじが100ひき数えられます。</p>
 
+<div class="note">
+<p>文字列に値を割り込ませる方法として <code>"ひつじが {} ひき".format(i)</code> あるいは <code>f"ひつじが {i} ひき"</code> という書き方もできます。中括弧の中に例えば <code>:2d</code> のような<a href="https://docs.python.org/3/library/string.html#formatstrings">書式指定</a>をすれば2桁右詰めになります：</p>
+<pre>
+for i in range(1,11):
+    print("ひつじが {:2d} ひき".format(i))
+
+for i in range(1,11):
+    print(f"ひつじが {i:2d} ひき")
+</pre>
+<p><code>"ひつじが %2d ひき" % i</code> のような古い<a href="https://docs.python.org/3/library/stdtypes.html#old-string-formatting">C言語スタイルの書式指定</a>もできます。次の例はいずれも出力が <code>'円周率はだいたい 3.1416 です。'</code> になります：</p>
+<pre>
+In [ ]: "円周率はだいたい {:.4f} です。".format(math.pi)
+In [ ]: f"円周率はだいたい {math.pi:.4f} です。"
+In [ ]: "円周率はだいたい %.4f です。" % math.pi
+</pre>
+</div>
+
 <h2>フィボナッチ数列</h2>
 
 <p>Python では複数の代入を並行して行うことができます。このことを使えば，フィボナッチ数列の生成が次のように少しだけ簡単に書けます：</p>
@@ -337,7 +347,7 @@ collatz(n)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-30 15:23:04</time>
+Last modified: <time>2019-05-30 22:18:53</time>
 <!-- hhmts end -->
 </p>
 </body>
