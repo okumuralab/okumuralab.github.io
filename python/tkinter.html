@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Tkinterによる簡単なGUI</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Tkinterによる簡単なGUI</h1>
+
+<p>Python には Tkinter という簡単な GUI 作成用ライブラリ（Tcl/Tk インターフェース）が標準で備わっています：</p>
+
+<pre>
+import tkinter as tk
+</pre>
+
+<p>まずは対話型の環境で窓を一つ作ってみましょう：</p>
+
+<pre>
+root = tk.Tk()                # 窓を作る
+root.title("Tkinterの練習")   # 窓のタイトルを設定
+root.geometry("640x480")      # 窓の大きさを設定
+</pre>
+
+<p>この中にラベル（テキスト）を書き込んでみます：</p>
+
+<pre>
+label = tk.Label(root, text="テスト")  # ラベルを作成
+label.pack()                           # 実際に表示する
+</pre>
+
+<p>ボタンも作ってみます：</p>
+
+<pre>
+button = tk.Button()                        # ボタンを作成
+button["text"] = "クリックしてね！"         # ボタンにラベルを設定
+button["command"] = lambda: print("ほげ！") # ボタンの動作を設定
+button.pack()                               # 実際に表示する
+</pre>
+
+<p>ここで <code>lambda:</code> は無名関数を作るための命令です。もっと複雑なコマンドをボタンに設定するには，関数を定義し，その関数名を <code>button["command"]</code> に代入します。</p>
+
+<p>対話型環境では，このように部品を一つずつ追加して確認できますが，一つのスクリプトにすると，すぐに終了してしまいます。そこで，プログラムの最後に</p>
+
+<pre>
+root.mainloop()  # ループ（対話型環境では不要）
+</pre>
+
+<p>と書いて，無限ループにします。終了するには，窓の「終了」ボタンをクリックします。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-30 14:11:24</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
