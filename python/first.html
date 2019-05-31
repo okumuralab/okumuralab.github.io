@@ -260,6 +260,8 @@ for i in range(1,11):
 ひつじが 10 ひき
 </pre>
 
+<p>もしもプログラムを間違えて止まらなくなったら，Ctrl + C を入力します（Emacs 環境なら Ctrl + C を2回入力します）。</p>
+
 <p>眠れない夜がまだまだ続くときは，ひつじを数える関数を作りましょう。</p>
 
 <pre>
@@ -296,6 +298,40 @@ a, b = 1, 1
 while a < 100:
     print(a)
     a, b = b, a+b
+</pre>
+
+<p>リストの形で返す関数にしてみます：</p>
+
+<pre>
+def fib(n):
+    """n未満のフィボナッチ数列を返す"""
+    r = []          # 空のリスト
+    a, b = 1, 1
+    while a < n:
+        r.append(a) # リストにアペンド
+        a, b = b, a+b
+    return r
+</pre>
+
+<p>先頭に <code>"""..."""</code> の形で与えたものは関数の説明（docstring）です。説明はヘルプに表示されます：</p>
+
+<pre>
+In [ ]: ?fib
+Signature: fib(n)
+Docstring: n未満のフィボナッチ数列を返す
+File:      ...
+Type:      function
+</pre>
+
+<div class="note">
+<p><code>"""..."""</code> または <code>'''...'''</code> は途中で改行が入ることを許す文字列です。説明（docstring）は途中で改行が入ることが多いので，このようにします。</p>
+</div>
+
+<p>実行してみます：</p>
+
+<pre>
+In [ ]: fib(100)
+Out[ ]: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
 </pre>
 
 <h2>Collatzの問題</h2>
@@ -347,7 +383,7 @@ collatz(n)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-30 22:18:53</time>
+Last modified: <time>2019-05-31 21:18:58</time>
 <!-- hhmts end -->
 </p>
 </body>
