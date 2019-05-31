@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>エラトステネスのふるい</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>エラトステネスのふるい</h1>
+
+<p>素数を列挙するエラトステネスの篩（ふるい）をプログラムしてみましょう。</p>
+
+<h2>集合を使う</h2>
+
+<p>例えば1000未満の素数は集合ですので，Python の集合を使ってみます。Python の集合は，例えば</p>
+
+<pre>
+s = {2, 3, 5, 7}
+</pre>
+
+<p>のように打ち込むと作れます。集合に要素を加えたり削除したりするには</p>
+
+<pre>
+s.add(9)    # 追加
+s.remove(2) # 削除
+</pre>
+
+<p>のようにします。</p>
+
+<p>まずは 2 以上 <code>n</code> 未満の整数の集合 <code>prime</code> を作りましょう：</p>
+
+<pre>
+n = 1000
+prime = {i for i in range(2,n)}
+</pre>
+
+<p>2 以上 <code>n</code> 未満の整数 <code>i</code> について，もし <code>i</code> が <code>prime</code> に入っているなら，その倍数を <code>prime</code> から削除します：</p>
+
+<pre>
+for i in range(2,n):
+    if i in prime:
+        for j in range(i*2,n,i):
+            if j in prime:
+                prime.remove(j)
+</pre>
+
+<p>対話型環境なら，中身を調べてみましょう：</p>
+
+<pre>
+In [ ]: max(prime)
+Out[ ]: 997
+
+In [ ]: min(prime)
+Out[ ]: 2
+
+In [ ]: len(prime)
+Out[ ]: 168
+
+In [ ]: 23 in prime
+Out[ ]: True
+
+In [ ]: 24 in prime
+Out[ ]: False
+</pre>
+
+<h2>リストを使う</h2>
+
+<p>リストは配列に相当するものです。例えば10未満の素数を列挙する場合，</p>
+
+<pre>
+prime = [2, 3, 5, 7]
+</pre>
+
+<p>のように集合と同じようにリストを使う方法と，</p>
+
+<pre>
+prime = [False, False, True, True, False, True, False, True, False, False]
+</pre>
+
+<p>のように真偽値の並びで <code>prime[i]</code> が <code>True</code> なら <code>i</code> は素数だとする方法があります。ここでは後者の方法を使います。</p>
+
+<p>まず <code>prime[0]</code> と <code>prime[1]</code> だけ <code>False</code> にして，残りは <code>True</code> にします：</p>
+
+<pre>
+n = 1000
+prime = [False] * 2 + [True] * (n-2)
+</pre>
+
+<p>残りは集合の場合と同じですが，除去する際に，含まれているかどうかを判定する必要がありません：</p>
+
+<pre>
+for i in range(2,n):
+    if prime[i]:
+        for j in range(i*2,n,i):
+            prime[j] = False
+</pre>
+
+<p>個数は次のようにして調べられます：</p>
+
+<pre>
+In [ ]: sum(prime)
+Out[ ]: 168
+</pre>
+
+<p>集合のようなリストに変換するには次のようにします：</p>
+
+<pre>
+s = []
+for i in range(2,n):
+    if prime[i]:
+        s.append(i)
+</pre>
+
+<p>これは次のようにも書けます：</p>
+
+<pre>
+s = [i for i in range(2,n) if prime[i]]
+</pre>
+
+<p>リストでなく集合を作るときにも同じようにできます：</p>
+
+<pre>
+s = {i for i in range(2,n) if prime[i]}
+</pre>
+
+<p>リストや集合のこのような <code>for</code> を使った表し方を内包表記（comprehension）と呼びます。</p>
+
+<h2>ndarray を使う</h2>
+
+<p>NumPy の ndarray を使えばもっとメモリ効率を良くできます。</p>
+
+<pre>
+import numpy as np
+
+prime = np.ones(1000, dtype="bool")  # [True] * 1000
+prime[0:2] = False                   # prime[0] = prime[1] = False
+</pre>
+
+<p>残りはリストの場合と同じです。</p>
+
+<p>このように <code>bool</code> 型にすれば，1要素1バイトで済みます。メモリ量を調べるには次のようにします：</p>
+
+<pre>
+In [ ]: import sys
+
+In [ ]: sys.getsizeof(prime)
+Out[ ]: 1096
+</pre>
+
+<p>もっとメモリを節約するには，2 だけ特別扱いにして奇数だけ考えるなどが考えられます。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-05-31 21:27:10</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
