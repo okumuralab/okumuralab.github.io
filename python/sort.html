@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>並べ替え（整列）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>並べ替え（整列）</h1>
+
+<p>Python には小さい順に並べ替える関数が二つあります。<code>sort()</code> と <code>sorted()</code> です。この違いを，例で体験してみましょう。</p>
+
+<pre>
+In [ ]: a = [3, 5, 2, 4, 1]   # 適当なリストを作る
+
+In [ ]: sorted(a)             # 並べ替えたリストを返す
+Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
+
+In [ ]: a                     # 元のリスト a は
+Out[ ]: [3, 5, 2, 4, 1]       # 並べ変わっていない
+
+In [ ]: a.sort()              # 並べ替えたリストで上書きする
+
+In [ ]: a                     # 元のリスト a は
+Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
+</pre>
+
+<p>並べ替えをする簡単な関数を作ってみましょう。いろいろなアルゴリズムがありますが，次のものは選択ソート（selection sort）というものです：</p>
+
+<pre>
+def selectsort(a):
+    n = len(a)
+    for i in range(n):
+        k = i
+        for j in range(i + 1, n):
+            if a[j] < a[k]:
+                k = j
+        a[i], a[k] = a[k], a[i]
+</pre>
+
+<p>最後の行は <code>a[i]</code> と <code>a[k]</code> の値を交換しています。Python ならこのように簡単に書けます。</p>
+
+<p>うまくいくか試してみましょう：</p>
+
+<pre>
+In [ ]: a = [3, 5, 2, 4, 1]   # 適当なリストを作る
+
+In [ ]: selectsort(a)         # うまくいくかな？
+
+In [ ]: a                     # 元のリスト a は
+Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
+</pre>
+
+<p>Python の <code>sort()</code> や <code>sorted()</code> は <a href="https://en.wikipedia.org/wiki/Timsort">Timsort</a> というアルゴリズムを使っています。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-06-03 17:56:56</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
