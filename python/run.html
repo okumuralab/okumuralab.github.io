@@ -29,7 +29,7 @@ python3 --version
 
 <h3>python コマンド（REPL）</h3>
 
-<p>ターミナルに</p>
+<p>ターミナル（Windows であれば PowerShell など）に</p>
 
 <pre>
 python3
@@ -56,16 +56,18 @@ for i in range(3):
 
 <h3>IPython</h3>
 
-<p>IPython なら，もう少し対話的に（interactive に）Python を使えます。ターミナルに</p>
+<p>IPython なら，もう少し対話的に（interactive に）Python を使えます。ターミナル（Windows であれば PowerShell など）に</p>
 
 <pre>
 ipython
 </pre>
 
-<p>と打ち込みます。もし古い Python 2 が出てくるようなら，<code>ipython3</code> と打ち込みます。</p>
+<p>と打ち込みます（もし古い Python 2 が出てくるようなら，<code>ipython3</code> と打ち込みます）。</p>
+
+<p>実際には，いくつかオプションを付けて起動することが多いと思います。例えば文字に色が付いてかえって見にくいなら <code>--colors='NoColor'</code>，matplotlib を使うなら <code>--matplotlib</code> などです。</p>
 
 <div class="note">
-<p>Emacs の <code>M-x shell</code> 内なら <code>ipython --simple-prompt</code> のようにオプションを付けて立ち上げます。</p>
+<p>Emacs の <code>M-x shell</code> 内で使うなら，おそらく <code>--simple-prompt</code> オプションが必要です。</p>
 </div>
 
 <p>ヘルプを見るには，例えば <code>?print</code> のように打ち込みます（このヘルプの終了は <code>q</code>）。</p>
@@ -145,7 +147,7 @@ $ python3 -c 'x=2;y=32;print(x**y)'
 
 <h3>Jupyter Notebook</h3>
 
-<p><a href="https://jupyter.org">Jupyter Notebook</a> はブラウザ上で使える Mathematica Notebook のような環境です。Julia，Python，R などをサポートしています（この三つの言語名が Jupyter の名前の起源です）。</p>
+<p><a href="https://jupyter.org">Jupyter Notebook</a>（ジュピター・ノートブック）はブラウザ上で使える Mathematica Notebook のような環境です。もともと Julia，Python，R などをサポートするということで Jupyter という名前になったようですが，今は40以上の言語に対応しています。</p>
 
 <p>ターミナルに</p>
 
@@ -182,7 +184,7 @@ jupyter notebook
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-29 18:53:36</time>
+Last modified: <time>2019-06-03 10:11:34</time>
 <!-- hhmts end -->
 </p>
 </body>
