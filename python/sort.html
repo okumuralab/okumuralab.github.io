@@ -59,6 +59,45 @@ In [ ]: a                     # 元のリスト a は
 Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
 </pre>
 
+<p>もっと速いアルゴリズムとしてクイックソート（quicksort）が知られています。これは <code>quicksort(a, 0, len(a)-1)</code> として呼び出します：</p>
+
+<pre>
+def quicksort(a, first, last):
+    x = a[(first + last) // 2]
+    i = first
+    j = last
+    while True:
+        while a[i] < x:
+            i += 1
+        while x < a[j]:
+            j -= 1
+        if i >= j:
+            break
+        a[i], a[j] = a[j], a[i]
+        i += 1
+        j -= 1
+    if first < i - 1:
+        quicksort(a, first, i - 1)
+    if j + 1 < last:
+        quicksort(a, j + 1, last)
+</pre>
+
+<p>時間を比べてみましょう。IPython の <code>%timeit</code> は何度も実行して正確な時間を測りますが，いったん整列したリストを再び整列すると典型的な時間が測れませんので，1回だけ実行するようにオプションで指定します：</p>
+
+<pre>
+In [ ]: import random
+
+In [ ]: a = [random.random() for _ in range(10000)]
+
+In [ ]: %timeit -n1 -r1 selectsort(a)
+3.44 s ± 0 ns per loop (mean ± std. dev. of 1 run, 1 loop each)
+
+In [ ]: a = [random.random() for _ in range(10000)]
+
+In [ ]: %timeit -n1 -r1 quicksort(a, 0, len(a)-1)
+22.8 ms ± 0 ns per loop (mean ± std. dev. of 1 run, 1 loop each)
+</pre>
+
 <p>Python の <code>sort()</code> や <code>sorted()</code> は <a href="https://en.wikipedia.org/wiki/Timsort">Timsort</a> というアルゴリズムを使っています。</p>
 
 <hr>
@@ -67,7 +106,7 @@ Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-03 17:56:56</time>
+Last modified: <time>2019-06-03 21:23:15</time>
 <!-- hhmts end -->
 </p>
 </body>
