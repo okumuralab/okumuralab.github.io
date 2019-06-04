@@ -18,7 +18,7 @@
 
 <p>Rで描いた<a href="../stat/followers.html">グラフの例：Twitterのフォロワー数</a>のPython版である。</p>
 
-<p>上と同様にしてソースからデータをファイルにコピーする。</p>
+<p>上と同様にしてJavaScriptのソースからデータをファイルにコピーする。</p>
 
 <pre>
 var ar_data = [];
@@ -39,7 +39,7 @@ ar_lbl[5] = [...];
 ar_lbl[6] = [...];
 </pre>
 
-<p>ここでPythonなら <code>var ar_data = [];</code> を <code>ar_data = [None] * 9</code>，<code>var ar_lbl = [];</code> を <code>ar_lbl = [None] * 7</code> に書き換えればそのまま使える。</p>
+<p>ここでPythonなら <code>var ar_data = [];</code> を <code>ar_data = {}</code>，<code>var ar_lbl = [];</code> を <code>ar_lbl = {}</code> に書き換えればそのまま使える。各行末の <code>;</code> は不要であるが，あっても問題ないので，消す必要はない。</p>
 
 <pre>
 import pandas as pd
@@ -64,7 +64,7 @@ df1.plot(color="black", marker="o")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-14 12:13:45</time>
+Last modified: <time>2019-06-04 20:42:57</time>
 <!-- hhmts end -->
 </p>
 </body>
