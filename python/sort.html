@@ -59,10 +59,10 @@ In [ ]: a                     # 元のリスト a は
 Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
 </pre>
 
-<p>もっと速いアルゴリズムとしてクイックソート（quicksort）が知られています。これは <code>quicksort(a, 0, len(a)-1)</code> として呼び出します：</p>
+<p>もっと速いアルゴリズムとしてクイックソート（quicksort）が知られています：</p>
 
 <pre>
-def quicksort(a, first, last):
+def quicksort(a, first=0, last=len(a)-1):
     x = a[(first + last) // 2]
     i = first
     j = last
@@ -94,7 +94,7 @@ In [ ]: %timeit -n1 -r1 selectsort(a)
 
 In [ ]: a = [random.random() for _ in range(10000)]
 
-In [ ]: %timeit -n1 -r1 quicksort(a, 0, len(a)-1)
+In [ ]: %timeit -n1 -r1 quicksort(a)
 22.8 ms ± 0 ns per loop (mean ± std. dev. of 1 run, 1 loop each)
 </pre>
 
@@ -106,7 +106,7 @@ In [ ]: %timeit -n1 -r1 quicksort(a, 0, len(a)-1)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-03 21:23:15</time>
+Last modified: <time>2019-06-04 08:30:01</time>
 <!-- hhmts end -->
 </p>
 </body>
