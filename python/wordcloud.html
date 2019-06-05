@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ワードクラウド</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ワードクラウド</h1>
+
+<p>ワードクラウド（word cloud）とは頻出語を頻度に比例する大きさで雲のように並べたものです。</p>
+
+<p>英語のワードクラウドは wordcloud ライブラリで簡単に描けます。あらかじめ <code>pip3 install wordcloud</code> などとしてインストールしておきます。テキストとしては何でもいいのですが，ここでは <code>WordCloud()</code> の説明文（docstring）を用いてみます：</p>
+
+<pre>
+from wordcloud import WordCloud
+
+text = WordCloud.__doc__
+wc = WordCloud(width=480, height=320)
+wc.generate(text)
+wc.to_file('wc1.png')
+</pre>
+
+<figure><img src="img/wc1.png" alt="WordCloudの説明のワードクラウド"></figure>
+
+<p>日本語はこのように簡単にはいきません。まずは単語に分解しなければなりません（形態素解析）。そのためのツールとして，<a href="https://taku910.github.io/mecab/">MeCab</a>（めかぶ，和布蕪）が有名ですが，インストールが難しい場合は，Python だけで実装した <a href="https://mocobeta.github.io/janome/">Janome</a>（じゃのめ，蛇の目）が便利です。ここではとりあえず MeCab を使って説明します。</p>
+
+<p>まず MeCab と辞書をインストールします。Mac では Homebrew でインストールするのが簡単です。また，MeCab を Python から使うためのライブラリもインストールします。</p>
+
+<pre>
+brew install mecab mecab-ipadic
+pip3 install mecab-python3
+</pre>
+
+<p>動作確認してみましょう：</p>
+
+<pre>
+In [ ]: import MeCab
+
+In [ ]: mecab = MeCab.Tagger()
+
+In [ ]: print(mecab.parse("すもももももももものうち"))
+すもも  名詞,一般,*,*,*,*,すもも,スモモ,スモモ
+も      助詞,係助詞,*,*,*,*,も,モ,モ
+もも    名詞,一般,*,*,*,*,もも,モモ,モモ
+も      助詞,係助詞,*,*,*,*,も,モ,モ
+もも    名詞,一般,*,*,*,*,もも,モモ,モモ
+の      助詞,連体化,*,*,*,*,の,ノ,ノ
+うち    名詞,非自立,副詞可能,*,*,*,うち,ウチ,ウチ
+EOS
+
+
+In [ ]: chasen = MeCab.Tagger("-Ochasen")
+
+In [ ]: print(chasen.parse("すもももももももものうち"))
+すもも  スモモ  すもも  名詞-一般               
+も      モ      も      助詞-係助詞             
+もも    モモ    もも    名詞-一般               
+も      モ      も      助詞-係助詞             
+もも    モモ    もも    名詞-一般               
+の      ノ      の      助詞-連体化             
+うち    ウチ    うち    名詞-非自立-副詞可能            
+EOS
+
+
+In [ ]: wakati = MeCab.Tagger("-Owakati")
+
+In [ ]: print(wakati.parse("すもももももももものうち"))
+すもも も もも も もも の うち 
+</pre>
+
+<p>とりあえず最後の例のようにして分かち書きにすればワードクラウドが作れそうです。</p>
+
+<p>サンプルとして，寺田寅彦の<a href="https://www.aozora.gr.jp/cards/000042/files/43260_17028.html">流言蜚語</a>を題材としてみます。青空文庫のサイトからコピペしてください。改行を含む長い文章ですので，全体を <code>"""..."""</code> で囲みます。</p>
+
+<pre>
+text = """
+長い管の中へ、水素と酸素とを適当な割合に混合したものを入れておく、
+（中略）
+甚だしい恥辱を曝さらす事なくて済みはしないかと思われるのである。
+"""
+words = wakati.parse(text)
+wc = WordCloud(width=480, height=320, background_color="white",
+               font_path="/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc")
+wc.generate(words)
+wc.to_file('wc2.png')
+</pre>
+
+<figure><img src="img/wc2.png" alt="流言蜚語ワードクラウド"></figure>
+
+<p>「その」「ある」などのあまり意味のないことばが大きく出てしまいました。これらの単語は「ストップワード」として外してしまいましょう。そのためには <code>WordCloud()</code> に例えば <code>stopwords={"その","ある"}</code> のようなオプション引数を与えます。</p>
+
+<p>もっと楽に済ませるには，せっかく MeCab で品詞がわかるのですから，名詞だけにしてしまうという手もあります：</p>
+
+<pre>
+nodes = mecab.parseToNode(text)
+s = []
+while nodes:
+    if nodes.feature[:2] == '名詞':
+        s.append(nodes.surface)
+    nodes = nodes.next
+wc = WordCloud(width=480, height=320, background_color="white",
+               stopwords={"もの","これ","ため","それ","ところ","よう"},
+               font_path="/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc")
+wc.generate(" ".join(s))
+wc.to_file('wc3.png')
+</pre>
+
+<figure><img src="img/wc3.png" alt="流言蜚語ワードクラウド"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-06-05 20:01:03</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
