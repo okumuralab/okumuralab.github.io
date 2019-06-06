@@ -27,11 +27,16 @@ Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
 In [ ]: a                     # 元のリスト a は
 Out[ ]: [3, 5, 2, 4, 1]       # 並べ変わっていない
 
-In [ ]: a.sort()              # 並べ替えたリストで上書きする
+In [ ]: a.sort()              # リストをその場で並べ替える
 
-In [ ]: a                     # 元のリスト a は
+In [ ]: a                     # 元のリスト a が
 Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
+
+In [ ]: sorted("I have an apple".lower().split())
+Out[ ]: ['an', 'apple', 'have', 'i']  # 文字列は辞書順に
 </pre>
+
+<p>デフォルトでは昇順になります。降順にするには <code>reverse=True</code> というオプションを与えます。</p>
 
 <p>並べ替えをする簡単な関数を作ってみましょう。いろいろなアルゴリズムがありますが，次のものは選択ソート（selection sort）というものです：</p>
 
@@ -108,7 +113,7 @@ In [ ]: %timeit -n1 -r1 quicksort(a)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-04 20:08:44</time>
+Last modified: <time>2019-06-06 08:52:26</time>
 <!-- hhmts end -->
 </p>
 </body>
