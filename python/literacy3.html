@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>『改訂第3版 基礎からわかる情報リテラシー』第13章のPython版</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>『改訂第3版 基礎からわかる情報リテラシー』第13章のPython版</h1>
+
+<p><a href="https://okumuralab.org/literacy3/">『改訂第3版 基礎からわかる情報リテラシー』</a>第13章「Rによるデータ処理」をPythonに焼き直したものです。</p>
+
+<p>Pythonのインストール・実行については<a href="./">お品書き</a>をご覧ください。</p>
+
+<h3>グラフの描画</h3>
+
+<p>ライブラリ <code>matplotlib</code>，<code>numpy</code> を使っています。</p>
+
+<p>2次関数 y = x<sup>2</sup> のグラフを -3 ≦ x ≦ 3 の範囲で描く：</p>
+
+<pre>
+# Jupyter Notebook では「%matplotlib inline」という行を追加してください
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(-3, 3, 101)
+plt.plot(x, x ** 2)
+</pre>
+
+<p>プロットが現れない場合は <code>plot.show()</code> を追加してください。</p>
+
+<p>縦横比を 1 にするには <code>plt.axis('scaled')</code> または <code>plt.axis('equal')</code> を追加してください。</p>
+
+<p>2次関数 y = x<sup>3</sup> - x のグラフをx軸（y = 0 の線）とともに -1.2 ≦ x ≦ 1.2 の範囲で描く：</p>
+
+<pre>
+x = np.linspace(-1.2, 1.2, 101)
+plt.plot(x, x ** 3 - x)
+plt.plot([-1.2, 1.2], [0, 0])
+</pre>
+
+<h3>データファイルの読み方</h3>
+
+<p>ライブラリ <code>pandas</code>, <code>xlrd</code> を使っています。</p>
+
+<pre>
+import pandas as pd
+
+birthdeath = pd.read_excel("https://okumuralab.org/literacy3/birthdeath.xlsx")
+birthdeath.head()
+</pre>
+
+<h3>データのグラフ化</h3>
+
+<pre>
+plt.plot(birthdeath['年'], birthdeath['出生数'], 'o-')
+plt.plot(birthdeath['年'], birthdeath['死亡数'], 'o-')
+</pre>
+
+<h3>CSVファイルの読み込みと直線のあてはめ</h3>
+
+<p>気象庁のデータを読み込んでプロットします：</p>
+
+<pre>
+df = pd.read_csv('http://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv',
+                 encoding='sjis')
+plt.plot(df['年'], df['世界全体'], 'o-')
+</pre>
+
+<p>直線をあてはめます。ライブラリ <code>scikit-learn</code> を使っています。</p>
+
+<pre>
+from sklearn.linear_model import LinearRegression
+
+x = np.array(df['年']).reshape(-1,1)
+y = np.array(df['世界全体'])
+model = LinearRegression()
+model.fit(x, y)
+plt.plot(x, model.predict(x))
+</pre>
+
+<p>あてはめた直線の傾きは <code>model.coef_</code>，y切片は <code>model.intercept_</code> です。</p>
+
+<p>ここでは機械学習寄りのライブラリ <code>scikit-learn</code> を使いましたが，Rのような統計寄りのライブラリ <code>statsmodels</code> も使えます。</p>
+
+<h3>データの集計</h3>
+
+<p>学生のデータを読み込み，学部ごとに集計して棒グラフを描きます：</p>
+
+<pre>
+students = pd.read_csv("https://okumuralab.org/literacy3/students.csv")
+s = students.groupby('学部')['学生数'].sum()
+plt.bar(s.index, s)
+</pre>
+
+<p>学年ごとに集計するには，上の「学部」を「学年」に変えます。</p>
+
+<h3>多数のファイルの集計</h3>
+
+<p>ここでは openpyxl ライブラリを使います。まずディレクトリ名（ここではカレントディレクトリ <code>"."</code>）を与えてファイル名一覧を取得します：</p>
+
+<pre>
+from openpyxl import load_workbook
+import pathlib
+
+path = pathlib.Path(".")
+names = [p for p in path.iterdir() if p.match("*.xlsx")]
+</pre>
+
+<p>ファイル名を与えると，ワークブックを開いて，最初のワークシートのセル B2，B3，B4，C2，C3，C4 の中身をリストとして返す関数を定義します。</p>
+
+<pre>
+def f(n):
+    wb = load_workbook(n, read_only=True)
+    ws = wb.worksheets[0]
+    return [ws['B2:C4'][i][j].value for j in range(2) for i in range(3)]
+</pre>
+
+<p>これを次々に呼び出して，リストのリストを作り，CSV形式で保存します。</p>
+
+<pre>
+x = []
+for n in names:
+    x.append(f(n))
+pd.DataFrame(x).to_csv("x.csv", encoding="sjis")
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-06-06 15:59:30</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
