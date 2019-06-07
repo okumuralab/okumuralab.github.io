@@ -24,10 +24,9 @@
 
 <p>ライブラリ <code>matplotlib</code>，<code>numpy</code> を使っています。</p>
 
-<p>2次関数 y = x<sup>2</sup> のグラフを -3 ≦ x ≦ 3 の範囲で描く：</p>
+<p>2次関数 y = x<sup>2</sup> のグラフを -3 ≦ x ≦ 3 の範囲で描きます（Jupyter Notebook では <code>%matplotlib inline</code> という行を最初に追加してください）：</p>
 
 <pre>
-# Jupyter Notebook では「%matplotlib inline」という行を追加してください
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -35,11 +34,11 @@ x = np.linspace(-3, 3, 101)
 plt.plot(x, x ** 2)
 </pre>
 
-<p>プロットが現れない場合は <code>plot.show()</code> を追加してください。</p>
+<p>プロットが現れない場合は <code>plt.show()</code> という行を最後に追加してください。その場合は，プロット窓を閉じないと次に進めなくなります。これは以下でも同じです。</p>
 
-<p>縦横比を 1 にするには <code>plt.axis('scaled')</code> または <code>plt.axis('equal')</code> を追加してください。</p>
+<p>縦横比を 1 にするには <code>plt.plot(x, x ** 2)</code> の後に <code>plt.axis('scaled')</code> または <code>plt.axis('equal')</code> という行を追加してください。</p>
 
-<p>2次関数 y = x<sup>3</sup> - x のグラフをx軸（y = 0 の線）とともに -1.2 ≦ x ≦ 1.2 の範囲で描く：</p>
+<p>2次関数 y = x<sup>3</sup> - x のグラフをx軸（y = 0 の線）とともに -1.2 ≦ x ≦ 1.2 の範囲で描きます（IPython などの対話型環境では，まず <code>plt.clf()</code> と打ち込んで，前のグラフをクリアしてください）：</p>
 
 <pre>
 x = np.linspace(-1.2, 1.2, 101)
@@ -84,10 +83,14 @@ x = np.array(df['年']).reshape(-1,1)
 y = np.array(df['世界全体'])
 model = LinearRegression()
 model.fit(x, y)
-plt.plot(x, model.predict(x))
+print("傾き", model.coef_, "y切片", model.intercept_)
 </pre>
 
-<p>あてはめた直線の傾きは <code>model.coef_</code>，y切片は <code>model.intercept_</code> です。</p>
+<p>前のプロットに続けて次のように打ち込むと，予測直線を上書きします：</p>
+
+<pre>
+plt.plot(x, model.predict(x))
+</pre>
 
 <p>ここでは機械学習寄りのライブラリ <code>scikit-learn</code> を使いましたが，Rのような統計寄りのライブラリ <code>statsmodels</code> も使えます。</p>
 
@@ -124,12 +127,15 @@ def f(n):
     return [ws['B2:C4'][i][j].value for j in range(2) for i in range(3)]
 </pre>
 
-<p>これを次々に呼び出して，リストのリストを作り，CSV形式で保存します。</p>
+<p>これを次々に呼び出して，リストのリストを作ります。</p>
 
 <pre>
-x = []
-for n in names:
-    x.append(f(n))
+x = [f(n) for n in names]
+</pre>
+
+<p>CSV形式で保存します。</p>
+
+<pre>
 pd.DataFrame(x).to_csv("x.csv", encoding="sjis")
 </pre>
 
@@ -139,7 +145,7 @@ pd.DataFrame(x).to_csv("x.csv", encoding="sjis")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-06 15:59:30</time>
+Last modified: <time>2019-06-07 10:03:04</time>
 <!-- hhmts end -->
 </p>
 </body>
