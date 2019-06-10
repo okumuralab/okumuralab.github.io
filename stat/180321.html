@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>福島県で胃がんが急増？</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
@@ -24,6 +23,8 @@
 <p><em>[2018-09-19]</em> <a href="https://ganjoho.jp/reg_stat/statistics/brochure/monitoring.html">全国がん罹患モニタリング集計</a>に2018-09-15付で新しいデータが入ったので追加した。</p>
 
 <p><em>[2018-12-28]</em> <a href="https://ganjoho.jp/reg_stat/statistics/dl/index.html">がんに関する統計データのダウンロード</a>に2018-11-19付で新しいデータが入ったので追加した。</p>
+
+<p><em>[2019-06-10]</em> <a href="https://ganjoho.jp/reg_stat/statistics/brochure/monitoring.html">全国がん罹患モニタリング集計</a>に新しいデータが入ったので追加した。</p>
 
 <hr>
 
@@ -66,6 +67,7 @@ for x in mcij*.pdf; do pdftotext -raw $x; done
 <a href="data/mcij2012_C16.txt">mcij2012_C16.txt</a>,
 <a href="data/mcij2013_C16.txt">mcij2013_C16.txt</a>
 <a href="data/mcij2014_C16.txt">mcij2014_C16.txt</a>
+<a href="data/mcij2015_C16.txt">mcij2015_C16.txt</a>
 として置いておくので，間違いがないかPDFと比較していただければ助かる。これらをまずRで読み込む：</p>
 
 <pre>
@@ -79,6 +81,7 @@ m11 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2011_C16.tx
 m12 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2012_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
 m13 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2013_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
 m14 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2014_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m15 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2015_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
 </pre>
 
 <p>これらは次の項目から成る：</p>
@@ -112,8 +115,9 @@ x = merge(x, m11[,c(1,7)], by="V1", all=TRUE)
 x = merge(x, m12[,c(1,7)], by="V1", all=TRUE)
 x = merge(x, m13[,c(1,7)], by="V1", all=TRUE)
 x = merge(x, m14[,c(1,7)], by="V1", all=TRUE)
-matplot(2005:2014, t(x[,-1]), type="o", pch=16, lty=1, col="#66ccff", xlab="", ylab="", main="男 胃 年齢調整罹患率/10万")
-points(2005:2014, t(x[x[,1]=='福島県',-1]), type="o", pch=16, col="#ff2800")
+x = merge(x, m15[,c(1,7)], by="V1", all=TRUE)
+matplot(2005:2015, t(x[,-1]), type="o", pch=16, lty=1, col="#66ccff", xlab="", ylab="", main="男 胃 年齢調整罹患率/10万")
+points(2005:2015, t(x[x[,1]=='福島県',-1]), type="o", pch=16, col="#ff2800")
 
 y = merge(m05[,c(1,13)], m06[,c(1,13)], by="V1", all=TRUE)
 y = merge(y, m07[,c(1,13)], by="V1", all=TRUE)
@@ -124,15 +128,18 @@ y = merge(y, m11[,c(1,13)], by="V1", all=TRUE)
 y = merge(y, m12[,c(1,13)], by="V1", all=TRUE)
 y = merge(y, m13[,c(1,13)], by="V1", all=TRUE)
 y = merge(y, m14[,c(1,13)], by="V1", all=TRUE)
-matplot(2005:2014, t(y[,-1]), type="o", pch=16, lty=1, col="#66ccff", xlab="", ylab="", main="女 胃 年齢調整罹患率/10万")
-points(2005:2014, t(y[y[,1]=='福島県',-1]), type="o", pch=16, col="#ff2800")
+y = merge(y, m15[,c(1,13)], by="V1", all=TRUE)
+matplot(2005:2015, t(y[,-1]), type="o", pch=16, lty=1, col="#66ccff", xlab="", ylab="", main="女 胃 年齢調整罹患率/10万")
+points(2005:2015, t(y[y[,1]=='福島県',-1]), type="o", pch=16, col="#ff2800")
 </pre>
 
-<figure><img src="img/180919a.png" alt="男 胃 年齢調整罹患率/10万（赤は福島県）"></figure>
+<figure><img src="img/190610c.png" alt="男 胃 年齢調整罹患率/10万（赤は福島県）"></figure>
 
-<figure><img src="img/180919b.png" alt="女 胃 年齢調整罹患率/10万（赤は福島県）"></figure>
+<figure><img src="img/190610d.png" alt="女 胃 年齢調整罹患率/10万（赤は福島県）"></figure>
 
 <p>地域ごとの罹患率データは，精度がまちまちであり，地域間の比較に使うのは本来あまり望ましくない。全体の傾向を見るために使っていただきたい。</p>
+
+<p><a href="https://ganjoho.jp/data/reg_stat/statistics/brochure/mcij2015_report.pdf">報告書</a> p.118 によれば，「福島県では、平成 22 年 3 月から地域がん登録事業を開始した。平成 22 年 12 月に標準データベースシステムを新規導入し、2008 年症例より集計を行っている。医療機関からの届出枚数は、年々増加し年間 25,000 枚を超えたが、その多くが拠点病院と DPC 病院からの届出となっている。地域的な偏りもあり、より高い登録精度を得るため、平成 25 年から出張採録を実施している。」とのことである。</p>
 
 <hr>
 
@@ -141,7 +148,7 @@ points(2005:2014, t(y[y[,1]=='福島県',-1]), type="o", pch=16, col="#ff2800")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-12-28 17:51:13</time>
+Last modified: <time>2019-06-10 10:32:46</time>
 <!-- hhmts end -->
 </p>
 </footer>
