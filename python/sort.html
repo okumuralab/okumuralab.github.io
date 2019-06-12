@@ -89,6 +89,10 @@ def quicksort(a, first=0, last=None):
         quicksort(a, j + 1, last)
 </pre>
 
+<div class="note">
+<p><code>def quicksort(a, first=0, last=len(a)-1):</code> としたいかもしれませんが，Python の引数のデフォルトの値は関数定義を評価したときに決まってしまうので，期待した動作になりません。ここでは，何もないことを表すオブジェクト <code>None</code> をデフォルトの値として，関数の実行時にもし <code>None</code> であれば <code>len(a) - 1</code> に置き換えています。<code>if last is None:</code> は <code>if last == None:</code> と似ていますが <code>==</code> は値の比較，<code>is</code> はオブジェクトのアドレスの比較です。後者の方が速く，しかも <code>==</code> のようにオーバーライド（上書き）できないので確実な比較ができます。</p>
+</div>
+
 <p>時間を比べてみましょう。IPython の <code>%timeit</code> は何度も実行して正確な時間を測りますが，いったん整列したリストを再び整列すると典型的な時間が測れませんので，1回だけ実行するようにオプションで指定します：</p>
 
 <pre>
@@ -113,7 +117,7 @@ In [ ]: %timeit -n1 -r1 quicksort(a)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-06 08:52:26</time>
+Last modified: <time>2019-06-12 20:13:01</time>
 <!-- hhmts end -->
 </p>
 </body>
