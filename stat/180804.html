@@ -103,7 +103,7 @@ all = data.frame(番号=1:47,
 write.csv(all, "atest2018.csv", quote=FALSE, row.names=FALSE)
 </pre>
 
-<p>このようにして作った <a href="data/atest2018.csv">atest2018.csv</a> を置いておく（文字コードはExcelでも読めるようにBOM付きUTF-8とした）。</p>
+<p>このようにして作った <a href="data/atest2018.csv">atest2018.csv</a> を置いておく。文字コードはExcelで文字化けしにくいようにBOM付きUTF-8とした。MacのRなら <code>read.csv()</code> でそのまま読み込めるが，WindowsのRならオプション <code>fileEncoding="UTF-8-BOM"</code> が必要である（<code>fileEncoding="UTF-8"</code> だけではうまくいかないようだ）。</p>
 
 <p>次の日本地図は色が濃いほど成績が良い。</p>
 
@@ -116,7 +116,7 @@ write.csv(all, "atest2018.csv", quote=FALSE, row.names=FALSE)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-08-04 20:14:02</time>
+Last modified: <time>2019-06-13 11:59:39</time>
 <!-- hhmts end -->
 </p>
 </footer>

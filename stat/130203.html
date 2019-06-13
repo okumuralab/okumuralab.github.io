@@ -139,7 +139,11 @@
 </div>
 
 <div class="note">
-<p>BOMについて追記： R 3.0.0から <code>read.csv("...", fileEncoding="UTF-8-BOM")</code> というエンコード指定ができるようになった。ただし <code>"UTF-8"</code> だけでも問題なく読めるようである。書き出す際には <code>"UTF-8-BOM"</code> 指定はできないので，<code>readr::write_excel_csv()</code> を使うのが便利。</p>
+<p>BOMについて追記： R 3.0.0から <code>read.csv("...", fileEncoding="UTF-8-BOM")</code> というエンコード指定ができるようになった。<del>ただし <code>"UTF-8"</code> だけでも問題なく読めるようである。</del>MacのRはBOM付きでもデフォルト（<code>"UTF-8"</code>）で読めるが，WindowsのRは<code>"UTF-8-BOM")</code>を指定しないとBOMが正しく扱われないようである。書き出す際には <code>"UTF-8-BOM"</code> 指定はできないので，<code>readr::write_excel_csv()</code> を使うのが便利。</p>
+</div>
+
+<div class="note">
+<p>Pythonのpandasでの<a href="../python/read.html">データの読み書き</a>は，MacでもWindowsでもデフォルトUTF-8で，読む際にBOMは無視され，書く際には <code>encoding="utf_8_sig", line_terminator="\r\n"</code> のようにBOM付きやCRLFを指定できる。</p>
 </div>
 
 <p>このように不要部分を削ったCSVファイルは，それだけでは何のデータかわからないので，説明ページを別途用意しておく。あるいは，CSVの決まりごとには定められていないが，行頭に「#」などの目印を付けて注釈を書いておくこともしばしば行われる。Rの <code>read.csv()</code> 関数で読み込む場合はオプション <code>comment.char="#"</code> を付けると「#」で始まる行を無視する。</p>
@@ -325,7 +329,7 @@ DateTime,uGy/h
 <p><a href="../" rel="author">奥村 晴彦</a> (<a href="http://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-17 21:05:25</time>
+Last modified: <time>2019-06-13 12:25:59</time>
 <!-- hhmts end -->
 </p>
 </footer>
