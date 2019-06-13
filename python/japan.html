@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>日本地図</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>日本地図</h1>
+
+<p><a href="https://qiita.com/SaitoTsutomu/items/6d17889ba47357e44131">県別データの可視化</a>で紹介されている japanmap ライブラリを使って日本地図を描く。</p>
+
+<p>まずインストール：</p>
+
+<pre>
+pip3 install japanmap
+pip3 install --upgrade opencv-python pillow  # 必要に応じて
+</pre>
+
+<p>都道府県名：</p>
+
+<pre>
+In [ ]: jp.pref_names
+Out[ ]: ['_', '北海道', '青森県', ……, '沖縄県']
+</pre>
+
+<p>PNG画像の白地図：</p>
+
+<pre>
+import japanmap as jp
+import matplotlib.pyplot as plt
+
+plt.imshow(jp.picture())
+</pre>
+
+<p>例として，<a href="../stat/190117.html">がんの分布</a>で紹介したデータを読み込んで地図に色を塗る：</p>
+
+<pre>
+import pandas as pd
+
+data = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/gansokuhou2016.csv")
+x = data['年齢調整罹患率日本総数'][1:48]
+x = (x - min(x)) / (max(x) - min(x))
+cmap = plt.get_cmap('bwr')  # or 'coolwarm' or 'cividis_r' etc...
+
+# picture() がnumpy.uint8型を受け付けないみたいなのでintに変換
+def tint(t):
+    return tuple(int(_) for _ in t)
+
+d = {i: tint(cmap(x[i], bytes=True)[:3]) for i in range(1,48)}
+plt.imshow(jp.picture(d))
+
+# 不要なティックやラベルを削除する
+plt.tick_params(bottom=False, top=False, left=False, right=False,
+                labelbottom=False, labeltop=False, labelleft=False, labelright=False)
+
+plt.savefig('190613a.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190613a.png" alt="がんの分布"></figure>
+
+<p>カラーマップについては matplotlib の <a href="https://matplotlib.org/3.1.0/gallery/color/colormap_reference.html">Colormap reference</a> 参照。</p>
+
+<!-- register_cmap についても -->
+
+<p>SVG の図を出力することもできる：</p>
+
+<pre>
+cmap = plt.get_cmap('coolwarm')
+cols = ['#%02X%02X%02X' % (cmap(x[i], bytes=True)[:3]) for i in range(1,48)]
+s = jp.pref_map(range(1,48), # qpqo=jp.get_data(move_okinawa=True),
+                cols=cols, tostr=True)
+
+# 独立した図として認識させるために頭書きを加える：
+s = s.replace('&lt;svg ',
+              '&lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="500" height="500" ')
+
+# 境界線を黒で描くには：
+# s = s.replace('&lt;path ', '&lt;path stroke="black" stroke-width="0.001" ')
+
+with open("190613b.svg", "w") as f:
+    f.write(s)
+</pre>
+
+<figure><img src="img/190613b.svg" alt="がんの分布"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-06-13 15:10:20</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
