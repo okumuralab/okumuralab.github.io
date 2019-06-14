@@ -20,7 +20,7 @@
 
 <h3>Python.org からのインストール</h3>
 
-<p><a href="https://www.python.org/download/">Download Python</a> から，Windows 用または Mac 用の最新のインストーラをダウンロードし，インストールします。Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。</p>
+<p><a href="https://www.python.org/download/">Download Python</a> から，Windows 用または Mac 用の最新のインストーラをダウンロードし，インストールします。Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）が，<a href="https://docs.python.org/3/using/windows.html#the-microsoft-store-package">公式ドキュメント</a>によれば “currently considered unstable” だそうです。</p>
 
 <p>インストールすると，Mac では <code>~/.bash_profile</code> にパスが付け加えられます。</p>
 
@@ -58,7 +58,7 @@ pip3 install ipython numpy scipy matplotlib pandas jupyter
 
 <h3>Homebrew によるインストール（Mac）</h3>
 
-<p><a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っている Mac ユーザは，<code>brew install python</code> で簡単に入ります。入るものは Python.org からインストールするものと同等のはずです（公式なビルドではありませんので微妙な違いがあるようです）。</p>
+<p>巨大な Xcode はたいていの場合に不要ですが，ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は，Mac を使っている開発者にとって必需品です。さらに，<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合，ターミナルに <code>brew install python</code> と打ち込めば，簡単に最新の Python が入ります。入るものは Python.org からインストールするものと同等のはずです（リンクされているライブラリに微妙な違いがあるようです）。</p>
 
 <p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンド（シンボリックリンク）が入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
@@ -166,9 +166,9 @@ make: *** [install] エラー 1
 
 <p>実行ファイル <code>python3</code>，<code>pip3</code> などが（デフォルトでは）<code>/usr/local/bin</code> に入りますので，そこにパスを通しておきます。Linux では <code>python</code> コマンドで Python 2 が動くことが想定されていることがあるので，<code>python3</code> という名前はそのままにしておくほうがよさそうです。</p>
 
-<h3>Google Collab を使う</h3>
+<h3>Google Colab を使う</h3>
 
-<p>インストールが面倒なら，<a href="https://colab.research.google.com/">Google Collaboratory</a> にアクセスし，「PYTHON 3 の新しいノートブック」をクリックします。Jupyter Notebook が開き，Python プログラムの入力待ちになります。</p>
+<p>インストールが面倒なら，<a href="https://colab.research.google.com/">Google Colaboratory</a> にアクセスし，「PYTHON 3 の新しいノートブック」をクリックします。Jupyter Notebook が開き，Python プログラムの入力待ちになります。</p>
 
 <pre>
 print("Hello, world!")
@@ -176,7 +176,7 @@ print("Hello, world!")
 
 <p>と打ち込んで Shift + Enter してみましょう。</p>
 
-<h3>Google Collab のようなサーバを立ち上げる</h3>
+<h3>Google Colab のようなサーバを立ち上げる</h3>
 
 <p>サーバ側に Python をインストールし，jupyter 等を入れておきます。サーバ側で <code>jupyter notebook --generate-config</code> を実行し，生成された <code>~/.jupyter/jupyter_notebook_config.py</code> を編集してリモートからの接続を許可します。</p>
 
@@ -215,7 +215,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-04 09:42:50</time>
+Last modified: <time>2019-06-14 10:31:07</time>
 <!-- hhmts end -->
 </p>
 </footer>
