@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>MNIST</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>MNIST</h1>
+
+<p><a href="http://yann.lecun.com/exdb/mnist/">MNIST</a>（エムニスト）は28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
+
+<p>ここでは Tensorflow に含まれるものを使う：</p>
+
+<pre>
+import tensorflow as tf
+
+mnist = tf.keras.datasets.mnist
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+</pre>
+
+<p>これを最初に実行する際には，ネットからデータをダウンロードする。次回からはローカルにキャッシュされたデータ（<code>~/.keras/datasets/mnist.npz</code>，11Mバイトほど）を使う。拡張子 <code>npz</code> のファイルは NumPy の ndarray を収めたバイナリファイル <code>変数名.npy</code> を束ねたZIPアーカイブである。詳しくは <code>np.savez()</code>，<code>np.load()</code> のヘルプ参照。</p>
+
+<p>トレーニング用が6万画像，テスト用が1万画像ある：</p>
+
+<pre>
+In [ ]: x_train.shape
+Out[ ]: (60000, 28, 28)
+
+In [ ]: y_train.shape
+Out[ ]: (60000,)
+
+In [ ]: x_test.shape
+Out[ ]: (10000, 28, 28)
+
+In [ ]: y_test.shape
+Out[ ]: (10000,)
+</pre>
+
+<p><code>x_train</code> に入っている画像をいくつか表示させてみよう：</p>
+
+<pre>
+plt.set_cmap("gray_r")  # 反転したグレースケール
+fig = plt.figure()
+for k in range(24):
+    ax = fig.add_subplot(3, 8, k+1)
+    ax.matshow(x_train[k])
+    ax.axis("image")
+    ax.tick_params(bottom=False, top=False, left=False, right=False,
+                   labelbottom=False, labeltop=False, labelleft=False, labelright=False)
+    ax.set_title(y_train[k])
+fig.savefig("mnistfig.png", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/mnistfig.png" alt="MNIST"></figure>
+
+<p>2次元（28×28）を1次元（784）に展開して，主成分分析（PCA）を行ってみる：</p>
+
+<pre>
+x = x_train.reshape(60000, 28*28)
+
+from sklearn.decomposition import PCA
+
+y = PCA(n_components=2).fit_transform(x)
+for i in range(10):
+    plt.scatter(y[y_train == i,0], y[y_train == i,1], marker=f'${i}$', alpha=0.5)
+plt.axis('equal')
+plt.legend(range(10))
+</pre>
+
+<figure><img src="img/mnist-pca.png" alt="MNIST PCA"></figure>
+
+<!-- 次のようにもできるが非常に遅い：
+<pre>
+plt.figure()
+plt.xlim(-1000,2500)
+plt.ylim(-1500,1500)
+plt.axis('equal')
+for i in range(60000):
+    plt.text(y[i,0], y[i,1], str(y_train[i]))
+</pre>
+-->
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-06-15 15:00:21</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

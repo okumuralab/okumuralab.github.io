@@ -83,7 +83,9 @@ for i in range(3):
     print("大事なので3回言います")
 </pre>
 
-<p>は，ファイルに納めておくことができます。ファイル名は <code>test.py</code> のように拡張子を <code>py</code> にします。保存の際の文字コードは UTF-8 にします。実行は</p>
+<p>は，テキストファイルとして保存してから実行することができます。テキストファイルとして保存した実行可能なプログラムを「スクリプト」と呼びます。テキストファイルですから，Windows の「メモ帳」や Mac の「テキストエディット」などの標準テキストエディタで作成できますが，本格的にプログラミングをするなら，<a href="https://atom.io">Atom</a> や <a href="https://code.visualstudio.com">Visual Studio Code</a> や Emacs や Vim のようなプログラミング専用テキストエディタが便利です。</p>
+
+<p>Python スクリプトのファイル名は <code>test.py</code> のように拡張子を <code>py</code> にします。保存の際の文字コードは UTF-8 にします。実行するには，ターミナル（Windows ならコマンドプロンプトか PowerShell）で（スクリプトを保存したディレクトリに移動してから）</p>
 
 <pre>
 python3 test.py
@@ -91,7 +93,7 @@ python3 test.py
 
 <p>と打ち込みます。文字化けする場合は，文字コードが UTF-8 になっているか確認してください。</p>
 
-<p>Linux や Mac などの UNIX 環境で実行可能なスクリプトにするには，先頭に <code>#! /usr/bin/env python3</code> を付けます：</p>
+<p>Linux や Mac などの UNIX 環境で実行可能なスクリプトにするには，先頭に <code>#! /usr/bin/env python3</code> を付けます（複数の <code>python3</code> があって具体的に指定したい場合は <code>#! /usr/local/bin/python3</code> などのようにします）：</p>
 
 <pre>
 #! /usr/bin/env python3
@@ -184,7 +186,7 @@ jupyter notebook
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-03 10:11:34</time>
+Last modified: <time>2019-06-15 11:23:53</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -36,29 +36,7 @@ os.environ['KMP_DUPLICATE_LIB_OK']='TRUE'
 <p>と最初に打ち込んでおけばよさそうである。</p>
 </div>
 
-<p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
-
-<p>まずはデータ（トレーニング用，テスト用）を取り出す：</p>
-
-<pre>
-import tensorflow as tf
-
-mnist = tf.keras.datasets.mnist
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
-</pre>
-
-<p>これを最初に実行する際には，ネットからデータをダウンロードする。次回からはローカルにキャッシュされたデータ（<code>~/.keras/datasets/mnist.npz</code>，11Mバイトほど）を使う。拡張子 <code>npz</code> のファイルは NumPy の ndarray を収めたバイナリファイル <code>変数名.npy</code> を束ねたZIPアーカイブである。詳しくは <code>np.savez()</code>，<code>np.load()</code> のヘルプ参照。</p>
-
-<p><code>x_train.shape</code> などと打ち込んで次元数を調べればわかるように，トレーニング用が6万画像，テスト用が1万画像ある。</p>
-
-<p><code>x_train</code> に入っている画像をいくつか表示させてみよう：</p>
-
-<pre>
-import matplotlib.pyplot as plt
-
-plt.gray()
-plt.matshow(x_train[0])
-</pre>
+<p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。MNIST については<a href="../mnist.html">こちら</a>も参照されたい。</p>
 
 <p>ピクセルは0〜255の整数値だが，0〜1の実数に変換する：</p>
 
@@ -115,7 +93,7 @@ with tf.Session():
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-24 20:42:15</time>
+Last modified: <time>2019-06-15 14:59:07</time>
 <!-- hhmts end -->
 </p>
 </body>

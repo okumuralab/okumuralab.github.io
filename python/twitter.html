@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Twitter</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Twitter</h1>
+
+<p>Twitter を Python から使うライブラリは <a href="https://developer.twitter.com/en/docs/developer-utilities/twitter-libraries.html">Twitter libraries</a> の Python の項にいくつかリストされている。どれがいいかわからないが，とりあえず一番上の <a href="https://github.com/bear/python-twitter/">python-twitter</a> を試してみる。インストールは</p>
+
+<pre>
+pip3 install python-twitter
+</pre>
+
+<p>でできる。</p>
+
+<p>まずは Twitter のアプリケーション登録をする。方法はいろいろなところで解説されている。例えば <a href="https://cre8cre8.com/python/twitter-api.htm">Python3でTwitterAPIを使う方法をどのサイトよりも丁寧に解説する</a> の前半が詳しい（この後半は別のライブラリが紹介されており，それも参考になる）。</p>
+
+<p>登録をしたら，Consumer Key，Consumer Secret，Access Token，Access Token Secret がもらえる。これらを次のコードの <code>...</code> の部分にコピペする。</p>
+
+<p>試してみよう：</p>
+
+<pre>
+import twitter
+
+api = twitter.Api(consumer_key='...',
+                  consumer_secret='...',
+                  access_token_key='...',
+                  access_token_secret='...',
+                  tweet_mode='extended')
+
+api.VerifyCredentials() # 自分が正しく認識できているかチェック
+
+home = api.GetHomeTimeline() # ホームタイムラインを取得（デフォルト20件）
+</pre>
+
+<p>これで <code>home</code> を表示すればだいたいの感じがわかる。このクラスの詳細は <code>??twitter.models.Status</code> と打ち込めば出てくる。この中の必要な項目を自分好みに出力すればよい。簡単な例を挙げておく：</p>
+
+<pre>
+for t in home2:
+    if (t.retweeted_status):
+        r = t.retweeted_status
+        print(r.id, r.user.screen_name, r.created_at, r.full_text)
+    else:
+        print(t.id, t.user.screen_name, t.created_at, t.full_text)
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-06-15 18:12:27</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
