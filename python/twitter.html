@@ -24,7 +24,7 @@ pip3 install python-twitter
 
 <p>でできる。</p>
 
-<p>まずは Twitter のアプリケーション登録をする。方法はいろいろなところで解説されている。例えば <a href="https://cre8cre8.com/python/twitter-api.htm">Python3でTwitterAPIを使う方法をどのサイトよりも丁寧に解説する</a> の前半が詳しい（この後半は別のライブラリが紹介されており，それも参考になる）。</p>
+<p>まずは Twitter のアプリケーション登録をする。方法は <a href="https://python-twitter.readthedocs.io/en/latest/">python-twitter's documentation</a> にも書かれているし，日本語の解説もたくさんある（例えば <a href="https://cre8cre8.com/python/twitter-api.htm">Python3でTwitterAPIを使う方法をどのサイトよりも丁寧に解説する</a> の前半）。</p>
 
 <p>登録をしたら，Consumer Key，Consumer Secret，Access Token，Access Token Secret がもらえる。これらを次のコードの <code>...</code> の部分にコピペする。</p>
 
@@ -37,7 +37,8 @@ api = twitter.Api(consumer_key='...',
                   consumer_secret='...',
                   access_token_key='...',
                   access_token_secret='...',
-                  tweet_mode='extended')
+                  tweet_mode='extended',
+                  sleep_on_rate_limit=True)
 
 api.VerifyCredentials() # 自分が正しく認識できているかチェック
 
@@ -47,12 +48,28 @@ home = api.GetHomeTimeline() # ホームタイムラインを取得（デフォ�
 <p>これで <code>home</code> を表示すればだいたいの感じがわかる。このクラスの詳細は <code>??twitter.models.Status</code> と打ち込めば出てくる。この中の必要な項目を自分好みに出力すればよい。簡単な例を挙げておく：</p>
 
 <pre>
-for t in home2:
+for t in home:
     if (t.retweeted_status):
-        r = t.retweeted_status
-        print(r.id, r.user.screen_name, r.created_at, r.full_text)
-    else:
-        print(t.id, t.user.screen_name, t.created_at, t.full_text)
+        t = t.retweeted_status
+    for u in t.urls:
+        t.full_text = t.full_text.replace(u.url, u.expanded_url)
+    print(t.id, t.created_at, t.user.screen_name, t.full_text)
+</pre>
+
+<p>これを少しいじれば，自家製Twitterクライアントができる。普段はEmacsのtwittering-modeを使っているが，自動処理にはコマンドラインで使えるほうが便利だ。</p>
+
+<p>書き込みはこんな感じ：</p>
+
+<pre>
+api.PostUpdate("テスト", latitude=34.7468, longitude=136.5248,
+               display_coordinates=True)
+</pre>
+
+<p>検索は<a href="https://python-twitter.readthedocs.io/en/latest/searching.html">ドキュメント</a>に生クエリの方法が書いてある。例：</p>
+
+<pre>
+results = api.GetSearch(
+    raw_query="q=twitter%20&amp;result_type=recent&amp;since=2014-07-19&amp;count=100")
 </pre>
 
 <hr>
@@ -61,7 +78,7 @@ for t in home2:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-15 18:12:27</time>
+Last modified: <time>2019-06-16 17:21:25</time>
 <!-- hhmts end -->
 </p>
 </body>
