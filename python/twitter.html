@@ -58,12 +58,21 @@ for t in home:
 
 <p>これを少しいじれば，自家製Twitterクライアントができる。普段はEmacsのtwittering-modeを使っているが，自動処理にはコマンドラインで使えるほうが便利だ。</p>
 
-<p>書き込みはこんな感じ：</p>
+<p>書き込みはこんな感じ（通常はツイート本文だけでよい）：</p>
 
 <pre>
-api.PostUpdate("テスト", latitude=34.7468, longitude=136.5248,
-               display_coordinates=True)
+api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
+               media="hoge.jpg",  # 添付画像ファイル
+               in_reply_to_status_id=1140050903828819970, # リプライ先のツイートID
+               auto_populate_reply_metadata=True, # リプライ先の @... を自動挿入
+               attachment_url="https://twitter.com/.../status/...", # 引用リツイート
+               latitude=34.7468, longitude=136.5248, # 位置情報
+               display_coordinates=True) # 正確な位置情報にするか
 </pre>
+
+<p>引用リツイートは従来のようにツイート本文末尾にURLを書いてもいいが，<code>attachment_url="..."</code> で指定すると文字数カウントに入らない。リプライの先頭に付ける <code>@...</code> も，手で書く代わりに <code>auto_populate_reply_metadata=True</code> にすれば自動で入り，文字数カウントに入らない。</p>
+
+<p><code>r = api.PostUpdate(...)</code> のように戻り値を取得すれば，例えば <code>r.id</code> でツイートのIDが調べられる。ツイートをつなげていくときに便利。</p>
 
 <p>検索は<a href="https://python-twitter.readthedocs.io/en/latest/searching.html">ドキュメント</a>に生クエリの方法が書いてある。例：</p>
 
@@ -78,7 +87,7 @@ results = api.GetSearch(
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-16 17:21:25</time>
+Last modified: <time>2019-06-18 10:18:32</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>ロジスティック回帰</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -27,7 +26,7 @@ MathJax.Hub.Config({
 
 <h1>ロジスティック回帰</h1>
 
-<p>かなり前（最終更新日2012-08-12）にざっと書いて放置していたページです。とりあえずMathJaxで書き直しました。より新しい<a href="140921.html">ロジスティック回帰と変数選択</a>のほうが詳しいと思います。</p>
+<p>かなり前（最終更新日2012-08-12）にざっと書いて放置していたページを更新したものです。<a href="140921.html">ロジスティック回帰と変数選択</a>もご覧ください。</p>
 
 <h2>合格の判定</h2>
 
@@ -68,6 +67,28 @@ MathJax.Hub.Config({
 \[ \pi = \frac{\exp(\beta_0 + \beta_1 x_1 + \beta_2 x_2)}{1 + \exp(\beta_0 + \beta_1 x_1 + \beta_2 x_2)} = \frac{1}{1 + \exp[-(\beta_0 + \beta_1 x_1 + \beta_2 x_2)]} \]
 
 <p>この右辺は $\mathrm{logit}^{-1}(\beta_0 + \beta_1 x_1 + \beta_2 x_2)$ とも書きます。この $\mathrm{logit}^{-1}$ という関数（logitの逆関数）はロジスティック関数と呼ばれるものの一種です。</p>
+
+<p>ここに現れる $1 / (1 + e^{-x})$ の形の式のグラフを描いてみましょう：</p>
+
+<pre>
+curve(1/(1+exp(-x)), -5, 5)
+</pre>
+
+<figure><img src="img/190617a.png" alt="ロジスティック曲線"></figure>
+
+<p>この曲線をロジスティック曲線といいます。より一般に，S字形をつぶしたような形の曲線をシグモイド曲線といいます。</p>
+
+<p>シグモイド曲線は，ニューラルネットの活性化関数として使われてきました（現在は ReLU を使うのが普通です）。</p>
+
+<h3>データの読み込み方（URL指定）</h3>
+
+<p>次のように打ち込むとデータが <code>data1</code> に読み込まれます：</p>
+
+<pre>
+data1 = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data1.csv")
+</pre>
+
+<script>document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];</script>
 
 <h3>データの読み込み方（RStudio使用）</h3>
 
@@ -283,7 +304,7 @@ Number of Fisher Scoring iterations: 4
 
 <p>
 <!-- hhmts start -->
-Last modified: <time itemprop="dateModified" datetime="2014-12-17T21:17:46+09:00">2014-12-17 21:17:46</time>
+Last modified: <time>2019-06-17 16:02:40</time>
 <!-- hhmts end -->
 </p>
 </body>
