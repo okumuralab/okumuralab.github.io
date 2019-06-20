@@ -56,7 +56,7 @@ for t in home:
     print(t.id, t.created_at, t.user.screen_name, t.full_text)
 </pre>
 
-<p>これを少しいじれば，自家製Twitterクライアントができる。普段はEmacsのtwittering-modeを使っているが，自動処理にはコマンドラインで使えるほうが便利だ。</p>
+<p>これを少しいじれば，自家製Twitterクライアントができる。これ以外に，位置情報 <code>t.place</code>，正確な位置情報 <code>t.geo</code> などが得られる。普段はEmacsのtwittering-modeを使っているが，自動処理にはコマンドラインで使えるほうが便利だ。</p>
 
 <p>書き込みはこんな感じ（通常はツイート本文だけでよい）：</p>
 
@@ -83,11 +83,66 @@ results = api.GetSearch(
 
 <hr>
 
+<p>毎時cronで起動して日毎のホームタイムラインをファイルにするコード例：</p>
+
+<pre>
+#! /usr/local/bin/python3
+
+import twitter
+import time
+from dateutil.parser import parse
+from pytz import timezone
+
+api = twitter.Api(consumer_key='...',
+                  consumer_secret='...',
+                  access_token_key='...',
+                  access_token_secret='...',
+                  tweet_mode='extended',
+                  sleep_on_rate_limit=True)
+
+try:
+    with open("maxid") as f:
+        sid = int(f.read())
+except:
+    sid = 1
+
+home = []
+mid = None
+while True:
+    h = api.GetHomeTimeline(count=200, since_id=sid, max_id=mid)
+    home.extend(h)
+    if len(h) &lt; 200:
+        break
+    mid = home[-1].id - 1
+
+if not home:
+    exit()
+
+with open("maxid", "w") as f:
+    f.write(str(home[0].id))
+
+home.reverse()
+
+with open(time.strftime("%Y%m%d"), "a", newline="\n") as f:
+    for t in home:
+        if (t.retweeted_status):
+            t = t.retweeted_status
+        s = t.full_text
+        for u in t.urls:
+            s = s.replace(u.url, u.expanded_url)
+        c = parse(t.created_at).astimezone(timezone('Asia/Tokyo')).strftime("%Y-%m-%d %H:%M:%S")
+        print(t.id, c, t.user.screen_name, s.replace("\n", "\r"), sep="\t", file=f)
+</pre>
+
+<p>grepしやすいように1ツイート1行にするために，ツイート中の改行は <code>"\r"</code> に変換している。</p>
+
+<hr>
+
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-18 10:18:32</time>
+Last modified: <time>2019-06-20 20:35:42</time>
 <!-- hhmts end -->
 </p>
 </body>
