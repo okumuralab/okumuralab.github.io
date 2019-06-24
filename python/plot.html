@@ -123,12 +123,24 @@ plt.title('日本語タイトル', fontfamily='IPAexGothic', fontsize=20)
 plt.xlabel('日本語のx軸タイトル', fontfamily='IPAexGothic')
 </pre>
 
+<div class="note">
+<p>より簡単な方法として <code>japanize-matplotlib</code> をインストールして <code>import japanize_matplotlib</code> する方法があります（<a href="https://qiita.com/uehara1414/items/6286590d2e1ffbf68f6c">pip install して import するだけで matplotlib を日本語表示対応させる</a>参照）。Google Colaboratory などリモートの環境で日本語を表示するときに便利です。</p>
+<pre>
+!pip install japanize-matplotlib
+
+import matplotlib.pyplot as plt
+import japanize_matplotlib
+plt.plot([1,2])
+plt.title('日本語タイトル')
+</pre>
+</div>
+
 <h2>ファイルへの保存</h2>
 
 <p>ファイルへの保存は，メニューからも，プログラムでもできます：</p>
 
 <pre>
-plt.savefig('filename.png', dpi=80, bbox_inches="tight")
+plt.savefig('filename.png', bbox_inches="tight")  # 必要に応じて dpi=80 などと指定
 plt.savefig('filename.pdf', bbox_inches="tight")
 plt.savefig('filename.pgf', bbox_inches="tight")
 </pre>
@@ -283,7 +295,7 @@ plt.close("all")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-13 12:29:11</time>
+Last modified: <time>2019-06-24 10:35:58</time>
 <!-- hhmts end -->
 </p>
 </body>

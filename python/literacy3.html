@@ -36,6 +36,8 @@ plt.plot(x, x ** 2)
 
 <p>プロットが現れない場合は <code>plt.show()</code> という行を最後に追加してください。その場合は，プロット窓を閉じないと次に進めなくなります。これは以下でも同じです。</p>
 
+<p><code>x = np.linspace(-3, 3, 101)</code> は区間 -3 ≦ x ≦ 3 を100等分する101個の <code>x</code> を計算します。101 という値に特に意味はありませんが，あまり小さすぎると滑らかに表示されません。</p>
+
 <p>縦横比を 1 にするには <code>plt.plot(x, x ** 2)</code> の後に <code>plt.axis('scaled')</code> または <code>plt.axis('equal')</code> という行を追加してください。</p>
 
 <p>2次関数 y = x<sup>3</sup> - x のグラフをx軸（y = 0 の線）とともに -1.2 ≦ x ≦ 1.2 の範囲で描きます（IPython などの対話型環境では，まず <code>plt.clf()</code> と打ち込んで，前のグラフをクリアしてください）：</p>
@@ -96,7 +98,7 @@ plt.plot(x, model.predict(x))
 
 <h3>データの集計</h3>
 
-<p>学生のデータを読み込み，学部ごとに集計して棒グラフを描きます：</p>
+<p>学生のデータを読み込み，学部ごとに集計して棒グラフを描きます（日本語フォントが設定されていない環境では文字化けしますので<a href="plot.html">プロット</a>の項を見て環境設定してください）：</p>
 
 <pre>
 students = pd.read_csv("https://okumuralab.org/literacy3/students.csv")
@@ -107,6 +109,8 @@ plt.bar(s.index, s)
 <p>学年ごとに集計するには，上の「学部」を「学年」に変えます。</p>
 
 <h3>多数のファイルの集計</h3>
+
+<p>以下はそのまま打ち込んでも実行できません。実際に集計したいExcelファイル群が存在するディレクトリを指定して実行してください。</p>
 
 <p>ここでは openpyxl ライブラリを使います。まずディレクトリ名（ここではカレントディレクトリ <code>"."</code>）を与えてファイル名一覧を取得します：</p>
 
@@ -145,7 +149,7 @@ pd.DataFrame(x).to_csv("x.csv", encoding="sjis")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-07 10:03:04</time>
+Last modified: <time>2019-06-24 15:22:58</time>
 <!-- hhmts end -->
 </p>
 </body>
