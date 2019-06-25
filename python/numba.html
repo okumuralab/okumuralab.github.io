@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Numba</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Numba</h1>
+
+<p><a href="https://numba.pydata.org">Numba</a>（ナンバ）はPythonのJIT（Just In Time）コンパイラです。簡単にいえば，Pythonの自前の関数を高速にする仕組みです。</p>
+
+<p>速さ比べのため，まずは100万個の乱数を用意します：</p>
+
+<pre>
+import numpy as np
+
+a = np.random.random(1000000)
+</pre>
+
+<p>これをPython標準の <code>sum()</code> 関数を使って合計するのに要する時間を計測します：</p>
+
+<pre>
+%timeit sum(a)
+</pre>
+
+<p>結果：</p>
+
+<pre>
+99.9 ms ± 460 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<p>約100ミリ秒（0.1秒）です。次は，自前の関数を作って，時間を計測します：</p>
+
+<pre>
+def sum1(a):
+    s = 0
+    for x in a:
+        s += x
+    return s
+
+%timeit sum1(a)
+</pre>
+
+<p>結果：</p>
+
+<pre>
+122 ms ± 287 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<p>やはり100ミリ秒少々です。次はNumbaを使ってみましょう。<code>pip3 install numba</code> などとしてインストールしてから，次を実行します：</p>
+
+<pre>
+from numba import jit
+
+@jit(nopython=True)
+def sum2(a):
+    s = 0
+    for x in a:
+        s += x
+    return s
+
+%timeit sum2(a)
+</pre>
+
+<p>結果：</p>
+
+<pre>
+1.01 ms ± 5.1 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+</pre>
+
+<p>約1ミリ秒です。100倍速くなりました。最後にNumPyの <code>np.sum()</code> も試します：</p>
+
+<pre>
+%timeit np.sum(a)
+</pre>
+
+<p>結果：</p>
+
+<pre>
+505 µs ± 3.12 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+</pre>
+
+<p>Numbaで高速化したものより2倍高速です。</p>
+
+<p>つまり，ループを含むようなPythonのコードはたいていNumbaで高速化できますが，同じ機能のNumPy関数があるなら，そちらを使いましょう。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-06-25 13:07:23</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
