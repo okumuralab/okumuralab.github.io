@@ -18,7 +18,7 @@
 
 <p>Python の実行には，いくつかの方法があります。</p>
 
-<p>以下では Python 3 を起動するコマンドは <code>python3</code> であると仮定します。システムによっては <code>python3</code> ではなく <code>python</code> かもしれません。</p>
+<p>以下では Python 3 を起動するコマンドは <code>python3</code> であると仮定します（環境によっては <code>python</code> でよいかもしれません）。</p>
 
 <p>念のため，<code>python</code> あるいは <code>python3</code> で起動する Python のバージョンを確認しておきましょう：</p>
 
@@ -138,6 +138,8 @@ import sys
 print(sys.argv)
 </pre>
 
+<p>もし Python 2 で書かれたスクリプト <code>filename.py</code> があれば，コマンド <code>2to3 -w filename.py</code> で Python 3 の文法に書き直してくれます。オリジナルは <code>filename.py.bak</code> にリネームされます。詳しくはマニュアルの <a href="https://docs.python.org/3/library/2to3.html">2to3</a> 参照。</p>
+
 <h3>One-Liner</h3>
 
 <p>ターミナルで1行だけの Python スクリプトを実行できます：</p>
@@ -186,7 +188,7 @@ jupyter notebook
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-16 17:44:03</time>
+Last modified: <time>2019-06-27 08:22:44</time>
 <!-- hhmts end -->
 </p>
 </body>
