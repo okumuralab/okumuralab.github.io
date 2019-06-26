@@ -212,13 +212,16 @@ json.dumps(df.to_dict(orient="list"), separators=(',',':'))
 
 <h2>全部メモリに入れないで処理する</h2>
 
-<p>全体を DataFrame に読み込まず行単位で操作するには</p>
+<p>全体を DataFrame に読み込まず行単位で操作するには，標準ライブラリ <code>csv</code> の <code>csv.reader()</code>，<code>csv.writer()</code> を使います。例：</p>
 
 <pre>
 import csv
-</pre>
 
-<p>として <code>csv.reader</code>，<code>csv.writer</code> を使います。詳細はヘルプを見てください。</p>
+with open('file.csv') as f:
+    reader = csv.reader(f)
+    for row in reader:
+        print(row)
+</pre>
 
 <hr>
 
@@ -226,7 +229,7 @@ import csv
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-06 12:59:46</time>
+Last modified: <time>2019-06-26 15:25:38</time>
 <!-- hhmts end -->
 </p>
 </body>

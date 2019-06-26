@@ -30,10 +30,25 @@ pip3 install tensorflow  # または conda install tensorflow
 pip3 install tensorflow==2.0.0-beta1
 </pre>
 
-<p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。MNIST については<a href="../mnist.html">こちら</a>も参照されたい。</p>
+<p>インポートする：</p>
 
 <pre>
 import tensorflow as tf
+</pre>
+
+<p>バージョンを確認する：</p>
+
+<pre>
+In [ ]: tf.__version__
+Out[ ]: '2.0.0-beta1'
+
+In [ ]: tf.keras.__version__
+Out[ ]: '2.2.4-tf'
+</pre>
+
+<p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。MNIST については<a href="../mnist.html">こちら</a>も参照されたい。</p>
+
+<pre>
 mnist = tf.keras.datasets.mnist
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -87,13 +102,32 @@ y_pred = model.predict_classes(x_test)
 tf.math.confusion_matrix(y_test, y_pred)
 </pre>
 
+<p>結果の例：</p>
+
+<pre>
+&lt;tf.Tensor: id=69328, shape=(10, 10), dtype=int32, numpy=
+array([[ 971,    0,    1,    2,    0,    0,    2,    1,    3,    0],
+       [   0, 1129,    1,    1,    0,    1,    1,    0,    2,    0],
+       [   5,    4,  999,    5,    4,    0,    2,    9,    3,    1],
+       [   0,    1,    2,  992,    0,    5,    0,    3,    0,    7],
+       [   2,    0,    1,    0,  945,    0,    4,    2,    2,   26],
+       [   2,    0,    0,    5,    1,  878,    2,    1,    1,    2],
+       [   8,    3,    1,    1,    4,   11,  926,    0,    4,    0],
+       [   2,   10,    7,    4,    0,    0,    0,  997,    1,    7],
+       [   3,    0,    1,    6,    3,    5,    0,    4,  946,    6],
+       [   3,    3,    0,    2,    4,    1,    0,    3,    0,  993]],
+      dtype=int32)&gt;
+</pre>
+
+<p>詳細は<a href="https://www.tensorflow.org/beta/guide/keras/overview">Keras: A quick overview</a>参照。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-26 13:57:43</time>
+Last modified: <time>2019-06-26 16:36:40</time>
 <!-- hhmts end -->
 </p>
 </body>
