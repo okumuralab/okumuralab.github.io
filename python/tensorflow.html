@@ -16,27 +16,28 @@
 
 <h1>TensorFlowによる機械学習</h1>
 
-<p><a href="https://www.tensorflow.org/">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。インストールは次のようにする：</p>
+<p><a href="https://www.tensorflow.org/">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。</p>
+
+<p>TensorFlow 1 系（最新は 1.14）をインストールするには</p>
 
 <pre>
-conda install tensorflow  # または pip3 install tensorflow
+pip3 install tensorflow  # または conda install tensorflow
 </pre>
 
-<div class="note">
-<p>私の環境で conda でインストールした TensorFlow 1.13.1 は，以下の例を実行すると <code>model.fit(...)</code> あたりで死んでしまう（matplotlib 併用時）：</p>
-<blockquote>
-<p>OMP: Error #15: Initializing libiomp5.dylib, but found libiomp5.dylib already initialized.</p>
-<p>OMP: Hint: This means that multiple copies of the OpenMP runtime have been linked into the program. That is dangerous, since it can degrade performance or cause incorrect results. The best thing to do is to ensure that only a single OpenMP runtime is linked into the process, e.g. by avoiding static linking of the OpenMP runtime in any library. As an unsafe, unsupported, undocumented workaround you can set the environment variable KMP_DUPLICATE_LIB_OK=TRUE to allow the program to continue to execute, but that may cause crashes or silently produce incorrect results. For more information, please see http://www.intel.com/software/products/support/.</p>
-</blockquote>
-<p>これを避けるには，とりあえず</p>
+<p>とするが，ここでは Tensorflow 2.0 beta を使ってみる：</p>
+
 <pre>
-import os
-os.environ['KMP_DUPLICATE_LIB_OK']='TRUE'
+pip3 install tensorflow==2.0.0-beta1
 </pre>
-<p>と最初に打ち込んでおけばよさそうである。</p>
-</div>
 
 <p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="http://yann.lecun.com/exdb/mnist/">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。MNIST については<a href="../mnist.html">こちら</a>も参照されたい。</p>
+
+<pre>
+import tensorflow as tf
+mnist = tf.keras.datasets.mnist
+
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+</pre>
 
 <p>ピクセルは0〜255の整数値だが，0〜1の実数に変換する：</p>
 
@@ -50,10 +51,11 @@ x_test  = x_test  / 255.0
 <pre>
 model = tf.keras.models.Sequential([
   tf.keras.layers.Flatten(input_shape=(28, 28)),
-  tf.keras.layers.Dense(512, activation=tf.nn.relu),
+  tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Dropout(0.2),
-  tf.keras.layers.Dense(10, activation=tf.nn.softmax)
+  tf.keras.layers.Dense(10, activation='softmax')
 ])
+
 model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
@@ -82,9 +84,7 @@ y_pred = model.predict_classes(x_test)
 <p>混同行列を求める：</p>
 
 <pre>
-cm = tf.math.confusion_matrix(y_test, y_pred)
-with tf.Session():
-    print(cm.eval())
+tf.math.confusion_matrix(y_test, y_pred)
 </pre>
 
 <hr>
@@ -93,7 +93,7 @@ with tf.Session():
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-15 14:59:07</time>
+Last modified: <time>2019-06-26 13:57:43</time>
 <!-- hhmts end -->
 </p>
 </body>
