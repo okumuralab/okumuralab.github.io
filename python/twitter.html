@@ -111,7 +111,7 @@ mid = None
 while True:
     h = api.GetHomeTimeline(count=200, since_id=sid, max_id=mid)
     home.extend(h)
-    if len(h) &lt; 200:
+    if len(h) &lt; 150:
         break
     mid = home[-1].id - 1
 
@@ -142,7 +142,7 @@ with open(time.strftime("%Y%m%d"), "a", newline="\n") as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-20 20:35:42</time>
+Last modified: <time>2019-06-26 19:48:47</time>
 <!-- hhmts end -->
 </p>
 </body>
