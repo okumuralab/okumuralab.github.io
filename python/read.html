@@ -61,7 +61,7 @@ df = pd.read_csv("finename.csv", na_values="", keep_default_na=False)
 
 <h3>Excel ファイルの読み込み</h3>
 
-<p>Excel ファイル（xls，xlsx）を読むには xlrd というライブラリが必要です。別途 <code>conda install xlrd</code> または <code>pip3 install xlrd</code> などとしてインストールしておきます。<code>read_excel()</code> を使うと自動的に import されます。</p>
+<p>Excel ファイル（xls，xlsx）を読むには xlrd というライブラリが必要です。別途 <code>conda install xlrd</code> または <code>pip install xlrd</code> などとしてインストールしておきます。<code>read_excel()</code> を使うと自動的に import されます。</p>
 
 <pre>
 df = pd.read_excel("filename.xlsx")
@@ -184,7 +184,7 @@ df.head()
 df.to_csv("filename.csv", index=False, encoding="utf_8_sig", line_terminator="\r\n")
 </pre>
 
-<p>Excel形式での書き出しは <code>pandas.DataFrame.to_excel()</code> です。エンジンは openpyxl または xlsxwriter が指定できます。前者のほうが多機能のようです。あらかじめ <code>conda install openpyxl</code> または <code>pip3 install openpyxl</code> などと打ち込んでインストールしておきます。</p>
+<p>Excel形式での書き出しは <code>pandas.DataFrame.to_excel()</code> です。エンジンは openpyxl または xlsxwriter が指定できます。前者のほうが多機能のようです。あらかじめ <code>conda install openpyxl</code> または <code>pip install openpyxl</code> などと打ち込んでインストールしておきます。</p>
 
 <pre>
 df.to_excel("filename.xlsx")
@@ -229,7 +229,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-26 15:25:38</time>
+Last modified: <time>2019-06-27 09:21:00</time>
 <!-- hhmts end -->
 </p>
 </body>
