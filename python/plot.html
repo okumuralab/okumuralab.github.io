@@ -43,7 +43,7 @@ backend: TkAgg
 
 <p>とします。</p>
 
-<p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら，システムにインストールされている適当な TrueType（matplotlib 3.1.0 以降は TrueType Collection も可）または OpenType フォント名を <code>~/.matplotlib/matplotlibrc</code> に書き加えます（後述のように単純な TrueType が推奨です）。Macなら例えば</p>
+<p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら，システムにインストールされている適当な TrueType または OpenType フォント名を <code>~/.matplotlib/matplotlibrc</code> に書き加えます。Macなら例えば</p>
 
 <pre>
 font.family: AppleGothic
@@ -55,7 +55,15 @@ font.family: AppleGothic
 font.family: IPAexGothic
 </pre>
 
-<p>その際，もし古い <code>~/.matplotlib/font*</code> のようなフォントのキャッシュファイルがあれば消しておきます。</p>
+<p>新しいフォントをインストールしたら，フォント名のキャッシュ <code>~/.matplotlib/font*</code> は消します（次回 matplotlib 使用の際に自動生成されます）。</p>
+
+<p>matplotlib 3.1.0 以降は TrueType Collection も表示できるようになりましたので，Windows なら</p>
+
+<pre>
+font.family: MS Gothic
+</pre>
+
+<p>でもかまいません。ただ，TrueType Collection では PDF への保存ができないようです。</p>
 
 <p>なお，<code>font.family</code> のデフォルト値は <code>sans-serif</code> で，DejaVu Sans が使われます。<code>serif</code> と指定すれば DejaVu Serif になります。DejaVu は Bitstream Vera ベースの良質なフォントです。</p>
 
@@ -295,7 +303,7 @@ plt.close("all")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-24 10:35:58</time>
+Last modified: <time>2019-06-27 10:57:01</time>
 <!-- hhmts end -->
 </p>
 </body>
