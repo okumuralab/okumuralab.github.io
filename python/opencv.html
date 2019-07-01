@@ -68,6 +68,12 @@ img = plt.imread("画像ファイル名")
 plt.imshow(img)
 plt.imsave("hoge.png", img)
 </pre>
+<p>あるいは，画像の読み書きに特化した <a href="https://pypi.org/project/imageio/">imageio</a> ライブラリが多機能である：</p>
+<pre>
+import imageio
+img = imageio.imread("入力画像ファイル名")
+imageio.imsave("出力画像ファイル名", img)
+</pre>
 </div>
 
 <h2>画像の加工</h2>
@@ -86,7 +92,7 @@ img2 = cv2.GaussianBlur(img, (9,9), 0)  # カーネルサイズは奇数に
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-27 09:20:22</time>
+Last modified: <time>2019-06-29 21:53:51</time>
 <!-- hhmts end -->
 </p>
 </body>
