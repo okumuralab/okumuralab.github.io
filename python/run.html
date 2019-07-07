@@ -70,9 +70,15 @@ for i in range(3):
 ipython
 </pre>
 
-<p>と打ち込みます（もし古い Python 2 が出てくるようなら，<code>ipython3</code> と打ち込みます）。</p>
+<p>と打ち込みます（もし古い Python 2 が出てくるようなら <code>ipython3</code> としてみてください）。</p>
 
-<p>実際には，いくつかオプションを付けて起動することが多いと思います。例えば文字に色が付いてかえって見にくいなら <code>--colors='NoColor'</code>，matplotlib を使うなら <code>--matplotlib</code> などです。</p>
+<p>実際には，いくつかオプションを付けて起動することが多いと思います。例えば，matplotlib を使い，文字に色を付けたくないなら</p>
+
+<pre>
+ipython --matplotlib --colors=NoColor
+</pre>
+
+<p>とします。</p>
 
 <div class="note">
 <p>Emacs の <code>M-x shell</code> 内で使うなら，おそらく <code>--simple-prompt</code> オプションが必要です。</p>
@@ -80,7 +86,7 @@ ipython
 
 <p>ヘルプを見るには，例えば <code>?print</code> のように打ち込みます（このヘルプの終了は <code>q</code>）。</p>
 
-<p><code>quit</code> と打ち込めば終了します。</p>
+<p><code>quit</code> または <code>exit</code> と打ち込めば終了します。</p>
 
 <h3>スクリプト</h3>
 
@@ -196,7 +202,7 @@ jupyter notebook
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-27 11:04:38</time>
+Last modified: <time>2019-07-07 16:11:26</time>
 <!-- hhmts end -->
 </p>
 </body>
