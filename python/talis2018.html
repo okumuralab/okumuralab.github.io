@@ -77,10 +77,31 @@ plt.xlim(1, 4)
 plt.plot(s, s.index, "o")
 plt.grid()
 plt.xlim(1, 4)
+</pre>
+
+<p>国名を日本語にするには，次のようにすればよい（りん先生の国名一覧を拝借した）：</p>
+
+<pre>
+co = pd.read_csv("http://www.edufolder.jp/files/talis2018/ISO3166.csv")
+dic = { r['Alpha3']: r['Name_ja'] for i,r in co.iterrows() }
+dic['ZAF'] = '南アフリカ'
+dic['CSH'] = '上海'
+dic['CYP'] = 'キプロス'
+dic['KAZ'] = 'カザフスタン'
+dic['CAB'] = 'CABA (アルゼンチン)'
+dic['SAU'] = 'サウジアラビア'
+cj = [ dic[x] for x in s.index ]
+
+plt.plot(s, cj, "o")
+plt.subplots_adjust(left=0.25, right=0.95)
+plt.grid()
+plt.xlim(1, 4)
 plt.savefig('190707a.png', bbox_inches="tight")
 </pre>
 
 <figure><img src="img/190707a.png" alt=""></figure>
+
+<p>要するに日本は「デジタル技術を使って生徒の学びをサポートする」（Support student learning through the use of digital technology）で最低点であるということだ。</p>
 
 <hr>
 
@@ -88,7 +109,7 @@ plt.savefig('190707a.png', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-07 20:51:13</time>
+Last modified: <time>2019-07-07 22:15:39</time>
 <!-- hhmts end -->
 </p>
 </body>
