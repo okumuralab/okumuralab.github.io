@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>老衰による死亡率の推移</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script>
+window.onload = function() {
+  document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>老衰による死亡率の推移</h1>
+
+<img src="img/AS20190713002185_commL.jpg" alt="老衰が死因の3位に"
+     style="float: right; margin: 0 0 1em 1em;">
+
+<p>朝日新聞に<a href="https://www.asahi.com/articles/ASM7B77P7M7BULZU01M.html">老衰で亡くなる人が増加、死因の３位に　超高齢化が要因</a>という記事が載っていた。ここ数年で老衰が急増しているという内容である。</p>
+
+<p>データはどこにあるのか。2019年7月12日に出たばかりの<a href="https://www.mhlw.go.jp/toukei/youran/index-kousei.html">厚生統計要覧（平成30年度）</a>の<a href="https://www.mhlw.go.jp/toukei/youran/indexyk_1_2.html">第1編　人口・世帯　第2章　人口動態</a>の1-30表「年齢調整死亡率（人口10万対），死因年次推移分類・性別」（130.xls）であろうか（厚労省はなぜまだxlsxでなくxlsを使うんだろう？）。でもこれは2017年までしか載っていない。しかも自動処理しにくいネ申Excelに近い。</p>
+
+<p>とりあえずこれを縦横逆にして1行目を項目名にして「折れ線グラフ」を描いてみた。</p>
+
+<figure><img src="img/190714a.png" alt="老衰による死亡率の推移"></figure>
+
+<p>これはやばいやつだ。年のきざみが一定でない。Excelでは「折れ線グラフ」を使ってはならない例だ。こういうのは「散布図」を使う：</p>
+
+<figure><img src="img/190714b.png" alt="老衰による死亡率の推移"></figure>
+
+<p>これを見やすくするには，かなりがんばらなければならない。</p>
+
+<p>そうこうしているうちに，<a href="https://www.e-stat.go.jp/">e-Stat</a>にもうちょっと完全なデータがあることに気づいた。e-Statを「人口動態調査」で検索し，「ファイル」をクリック，確定数→死亡→年次，2017年と進んで，5-14 死因年次推移分類別にみた性別年齢調整死亡率（人口10万対）のCSVをダウンロードする。ファイル名は mc140000.csv となる。これをまともなCSVにした <a href="data/mc140000a.csv">mc140000a.csv</a> を置いておく（文字コード：BOM付きUTF-8）。これをPythonでプロットする：</p>
+
+<pre>
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/mc140000a.csv", comment="#")
+df.head()   # 頭を表示して確認
+
+plt.plot(df['年'], df[['老衰男','老衰女']], "o-")
+plt.xlabel('年')
+plt.ylabel('年齢調整死亡率（人口10万対）')
+plt.title('老衰による死亡率の推移')
+plt.legend(['男','女'])
+plt.savefig('190714c.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190714c.png" alt="老衰による死亡率の推移"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-07-14 11:13:19</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

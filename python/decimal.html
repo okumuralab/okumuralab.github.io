@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>十進計算</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>十進計算</h1>
+
+<p>Pythonでなくてもどんな言語でも計算の誤差に悩まされます。例えば</p>
+
+<pre>
+In [ ]: 0.3 - 0.2 - 0.1
+Out[ ]: -2.7755575615628914e-17
+</pre>
+
+<p>この <code>e-17</code> は ×10<sup>-17</sup> つまり1のあとに0が17個並ぶ数 100000000000000000 分の 1 を掛け算した値という意味です。ごくわずかですが誤差があります。</p>
+
+<p>この誤差の原因はコンピュータの中では10進表現ではなく2進表現が使われていることにあります。0.1 のような10進で表現すると有限小数になる値でも，2進で表現すると無限に循環する小数になり，正確に表せません。</p>
+
+<p>ただ，コンピュータでも，効率は悪いのですが，10進表現を使うこともできます。Python では <a href="https://docs.python.org/3/library/decimal.html">decimal</a> というパッケージで任意精度の10進表現が使えます。</p>
+
+<pre>
+In [ ]: from decimal import *
+
+In [ ]: getcontext().prec = 100  # 100桁精度にする（デフォルトは28桁）
+
+In [ ]: Decimal('0.3') - Decimal('0.2') - Decimal('0.1')
+Out[ ]: Decimal('0.0')
+</pre>
+
+<p>2進でも正確に表せる数（整数など）なら文字列として与える必要はありません：</p>
+
+<pre>
+In [ ]: Decimal(2).sqrt()
+Out[ ]: Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462107038850387534327641573')
+</pre>
+
+<p>使える関数は <code>sqrt()</code>，<code>exp()</code>，<code>ln()</code>，<code>log10()</code> くらいのものです。<code>pi()</code>，<code>sin()</code>，<code>cos()</code> の定義例は <a href="https://docs.python.org/3/library/decimal.html">decimal</a> のページに載っています。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-07-13 21:51:19</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
