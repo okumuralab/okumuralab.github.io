@@ -116,13 +116,20 @@ wc.to_file('wc3.png')
 
 <figure><img src="img/wc3.png" alt="流言蜚語ワードクラウド"></figure>
 
+<p>ちなみに，プログラム中にテキストを書き込むのは面倒なので，テキストは別ファイルにして，次のようにして読み込むのが楽です：</p>
+
+<pre>
+with open('filename.txt') as f:
+    text = f.read()
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-27 09:22:38</time>
+Last modified: <time>2019-07-14 13:56:35</time>
 <!-- hhmts end -->
 </p>
 </body>

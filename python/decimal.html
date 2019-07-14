@@ -16,18 +16,30 @@
 
 <h1>十進計算</h1>
 
-<p>Pythonでなくてもどんな言語でも計算の誤差に悩まされます。例えば</p>
+<p>Excelに <code>=0.3-0.2-0.1</code> と打ち込んでみてください。当然ながら（？）ぴったりゼロになります。</p>
+
+<p>では今度は <code>=(0.3-0.2-0.1)</code> とカッコ付きで打ち込んでみてください。あれあれ！ <code>-2.77556E-17</code> になってしまいました。この <code>E-17</code> は ×10<sup>-17</sup> つまり1のあとに0が17個並ぶ数 100000000000000000 分の 1 を掛け算した値という意味です。ごくわずかですが誤差があります。</p>
+
+<p>Excelの計算結果としては，この <code>-2.77556E-17</code> のほうが正しいのです。Excelの中では10進表現ではなく2進表現が使われているので，0.1 のような10進で表現すると有限小数になる値でも，2進で表現すると無限に循環する小数になり，正確に表せません。このため，わずかな誤差が出るのが正しい計算です。</p>
+
+<p>では最初の <code>=0.3-0.2-0.1</code> はなぜぴったりゼロになったのかというと，Excelはカッコを付けないと10進でキリの良い値に丸めるようにプログラムされているのです。</p>
+
+<p>これは数値計算としてはまずい仕様です。本当はゼロでない答えが出ても，ゼロにされてしまうのですから。たとえばExcelに <code>=74724506/23785549-PI()</code> と打ち込んでみてください。ぴったりゼロになります。円周率は有理数 74724506/23785549 と（Excelの精度で）ぴったり一致するのでしょうか。でも <code>=(74724506/23785549-PI())</code> とカッコ付きで打ち込めば，答えは <code>-2.22045E-15</code> になります。</p>
+
+<p>ちなみに，74724506/23785549-π の15桁まで正しい値は -2.22712210211597E-15 です。</p>
+
+<p>以上はExcelの話ですが，AppleのNumbersという表計算ソフトの最新版では <code>=74724506/23785549-PI()</code> と打ち込むとぴったり -2.22712210211597E-15 になります（標準では -0.00000... となってしまうので，セルのデータフォーマットを「指数表示」に直してください）。</p>
+
+<p>どうしてNumbersはこんなに正確に答えを出せるのかというと，<a href="https://support.apple.com/ja-jp/HT210179">Pages、Numbers、Keynote の計算の精度向上について</a>に書いてあるように，128ビット10進浮動小数点（DFP）演算を使うようになったためです。一方，Excelは64ビットIEEE 754にアドホックな修正を加えたものです（Wikipediaの <a href="https://en.wikipedia.org/wiki/Numeric_precision_in_Microsoft_Excel">Numeric precision in Microsoft Excel</a> 参照）。なお，LibreOfficeについては<a href="https://togetter.com/li/1367733">LibreOffice CalcとExcelの計算結果誤差をみなさんで検証していただいた結果まとめ</a>をご覧ください。</p>
+
+<p>Pythonも標準では同じことが起きます：</p>
 
 <pre>
 In [ ]: 0.3 - 0.2 - 0.1
 Out[ ]: -2.7755575615628914e-17
 </pre>
 
-<p>この <code>e-17</code> は ×10<sup>-17</sup> つまり1のあとに0が17個並ぶ数 100000000000000000 分の 1 を掛け算した値という意味です。ごくわずかですが誤差があります。</p>
-
-<p>この誤差の原因はコンピュータの中では10進表現ではなく2進表現が使われていることにあります。0.1 のような10進で表現すると有限小数になる値でも，2進で表現すると無限に循環する小数になり，正確に表せません。</p>
-
-<p>ただ，コンピュータでも，効率は悪いのですが，10進表現を使うこともできます。Python では <a href="https://docs.python.org/3/library/decimal.html">decimal</a> というパッケージで任意精度の10進表現が使えます。</p>
+<p>Pythonでは <a href="https://docs.python.org/3/library/decimal.html">decimal</a> というパッケージを使えば任意精度の10進演算ができます。</p>
 
 <pre>
 In [ ]: from decimal import *
@@ -42,10 +54,54 @@ Out[ ]: Decimal('0.0')
 
 <pre>
 In [ ]: Decimal(2).sqrt()
-Out[ ]: Decimal('1.414213562373095048801688724209698078569671875376948073176679737990732478462107038850387534327641573')
+Out[ ]: Decimal('1.41421356237309504880168872420969807856967187537694...') # 略
 </pre>
 
-<p>使える関数は <code>sqrt()</code>，<code>exp()</code>，<code>ln()</code>，<code>log10()</code> くらいのものです。<code>pi()</code>，<code>sin()</code>，<code>cos()</code> の定義例は <a href="https://docs.python.org/3/library/decimal.html">decimal</a> のページに載っています。</p>
+<p>使える関数は <code>sqrt()</code>，<code>exp()</code>，<code>ln()</code>，<code>log10()</code> くらいのものです。<code>pi()</code>，<code>sin()</code>，<code>cos()</code> の定義例は <a href="https://docs.python.org/3/library/decimal.html">decimal</a> のページに載っています。これを使って 74724506 / 23785549 - π の値を求めてみましょう：</p>
+
+<pre>
+from decimal import *
+
+def pi():
+    """Compute Pi to the current precision.
+
+    >>> print(pi())
+    3.141592653589793238462643383
+
+    """
+    getcontext().prec += 2  # extra digits for intermediate steps
+    three = Decimal(3)      # substitute "three=3.0" for regular floats
+    lasts, t, s, n, na, d, da = 0, three, 3, 1, 0, 0, 24
+    while s != lasts:
+        lasts = s
+        n, na = n+na, na+8
+        d, da = d+da, da+32
+        t = (t * n) / d
+        s += t
+    getcontext().prec -= 2
+    return +s               # unary plus applies the new precision
+
+getcontext().prec = 100  # 100桁精度にする（デフォルトは28桁）
+print(Decimal(74724506) / Decimal(23785549) - pi())
+</pre>
+
+<p>結果が <code>-2.22712210211597472...E-15</code> のように出力されます。</p>
+
+<p>ちなみに，74724506 / 23785549 がほぼ π になることは次のようにして探索しました：</p>
+
+<pre>
+import math
+
+a = 1
+for i in range(1, 100000000):
+    j = round(i * math.pi)
+    x = j / i - math.pi
+    if abs(x) < a:
+        a = abs(x)
+        print(j, i, a)
+        if a == 0:
+            break
+</pre>
 
 <hr>
 
@@ -53,7 +109,7 @@ Out[ ]: Decimal('1.4142135623730950488016887242096980785696718753769480731766797
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-13 21:51:19</time>
+Last modified: <time>2019-07-14 13:11:21</time>
 <!-- hhmts end -->
 </p>
 </body>
