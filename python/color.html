@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Pythonと色</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Pythonと色（途中）</h1>
+
+<p>matplotlib の色については次のチュートリアルやレファレンスがあります：</p>
+
+<ul>
+  <li><a href="https://matplotlib.org/tutorials/colors/colors.html">Specifying Colors</a></li>
+  <li><a href="https://matplotlib.org/tutorials/colors/colormaps">Choosing Colormaps in Matplotlib</a></li>
+  <li><a href="https://matplotlib.org/tutorials/colors/colormap-manipulation.html">Creating Colormaps in Matplotlib</a></li>
+  <li><a href="https://matplotlib.org/tutorials/colors/colorbar_only.html">Customized Colorbars Tutorial</a></li>
+  <li><a href="https://matplotlib.org/tutorials/colors/colormapnorms.html">Colormap Normalization</a></li>
+  <li><a href="https://matplotlib.org/gallery/color/named_colors.html">List of named colors</a></li>
+  <li><a href="https://matplotlib.org/gallery/color/colormap_reference.html">Colormap reference</a></li>
+</ul>
+
+<p>簡単な例で説明します。例えば</p>
+
+<pre>
+import matplotlib.pyplot as plt
+
+plt.plot([[1,2], [3,4]])
+</pre>
+
+<p>とすると，青とオレンジのグラフができます。もう一度 <code>plt.plot([[1,2], [3,4]])</code> を打ち込むと，今度は緑と赤になります。これらの色は matplotlib のデフォルトのパレット <code>tab10</code> から順にとっています。これは <a href="https://www.tableau.com">Tableau</a>（タブロー）という有名な可視化ツールの <a href="https://www.tableau.com/about/blog/2016/7/colors-upgrade-tableau-10-56782">Tableau 10</a> というカラーマップの旧版に基づいています：</p>
+
+<table>
+  <tr>
+    <td style="height:1em; background:#1f77b4"></td>
+    <td style="height:1em; background:#ff7f0e"></td>
+    <td style="height:1em; background:#2ca02c"></td>
+    <td style="height:1em; background:#d62728"></td>
+    <td style="height:1em; background:#9467bd"></td>
+  </tr>
+  <tr>
+    <td><code>#1f77b4</code></td>
+    <td><code>#ff7f0e</code></td>
+    <td><code>#2ca02c</code></td>
+    <td><code>#d62728</code></td>
+    <td><code>#9467bd</code></td>
+  </tr>
+  <tr>
+    <td style="height:1em; background:#8c564b"></td>
+    <td style="height:1em; background:#e377c2"></td>
+    <td style="height:1em; background:#7f7f7f"></td>
+    <td style="height:1em; background:#bcbd22"></td>
+    <td style="height:1em; background:#17becf"></td>
+  </tr>
+  <tr>
+    <td><code>#8c564b</code></td>
+    <td><code>#e377c2</code></td>
+    <td><code>#7f7f7f</code></td>
+    <td><code>#bcbd22</code></td>
+    <td><code>#17becf</code></td>
+  </tr>
+</table>
+
+<p>（続きはそのうち書きます）</p>
+
+<p>リンク</p>
+
+<ul>
+  <li><a href="https://qiita.com/skotaro/items/5c9893d186ccd31f459d">matplotlibでcolor cycleのN番目の色を指定するいくつかの方法</a></li>
+  <li><a href="http://medvis.org/2016/02/23/better-than-the-rainbow-the-matplotlib-alternative-colormaps/">Better than the rainbow: The Matplotlib alternative colormaps</a></li>
+  <li><a href="http://yyhhyy.hatenablog.com/entry/2017/05/04/200000">誤解を招かないように配慮された最新のカラーマップ（カラーパレット）について</a></li>
+  <li><a href="https://doi.org/10.1371/journal.pone.0199239">Optimizing colormaps with consideration for color vision deficiency to enable accurate interpretation of scientific data</a> (<code>"cividis"</code> の提案)</li>
+</ul>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-07-15 10:21:45</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
