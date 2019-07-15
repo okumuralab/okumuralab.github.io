@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Macでファイルにタグを付ける</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>Macでファイルにタグを付ける</h1>
+
+<p>MacのFinderでファイルを右クリックして「情報を見る」を選ぶと，次のような画面が現れる。ここにタグを複数設定することができる。次のファイルにはタグ「Deep Learning」「LeCun」「Bengio」「Hinton」「2015」が設定されている。</p>
+
+<figure><img src="img/190715a.png" alt="MacのFinderで「情報を見る」"></figure>
+
+<p>タグはコマンドで確認できる：</p>
+
+<pre>
+$ mdls -name kMDItemUserTags nature14539.pdf 
+kMDItemUserTags = (
+    "Deep Learning",
+    LeCun,
+    Bengio,
+    Hinton,
+    2015
+)
+</pre>
+
+<p>このタグはSpotlightで検索することができるし，次のようにコマンドで検索することもできる：</p>
+
+<pre>
+$ mdfind "kMDItemUserTags == Hinton && kMDItemUserTags == Bengio"
+$ mdfind "kMDItemUserTags == 'Deep Learn*'"
+</pre>
+
+<p>このタグはMacのファイルシステムにメタデータとして保存されているので，別のMacに送る場合は <code>rsync -auvzE ....</code> のように <code>-E</code> オプションを付けて送る必要がある。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-07-15 15:56:18</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
