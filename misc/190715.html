@@ -33,14 +33,67 @@ kMDItemUserTags = (
 )
 </pre>
 
-<p>このタグはSpotlightで検索することができるし，次のようにコマンドで検索することもできる：</p>
+<p>このタグはSpotlightで検索できるし，次のようにコマンドでも検索できる：</p>
 
 <pre>
 $ mdfind "kMDItemUserTags == Hinton && kMDItemUserTags == Bengio"
 $ mdfind "kMDItemUserTags == 'Deep Learn*'"
 </pre>
 
-<p>このタグはMacのファイルシステムにメタデータとして保存されているので，別のMacに送る場合は <code>rsync -auvzE ....</code> のように <code>-E</code> オプションを付けて送る必要がある。</p>
+<p>検索にはファイル名も含ませることができる：</p>
+
+<pre>
+$ mdfind "kMDItemUserTags == Hinton && kMDItemFSName == *.pdf"
+</pre>
+
+<p><code>kMDItemFSName</code> 以外に <code>kMDItemDisplayName</code> もあるが，こちらは表示名である（例えば「Documents」と「書類」）。</p>
+
+<p>これ以外にどんなメタデータがあるかは，<code>mdls ファイル名</code> として調べられる。</p>
+
+<p>これらのメタ情報はMac固有のものである。別のMacに送る場合は <code>rsync -auvzE ....</code> のように <code>-E</code> オプションを付ける必要がある。</p>
+
+<p>タグを操作するもっと便利なコマンドとして <a href="https://github.com/jdberry/tag/">tag</a> がある。Homebrew でもインストールできる。</p>
+
+<pre>
+$ tag --help
+tag - A tool for manipulating and querying file tags.
+  usage:
+    tag -a | --add &lt;tags&gt; &lt;path&gt;...     Add tags to file
+    tag -r | --remove &lt;tags&gt; &lt;path&gt;...  Remove tags from file
+    tag -s | --set &lt;tags&gt; &lt;path&gt;...     Set tags on file
+    tag -m | --match &lt;tags&gt; &lt;path&gt;...   Display files with matching tags
+    tag -f | --find &lt;tags&gt; &lt;path&gt;...    Find all files with tags (-A, -e, -R ignored)
+    tag -u | --usage &lt;tags&gt; &lt;path&gt;...   Display tags used, with usage counts
+    tag -l | --list &lt;path&gt;...           List the tags on file
+  &lt;tags&gt; is a comma-separated list of tag names; use * to match/find any tag.
+  additional options:
+        -v | --version      Display version
+        -h | --help         Display this help
+        -A | --all          Display invisible files while enumerating
+        -e | --enter        Enter and enumerate directories provided
+        -R | --recursive    Recursively process directories
+        -n | --name         Turn on filename display in output (default)
+        -N | --no-name      Turn off filename display in output (list, find, match)
+        -t | --tags         Turn on tags display in output (find, match)
+        -T | --no-tags      Turn off tags display in output (list)
+        -g | --garrulous    Display tags each on own line (list, find, match)
+        -G | --no-garrulous Display tags comma-separated after filename (default)
+        -c | --color        Display tags in color
+        -p | --slash        Terminate each directory name with a slash
+        -0 | --nul          Terminate lines with NUL (\0) for use with xargs -0
+             --home         Find tagged files in user home directory
+             --local        Find tagged files in home + local filesystems
+             --network      Find tagged files in home + local + network filesystems
+</pre>
+
+<p>使い方の例：</p>
+
+<pre>
+$ tag --add LeCun,Bengio,Hinton,2015,'Deep Learning' nature14539.pdf
+$ tag nature*.pdf   # タグをリスト
+$ tag --find Hinton,2015  # AND検索
+$ tag --find 'deep learning' /Volumes/opt  # /Volumes/opt 以下に限定
+</pre>
 
 <hr>
 
@@ -49,7 +102,7 @@ $ mdfind "kMDItemUserTags == 'Deep Learn*'"
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-15 15:56:18</time>
+Last modified: <time>2019-07-15 19:31:28</time>
 <!-- hhmts end -->
 </p>
 </footer>
