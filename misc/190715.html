@@ -95,6 +95,13 @@ $ tag --find Hinton,2015  # AND検索
 $ tag --find 'deep learning' /Volumes/opt  # /Volumes/opt 以下に限定
 </pre>
 
+<p>残念なことに <code>mdfind</code> と違ってワイルドカード <code>*</code> が使えない。</p>
+
+<pre>
+$ mdfind "kMDItemUserTags == 'Deep Learn*'" # 見つかる
+$ tag --find 'Deep Learn*'                  # 見つからない
+</pre>
+
 <hr>
 
 <footer>
@@ -102,7 +109,7 @@ $ tag --find 'deep learning' /Volumes/opt  # /Volumes/opt 以下に限定
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-15 19:31:28</time>
+Last modified: <time>2019-07-16 22:05:59</time>
 <!-- hhmts end -->
 </p>
 </footer>
