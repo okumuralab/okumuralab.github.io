@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>SymPyによる数式処理</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>SymPyによる数式処理</h1>
+
+<p><a href="https://www.sympy.org">SymPy</a> は数式処理のための Python ライブラリです。もしまだインストールされていないようでしたら，<code>pip install sympy</code> などと打ち込んでインストールしてください。あるいは，<a href="https://live.sympy.org">こちら</a>でオンラインで使うこともできます（ただし Python 2.7 です。グラフは描画されません）。<a href="https://colab.research.google.com/">Google Colaboratory</a> でも使えます（後で書くように数式表示に制約があります）。</p>
+
+<p>ここでは SymPy の中身を全部インポートしてしまいましょう：</p>
+
+<pre>
+from sympy import *
+</pre>
+
+<p>以下では $x$ と $y$ を「文字」（symbol）だとします：</p>
+
+<pre>
+x, y = symbols("x y")
+</pre>
+
+<p>文字式を表示してみます：</p>
+
+<pre>
+(x + y)**10
+</pre>
+
+<p>もし $(x + y)^{10}$ のように表示されなければ，<code>init_printing()</code> と打ち込んでからもう一度やってみてください。</p>
+
+<div class="note">
+<p>Google Colaboratory では <code>init_printing(use_latex='matplotlib')</code> と打ち込めば図として出力されます。あまりきれいではありません。あるいは無理矢理 MathJax を読み込ませる方法が<a href="https://stackoverflow.com/questions/52010001/latex-output-from-sympy-does-not-correctly-display-in-google-colaboratory-jupyte">ここ</a>に書いてあります。</p>
+</div>
+
+<p>この式を展開してみましょう：</p>
+
+<pre>
+expand((x + y)**10)
+</pre>
+
+<p>$x^{10} + 10 x^{9} y + 45 x^{8} y^{2} + 120 x^{7} y^{3} + 210 x^{6} y^{4} + 252 x^{5} y^{5} + 210 x^{4} y^{6} + 120 x^{3} y^{7} + 45 x^{2} y^{8} + 10 x y^{9} + y^{10}$ のように展開できましたでしょうか。</p>
+
+<div class="note">
+<p>上の式は <code>latex(expand((x + y)**10))</code> と打ち込んで出力されたものを LaTeX (MathJax) で数式化しています。</p>
+</div>
+
+<p>展開 <code>expand()</code> の逆は因数分解 <code>factor()</code> です。</p>
+
+<p>積分もできます：</p>
+
+<pre>
+Integral(exp(-x**2/2))
+</pre>
+
+<p>定積分は次のようにします：</p>
+
+<pre>
+Integral(exp(-x**2/2), (x, -oo, oo))
+</pre>
+
+<p>定積分を実行してみましょう：</p>
+
+<pre>
+integrate(exp(-x**2/2), (x, -oo, oo))
+</pre>
+
+<p>$\sqrt{2}\sqrt{\pi}$ になってしまいました。本当は $\sqrt{2\pi}$ としてほしいところですが。</p>
+
+<p>ほかの例として，積分 <code>integrate(sin(x))</code> や微分 <code>diff(sin(x))</code> もやってみましょう。</p>
+
+<p>グラフのプロットも簡単です：</p>
+
+<pre>
+plot(exp(-x**2/2))
+</pre>
+
+<p>もしうまくいかなかったら <code>%matplotlib inline</code> と打ち込んでから再度試してみてください。</p>
+
+<p>複数の式を指定したり，$x$ の範囲を指定したりすることもできます：</p>
+
+<pre>
+plot(sin(x), cos(x), (x, 0, 2*pi))
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-07-18 15:04:01</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

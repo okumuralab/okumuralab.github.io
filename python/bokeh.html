@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Bokehによるプロット</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Bokehによるプロット</h1>
+
+<p><a href="https://bokeh.pydata.org">Bokeh</a>（ボケ）はHTML＋JavaScriptでグラフを描くPythonパッケージです。日本語起源の写真用語<a href="https://ja.wikipedia.org/wiki/%E3%83%9C%E3%82%B1_%28%E5%86%99%E7%9C%9F%29">ボケ</a>が語源です。</p>
+
+<p><code>pip install bokeh</code> などでインストールして，試してみましょう。</p>
+
+<pre>
+from bokeh.plotting import figure, output_file, show
+
+output_file("test.html")  # カレントディレクトリに作るHTMLファイルの名前
+p = figure(title="簡単な例", x_axis_label='x', y_axis_label='y')
+p.line([1,2], [3,4], legend="線", line_width=2)
+show(p)
+</pre>
+
+<p>matplotlibとは独立ですので，ブラウザとネット接続があれば，どんな環境でも使えます。</p>
+
+<p>（以下そのうち書きます）</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-07-18 15:55:59</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
