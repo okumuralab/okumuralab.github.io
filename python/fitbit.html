@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Fitbit</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@h_okumura">
+<meta name="twitter:title" content="PythonでFitbitのデータを読む">
+<meta name="twitter:image" content="https://oku.edu.mie-u.ac.jp/~okumura/python/img/heart190718.png">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Fitbit</h1>
+
+<p><a href="https://towardsdatascience.com/collect-your-own-fitbit-data-with-python-ff145fa10873">Collect Your Own Fitbit Data with Python</a> という解説に従って，自分の Fitbit のデータを取得する。基本的には <code>fitbit</code> ライブラリを使う。このライブラリの GitHub リポジトリは <a href="https://github.com/orcasgit/python-fitbit">こちら</a>，ドキュメントは <a href="https://python-fitbit.readthedocs.io/">こちら</a> にある。</p>
+
+<p>まず Fitbit の <a href="https://dev.fitbit.com/">開発者サイト</a> にログインし，Manage → Register An App でアプリケーションを登録する。方法は上の解説に詳しく書かれている（アプリ名と組織名に fitbit という文字列を含めることはできない）。おそらくGDPRの影響か，Terms Of Service Url，Privacy Policy Url が追加されている。OAuth 2.0 Client ID と Client Secret をメモしておく。</p>
+
+<p>ライブラリ自体は <code>pip install fitbit</code> で入る。後で <code>cherrypy</code> も必要になる。<a href="https://github.com/orcasgit/python-fitbit">リポジトリ</a> にある gather_keys_oauth2.py を同じディレクトリに置いて作業する。</p>
+
+<pre>
+import fitbit
+import gather_keys_oauth2 as Oauth2
+import pandas as pd 
+import datetime
+
+CLIENT_ID = '......'
+CLIENT_SECRET = '................................'
+
+server = Oauth2.OAuth2Server(CLIENT_ID, CLIENT_SECRET)
+server.browser_authorize()
+ACCESS_TOKEN = str(server.fitbit.client.session.token['access_token'])
+REFRESH_TOKEN = str(server.fitbit.client.session.token['refresh_token'])
+</pre>
+
+<p>これを実行すると，ブラウザが開き，アクセス機能を求める画面が出る。「すべて許可する」をチェックして「許可」ボタンを押すと，「You are now authorized to access the Fitbit API! You can close this window」と出る。次からはログイン画面だけになる。これらを使ってクライアントを作る：</p>
+
+<pre>
+auth2_client = fitbit.Fitbit(CLIENT_ID, CLIENT_SECRET, oauth2=True,
+                             access_token=ACCESS_TOKEN, refresh_token=REFRESH_TOKEN)
+</pre>
+
+<p>例として昨日の心拍数を取得してみる：</p>
+
+<pre>
+yesterday = str((datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y%m%d"))
+yesterday2 = str((datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d"))
+today = str(datetime.datetime.now().strftime("%Y%m%d"))
+
+fit_statsHR = auth2_client.intraday_time_series('activities/heart',
+                                                base_date=yesterday2,
+                                                detail_level='1sec')
+</pre>
+
+<p><code>fit_statsHR</code> にデータが入る。最初の10個くらいを眺めてみる：</p>
+
+<pre>
+In [ ]: fit_statsHR['activities-heart-intraday']['dataset'][:10]
+Out[ ]: 
+[{'time': '08:40:10', 'value': 70},
+ {'time': '08:40:25', 'value': 70},
+ {'time': '08:40:35', 'value': 79},
+ {'time': '08:40:50', 'value': 95},
+ {'time': '08:40:55', 'value': 115},
+ {'time': '08:41:00', 'value': 104},
+ {'time': '08:41:05', 'value': 105},
+ {'time': '08:41:10', 'value': 113},
+ {'time': '08:41:15', 'value': 122},
+ {'time': '08:41:20', 'value': 124}]
+</pre>
+
+<p>だいたい5〜15秒ごとのデータが取れているようである。このままでは扱いにくいので，pandas の　DataFrame に直す：</p>
+
+<pre>
+date = fit_statsHR['activities-heart'][0]['dateTime']
+t = [pd.to_datetime(date + ' ' + x['time'])
+     for x in fit_statsHR['activities-heart-intraday']['dataset']]
+v = [x['value'] for x in fit_statsHR['activities-heart-intraday']['dataset']]
+df = pd.DataFrame({'Heart Rate':v}, index=t)
+</pre>
+
+<p>日付入りのファイル名で CSV に保存する：</p>
+
+<pre>
+df.to_csv('heart' + yesterday + '.csv')
+</pre>
+
+<p>読むには次のようにする：</p>
+
+<pre>
+df = pd.read_csv("heart20190718.csv", index_col=0, parse_dates=[0])
+</pre>
+
+<p>簡単なプロット：</p>
+
+<pre>
+df.plot(figsize=(10,5))
+</pre>
+
+<figure><img src="img/heart190718.png" alt="心拍数"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-07-20 10:56:16</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

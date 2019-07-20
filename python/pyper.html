@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>PythonからRを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PythonからRを使う</h1>
+
+<p>Python から R を使うには <a href="http://bioinfo.ihb.ac.cn/softwares/PypeR/">PypeR</a>（パイパー）というライブラリが便利です（ほかに <a href="https://rpy2.bitbucket.io">rpy2</a> というライブラリもあります）。PypeR は <code>pip install pyper</code> でインストールできます。</p>
+
+<pre>
+In [ ]: import pyper
+
+In [ ]: r = pyper.R()  # Rのインスタンスを作る
+
+In [ ]: r('sin(pi/4)') # Rにコマンドを送る（出力が見にくい）
+Out[ ]: 'try({sin(pi/4)})\n[1] 0.7071068\n'
+
+In [ ]: print(r('sin(pi/4)'))  # これのほうが見やすい
+try({sin(pi/4)})
+[1] 0.7071068
+
+
+In [ ]: r.assign('x', [i for i in range(10)]) # Rのオブジェクトに代入
+
+In [ ]: print(r('x^2'))
+try({x^2})
+ [1]  0  1  4  9 16 25 36 49 64 81
+
+
+In [ ]: r('y = x^2')
+Out[ ]: 'try({y = x^2})\n'
+
+In [ ]: r.get('y')  # RのオブジェクトをPythonに持ってくる
+Out[ ]: array([ 0,  1,  4,  9, 16, 25, 36, 49, 64, 81])
+
+In [ ]: r("curve(x^2, -2, 2)")  # これでは表示できない
+Out[ ]: 'try({curve(x^2, -2, 2)})\n'
+
+In [ ]: r('png("hoge.png"); curve(x^2, -2, 2); dev.off()')  # 画像ファイル出力
+Out[ ]: 'try({png("hoge.png"); curve(x^2, -2, 2); dev.off()})\npdf \n  2 \n'
+
+In [ ]: !open hoge.png  # Macならこれで画像ファイルを表示できる
+</pre>
+
+<p>Jupyter Notebook なら次のようにすればカレントディレクトリの画像ファイルをブラウザにインライン表示できます：</p>
+
+<pre>
+from IPython.display import Image
+
+Image('hoge.png')
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-07-18 22:03:28</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
