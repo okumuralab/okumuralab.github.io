@@ -6,6 +6,11 @@
 <title>PISA 2015データを読む</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script>
+window.onload = function() {
+  document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];
+}
+</script>
 </head>
 <body>
 
@@ -14,7 +19,7 @@
 <a href="./">統計・データ解析</a> &gt;
 </nav>
 
-<h1>PISA 2015データを読む<em>（未完）</em></h1>
+<h1>PISA 2015データを読む</h1>
 
 <p>これは<a href="pisa.html">PISAデータを読む</a>のPISA 2015年版（2016年12月結果公開）である。生徒のアンケート個票をRで読んで分析するのが目的である。</p>
 
@@ -96,17 +101,53 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 
 <h2>回答の分析</h2>
 
-<p>ファイルのデータ構造は上記ページ「Codebooks for the main files」からExcel形式でダウンロードできる。主なメタデータは次の通りである：</p>
+<p>上記いずれかの方法で <code>data</code> という名前でデータを読み込んだとする。データの大きさを調べてみよう：</p>
+
+<pre>
+<code>dim(data)</code>
+[1] 519334    921
+</pre>
+
+<p>519334行921列のデータだとわかる。確かに大きい。項目名（列名）を一覧してみよう：</p>
+
+<pre>
+<code>names(data)</code>
+  [1] "CNTRYID"       "CNT"           "CNTSCHID"      "CNTSTUID"     
+  [5] "CYC"           "NatCen"        "Region"        "STRATUM"      
+  [9] "SUBNATIO"      "OECD"          "ADMINMODE"     "Option_CPS"   
+ [13] "Option_FL"     "Option_ICTQ"   "Option_ECQ"    "Option_PQ"    
+ [17] "Option_TQ"     "Option_UH"     "Option_Read"   "Option_Math"  
+ [21] "LANGTEST_QQQ"  "LANGTEST_COG"  "LANGTEST_PAQ"  "CBASCI"       
+ [25] "BOOKID"        "ST001D01T"     "ST003D02T"     "ST003D03T"    
+ [29] "ST004D01T"     "ST005Q01TA"    "ST006Q01TA"    "ST006Q02TA"   
+ [33] "ST006Q03TA"    "ST006Q04TA"    "ST007Q01TA"    "ST008Q01TA"   
+ [37] "ST008Q02TA"    "ST008Q03TA"    "ST008Q04TA"    "ST011Q01TA"   
+ [41] "ST011Q02TA"    "ST011Q03TA"    "ST011Q04TA"    "ST011Q05TA"   
+....(後略)....
+</pre>
+
+<p>コードブック <a href="https://www.oecd.org/pisa/data/2015database/Codebook_CMB.xlsx">Codebooks for the main files</a> に書かれているが，先頭のいくつかの項目は次の通りである：</p>
 
 <ul>
-  <li>CNTRYID: 国コード（番号）</li>
-  <li>CNT: 国（3文字）</li>
-  <li>CNTSCHID: 学校コード</li>
-  <li>CNTSTUID: 生徒コード</li>
-  <li>OECD: OECD加盟国であるか（0: No, 1: Yes）</li>
+  <li><code>CNTRYID</code>: 国コード（番号）</li>
+  <li><code>CNT</code>: 国（3文字）</li>
+  <li><code>CNTSCHID</code>: 学校コード</li>
+  <li><code>CNTSTUID</code>: 生徒コード</li>
+  <li><code>OECD</code>: OECD加盟国であるか（0: No, 1: Yes）</li>
 </ul>
 
-<p>質問の内容は「The questionnaires below are available in Annex A of PISA 2015 Assessment and Analytical Framework (OECD, 2015)」からリンクされている。例えば ST011「Which of the following are in your home?」の中の ST011Q04TA「A computer you can use for school work」では 1（Yes），2（No）が回答である。日本の生徒についての内訳を見るには</p>
+<p><code>ST</code> で始まる項目名が生徒に対する質問の回答である。質問の内容は <a href="https://www.oecd.org/pisa/data/CY6_QST_MS_STQ_CBA_Final.pdf">Student questionnaire</a>  (computer-based assessment) に書かれている。例えば ST011「Which of the following are in your home?」の中の <code>ST011Q04TA</code>「A computer you can use for school work」では 1（Yes），2（No）が回答である。それぞれの回答数を表にしてみよう：</p>
+
+<pre>
+<code>table(data$ST011Q04TA)</code>
+
+     1      2 
+426698  71943 
+</pre>
+
+<p>全体で519334件あるはずだが，合わせて498641しか回答がない。無回答の生徒もいるのだろう。</p>
+
+<p>日本の生徒についての内訳を見るには</p>
 
 <pre>
 <code>table(data$ST011Q04TA[data$CNT=="JPN"])</code>
@@ -140,7 +181,17 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 
 <p>日本は下から7番目である。</p>
 
-<p>（未完）</p>
+<p>3文字国名の表 <a href="data/countries.csv">countries.csv</a>（UTF-8）を使って日本語にしてみよう：</p>
+
+<pre>
+cnt = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/countries.csv",
+               fileEncoding="UTF-8")
+tcnt = cnt$国名
+names(tcnt) = cnt$三字
+s = sort(x[,1] / rowSums(x[,1:2]))
+par(mar=c(5,15,1,2)) # 下左上右マージン（要調整）
+barplot(s, horiz=TRUE, las=1, names.arg=tcnt[names(s)])
+</pre>
 
 <h2>参考リンク</h2>
 
@@ -159,7 +210,7 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-16 21:07:31</time>
+Last modified: <time>2019-07-20 20:12:40</time>
 <!-- hhmts end -->
 </p>
 </footer>

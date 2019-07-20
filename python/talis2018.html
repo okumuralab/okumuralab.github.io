@@ -79,17 +79,11 @@ plt.grid()
 plt.xlim(1, 4)
 </pre>
 
-<p>国名を日本語にするには，次のようにすればよい（りん先生の国名一覧を拝借した）：</p>
+<p>国名を日本語にするには，次のようにすればよい：</p>
 
 <pre>
-co = pd.read_csv("http://www.edufolder.jp/files/talis2018/ISO3166.csv")
-dic = { r['Alpha3']: r['Name_ja'] for i,r in co.iterrows() }
-dic['ZAF'] = '南アフリカ'
-dic['CSH'] = '上海'
-dic['CYP'] = 'キプロス'
-dic['KAZ'] = 'カザフスタン'
-dic['CAB'] = 'CABA (アルゼンチン)'
-dic['SAU'] = 'サウジアラビア'
+co = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/countries.csv")
+dic = { r['三字']: r['国名'] for i,r in co.iterrows() }
 cj = [ dic[x] for x in s.index ]
 
 plt.plot(s, cj, "o")
@@ -109,7 +103,7 @@ plt.savefig('190707a.png', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-07 22:15:39</time>
+Last modified: <time>2019-07-20 20:58:46</time>
 <!-- hhmts end -->
 </p>
 </body>
