@@ -16,13 +16,9 @@
 
 <h1>OpenCVによる画像処理</h1>
 
-<h2>基本</h2>
+<h2>画像の読み書き表示</h2>
 
-<p><a href="https://opencv.org">OpenCV</a> は画像を扱うためのライブラリである。</p>
-
-<pre>
-conda install opencv  # または pip install opencv-python
-</pre>
+<p><a href="https://opencv.org">OpenCV</a> は画像を扱うためのライブラリである。インストールは <code>pip install opencv-python</code> または <code>conda install opencv</code> でできる。</p>
 
 <p>まずは適当な画像を読み込んでみる：</p>
 
@@ -35,9 +31,17 @@ type(img)   # numpy.ndarray
 img.shape   # (縦ピクセル数, 横ピクセル数, チャンネル数)
 </pre>
 
-<p>これでエラーが出ればうまく読めていないことになる。私の環境では  URL や <code>~/</code> で始まるパス名やはうまくいかなかった。</p>
+<p>これでエラーが出ればうまく読めていないことになる。私の環境では  URL や <code>~/</code> で始まるパス名はうまくいかなかった。Windows 環境では全角ファイル名が読み込めないらしい（<a href="https://qiita.com/SKYS/items/cbde3775e2143cad7455">Python OpenCV の cv2.imread 及び cv2.imwrite で日本語を含むファイルパスを取り扱う際の問題への対処について</a> 参照）。</p>
 
-<p>IPython などの対話型の環境で画像を表示するには，次のようにするのがよさそうだ：</p>
+<p>画像を表示するには，</p>
+
+<pre>
+cv2.imshow('Image', img)  # ウィンドウ名は何でもよい
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+</pre>
+
+<p>あるいは</p>
 
 <pre>
 cv2.startWindowThread()
@@ -45,7 +49,15 @@ cv2.namedWindow("Image")  # ウィンドウ名は何でもよい
 cv2.imshow("Image", img)
 </pre>
 
-<p>別のやりかたとして例えば <code>cv2.imshow("Image", img); cv2.waitKey(5000)</code> のようにすれば5秒間ブロックして表示する。表示ウィンドウをすべて閉じるには <code>cv2.destroyAllWindows()</code> と打ち込む。</p>
+<p>あるいは，例えば <code>cv2.imshow("Image", img); cv2.waitKey(5000)</code> のようにすれば5秒間ブロックして表示する。表示ウィンドウをすべて閉じるには <code>cv2.destroyAllWindows()</code> と打ち込む。</p>
+
+<p>しかし，私の環境では，うまくいったりいかなかったり。Matplotlib で表示するほうが楽である。ただ，OpenCV は BGR の順，Matplotlib は RGB の順なので，そのままでは色がおかしくなる。<a href="https://stackoverflow.com/questions/15072736/extracting-a-region-from-an-image-using-slicing-in-python-opencv">ここ</a>で論じられているように，<code>img2 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)</code> または <code>img2 = img[..., ::-1]</code> で逆順にしてから <code>plt.imshow(img2)</code> すればよい。あるいは次のようにすればよい：</p>
+
+<pre>
+import matplotlib.pyplot as plt
+
+plt.imshow(img[..., ::-1])
+</pre>
 
 <p>画像は NumPy の ndarray で，成分は <code>'uint8'</code> である。チャンネルは [B,G,R] の順に入る。例えば青だけの縦150，横100の画像は次のようにして生成できる：</p>
 
@@ -54,7 +66,7 @@ img = np.array([[[255,0,0] for x in range(100)] for y in range(150)], dtype='uin
 # または img = np.array([[[255,0,0]] * 100] * 150, dtype="uint8")
 </pre>
 
-<p>保存する：</p>
+<p>保存するには，次のようにする：</p>
 
 <pre>
 cv2.imwrite("hoge.png", img)
@@ -84,7 +96,26 @@ imageio.imsave("出力画像ファイル名", img)
 img2 = cv2.GaussianBlur(img, (9,9), 0)  # カーネルサイズは奇数に
 </pre>
 
-<p>（未完）</p>
+<h2>顔認識</h2>
+
+<p>顔が写っている画像を読み込み，顔の部分を赤い四角形で囲む：</p>
+
+<pre>
+import matplotlib.pyplot as plt
+import cv2
+
+img = cv2.imread("lena_std.png")  # 顔が写っている画像
+
+cascade = cv2.CascadeClassifier('/usr/local/lib/python3.7/' +
+    'site-packages/cv2/data/haarcascade_frontalface_default.xml')
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+faces = cascade.detectMultiScale(gray, scaleFactor=1.5)
+
+for (x, y, w, h) in faces:
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255))
+
+plt.imshow(img[..., ::-1])
+</pre>
 
 <hr>
 
@@ -92,7 +123,7 @@ img2 = cv2.GaussianBlur(img, (9,9), 0)  # カーネルサイズは奇数に
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-29 21:53:51</time>
+Last modified: <time>2019-07-21 17:48:27</time>
 <!-- hhmts end -->
 </p>
 </body>
