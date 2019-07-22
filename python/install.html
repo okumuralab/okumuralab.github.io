@@ -16,11 +16,13 @@
 
 <h1>Python 3 インストール</h1>
 
-<p>macOS や Linux には Python 2.7 が入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>します。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うには，Python 3 をインストールする必要があります。そのためのいろいろな方法を紹介します。</p>
+<p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>します。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うには，Python 3 をインストールする必要があります。そのためのいろいろな方法を紹介します。</p>
 
 <h3>公式サイト Python.org からのインストール</h3>
 
-<p><a href="https://www.python.org/download/">Download Python</a> から，Windows 用または Mac 用の最新のインストーラをダウンロードし，インストールします。Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）が，<a href="https://docs.python.org/3/using/windows.html#the-microsoft-store-package">公式ドキュメント</a>によれば “currently considered unstable” だそうです。</p>
+<p><a href="https://www.python.org/download/">Download Python</a> から，Windows 用または Mac 用の最新のインストーラをダウンロードし，インストールします。Windows ではデフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37-32\python.exe (および pythonw.exe) に，Mac では /Library/Frameworks/Python.framework/Versions/3.7/bin/python3 に入るようです。</p>
+
+<p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら，PowerShell かコマンドプロンプトで「python」と打ち込むと，「ストア」が立ち上がって「Python」をインストールする画面が出てくるようです。なお，<a href="https://docs.python.org/3/using/windows.html#the-microsoft-store-package">公式ドキュメント</a>によれば “currently considered unstable” だそうです。</p>
 
 <p>インストールすると，Mac では <code>~/.bash_profile</code> にパスが付け加えられます。</p>
 
@@ -228,7 +230,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-17 13:22:17</time>
+Last modified: <time>2019-07-22 13:27:02</time>
 <!-- hhmts end -->
 </p>
 </footer>
