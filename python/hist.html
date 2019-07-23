@@ -36,6 +36,17 @@ plt.hist(x, color="lightgray", edgecolor="black")
 
 <figure><img src="img/hist2.png" alt="ヒストグラム2"></figure>
 
+<p>seaborn 風（やや ggplot2 風）に描くには，次のようにする：</p>
+
+<pre>
+import seaborn as sns
+
+sns.set()
+plt.hist(x)
+</pre>
+
+<figure><img src="img/hist3.png" alt="ヒストグラム3"></figure>
+
 <p>オプション <code>density=True</code> で縦軸が個数でなく密度になる。<code>orientation='horizontal'</code> で横向きになる。</p>
 
 <p>例えば <code>bins=50</code> で，だいたい50分割になる。また，例えば <code>bins=[0,1,2,3,4]</code> のように分割点を指定できる。この場合，区間は左閉区間 [0,1)，[1,2)，[2,3)，[3,4] になる。一番右が閉区間となるのに注意。左が閉じた区間になるのは，R のデフォルトとは逆で，R ではオプション <code>right=FALSE</code> を付けると <code>plt.hist()</code> と同じになる。<code>plt.hist()</code> の流儀のほうが一般的のように思う。</p>
@@ -46,7 +57,7 @@ plt.hist(x, color="lightgray", edgecolor="black")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-23 13:07:24</time>
+Last modified: <time>2019-07-23 22:32:58</time>
 <!-- hhmts end -->
 </p>
 </body>
