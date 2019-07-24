@@ -88,9 +88,13 @@ df2 = df.fillna(method="ffill") # 欠測値を直前の行で置き換える
 
 <p>データの（0から数えて）例えば2行目から4行目を選択するには <code>df[2:5]</code> のようにします。データの一部の列を選択するには <code>df.列名</code> あるいは <code>df['列名']</code> あるいは <code>df[['列名1','列名2']]</code> のようにします。行列のように行名・列名で選ぶには <code>df.loc['行名','列名']</code>，行番号・列番号で選ぶには <code>df.iloc[行番号,列番号]</code> とします。複数与えるには <code>[2,3,4]</code> のようにリストにするか，<code>2:5</code> のように範囲で表します（Pythonでは番号は0から数え，<code>2:5</code> のような範囲は最後の5を含まないことに注意）。</p>
 
+<p><code>df['列名']</code> はSeries（1列だけのDataFrame）という型のものです。普通のベクトル（ndarray）に直すには <code>df['列名'].values</code> とします。</p>
+
 <pre>
-df['列名'].value_counts()  # 列の度数分布表を出力
+df['列名'].value_counts()  # 列の度数分布表
 df['列名'].mean()  # 列の平均（median(), var(), std() なども同様）
+df.groupby('列名1')['列名2'].mean() # 列名1でグループ化した列名2の平均
+pd.crosstab(df['列名1'], df['列名2']) # クロス集計
 </pre>
 
 <h2>データ型の指定</h2>
@@ -229,7 +233,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-27 09:21:00</time>
+Last modified: <time>2019-07-24 14:47:15</time>
 <!-- hhmts end -->
 </p>
 </body>
