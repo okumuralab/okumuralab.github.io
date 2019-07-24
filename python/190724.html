@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>2019参院選の山田太郎票と山本太郎票</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@h_okumura">
+<meta name="twitter:title" content="2019参院選の山田太郎票と山本太郎票">
+<meta name="twitter:image" content="https://oku.edu.mie-u.ac.jp/~okumura/python/img/190724a.png">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>2019参院選の山田太郎票と山本太郎票</h1>
+
+<p>2019年7月21日の参院選比例代表で選管が山田太郎と山本太郎を混同する事故があった。<a href="https://mainichi.jp/senkyo/articles/20190723/k00/00m/010/163000c">山田太郎票515票を山本太郎票に　職員思い込みで富士宮市選管集計ミス</a>：「22日に発表した確定票は山本氏1453票、山田氏0票だったが、訂正後は山本氏938票、山田氏515票になる」。</p>
+
+<p>上越市でも同様の疑念がある。<a href="https://mainichi.jp/senkyo/articles/20190724/k00/00m/010/135000c">新潟・上越市でも山田太郎氏の票少なく　選管「開票は適正」</a>によれば，「公職選挙法に基づく訴訟を起こされない限り、票の再確認はできない」とのこと。</p>
+
+<p>新潟県の開票区ごとの山田票，山本票をCSVにした <a href="data/niigata2019.csv">niigata2019.csv</a> を置いておく（BOM付きUTF-8，行末CRLF）。</p>
+
+<p>これを読んでプロットしてみよう。両軸の目盛が等しくなるようにした。</p>
+
+<pre>
+import matplotlib.pyplot as plt
+import pandas as pd
+
+niigata = pd.read_csv("niigata.csv")
+plt.figure(figsize=[7, 4])
+plt.plot(niigata["山本太郎"], niigata["山田太郎"], "o")
+plt.axis('equal')
+for i, v in niigata.iterrows():
+    plt.text(v["山本太郎"], v["山田太郎"], v["開票区名"])
+plt.xlabel("山本太郎")
+plt.ylabel("山田太郎")
+plt.savefig('190724a.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190724a.png" alt="新潟県の開票区ごとの山田太郎票，山本太郎票"></figure>
+
+<p>ついでに三重県も調べてみた。データは <a href="data/mie2019.csv">mie2019.csv</a> である（BOM付きUTF-8，行末CRLF）。</p>
+
+<pre>
+plt.figure(figsize=[7, 4])
+plt.plot(mie["山本太郎"], mie["山田太郎"], "o")
+plt.axis('equal')
+for i, v in mie.iterrows():
+    plt.text(v["山本太郎"], v["山田太郎"], v["開票区名"])
+plt.xlabel("山本太郎")
+plt.ylabel("山田太郎")
+</pre>
+
+<p>さらに，四日市市以外の傾向を直線で書き込んでみる：</p>
+
+<pre>
+plt.plot([0, mie["山本太郎"][mie["開票区名"] != "四日市市"].sum()],
+         [0, mie["山田太郎"][mie["開票区名"] != "四日市市"].sum()],
+         scalex=False, scaley=False)
+plt.savefig('190724b.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190724b.png" alt="三重県の開票区ごとの山田太郎票，山本太郎票"></figure>
+
+<p>四日市市は外れ値といえるであろうか。</p>
+
+<p>両対数グラフにしてみる：</p>
+
+<pre>
+plt.figure(figsize=[5, 5])
+...
+plt.xscale('log')
+plt.yscale('log')
+plt.savefig('190724d.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190724d.png" alt="三重県の開票区ごとの山田太郎票，山本太郎票"></figure>
+
+<p>対数にすると，人口の少ない（したがって統計誤差の大きい）開票区の誤差が強調されて，大都市が目立たなくなってしまうのであろう。</p>
+
+<p>両候補の得票率でもプロットしてみよう。</p>
+
+<pre>
+plt.plot(mie['山本太郎']/mie['投票者数'], mie['山田太郎']/mie['投票者数'], "o")
+for i, v in mie.iterrows():
+    plt.text(v["山本太郎"]/v['投票者数'], v["山田太郎"]/v['投票者数'], v["開票区名"])
+plt.axis('equal')
+plt.xlabel("山本太郎得票率")
+plt.ylabel("山田太郎得票率")
+plt.savefig('190724c.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190724c.png" alt="三重県の開票区ごとの山田太郎，山本太郎得票率"></figure>
+
+<p>四日市市が目立たなくなってしまった。これは，人口の少ない（したがって統計誤差の大きい）開票区がランダムに散らばったためであろう。</p>
+
+<p>要は，グラフの描き方で印象が変わってしまうので，注意しなければならないということである。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-07-24 22:26:04</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
