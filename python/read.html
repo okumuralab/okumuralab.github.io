@@ -59,6 +59,17 @@ Out[ ]: pandas.core.frame.DataFrame
 df = pd.read_csv("finename.csv", na_values="", keep_default_na=False)
 </pre>
 
+<p>10進で切りの良い値なのに微妙な誤差が入ることがあります。例：</p>
+
+<pre>
+from io import StringIO
+data = ("A\n1258.477\n")
+df = pd.read_csv(StringIO(data))
+df.A[0] - 1258.477    # -2.2737367544323206e-13
+</pre>
+
+<p>これを避けるには <code>float_precision="high"</code> または <code>float_precision="round_trip"</code> というオプションを与えます。</p>
+
 <h3>Excel ファイルの読み込み</h3>
 
 <p>Excel ファイル（xls，xlsx）を読むには xlrd というライブラリが必要です。別途 <code>conda install xlrd</code> または <code>pip install xlrd</code> などとしてインストールしておきます。<code>read_excel()</code> を使うと自動的に import されます。</p>
@@ -188,6 +199,8 @@ df.head()
 df.to_csv("filename.csv", index=False, encoding="utf_8_sig", line_terminator="\r\n")
 </pre>
 
+<p>データが10進で切りの良い値でも，微妙な誤差が入ることがあります。例えばオプション <code>float_format="%.14g"</code> を付けて，わざと精度を落として書き込むといった対策がありそうです。</p>
+
 <p>Excel形式での書き出しは <code>pandas.DataFrame.to_excel()</code> です。エンジンは openpyxl または xlsxwriter が指定できます。前者のほうが多機能のようです。あらかじめ <code>conda install openpyxl</code> または <code>pip install openpyxl</code> などと打ち込んでインストールしておきます。</p>
 
 <pre>
@@ -233,7 +246,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-24 14:47:15</time>
+Last modified: <time>2019-07-25 09:44:37</time>
 <!-- hhmts end -->
 </p>
 </body>
