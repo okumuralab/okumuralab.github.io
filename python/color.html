@@ -69,7 +69,31 @@ plt.plot([[1,2], [3,4]])
   </tr>
 </table>
 
-<p>（続きはそのうち書きます）</p>
+<p>これらの値は次のようにして確認できます：</p>
+
+<pre>
+In [ ]: plt.rcParams['axes.prop_cycle']
+Out[ ]: cycler('color', ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', ...])
+</pre>
+
+<p>この中の色は <code>color="C0"</code> から <code>color="C9"</code> までで指定できます。</p>
+
+<p>もし色をいつも黒にしたいなら，</p>
+
+<pre>
+from cycler import cycler
+plt.rcParams['axes.prop_cycle'] = cycler(color=["black"])
+</pre>
+
+<p>あるいは現在のプロットの次の描画からの色を変えるなら，</p>
+
+<pre>
+plt.gca().set_prop_cycle(color=['black'])
+</pre>
+
+<p>とすればよさそうです。</p>
+
+<p>（まだ続きます）</p>
 
 <p>リンク</p>
 
@@ -86,7 +110,7 @@ plt.plot([[1,2], [3,4]])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-15 10:21:45</time>
+Last modified: <time>2019-07-25 15:47:35</time>
 <!-- hhmts end -->
 </p>
 </body>
