@@ -74,11 +74,16 @@ api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
 
 <p><code>r = api.PostUpdate(...)</code> のように戻り値を取得すれば，例えば <code>r.id</code> でツイートのIDが調べられる。ツイートをつなげていくときに便利。</p>
 
-<p>検索は<a href="https://python-twitter.readthedocs.io/en/latest/searching.html">ドキュメント</a>に生クエリの方法が書いてある。例：</p>
+<p>検索は python-twitter の<a href="https://python-twitter.readthedocs.io/en/latest/searching.html">ドキュメント</a>や，Twitter API の <a href="https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets">Search Tweets</a>，<a href="https://developer.twitter.com/en/docs/tweets/search/guides">Search Tweet Guides</a> 参照。例：</p>
 
 <pre>
-results = api.GetSearch(
-    raw_query="q=twitter%20&amp;result_type=recent&amp;since=2014-07-19&amp;count=100")
+import urllib.parse
+
+query = {"q":"ほげ ふが",
+         "result_type":"recent", # 新しいもの
+         "max_id":1140050903828819970,  # これ以下
+         "count":100}  # 最大100
+results = api.GetSearch(raw_query=urllib.parse.urlencode(query))
 </pre>
 
 <hr>
@@ -142,7 +147,7 @@ with open(time.strftime("%Y%m%d"), "a", newline="\n") as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-27 09:22:11</time>
+Last modified: <time>2019-07-25 22:16:04</time>
 <!-- hhmts end -->
 </p>
 </body>
