@@ -109,13 +109,26 @@ df.plot(figsize=(10,5))
 
 <figure><img src="img/heart190718.png" alt="心拍数"></figure>
 
+<p>もうちょっと軸を読みやすくするには，次のようにする：</p>
+
+<pre>
+import matplotlib.dates as mdates
+
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+ax = plt.gca()  # または ax = plt.subplot(1,1,1)
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.plot(df)
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-21 22:09:45</time>
+Last modified: <time>2019-07-26 09:22:25</time>
 <!-- hhmts end -->
 </p>
 </body>
