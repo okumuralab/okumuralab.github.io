@@ -74,18 +74,6 @@ api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
 
 <p><code>r = api.PostUpdate(...)</code> のように戻り値を取得すれば，例えば <code>r.id</code> でツイートのIDが調べられる。ツイートをつなげていくときに便利。</p>
 
-<p>検索は python-twitter の<a href="https://python-twitter.readthedocs.io/en/latest/searching.html">ドキュメント</a>や，Twitter API の <a href="https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets">Search Tweets</a>，<a href="https://developer.twitter.com/en/docs/tweets/search/guides">Search Tweet Guides</a> 参照。例：</p>
-
-<pre>
-import urllib.parse
-
-query = {"q":"ほげ ふが",
-         "result_type":"recent", # 新しいもの
-         "max_id":1140050903828819970,  # これ以下
-         "count":100}  # 最大100
-results = api.GetSearch(raw_query=urllib.parse.urlencode(query))
-</pre>
-
 <hr>
 
 <p>毎時cronで起動して日毎のホームタイムラインをファイルにするコード例：</p>
@@ -143,11 +131,82 @@ with open(time.strftime("%Y%m%d"), "a", newline="\n") as f:
 
 <hr>
 
+<p>検索は python-twitter の<a href="https://python-twitter.readthedocs.io/en/latest/searching.html">ドキュメント</a>や，Twitter API の <a href="https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets">Search Tweets</a>，<a href="https://developer.twitter.com/en/docs/tweets/search/guides">Search Tweet Guides</a> 参照。例：</p>
+
+<pre>
+import urllib.parse
+
+query = {"q": "ほげ ふが",        # 検索文字列（スペース区切り）
+         "result_type": "recent", # 新しいもの順に取得
+         "count": 100}            # 最大100
+
+results = []
+while True:
+    r = api.GetSearch(raw_query=urllib.parse.urlencode(query))
+    print('Retrieved', len(r), 'tweets')
+    if len(r) == 0:
+        break
+    results.extend(r)
+    query['max_id'] = results[-1].id - 1
+    time.sleep(1)
+</pre>
+
+<p>この方法で取得できるものは，検索語によっては，大部分が重複（リツイート）である。</p>
+
+<p>結果をMeCabで形態素解析し，名詞の出現頻度をグラフにしてみよう：</p>
+
+<pre>
+import MeCab
+import collections
+
+text = ""
+for t in results:
+    if (t.retweeted_status):
+        t = t.retweeted_status
+    s = t.full_text
+    for u in t.urls:
+        s = s.replace(u.url, ' ')
+    text += s + '\n'
+
+mecab = MeCab.Tagger()
+nodes = mecab.parseToNode(text)
+s = []
+while nodes:
+    if nodes.feature[:2] == '名詞':
+        s.append(nodes.surface)
+    nodes = nodes.next
+
+c = collections.Counter(s)
+
+stopwords={"こと","もの","さん","それ","たち","よう","そう",
+           "ため","これ","どこ","ほう","とき","みたい","そこ",
+           "of","the","RT","うち","あと","こちら","あたり","あら",
+           "ところ","わけ","はず","たくさん","ほんと","すべて",
+           "ツイッター","Twitter"}
+
+i = 0
+mc = {}
+for k,v in c.most_common():
+    if len(k) > 1 and k not in stopwords:
+        print(k, v)
+        mc[k] = v
+        i += 1
+        if i >= 30:
+            break
+
+plt.figure(figsize=[5, 5])
+plt.barh(range(len(mc),0,-1), mc.values())
+plt.yticks(range(len(mc),0,-1), mc.keys())
+plt.savefig('hist.png', bbox_inches="tight")
+</pre>
+
+<hr>
+
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-25 22:16:04</time>
+Last modified: <time>2019-07-27 22:23:11</time>
 <!-- hhmts end -->
 </p>
 </body>
