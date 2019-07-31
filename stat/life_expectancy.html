@@ -5,8 +5,12 @@
 <meta name="viewport" content="width=device-width">
 <title>日本人の平均寿命</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script>
+window.onload = function() {
+  document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];
+}
+</script>
 </head>
 <body>
 
@@ -18,6 +22,8 @@
 
 <h1>日本人の平均寿命</h1>
 
+<p>[2019-07-31 追記] <a href="https://www.mhlw.go.jp/toukei/saikin/hw/life/life18/index.html">平成30年簡易生命表の概況</a>のデータを <a href="data/lifetable2018.csv">lifetable2018.csv</a> として置いておく。平均寿命の推移 <a href="data/life_expectancy_Japan.csv">life_expectancy_Japan.csv</a> も2018年まで追記した。</p>
+
 <p>[2017-08-31 追記] <a href="http://www.e-stat.go.jp/SG1/estat/GL08020101.do?_toGL08020101_&tstatCode=000001031336">e-Stat</a>に2015年の生命表が出たので <a href="data/lifetable2015.csv">lifetable2015.csv</a> として置いておく。</p>
 
 <p>男女別の平均寿命は次のグラフのようになる。青が男，オレンジが女である。</p>
@@ -25,7 +31,7 @@
 <div><img src="img/170727a.png" alt="日本人の平均寿命の推移"></div>
 
 <pre>
-data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/life_expectancy_Japan.csv", comment.char="#")
+data = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/life_expectancy_Japan.csv", comment.char="#")
 par(mgp=c(2,0.8,0))
 matplot(data[,1], data[,2:3], type="o", pch=16, lty=1, col=c("#0080ff","#ff8000"), xlab="", ylab="平均寿命")
 axis(4, data[nrow(data),2:3], c("男","女"), las=1)
@@ -57,7 +63,7 @@ axis(4, data[nrow(data),2:3], c("男","女"), las=1)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2017-08-31 10:27:34</time>
+Last modified: <time>2019-07-31 14:49:56</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -34,7 +34,21 @@ MathJax.Hub.Config({
 from sympy import *
 </pre>
 
-<p>以下では $x$ と $y$ を「文字」（symbol）だとします：</p>
+<p>簡単な数式を入力してみましょう。<code>sqrt</code> は平方根（square root）です：</p>
+
+<pre>
+sqrt(8)
+</pre>
+
+<p>2.828… でなく，<code>2*sqrt(2)</code>（または $2\sqrt{2}$）のように出力されたと思います。</p>
+
+<p>表示方法を <code>2*sqrt(2)</code> から $2\sqrt{2}$ に変えるには，<code>init_printing()</code> と打ち込んで，もう一度やってみてください。</p>
+
+<div class="note">
+<p>Google Colaboratory では <code>init_printing(use_latex='matplotlib')</code> と打ち込めば図として出力されます。あまりきれいではありません。あるいは無理矢理 MathJax（数式表示用の JavaScript ライブラリ）を読み込ませる方法が<a href="https://stackoverflow.com/questions/52010001/latex-output-from-sympy-does-not-correctly-display-in-google-colaboratory-jupyte">ここ</a>に書いてあります。</p>
+</div>
+
+<p>文字式も扱えます。以下では $x$ と $y$ を「文字」（symbol）だとします：</p>
 
 <pre>
 x, y = symbols("x y")
@@ -45,12 +59,6 @@ x, y = symbols("x y")
 <pre>
 (x + y)**10
 </pre>
-
-<p>もし $(x + y)^{10}$ のように表示されなければ，<code>init_printing()</code> と打ち込んでからもう一度やってみてください。</p>
-
-<div class="note">
-<p>Google Colaboratory では <code>init_printing(use_latex='matplotlib')</code> と打ち込めば図として出力されます。あまりきれいではありません。あるいは無理矢理 MathJax を読み込ませる方法が<a href="https://stackoverflow.com/questions/52010001/latex-output-from-sympy-does-not-correctly-display-in-google-colaboratory-jupyte">ここ</a>に書いてあります。</p>
-</div>
 
 <p>この式を展開してみましょう：</p>
 
@@ -64,7 +72,21 @@ expand((x + y)**10)
 <p>上の式は <code>latex(expand((x + y)**10))</code> と打ち込んで出力されたものを LaTeX (MathJax) で数式化しています。</p>
 </div>
 
-<p>展開 <code>expand()</code> の逆は因数分解 <code>factor()</code> です。</p>
+<p>展開結果を変数に代入しておきましょう：</p>
+
+<pre>
+a = expand((x + y)**10)
+</pre>
+
+<p>ここで単に <code>a</code> とだけ打てば，展開式が表示されます。</p>
+
+<p>展開 <code>expand()</code> の逆は因数分解 <code>factor()</code> です。さきほどの長い式を因数分解してみましょう：</p>
+
+<pre>
+factor(a)
+</pre>
+
+<p>元の $(x + y)^{10}$ に戻りました。</p>
 
 <p>積分もできます：</p>
 
@@ -108,7 +130,7 @@ plot(sin(x), cos(x), (x, 0, 2*pi))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-18 15:04:01</time>
+Last modified: <time>2019-07-31 10:14:55</time>
 <!-- hhmts end -->
 </p>
 </body>
