@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>生命表</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@h_okumura">
+<meta name="twitter:title" content="日本人の平均寿命">
+<meta name="twitter:image" content="https://oku.edu.mie-u.ac.jp/~okumura/python/img/190731b.png">
+<script>
+window.onload = function() {
+  document.getElementById("dirurl1").textContent = /^(.*\/).*\//.exec(location.href)[1];
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>日本人の平均寿命</h1>
+
+<p>Rで描いた<a href="../stat/life_expectancy.html">日本人の平均寿命</a>のPython版である。</p>
+
+<p>厚労省<a href="https://www.mhlw.go.jp/toukei/saikin/hw/life/life18/index.html">平成30年簡易生命表の概況</a>にある平成30年簡易生命表の「年齢」および男女「生存数」（10万人あたり）を抜き出したものを読んでプロットする。</p>
+
+<pre>
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("<span id="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/lifetable2018.csv")
+plt.plot(df.Age, df.Male / 100000)
+plt.plot(df.Age, df.Female / 100000)
+plt.yticks([0, 0.5, 1])
+plt.grid()
+plt.legend(["男", "女"])
+plt.xlabel("年齢")
+plt.ylabel("生存率")
+plt.savefig('190731a.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190731a.png" alt="年齢と生存率"></figure>
+
+<p>2018年の平均寿命は男81.25歳，女87.32歳であるが，寿命の中央値（上の図の半減期）にあたる寿命中位数は男84.23歳，女90.11歳である。これは上の図を描いた後で <code>plt.xlim(80, 92)</code> などと打ち込んで右の方を拡大すると読み取りやすい。</p>
+
+<p>ついでに平均寿命の推移も：</p>
+
+<pre>
+df2 = pd.read_csv("<span id="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/life_expectancy_Japan.csv",
+                  comment="#")
+plt.plot(df2.Year, df2.Male, "o-")
+plt.plot(df2.Year, df2.Female, "o-")
+plt.xlabel("年")
+plt.ylabel("平均寿命")
+plt.grid()
+plt.legend(["男", "女"])
+plt.savefig('190731b.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190731b.png" alt="平均寿命の推移"></figure>
+
+<p>1990年以降に限ってプロット：</p>
+
+<pre>
+df3 = df2[df2.Year >= 1990]
+plt.plot(df3.Year, df3.Male, "o-")
+plt.plot(df3.Year, df3.Female, "o-")
+plt.xlabel("年")
+plt.ylabel("平均寿命")
+plt.grid()
+plt.legend(["男", "女"])
+plt.savefig('190731c.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190731c.png" alt="平均寿命の推移"></figure>
+
+<p>1995年は阪神・淡路大震災，2011年は東日本大震災の年である。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-07-31 16:10:23</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
