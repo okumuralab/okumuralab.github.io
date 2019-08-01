@@ -122,13 +122,28 @@ ax.xaxis.set_major_formatter(formatter)
 ax.plot(df)
 </pre>
 
+<p>さらに点ごとに色を付けてみる：</p>
+
+<pre>
+cm = plt.get_cmap('jet')
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+plt.gca().xaxis.set_major_locator(locator)
+plt.gca().xaxis.set_major_formatter(formatter)
+for i, v in df.iterrows():
+    plt.plot(i, v[0], ".", color=cm((v[0] - 50) / 100))
+plt.ylim(50, 170)
+</pre>
+
+<figure><img src="img/HR20190729.png" alt="心拍数"></figure>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-26 09:22:25</time>
+Last modified: <time>2019-08-01 22:35:08</time>
 <!-- hhmts end -->
 </p>
 </body>
