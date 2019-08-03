@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>周産期死亡率</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@h_okumura">
+<meta name="twitter:title" content="周産期死亡率">
+<meta name="twitter:image" content="https://oku.edu.mie-u.ac.jp/~okumura/python/img/190802a.png">
+<script>
+window.onload = function() {
+  document.getElementById("dirurl1").textContent = /^.*\//.exec(location.href)[0];
+  document.getElementById("dirurl2").textContent = /^.*\//.exec(location.href)[0];
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>周産期死亡率</h1>
+
+<p><a href="https://iopscience.iop.org/article/10.1088/1361-6498/ab36a3">Perinatal mortality after the Fukushima accident: a spatiotemporal analysis</a> というレターに，原発事故後，福島周辺の周産期死亡率が有意に増加したと書かれている（図）。</p>
+
+<figure><img src="img/Korblein-JRP.png" alt="perinatal mortality"></figure>
+
+<p>データは e-Stat の <a href="http://www.e-stat.go.jp/SG1/estat/NewList.do?tid=000001028897">人口動態調査</a> のもので，study region は福島，岩手，宮城，群馬，栃木，茨城，千葉，control region はそれ以外とのことである。</p>
+
+<p>この7県を選んだ基準も，年の範囲も，もしかしたら図の描き方も，恣意的かもしれない。そこで，改めて e-Stat からデータを取得して，グラフを描き直してみた。</p>
+
+<p>e-Stat の 人口動態調査 → 人口動態統計 → 確定数 → 周産期 → 年次 と進んで，各年の「都道府県別にみた年次別妊娠満22週以後の死産－早期新生児死亡別周産期死亡数」から周産期死亡数（産前・産後の死亡数）を抽出する。1998年〜2017年について，都道府県コード順に並べた結果を <a href="data/perinatal.csv">perinatal.csv</a> として置いておく。また，人口動態調査 → 人口動態統計 → 確定数 → 出生 → 年次 と進んで，各年の「都道府県別にみた年次別出生数」を抽出し，1994年〜2017年について，同様に並べた結果を <a href="data/birth.csv">birth.csv</a> として置いておく。</p>
+
+<p>このデータから，周産期死亡率の推移をグラフにしてみよう：</p>
+
+<pre>
+import pandas as pd
+import matplotlib.pyplot as plt
+
+birth = pd.read_csv("<span id="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/python/</span>data/birth.csv")
+perinatal = pd.read_csv("<span id="dirurl2">https://oku.edu.mie-u.ac.jp/~okumura/python/</span>data/perinatal.csv")
+
+region = [6,2,3,9,8,7,11]  # 福島，岩手，宮城，群馬，栃木，茨城，千葉
+control = list(set(range(47)) - set(region))
+
+pf = {}  # 福島
+pr = {}  # 福島を含む7県
+pc = {}  # 上記以外
+years = range(1998,2018)
+for y in years:
+    pf[y] = perinatal[str(y)][6] / birth[str(y)][6]
+    pr[y] = sum(perinatal[str(y)][region]) / sum(birth[str(y)][region])
+    pc[y] = sum(perinatal[str(y)][control]) / sum(birth[str(y)][control])
+
+plt.plot(years, list(pr.values()), "o-", c="C1")
+plt.plot(years, list(pc.values()), "o-", c="C0")
+plt.plot(years, list(pf.values()), "o-", c="C3")
+plt.legend(["study region","control region","Fukushima"])
+plt.xticks(range(1998,2018,2))
+plt.savefig('190802a.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190802a.png" alt="perinatal mortality"></figure>
+
+<p>論文では2012年の影響が大きいようなグラフになっていたが，2012年の死亡率分布を地図にしてみよう：</p>
+
+<pre>
+import japanmap as jp
+
+x = perinatal['2012'] / birth['2012']
+x = (x - min(x)) / (max(x) - min(x))
+cmap = plt.get_cmap('bwr')
+cols = ['#%02X%02X%02X' % (cmap(x[i], bytes=True)[:3]) for i in range(47)]
+s = jp.pref_map(range(1,48), cols=cols, tostr=True)
+s = s.replace('&lt;svg ',
+              '&lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="500" height="500" ')
+s = s.replace('&lt;path ', '&lt;path stroke="black" stroke-width="0.001" ')
+with open("190802b.svg", "w") as f:
+    f.write(s)
+</pre>
+
+<p>赤ほど死亡率が大きい：</p>
+
+<figure><img src="img/190802b.svg" alt="perinatal mortality"></figure>
+
+<p>トップは岩手県である。</p>
+
+<p>念のため，ちょっと見にくいが，全都道府県のグラフを（透明度を少し入れて）重ね書きしてみる：</p>
+
+<pre>
+rate = perinatal / birth[[str(y) for y in range(1998,2018)]]
+for i in range(47):
+    if i in control:
+        plt.plot(years, rate.iloc[i,:], c="C0", alpha=0.5)
+for i in range(47):
+    if i in region:
+        plt.plot(years, rate.iloc[i,:], c="C1", alpha=0.5)
+plt.plot(years, rate.iloc[6,:], c="C3", alpha=0.5)
+plt.xticks(range(1998,2018,2))
+plt.savefig('190803a.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/190803a.png" alt="perinatal mortality"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-08-03 10:13:24</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
