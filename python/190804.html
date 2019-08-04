@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>白血病罹患率地図</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@h_okumura">
+<meta name="twitter:title" content="白血病罹患率地図">
+<meta name="twitter:image" content="https://oku.edu.mie-u.ac.jp/~okumura/python/img/190804e.png">
+<script>
+window.onload = function() {
+  var url = /^.*\//.exec(location.href)[0];
+  var a = document.getElementsByClassName("dirurl");
+  [].forEach.call(a, function(x) {x.textContent = url});
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>白血病罹患率地図</h1>
+
+<p><a href="https://ganjoho.jp/reg_stat/statistics/brochure/monitoring.html">全国がん罹患モニタリング集計</a>にある<a href="https://ganjoho.jp/data/reg_stat/statistics/brochure/mcij2015_report.pdf">全国がん罹患モニタリング集計　2015年罹患数・率報告（平成31年3月）（PDF：31,131KB) </a>から各都道府県の白血病についてのデータを抜き出してCSVにしたもの <a href="data/mcij2015leu.csv">mcij2015leu.csv</a> を作成した（方法は後述）。この年齢調整罹患率（日本人口）を使って日本地図を描く。</p>
+
+<pre>
+import pandas as pd
+import japanmap as jp
+import matplotlib.pyplot as plt
+
+leu = pd.read_csv("<span class="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/python/</span>data/mcij2015leu.csv")
+x = leu['年齢調整罹患率日計']
+x = (x - min(x)) / (max(x) - min(x))
+cmap = plt.get_cmap('coolwarm')
+cols = ['#%02X%02X%02X' % (cmap(x[i], bytes=True)[:3]) for i in range(47)]
+s = jp.pref_map(range(1,48), cols=cols, tostr=True)
+s = s.replace('&lt;svg ',
+              '&lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="500" height="500" ')
+s = s.replace('&lt;path ', '&lt;path stroke="black" stroke-width="0.001" ')
+with open("190804e.svg", "w") as f:
+    f.write(s)
+</pre>
+
+<figure><img src="img/190804e.svg" alt="白血病罹患地図"></figure>
+
+<p>赤ほど多い地域である。沖縄県が多く，福島県が少ない。</p>
+
+<hr>
+
+<p>従来は都道府県ごとのデータの精度が異なるため安易な地域間比較は慎むべきとされたが，このデータについては「第3次対がん総合戦略10カ年の間に都道府県がん登録の罹患データの精度は著しく向上し、依然存在する地域間の精度格差と、人口規模の差に注意をすれば、MCIJ2015の罹患データは、県間の比較が十分可能であると考えている」（p.285）とのことである。ただ，香川県については「（参考値）」と付記されていることに注意。</p>
+
+<hr>
+
+<p>白血病罹患率はHTLV-1感染率と相関することが考えられる。内丸 薫<a href="https://www.jstage.jst.go.jp/article/naika/106/7/106_1370/_pdf/-char/ja">「HTLV-1 関連疾患の疫学」（PDF）</a>参照。</p>
+
+<hr>
+
+<p>［参考］上記CSVの作り方：</p>
+
+<p>まずPDFをテキストに変換する：</p>
+
+<pre>
+pdftotext -raw mcij2015_report.pdf
+</pre>
+
+<p>できたテキストファイルからデータを取り出す次のようなスクリプトを作る。<a href="https://docs.python.org/3/library/fileinput.html">fileinput</a> と正規表現ライブラリ <a href="https://docs.python.org/3/library/re.html">re</a> を使う：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import re
+import fileinput
+
+i = 1
+state = 0
+for line in fileinput.input():
+    if state == 0:
+        if len(line) &lt; 15:
+            m = re.search(r"^(\d\d) ", line)
+            if m and m.group(1) == "{:02d}".format(i):
+                print(line.rstrip(), end=" ")
+                state = 1
+                continue
+    if state == 1:
+        m = re.search(r"^白血病 (.*)$", line)
+        if m:
+            print(m.group(1))
+            state = 0
+            i += 1
+</pre>    
+
+<p>このファイル名を <code>leu.py</code> とすれば，<code>./leu.py mcij2015_report.txt</code> と打ち込めばデータ部分が抜き出せる。この <code>,</code> を消してスペースを <code>,</code> で置換し，ヘッダを付ければ完成である。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-08-04 22:47:40</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
