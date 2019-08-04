@@ -4,8 +4,17 @@
 <meta charset="UTF-8">
 <title>いろいろな都道府県別データ</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script>
+window.onload = function() {
+  var url = /^.*\//.exec(location.href)[0];
+  var url1 = /^(.*\/).*\//.exec(location.href)[1];
+  var a = document.getElementsByClassName("dirurl");
+  [].forEach.call(a, function(x) {x.textContent = url});
+  var a1 = document.getElementsByClassName("dirurl1");
+  [].forEach.call(a1, function(x) {x.textContent = url1});
+}
+</script>
 </head>
 <body>
 
@@ -27,6 +36,20 @@ kenmei = c("北海道", "青森県", "岩手県", "宮城県", "秋田県", "山
 <blockquote>
 kenmei = c("北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城", "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山", "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重", "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根", "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡", "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄")
 </blockquote>
+
+<p><a href="https://id.fnshr.info/2017/03/19/pref-name/">都道府県名を1文字で表す試み</a>の例：</p>
+
+<blockquote>
+kenmei = c("道", "青", "岩", "城", "秋", "形", "磐", "茨", "栃", "群", "埼", "葉", "東", "神", "越", "富", "石", "井", "甲", "信", "岐", "静", "名", "三", "滋", "京", "阪", "兵", "奈", "紀", "因", "雲", "岡", "広", "防", "徳", "香", "媛", "高", "筑", "佐", "崎", "熊", "分", "向", "鹿", "沖")
+</blockquote>
+
+<p>間をとって，先頭1字目または2字目がユニークなものは1文字にし，残ったもの（福島，福岡，長崎，宮崎）だけ2文字にしたもの：</p>
+
+<blockquote>
+kenmei = c("北", "青", "岩", "城", "秋", "形", "福島", "茨", "栃", "群", "埼", "千", "東", "神", "新", "富", "石", "井", "梨", "野", "岐", "静", "知", "三", "滋", "京", "阪", "兵", "奈", "和", "鳥", "島", "岡", "広", "口", "徳", "香", "媛", "高", "福岡", "佐", "長崎", "熊", "分", "宮崎", "鹿", "沖")
+</blockquote>
+
+<p>県庁所在地：</p>
 
 <blockquote>
 県庁所在地 = c("札幌", "青森", "盛岡", "仙台", "秋田", "山形", "福島", "水戸", "宇都宮", "前橋", "さいたま", "千葉", "東京", "横浜", "新潟", "富山", "金沢", "福井", "甲府", "長野", "岐阜", "静岡", "名古屋", "津", "大津", "京都", "大阪", "神戸", "奈良", "和歌山", "鳥取", "松江", "岡山", "広島", "山口", "徳島", "高松", "松山", "高知", "福岡", "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "那覇")
@@ -65,14 +88,14 @@ c(5506419, 1373339, 1330147, 2348165, 1085997, 1168924, 2029064, 2969770, 200768
 <p><a href="http://www.nier.go.jp/16chousakekkahoukoku/index.html">平成28年度全国学力・学習状況調査</a>の都道府県別正答率小学校<a href="data/atest2016p.csv">atest2016p.csv</a>，中学校<a href="data/atest2016m.csv">atest2016m.csv</a>，文字コードはSJISである。両方まとめたExcelファイル <a href="data/atest2016.xlsx">atest2016.xlsx</a> も念のため置いておく。</p>
 
 <pre>
-atest2016p = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/atest2016p.csv", fileEncoding="CP932")
-atest2016m = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/atest2016m.csv", fileEncoding="CP932")
+atest2016p = read.csv("<span class="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/atest2016p.csv", fileEncoding="CP932")
+atest2016m = read.csv("<span class="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/atest2016m.csv", fileEncoding="CP932")
 </pre>
 
 <p><a href="http://www.nier.go.jp/15chousakekkahoukoku/report/question/">平成27年度全国学力・学習状況調査</a>の都道府県別正答率<a href="data/atest2015.csv">atest2015.csv</a>，文字コードはSJISである。Rでは次のようにすれば読める。</p>
 
 <pre>
-atest2015 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/atest2015.csv", fileEncoding="CP932")
+atest2015 = read.csv("<span class="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/atest2015.csv", fileEncoding="CP932")
 </pre>
 
 <h2>平成29年度全国体力・運動能力、運動習慣等調査</h2>
@@ -179,14 +202,14 @@ radiation = c(0.029, 0.030, 0.027, 0.038, 0.036, 0.035, 0.037, 0.040, 0.037, 0.0
 
 <h2>リンク</h2>
 
-<p>私のブログへのリンク：</p>
+<p>古いブログへのリンク：</p>
 
 <ul>
-  <li>2008-09-27 <a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2272">日教組組織率と学力</a></li>
-  <li>2008-09-28 <a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2274">日教組組織率と学力：補遺</a></li>
-  <li>2008-10-11 <a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2282">日教組票と学力</a></li>
-  <li>2008-10-13 <a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2283">日教組票と学力：補遺</a></li>
-  <li>2008-10-14 <a href="http://oku.edu.mie-u.ac.jp/~okumura/blog/node/2284">教員用コンピュータ整備率と成績</a></li>
+  <li>2008-09-27 <a href="https://oku.edu.mie-u.ac.jp/~okumura/blog/node/2272">日教組組織率と学力</a></li>
+  <li>2008-09-28 <a href="https://oku.edu.mie-u.ac.jp/~okumura/blog/node/2274">日教組組織率と学力：補遺</a></li>
+  <li>2008-10-11 <a href="https://oku.edu.mie-u.ac.jp/~okumura/blog/node/2282">日教組票と学力</a></li>
+  <li>2008-10-13 <a href="https://oku.edu.mie-u.ac.jp/~okumura/blog/node/2283">日教組票と学力：補遺</a></li>
+  <li>2008-10-14 <a href="https://oku.edu.mie-u.ac.jp/~okumura/blog/node/2284">教員用コンピュータ整備率と成績</a></li>
 </ul>
 
 <p>それ以外へのリンク：</p>
@@ -202,7 +225,7 @@ radiation = c(0.029, 0.030, 0.027, 0.038, 0.036, 0.035, 0.037, 0.040, 0.037, 0.0
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-27 17:24:41</time>
+Last modified: <time>2019-08-04 17:15:35</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -12,8 +12,9 @@
 <meta name="twitter:image" content="https://oku.edu.mie-u.ac.jp/~okumura/python/img/190802a.png">
 <script>
 window.onload = function() {
-  document.getElementById("dirurl1").textContent = /^.*\//.exec(location.href)[0];
-  document.getElementById("dirurl2").textContent = /^.*\//.exec(location.href)[0];
+  var url = /^.*\//.exec(location.href)[0];
+  var a = document.getElementsByClassName("dirurl");
+  [].forEach.call(a, function(x) {x.textContent = url});
 }
 </script>
 </head>
@@ -42,8 +43,8 @@ window.onload = function() {
 import pandas as pd
 import matplotlib.pyplot as plt
 
-birth = pd.read_csv("<span id="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/python/</span>data/birth.csv")
-perinatal = pd.read_csv("<span id="dirurl2">https://oku.edu.mie-u.ac.jp/~okumura/python/</span>data/perinatal.csv")
+birth = pd.read_csv("<span class="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/python/</span>data/birth.csv")
+perinatal = pd.read_csv("<span class="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/python/</span>data/perinatal.csv")
 
 region = [6,2,3,9,8,7,11]  # 福島，岩手，宮城，群馬，栃木，茨城，千葉
 control = list(set(range(47)) - set(region))
@@ -113,7 +114,7 @@ plt.savefig('190803a.png', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-03 10:13:24</time>
+Last modified: <time>2019-08-04 14:33:25</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -6,6 +6,17 @@
 <meta name="viewport" content="width=device-width">
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@h_okumura">
+<meta name="twitter:title" content="白血病による死亡率・罹患率の推移">
+<meta name="twitter:image" content="https://oku.edu.mie-u.ac.jp/~okumura/stat/img/190324c.png">
+<script>
+window.onload = function() {
+  var url = /^.*\//.exec(location.href)[0];
+  var a = document.getElementsByClassName("dirurl");
+  [].forEach.call(a, function(x) {x.textContent = url});
+}
+</script>
 </head>
 <body>
 
@@ -18,6 +29,8 @@
 
 <p><em>[2019-03-24]</em> 大幅にアップデートした。</p>
 
+<p><em>[2019-08-04]</em> <code>cancer_incidence(1975-2014).xls</code> を <code>cancer_incidence(1975-2015).xls</code> に差し替えた。</p>
+
 <h2>死亡率</h2>
 
 <p>e-Stat の <a href="http://www.e-stat.go.jp/SG1/estat/GL08020101.do?_toGL08020101_&amp;tstatCode=000001028897&amp;requestSender=dsearch">人口動態調査 &gt; 人口動態統計</a>
@@ -28,7 +41,7 @@
 <figure><img src="img/181229a.png" alt="白血病による死亡率の推移"></figure>
 
 <pre>
-leu = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/leukemia3.csv")
+leu = read.csv("<span class="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/leukemia3.csv")
 with(leu, plot(year+(month-1)/12, rate, type="o", pch=16, xlab="年", ylab="死亡率/10万/年"))
 </pre>
 
@@ -72,25 +85,45 @@ plot(y, z, type="o", pch=16, xlab="年", ylab="全国年齢調整死亡率（対
 
 <h2>罹患率</h2>
 
-<p>上と同様に，国立がん研究センター<a href="https://ganjoho.jp/reg_stat/statistics/dl/index.html">がんに関する統計データのダウンロード</a>から罹患データ（全国推計値）のファイル <code>cancer_incidence(1975-2014).xls</code> をいただいてくる。</p>
+<p>上と同様に，国立がん研究センター<a href="https://ganjoho.jp/reg_stat/statistics/dl/index.html">がんに関する統計データのダウンロード</a>から罹患データ（全国推計値）のファイル <code>cancer_incidence(1975-2015).xls</code> をいただいてくる。</p>
 
 <pre>
 library(readxl)
-data = read_excel("cancer_incidence(1975-2014).xls", "asr")
+data = read_excel("cancer_incidence(1975-2015).xls", "asr")
 leu = subset(data, 部位=="白血病" & 性別=="男女計" & 標準人口=="昭和60年モデル人口")
-y = 1975:2014
+y = 1975:2015
 z = as.numeric(leu[as.character(y)])
-# quartz(width=7, height=5, type="png", file="190324a.png")
+# quartz(width=7, height=5, type="png", file="190804a.png")
 # par(mar=c(3,3,1,1), mgp=c(2,0.8,0))
 plot(y, z, type="o", pch=16, xlab="年", ylab="全国推定年齢調整罹患率（対10万人）", panel.first=grid())
 # dev.off()
 </pre>
 
-<figure><img src="img/190324a.png" alt="白血病罹患率の推移"></figure>
+<figure><img src="img/190804a.png" alt="白血病罹患率の推移"></figure>
+
+<p>[追記] このようなグラフは0オリジンで描くほうがわかりやすいというコメントをいただいたので，棒グラフも載せておく：</p>
+
+<pre>
+barplot(z, xlab="年", names.arg=y, ylab="全国推定年齢調整罹患率（対10万人）")
+</pre>
+
+<figure><img src="img/190804c.png" alt="白血病罹患率の推移"></figure>
 
 <p>比較のため，上の「白血病」を「全部位」に変えたものを挙げておく：</p>
 
-<figure><img src="img/190324b.png" alt="がん（全部位）罹患率の推移"></figure>
+<pre>
+zen = subset(data, 部位=="全部位" & 性別=="男女計" & 標準人口=="昭和60年モデル人口")
+y = 1975:2015
+z = as.numeric(zen[as.character(y)])
+# quartz(width=7, height=5, type="png", file="190804b.png")
+# par(mar=c(3,3,1,1), mgp=c(2,0.8,0))
+plot(y, z, type="o", pch=16, xlab="年", ylab="全国推定年齢調整罹患率（対10万人）", panel.first=grid())
+# dev.off()
+</pre>
+
+<figure><img src="img/190804b.png" alt="がん（全部位）罹患率の推移"></figure>
+
+<figure><img src="img/190804d.png" alt="がん（全部位）罹患率の推移"></figure>
 
 <p>死亡率が減少しているのに，罹患率は少しずつ上昇している。理由を考えてみよう。</p>
 
@@ -106,7 +139,7 @@ plot(y, z, type="o", pch=16, xlab="年", ylab="全国推定年齢調整罹患率
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-03-24 17:55:19</time>
+Last modified: <time>2019-08-04 15:02:31</time>
 <!-- hhmts end -->
 </p>
 </body>
