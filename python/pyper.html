@@ -61,13 +61,50 @@ from IPython.display import Image
 Image('hoge.png')
 </pre>
 
+<p>逆に R から Python を使うには reticulate パッケージを使います。</p>
+
+<p>R で reticulate を使って R のオブジェクトを Python の npy 形式または npz 形式で保存することができます（参考：<a href="https://cran.r-project.org/web/packages/RcppCNPy/vignettes/UsingReticulate.pdf">Using reticulate to read and write NumPy files</a>）：</p>
+
+<pre>
+library(reticulate)
+
+np = import("numpy")
+np$savez("data.npz", x=x, y=y)
+</pre>
+
+<p>Python 側での読み込みは次の通りです：</p>
+
+<pre>
+import numpy as np
+
+data = np.load("data.npz")
+data.files   # ['y', 'x']
+data['x']
+data['y']
+</pre>
+
+<p>逆に Python からの保存：</p>
+
+<pre>
+np.savez("data.npz", x=x, y=y)
+</pre>
+
+<p>R での読み込み：</p>
+
+<pre>
+data = np$load("data.npz")
+data["files"]  # "y" "x"
+data["x"]
+data["y"]
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-18 22:03:28</time>
+Last modified: <time>2019-08-05 14:53:35</time>
 <!-- hhmts end -->
 </p>
 </body>
