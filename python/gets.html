@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>標準入力を1行ずつ処理する</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>標準入力を1行ずつ処理する</h1>
+
+<p>Ruby の</p>
+
+<pre>
+while line = gets
+  puts line
+end
+</pre>
+
+<p>は，コマンドライン引数で与えられたファイルを一つずつ開いて1行ずつ読み込み，出力するループである。コマンドライン引数でファイルを指定しなければ，標準入力から1行ずつ読み込む。</p>
+
+<p>これと同じことをするためのパッケージが <a href="https://docs.python.org/3/library/fileinput.html">fileinput</a> である：</p>
+
+<pre>
+import fileinput
+
+for line in fileinput.input():
+    print(line, end="")  # または print(line.rstrip())
+</pre>
+
+<p><code>fileinput.input()</code> に引数でファイル名（のリスト）を与えれば，それが優先される。</p>
+
+<p>Ruby の <code>gets</code> と違い，ループの中で余分に行を読み込むことはできない。</p>
+
+<p>標準入力だけ読めばよいなら，次のようにできる：</p>
+
+<pre>
+import sys
+
+for line in sys.stdin:
+    print(line, end="")  # または print(line.rstrip())
+</pre>
+
+<p>ループではなく，標準入力から1行だけ読むには，次のようにする：</p>
+
+<pre>
+line = sys.stdin.readline()
+</pre>
+
+<p>プロンプトで入力を促すには，次のようにする：</p>
+
+<pre>
+n = int(input('正の整数を入力してください: '))
+</pre>
+
+<p>全部の行を行（文字列）のリストの形で読み込むには，次のようにする：</p>
+
+<pre>
+lines = sys.stdin.readlines()
+</pre>
+
+<p>全部の行を一つの文字列の形で読み込むには，次のようにする：</p>
+
+<pre>
+lines = sys.stdin.read()
+</pre>
+
+<p>標準入力でないファイルの場合は，次のようにする：</p>
+
+<pre>
+with open("filename") as f:
+    for line in f:
+        print(line, end="")
+</pre>
+
+<p>あるいは</p>
+
+<pre>
+with open("filename") as f:
+    lines = f.readlines()  # または f.read()
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-08-05 13:28:24</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
