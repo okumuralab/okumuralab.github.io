@@ -9,7 +9,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@h_okumura">
 <meta name="twitter:title" content="PythonでFitbitのデータを読む">
-<meta name="twitter:image" content="https://oku.edu.mie-u.ac.jp/~okumura/python/img/heart190718.png">
+<meta name="twitter:image" content="https://oku.edu.mie-u.ac.jp/~okumura/python/img/heart190718sns.png">
 </head>
 <body>
 
@@ -135,7 +135,23 @@ for i, v in df.iterrows():
 plt.ylim(50, 170)
 </pre>
 
-<figure><img src="img/HR20190729.png" alt="心拍数"></figure>
+<p>Seaborn を使ってみる：</p>
+
+<pre>
+import seaborn as sns
+
+cm = plt.get_cmap('jet')
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+ax = sns.scatterplot(df.index, df['Heart Rate'], hue=df['Heart Rate'],
+                     palette=cm, hue_norm=(60,150))
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+plt.xlim(min(df.index), max(df.index))
+plt.ylim(50, 170)
+</pre>
+
+<figure><img src="img/heart190718sns.png" alt="心拍数"></figure>
 
 <hr>
 
@@ -143,7 +159,7 @@ plt.ylim(50, 170)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-01 22:35:08</time>
+Last modified: <time>2019-08-07 15:33:05</time>
 <!-- hhmts end -->
 </p>
 </body>
