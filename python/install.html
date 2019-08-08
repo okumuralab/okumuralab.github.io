@@ -16,7 +16,7 @@
 
 <h1>Python 3 インストール</h1>
 
-<p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>します。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うには，Python 3 をインストールする必要があります。そのためのいろいろな方法を紹介します。</p>
+<p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>します。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うなら，Python 3 をお薦めします。ここでは Python 3 のいろいろなインストールの方法を紹介します。インストールしないで Web で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
 <h3>公式サイト Python.org からのインストール</h3>
 
@@ -138,6 +138,10 @@ conda list
 conda install ipython numpy scipy matplotlib pandas scikit-learn
 </pre>
 
+<h3>（Windows）WSLのLinuxへのインストール</h3>
+
+<p><a href="https://news.mynavi.jp/article/liunx_win-28/">Visual Studio CodeとWSLでPython開発に挑戦してみよう</a>参照。要は WSL の Ubuntu に apt で python3 と python3-pip を入れる。グラフィックスは多分面倒。</p>
+
 <h3>ソースからのインストール</h3>
 
 <p>CentOS 7 なら <code>yum install libffi-devel sqlite-devel</code> しておきます。</p>
@@ -173,13 +177,7 @@ make: *** [install] エラー 1
 
 <h3>Google Colab を使う</h3>
 
-<p>インストールが面倒なら，<a href="https://colab.research.google.com/">Google Colaboratory</a> にアクセスし，「PYTHON 3 の新しいノートブック」をクリックします。Jupyter Notebook が開き，Python プログラムの入力待ちになります。</p>
-
-<pre>
-print("Hello, world!")
-</pre>
-
-<p>と打ち込んで Shift + Enter してみましょう。</p>
+<p>Google Colaboratory については<a href="run.html">実行</a>のページに移しました。</p>
 
 <h3>Azure Notebooks を使う</h3>
 
@@ -230,7 +228,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-22 13:27:02</time>
+Last modified: <time>2019-08-08 10:29:34</time>
 <!-- hhmts end -->
 </p>
 </footer>

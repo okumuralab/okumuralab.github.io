@@ -16,9 +16,29 @@
 
 <h1>実行</h1>
 
-<p>Python の実行には，いくつかの方法があります。</p>
+<p>Python 3 を実行するには，いろいろな方法があります。初心者はまず Google Colab で実行してみましょう。</p>
 
-<p>以下では Python 3 を起動するコマンドは <code>python3</code> であると仮定します（環境によっては <code>python</code> でよいかもしれません）。</p>
+<h3>Google Colab を使う</h3>
+
+<p>Google Colaboratory（略称 Google Colab）を使えば Web 上で Python が使えます。ただし，Google のアカウントが必要です。古いブラウザ（IE など）では使えません。Windows は Edge でも Shift + Enter がうまくいかないことがあるようです。できれば Google Chrome か Firefox を使ってください。Mac は Safari で問題ありません。</p>
+
+<p><a href="https://colab.research.google.com/">Google Colaboratory</a> にアクセスしてください。上にオレンジ色の帯のあるポップアップが出ますので，一番下の「PYTHON 3 の新しいノートブック」をクリックします。もしポップアップが出なかったか，出てもキャンセルしてしまった場合は，上の「ファイル」メニューから「Python 3 の新しいノートブック」を選びます。</p>
+
+<p>コードセル（カーソルの点滅しているところ）に何か計算式を入れてみましょう。例えば</p>
+
+<pre>
+2+3
+</pre>
+
+<p>と打ち込んで，Shift + Enter します。答え（上の計算の場合は 5）が現れ，その下に新しいコードセルが出ます。</p>
+
+<p>ブラウザによっては Shift + Enter がうまく効かないことがあるようです。その場合は ● ▷ のボタンをクリックすれば実行されます。ただ，新しいコードセルが出ませんので，「+ コード」ボタンを押してコードセルを追加します。</p>
+
+<p>あとは<a href="first.html">Pythonの初歩</a>を見ながらいろいろ試してください。</p>
+
+<h3>python コマンド（REPL）</h3>
+
+<p>以下ではパソコンに Python 3 が<a href="install.html">インストール</a>されていることを前提に説明します。Python 3 を起動するコマンドは <code>python3</code> だと仮定します（環境によっては <code>python</code> でよいかもしれません）。</p>
 
 <p>念のため，<code>python</code> あるいは <code>python3</code> で起動する Python のバージョンを確認しておきましょう：</p>
 
@@ -26,8 +46,6 @@
 python --version
 python3 --version
 </pre>
-
-<h3>python コマンド（REPL）</h3>
 
 <p>ターミナル（Windows であれば PowerShell など）に</p>
 
@@ -38,19 +56,12 @@ python3
 <p>とだけ打ち込むと，<code>&gt;&gt;&gt;</code> というプロンプトが現れますので，その右側に Python の命令を打ち込みます。例えば</p>
 
 <pre>
-print("こんにちは")
+2+3
 </pre>
 
-<p>と打ち込めば，ターミナルに「こんにちは」と現れます。</p>
+<p>と打ち込んで Enter すれば，答え「5」が現れます。</p>
 
-<p>もうちょっと長いものを打ち込んでみましょう：</p>
-
-<pre>
-for i in range(3):
-    print("大事なので3回言います")
-</pre>
-
-<p>Python はインデント（字下げ）でブロック構造を表すので，インデントを省略しないでください。</p>
+<p>あとは<a href="first.html">Pythonの初歩</a>を見ながらいろいろ試してください。</p>
 
 <p>ターミナルに戻るには，<code>quit()</code> または <code>exit()</code> と打ち込みます。</p>
 
@@ -212,7 +223,7 @@ jupyter lab
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-19 14:03:44</time>
+Last modified: <time>2019-08-08 10:18:27</time>
 <!-- hhmts end -->
 </p>
 </body>
