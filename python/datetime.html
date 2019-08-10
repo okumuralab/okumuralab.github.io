@@ -39,16 +39,26 @@ t2 = time.time()
 print(t2 - t1)
 </pre>
 
+<p>年月日時分秒で表した時刻：</p>
+
+<pre>
+time.localtime() # 現在時刻
+time.localtime(t1)  # 1970年からの秒数t1の時刻
+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(t1)) # 'YYYY-MM-DD HH:MM:SS'
+</pre>
+
 <p><code>datetime.datetime</code> 型は，年月日時分秒，マイクロ秒，タイムゾーン情報を持つ構造体である：</p>
 
 <pre>
 import datetime
 
+datetime.datetime.now()  # datetime.datetime(年, 月, 日, 時, 分, 秒, μ秒)
+datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') # 'YYYY-MM-DD HH:MM:SS'
+
 x = datetime.datetime.now()
-print(x)  # datetime.datetime(2019, 5, 23, 13, 59, 25, 7133)
 # しばらく経って・・・
 y = datetime.datetime.now()
-y - x     # datetime.timedelta(seconds=65, microseconds=674158)
+y - x     # datetime.timedelta(seconds=秒, microseconds=μ秒)
 </pre>
 
 <p>例えば2019年5月1日で始まる32日分の配列：</p>
@@ -106,7 +116,7 @@ t = np.arange(np.datetime64("2019-05-01"), np.datetime64("2019-06-02"))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-17 13:37:26</time>
+Last modified: <time>2019-08-09 11:12:20</time>
 <!-- hhmts end -->
 </p>
 </body>
