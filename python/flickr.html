@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>FlickrのURL</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>FlickrのURL</h1>
+
+<p><a href="https://www.flickr.com">Flickr</a>（フリッカー）は昔からある写真共有サイト。Yahoo! に買収され，その後 <a href="https://www.smugmug.com">SmugMug</a> に買収された。<a href="http://image-net.org">ImageNet</a> の画像の半分くらいは Flickr から得ている。</p>
+
+<p>Flickr の URL は<a href="https://www.flickr.com/services/api/misc.urls.html">ここ</a>に説明されているようにいろいろなタイプがある。</p>
+
+<p>例えば ImageNet で Persian cat を検索して最初に出てくる猫は <a href="https://farm1.static.flickr.com/99/276298625_d7b9a004ec.jpg">https://farm1.static.flickr.com/99/276298625_d7b9a004ec.jpg</a> という URL である。この 276298625 が画像 ID である。画像 ID だけで元ページに行く URL は <a href="https://flickr.com/photo.gne?id=276298625">https://flickr.com/photo.gne?id=276298625</a> である。</p>
+
+<p>Flickr には https://flic.kr/p/... という短縮 URL もある。これについては <a href="https://www.flickr.com/groups/api/discuss/72157616713786392/">manufacturing flic.kr style photo URLs</a> で説明されているように最後の部分は画像 ID の <a href="https://ja.wikipedia.org/wiki/Base58">Base58</a> である。画像 ID の Base58 エンコード・デコードは次の Python コードでできる：</p>
+
+<pre>
+alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
+
+def encode(n):
+    e = ""
+    while n != 0:
+        e = alphabet[n % 58] + e
+        n //= 58
+    return e
+
+def decode(e):
+    n = 0
+    m = 1
+    r = list(e)  # explode
+    r.reverse()
+    for c in r:
+        n += m * alphabet.find(c)
+        m *= 58
+    return n
+</pre>
+
+<p>この仕組みを使えば，画像 ID が 276298625 のページは</p>
+
+<pre>
+print("https://flic.kr/p/" + encode(276298625))
+</pre>
+
+<p>で求められる。<a href="https://flic.kr/p/qq6Xp">https://flic.kr/p/qq6Xp</a> である。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-08-09 16:42:46</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

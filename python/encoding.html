@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>文字コード</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>文字コード</h1>
+
+<h3>文字コード変換</h3>
+
+<p>（文字コードと <a href="https://docs.python.org/3/library/codecs.html">codecs</a> モジュールについてまとめる予定）</p>
+
+<h3>NFC，NFD</h3>
+
+<p>Mac の場合，ファイル名の Unicode 正規化がほぼ NFD という形式になっている。例えばカレントディレクトリに「パンダ.txt」というファイルを作り，<a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> でファイル名を読み出す：</p>
+
+<pre>
+!touch パンダ.txt  # カレントディレクトリに「パンダ.txt」を作る
+
+import pathlib
+
+path = pathlib.Path(".")
+s = str(list(path.glob("*ン*.txt"))[0])
+</pre>
+
+<p>ところが</p>
+
+<pre>
+In [ ]: s
+Out[ ]: 'パンダ.txt'
+
+In [ ]: list(s)
+Out[ ]: ['ハ', '゚', 'ン', 'タ', '゙', '.', 't', 'x', 't']
+</pre>
+
+<p>このように濁点・半濁点が分離されている。これが NFD である。通常の NFC に直すには <a href="https://docs.python.org/3/library/unicodedata.html">unicodedata</a> モジュールを使う：</p>
+
+<pre>
+import unicodedata
+
+t = unicodedata.normalize('NFC', s)
+</pre>
+
+<p>とする。今度は</p>
+
+<pre>
+In [ ]: t
+Out[ ]: 'パンダ.txt'
+
+In [ ]: list(t)
+Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
+</pre>
+
+<p>見かけは同じだが中身が違う。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-08-10 21:12:03</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>TesseractでOCR</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>TesseractでOCR</h1>
+
+<p><a href="https://github.com/tesseract-ocr/tesseract">Tesseract OCR</a> はオープンソースの OCR エンジンである。バージョン4は LSTM をサポートしている。</p>
+
+<p>Homebrew を使っている Mac なので <code>brew install tesseract</code> でインストールできる。</p>
+
+<p><a href="https://github.com/tesseract-ocr/tessdata_best">tessdata_best</a> のリポジトリから英語用 eng.traineddata，日本語用の jpn.traineddata，日本語縦書き用の jpn_vert.traineddata をダウンロードし，Homebrew の Tesseract なら /usr/local/Cellar/tesseract/X.X.X/share/tessdata/ に入れる（もともとある eng.traineddata は best 版ではないらしい）。</p>
+
+<p>例えば hoge.png に入った英語の画像を認識して hoge.txt に入れたい場合：</p>
+
+<pre>
+tesseract hoge.png hoge
+</pre>
+
+<p>認識対象文字が数字に限られている場合：</p>
+
+<pre>
+tesseract hoge.png hoge digits
+</pre>
+
+<p>この <code>digits</code> は /usr/local/Cellar/tesseract/X.X.X/share/tessdata/configs/digits というファイルを指す。この中には <code>tessedit_char_whitelist 0123456789-.</code> と書き込まれている。こういう config ファイルは自分で追加することができる。</p>
+
+<p>言語を指定するには
+
+<pre>
+tesseract hoge.png hoge -l eng   # 英語
+tesseract hoge.png hoge -l jpn -c preserve_interword_spaces=1  # 日本語
+tesseract hoge.png hoge -l eng+jpn  # 英語と日本語
+tesseract hoge.png hoge -l snum  # シリアルナンバー
+</pre>
+
+<p>などとすればよい。対応する *.traineddata が /usr/local/Cellar/tesseract/X.X.X/share/tessdata に入っている必要がある。</p>
+
+<p>参考：<a href="https://a244.hateblo.jp/entry/2018/06/20/200000">Tesseract OCR 近況（2018/06）</a>，<a href="https://a244.hateblo.jp/entry/2018/10/02/190000">Tesseract 近況 その2 （2018/10 Early）</a></p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-08-08 22:16:41</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
