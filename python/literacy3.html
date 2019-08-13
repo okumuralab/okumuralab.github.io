@@ -6,6 +6,16 @@
 <title>『改訂第3版 基礎からわかる情報リテラシー』第13章のPython版</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
 </head>
 <body>
 
@@ -24,7 +34,7 @@
 
 <p>ライブラリ <code>matplotlib</code>，<code>numpy</code> を使っています。</p>
 
-<p>2次関数 y = x<sup>2</sup> のグラフを -3 ≦ x ≦ 3 の範囲で描きます（Jupyter Notebook では <code>%matplotlib inline</code> という行を最初に追加してください）：</p>
+<p>2次関数 $y = x^2$ のグラフを $-3 \leqq x \leqq 3$ の範囲で描きます（Jupyter Notebook では <code>%matplotlib inline</code> という行を最初に追加してください）：</p>
 
 <pre>
 import matplotlib.pyplot as plt
@@ -36,16 +46,16 @@ plt.plot(x, x ** 2)
 
 <p>プロットが現れない場合は <code>plt.show()</code> という行を最後に追加してください。その場合は，プロット窓を閉じないと次に進めなくなります。これは以下でも同じです。</p>
 
-<p><code>x = np.linspace(-3, 3, 101)</code> は区間 -3 ≦ x ≦ 3 を100等分する101個の <code>x</code> を計算します。101 という値に特に意味はありませんが，あまり小さすぎると滑らかに表示されません。</p>
+<p><code>x = np.linspace(-3, 3, 101)</code> は区間 $-3 \leqq x \leqq 3$ を100等分する101個の <code>x</code> を計算します。101 という値に特に意味はありませんが，あまり小さすぎると滑らかに表示されません。</p>
 
 <p>縦横比を 1 にするには <code>plt.plot(x, x ** 2)</code> の後に <code>plt.axis('scaled')</code> または <code>plt.axis('equal')</code> という行を追加してください。</p>
 
-<p>2次関数 y = x<sup>3</sup> - x のグラフをx軸（y = 0 の線）とともに -1.2 ≦ x ≦ 1.2 の範囲で描きます（IPython などの対話型環境では，まず <code>plt.clf()</code> と打ち込んで，前のグラフをクリアしてください）：</p>
+<p>2次関数 $y = x^3 - x$ のグラフを $x$ 軸（$y = 0$ の線）とともに $-1.2 \leqq x \leqq 1.2$ の範囲で描きます（IPython などの対話型環境では，まず <code>plt.clf()</code> と打ち込んで，前のグラフをクリアしてください）：</p>
 
 <pre>
 x = np.linspace(-1.2, 1.2, 101)
 plt.plot(x, x ** 3 - x)
-plt.plot([-1.2, 1.2], [0, 0])
+plt.axhline()
 </pre>
 
 <h3>データファイルの読み方</h3>
@@ -76,7 +86,21 @@ df = pd.read_csv('http://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv',
 plt.plot(df['年'], df['世界全体'], 'o-')
 </pre>
 
-<p>直線をあてはめます。ライブラリ <code>scikit-learn</code> を使っています。</p>
+<p>直線をあてはめます。</p>
+
+<pre>
+slope, intercept = np.polyfit(df['年'], df['世界全体'], 1)
+print("傾き", slope, "y切片", intercept)
+</pre>
+
+<p>前のプロットに続けて次のように打ち込むと，予測直線が重ね書きされます：</p>
+
+<pre>
+plt.plot(df['年'], df['年'] * slope + intercept)
+</pre>
+
+<div class="note">
+<p>別のやり方として，機械学習でよく用いられるライブラリ <code>scikit-learn</code> を使う方法も書いておきます。</p>
 
 <pre>
 from sklearn.linear_model import LinearRegression
@@ -86,15 +110,12 @@ y = np.array(df['世界全体'])
 model = LinearRegression()
 model.fit(x, y)
 print("傾き", model.coef_, "y切片", model.intercept_)
-</pre>
-
-<p>前のプロットに続けて次のように打ち込むと，予測直線を上書きします：</p>
-
-<pre>
 plt.plot(x, model.predict(x))
 </pre>
 
-<p>ここでは機械学習寄りのライブラリ <code>scikit-learn</code> を使いましたが，Rのような統計寄りのライブラリ <code>statsmodels</code> も使えます。</p>
+<p>ほかに，Rのような統計寄りのライブラリ <code>statsmodels</code> も使えます。</p>
+</pre>
+</div>
 
 <h3>データの集計</h3>
 
@@ -149,7 +170,7 @@ pd.DataFrame(x).to_csv("x.csv", encoding="sjis")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-24 15:22:58</time>
+Last modified: <time>2019-08-13 21:48:23</time>
 <!-- hhmts end -->
 </p>
 </body>
