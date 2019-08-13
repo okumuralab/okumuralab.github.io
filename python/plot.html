@@ -278,6 +278,14 @@ plt.axis('equal')
 plt.axis('scaled')
 </pre>
 
+<p>水平線，垂直線を引く：</p>
+
+<pre>
+plt.axhline()  # 引数を省略すればy=0の水平線
+plt.axvline()  # 引数を省略すればx=0の水平線
+plt.axhline(0.5, linewidth=1, color="black")
+</pre>
+
 <p>プロットをクリア：</p>
 
 <pre>
@@ -304,7 +312,7 @@ plt.close("all")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-09 09:17:03</time>
+Last modified: <time>2019-08-13 19:29:19</time>
 <!-- hhmts end -->
 </p>
 </body>
