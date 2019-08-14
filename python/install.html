@@ -28,7 +28,7 @@
 
 <p><code>python3</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
 
-<p>いろいろなパッケージのインストールは <code>pip</code>（または <code>pip3</code>）コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです（以下では <code>sudo</code> が必要かどうかはインストール形態によります）。</p>
+<p>いろいろなパッケージのインストールは <code>pip</code>（または <code>pip3</code>）コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
 
 <p>まずは，アップデートの必要なパッケージを，次のコマンドで調べます：</p>
 
@@ -42,15 +42,13 @@ pip list --outdated
 pip install --upgrade pip
 </pre>
 
-<p>Mac で「権限がない」というエラーになった場合は，<code>sudo pip install --upgrade pip</code> のように，頭に <code>sudo</code> を付けます。このとき，パスワードを聞いてきます。Mac で一般ユーザ（非 sudoers）の場合は <code>sudo</code> が使えません。そのときは <code>su 管理者名</code> で管理者になってから行います。</p>
+<p>もし「権限がない」というエラーになった場合は，マルチユーザマシンの場合は管理者権限で実行します（頭に <code>sudo</code> を付けるなど）。自分しか使わないマシンなら <code>pip install --user</code> のように <code>--user</code> オプションを付けます。そうすれば，ユーザ権限で書き込める場所（<code>~/.local</code> または <code>~/Library/Python/X.Y</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。</p>
 
 <p>これ以外に必要なパッケージは，その都度インストールします。例：</p>
 
 <pre>
 pip install ipython numpy scipy matplotlib pandas jupyter
 </pre>
-
-<!-- statsmodels linearmodels scikit-learn -->
 
 <h3>Anaconda によるインストール</h3>
 
@@ -64,7 +62,7 @@ pip install ipython numpy scipy matplotlib pandas jupyter
 
 <p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip</code>（<code>pip3</code>）などのコマンドが入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
-<p>パッケージのインストールや更新は，Python.org から入れたものと同様に行います。Homebrew の場合は <code>pip</code> コマンドに <code>sudo</code> を付ける必要はありません：</p>
+<p>パッケージのインストールや更新は <code>pip</code> で行います：</p>
 
 <pre>
 pip install --upgrade pip
@@ -228,7 +226,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-08 10:29:34</time>
+Last modified: <time>2019-08-14 22:10:46</time>
 <!-- hhmts end -->
 </p>
 </footer>

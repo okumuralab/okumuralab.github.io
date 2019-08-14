@@ -133,7 +133,7 @@ plt.bar(s.index, s)
 
 <p>以下はそのまま打ち込んでも実行できません。実際に集計したいExcelファイル群が存在するディレクトリを指定して実行してください。</p>
 
-<p>ここでは openpyxl ライブラリを使います。まずディレクトリ名（ここではカレントディレクトリ <code>"."</code>）を与えてファイル名一覧を取得します：</p>
+<p>ここでは <a href="https://openpyxl.readthedocs.io">openpyxl</a> ライブラリを使います。まずディレクトリ名（ここではカレントディレクトリ <code>"."</code>）を与えてファイル名一覧を取得します：</p>
 
 <pre>
 from openpyxl import load_workbook
@@ -164,13 +164,22 @@ x = [f(n) for n in names]
 pd.DataFrame(x).to_csv("x.csv", encoding="sjis")
 </pre>
 
+<div class="note">
+<p>openpyxl を直接使う代わりに pandas の read_excel() を使うやりかたもあります：</p>
+<pre>
+def f(n):
+    a = pd.read_excel(n, usecols="B:C", header=None, skiprows=[0], nrows=3)
+    return np.array(a).reshape(6, order="F")
+</pre>
+</div>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-13 21:48:23</time>
+Last modified: <time>2019-08-14 09:18:05</time>
 <!-- hhmts end -->
 </p>
 </body>
