@@ -240,6 +240,19 @@ plt.rcParams['text.latex.preamble'] = r'\usepackage{tgtermes},\usepackage{newtxm
 plt.figure(figsize=[6.4, 4.8])  # デフォルトは6.4×4.8インチ
 </pre>
 
+<p>あるいはデフォルトを変更する：</p>
+
+<pre>
+plt.rcParams['figure.figsize'] = (6.4, 4.8)
+</pre>
+
+<p>（Jupyter Notebook などの場合）図を PNG でなく SVG にする（拡大しても荒くならない）：</p>
+
+<pre>
+from IPython import display
+display.set_matplotlib_formats('svg')
+</pre>
+
 <p>軸の最小値・最大値を指定する：</p>
 
 <pre>
@@ -312,7 +325,7 @@ plt.close("all")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-13 19:29:19</time>
+Last modified: <time>2019-08-15 15:33:37</time>
 <!-- hhmts end -->
 </p>
 </body>

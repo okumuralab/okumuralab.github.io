@@ -102,7 +102,7 @@ df2 = df.fillna(method="ffill") # 欠測値を直前の行で置き換える
 <p><code>df['列名']</code> はSeries（1列だけのDataFrame）という型のものです。普通のベクトル（ndarray）に直すには <code>df['列名'].values</code> とします。</p>
 
 <pre>
-df['列名'].value_counts()  # 列の度数分布表
+df['列名'].value_counts(sort=False)  # 列の度数分布表
 df['列名'].mean()  # 列の平均（median(), var(), std() なども同様）
 df.groupby('列名1')['列名2'].mean() # 列名1でグループ化した列名2の平均
 pd.crosstab(df['列名1'], df['列名2']) # クロス集計
@@ -246,7 +246,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-25 09:44:37</time>
+Last modified: <time>2019-08-15 16:47:13</time>
 <!-- hhmts end -->
 </p>
 </body>

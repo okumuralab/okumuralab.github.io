@@ -16,11 +16,13 @@
 
 <h1>Python 3 インストール</h1>
 
-<p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>します。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うなら，Python 3 をお薦めします。ここでは Python 3 のいろいろなインストールの方法を紹介します。インストールしないで Web で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
+<p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>します。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うなら，Python 3 をお薦めします。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
+
+<p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
 <h3>公式サイト Python.org からのインストール</h3>
 
-<p><a href="https://www.python.org/download/">Download Python</a> から，Windows 用または Mac 用の最新のインストーラをダウンロードし，インストールします。Windows ではデフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37-32\python.exe (および pythonw.exe) に，Mac では /Library/Frameworks/Python.framework/Versions/3.7/bin/python3 に入るようです。</p>
+<p><a href="https://www.python.org/download/">Download Python</a> から，Windows 用または Mac 用の最新のインストーラをダウンロードし，インストールします。Windows ではデフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python*\python.exe (および pythonw.exe) に，Mac では /Library/Frameworks/Python.framework/Versions/*/bin/python3 に入るようです。</p>
 
 <p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら，PowerShell かコマンドプロンプトで「python」と打ち込むと，「ストア」が立ち上がって「Python」をインストールする画面が出てくるようです。なお，<a href="https://docs.python.org/3/using/windows.html#the-microsoft-store-package">公式ドキュメント</a>によれば “currently considered unstable” だそうです。</p>
 
@@ -42,7 +44,7 @@ pip list --outdated
 pip install --upgrade pip
 </pre>
 
-<p>もし「権限がない」というエラーになった場合は，マルチユーザマシンの場合は管理者権限で実行します（頭に <code>sudo</code> を付けるなど）。自分しか使わないマシンなら <code>pip install --user</code> のように <code>--user</code> オプションを付けます。そうすれば，ユーザ権限で書き込める場所（<code>~/.local</code> または <code>~/Library/Python/X.Y</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。</p>
+<p>もし「権限がない」というエラーになった場合は，マルチユーザマシンで環境を共有する場合は管理者権限で実行します（頭に <code>sudo</code> を付けるなど）。自分しか使わないマシンなら <code>pip install --user</code> のように <code>--user</code> オプションを付けます。そうすれば，ユーザ権限で書き込める場所（<code>~/.local</code> または <code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。</p>
 
 <p>これ以外に必要なパッケージは，その都度インストールします。例：</p>
 
@@ -62,12 +64,7 @@ pip install ipython numpy scipy matplotlib pandas jupyter
 
 <p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip</code>（<code>pip3</code>）などのコマンドが入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
-<p>パッケージのインストールや更新は <code>pip</code> で行います：</p>
-
-<pre>
-pip install --upgrade pip
-pip install ipython numpy scipy matplotlib pandas jupyter
-</pre>
+<p>パッケージのインストールや更新は <code>pip</code> で行います（上参照）。</p>
 
 <p>これで <code>python</code> と打ち込むと macOS 側の Python 2 が，<code>python3</code> と打ち込むと Homebrew 側の Python 3 が動くことになります。<code>ipython</code> は macOS 側にないので <code>3</code> を付ける必要はありません（付けてもかまいません）。<code>python</code> と打ち込んで Python 3 が動くようにしたければ，<code>/usr/local/opt/python/libexec/bin</code> のパスを <code>/usr/bin</code> より先に設定します。</p>
 
@@ -226,7 +223,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-14 22:10:46</time>
+Last modified: <time>2019-08-15 08:59:46</time>
 <!-- hhmts end -->
 </p>
 </footer>

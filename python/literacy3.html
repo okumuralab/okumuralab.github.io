@@ -133,10 +133,9 @@ plt.bar(s.index, s)
 
 <p>以下はそのまま打ち込んでも実行できません。実際に集計したいExcelファイル群が存在するディレクトリを指定して実行してください。</p>
 
-<p>ここでは <a href="https://openpyxl.readthedocs.io">openpyxl</a> ライブラリを使います。まずディレクトリ名（ここではカレントディレクトリ <code>"."</code>）を与えてファイル名一覧を取得します：</p>
+<p>まずディレクトリ名（ここではカレントディレクトリ <code>"."</code>）を与えてファイル名一覧を取得します（Excel で開いているとファイル名の頭に <code>~$</code> の付いたテンポラリファイル名を拾ってしまうことがあるので要注意）：</p>
 
 <pre>
-from openpyxl import load_workbook
 import pathlib
 
 path = pathlib.Path(".")
@@ -147,12 +146,11 @@ names = [p for p in path.iterdir() if p.match("*.xlsx")]
 
 <pre>
 def f(n):
-    wb = load_workbook(n, read_only=True)
-    ws = wb.worksheets[0]
-    return [ws['B2:C4'][i][j].value for j in range(2) for i in range(3)]
+    a = pd.read_excel(n, usecols="B:C", header=None, skiprows=1, nrows=3)
+    return a.values.flatten("F")
 </pre>
 
-<p>これを次々に呼び出して，リストのリストを作ります。</p>
+<p>縦横に並んだセルを1列に並べる <code>flatten()</code> を使っています。デフォルトでは B2，C2，B3，C3，B4，C4 の順に並びますが，<code>"F"</code> を与えると，縦読み（Fortran流）の B2，B3，B4，C2，C3，C4 の順になります。これを次々に呼び出して，リストのリストを作ります。</p>
 
 <pre>
 x = [f(n) for n in names]
@@ -161,15 +159,19 @@ x = [f(n) for n in names]
 <p>CSV形式で保存します。</p>
 
 <pre>
-pd.DataFrame(x).to_csv("x.csv", encoding="sjis")
+pd.DataFrame(x).to_csv("x.csv", index=False, header=False, encoding="sjis")
 </pre>
 
 <div class="note">
-<p>openpyxl を直接使う代わりに pandas の read_excel() を使うやりかたもあります：</p>
+<p><a href="https://openpyxl.readthedocs.io">openpyxl</a> ライブラリを直接使えばもっと細かいこともできます（この例ではたいして変わりませんが Excel と同じ形でセル範囲が書けます）：</p>
 <pre>
+from openpyxl import load_workbook
+
 def f(n):
-    a = pd.read_excel(n, usecols="B:C", header=None, skiprows=[0], nrows=3)
-    return np.array(a).reshape(6, order="F")
+    wb = load_workbook(n, read_only=True)
+    ws = wb.worksheets[0]
+    return [ws['B2:C4'][i][j].value for j in range(2) for i in range(3)]
+# あるいは return [x.value for x in np.array(ws['B2:C4']).flatten("F")]
 </pre>
 </div>
 
@@ -179,7 +181,7 @@ def f(n):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-14 09:18:05</time>
+Last modified: <time>2019-08-15 14:09:13</time>
 <!-- hhmts end -->
 </p>
 </body>
