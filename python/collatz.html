@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Collatzの問題</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Collatzの問題</h1>
+
+<p>1937年にドイツの数学者Collatz（コラッツ）が，「ある数が偶数なら2で割り，奇数なら3倍して1を足す。これを繰り返すとすべての数は1になるだろう」と予想しましたが，だれもそれを証明することができていません（ウィキペディアの<a href="https://ja.wikipedia.org/wiki/コラッツの問題">コラッツの問題</a>参照）。</p>
+
+<p>Pythonのプログラムで調べてみましょう。</p>
+
+<pre>
+def collatz(n):
+    print(n, end="")
+    while (n &gt; 1):
+        if (n % 2 == 0):
+            n = n // 2
+        else:
+            n = 3 * n + 1
+        print(" →", n, end="")
+    print()
+</pre>
+
+<p>ここで <code>n % 2</code> はnを2で割った余りです。</p>
+
+<p>例えば <code>collatz(3)</code> と打つと次のように出ます。</p>
+
+<pre>
+3 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+</pre>
+
+<p>いろいろな数から出発して，Collatzの予想が正しいかどうか確かめてください。Pythonの整数はどんな大きな数でも扱えますので，桁あふれする心配はありません。</p>
+
+<p>なお，<code>n = n // 2</code> は <code>n //= 2</code> と書くこともできます。同様に，<code>n = n + 1</code> は <code>n += 1</code> と書けます。</p>
+
+<div class="note">
+<p><code>n = n + 1</code> と <code>n += 1</code> では，前者は <code>n</code> を2回評価し，後者は <code>n</code> を1回しか評価しないという違いがあります。評価することによって副作用が生じる場合は，結果が違うことがありますが，上のような単純な例では，まったく違いがないと考えて差し支えありません。<code>n += 1</code> のほうが必ずしも実行が速いというわけでもありません。</p>
+</div>
+
+<p>入力を促すためには次のようにします：</p>
+
+<pre>
+n = int(input('正の整数を入力してください: '))
+collatz(n)
+</pre>
+
+<p>関数 <code>input()</code> はキーボード入力を文字列として読み込みます。整数にしたいときは <code>int()</code>，浮動小数点数にしたいときは <code>float()</code> で変換します。</p>
+
+<p>Collatz の問題で，最後は 1 になるとしても，途中でどれくらい大きい数になるでしょうか。これを調べるための関数を作ってみましょう：</p>
+
+<pre>
+def collatz_max(n):
+    max = n
+    while (n &gt; 1):
+        if (n % 2 == 0):
+            n = n // 2
+        else:
+            n = 3 * n + 1
+            if n &gt; max:
+                max = n
+    return max
+</pre>
+
+<p>これは <code>n</code> が大きくなるにつれてどれくらい大きくなるでしょうか。</p>
+
+<pre>
+max = 0
+for n in range(10000):
+    m = collatz(n)
+    if m &gt; max:
+        print(n, m)
+        max = m
+</pre>
+
+<p><code>range()</code> の数をもっと大きくしてやってみましょう。</p>
+
+<figure><img src="img/190816a.png" alt="Collatzの問題"></figure>
+
+<p>オレンジの線は <code>n</code> の2乗を表します。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-08-16 16:38:45</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

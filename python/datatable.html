@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>datatableによるデータの読み込み</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>datatableによるデータの読み込み</h1>
+
+<p>R で最高速なデータ読み込みライブラリ <a href="../stat/datatable.html">data.table</a> を Python に移植した <a href="https://pypi.org/project/datatable/">datatable</a> パッケージがある（<a href="https://towardsdatascience.com/an-overview-of-pythons-datatable-package-5d3a97394ee9">参考</a>）。</p>
+
+<p>Mac では <code>pip install datatable</code> でインストールできるが，今のところ Mac 以外ではソースからビルドしないといけないようだ。</p>
+
+<p>使い方：</p>
+
+<pre>
+import datatable as dt
+
+dfr = dt.fread("hoge.csv")
+dfr.head()  # 頭だけ見る
+df = dfr.to_pandas()  # pandasのデータフレームに変換
+a = dfr.to_numpy()    # numpyの配列に変換
+</pre>
+
+<p>次のものが使える：</p>
+
+<pre>
+dfr.append         dfr.cbind          dfr.colindex       dfr.copy           dfr.countna
+dfr.countna1       dfr.head           dfr.key            dfr.keys           dfr.ltypes
+dfr.materialize    dfr.max            dfr.max1           dfr.mean           dfr.mean1
+dfr.min            dfr.min1           dfr.mode           dfr.mode1          dfr.names
+dfr.ncols          dfr.ndims          dfr.nmodal         dfr.nmodal1        dfr.nrows
+dfr.nunique        dfr.nunique1       dfr.rbind          dfr.replace        dfr.save
+dfr.scalar         dfr.sd             dfr.sd1            dfr.shape          dfr.sort
+dfr.stypes         dfr.sum            dfr.sum1           dfr.tail           dfr.to_csv
+dfr.to_dict        dfr.to_jay         dfr.to_list        dfr.to_numpy       dfr.to_pandas
+dfr.to_tuples      dfr.view
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-08-16 11:10:50</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
