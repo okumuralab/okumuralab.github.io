@@ -46,7 +46,7 @@ def selectsort(a):
     for i in range(n):
         k = i
         for j in range(i + 1, n):
-            if a[j] < a[k]:
+            if a[j] &lt; a[k]:
                 k = j
         a[i], a[k] = a[k], a[i]
 </pre>
@@ -74,18 +74,18 @@ def quicksort(a, first=0, last=None):
     i = first
     j = last
     while True:
-        while a[i] < x:
+        while a[i] &lt; x:
             i += 1
-        while x < a[j]:
+        while x &lt; a[j]:
             j -= 1
-        if i >= j:
+        if i &gt;= j:
             break
         a[i], a[j] = a[j], a[i]
         i += 1
         j -= 1
-    if first < i - 1:
+    if first &lt; i - 1:
         quicksort(a, first, i - 1)
-    if j + 1 < last:
+    if j + 1 &lt; last:
         quicksort(a, j + 1, last)
 </pre>
 
@@ -93,20 +93,22 @@ def quicksort(a, first=0, last=None):
 <p><code>def quicksort(a, first=0, last=len(a)-1):</code> としたいかもしれませんが，Python の引数のデフォルトの値は関数定義を評価したときに決まってしまうので，期待した動作になりません。ここでは，何もないことを表すオブジェクト <code>None</code> をデフォルトの値として，関数の実行時にもし <code>None</code> であれば <code>len(a) - 1</code> に置き換えています。<code>if last is None:</code> は <code>if last == None:</code> と似ていますが <code>==</code> は値の比較，<code>is</code> はオブジェクトのアドレスの比較です。後者の方が速く，しかも <code>==</code> のようにオーバーライド（上書き）できないので確実な比較ができます。</p>
 </div>
 
-<p>時間を比べてみましょう。IPython の <code>%timeit</code> は何度も実行して正確な時間を測りますが，いったん整列したリストを再び整列すると典型的な時間が測れませんので，1回だけ実行するようにオプションで指定します：</p>
+<p>時間を比べてみましょう。Wall time が実時間（壁にかかっている時計で計った時間）です：</p>
 
 <pre>
 In [ ]: import random
 
 In [ ]: a = [random.random() for _ in range(10000)]
 
-In [ ]: %timeit -n1 -r1 selectsort(a)
-3.44 s ± 0 ns per loop (mean ± std. dev. of 1 run, 1 loop each)
+In [ ]: %time selectsort(a)
+CPU times: user 3.41 s, sys: 1.99 ms, total: 3.41 s
+Wall time: 3.41 s
 
 In [ ]: a = [random.random() for _ in range(10000)]
 
-In [ ]: %timeit -n1 -r1 quicksort(a)
-23.2 ms ± 0 ns per loop (mean ± std. dev. of 1 run, 1 loop each)
+In [ ]: %time quicksort(a)
+CPU times: user 23.3 ms, sys: 743 µs, total: 24 ms
+Wall time: 23.5 ms
 </pre>
 
 <p>Python の <code>sort()</code> や <code>sorted()</code> は <a href="https://en.wikipedia.org/wiki/Timsort">Timsort</a> というアルゴリズムを使っています。</p>
@@ -117,7 +119,7 @@ In [ ]: %timeit -n1 -r1 quicksort(a)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-12 20:13:01</time>
+Last modified: <time>2019-08-16 09:56:22</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -78,13 +78,7 @@ data = fread("CY6_MS_CMB_STU_QQQ.csv")     # 1分40秒
 <div class="note">
 <p>[2019-05-07追記] 新しい Mac mini 3.6GHz Core i3 で Python でもやってみた：</p>
 <pre>
-import pandas as pd
-import time
-
-t1 = time.time()
 df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv")
-t2 = time.time()
-print(t2 - t1)
 </pre>
 <p>1回目68.6秒，2回目50.9秒であった。警告 "DtypeWarning: Columns (52,53,54) have mixed types. Specify dtype option on import or set low_memory=False." が出たが，これは</p>
 <pre>
@@ -97,6 +91,18 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 
 <div class="note">
 <p>[2019-05-16追記] <a href="https://github.com/r-lib/vroom">vroom</a> が速いと聞いてやってみたが，1回目1分34秒，2回目38秒。あまり速くない。</p>
+</div>
+
+<div class="note">
+<p>[2019-08-16追記] Python の <a href="https://pypi.org/project/datatable/">datatable</a> でやってみた（<a href="https://towardsdatascience.com/an-overview-of-pythons-datatable-package-5d3a97394ee9">参考</a>）。</p>
+<pre>
+%time df = dt.fread("CY6_MS_CMB_STU_QQQ.csv")
+</pre>
+<p>1回目1分9秒，2回目15.4秒だった。<code>sys.getsizeof(df)</code> の結果は3757730280。このままでもいいが，pandasのDataFrameに変換してみる：</p>
+<pre>
+%time df = df2.to_pandas()
+</pre>
+<p>15.9秒かかった。</p>
 </div>
 
 <h2>回答の分析</h2>
@@ -225,7 +231,7 @@ text(100*pc, 100*ph, tcnt[names(ph)], xpd=TRUE)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-29 15:43:11</time>
+Last modified: <time>2019-08-16 10:48:04</time>
 <!-- hhmts end -->
 </p>
 </footer>

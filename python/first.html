@@ -237,7 +237,7 @@ The argument must be an iterable if specified.
 
 <p>浮動小数点表示の精度は，例えば <code>%precision 3</code> で小数第3位まで，<code>%precision %.7g</code> で7桁精度になります。 <code>%precision</code> だけ打てばデフォルトに戻ります。</p>
 
-<p>このほか，Tab キーによる補完，<code>%pwd</code> や <code>%cd 何々</code> によるディレクトリ表示や移動，環境変数を表示する <code>%env</code>，実行時間を計測する <code>%timeit 何々</code>，シェルでコマンドを実行する <code>!<i>command</i></code> など，豊富な命令が使えます。詳しくは，<code>?</code> だけ打ち込むと出てくる IPython のヘルプ，<code>%magic</code> と打ち込むと出てくるマジックコマンドのヘルプをご覧ください。</p>
+<p>このほか，Tab キーによる補完，<code>%pwd</code> や <code>%cd 何々</code> によるディレクトリ表示や移動，環境変数を表示する <code>%env</code>，実行時間を計測する <code>%timeit 何々</code>，シェルでコマンドを実行する <code>!<i>command</i></code> など，豊富な命令が使えます。詳しくは，<code>?</code> だけ打ち込むと出てくる IPython のヘルプ，<code>%magic</code> と打ち込むと出てくるマジックコマンドのヘルプをご覧ください。なお，デフォルトでは <code>%</code> を省略できていしまうので要注意です。省略できないようにするには <code>%automagic off</code> と打ち込みます。</p>
 
 <h2>終了のしかた</h2>
 
@@ -358,56 +358,13 @@ In [ ]: [fibn(n) for n in range(1,11)]
 Out[ ]: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
 </pre>
 
-<h2>Collatzの問題</h2>
-
-<p>1937年にドイツの数学者Collatz（コラッツ）が，「ある数が偶数なら2で割り，奇数なら3倍して1を足す。これを繰り返すとすべての数は1になるだろう」と予想しましたが，だれもそれを証明することができていません。</p>
-
-<p>Pythonのプログラムで調べてみましょう。</p>
-
-<pre>
-def collatz(n):
-    print(n, end="")
-    while (n > 1):
-        if (n % 2 == 0):
-            n = n // 2
-        else:
-            n = 3 * n + 1
-        print(" →", n, end="")
-    print()
-</pre>
-
-<p>ここで <code>n % 2</code> はnを2で割った余りです。</p>
-
-<p>例えば <code>collatz(3)</code> と打つと次のように出ます。</p>
-
-<pre>
-3 → 10 → 5 → 16 → 8 → 4 → 2 → 1
-</pre>
-
-<p>いろいろな数から出発して，Collatzの予想が正しいかどうか確かめてください。Pythonの整数はどんな大きな数でも扱えますので，桁あふれする心配はありません。</p>
-
-<p>なお，<code>n = n // 2</code> は <code>n //= 2</code> と書くこともできます。同様に，<code>n = n + 1</code> は <code>n += 1</code> と書けます。</p>
-
-<div class="note">
-<p><code>n = n + 1</code> と <code>n += 1</code> では，前者は <code>n</code> を2回評価し，後者は <code>n</code> を1回しか評価しないという違いがあります。評価することによって副作用が生じる場合は，結果が違うことがありますが，上のような単純な例では，まったく違いがないと考えて差し支えありません。<code>n += 1</code> のほうが必ずしも実行が速いというわけでもありません。</p>
-</div>
-
-<p>入力を促すためには次のようにします：</p>
-
-<pre>
-n = int(input('正の整数を入力してください: '))
-collatz(n)
-</pre>
-
-<p>関数 <code>input()</code> はキーボード入力を文字列として読み込みます。整数にしたいときは <code>int()</code>，浮動小数点数にしたいときは <code>float()</code> で変換します。</p>
-
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-15 19:52:53</time>
+Last modified: <time>2019-08-16 15:58:27</time>
 <!-- hhmts end -->
 </p>
 </body>

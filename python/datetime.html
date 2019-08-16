@@ -28,6 +28,19 @@ In [ ]: %timeit x = 0; x += 1
 
 <p>（あれ，<code>x += 1</code> より <code>x = x + 1</code> の方が若干速いんだ。）</p>
 
+<p>ちなみに <code>%%timeit</code> とすると複数行の計測ができる。終了は空行を二つほど打つ：</p>
+
+<pre>
+In [ ]: %%timeit
+   ...: x = 0
+   ...: x += 1
+   ...: 
+   ...: 
+31.8 ns ± 0.0191 ns per loop (mean ± std. dev. of 7 runs, 10000000 loops each)
+</pre>
+
+<p><code>%timeit</code> の代わりに <code>%time</code> とすれば1回の時間を計測できる。</p>
+
 <p><code>time.time()</code> は現在時刻を1970年からの秒数で返す（<code>float</code> 型）：</p>
 
 <pre>
@@ -116,7 +129,7 @@ t = np.arange(np.datetime64("2019-05-01"), np.datetime64("2019-06-02"))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-09 11:12:20</time>
+Last modified: <time>2019-08-16 09:45:30</time>
 <!-- hhmts end -->
 </p>
 </body>
