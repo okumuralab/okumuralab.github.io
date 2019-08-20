@@ -207,7 +207,7 @@ df.to_csv("filename.csv", index=False, encoding="utf_8_sig", line_terminator="\r
 df.to_excel("filename.xlsx")
 </pre>
 
-<p>JSON形式での書き出しは <code>to_json()</code> です：</p>
+<p>JSON形式への変換は <code>to_json()</code> です：</p>
 
 <pre>
 df = pd.DataFrame({"A":[1,2],"B":[1.5,2.5]})
@@ -225,6 +225,16 @@ json.dumps(df.to_dict(orient="list"))
 #==&gt; '{"A": [1, 2], "B": [1.5, 2.5]}'
 json.dumps(df.to_dict(orient="list"), separators=(',',':'))
 #==&gt; '{"A":[1,2],"B":[1.5,2.5]}'
+</pre>
+
+<p>いったん dict 形式になれば，JSON ファイルへの書き出し・読み込みは次のようにできます：</p>
+
+<pre>
+with open('hoge.json', 'w') as f:
+    json.dump(hoge, f)
+
+with open('hoge.json') as f:
+    hoge = json.load(f)
 </pre>
 
 <h2>全部メモリに入れないで処理する</h2>
@@ -246,7 +256,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-15 16:47:13</time>
+Last modified: <time>2019-08-20 22:11:57</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -68,6 +68,10 @@ pip install ipython numpy scipy matplotlib pandas jupyter
 
 <p>これで <code>python</code> と打ち込むと macOS 側の Python 2 が，<code>python3</code> と打ち込むと Homebrew 側の Python 3 が動くことになります。<code>ipython</code> は macOS 側にないので <code>3</code> を付ける必要はありません（付けてもかまいません）。<code>python</code> と打ち込んで Python 3 が動くようにしたければ，<code>/usr/local/opt/python/libexec/bin</code> のパスを <code>/usr/bin</code> より先に設定します。</p>
 
+<div class="note">
+<p>ApplePersistenceIgnoreState という警告を消すにはターミナルに <code>defaults write org.python.python ApplePersistenceIgnoreState NO</code> と打てばよいみたいです（<a href="https://github.com/Homebrew/homebrew-core/issues/24424">参照</a>）。</p>
+</div>
+
 <h3>Homebrew による pyenv 経由のインストール（Mac）</h3>
 
 <p><code>brew install pyenv</code> でまず pyenv を入れてから pyenv 経由で各種 Python を入れる方法です。</p>
@@ -223,7 +227,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-19 15:23:40</time>
+Last modified: <time>2019-08-20 21:15:58</time>
 <!-- hhmts end -->
 </p>
 </footer>
