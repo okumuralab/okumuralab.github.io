@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>GPU</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>GPU</h1>
+
+<h2>Google ColabでGPU</h2>
+
+<p>MXNetである学習をしていたが，自分のMac miniではあまりにも遅いので，Coogle Colabで12時間まで無料で使えるGPUを試してみた。</p>
+
+<p>「ランタイム」→「ランタイムのタイプを変更」でGPUを選ぶ。別マシンになるので，今までインストールしたものはすべて再インストールになり，計算も最初からやり直しになる。ここで間違えて <code>pip install mxnet</code> してしまったが，GPU版にしなければならないので <code>pip uninstall mxnet</code> で戻す。<code>!nvcc --version</code> するとCudaのバージョンが10.0と出た：</p>
+
+<figure><img src="img/190825a.png" alt="nvcc"></figure>
+
+<p>そこで</p>
+
+<pre>
+pip install mxnet-cu100
+</pre>
+
+<p>とする。これでMac miniで 14 examples/sec だった例が 801 examples/sec になった。</p>
+
+<p>参考：<a href="https://www.kdnuggets.com/2018/02/fast-ai-lesson-1-google-colab-free-gpu.html">Fast.ai Lesson 1 on Google Colab (Free GPU)</a>，<a href="https://d2l.ai/chapter_install/install.html">d2l.ai の Installation</a></p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-08-25 14:02:39</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

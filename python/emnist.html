@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>EMNIST</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>EMNIST</h1>
+
+<p>MNISTを拡張したEMNIST：</p>
+
+<ul>
+  <li><a href="https://www.nist.gov/node/1298471/emnist-dataset">The EMNIST Dataset</a></li>
+  <li>arXiv: <a href="https://arxiv.org/abs/1702.05373">EMNIST: an extension of MNIST to handwritten letters</a></li>
+  <li>PYPI: <a href="https://pypi.org/project/emnist/">emnist 0.0</a></li>
+</ul>
+
+<p>いくつか表示させてみる：</p>
+
+<pre>
+from emnist import extract_training_samples
+
+images, labels = extract_training_samples('digits')
+
+plt.set_cmap("gray_r")  # 反転したグレースケール
+fig = plt.figure()
+for k in range(24):
+    ax = fig.add_subplot(3, 8, k+1)
+    ax.matshow(images[k])
+    ax.axis("image")
+    ax.tick_params(bottom=False, top=False, left=False, right=False,
+                   labelbottom=False, labeltop=False, labelleft=False, labelright=False)
+    ax.set_title(labels[k])
+fig.savefig("emnistfig.png", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/emnistfig.png" alt="EMNIST"></figure>
+
+<p>数字以外の文字：</p>
+
+<pre>
+images, labels = extract_training_samples('letters')
+</pre>
+
+<figure><img src="img/emnistfig2.png" alt="EMNIST"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-08-25 21:31:05</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
