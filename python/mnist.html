@@ -78,7 +78,24 @@ plt.legend(range(10))
 
 <figure><img src="img/mnist-pca.png" alt="MNIST PCA"></figure>
 
-<p>MNISTを拡張した<a href="emnist.html">EMNIST</a>もある。日本で作られた<a href="http://etlcdb.db.aist.go.jp/?lang=ja">ETL文字データベース</a>もある。</p>
+<p>MNISTを拡張した<a href="emnist.html">EMNIST</a>もある。日本で作られた<a href="http://etlcdb.db.aist.go.jp/?lang=ja">ETL文字データベース</a>もある。MNISTと同様の形式で中身がファッション製品の Fashion-MNIST もある。</p>
+
+<p>MNISTをロードする関数は，ほかにもいろいろなライブラリにある。以下はMXNetの例である。こちらはMXNetのNDArray型になる：</p>
+
+<pre>
+from mxnet import nd, gluon
+
+mnist_train = gluon.data.vision.MNIST(train=True)
+mnist_test = gluon.data.vision.MNIST(train=False)
+
+img, lbl = mnist_train[0]
+img.shape  # ==> (28, 28, 1)
+img.max()  # ==> [255]
+type(img)  # ==> mxnet.ndarray.ndarray.NDArray
+type(lbl)  # ==> numpy.int32
+</pre>
+
+<p>データは <code>~/.mxnet/datasets/mnist/</code> 以下にキャッシュされる。</p>
 
 <hr>
 
@@ -86,7 +103,7 @@ plt.legend(range(10))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-25 20:20:53</time>
+Last modified: <time>2019-08-26 10:23:17</time>
 <!-- hhmts end -->
 </p>
 </body>

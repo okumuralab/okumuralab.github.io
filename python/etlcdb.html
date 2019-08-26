@@ -26,7 +26,61 @@
   <li><a href="https://www.freecodecamp.org/news/build-a-handwriting-recognizer-ship-it-to-app-store-fcce24205b4b/">How I built a handwriting recognizer and shipped it to the App Store</a></li>
 </ul>
 
-<p>（未完🍊）</p>
+<p>ここでは <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> ライブラリを使って ETL1.zip だけ読み込む：</p>
+
+<pre>
+from zipfile import ZipFile
+import struct
+import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
+
+RECORD_SIZE = 2052
+etl = []
+with ZipFile('ETL1.zip') as etl1:
+    names = [n for n in etl1.namelist() if '_' in n]
+    for x in names:
+        with etl1.open(x) as f:
+            while True:
+                s = f.read(RECORD_SIZE)
+                if s is None or len(s) &lt; RECORD_SIZE:
+                    break
+                r = struct.unpack("&gt;H2sHBBBBBBIHHHHBBBBHH2016s4x", s)
+                img = Image.frombytes('F', (64, 63), r[20], 'bit', (4, 0))
+                img = np.array(img.convert('L'))  # 0..15
+                lbl = r[3]  # 文字コード
+                etl.append((img, lbl))
+</pre>
+
+<p>ラベルは <a href="https://ja.wikipedia.org/wiki/JIS_X_0201">JIS X 0201</a> 文字コードである。画像はモノクロで 0〜15 の値を持つ。数字の部分をランダムに表示させた：</p>
+
+<pre>
+plt.set_cmap("gray_r")  # 反転したグレースケール
+fig = plt.figure()
+lst = [i for i in range(len(etl)) if etl[i][1] in range(48,58)]  # 数字だけ
+perm = np.random.permutation(lst)
+for k in range(24):
+    ax = fig.add_subplot(3, 8, k+1)
+    img, lbl = etl[perm[k]]
+    ax.matshow(img)
+    ax.axis("image")
+    ax.tick_params(bottom=False, top=False, left=False, right=False,
+                   labelbottom=False, labeltop=False, labelleft=False, labelright=False)
+    ax.set_title(f'{lbl:02X}')
+fig.savefig("etlcdb.png", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/etlcdb.png" alt="ETL文字データベース"></figure>
+
+<p>数字以外にもたくさん文字が入っている：</p>
+
+<pre>
+perm = np.random.permutation(len(etl))
+</pre>
+
+<figure><img src="img/etlcdb2.png" alt="ETL文字データベース"></figure>
+
+<p>背景が邪魔かもしれない。例えば <code>ax.matshow(img &gt;= 4)</code> にすれば2値画像になる。</p>
 
 <hr>
 
@@ -34,7 +88,7 @@
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-25 22:41:07</time>
+Last modified: <time>2019-08-26 15:34:13</time>
 <!-- hhmts end -->
 </p>
 </body>
