@@ -33,25 +33,24 @@ img.shape   # (縦ピクセル数, 横ピクセル数, チャンネル数)
 
 <p>これでエラーが出ればうまく読めていないことになる。私の環境では  URL や <code>~/</code> で始まるパス名はうまくいかなかった。Windows 環境では全角ファイル名が読み込めないらしい（<a href="https://qiita.com/SKYS/items/cbde3775e2143cad7455">Python OpenCV の cv2.imread 及び cv2.imwrite で日本語を含むファイルパスを取り扱う際の問題への対処について</a> 参照）。</p>
 
-<p>画像を表示するには，</p>
-
+<div class="note">
+<p>OpenCVで画像を表示するには，</p>
 <pre>
 cv2.imshow('Image', img)  # ウィンドウ名は何でもよい
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 </pre>
-
 <p>あるいは</p>
-
 <pre>
 cv2.startWindowThread()
 cv2.namedWindow("Image")  # ウィンドウ名は何でもよい
 cv2.imshow("Image", img)
 </pre>
-
 <p>あるいは，例えば <code>cv2.imshow("Image", img); cv2.waitKey(5000)</code> のようにすれば5秒間ブロックして表示する。表示ウィンドウをすべて閉じるには <code>cv2.destroyAllWindows()</code> と打ち込む。</p>
+<p>しかし，私の環境では，いずれもうまくいったりいかなかったり。Matplotlib で表示するほうが楽なので，以下はその方法を述べる。</p>
+</div>
 
-<p>しかし，私の環境では，うまくいったりいかなかったり。Matplotlib で表示するほうが楽である。ただ，OpenCV は BGR の順，Matplotlib は RGB の順なので，そのままでは色がおかしくなる。<a href="https://stackoverflow.com/questions/15072736/extracting-a-region-from-an-image-using-slicing-in-python-opencv">ここ</a>で論じられているように，<code>img2 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)</code> または <code>img2 = img[..., ::-1]</code> で逆順にしてから <code>plt.imshow(img2)</code> すればよい。あるいは次のようにすればよい：</p>
+<p>OpenCV で読み込んだ画像は BGR の順，Matplotlib の画像は RGB の順なので，そのまま Matplotlib で表示すると，色がおかしくなる。<a href="https://stackoverflow.com/questions/15072736/extracting-a-region-from-an-image-using-slicing-in-python-opencv">ここ</a>で論じられているように，<code>img2 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)</code> または <code>img2 = img[..., ::-1]</code> で逆順にしてから <code>plt.imshow(img2)</code> すればよい。あるいは次のようにすればよい：</p>
 
 <pre>
 import matplotlib.pyplot as plt
@@ -101,6 +100,54 @@ Image("画像ファイル名")
 img2 = cv2.GaussianBlur(img, (9,9), 0)  # カーネルサイズは奇数に
 </pre>
 
+<h2>線画化</h2>
+
+<p>いらすとやさんの<a href="https://www.irasutoya.com/2019/03/blog-post_831.html">蝶と遊ぶ子供のイラスト</a>を線画化してみる：</p>
+
+<pre>
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+
+def makecontour(path):
+    # カーネルを定義
+    kernel = np.ones((5,5), np.uint8)
+    kernel[0,0] = kernel[0,4] = kernel[4,0] = kernel[4,4] = 0
+    # グレースケールで画像を読み込む.
+    # gray = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    # いらすとやの画像はアルファチャンネルがあるのでこれをまず白にする
+    # ImageMagickの convert -flatten x.png y.png に対応
+    img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
+    if img.shape[2] == 4:
+        mask = img[:,:,3] == 0
+        img[mask] = [255] * 4
+        img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # ノイズ除去が必要なら
+    # gray = cv2.fastNlMeansDenoising(gray, h=20)
+    # 白い部分を膨張させる
+    dilated = cv2.dilate(gray, kernel, iterations=1)
+    # 差をとる
+    diff = cv2.absdiff(dilated, gray)
+    # 白黒反転して2値化
+    # _, contour = cv2.threshold(255 - diff, 240, 255, cv2.THRESH_BINARY)
+    # あるいは
+    contour = cv2.adaptiveThreshold(255 - diff, 255,
+                                    cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                    cv2.THRESH_BINARY, 7, 8)
+    return contour
+
+# plt.close("all")
+# plt.figure(figsize=[8, 8])
+plt.set_cmap("gray")
+# plt.clf()
+contour = makecontour("bug_chou_tawamureru_kids.png")
+plt.imshow(contour)
+cv2.imwrite("190831a.png", contour)
+</pre>
+
+<figure><img src="img/190831a.png" alt="蝶と遊ぶ子供のイラスト"></figure>
+
 <h2>顔認識</h2>
 
 <p>顔が写っている画像を読み込み，顔の部分を赤い四角形で囲む：</p>
@@ -128,7 +175,7 @@ plt.imshow(img[..., ::-1])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-23 14:29:24</time>
+Last modified: <time>2019-08-31 17:16:50</time>
 <!-- hhmts end -->
 </p>
 </body>
