@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>スクレイピング</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>スクレイピング</h1>
+
+<p>Webスクレイピングの基本は <a href="https://docs.python.org/3/library/urllib.request.html">urllib.request</a> またはより新しい <a href="https://2.python-requests.org">Requests</a> と，正規表現 <a href="https://docs.python.org/3/library/re.html">re</a> とである。より高レベルのライブラリとして Beautiful Soup がある（<code>pip install beautifulsoup4</code>，<code>from bs4 import BeautifulSoup</code>）。</p>
+
+<p>例えば，このサイトにどれだけリンクがあるかを調べてみよう。まず urllib.request による方法：</p>
+
+<pre>
+import urllib.request
+import re
+
+with urllib.request.urlopen('http://example.jp/') as f:
+    s = f.read().decode('utf-8')
+    a = re.findall('&lt;a href="(.*?)"', s)
+</pre>
+
+<p>requests による方法：</p>
+
+<pre>
+import requests
+import re
+
+r = requests.get('http://example.jp/')
+if r.status_code != 200:  # エラーチェックが必要なら
+    raise ConnectionError()
+r.encoding = 'utf-8'  # 自動判断では 'ISO-8859-1' に間違えられることがある
+a = re.findall('&lt;a href="(.*?)"', r.text)
+</pre>
+
+<p>これで <code>a</code> には <code>['../', '../stat/', 'install.html', ...]</code> という配列が入る。</p>
+
+<p>ファイルのダウンロードは例えば次のようにする：</p>
+
+<pre>
+import requests
+import pathlib
+
+r = requests.get('http://example.jp/hoge.png')
+pathlib.Path("hoge.png").write_bytes(r.content)
+</pre>
+
+<p>ほか，例えば <code>r.headers['Last-Modified']</code> で更新日時がわかるので，<code>os.utime()</code> でファイルのタイムスタンプを変えるといったことも可能であろう。</p>
+
+<p>User Agent（ブラウザの種類）は <code>"python-requests/2.22.0"</code> のような感じで先方のログに残る。これが嫌なら適当に変えられる：</p>
+
+<pre>
+r = requests.get('http://example.jp/', headers={'User-Agent': 'hogehoge/001'})
+</pre>
+
+<p>最後に，いらすとやさんから「科学」ジャンルの画像のサムネール（256x256）をスクレイプする簡単なコード例を挙げておく。カレントディレクトリ下に <code>irasutoya</code> というサブディレクトリがあるとする。</p>
+
+<pre>
+import requests
+import pathlib
+import time
+
+path = pathlib.Path("irasutoya")
+names = [re.sub("irasutoya/", "", str(n)) for n in path.iterdir()]
+
+url = 'https://www.irasutoya.com/search/label/科学'
+while True:
+    print("Requesting", url)
+    r = requests.get(url)
+    if r.status_code != 200:
+        break
+    r.encoding = 'utf-8'
+    a = re.findall('document.write\(bp_thumbnail_resize\("(.*?)"', r.text)
+    for i in a:
+        m = re.search('/([^/]+)$', i)
+        if not m:
+            continue
+        name = m.group(1)
+        if name in names:
+            continue
+        names.append(name)
+        png256 = re.sub('/s72-c/', '/s256-c/', i)
+        print("Downloading", png256)
+        time.sleep(1)  # 迷惑をかけないように必ず数秒待つ
+        r1 = requests.get(png256)
+        if r1.status_code != 200:
+            print(png256, "not available")
+            continue
+        pathlib.Path("irasutoya/" + name).write_bytes(r1.content)
+    m = re.search("&lt;a class='blog-pager-older-link' href='(.*?)'", r.text)
+    if not m:
+        break
+    url = m.group(1)
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-09-03 21:20:52</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
