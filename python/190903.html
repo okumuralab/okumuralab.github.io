@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>キャッシュレス消費者還元事業登録リストのCSV化</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>キャッシュレス消費者還元事業登録リストのCSV化</h1>
+
+<p><a href="https://cashless.go.jp/consumer/">キャッシュレス消費者還元事業の「消費者のみなさま」のページ</a>，ちゃんと go.jp を使っているところは偉いが，「使えるお店を探す　登録加盟店一覧はこちら」をクリックすると，なんと<del>3600ページ</del><ins>6300ページ</ins>以上のPDFファイルが落ちてくる。これをCSVにしてみよう。</p>
+
+<p>PDFをテキスト化するツールはいろいろあるが，ここでは<a href="http://www.xpdfreader.com">Xpdf</a>の一部として配布されているpdftotextコマンドを使う。ターミナルに</p>
+
+<pre>
+pdftotext -raw kameiten_touroku_list.pdf
+</pre>
+
+<p>と打ち込めば kameiten_touroku_list.txt ができる。これを次のPythonスクリプトでCSV化する：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import sys
+import re
+
+category = 0
+regexp = r"([\d,]+) ([^ ]+) ([^ ]+) (.+) ([^ ]+) ([^ ]+) (\d+%)$"
+rangelim = 8
+for line in sys.stdin:
+    line = line.rstrip()
+    m = re.search(r"([\d,]+) ", line)
+    if not m:
+        continue
+    n = int(re.sub(",", "", m.group(1)))
+    if n == 1:
+        category += 1
+        if category == 2:
+            regexp = r"([\d,]+) (.+) (\d+%)$"
+            rangelim = 4
+    elif n != nprev + 1:
+        continue
+    nprev = n
+    while not re.search(r"%$", line):
+        line = line + " " + sys.stdin.readline().strip()
+    m = re.search(regexp, line)
+    if m:
+        print(n, end="")
+        for i in range(2,rangelim):
+            print("," + m.group(i).strip(), end="")
+        print()
+    else:
+        print("###", line)  # error
+</pre>
+
+<p>上記スクリプトが test.py ならば</p>
+
+<pre>
+./test.py &lt; kameiten_touroku_list.txt &gt; kameiten_touroku_list.csv
+</pre>
+
+<p>でCSVになる。念のため <a href="https://oku.edu.mie-u.ac.jp/~okumura/python/data/kameiten_touroku_list.csv">kameiten_touroku_list.csv</a> として置いておく（文字コードは<del>UTF-8</del><ins>BOM付きUTF-8</ins>）。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-09-06 20:55:14</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
