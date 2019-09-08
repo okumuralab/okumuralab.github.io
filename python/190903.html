@@ -18,6 +18,8 @@
 
 <p>[追記] KamimuraさんがPythonコードを<a href="https://www.mkamimura.com/2019/09/Python-Haruhiko-Okumura-hokumura-PDF-CSV.html">デバッグ・改良</a>してくださいました（未マージ）。</p>
 
+<p>[追記] uriboさんが<a href="https://gist.github.com/uribo/932fda5c5713c486cd8ef8935a060ff2">Rで実装</a>してくださいました（「ただしJavaのメモリ不足になるため固定店舗の5533ページ分を読み込むには分割して実行する必要が ...😂」とのこと）。</p>
+
 <p><a href="https://cashless.go.jp/consumer/">キャッシュレス消費者還元事業の「消費者のみなさま」のページ</a>，ちゃんと go.jp を使っているところは偉いが，「使えるお店を探す　登録加盟店一覧はこちら」をクリックすると，なんと<del>3600ページ</del><ins>6300ページ</ins>以上のPDFファイルが落ちてくる。これをCSVにしてみよう。</p>
 
 <p>PDFをテキスト化するツールはいろいろあるが，ここでは<a href="http://www.xpdfreader.com">Xpdf</a>の一部として配布されているpdftotextコマンドを使う。ターミナルに</p>
@@ -71,13 +73,15 @@ for line in sys.stdin:
 
 <p>でCSVになる。念のため <a href="https://oku.edu.mie-u.ac.jp/~okumura/python/data/kameiten_touroku_list.csv">kameiten_touroku_list.csv</a> として置いておく（文字コードは<del>UTF-8</del><ins>BOM付きUTF-8</ins>）。</p>
 
+<p>なお，<code>while ...</code> の部分は，pdftotext -raw による変換で長い行が複数行に分割されてしまうことへの対処である。pdftotext -table とすると今度は列間のスペースがなくなる行が出てくる。なかなか難しい。良いツール（あるいはpdftotextの改造法）があったら教えてください。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-06 22:17:22</time>
+Last modified: <time>2019-09-07 09:58:12</time>
 <!-- hhmts end -->
 </p>
 </body>
