@@ -30,6 +30,8 @@ pip install tensorflow  # または conda install tensorflow
 pip install tensorflow==2.0.0-rc0
 </pre>
 
+<p><code>tf.keras</code> を使う上では見かけ上の違いはほぼない。</p>
+
 <div class="note">
 <p>TensorFlow 2 で 1.x のコードを走らるには</p>
 <pre>
@@ -74,9 +76,7 @@ Out[ ]: '2.2.4-tf'
 <p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="mnist.html">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
 
 <pre>
-mnist = tf.keras.datasets.mnist
-
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 </pre>
 
 <p>ピクセルは0〜255の整数値だが，0〜1の実数に変換する：</p>
@@ -171,7 +171,7 @@ model = tf.keras.models.load_model("mymodel.h5")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-10 17:18:52</time>
+Last modified: <time>2019-09-10 22:05:01</time>
 <!-- hhmts end -->
 </p>
 </body>

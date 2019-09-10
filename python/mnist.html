@@ -23,8 +23,7 @@
 <pre>
 import tensorflow as tf
 
-mnist = tf.keras.datasets.mnist
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 </pre>
 
 <p>これを最初に実行する際には，ネットからデータをダウンロードする。次回からはローカルにキャッシュされたデータ（<code>~/.keras/datasets/mnist.npz</code>，11Mバイトほど）を使う。拡張子 <code>npz</code> のファイルは NumPy の ndarray を収めたバイナリファイル <code>変数名.npy</code> を束ねたZIPアーカイブである。詳しくは <code>np.savez()</code>，<code>np.load()</code> のヘルプ参照。</p>
@@ -48,6 +47,18 @@ Out[ ]: (10000,)
 <p><code>x_train</code> に入っている画像をいくつか表示させてみよう：</p>
 
 <pre>
+import matplotlib.pyplot as plt
+
+for k in range(24):
+    plt.subplot(3, 8, k+1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.imshow(x_train[k], cmap='gray_r') # または cmap=plt.cm.binary
+    plt.title(y_train[k]) # または plt.xlabel(y_train[k])
+</pre>
+
+<!--
+<pre>
 plt.set_cmap("gray_r")  # 反転したグレースケール
 fig = plt.figure()
 for k in range(24):
@@ -59,6 +70,7 @@ for k in range(24):
     ax.set_title(y_train[k])
 fig.savefig("mnistfig.png", bbox_inches="tight")
 </pre>
+-->
 
 <figure><img src="img/mnistfig.png" alt="MNIST"></figure>
 
@@ -78,7 +90,7 @@ plt.legend(range(10))
 
 <figure><img src="img/mnist-pca.png" alt="MNIST PCA"></figure>
 
-<p>MNISTを拡張した<a href="emnist.html">EMNIST</a>もある。日本で作られた<a href="http://etlcdb.db.aist.go.jp/?lang=ja">ETL文字データベース</a>もある。MNISTと同様の形式で中身がファッション製品の Fashion-MNIST もある。</p>
+<p>MNISTを拡張した<a href="emnist.html">EMNIST</a>もある。日本で作られた<a href="http://etlcdb.db.aist.go.jp/?lang=ja">ETL文字データベース</a>もある。MNISTと同様の形式で中身がファッション製品の <a href="https://github.com/zalandoresearch/fashion-mnist">Fashion-MNIST</a> もある（<code>mnist.load_data()</code> の代わりに <code>fashon_mnist.load_data()</code> とすればよい）。</p>
 
 <p>MNISTをロードする関数は，ほかにもいろいろなライブラリにある。以下はMXNetの例である。こちらはMXNetのNDArray型になる：</p>
 
@@ -103,7 +115,7 @@ type(lbl)  # ==> numpy.int32
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-26 10:23:17</time>
+Last modified: <time>2019-09-10 21:59:11</time>
 <!-- hhmts end -->
 </p>
 </body>
