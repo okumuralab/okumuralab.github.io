@@ -66,25 +66,24 @@ r = requests.get('http://example.jp/', headers={'User-Agent': 'hogehoge/001'})
 
 <pre>
 import requests
+import re
 import pathlib
 import time
 
 path = pathlib.Path("irasutoya")
-names = [re.sub("irasutoya/", "", str(n)) for n in path.iterdir()]
+names = [re.sub("^.*/", "", str(n)) for n in path.iterdir()]
 
 url = 'https://www.irasutoya.com/search/label/科学'
 while True:
     print("Requesting", url)
     r = requests.get(url)
     if r.status_code != 200:
+        print("Status:", r.status_code)
         break
     r.encoding = 'utf-8'
     a = re.findall('document.write\(bp_thumbnail_resize\("(.*?)"', r.text)
     for i in a:
-        m = re.search('/([^/]+)$', i)
-        if not m:
-            continue
-        name = m.group(1)
+        name = re.sub("^.*/", "", i)
         if name in names:
             continue
         names.append(name)
@@ -93,7 +92,7 @@ while True:
         time.sleep(1)  # 迷惑をかけないように必ず数秒待つ
         r1 = requests.get(png256)
         if r1.status_code != 200:
-            print(png256, "not available")
+            print("Status:", r1.status_code)
             continue
         pathlib.Path("irasutoya/" + name).write_bytes(r1.content)
     m = re.search("&lt;a class='blog-pager-older-link' href='(.*?)'", r.text)
@@ -108,7 +107,7 @@ while True:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-03 21:20:52</time>
+Last modified: <time>2019-09-04 13:12:37</time>
 <!-- hhmts end -->
 </p>
 </body>

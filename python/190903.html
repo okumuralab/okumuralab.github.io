@@ -20,6 +20,8 @@
 
 <p>[追記] uriboさんが<a href="https://gist.github.com/uribo/932fda5c5713c486cd8ef8935a060ff2">Rで実装</a>してくださいました（「ただしJavaのメモリ不足になるため固定店舗の5533ページ分を読み込むには分割して実行する必要が ...😂」とのこと）。</p>
 
+<p>[追記] PDF 571ページの 23,872 の最後の 5% が pdftotext -raw ではページ下に飛んでしまいます。バグのようです。</p>
+
 <p><a href="https://cashless.go.jp/consumer/">キャッシュレス消費者還元事業の「消費者のみなさま」のページ</a>，ちゃんと go.jp を使っているところは偉いが，「使えるお店を探す　登録加盟店一覧はこちら」をクリックすると，なんと<del>3600ページ</del><ins>6300ページ</ins>以上のPDFファイルが落ちてくる。これをCSVにしてみよう。</p>
 
 <p>PDFをテキスト化するツールはいろいろあるが，ここでは<a href="http://www.xpdfreader.com">Xpdf</a>の一部として配布されているpdftotextコマンドを使う。ターミナルに</p>
@@ -81,7 +83,7 @@ for line in sys.stdin:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-07 09:58:12</time>
+Last modified: <time>2019-09-09 15:39:24</time>
 <!-- hhmts end -->
 </p>
 </body>
