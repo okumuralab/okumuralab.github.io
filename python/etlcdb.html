@@ -55,18 +55,15 @@ with ZipFile('ETL1.zip') as etl1:
 <p>ラベルは <a href="https://ja.wikipedia.org/wiki/JIS_X_0201">JIS X 0201</a> 文字コードである。画像はモノクロで 0〜15 の値を持つ。数字の部分をランダムに表示させた：</p>
 
 <pre>
-plt.set_cmap("gray_r")  # 反転したグレースケール
-fig = plt.figure()
 lst = [i for i in range(len(etl)) if etl[i][1] in range(48,58)]  # 数字だけ
 perm = np.random.permutation(lst)
 for k in range(24):
-    ax = fig.add_subplot(3, 8, k+1)
+    plt.subplot(3, 8, k+1)
+    plt.xticks([])
+    plt.yticks([])
     img, lbl = etl[perm[k]]
-    ax.matshow(img)
-    ax.axis("image")
-    ax.tick_params(bottom=False, top=False, left=False, right=False,
-                   labelbottom=False, labeltop=False, labelleft=False, labelright=False)
-    ax.set_title(f'{lbl:02X}')
+    plt.imshow(img, cmap='gray_r')
+    plt.title(f'{lbl:02X}')
 fig.savefig("etlcdb.png", bbox_inches="tight")
 </pre>
 
@@ -80,7 +77,7 @@ perm = np.random.permutation(len(etl))
 
 <figure><img src="img/etlcdb2.png" alt="ETL文字データベース"></figure>
 
-<p>背景が邪魔かもしれない。例えば <code>ax.matshow(img &gt;= 4)</code> にすれば2値画像になる。</p>
+<p>背景が邪魔かもしれない。例えば <code>plt.imshow(img &gt;= 4)</code> にすれば2値画像になる。</p>
 
 <hr>
 
@@ -88,7 +85,7 @@ perm = np.random.permutation(len(etl))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-26 15:34:13</time>
+Last modified: <time>2019-09-13 12:02:40</time>
 <!-- hhmts end -->
 </p>
 </body>

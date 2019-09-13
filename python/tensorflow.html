@@ -27,7 +27,7 @@ pip install tensorflow  # または conda install tensorflow
 <p>新しい TensorFlow 2.0 RC をインストールするには（これをすると TensorFlow 1.x はアンインストールされる）：</p>
 
 <pre>
-pip install tensorflow==2.0.0-rc0
+pip install tensorflow==2.0.0-rc1
 </pre>
 
 <p><code>tf.keras</code> を使う上では見かけ上の違いはほぼない。</p>
@@ -46,7 +46,7 @@ tf.disable_v2_behavior()
 <pre>
 tf_upgrade_v2 --intree dir/ --outtree dir2/ --reportfile report.txt
 </pre>
-<p>と打ち込む。<code>dir/</code> が元のディレクトリ，<code>dir2/</code> は新しく作られるディレクトリ（あらかじめ作成しておいてはいけない）。</p>
+<p>と打ち込む。<code>dir/</code> が元のディレクトリ，<code>dir2/</code> は新しく作られるディレクトリ（あらかじめ作成しておいてはいけない）。必ずしもうまくいくとは限らない。</p>
 </div>
 
 <div class="note">
@@ -171,7 +171,7 @@ model = tf.keras.models.load_model("mymodel.h5")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-10 22:05:01</time>
+Last modified: <time>2019-09-13 11:29:42</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -44,17 +44,26 @@ In [ ]: y_test.shape
 Out[ ]: (10000,)
 </pre>
 
-<p><code>x_train</code> に入っている画像をいくつか表示させてみよう：</p>
+<p><code>x_train</code> に入っている画像を表示してみよう：</p>
 
 <pre>
 import matplotlib.pyplot as plt
 
+plt.imshow(x_train[0])
+plt.colorbar()
+fig.savefig("mnistfig0.png", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/mnistfig0.png" alt="MNIST"></figure>
+
+<pre>
 for k in range(24):
     plt.subplot(3, 8, k+1)
     plt.xticks([])
     plt.yticks([])
     plt.imshow(x_train[k], cmap='gray_r') # または cmap=plt.cm.binary
     plt.title(y_train[k]) # または plt.xlabel(y_train[k])
+fig.savefig("mnistfig.png", bbox_inches="tight")
 </pre>
 
 <!--
@@ -68,7 +77,6 @@ for k in range(24):
     ax.tick_params(bottom=False, top=False, left=False, right=False,
                    labelbottom=False, labeltop=False, labelleft=False, labelright=False)
     ax.set_title(y_train[k])
-fig.savefig("mnistfig.png", bbox_inches="tight")
 </pre>
 -->
 
@@ -115,7 +123,7 @@ type(lbl)  # ==> numpy.int32
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-10 21:59:11</time>
+Last modified: <time>2019-09-13 11:43:01</time>
 <!-- hhmts end -->
 </p>
 </body>
