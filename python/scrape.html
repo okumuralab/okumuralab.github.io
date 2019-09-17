@@ -101,13 +101,59 @@ while True:
     url = m.group(1)
 </pre>
 
+<p>さらについでに，いらすとやさんの<a href="https://www.irasutoya.com/2014/10/faceicons.html">いろいろな顔アイコン</a>（動物・モンスターを除く人間だけ）以下の256×256サムネールを全部取得してカレントディレクトリの <code>irasutoya2</code> サブディレクトリに入れる：</p>
+
+<pre>
+path = pathlib.Path("irasutoya2")
+names = [re.sub("^.*/", "", str(n)) for n in path.iterdir()]
+
+urls = [
+    'http://www.irasutoya.com/2013/10/blog-post_5077.html',
+    'http://www.irasutoya.com/2013/10/blog-post_3974.html',
+    'http://www.irasutoya.com/2013/10/blog-post_9098.html',
+    'http://www.irasutoya.com/2013/10/blog-post_6907.html',
+    'http://www.irasutoya.com/2013/10/blog-post_872.html',
+    'http://www.irasutoya.com/2013/10/blog-post_8683.html',
+    'http://www.irasutoya.com/2013/10/blog-post_2022.html',
+    'http://www.irasutoya.com/2013/10/blog-post_1473.html',
+    'http://www.irasutoya.com/2015/10/blog-post_59.html',
+    'http://www.irasutoya.com/2015/10/blog-post_29.html',
+    'http://www.irasutoya.com/2015/10/blog-post_405.html',
+    'http://www.irasutoya.com/2015/10/blog-post_135.html' ]
+
+for u in urls:
+    print("Requesting", u)
+    r = requests.get(u)
+    if r.status_code != 200:
+        print("Status:", r.status_code)
+        break
+    r.encoding = 'utf-8'
+    a = re.findall('"([^"]*/s800/[^"]*)"', r.text)
+    for i in a:
+        name = re.sub("^.*/", "", i)
+        if name in names:
+            continue
+        names.append(name)
+        png256 = re.sub('/s800/', '/s256-c/', i)
+        m = re.search('^//', png256)
+        if m:
+            png256 = 'http:' + png256
+        print("Downloading", png256)
+        time.sleep(1)
+        r1 = requests.get(png256)
+        if r1.status_code != 200:
+            print("Status:", r1.status_code)
+            continue
+        pathlib.Path("irasutoya2/" + name).write_bytes(r1.content)
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-04 13:12:37</time>
+Last modified: <time>2019-09-17 13:58:58</time>
 <!-- hhmts end -->
 </p>
 </body>
