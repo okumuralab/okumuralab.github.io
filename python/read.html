@@ -31,7 +31,7 @@ df = pd.read_csv("filename.csv")
 df.head()   # 頭の5行だけ表示
 </pre>
 
-<p>読み込んだデータは <code>DataFrame</code> オブジェクトです：</p>
+<p>表示精度を変えたいときは <code>pd.options.display.precision</code>（デフォルト6）に桁数の目標値を代入します（IPython の <code>%precision</code> には影響を受けないようです）。読み込んだデータは <code>DataFrame</code> オブジェクトです：</p>
 
 <pre>
 In [ ]: type(df)
@@ -256,7 +256,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-20 22:11:57</time>
+Last modified: <time>2019-09-26 10:49:58</time>
 <!-- hhmts end -->
 </p>
 </body>
