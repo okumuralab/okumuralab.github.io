@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Apple Watch</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Apple Watch（未完）</h1>
+
+<h2>ヘルスケアデータの心拍数を読む</h2>
+
+<p>iPhoneの「ヘルスケア」アプリを開き，右上の自分のアイコンをタップし，「すべてのヘルスケアデータを書き出す」をタップする。共有方法は何でもいいが，簡単なのは「"ファイル"に保存」で，そのままiCloud Driveに保存する。</p>
+
+<p>MacのFinderでiCloud Driveにアクセスし，「書き出したデータ.zip」というファイルをカレントディレクトリに持ってきて（あるいは以下のZipファイル名としてフルパスで <code>'/Users/自分の名前/Library/Mobile Documents/com~apple~CloudDocs/書き出したデータ.zip'</code> を指定して），次のスクリプトを走らせる：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+from zipfile import ZipFile
+import xml.etree.ElementTree as ET
+
+with ZipFile('書き出したデータ.zip') as zipdata:
+    with zipdata.open('apple_health_export/export.xml') as f:
+        tree = ET.parse(f)
+
+root = tree.getroot()
+for x in root.findall('Record'):
+    if x.get('type') == 'HKQuantityTypeIdentifierHeartRate':
+        print(x.get('startDate')[:19], x.get('value'), sep=',')
+</pre>
+
+<p>標準出力に日時・心拍数のCSVが出力されるので，適当にリダイレクトしてファイルに収める。あとは<a href="fitbit.html">Fitbit</a>と同様にグラフを描けばよい。</p>
+
+<p>ほかに <code>HKQuantityTypeIdentifierHeartRateVariabilitySDNN</code> というタイプには心拍変動がミリ秒単位で入る。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-09-27 09:48:05</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

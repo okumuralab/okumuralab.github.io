@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Twitter</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>TwitterのステータスIDの仕組み</h1>
+
+<p><a href="https://developer.twitter.com/en/docs/basics/twitter-ids">Twitter ID</a> は snowflake という仕組みで日時から生成される。下位22ビットはユニークな値で，上位は 2010-11-04 01:42:54.657 UTC (2010-11-04 10:42:54.657 JST) を起点としたミリ秒単位の時刻を表す。したがって，IDからツイートのタイムスタンプを求めるには次のようにすればよい：</p>
+
+<pre>
+import time
+
+def id2time(id):
+    return ((id >> 22) + 1288834974657) / 1000
+
+id = 1177189139873054725 # このIDのツイートのタイムスタンプを求める
+print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(id2time(id))))
+</pre>
+
+<p>2019-09-26 20:52:16 と出力される。逆は例えば次のようにすればよい：</p>
+
+<pre>
+import numpy as np
+
+print(np.datetime64("2010-11-04 10:42:54.657") + np.timedelta64(id >> 22, "ms"))
+</pre>
+
+<p>2019-09-26T20:52:16.719 と出力される。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-09-27 12:16:31</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
