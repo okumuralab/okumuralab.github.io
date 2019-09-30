@@ -39,11 +39,39 @@ for x in root.findall('Record'):
         print(x.get('startDate')[:19], x.get('value'), y.get('value'), sep=',')
 </pre>
 
-<p>標準出力に日時・心拍数・そのときの運動状態のCSVが出力されるので，適当にリダイレクトしてファイルに収める。あとは<a href="fitbit.html">Fitbit</a>と同様にグラフを描けばよい。</p>
+<p>標準出力に日時・心拍数・そのときの運動状態（0，1，2）のCSVが出力されるので，適当にリダイレクトしてファイルに収める。あとは<a href="fitbit.html">Fitbit</a>と同様にグラフを描けばよい。CSVからグラフを描く簡単なプログラムを挙げておく：</p>
 
-<p>ほかに <code>HKQuantityTypeIdentifierHeartRateVariabilitySDNN</code> というタイプには心拍変動がミリ秒単位で入る。</p>
+<pre>
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import seaborn as sns
+import pandas as pd
 
-<p>これらのHKで始まる長い名前は<a href="https://developer.apple.com/documentation/healthkit">HealthKit</a>関連のものである。</p>
+df = pd.read_csv('healthdata.csv', header=None,
+                 names=['datetime', 'heartrate', 'motion'],
+                 index_col='datetime', parse_dates=['datetime'])
+
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+pd.plotting.register_matplotlib_converters()
+cm = plt.get_cmap('jet')
+
+plt.figure(figsize=[10,5])
+ax = sns.scatterplot(df.index, df['heartrate'], hue=df['heartrate'],
+                     style=df['motion'], palette=cm, hue_norm=(60,150))
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+plt.xlim(min(df.index), max(df.index))
+plt.ylim(50, 170)
+</pre>
+
+<p>もしプログラム上で日時を制限したいなら，例えば次のようにすればよい：</p>
+
+<pre>
+df = df[df.index &gt;= pd.Timestamp("2019-09-30 00:00:00")]
+</pre>
+
+<p>ほかにも，例えば <code>HKQuantityTypeIdentifierHeartRateVariabilitySDNN</code> というタイプには心拍変動がミリ秒単位で入る。これらHKで始まる長い名前は<a href="https://developer.apple.com/documentation/healthkit">HealthKit</a>関連のものである。</p>
 
 <hr>
 
@@ -51,7 +79,7 @@ for x in root.findall('Record'):
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-30 20:49:34</time>
+Last modified: <time>2019-09-30 21:46:03</time>
 <!-- hhmts end -->
 </p>
 </footer>
