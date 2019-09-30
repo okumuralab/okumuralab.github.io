@@ -18,7 +18,7 @@
 
 <h2>ヘルスケアデータの心拍数を読む</h2>
 
-<p>iPhoneの「ヘルスケア」アプリを開き，右上の自分のアイコンをタップし，「すべてのヘルスケアデータを書き出す」をタップする。共有方法は何でもいいが，簡単なのは「"ファイル"に保存」で，そのままiCloud Driveに保存する。</p>
+<p>iPhoneの「ヘルスケア」アプリを開き，右上の自分のアイコンをタップし，「すべてのヘルスケアデータを書き出す」をタップする。共有方法は何でもいいが，簡単なのは「"ファイル"に保存」で，そのままiCloud Driveに保存する。iPhoneがWi-Fiでインターネットに接続していなければ同期しないかもしれないので注意。</p>
 
 <p>MacのFinderでiCloud Driveにアクセスし，「書き出したデータ.zip」というファイルをカレントディレクトリに持ってきて（あるいは以下のZipファイル名としてフルパスで <code>'/Users/自分の名前/Library/Mobile Documents/com~apple~CloudDocs/書き出したデータ.zip'</code> を指定して），次のスクリプトを走らせる：</p>
 
@@ -35,12 +35,15 @@ with ZipFile('書き出したデータ.zip') as zipdata:
 root = tree.getroot()
 for x in root.findall('Record'):
     if x.get('type') == 'HKQuantityTypeIdentifierHeartRate':
-        print(x.get('startDate')[:19], x.get('value'), sep=',')
+        y = x.find('MetadataEntry')
+        print(x.get('startDate')[:19], x.get('value'), y.get('value'), sep=',')
 </pre>
 
-<p>標準出力に日時・心拍数のCSVが出力されるので，適当にリダイレクトしてファイルに収める。あとは<a href="fitbit.html">Fitbit</a>と同様にグラフを描けばよい。</p>
+<p>標準出力に日時・心拍数・そのときの運動状態のCSVが出力されるので，適当にリダイレクトしてファイルに収める。あとは<a href="fitbit.html">Fitbit</a>と同様にグラフを描けばよい。</p>
 
 <p>ほかに <code>HKQuantityTypeIdentifierHeartRateVariabilitySDNN</code> というタイプには心拍変動がミリ秒単位で入る。</p>
+
+<p>これらのHKで始まる長い名前は<a href="https://developer.apple.com/documentation/healthkit">HealthKit</a>関連のものである。</p>
 
 <hr>
 
@@ -48,7 +51,7 @@ for x in root.findall('Record'):
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-27 09:48:05</time>
+Last modified: <time>2019-09-30 20:49:34</time>
 <!-- hhmts end -->
 </p>
 </footer>

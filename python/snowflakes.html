@@ -28,7 +28,7 @@ id = 1177189139873054725 # このIDのツイートのタイムスタンプを求
 print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(id2time(id))))
 </pre>
 
-<p>2019-09-26 20:52:16 と出力される。逆は例えば次のようにすればよい：</p>
+<p>2019-09-26 20:52:16 と出力される。あるいは次のようにしてもよい：</p>
 
 <pre>
 import numpy as np
@@ -38,13 +38,22 @@ print(np.datetime64("2010-11-04 10:42:54.657") + np.timedelta64(id >> 22, "ms"))
 
 <p>2019-09-26T20:52:16.719 と出力される。</p>
 
+<p>逆は次のようにすればよい。例えばタイムスタンプ 2019-09-26 20:52:16 のIDは</p>
+
+<pre>
+t = '2019-09-26 20:52:16'
+print((np.datetime64(t) - np.datetime64("2010-11-04 10:42:54.657")).astype(int) << 22)
+</pre>
+
+<p>小さめの値 1177189136855990272 が出力される。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-27 12:16:31</time>
+Last modified: <time>2019-09-27 12:38:44</time>
 <!-- hhmts end -->
 </p>
 </body>

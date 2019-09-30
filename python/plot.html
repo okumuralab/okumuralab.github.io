@@ -29,19 +29,19 @@ plt.plot([-1,1])
 plt.show()
 </pre>
 
-<p>でエラーになるなら，<code>~/.matplotlib/matplotlibrc</code> にバックエンドの名前を指定します。Macの場合は</p>
+<p>でエラーになるなら，<code>~/.matplotlib/matplotlibrc</code> の<a href="https://matplotlib.org/faq/usage_faq.html#what-is-a-backend">バックエンド</a>の指定を見直します。Macの場合は</p>
 
 <pre>
 backend: MacOSX
 </pre>
 
-<p>でうまくいかなければ</p>
+<p>または <code>pip install PyQt5</code> して</p>
 
 <pre>
-backend: TkAgg
+backend: Qt5Agg
 </pre>
 
-<p>とします。</p>
+<p>とします（うまくいかなければ <code>MacOSX Qt5Agg Qt4Agg Gtk3Agg GTK3Cairo TkAgg WxAgg Agg Cairo</code> の中から選んでください）。</p>
 
 <p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら，システムにインストールされている適当な TrueType または OpenType フォント名を <code>~/.matplotlib/matplotlibrc</code> に書き加えます。Macなら例えば</p>
 
@@ -325,7 +325,7 @@ plt.close("all")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-12 22:02:48</time>
+Last modified: <time>2019-09-28 20:33:59</time>
 <!-- hhmts end -->
 </p>
 </body>
