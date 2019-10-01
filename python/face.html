@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>顔のランドマーク検出</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>顔のランドマーク検出</h1>
+
+<p>顔の検出（バウンディングボックスを求める）については <a href="opencv.html">OpenCV</a> のページでも述べた。ここでは <a href="http://dlib.net">dlib</a> を使って顔の68個のランドマーク（特徴点）を求める。dlib の <a href="http://dlib.net/imaging.html">Image Processing</a> のページからリンクされている <a href="http://dlib.net/face_landmark_detection.py.html">face_landmark_detection.py</a> というサンプルが参考になる。入力は<a href="../">私</a>の写真（300×300ピクセル）である。</p>
+
+<p>あらかじめ学習済みモデル <a href="http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2">shape_predictor_68_face_landmarks.dat.bz2</a> をダウンロードし，bunzip2 で展開したものを，カレントディレクトリに置いておく。</p>
+
+<pre>
+import cv2
+import dlib
+import numpy as np
+
+predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+
+img = cv2.imread("okumura.jpg")
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+white = np.ones((300, 300, 3), dtype="uint8") * 255
+detector = dlib.get_frontal_face_detector()
+for d in detector(gray, 1):
+    for p in predictor(gray, d).parts():
+        cv2.drawMarker(white, (p.x, p.y), (0, 0, 0))
+cv2.imshow("Landmarks", white)
+cv2.imwrite("191001a.png", white)
+cv2.destroyAllWindows()
+</pre>
+
+<figure><img src="img/191001a.png" alt="Landmarks"></figure>
+
+<p>この dlib をラップする形の使いやすいライブラリ <a href="https://github.com/ageitgey/face_recognition">face_recognition</a> がある。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-10-01 16:29:36</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
