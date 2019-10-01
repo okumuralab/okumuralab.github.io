@@ -33,29 +33,24 @@ img.shape   # (縦ピクセル数, 横ピクセル数, チャンネル数)
 
 <p>これでエラーが出ればうまく読めていないことになる。私の環境では  URL や <code>~/</code> で始まるパス名はうまくいかなかった。Windows 環境では全角ファイル名が読み込めないらしい（<a href="https://qiita.com/SKYS/items/cbde3775e2143cad7455">Python OpenCV の cv2.imread 及び cv2.imwrite で日本語を含むファイルパスを取り扱う際の問題への対処について</a> 参照）。</p>
 
-<div class="note">
-<p>OpenCVで画像を表示するには，</p>
+<p>このように読み込んだ画像を OpenCV で表示するには</p>
+
 <pre>
-cv2.imshow('Image', img)  # ウィンドウ名は何でもよい
-cv2.waitKey(0)
+cv2.imshow('Image', img)  # 最初の引数（ウィンドウ名）は何でもよい
+</pre>
+
+<p>とすればよいが，この挙動はシステムごとに異なるようである。うまくいかなければ諦めて，次に示すように matplotlib で表示すればよい。なお，OpenCV の窓をすべて閉じるには次のようにする：</p>
+
+<pre>
 cv2.destroyAllWindows()
 </pre>
-<p>あるいは</p>
-<pre>
-cv2.startWindowThread()
-cv2.namedWindow("Image")  # ウィンドウ名は何でもよい
-cv2.imshow("Image", img)
-</pre>
-<p>あるいは，例えば <code>cv2.imshow("Image", img); cv2.waitKey(5000)</code> のようにすれば5秒間ブロックして表示する。表示ウィンドウをすべて閉じるには <code>cv2.destroyAllWindows()</code> と打ち込む。</p>
-<p>しかし，私の環境では，いずれもうまくいったりいかなかったり。Matplotlib で表示するほうが楽なので，以下はその方法を述べる。</p>
-</div>
 
-<p>OpenCV で読み込んだ画像は BGR の順，Matplotlib の画像は RGB の順なので，そのまま Matplotlib で表示すると，色がおかしくなる。<a href="https://stackoverflow.com/questions/15072736/extracting-a-region-from-an-image-using-slicing-in-python-opencv">ここ</a>で論じられているように，<code>img2 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)</code> または <code>img2 = img[..., ::-1]</code> で逆順にしてから <code>plt.imshow(img2)</code> すればよい。あるいは次のようにすればよい：</p>
+<p>上の方法でうまくいかない場合，matplotlib で表示すればよいが，OpenCV で読み込んだ画像は BGR の順，matplotlib の画像は RGB の順なので，そのまま matplotlib で表示すると色がおかしくなる。<a href="https://stackoverflow.com/questions/15072736/extracting-a-region-from-an-image-using-slicing-in-python-opencv">ここ</a>で論じられているように，<code>img2 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)</code> で変換してから <code>plt.imshow(img2)</code> すればよい。あるいは次のようにすればよい：</p>
 
 <pre>
 import matplotlib.pyplot as plt
 
-plt.imshow(img[..., ::-1])
+plt.imshow(img[..., ::-1])  # ::-1 は逆順にするハック
 </pre>
 
 <p>画像は NumPy の ndarray で，成分は <code>'uint8'</code> である。チャンネルは [B,G,R] の順に入る。例えば青だけの縦150，横100の画像は次のようにして生成できる：</p>
@@ -175,7 +170,7 @@ plt.imshow(img[..., ::-1])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-31 17:16:50</time>
+Last modified: <time>2019-10-01 14:46:52</time>
 <!-- hhmts end -->
 </p>
 </body>
