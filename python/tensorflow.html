@@ -18,19 +18,21 @@
 
 <p><a href="https://www.tensorflow.org/">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。</p>
 
-<p>TensorFlow 1 系（最新は 1.14）をインストールするには</p>
+<p>TensorFlow 2 正式版が出た。</p>
 
 <pre>
-pip install tensorflow  # または conda install tensorflow
+pip install tensorflow
 </pre>
 
-<p>新しい TensorFlow 2.0 RC をインストールするには（これをすると TensorFlow 1.x はアンインストールされる）：</p>
+<p>で入るはずである。もし古いものが入っていたら</p>
 
 <pre>
-pip install tensorflow==2.0.0-rc1
+pip install --upgrade tensorflow
 </pre>
 
-<p><code>tf.keras</code> を使う上では見かけ上の違いはほぼない。</p>
+<p>で 2 に更新される。</p>
+
+<p><code>tf.keras</code> を使う上では TensorFlow 1 系 と 2 系で見かけ上の違いはほぼない。</p>
 
 <div class="note">
 <p>TensorFlow 2 で 1.x のコードを走らるには</p>
@@ -50,7 +52,7 @@ tf_upgrade_v2 --intree dir/ --outtree dir2/ --reportfile report.txt
 </div>
 
 <div class="note">
-<p>Google Colab で 2.x を使うには，インポートの前に</p>
+<p>Google Colab は現時点ではまだ 1.14.0 である。2.x を使うには，インポートの前に</p>
 <pre>
 %tensorflow_version 2.x
 </pre>
@@ -67,7 +69,7 @@ import tensorflow as tf
 
 <pre>
 In [ ]: tf.__version__
-Out[ ]: '2.0.0-beta1'    # または '1.14.0'
+Out[ ]: '2.0.0'
 
 In [ ]: tf.keras.__version__
 Out[ ]: '2.2.4-tf'
@@ -171,7 +173,7 @@ model = tf.keras.models.load_model("mymodel.h5")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-13 11:29:42</time>
+Last modified: <time>2019-10-01 17:38:18</time>
 <!-- hhmts end -->
 </p>
 </body>
