@@ -30,26 +30,36 @@
 
 <p><code>python3</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
 
-<p>いろいろなパッケージのインストールは <code>pip</code>（または <code>pip3</code>）コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
+<p>いろいろなパッケージのインストールは <code>pip</code> または <code>pip3</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
 
 <p>まずは，アップデートの必要なパッケージを，次のコマンドで調べます：</p>
 
 <pre>
-pip list --outdated
+pip3 list --outdated
 </pre>
 
-<p>例えば pip そのものをアップデートするには，ターミナルに次のように打ち込みます：</p>
+<p>最初は pip そのものが古いはずですので，まずこれをアップデートしましょう。ターミナルに次のように打ち込みます：</p>
 
 <pre>
-pip install --upgrade pip
+pip3 install --upgrade pip
 </pre>
 
-<p>もし「権限がない」というエラーになった場合は，マルチユーザマシンで環境を共有する場合は管理者権限で実行します（頭に <code>sudo</code> を付けるなど）。自分しか使わないマシンなら <code>pip install --user</code> のように <code>--user</code> オプションを付けます。そうすれば，ユーザ権限で書き込める場所（<code>~/.local</code> または <code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。</p>
-
-<p>これ以外に必要なパッケージは，その都度インストールします。例：</p>
+<p>Permission denied というエラーになった場合は</p>
 
 <pre>
-pip install ipython numpy scipy matplotlib pandas jupyter
+pip3 install --user --upgrade pip
+</pre>
+
+<p>のように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/.local</code> または <code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> の類に</p>
+
+<pre>
+export PATH=$HOME/Library/Python/3.7/bin:$PATH
+</pre>
+
+<p>を追加します。これ以外に必要なパッケージは，その都度インストールします。例：</p>
+
+<pre>
+pip install --user ipython numpy scipy matplotlib pandas jupyter
 </pre>
 
 <h3>Anaconda によるインストール</h3>
@@ -141,6 +151,10 @@ conda install ipython numpy scipy matplotlib pandas scikit-learn
 
 <p><a href="https://news.mynavi.jp/article/liunx_win-28/">Visual Studio CodeとWSLでPython開発に挑戦してみよう</a>参照。要は WSL の Ubuntu に apt で python3 と python3-pip を入れる。グラフィックスは多分面倒。</p>
 
+<h3>CentOS でのインストール</h3>
+
+<p>CentOS 7 なら <code>yum install python3</code> で少し古い /usr/bin/python3 や /usr/bin/pip3 が入ります。</p>
+
 <h3>ソースからのインストール</h3>
 
 <p>CentOS 7 なら <code>yum install libffi-devel sqlite-devel</code> しておきます。</p>
@@ -227,7 +241,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-20 21:15:58</time>
+Last modified: <time>2019-10-02 13:55:29</time>
 <!-- hhmts end -->
 </p>
 </footer>
