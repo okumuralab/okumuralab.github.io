@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>pygame</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>pygame（書きかけ）</h1>
+
+<p><a href="https://www.pygame.org">pygame</a> は Python でゲームを作るためのパッケージである。</p>
+
+<p>pip でインストールできる。動作確認は</p>
+
+<pre>
+python3 -m pygame.examples.aliens
+</pre>
+
+<p><a href="https://www.python.org">python.org</a> の Python ではうまくいったが，Homebrew 版 Python では音が出ても画像が出ない。<a href="https://github.com/pygame/pygame/issues/555">対策</a>：</p>
+
+<pre>
+pip3 uninstall pygame
+brew install sdl2 sdl2_gfx sdl2_image sdl2_mixer sdl2_net sdl2_ttf
+git clone https://github.com/pygame/pygame.git
+cd pygame
+python3 setup.py -config -auto -sdl2
+python3 setup.py install
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-10-03 15:03:46</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
