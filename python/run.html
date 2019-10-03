@@ -210,9 +210,19 @@ jupyter lab
 
 <p>Anaconda を入れなくても <code>pip install spyder</code> でインストールすることができます（詳しくは<a href="https://docs.spyder-ide.org/installation.html">こちら</a>参照）。Homebrew 環境なら /usr/local/bin/spyder3 という実行ファイルができますので，ターミナルで spyder3 と打ち込めば立ち上がります。</p>
 
-<h3>PyCharm，VS Code，Atom，…</h3>
+<h3>VS Code</h3>
 
-<p>[…]</p>
+<p><a href="https://code.visualstudio.com">Visual Studio Code</a>（VS Code）を使う場合，まず最初に Extension ボタン（正方形が3+1個）をクリックして「Japanese」と入れ，Japanese Language Pack for ... を Install し，「Restart Now」のボタンを押して VS Code を再起動すると，メニューが日本語になります。「基本設定」→「配色テーマ」で自分好みの配色を選びます。</p>
+
+<p>Extensions ボタンをクリックして「Python」をインストールします。「ファイル」→「新規ファイル」とすると「Untitled-1」のようなタブが開きますので，「ファイル」→「名前を付けて保存…」で例えば <code>test.py</code> のような名前で保存します。</p>
+
+<p>「Linter pylint is not installed」と言ってくるなら，念のためインストールしておきます。pylint（パイリント）は Python の文法チェックツールです。</p>
+
+<p>これで普通に Python のコードが編集できますが，Jupyter Notebook を使いたい場合，1行目に <code>#%%</code> とだけ入れて改行します。すぐ上に「Run Cell」などのリンクができることを確認します。2行目以降にプログラムを書いて，ここまでを実行したいというところで Shift + Enter すると（あるいは「Run Cell」をクリックすると），「Python Interactive」というタブに実行結果が現れます。このタブの最下部には「Type code here and press shift-enter to run」という部分もありますので，1行でできる計算はそちらに書いてもかまいません。</p>
+
+<h3>PyCharm，Atom，…</h3>
+
+<p>[工事中]</p>
 
 <h3>Emacs 内で IPython を動かす</h3>
 
@@ -233,7 +243,7 @@ jupyter lab
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-28 22:02:00</time>
+Last modified: <time>2019-10-03 11:04:41</time>
 <!-- hhmts end -->
 </p>
 </body>
