@@ -28,9 +28,9 @@
 from zipfile import ZipFile
 import xml.etree.ElementTree as ET
 
-with ZipFile('書き出したデータ.zip') as zipdata:
-    with zipdata.open('apple_health_export/export.xml') as f:
-        tree = ET.parse(f)
+with ZipFile('書き出したデータ.zip') as zipdata, \
+     zipdata.open('apple_health_export/export.xml') as f:
+    tree = ET.parse(f)
 
 root = tree.getroot()
 for x in root.findall('Record'):
@@ -79,7 +79,7 @@ df = df[df.index &gt;= pd.Timestamp("2019-09-30 00:00:00")]
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-30 21:46:03</time>
+Last modified: <time>2019-10-06 16:23:57</time>
 <!-- hhmts end -->
 </p>
 </footer>
