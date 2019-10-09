@@ -235,13 +235,23 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 
 <p>カシオの電卓 <a href="https://web.casio.jp/dentaku/fxcg50/">fx-CG50</a> などで MicroPython という Python のサブセットが使えるようです。</p>
 
+<h3>macOS 10.15 Catalina の Python</h3>
+
+<p>2019-10-08 に出た macOS Catalina には，以前からの /usr/bin/python（バージョン 2.7.16）に加えて，/usr/bin/python3 が入っています。現時点のバージョンは 3.7.3 です。ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールしてから使います。まずは</p>
+
+<pre>
+/usr/bin/pip3 install --user --upgrade pip
+</pre>
+
+<p>で pip を更新します。新しい pip コマンド等が ~/Library/Python/3.7/bin に入りますので，そちらにパスを通しておきます。あとは本家のものと同じように使えそうです（十分テストをしていないので問題があったらお教えください）。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-10-02 13:55:29</time>
+Last modified: <time>2019-10-09 10:15:30</time>
 <!-- hhmts end -->
 </p>
 </footer>
