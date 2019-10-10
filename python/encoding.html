@@ -20,6 +20,41 @@
 
 <p>（文字コードと <a href="https://docs.python.org/3/library/codecs.html">codecs</a> モジュールについてまとめる予定）</p>
 
+<h3>ZIPアーカイブのファイル名文字化け対策</h3>
+
+<p>ZIP アーカイブの操作は <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> パッケージでできる。ただ，日本語環境の Windows で作成したアーカイブは，ファイル名が CP932（Shift JIS の Microsoft 拡張）になっている。これを Mac や Linux で展開するには，UTF-8 に変換しなければならない。</p>
+
+<p>Python 3 の zipfile モジュール（zipfile.py）では</p>
+
+<pre>
+            if zinfo.flag_bits & 0x800:
+                # UTF-8 filename
+                fname_str = fname.decode("utf-8")
+            else:
+                fname_str = fname.decode("cp437")
+</pre>
+
+<p>のような処理がされている。コードページ 437（DOS Latin US）はオリジナルの IBM PC の文字セットである。したがって，これを UTF-8 に変換して展開するには，次のようにすればよさそうである：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import sys
+from zipfile import ZipFile
+
+with ZipFile(sys.argv[1]) as zip:
+    for zinfo in zip.infolist():
+        if not zinfo.flag_bits & 0x800:
+            try:
+                name = zinfo.filename.encode('cp437').decode('cp932')
+            except:
+                name = zinfo.filename.encode('cp437').decode('utf-8')
+            zinfo.filename = name
+        zip.extract(zinfo)
+</pre>
+
+<p>Mac の展開ツール（ZIP アーカイブをダブルクリックすると現れる）はファイル名の文字コードの自動判断ができる。Windows 8 以降の展開ツールも大丈夫らしい。Windows 7 は <a href="https://support.microsoft.com/ja-jp/help/2704299/japanese-characters-in-file-names-are-displayed-as-garbled-text-after">KB2704299</a> で対応したらしい。Mac の /usr/bin/unzip にはファイル名変換機能はない（CentOS 7 の /usr/bin/unzip には -O cp932 オプションがある）。</p>
+
 <h3>NFC，NFD</h3>
 
 <p>Mac の場合，ファイル名の Unicode 正規化がほぼ NFD という形式になっている。例えばカレントディレクトリに「パンダ.txt」というファイルを作り，<a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> でファイル名を読み出す：</p>
@@ -69,7 +104,7 @@ Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-10 21:12:03</time>
+Last modified: <time>2019-10-10 14:38:50</time>
 <!-- hhmts end -->
 </p>
 </body>
