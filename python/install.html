@@ -24,13 +24,11 @@
 
 <p><a href="https://www.python.org/download/">Download Python</a> から，Windows 用または Mac 用の最新のインストーラをダウンロードし，インストールします。Windows ではデフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python*\python.exe (および pythonw.exe) に，Mac では /Library/Frameworks/Python.framework/Versions/*/bin/python3 に入るようです。</p>
 
-<p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら，PowerShell かコマンドプロンプトで「python」と打ち込むと，「ストア」が立ち上がって「Python」をインストールする画面が出てくるようです。なお，<a href="https://docs.python.org/3/using/windows.html#the-microsoft-store-package">公式ドキュメント</a>によれば “currently considered unstable” だそうです。</p>
-
-<p>インストールすると，Mac では <code>~/.bash_profile</code> にパスが付け加えられます。</p>
+<p>インストールすると，Mac では <code>~/.bash_profile</code> の最後にパスが付け加えられます。</p>
 
 <p><code>python3</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
 
-<p>いろいろなパッケージのインストールは <code>pip</code> または <code>pip3</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
+<p>いろいろなパッケージのインストールは <code>pip3</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
 
 <p>まずは，アップデートの必要なパッケージを，次のコマンドで調べます：</p>
 
@@ -38,29 +36,39 @@
 pip3 list --outdated
 </pre>
 
-<p>最初は pip そのものが古いはずですので，まずこれをアップデートしましょう。ターミナルに次のように打ち込みます：</p>
-
-<pre>
-pip3 install --upgrade pip
-</pre>
-
-<p>Permission denied というエラーになった場合は</p>
+<p>最初は pip そのものが古いはずですので，まずこれをアップデートしましょう。単に <code>pip3 install --upgrade pip</code> とすれば Permission denied のエラーになると思いますので，次のようにターミナルに打ち込みます：</p>
 
 <pre>
 pip3 install --user --upgrade pip
 </pre>
 
-<p>のように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/.local</code> または <code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> の類に</p>
+<p>このように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> の最後に</p>
 
 <pre>
-export PATH=$HOME/Library/Python/3.7/bin:$PATH
+export PATH=$HOME/Library/Python/3.8/bin:$PATH
 </pre>
 
 <p>を追加します。これ以外に必要なパッケージは，その都度インストールします。例：</p>
 
 <pre>
-pip install --user ipython numpy scipy matplotlib pandas jupyter
+pip install --user ipython numpy matplotlib pandas jupyter
 </pre>
+
+<h3>Microsoft Store 版 Python</h3>
+
+<p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら，PowerShell かコマンドプロンプトで「python」と打ち込むと，「ストア」が立ち上がって「Python」をインストールする画面が出てきます。</p>
+
+<p>コマンドは 3 を付けても付けなくても同じです（python3 = python，pip3 = pip）。</p>
+
+<h3>macOS 10.15 Catalina の Python</h3>
+
+<p>2019-10-08 に出た macOS Catalina には，以前からの /usr/bin/python（バージョン 2.7.16）に加えて，/usr/bin/python3 が入っています。現時点のバージョンは 3.7.3 です。ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールしてから使います。まずは</p>
+
+<pre>
+/usr/bin/pip3 install --user --upgrade pip
+</pre>
+
+<p>で pip を更新します。新しい pip コマンド等が ~/Library/Python/3.7/bin に入りますので，そちらにパスを通しておきます。あとは本家のものと同じように使えそうです。</p>
 
 <h3>Anaconda によるインストール</h3>
 
@@ -239,23 +247,13 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 
 <p>カシオの電卓 <a href="https://web.casio.jp/dentaku/fxcg50/">fx-CG50</a> などで MicroPython という Python のサブセットが使えるようです。</p>
 
-<h3>macOS 10.15 Catalina の Python</h3>
-
-<p>2019-10-08 に出た macOS Catalina には，以前からの /usr/bin/python（バージョン 2.7.16）に加えて，/usr/bin/python3 が入っています。現時点のバージョンは 3.7.3 です。ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールしてから使います。まずは</p>
-
-<pre>
-/usr/bin/pip3 install --user --upgrade pip
-</pre>
-
-<p>で pip を更新します。新しい pip コマンド等が ~/Library/Python/3.7/bin に入りますので，そちらにパスを通しておきます。あとは本家のものと同じように使えそうです（十分テストをしていないので問題があったらお教えください）。</p>
-
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-10-12 17:38:41</time>
+Last modified: <time>2019-10-15 15:21:55</time>
 <!-- hhmts end -->
 </p>
 </footer>
