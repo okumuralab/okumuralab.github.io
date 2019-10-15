@@ -24,7 +24,12 @@
 
 <p><a href="https://www.python.org/download/">Download Python</a> から，Windows 用または Mac 用の最新のインストーラをダウンロードし，インストールします。Windows ではデフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python*\python.exe (および pythonw.exe) に，Mac では /Library/Frameworks/Python.framework/Versions/*/bin/python3 に入るようです。</p>
 
-<p>インストールすると，Mac では <code>~/.bash_profile</code> の最後にパスが付け加えられます。</p>
+<p>インストールすると，Mac では <code>~/.bash_profile</code> の最後にパスが付け加えられます：</p>
+
+<pre>
+PATH="/Library/Frameworks/Python.framework/Versions/3.8/bin:${PATH}"
+export PATH
+</pre>
 
 <p><code>python3</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
 
@@ -42,13 +47,15 @@ pip3 list --outdated
 pip3 install --user --upgrade pip
 </pre>
 
-<p>このように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> の最後に</p>
+<p>このように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> にさきほど追加されたものを</p>
 
 <pre>
-export PATH=$HOME/Library/Python/3.8/bin:$PATH
+PATH="/Library/Frameworks/Python.framework/Versions/3.8/bin:${PATH}"
+PATH="${HOME}/Library/Python/3.8/bin:${PATH}"
+export PATH
 </pre>
 
-<p>を追加します。これ以外に必要なパッケージは，その都度インストールします。例：</p>
+<p>と編集すればいいでしょう。これ以外に必要なパッケージは，その都度インストールします。例：</p>
 
 <pre>
 pip install --user ipython numpy matplotlib pandas jupyter
@@ -253,7 +260,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-10-15 15:21:55</time>
+Last modified: <time>2019-10-15 17:32:52</time>
 <!-- hhmts end -->
 </p>
 </footer>
