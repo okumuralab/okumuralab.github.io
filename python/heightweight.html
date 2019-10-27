@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>身長と体重の関係</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>身長と体重の関係</h1>
+
+<p>体重は身長の3乗に比例しそうだが，BMIは体重÷身長の2乗であるので，体重は身長の2乗に比例するのであろうか。</p>
+
+<p>成人の男女別のデータがあればよいのだが，Kaggleでも乱数で生成したらしいものしか見つからない（そうでないのがあったら教えてください）。そこで，<a href="https://www.e-stat.go.jp">e-Stat</a>で「身長と体重の相関表 平成３１年度」を検索して出てくる唯一のExcelファイルを使って，一番大きい年齢層（17歳）の男女別の身長・体重の関係を調べる。ひどいExcelファイルで，うまく印刷できるように2シートに分けてあるので，別々に読んで結合しなければならない。</p>
+
+<p>まず男子。</p>
+
+<pre>
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+df1 = pd.read_excel("h30_hoken_eturan_01.xlsx", "10-020",
+                    skiprows=[0,1,2,4], na_values="-")
+df2 = pd.read_excel("h30_hoken_eturan_01.xlsx", "10-021",
+                    skiprows=[0,1,2,4], na_values="-")
+
+df = pd.concat([df1.iloc[0:46, 3:35], df2.iloc[0:46, 2:34]], axis=1)
+df = df.fillna(0)  # 行145..190cm 列37..100kg
+
+height = []
+weight = []
+for i in range(46):
+    for j in range(64):
+        n = int(round(df.iloc[i,j] * 10))
+        height = np.append(height, [i+145] * n)
+        weight = np.append(weight, [j+37] * n)
+
+def jitter(x):
+    return x + np.random.random(len(x)) - 0.5
+
+plt.figure(figsize=[7, 7])
+plt.plot(jitter(height), jitter(weight), ".")
+plt.xlabel("height (cm)")
+plt.ylabel("weight (kg)")
+plt.title("17歳 男")
+plt.savefig('191027a.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/191027a.png" alt="17歳 男 身長と体重の関係"></figure>
+
+<p>相関係数</p>
+
+<pre>
+np.corrcoef([weight, height, height**2, height**3, height**4])
+</pre>
+
+<p>は</p>
+
+<pre>
+array([[1.        , 0.42350688, 0.42390102, 0.42405993, 0.42398417],
+       [0.42350688, 1.        , 0.99970906, 0.99883893, 0.99739424],
+       [0.42390102, 0.99970906, 1.        , 0.99971011, 0.99884296],
+       [0.42405993, 0.99883893, 0.99971011, 1.        , 0.99971108],
+       [0.42398417, 0.99739424, 0.99884296, 0.99971108, 1.        ]])
+</pre>
+
+<p>となり，3乗の相関が一番大きいが，違いはほとんどない。</p>
+
+<p>女子。</p>
+
+<pre>
+df1 = pd.read_excel("h30_hoken_eturan_01.xlsx", "10-041",
+                    skiprows=[0,1,2,4], na_values="-")
+df2 = pd.read_excel("h30_hoken_eturan_01.xlsx", "10-042",
+                    skiprows=[0,1,2,4], na_values="-")
+
+df = pd.concat([df1.iloc[0:43, 3:33], df2.iloc[0:43, 2:30]], axis=1)
+df = df.fillna(0)  # 行136..178cm 列33..90kg
+
+height = []
+weight = []
+for i in range(43):
+    for j in range(58):
+        n = int(round(df.iloc[i,j] * 10))
+        height = np.append(height, [i+136] * n)
+        weight = np.append(weight, [j+33] * n)
+
+plt.clf()
+plt.plot(jitter(height), jitter(weight), ".")
+plt.xlabel("height (cm)")
+plt.ylabel("weight (kg)")
+plt.title("17歳 女")
+plt.savefig('191027b.png', bbox_inches="tight")
+np.corrcoef([weight, height, height**2, height**3, height**4])
+</pre>
+
+<figure><img src="img/191027b.png" alt="17歳 女 身長と体重の関係"></figure>
+
+<pre>
+array([[1.        , 0.43228155, 0.43256623, 0.43261141, 0.43241617],
+       [0.43228155, 1.        , 0.99972306, 0.99889131, 0.9975034 ],
+       [0.43256623, 0.99972306, 1.        , 0.99972231, 0.99888773],
+       [0.43261141, 0.99889131, 0.99972231, 1.        , 0.99972126],
+       [0.43241617, 0.9975034 , 0.99888773, 0.99972126, 1.        ]])
+</pre>
+
+<p>こちらも3乗の相関が一番大きいが，違いはほとんどない。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-10-27 22:16:39</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
