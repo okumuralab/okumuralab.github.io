@@ -114,13 +114,28 @@ array([[1.        , 0.43228155, 0.43256623, 0.43261141, 0.43241617],
 
 <p>こちらも3乗の相関が一番大きいが，違いはほとんどない。</p>
 
+<p>分布の形から見て女子のデータのほうがサチってないので，こちらで計算を続けると，分布が左右対称であれば歪度（skewness）は 0 になるはずであるので，調べてみる：</p>
+
+<pre>
+pd.DataFrame(height).skew()           # 0.092451
+pd.DataFrame(height**3).skew()        # 0.293783
+pd.DataFrame(weight).skew()           # 1.077402
+pd.DataFrame(weight**(1/2)).skew()    # 0.765789
+pd.DataFrame(weight**(1/3)).skew()    # 0.668884
+pd.DataFrame(weight**(1/4)).skew()    # 0.621595
+pd.DataFrame(weight**(1/100)).skew()  # 0.4894
+pd.DataFrame(np.log(weight)).skew()   # 0.484013
+</pre>
+
+<p>身長はほぼ歪度 0 であるが，体重は3乗根にしても100乗根にしても歪度 0 にならない。体重は身長の3乗（2乗？）に比例するので正規分布から外れるといった説明は，正しくなさそうである。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-10-27 22:16:39</time>
+Last modified: <time>2019-10-28 15:11:07</time>
 <!-- hhmts end -->
 </p>
 </footer>
