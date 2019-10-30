@@ -53,7 +53,9 @@ with ZipFile(sys.argv[1]) as zip:
         zip.extract(zinfo)
 </pre>
 
-<p>Mac の展開ツール（ZIP アーカイブをダブルクリックすると現れる）はファイル名の文字コードの自動判断ができる。Windows 8 以降の展開ツールも大丈夫らしい。Windows 7 は <a href="https://support.microsoft.com/ja-jp/help/2704299/japanese-characters-in-file-names-are-displayed-as-garbled-text-after">KB2704299</a> で対応したらしい。Mac の /usr/bin/unzip にはファイル名変換機能はない（CentOS 7 の /usr/bin/unzip には -O cp932 オプションがある）。</p>
+<p>この14行ほどのファイルを <code>unzip.py</code> という名前で作成して実行可能にしておけば，<code>./unzip.py アーカイブ名.zip</code> で展開できる。</p>
+
+<p>Mac の展開ツール（ZIP アーカイブをダブルクリックすると現れる）はファイル名の文字コードの自動判断ができる（うまくいかない場合があるという話も聞いた）。Windows 8 以降の展開ツールも大丈夫らしい。Windows 7 は <a href="https://support.microsoft.com/ja-jp/help/2704299/japanese-characters-in-file-names-are-displayed-as-garbled-text-after">KB2704299</a> で対応したらしい。Mac の /usr/bin/unzip にはファイル名変換機能はない（CentOS 7 の /usr/bin/unzip には -O cp932 オプションがある）。</p>
 
 <h3>NFC，NFD</h3>
 
@@ -104,7 +106,7 @@ Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-10-10 14:38:50</time>
+Last modified: <time>2019-10-30 22:39:38</time>
 <!-- hhmts end -->
 </p>
 </body>
