@@ -358,13 +358,24 @@ In [ ]: [fibn(n) for n in range(1,11)]
 Out[ ]: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
 </pre>
 
+<p>他の言語のように，最初に一定の長さの配列を宣言しておきたい場合は，次のように，あらかじめ（例えば）<code>0</code> を100個並べたものを作っておくことができます：</p>
+
+<pre>
+a = [0] * 100
+a[0] = a[1] = 1
+for i in range(2,100):
+    a[i] = a[i-2] + a[i-1]
+</pre>
+
+<p><code>0</code> の代わりに，未定義であることを示す <code>None</code> を使うほうがいいかもしれません。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-16 15:58:27</time>
+Last modified: <time>2019-10-31 13:10:02</time>
 <!-- hhmts end -->
 </p>
 </body>
