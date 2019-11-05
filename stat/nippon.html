@@ -132,6 +132,8 @@ saveGIF({
 <p><code>JapanPrefMap()</code> を少々改造し，投影法を UTM 54N に変えてみる。座標変換は sf パッケージの <code>st_transform()</code> を使う。</p>
 
 <pre>
+library(sf)
+
 JapanPrefMap2 &lt;-
 function (col = NULL, inset = TRUE, ...) 
 {
@@ -186,7 +188,7 @@ legend(600, 3700, c("副免許不要","副免許必要"), fill=c("blue","yellow"
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-11-05 20:55:32</time>
+Last modified: <time>2019-11-05 22:36:16</time>
 <!-- hhmts end -->
 </p>
 </footer>
