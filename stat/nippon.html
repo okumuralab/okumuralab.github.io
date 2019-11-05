@@ -17,6 +17,8 @@
 
 <h1>日本地図</h1>
 
+<p><em>[2019年11月追記]</em> NipponパッケージがCRANから消されてしまったのでNipponMapだけで描くように手直しした。</p>
+
 <p><em>[2017年12月追記]</em> 谷村先生ご自身によるNipponパッケージの紹介スライドが
 <a href="https://prs.ism.ac.jp/useRjp/hiki.cgi?2017%C7%AF%C5%D9+%A5%C7%A1%BC%A5%BF%B2%F2%C0%CF%B4%C4%B6%ADR%A4%CE%C0%B0%C8%F7%A4%C8%CD%F8%CD%D1">2017年度 統計数理研究所共同研究集会「データ解析環境Rの整備と利用」</a>
 ページからダウンロードできる。また，Nipponパッケージの日本地図機能だけを含む
@@ -26,46 +28,55 @@
 <h2>高校「情報」教員採用試験状況</h2>
 
 <p>2015年6月に三重大学医学部看護学科教授になられた 谷村 晋 先生によるパッケージ
-<a href="https://CRAN.R-project.org/package=Nippon">Nippon</a>
-および
+<del><a href="https://CRAN.R-project.org/package=Nippon">Nippon</a>
+および</del>
 <a href="https://CRAN.R-project.org/package=NipponMap">NipponMap</a>
 を使って日本地図を描いてみる。</p>
 
 <p>データは，神戸市立科学技術高等学校の 中野 由章 先生が毎年調べられている<a href="http://nakano.ac/index.php?%B9%E2%B9%BB%A1%D6%BE%F0%CA%F3%A1%D7%B6%B5%B0%F7%BA%CE%CD%D1%BB%EE%B8%B3%BE%F5%B6%B7">高校「情報」教員採用試験状況</a>である。</p>
 
-<p>まずNipponおよびNipponMapパッケージのインストール：</p>
+<p>まずNipponMapパッケージのインストール：</p>
 
 <pre>
-install.packages(c("Nippon","NipponMap"))
+install.packages("NipponMap")
 </pre>
 
-<p>2019年度採用の高校「情報」教員採用試験で，副免許不要の都道府県は青，副免許必要の都道府県は黄を塗る。</p>
+<p>2020年度採用の高校「情報」教員採用試験で，副免許不要の都道府県は青，副免許必要の都道府県は黄を塗る。</p>
 
 <pre>
-library(Nippon)
 library(NipponMap)
-data(prefectures)
+kenmei = c("北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
+           "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山",
+           "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重",
+           "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根",
+           "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡",
+           "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄")
 cols = rep("white", 47)
-names(cols) = sub("[都府県]$", "", prefectures$name)
-cols[c("青森","山形","千葉","岐阜","三重","京都","大阪","岡山","広島","福岡","大分","沖縄")] = "blue"
-cols[c("宮城","茨城","埼玉","東京","神奈川","富山","長野","愛知","兵庫")] = "yellow"
+names(cols) = kenmei
+cols[c("青森","岩手","千葉","石川","福井","静岡","愛知","岐阜","京都","大阪","和歌山",
+       "岡山","広島","徳島","高知","福岡","佐賀","熊本","大分","宮崎","沖縄")] = "blue"
+cols[c("北海道","宮城","茨城","埼玉","東京","神奈川","富山","長野","兵庫","山口")] = "yellow"
 par(mar=c(0,0,0,0))
 JapanPrefMap(col=cols)
 legend(143, 33, c("副免許不要","副免許必要"), fill=c("blue","yellow"))
 </pre>
 
-<figure><img src="img/180803a.png" alt="2019年度高校「情報」教員採用試験状況"></figure>
+<figure><img src="img/191105a.png" alt="2020年度高校「情報」教員採用試験状況"></figure>
 
-<p>「白いところは何なんですか？」とよく尋ねられる。「採用なし」である。ちなみに，高校「情報」は必履修の教科である。</p>
+<p>「白いところは何なんですか？」とよく尋ねられる。「採用なし」である。ちなみに，高校「情報」は必履修の教科である。これでも白いところが減ってきた。</p>
 
 <h2>アニメーション化</h2>
 
 <p>ついでに，<a href="http://nakano.ac/index.php?%B9%E2%B9%BB%A1%D6%BE%F0%CA%F3%A1%D7%B6%B5%B0%F7%BA%CE%CD%D1%BB%EE%B8%B3%BE%F5%B6%B7">中野先生のページ</a>から副免許の要・不要も書き込まれたデータをすべていただいてきて，アニメーションで表示する：</p>
 
 <pre>
-year = 2001:2019
-cols = matrix(rep("white", 47*19), nrow=47)
-rownames(cols) = sub("[都府県]$", "", prefectures$name)
+year = 2001:2020
+cols = matrix(rep("white", 47*20), nrow=47)
+rownames(cols) = kenmei
+
+cols[c("青森","岩手","千葉","石川","福井","静岡","愛知","岐阜","京都","大阪","和歌山",
+       "岡山","広島","徳島","高知","福岡","佐賀","熊本","大分","宮崎","沖縄"), 20] = "blue"
+cols[c("北海道","宮城","茨城","埼玉","東京","神奈川","富山","長野","兵庫","山口"), 20] = "yellow"
 
 cols[c("青森","山形","千葉","岐阜","三重","京都","大阪","岡山","広島","福岡","大分","沖縄"), 19] = "blue"
 cols[c("宮城","茨城","埼玉","東京","神奈川","富山","長野","愛知","兵庫"), 19] = "yellow"
@@ -105,7 +116,7 @@ cols[c("茨城","群馬","埼玉","東京","富山","愛知","鳥取"), 8] = "ye
 
 library(animation)
 saveGIF({
-    for (i in 8:19) {
+    for (i in 8:20) {
         par(mar=c(0,0,2,0))
         JapanPrefMap(col=cols[,i])
         title(year[i])
@@ -114,7 +125,7 @@ saveGIF({
 })
 </pre>
 
-<figure><img src="img/180803b.gif" alt="高校で「情報」教員が採用された都道府県"></figure>
+<figure><img src="img/191105b.gif" alt="高校で「情報」教員が採用された都道府県"></figure>
 
 <h2>投影法の変更</h2>
 
@@ -156,7 +167,7 @@ JapanPrefMap2(col=cols)
 legend(600, 3700, c("副免許不要","副免許必要"), fill=c("blue","yellow"))
 </pre>
 
-<figure><img src="img/180803c.png" alt="2019年度高校「情報」教員採用試験状況"></figure>
+<figure><img src="img/191105c.png" alt="2019年度高校「情報」教員採用試験状況"></figure>
 
 <p>UTM 54N以外に，<a href="http://gis.stackexchange.com/questions/73107/suitable-projection-for-a-map-of-japan">Suitable projection for a map of Japan</a> で次のような経線がまっすぐになるものも薦められている：</p>
 
@@ -175,7 +186,7 @@ legend(600, 3700, c("副免許不要","副免許必要"), fill=c("blue","yellow"
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-08-03 11:48:26</time>
+Last modified: <time>2019-11-05 20:55:32</time>
 <!-- hhmts end -->
 </p>
 </footer>
