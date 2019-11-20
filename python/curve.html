@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>曲線を描く</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>曲線を描く</h1>
+
+<p>Python の matplotlib で曲線を描く基本は次のようにします：</p>
+
+<pre>
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 2 * np.pi, 101)  # 区間[0,2π]を100等分する101点
+plt.plot(x, np.sin(x))
+</pre>
+
+<p>これだけで図が現れなければ最後に <code>plt.show()</code> を入れます。</p>
+
+<p>コサインも追加してみましょう：</p>
+
+<pre>
+plt.plot(x, np.cos(x))
+</pre>
+
+<p>凡例（レジェンド）を入れましょう：</p>
+
+<pre>
+plt.legend(["sin x", "cos x"])
+</pre>
+
+<p>タンジェントも加えてみましょう：</p>
+
+<pre>
+plt.plot(x, np.tan(x))
+</pre>
+
+<p>あれれ，おかしくなりましたか。y の範囲を限定しましょう：</p>
+
+<pre>
+plt.ylim(-2, 2)
+</pre>
+
+<p>もし変な縦線が入るのが嫌なら，次のようにするといいでしょう：</p>
+
+<pre>
+eps = 0.000001
+x1 = np.linspace(0, np.pi/2 - eps)
+x2 = np.linspace(np.pi/2 + eps, 3*np.pi/2 - eps)
+x3 = np.linspace(3*np.pi/2 + eps, 2*np.pi)
+plt.plot(x1, np.tan(x1))
+plt.plot(x2, np.tan(x2), color="C2")  # 色: C0，C1，C2，…
+plt.plot(x3, np.tan(x3), color="C2")
+plt.ylim(-2, 2)
+plt.legend(["sin x","cos x", "tan x"])
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-11-20 22:01:51</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
