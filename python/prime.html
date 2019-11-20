@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>素因数分解</title>
+<title>素数の判定</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -14,20 +14,45 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>素因数分解</h1>
+<h1>素数の判定</h1>
 
-<p>今日 20190823 は素数：</p>
+<p>基本は順に割っていけばよい：</p>
 
 <pre>
-import math, time
+import math
+
+def isprime(n):
+    if n < 2:
+        return False
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0: return False
+    return True
+</pre>
+
+<p>いろいろ改良が可能である。2を除けば偶数で割ってみる必要はないので，計算量は半分にできる。</p>
+
+<pre>
+import math
+
+def isprime(n):
+    if n < 2:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+    for i in range(3, int(math.sqrt(n)) + 1, 2):
+        if n % i == 0: return False
+    return True
+</pre>
+
+<p>今日（例えば 20190823）は素数か？</p>
+
+<pre>
+import time
 
 n = int(time.strftime('%Y%m%d', time.localtime()))
-print(n, "=", end=" ")
-for i in range(2, int(math.sqrt(n)+0.5)+1):
-    if n % i == 0:
-        print(i, end='*')
-        n //= i
-print(n)
+isprime(n)
 </pre>
 
 <p><code>math.sqrt()</code> は平方数については正確な平方根を与えるはずだが，浮動小数点数の精度を超える整数の場合は心配である。整数の平方根を整数の範囲で求める次の <code>isqrt()</code> を使うとよい（<code>isqrt()</code> は下に紹介する primefac パッケージに含まれている）：</p>
@@ -53,8 +78,6 @@ def isprime(n):
             return False
     return True
 </pre>
-
-<p>いろいろ改良が可能である。2を除けば偶数で割ってみる必要はないので，計算量は半分にできる。</p>
 
 <p>もっと大きい数の素因数分解をするライブラリ <a href="https://pypi.org/project/primefac/">primefac</a>（旧 pyfac）は今のところ Python 2 にしか対応していない。Python 3 に対応させた <a href="https://github.com/elliptic-shiho/primefac-fork">primefac-fork</a> がある。インストールするには：</p>
 
@@ -82,7 +105,7 @@ primefac.factorint(20190823)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-23 15:32:26</time>
+Last modified: <time>2019-11-20 14:39:24</time>
 <!-- hhmts end -->
 </p>
 </body>
