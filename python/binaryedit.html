@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>バイナリ編集</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>バイナリ編集</h1>
+
+<p>写真をたくさんいただいたが，JPEGファイル内に記録されている日付が間違っている！ 一括置換したいが，バイナリファイルである。どうするか。日付はファイルの冒頭近くに3箇所書き込まれているので，安全のため3箇所だけ置換する。読み書きはバイナリモードで行う。</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import sys
+import re
+
+for arg in sys.argv[1:]:
+    with open(arg, 'rb') as f:
+        file = f.read()
+    newfile = re.sub(b'2021:11:14 ', b'2019:11:15 ', file, count=3)
+    with open('new/' + arg, 'wb') as f:
+        f.write(newfile)
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-11-26 21:20:32</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
