@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Twitter</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Twitterデータ</h1>
+
+<p>自分の全ツイートを含むデータを入手するには，Twitterで「設定」→「アカウント」→「Twitterデータ」とたどり「Twitterデータをダウンロード」のところにパスワードを打ち込む。申し込んでしばらく（数時間）待つとメールで連絡が来るので，示されたリンクからダウンロードする。巨大なZIPファイルで，展開すると現れる巨大な tweet.js にJSON形式で全ツイートが入っている。添付ファイルは tweet_media というサブディレクトリに入っている。</p>
+
+<p>JSONはふつう <code>[ ... ]</code> または <code>{ ... }</code> のような形式になっているが，この tweet.js は <code>window.YTD.tweet.part0 = [ ... ]</code> のように頭に変数名が付いている（つまりJSONというよりはJavaScriptファイルになっている）。この部分を削除して読まなければならない。具体的には次のようにする。ここではツイートのID，日時（日本時間に変換したもの），ツイート内容をタブで区切り，ツイート中の改行は適当な文字（ここでは <code>↩︎</code>）で置き換えた。</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import json
+from dateutil.parser import parse
+from pytz import timezone
+
+with open('tweet.js') as f:
+    data = f.read()
+tw = json.loads(data[data.find('['):])
+
+with open("tweet.tsv", "w") as f:
+    for t in tw:
+        s = t['full_text']
+        e = t['entities']
+        if 'urls' in e:
+            for u in e['urls']:
+                s = s.replace(u['url'], u['expanded_url'])
+        c = parse(t['created_at']).astimezone(timezone('Asia/Tokyo')).strftime("%Y-%m-%d %H:%M:%S")
+        print(t['id'], c, s.replace("\n", "↩︎"), sep="\t", file=f)
+</pre>
+
+<p>これを実行するとカレントディレクトリに tweet.tsv というタブ区切りファイルができる。これをExcelで読むには，Excelを立ち上げて「ファイル」→「開く…」で開く。テキストファイルウィザードが現れるので，「元のファイル:」を「Unicode (UTF-8)」にして「次へ＞」を2回クリックし，左端の列のデータ形式を「文字列」にして「完了」をクリックする。列の幅を適当に広げる（AとBの間，BとCの間をダブルクリックするのが簡単）。なお私自身はExcelを使っていないので不具合があったらお教えください。</p>
+
+<p>ちなみに，以前（2017-07-30）入手したデータは月ごとに分かれており，閲覧用の index.html も付属し，さらにCSV形式のものも収められていた。この形式に変わったのは最近らしい。新しい形式のデータのビューアを作られたかたがおられる：<a href="https://blog.kotet.jp/2019/10/tweet-js-viewer/">Twitterデータの全ツイート履歴を見られるように簡易ビューアを作った</a>。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-11-28 14:50:08</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
