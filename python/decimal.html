@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>十進計算</title>
+<title>十進多倍長計算</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -14,7 +14,7 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>十進計算</h1>
+<h1>十進多倍長計算</h1>
 
 <p>Excelに <code>=0.3-0.2-0.1</code> と打ち込んでみてください。当然ながら（？）ぴったりゼロになります。</p>
 
@@ -42,7 +42,7 @@ Out[ ]: -2.7755575615628914e-17
 <p>Pythonでは <a href="https://docs.python.org/3/library/decimal.html">decimal</a> というパッケージを使えば任意精度の10進演算ができます。</p>
 
 <pre>
-In [ ]: from decimal import *
+In [ ]: from decimal import Decimal, getcontext
 
 In [ ]: getcontext().prec = 100  # 100桁精度にする（デフォルトは28桁）
 
@@ -60,7 +60,7 @@ Out[ ]: Decimal('1.41421356237309504880168872420969807856967187537694...') # 略
 <p>使える関数は <code>sqrt()</code>，<code>exp()</code>，<code>ln()</code>，<code>log10()</code> くらいのものです。<code>pi()</code>，<code>sin()</code>，<code>cos()</code> の定義例は <a href="https://docs.python.org/3/library/decimal.html">decimal</a> のページに載っています。これを使って 74724506 / 23785549 - π の値を求めてみましょう：</p>
 
 <pre>
-from decimal import *
+from decimal import Decimal, getcontext
 
 def pi():
     """Compute Pi to the current precision.
@@ -103,13 +103,22 @@ for i in range(1, 100000000):
             break
 </pre>
 
+<p>ループを使わないで1から100までの整数を列挙できるかという問題もやってみましょう（<a href="https://www.quora.com/How-can-I-print-1-to-100-in-C%2B%2B-without-a-loop-goto-or-recursion">How can I print 1 to 100 in C++ without a loop, goto or recursion?</a> にある Conner Davis の方法）：</p>
+
+<pre>
+In [ ]: getcontext().prec = 298
+
+In [ ]: 1000 / Decimal(999)**2
+Out[ ]: Decimal('0.001002003004005006007008009010011012...(中略)...098099100')
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-14 13:11:21</time>
+Last modified: <time>2019-11-29 22:34:24</time>
 <!-- hhmts end -->
 </p>
 </body>
