@@ -18,7 +18,7 @@
 
 <p><a href="http://www.oecd.org/education/talis/">TALIS - The OECD Teaching and Learning International Survey</a> のデータを R で読んで解析する手順は，りん先生の <a href="https://www.con3.com/rinlab/?p=3552">RでTALIS2018</a> に書かれている通りである。ここでは Python で同じことをやってみる。</p>
 
-<p>pandas の <a href="http://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">IO Tools</a> のページにいろいろなファイルの読み方が書いてあるが，SPSS のファイルについては書かれていない。そこで，<a href="https://github.com/Roche/pyreadstat">pyreadstat</a> パッケージを使うことにする。これは R の haven パッケージと同程度に高速である。試しに中学校のデータを読んでみる：</p>
+<p>pandas の <a href="http://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">IO Tools</a> のページにいろいろなファイルの読み方が書いてあるが，SPSS のファイルについては書かれていない。書いてないだけで，<code>read_spss()</code> という関数があるが，それは <a href="https://github.com/Roche/pyreadstat">pyreadstat</a> パッケージを使っているだけである。ここでは pyreadstat を直接使うことにする。これは R の haven パッケージと同程度に高速である。試しに中学校のデータを読んでみる：</p>
 <pre>
 import pyreadstat
 
@@ -103,7 +103,7 @@ plt.savefig('190707a.png', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-20 20:58:46</time>
+Last modified: <time>2019-12-04 20:31:06</time>
 <!-- hhmts end -->
 </p>
 </body>
