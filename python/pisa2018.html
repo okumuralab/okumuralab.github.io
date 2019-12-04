@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>PISA 2018データを読む</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PISA 2018データを読む</h1>
+
+<p>R版<a href="../stat/pisa2018.html">PISA 2018データを読む</a>のPython版である。</p>
+
+<p>SPSSのsavデータを読むにはpandasの <code>read_spss()</code> でもできるが，これはpyreadstatパッケージを呼び出しているだけである。pyreadstatを直接使うには</p>
+
+<pre>
+import pyreadstat
+
+df, meta = pyreadstat.read_sav('CY07_MSU_STU_QQQ.sav')
+</pre>
+
+<p>とする（24分ほどかかった）。ここではmetaは特に何も入っていない。dfは</p>
+
+<pre>
+import sys
+sys.getsizeof(df)
+</pre>
+
+<p>とすればわかるように，約6Gのメモリを占める。dfは</p>
+
+<pre>
+df.shape
+</pre>
+
+<p>と打ち込めば612004行1118列であることがわかる。最初の50個の変数名を表示する：</p>
+
+<pre>
+df.columns[:50]
+</pre>
+
+<p>国ごとの行数を，多いほうから50だけ表示する：</p>
+
+<pre>
+df['CNT'].value_counts()[:50]
+</pre>
+
+<p>出力は</p>
+
+<pre>
+ESP    35943
+CAN    22653
+KAZ    19507
+ARE    19277
+AUS    14273
+・・・中略・・・
+JPN     6109
+・・・後略・・・
+</pre>
+
+<p>日本（JPN）は6109人しか受験していない。</p>
+
+<p>(続く)</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-12-04 21:56:14</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
