@@ -22,9 +22,29 @@
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
-<h3>公式サイト Python.org からのインストール</h3>
+<h3>公式サイト Python.org からのインストール（Windows）</h3>
 
-<p><a href="https://www.python.org/download/">Download Python</a> から，Windows 用または Mac 用の最新のインストーラをダウンロードし，インストールします。Windows ではデフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python*\python.exe (および pythonw.exe) に，Mac では /Library/Frameworks/Python.framework/Versions/*/bin/python3 に入るようです。</p>
+<p><a href="https://www.python.org/download/">Download Python</a> からインストールします。いくつかありますが，64ビット版の Windows x86-64 executable installer でいいと思います。インストーラの最初の画面で「Add Python 3.7 to PATH」に必ずチェックを付けておきましょう。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37 以下（<code>pip</code> などはさらに Scripts の中）に入ります。</p>
+
+<p><code>python</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
+
+<p>いろいろなパッケージのインストールは <code>pip</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
+
+<p>まずは，アップデートの必要なパッケージを，次のコマンドで調べます：</p>
+
+<pre>
+pip list --outdated
+</pre>
+
+<p>最初は pip そのものが古いはずですので，まずこれを <code>pip install --upgrade pip</code> としてアップグレードします。これ以外に必要なパッケージは，その都度インストールします。例：</p>
+
+<pre>
+pip install numpy matplotlib pandas jupyter
+</pre>
+
+<h3>公式サイト Python.org からのインストール（Mac）</h3>
+
+<p><a href="https://www.python.org/download/">Download Python</a> からインストーラをダウンロードし，インストールします。/Library/Frameworks/Python.framework/Versions/3.7/bin に <code>python3</code> などのバイナリが入ります。</p>
 
 <p>インストールすると，Mac では <code>~/.bash_profile</code> の最後にパスが付け加えられます：</p>
 
@@ -60,14 +80,14 @@ export PATH
 <p>と編集すればいいでしょう。これ以外に必要なパッケージは，その都度インストールします。例：</p>
 
 <pre>
-pip install --user ipython numpy matplotlib pandas jupyter
+pip3 install --user ipython numpy matplotlib pandas jupyter
 </pre>
 
-<p>（ソースでしか提供されていないパッケージには，ビルドに gfortran が必要な場合もある。Homebrew なら brew install gcc で入る。）</p>
+<p>ソースでしか提供されていないパッケージには，ビルドに gfortran が必要な場合もあります。Homebrew なら brew install gcc で入ります。</p>
 
 <h3>Microsoft Store 版 Python</h3>
 
-<p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら，PowerShell かコマンドプロンプトで「python」と打ち込むと，「ストア」が立ち上がって「Python」をインストールする画面が出てきます。</p>
+<p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら，PowerShell かコマンドプロンプトで「python」と打ち込むと，「ストア」が立ち上がって「Python」をインストールする画面が出てきます。インストール場所は C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps です。</p>
 
 <p>コマンドは 3 を付けても付けなくても同じです（python3 = python，pip3 = pip）。</p>
 
@@ -264,7 +284,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-10-21 10:30:38</time>
+Last modified: <time>2019-12-16 15:40:25</time>
 <!-- hhmts end -->
 </p>
 </footer>
