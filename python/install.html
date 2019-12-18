@@ -24,9 +24,32 @@
 
 <h3>公式サイト Python.org からのインストール（Windows）</h3>
 
-<p><a href="https://www.python.org/download/">Download Python</a> からインストールします。いくつかありますが，64ビット版の Windows x86-64 executable installer でいいと思います。インストーラの最初の画面で「Add Python 3.7 to PATH」に必ずチェックを付けておきましょう。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37 以下（<code>pip</code> などはさらに Scripts の中）に入ります。</p>
+<p>まず，初心者のかたで，今までどこかで Python をインストールしたけれどうまく設定できていないという場合は，［スタートボタン］→［⚙設定］→［アプリ］で，それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
 
-<p><code>python</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
+<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが，今なら Python 3.7.5 の64ビット版 Windows x86-64 executable installer でいいと思います。初心者のかたは，インストーラの最初の画面で必ず「Add Python 3.7 to PATH」にチェックを付けておきましょう。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
+
+<p>確認として，Windows PowerShell（またはコマンドプロンプト）を立ち上げ，</p>
+
+<pre>
+where.exe python
+</pre>
+
+<p>と打ち込んで，正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell では <code>.exe</code> を省略できないようです）。うまくいっていれば</p>
+
+<pre>
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37\python.exe
+C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
+</pre>
+
+<p>と出ます（2行目はもともと入っている <code>python</code> コマンドで，後述のように，ストアアプリをダウンロードする画面に移動するだけの機能しかありません）。</p>
+
+<p>同様に <code>pip</code> も確認します。</p>
+
+<pre>
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37\Scripts\pip.exe
+</pre>
+
+<p>ほかに <a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされますが，ここでは使いません。</p>
 
 <p>いろいろなパッケージのインストールは <code>pip</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
 
@@ -41,6 +64,10 @@ pip list --outdated
 <pre>
 pip install numpy matplotlib pandas jupyter
 </pre>
+
+<p>念のため，Windows PowerShell でパスを確認するには <code>$env:path</code> と打ち込みます。コマンドプロンプトなら <code>path</code> と打ち込みます。</p>
+
+<p>追記：ウイルスバスターが入っていると Jupyter Notebook がうまく立ち上がらないようです。ウイルスバスターは外して Windows Defender を使う設定にしましょう。</p>
 
 <h3>公式サイト Python.org からのインストール（Mac）</h3>
 
@@ -284,7 +311,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-12-16 15:40:25</time>
+Last modified: <time>2019-12-18 12:44:35</time>
 <!-- hhmts end -->
 </p>
 </footer>
