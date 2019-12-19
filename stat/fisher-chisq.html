@@ -126,13 +126,24 @@ abline(0,1)
   k = sample(c(rep(1,15),rep(3,35))) + sample(c(rep(0,20),rep(1,30)))
 </pre>
 
+<h2>追記：Barnardの正確検定</h2>
+
+<p><a href="https://CRAN.R-project.org/package=Exact">Exact</a>パッケージにBarnard/Boschlooの正確検定が収められている。これらは，行・列のマージンを固定するFisherの正確検定と違って，行マージンだけ固定するモデル（<code>"Binomial"</code>，デフォルト）および全カウントのみ固定するモデル（<code>"Multinomial"</code>）が可能である。</p>
+
+<p><code>exact.test(a)</code> および <code>exact.test(a, model="Multinomial")</code> で試してみる。前者は <code>ni</code> を1000，後者は時間の関係で途中でキャンセルしたため623だけしか行っていないので不正確であるが，雰囲気をつかむため，図を載せておく：</p>
+
+<figure>
+<img src="img/191219a.png" alt="ECDF for exact.test()">
+<img src="img/191219b.png" alt="ECDF for exact.test(model='Multinomial')">
+</figure>
+
 </article>
 <hr>
 <footer>
 <p><a href="../">奥村晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-09 10:29:14</time>
+Last modified: <time>2019-12-19 20:57:53</time>
 <!-- hhmts end -->
 </p>
 </footer>
