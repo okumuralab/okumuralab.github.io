@@ -130,12 +130,34 @@ abline(0,1)
 
 <p><a href="https://CRAN.R-project.org/package=Exact">Exact</a>パッケージにBarnard/Boschlooの正確検定が収められている。これらは，行・列のマージンを固定するFisherの正確検定と違って，行マージンだけ固定するモデル（<code>"Binomial"</code>，デフォルト）および全カウントのみ固定するモデル（<code>"Multinomial"</code>）が可能である。</p>
 
-<p><code>exact.test(a)</code> および <code>exact.test(a, model="Multinomial")</code> で試してみる。前者は <code>ni</code> を1000，後者は時間の関係で途中でキャンセルしたため623だけしか行っていないので不正確であるが，雰囲気をつかむため，図を載せておく：</p>
+<pre>
+library(Exact)
+</pre>
+
+<p>行の比率を 20:30 に固定して，列だけ 0.3, 0.7 の2項分布にする：</p>
+
+<pre>
+  k = sample(c(1,3), 50, replace=TRUE, prob=c(0.3,0.7)) +
+      sample(c(rep(0,20),rep(1,30))) # row binom
+</pre>
+
+<p>これで <code>fisher.test(a)</code>，<code>chisq.test(a, correct=FALSE)</code>，<code>chisq.test(a, correct=TRUE)</code>，<code>exact.test(a, to.plot=FALSE)</code>，<code>exact.test(a, cond.row=FALSE, to.plot=FALSE)</code> をそれぞれ試してみる。ただし <code>exact.test()</code> は遅いので <code>ni = 10000</code> とした：</p>
 
 <figure>
-<img src="img/191219a.png" alt="ECDF for exact.test()">
-<img src="img/191219b.png" alt="ECDF for exact.test(model='Multinomial')">
+<img src="img/191220a.png" alt="ECDF for fisher.test() -- row binom">
+<img src="img/191220b.png" alt="ECDF for chisq.test(correct=F) -- row binom">
+<img src="img/191220c.png" alt="ECDF for chisq.test(correct=T) -- row binom">
+<img src="img/191220d.png" alt="ECDF for exact.test() -- row binom">
+<img src="img/191220e.png" alt="ECDF for exact.test(cond.row=F) -- row binom">
 </figure>
+
+<p>最後に <code>k = sample(1:4, 50, replace=TRUE, prob=prob)</code> で行も列も固定せず全体の数だけ固定する <code>exact.test(a, model="Multinomial")</code> を試してみる。非常に遅いので <code>ni = 1000</code> とした：</p>
+
+<figure>
+<img src="img/191220f.png" alt="ECDF for exact.test(model='Multinomial')">
+</figure>
+
+<p>まとめると，周辺分布固定という <code>fisher.test()</code> の仮定が満たされる場合以外は，<code>chisq.test(correct=FALSE)</code> が良さそうである。</p>
 
 </article>
 <hr>
@@ -143,7 +165,7 @@ abline(0,1)
 <p><a href="../">奥村晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-12-19 20:57:53</time>
+Last modified: <time>2019-12-20 14:12:00</time>
 <!-- hhmts end -->
 </p>
 </footer>
