@@ -6,16 +6,19 @@
 <title>Fisherの正確検定かカイ2乗検定か</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  CommonHTML: { matchFontHeight: false },
-  tex2jax: {
-    inlineMath: [['$','$'], ['\(','\)']],
-    processEscapes: true
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
   }
-});
+};
 </script>
-<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
 <style>
 table { border-collapse: collapse; }
 td { border: 1px solid; }
@@ -128,7 +131,8 @@ abline(0,1)
 
 <h2>追記：Barnardの正確検定</h2>
 
-<p><a href="https://CRAN.R-project.org/package=Exact">Exact</a>パッケージにBarnard/Boschlooの正確検定が収められている。これらは，行・列のマージンを固定するFisherの正確検定と違って，行マージンだけ固定するモデル（<code>"Binomial"</code>，デフォルト）および全カウントのみ固定するモデル（<code>"Multinomial"</code>）が可能である。</p>
+<p><a href="https://CRAN.R-project.org/package=Exact">Exact</a>パッケージにBarnard/Boschlooの正確検定が収められている（<a href="https://stats.stackexchange.com/questions/169864/which-test-for-cross-table-analysis-boschloo-or-barnard">Which test for cross table analysis: Boschloo or Barnard?
+</a> も参照）。これらは，行・列のマージンを固定するFisherの正確検定と違って，行マージンだけ固定するモデル（<code>"Binomial"</code>，デフォルト）および全カウントのみ固定するモデル（<code>"Multinomial"</code>）が可能である。</p>
 
 <pre>
 library(Exact)
@@ -151,13 +155,15 @@ library(Exact)
 <img src="img/191220e.png" alt="ECDF for exact.test(cond.row=F) -- row binom">
 </figure>
 
+<p>行ごとに固定したので <code>exact.test(a, cond.row=FALSE, to.plot=FALSE)</code> はうまくいかなくても当然である。</p>
+
 <p>最後に <code>k = sample(1:4, 50, replace=TRUE, prob=prob)</code> で行も列も固定せず全体の数だけ固定する <code>exact.test(a, model="Multinomial")</code> を試してみる。非常に遅いので <code>ni = 1000</code> とした：</p>
 
 <figure>
 <img src="img/191220f.png" alt="ECDF for exact.test(model='Multinomial')">
 </figure>
 
-<p>まとめると，周辺分布固定という <code>fisher.test()</code> の仮定が満たされる場合以外は，<code>chisq.test(correct=FALSE)</code> が良さそうである。</p>
+<p>まとめると，周辺分布固定という <code>fisher.test()</code> の仮定が満たされる場合以外は，<code>chisq.test(correct=FALSE)</code> が平均的には良さそうである。ただ，検定は strict でなければならない（辛い分にはよい）という考え方もあって，そういう向きには正確検定が好まれそうである。</p>
 
 </article>
 <hr>
@@ -165,7 +171,7 @@ library(Exact)
 <p><a href="../">奥村晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-12-20 14:12:00</time>
+Last modified: <time>2019-12-20 16:59:37</time>
 <!-- hhmts end -->
 </p>
 </footer>
