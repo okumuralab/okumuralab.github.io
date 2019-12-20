@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>一括編集</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>一括編集</h1>
+
+<p><a href="https://www.mathjax.org">MathJax</a> がバージョン3になった。以前は</p>
+
+<pre>
+&lt;script type="text/x-mathjax-config"&gt;
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$']],
+    processEscapes: true
+  },
+  CommonHTML: { matchFontHeight: false }
+});
+&lt;/script&gt;
+&lt;script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"&gt;&lt;/script&gt;
+</pre>
+
+<p>などと書いていたものを</p>
+
+<pre>
+&lt;script&gt;
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+&lt;/script&gt;
+&lt;script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"&gt;
+&lt;/script&gt;
+</pre>
+
+<p>に一括置換したい。</p>
+
+<p>上書きは怖いので，カレントディレクトリに <code>new</code> というサブディレクトリを作り，そこに書き出すことにした：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import sys
+import re
+
+for arg in sys.argv[1:]:
+    with open(arg) as f:
+        orig = f.read()
+    text = orig
+    text = re.sub(r'&lt;script type="text/x-mathjax-config"&gt;.*?&lt;/script&gt;',
+                  '''&lt;script&gt;
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+&lt;/script&gt;''', text, count=1, flags=re.MULTILINE|re.DOTALL)
+    text = re.sub(r'&lt;script async .*?&lt;/script&gt;',
+                  '''&lt;script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"&gt;
+&lt;/script&gt;''', text, count=1)
+    if text != orig:
+        with open('new/' + arg, 'w') as f:
+            f.write(text)
+</pre>
+
+<p>うまくいったようである。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-12-20 16:43:01</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
