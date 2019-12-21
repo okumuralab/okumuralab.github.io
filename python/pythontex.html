@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>PythonTeX</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PythonTeX</h1>
+
+<p>TeX Wiki にも <a href="https://texwiki.texjp.org/?PythonTeX">PythonTeX</a> の項目があるが，ここでもまとめておく。詳しいマニュアルは TeX Live をインストールした環境で <code>texdoc pythontex</code> と打ち込めばよい。</p>
+
+<p>Python コードのプリティプリントのための <a href="https://pygments.org">Pygments</a> パッケージをあらかじめインストールしておく（<code>pip install Pygments</code>）。</p>
+
+<p>デフォルトの設定では <code>python</code> というコマンドで動く Python インタープリタが使われる。これが Python 2.x であり，使いたい Python 3.x が <code>python3</code> というコマンドで動く場合は，ターミナルで次のように打ち込んで <code>pythontex</code> というシンボリックリンクのリンク先を変えてしまうのが楽であるように思う（TeX Live の場合）：</p>
+
+<pre>
+cd $(dirname `which pythontex`)
+mv pythontex pythontex.bak  # 念のため
+ln -sf ../../texmf-dist/scripts/pythontex/pythontex3.py pythontex
+</pre>
+
+<p>試しに次のような LaTeX ファイルを <code>test.tex</code> というファイル名で作る：</p>
+
+<pre>
+\documentclass{jsarticle}
+\usepackage{pythontex}
+\begin{document}
+\begin{pycode}
+def fibn(n):
+    if n < 3:
+        return 1
+    else:
+        return fibn(n-2) + fibn(n-1)
+\end{pycode}
+
+フィボナッチ数列 1, 1, 2, 3, 5, \ldots\ の10番目は\py{fibn(10)}である。
+
+\end{document}
+</pre>
+
+<p>これを処理するには</p>
+
+<pre>
+platex test
+pythontex test
+platex test
+dvipdfmx test
+</pre>
+
+<p>のようにする。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-12-21 18:00:25</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
