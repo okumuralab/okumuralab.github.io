@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ロジスティック回帰</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ロジスティック回帰</h1>
+
+<p>Rでの<a href="../stat/logistic.html">ロジスティック回帰</a>について復習しましょう。例えばRに</p>
+
+<pre>
+x = c(4,5,17,17,19,19,29,41,45,47,49,54,56,58,70,76,88,88,93,97)
+y = c(0,0,0,0,0,0,1,1,1,0,0,1,1,0,1,1,1,1,1,1)
+glm(y ~ x, family=binomial(link="logit"))
+</pre>
+
+<p>と打ち込めば</p>
+
+<pre>
+Call:  glm(formula = y ~ x, family = binomial(link = "logit"))
+
+Coefficients:
+(Intercept)            x  
+   -3.56668      0.08319  
+
+Degrees of Freedom: 19 Total (i.e. Null);  18 Residual
+Null Deviance:	    27.53 
+Residual Deviance: 15.19 	AIC: 19.19
+</pre>
+
+<p>と出力されます。これは</p>
+
+\[ y \approx \frac{1}{1 + \exp(-(-3.56668 + 0.08319 x))} \]
+
+<p>という意味です（近似は最小二乗法ではなく最尤推定です）。</p>
+
+<p>ちょっといたずらをしてみましょう。<code>x</code> の値を $1/1000$ にしてみます：</p>
+
+<pre>
+x = x / 1000
+glm(y ~ x, family=binomial(link="logit"))
+</pre>
+
+<p>当然ながら，表示の誤差範囲内で <code>x</code> の係数が1000倍になったはずです。</p>
+
+<p>同じことをPythonでやってみましょう。<a href="sklearn.html">scikit-learn</a>がインストールされているとします：</p>
+
+<pre>
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+
+X = np.array([4,5,17,17,19,19,29,41,45,47,49,54,56,58,70,76,88,88,93,97]).reshape(-1,1)
+y = np.array([0,0,0,0,0,0,1,1,1,0,0,1,1,0,1,1,1,1,1,1])
+
+model = LogisticRegression().fit(X, y)
+print(model.coef_, model.intercept_)
+</pre>
+
+<p>結果は <code>[[0.08308145]] [-3.5620736]</code> で，係数がやや小さめに出たようです。</p>
+
+<p>同じようないたずらとして，<code>X</code> を $1/1000$ にしてみます：</p>
+
+<pre>
+X = X / 1000
+model = LogisticRegression().fit(X, y)
+print(model.coef_, model.intercept_)
+</pre>
+
+<p>結果は <code>[[0.20155727]] [0.19087727]</code> で，Rとはまったく異なる結果になってしまいました。</p>
+
+<p>この理由は，Rを作った統計屋とscikit-learnを作った機械学習屋の考え方の相違にあるようです。scikit-learnの <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">LogisticRegression()</a> では係数が 0 に近くなるような正則化（regularization）が行われます。ベイズ推定のことばでいえば，係数が 0 に近くなるような事前分布が設定されています。正則化のパラメータ <code>C</code> はデフォルトでは 1 に設定されており，この値が小さいほど強い正則化が行われます。ならば，<code>C</code> に $\infty$ を設定すれば正則化が行われなくなるはずです。やってみましょう：</p>
+
+<pre>
+model = LogisticRegression(C=np.inf).fit(X, y)
+print(model.coef_, model.intercept_)
+</pre>
+
+<p>結果は <code>[[83.18706659]] [-3.56667989]</code> で，Rと同じになりました。</p>
+
+<p>このような正則化の是非については <a href="https://ryxcommar.com/2019/08/30/scikit-learns-defaults-are-wrong/">Scikit-learn’s Defaults are Wrong</a> や <a href="https://statmodeling.stat.columbia.edu/2019/11/28/the-default-prior-for-logistic-regression-coefficients-in-scikit-learn/">The default prior for logistic regression coefficients in Scikit-learn</a> をご覧ください。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-12-22 10:21:40</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
