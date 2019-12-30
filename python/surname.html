@@ -29,6 +29,8 @@ df = pd.read_csv("http://www.masaki.j.u-tokyo.ac.jp/utas/2019UTASP20191109.csv",
                  encoding="cp932")
 </pre>
 
+<p><code>df.shape</code> と打ち込めばわかるように，491行126列のデータである。</p>
+
 <p><code>df['Q4_10']</code> が「夫婦が望む場合には、結婚後も夫婦がそれぞれ結婚前の名字を称することを、法律で認めるべきだ」の回答で，
 1 賛成
 2 どちらかと言えば賛成
@@ -46,6 +48,8 @@ df = pd.read_csv("http://www.masaki.j.u-tokyo.ac.jp/utas/2019UTASP20191109.csv",
 5      22
 99     81
 </pre>
+
+<p>491人中200人が明確に「賛成」と回答している。</p>
 
 <p><code>df['PARTY']</code> が政党で，
 1 自民党
@@ -95,7 +99,7 @@ PARTY
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-12-30 10:51:33</time>
+Last modified: <time>2019-12-30 11:02:29</time>
 <!-- hhmts end -->
 </p>
 </body>
