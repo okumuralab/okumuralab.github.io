@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>選択的夫婦別姓</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>選択的夫婦別姓</h1>
+
+<p><a href="https://mainichi.jp/articles/20151213/k00/00m/040/121000c">夫婦同姓 法律義務は日本だけ</a>などと言われながら，日本はなかなか選択的夫婦別姓を受け入れようとしない。姓を変えたくなくて結婚しない人が減ることは少子化対策にもなるはずだが。</p>
+
+<p>国会議員はどれくらい選択的夫婦別姓に賛成・反対なのか。</p>
+
+<p><a href="http://www.masaki.j.u-tokyo.ac.jp/utas/utasindex.html">東京大学谷口研究室・朝日新聞社共同調査</a>では，選挙ごとに<a href="http://www.masaki.j.u-tokyo.ac.jp/utas/utasv.html">有権者へのパネル調査</a>と<a href="http://www.masaki.j.u-tokyo.ac.jp/utas/utasp.html">政治家へのアンケート調査</a>をしている。直近の2019年参議院議員・参院選候補者調査の結果のCSVファイルをPythonで読み込んで調べてみよう。</p>
+
+<pre>
+import pandas as pd
+
+df = pd.read_csv("http://www.masaki.j.u-tokyo.ac.jp/utas/2019UTASP20191109.csv",
+                 encoding="cp932")
+</pre>
+
+<p><code>df['Q4_10']</code> が「夫婦が望む場合には、結婚後も夫婦がそれぞれ結婚前の名字を称することを、法律で認めるべきだ」の回答で，
+1 賛成
+2 どちらかと言えば賛成
+3 どちらとも言えない
+4 どちらかと言えば反対
+5 反対
+99 無回答
+である。<code>df['Q4_10'].value_counts(sort=False)</code> で集計できる：</p>
+
+<pre>
+1     200
+2      73
+3      89
+4      26
+5      22
+99     81
+</pre>
+
+<p><code>df['PARTY']</code> が政党で，
+1 自民党
+2 立憲民主党
+3 国民民主党
+4 公明党
+5 共産党
+6 日本維新の会
+7 社民党
+8 れいわ新選組
+9 幸福実現党
+10 諸派
+11 無所属候補
+12 NHKから国民を守る党
+13 オリーブの木
+14 労働者党
+15 安楽死制度を考える会
+である。<code>pd.crosstab(df['PARTY'], df['Q4_10'])</code> でクロス集計してみよう：</p>
+
+<pre>
+Q4_10  1   2   3   4   5   99
+PARTY                        
+1       7  11  43  13  13  51
+2      48   5   0   0   0   4
+3      21  10   5   0   1   7
+4      15  16   4   2   0   1
+5      44   0   0   0   0   2
+6       7  15   2   2   0   2
+7       8   0   0   0   0   0
+8       9   0   0   0   0   1
+9       0   0   4   6   2   0
+10      1   0   0   0   0   0
+11     23   7   2   0   0   6
+12      5   7  15   2   6   6
+13      2   2   4   1   0   1
+14     10   0   0   0   0   0
+15      0   0  10   0   0   0
+</pre>
+
+<p>選択的夫婦別姓に反対が多いのは，自民党，幸福実現党，NHKから国民を守る党である。</p>
+
+<p>グラフにしたり，他の項目とクロス集計したり，過去の調査と比較したりすることは，課題として残しておく。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2019-12-30 10:51:33</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
