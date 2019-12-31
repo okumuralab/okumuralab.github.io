@@ -82,7 +82,7 @@ for k in range(24):
 
 <figure><img src="img/mnistfig.png" alt="MNIST"></figure>
 
-<p>2次元（28×28）を1次元（784）に展開して，主成分分析（PCA）を行ってみる：</p>
+<p>2次元（28×28）を1次元（784）に展開して，主成分分析（<a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">PCA</a>）を行ってみる：</p>
 
 <pre>
 x = x_train.reshape(60000, 28*28)
@@ -97,6 +97,26 @@ plt.legend(range(10))
 </pre>
 
 <figure><img src="img/mnist-pca.png" alt="MNIST PCA"></figure>
+
+<p>PCAではあまりうまく分離できないので，<a href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html">t-SNE</a>（ティー・スニー）をしてみる（とても時間がかかる）：</p>
+
+<pre>
+from sklearn.manifold import TSNE
+
+y = TSNE(n_components=2).fit_transform(x)
+</pre>
+
+<figure><img src="img/mnist-tsne.png" alt="MNIST t-SNE"></figure>
+
+<p>より新しい <a href="https://github.com/lmcinnes/umap">UMAP</a> もやってみる（あらかじめ <code>pip install umap-learn</code> しておく）。t-SNEよりずっと速い：</p>
+
+<pre>
+import umap
+
+y = umap.UMAP().fit_transform(x)
+</pre>
+
+<figure><img src="img/mnist-umap.png" alt="MNIST UMAP"></figure>
 
 <p>MNISTを拡張した<a href="emnist.html">EMNIST</a>もある。日本で作られた<a href="http://etlcdb.db.aist.go.jp/?lang=ja">ETL文字データベース</a>もある。MNISTと同様の形式で中身がファッション製品の <a href="https://github.com/zalandoresearch/fashion-mnist">Fashion-MNIST</a> もある（<code>mnist.load_data()</code> の代わりに <code>fashon_mnist.load_data()</code> とすればよい）。</p>
 
@@ -123,7 +143,7 @@ type(lbl)  # ==> numpy.int32
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-13 11:43:01</time>
+Last modified: <time>2019-12-31 15:34:51</time>
 <!-- hhmts end -->
 </p>
 </body>
