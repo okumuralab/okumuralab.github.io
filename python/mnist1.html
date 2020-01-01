@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>MNIST</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>MNISTの次元削減</h1>
+
+<p><a href="mnist.html">MNIST</a>では主成分分析，t-SNE，UMAPでMNIST訓練データ6万文字の次元削減を試し，結果をカラーでプロットした。しかし，結果のプロットは手書き文字そのもので行うほうがわかりやすい。以下では6万文字を次元削減した上で，全体の約1/50をランダムに選び，元の手書き文字そのものでプロットした。</p>
+
+<p>PCA:</p>
+
+<figure><img src="img/mnistpca.png" alt="MNIST PCA"></figure>
+
+<p>t-SNE:</p>
+
+<figure><img src="img/mnisttsne.png" alt="MNIST t-SNE"></figure>
+
+<p>UMAP:</p>
+
+<figure><img src="img/mnistumap.png" alt="MNIST UMAP"></figure>
+
+<p>プログラムはちょっと強引で，もっとエレガントに書けそうだけれど，とりあえず：</p>
+
+<pre>
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+import tensorflow as tf
+
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+x = x_train.reshape(60000, 28*28)
+y = PCA(n_components=2).fit_transform(x)
+
+def toimg(nx, ny, ax, ay):
+    img = np.zeros((ny,nx), dtype='uint8')
+    x1 = min(ax)
+    x2 = max(ax)
+    y1 = min(ay)
+    y2 = max(ay)
+    hx = (nx - 28) / (x2 - x1)
+    hy = (ny - 28) / (y2 - y1)
+    h = min(hx, hy)
+    for k in range(60000):
+        if np.random.random() &lt; 0.02:
+            i1 = int(h * (ax[k] - x1))
+            j1 = int(h * (y2 - ay[k]))
+            for i in range(28):
+                for j in range(28):
+                    img[j1+j, i1+i] = min(int(img[j1+j, i1+i]) + int(x_train[k][j,i]), 255)
+    return img
+
+img = toimg(1024, 1024, y[:,0], y[:,1])
+plt.imshow(img, cmap='gray_r')
+plt.imsave("mnistpca.png", img, cmap='gray_r')
+</pre>
+
+<p>t-SNE，UMAPも同様。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-01-01 17:30:44</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
