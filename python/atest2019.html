@@ -6,6 +6,11 @@
 <title>全国学力テストの都道府県別正答率（2019年版）</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script>
+window.onload = function() {
+  document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];
+}
+</script>
 </head>
 <body>
 
@@ -130,13 +135,65 @@ psansuu = [2483, 6363, 16106, 27530, 38028, 48859, 61497, 74694,
            91659, 108309, 125896, 139305, 137438, 109090, 53222]
 </pre>
 
+<p>ついでに主成分分析をしてみる：</p>
+
+<pre>
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+import pandas as pd
+
+kenmei = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
+          "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山",
+          "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重",
+          "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根",
+          "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡",
+          "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄"]
+
+df = pd.read_csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/python/</span>data/atest2019.csv")
+
+pca = PCA(n_components=2)
+y = pca.fit_transform(df)
+
+plt.clf()
+plt.xlim(min(y[:,0]), max(y[:,0]))
+plt.ylim(min(y[:,1])-0.2, max(y[:,1])+0.2)
+for i in range(47):
+    plt.text(y[i,0], y[i,1], kenmei[i],
+             horizontalalignment='center', verticalalignment='center')
+plt.axis('scaled')
+
+plt.savefig('atest2019pca1.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/atest2019pca1.png" alt="全国学力テストの都道府県別正答率（2019年版）主成分分析"></figure>
+
+<p>各主成分の分散の割合は <code>pca.explained_variance_ratio_</code> で調べられる。第一主成分61.8%，第二主成分26.6%である。回転後の座標軸は次の通り：</p>
+
+<pre>
+r = pca.components_
+
+plt.clf()
+plt.xlim(-1, 1)
+plt.ylim(-1, 1)
+for i in range(5):
+    plt.arrow(0, 0, r[0,i], r[1,i], head_width=0.05,
+              head_length=0.05, length_includes_head=True, color='black')
+    plt.text(r[0,i], r[1,i], df.columns[i])
+plt.axis('scaled')
+
+plt.savefig('atest2019pca2.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/atest2019pca2.png" alt="全国学力テストの都道府県別正答率（2019年版）主成分分析"></figure>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-06 21:31:02</time>
+Last modified: <time>2020-01-03 20:18:15</time>
 <!-- hhmts end -->
 </p>
 </body>

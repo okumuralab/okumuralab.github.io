@@ -20,12 +20,15 @@
 
 <pre>
 import requests
-import json
 
 url = "http://zipcloud.ibsnet.co.jp/api/search"
 param = {"zipcode": "5140007"}
-res = requests.get(url, param)
-data = json.loads(res.text)
+data = requests.get(url, param).json()
+
+# 上の3行は次の2行でもよい：
+# url = "http://zipcloud.ibsnet.co.jp/api/search?zipcode=5140007"
+# data = requests.get(url).json()
+
 address = data["results"][0]
 print(address["address1"] + address["address2"] + address["address3"])
 </pre>
@@ -36,19 +39,28 @@ print(address["address1"] + address["address2"] + address["address3"])
 #! /usr/bin/env python3
 
 import requests
-import json
 
 url = "http://zipcloud.ibsnet.co.jp/api/search"
 while True:
-    zip = input('7桁の郵便番号を入力してください: ')
+    zip = input("7桁の郵便番号を入力してください: ")
     if not zip:
         break
     print(zip)
     param = {"zipcode": zip}
-    res = requests.get(url, param)
-    data = json.loads(res.text)
+    data = requests.get(url, param).json()
     address = data["results"][0]
     print(address["address1"] + address["address2"] + address["address3"])
+</pre>
+
+<p>別の例として<a href="http://weather.livedoor.com/weather_hacks/">Weather Hacks</a>を使ってみる。<a href="http://weather.livedoor.com/weather_hacks/webservice">Webサービス仕様</a>をよく見て使う：</p>
+
+<pre>
+url = "http://weather.livedoor.com/forecast/webservice/json/v1"
+param = {"city": "240010"} # 三重県津市
+data = requests.get(url, param).json()
+print("今日の天気:", data["forecasts"][0]["telop"])
+print("明日の天気:", data["forecasts"][1]["telop"])
+print("明後日の天気:", data["forecasts"][2]["telop"])
 </pre>
 
 <hr>
@@ -57,7 +69,7 @@ while True:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-12-11 10:02:44</time>
+Last modified: <time>2020-01-03 22:38:54</time>
 <!-- hhmts end -->
 </p>
 </body>
