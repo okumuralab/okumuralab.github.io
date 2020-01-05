@@ -78,7 +78,9 @@ okumura ALL=(ALL) NOPASSWD: /sbin/umount
 
 <h2>Finder</h2>
 
-<p>Finderの「環境設定」の「詳細」で「すべてのファイル名拡張子を表示」，「確実にゴミ箱を空にする」にチェックを付ける（セキュリティのため）。完全消去は /usr/bin/srm でもできる（Linux 等でよく使われる shred コマンドもインストールできる）。El Capitanでは「確実にゴミ箱を空にする」がなくなった代わりに「すぐに削除」というメニューができた（<a href="http://applech2.com/archives/46437181.html">Apple、フラッシュストレージを搭載したMacでは「確実にゴミ箱を空にする」オプションが保証できないとして、OS X 10.11 El Capitanからこのオプションを削除。</a>）。</p>
+<p>Finderの「環境設定」の「詳細」で「すべてのファイル名拡張子を表示」をオンにする。El Capitan以降では「確実にゴミ箱を空にする」はなくなった。完全消去コマンド /usr/bin/srm もなくなった。そもそもSSDの時代に完全消去は無理。それよりFileVaultを使って少なくともSSDは暗号化する。暗号化されていれば捨てても大丈夫。あと，rm コマンドのオプション -P でファイル削除の際に3回上書き（FF 00 FF）される。</p>
+
+<p>⌘ shift . （コマンド＋シフト＋ピリオド）で隠しファイルを含めたすべてのファイルが表示できる。</p>
 
 <p>あとは好みで適宜設定。例えば「表示」で「パスバーを表示」にすると便利。</p>
 
@@ -348,38 +350,9 @@ pyenv install 3.7.1
 <p><a href="https://qiita.com/zreactor/items/c3fd04417e0d61af0afe">こちら</a>の方法でもコンパイルはうまくいったがreadlineがリンクされなかった。</p>
 </div>
 
-<h3>Miniconda</h3>
+<h3>Python</h3>
 
-<p><a href="https://conda.io/miniconda.html">https://conda.io/miniconda.html</a>
-から Python 3.7 版 Mac OS X 64-bit (bash installer) をダウンロード。</p>
-
-<pre>
-bash Miniconda3-latest-MacOSX-x86_64.sh
-</pre>
-
-<p>いろいろ聞いてくるので答える。<code>.bash_profile</code> にパスが追加されるので，ターミナルに <code>. ~/.bash_profile</code> と打ち込む。</p>
-
-<p>パッケージ管理は <code>conda</code> コマンドで行う：</p>
-
-<pre>
-conda --version
-conda update conda
-conda list
-conda install ipython numpy scipy matplotlib pandas
-</pre>
-
-<p>ときどき <code>conda update --all</code> する。</p>
-
-<p>環境を変えるのは <code>conda activate</code> または <code>conda deactivate</code> 。最初にこれをやってメッセージが出たときは <code>conda init bash</code> すると <code>~/.bash_profile</code> に追記されるので <code>source ~/.bash_profile</code> するとプロンプトの最初に <code>(base)</code> が出て，システムの python のパスの前に miniconda3 の python が追加される（CentOS へのインストールでは <code>~/.bashrc</code> のほうに追記されて，<code>conda activate</code> すると，プロンプトの最初に <code>(base)</code> が出て，システムの python のパスの前に miniconda3 の python が追加された）。</p>
-
-<p>詳しい解説は <a href="../python3/">Python 3</a> のほうに書きつつある。</p>
-
-<p>雛形の <code>matplotlibrc</code> の位置はPythonで次のコマンドを実行すれば得られる：</p>
-
-<pre>
-import matplotlib
-matplotlib.matplotlib_fname()
-</pre>
+<p><a href="../python/install.html">Python 3 インストール</a>を参照されたい。</p>
 
 <h2>X11</h2>
 
@@ -506,6 +479,12 @@ Host *
 
 <p>HFS+に保存されたメタ情報は，<code>rsync</code> に <code>-E</code> オプションを付ければ他のMacにも送れる。よく使うのは <code>rsync -auvzE</code> という形。</p>
 
+<h2>声</h2>
+
+<p>音声合成用データは /System/Library/Speech/Voices にある。何々Compact.SpeechVoice とあるのは簡略版。システム環境設定→アクセシビリティ→スピーチ→システムの声でカスタマイズするとCompactでないものがダウンロードできる。ただし一つあたり数百MBのデータを含むので注意。</p>
+
+<p><code>say</code> というコマンドで発音できる。例えば <code>say -v Samantha 'Hello World'</code> のように。<code>say -v Samantha</code> だけなら標準入力から読み込む。声の種類は例えば <code>say -v '?' | grep en_US</code> のようにして一覧できる。女声日本語なら Kyoko，女声米語なら Samantha でよさそう。</p>
+
 <h2>おまけ</h2>
 
 <p>壁紙用写真の
@@ -525,7 +504,7 @@ Host *
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-30 08:52:39</time>
+Last modified: <time>2020-01-05 22:06:08</time>
 <!-- hhmts end -->
 </p>
 </footer>
