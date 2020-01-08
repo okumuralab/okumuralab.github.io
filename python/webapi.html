@@ -16,17 +16,17 @@
 
 <h1>Web API</h1>
 
-<p>文科省<a href="http://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">高等学校情報科「情報Ⅰ」教員研修用教材</a>の第3章に簡単なWeb APIをPythonで叩く例が載っていたので，試してみる。使うのは株式会社アイビスが提供している<a href="http://zipcloud.ibsnet.co.jp/doc/api">郵便番号検索API</a>。</p>
+<p>文科省<a href="http://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">高等学校情報科「情報Ⅰ」教員研修用教材</a>の第3章に簡単なWeb APIをPythonで叩く例が載っていたので，試してみる。使うのは株式会社アイビスが提供している<a href="https://zip-cloud.appspot.com/doc/api">郵便番号検索API</a>。</p>
 
 <pre>
 import requests
 
-url = "http://zipcloud.ibsnet.co.jp/api/search"
+url = "https://zip-cloud.appspot.com/api/search"
 param = {"zipcode": "5140007"}
 data = requests.get(url, param).json()
 
 # 上の3行は次の2行でもよい：
-# url = "http://zipcloud.ibsnet.co.jp/api/search?zipcode=5140007"
+# url = "https://zip-cloud.appspot.com/api/search"
 # data = requests.get(url).json()
 
 address = data["results"][0]
@@ -40,7 +40,7 @@ print(address["address1"] + address["address2"] + address["address3"])
 
 import requests
 
-url = "http://zipcloud.ibsnet.co.jp/api/search"
+url = "https://zip-cloud.appspot.com/api/search"
 while True:
     zip = input("7桁の郵便番号を入力してください: ")
     if not zip:
@@ -69,7 +69,7 @@ print("明後日の天気:", data["forecasts"][2]["telop"])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-03 22:38:54</time>
+Last modified: <time>2020-01-08 22:01:21</time>
 <!-- hhmts end -->
 </p>
 </body>
