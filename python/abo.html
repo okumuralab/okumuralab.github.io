@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ABO血液型</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script>
+window.onload = function() {
+  var url = /^(.*\/).*\//.exec(location.href)[1];
+  var a = document.getElementsByClassName("dirurl1");
+  [].forEach.call(a, function(x) {x.textContent = url});
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ABO血液型</h1>
+
+<h2>古畑（田中）のデータ</h2>
+
+<p>古畑種基『血液型の話』（岩波新書467，1962年）に当時の県別血液型分布の表が載っている（202〜205ページ）。「田中が集計した日本人一一四万八六二三名」（196ページ）とあるだけで出典はよくわからない。余談だが，<a href="https://ja.wikipedia.org/wiki/%E5%8F%A4%E7%95%91%E7%A8%AE%E5%9F%BA">ウィキペディア「古畑種基」</a>によれば，古畑は四大死刑冤罪事件のうち3件に関わっている。冤罪を作り出した責任の一端を負うべき人物といえるが，本書にも犯人と同じA型だから犯人にされたといった記述が見られ，（当時の）検察の杜撰さも感じられる。</p>
+
+<p>古畑（田中）の表をOCRして目視チェックしたものを <a href="../stat/data/abo.xlsx">abo.xlsx</a> として置いておく。Pythonで読み出してみよう：</p>
+
+<pre>
+import pandas as pd
+
+df = pd.read_excel("<span class="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/abo.xlsx")
+</pre>
+
+<p>これで読めたはずだが，合計が合わない：</p>
+
+<pre>
+sum(df['検査人員'][:49])  # 1136456
+df['検査人員'][49] - sum(df['検査人員'][:49])  # 12167
+</pre>
+
+<p>血液型の合計は誤差範囲内で100%になっている：</p>
+
+<pre>
+max(abs(df[["O型","A型","B型","AB型"]].sum(axis=1) - 100))  # 0.01
+</pre>
+
+<p>O，A，B，AB型の比率は 31.51，37.34，22.06，9.10 となっている。</p>
+
+<p>この表の「府県名」はJIS X 0401「都道府県コード」の順になっていない。また，当時はまだ沖縄は外地であった。JIS X 0401順に並べ替えるには，次のようにする：</p>
+
+<pre>
+kenmei = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
+          "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山",
+          "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重",
+          "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根",
+          "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡",
+          "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄"]
+pref = pd.DataFrame({"id": range(1,48), "都道府県名": kenmei})
+df1 = pd.merge(pref, df, left_on="都道府県名", right_on="府県名").drop(columns="府県名")
+</pre>
+
+<h2>2010年の高校生のデータ</h2>
+
+<p>静岡県立磐田南高等学校の生徒さんたちが，全国SSH指定校および理数科設置校にアンケートを依頼され（2010年3月22日付で依頼，返送期限4月末日），41校21017人から得られた回答の集計データをいただくことができた。関係の皆様に感謝する。データの都道府県別人数の部分だけ <a href="../stat/data/abo2010.xlsx">abo2010.xlsx</a> として置かせていただく。最近のデータとしてはたいへん貴重なものである。</p>
+
+<p>こちらも，JIS X 0401順に並べ替えるには，次のようにする：</p>
+
+<pre>
+df2 = pd.read_excel("<span class="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/abo2010.xlsx")
+df2 = pd.merge(pref, df2, on="都道府県名")
+</pre>
+
+<p>簡単な集計をしてみる：</p>
+
+<pre>
+s = df2[["計O","計A","計B","計AB"]].sum()
+s / sum(s)
+</pre>
+
+<p>結果は次のとおり：</p>
+
+<pre>
+計O     0.297807
+計A     0.378646
+計B     0.218775
+計AB    0.104772
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-01-09 15:54:05</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
