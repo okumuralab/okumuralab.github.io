@@ -16,7 +16,25 @@
 
 <h1>Web API</h1>
 
-<p>文科省<a href="http://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">高等学校情報科「情報Ⅰ」教員研修用教材</a>の第3章に簡単なWeb APIをPythonで叩く例が載っていたので，試してみる。使うのは株式会社アイビスが提供している<a href="https://zip-cloud.appspot.com/doc/api">郵便番号検索API</a>。</p>
+<h3>はじめに</h3>
+
+<p>2022年度から学年進行で施行される高等学校学習指導要領<a href="https://www.mext.go.jp/a_menu/shotou/new-cs/1407074.htm">解説</a>の「情報編」には，APIの利用について，次のような記述がある：</p>
+
+<blockquote>
+<p style="text-indent:1em">例えば，気象データや自治体が公開しているオープンデータなどを用いて数値の合計，平均，最大値，最小値を計算する単純なアルゴリズムや，探索や整列などの典型的なアルゴリズムを考えたり表現したりする活動を取り上げ，アルゴリズムの表現方法，アルゴリズムを正確に表現することの重要性，アルゴリズムによる効率の違いなどを扱うことが考えられる。その際，アルゴリズムを基に平易にプログラムを記述できるプログラミング言語を使用するとともに，アルゴリズムやプログラムの記述方法の習得が目的にならないよう取扱いに配慮する。</p>
+<p style="text-indent:1em">また，プログラミングによってコンピュータの能力を活用することを取り上げ，対象に応じた適切なプログラミング言語の選択，アルゴリズムをプログラムとして表現すること，プログラムから呼び出して使う標準ライブラリやオペレーティングシステム及びサーバなどが提供するライブラリ，API（Application Programming Interface）などの機能，プログラムの修正，関数を用いてプログラムをいくつかのまとまりに分割してそれぞれの関係を明確にして構造化することなどを扱うことが考えられる。その際，プログラミング言語ごとの固有の知識の習得が目的とならないように配慮する。</p>
+<p style="text-indent:1em">更に問題解決のためのプログラミングを取り上げ，プログラミングでワードプロセッサや表計算ソフトウェアのようなアプリケーションソフトウェアが持つ検索や置換及び並べ替えなどの機能の一部を実現したり，ツールやアプリケーションを開発したり，カメラやセンサ及びアクチュエータを利用したり，画像認識や音声認識及び人工知能などの既存のライブラリを組み込んだり，APIを用いたりすることなどが考えられる。その際，人に優しく使いやすいインタフェース，手順を分かりやすく表現するアルゴリズム，効率的で読みやすいプログラムなどのデザインについて触れる。</p>
+</blockquote>
+
+<p>オープンデータをAPIで取得するプログラムを作れと言っているようにも読める。実際，2019年5月に出た文科省<a href="http://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">高等学校情報科「情報Ⅰ」教員研修用教材</a>には，第3章に郵便番号検索APIをPythonで叩く例が載っている。</p>
+
+<p>2020年1月に出た教育用プログラミング言語<a href="https://dolittle.eplang.jp">ドリトル</a>v3.3には，Web APIを扱う機能が付け加えられ，5通りのサンプルプログラムが付いている。</p>
+
+<p>以下では，これらを参考に，無登録で使えるWeb APIをPythonで使う例を紹介する。</p>
+
+<h3>郵便番号検索API</h3>
+
+<p><a href="https://www.ibsnet.co.jp">株式会社アイビス</a>が提供している<a href="https://zip-cloud.appspot.com/doc/api">郵便番号検索API</a>。</p>
 
 <pre>
 import requests
@@ -25,12 +43,12 @@ url = "https://zip-cloud.appspot.com/api/search"
 param = {"zipcode": "5140007"}
 data = requests.get(url, param).json()
 
-# 上の3行は次の2行でもよい：
-# url = "https://zip-cloud.appspot.com/api/search"
+# 上の3行は次の2行と同じことである：
+# url = "https://zip-cloud.appspot.com/api/search?zipcode=5140007"
 # data = requests.get(url).json()
 
 address = data["results"][0]
-print(address["address1"] + address["address2"] + address["address3"])
+print(address["address1"], address["address2"], address["address3"])
 </pre>
 
 <p>入力を含むプログラム：</p>
@@ -49,10 +67,12 @@ while True:
     param = {"zipcode": zip}
     data = requests.get(url, param).json()
     address = data["results"][0]
-    print(address["address1"] + address["address2"] + address["address3"])
+    print(address["address1"], address["address2"], address["address3"])
 </pre>
 
-<p>別の例として<a href="http://weather.livedoor.com/weather_hacks/">Weather Hacks</a>を使ってみる。<a href="http://weather.livedoor.com/weather_hacks/webservice">Webサービス仕様</a>をよく見て使う：</p>
+<h3>Weather Hacks</h3>
+
+<p><a href="http://www.livedoor.com">livedoor</a>（LINE Corporation）の提供する<a href="http://weather.livedoor.com/weather_hacks/">Weather Hacks</a>は，場所を指定しすると3日分の天気予報が取得できる。詳細は<a href="http://weather.livedoor.com/weather_hacks/webservice">Webサービス仕様</a>参照。</p>
 
 <pre>
 url = "http://weather.livedoor.com/forecast/webservice/json/v1"
@@ -63,13 +83,60 @@ print("明日の天気:", data["forecasts"][1]["telop"])
 print("明後日の天気:", data["forecasts"][2]["telop"])
 </pre>
 
+<h3>openBD</h3>
+
+<p><a href="https://calil.jp">カーリル</a>・<a href="https://www.hanmoto.com">版元ドットコム</a>の<a href="https://openbd.jp">openBD</a>は書誌情報・書影を提供する。</p>
+
+<pre>
+url = "https://api.openbd.jp/v1/get"
+param = {"isbn": "978-4-7741-9690-9"}
+data = requests.get(url, param).json()
+print("著者名:", data[0]["summary"]["author"])
+print("書名:", data[0]["summary"]["title"])
+print("出版社名:", data[0]["summary"]["publisher"])
+print("出版年月:", data[0]["summary"]["pubdate"])
+</pre>
+
+<h3>HeartRails Express</h3>
+
+<p><a href="https://www.heartrails.com">ハートレイルズ</a>の<a href="http://express.heartrails.com">HeartRails Express</a>は路線／駅名データ等の地理情報を提供する。</p>
+
+<pre>
+url = "http://express.heartrails.com/api/json"
+
+param = {"method": "getLines", "prefecture": "三重県" }
+data = requests.get(url, param).json()
+print("路線名一覧:")
+for i in data["response"]["line"]:
+    print(i)
+
+param = {"method": "getStations", "line": "近鉄名古屋線" }
+data = requests.get(url, param).json()
+print("駅と経度・緯度:")
+for i in data["response"]["station"]:
+    print(i["name"], i["x"], i["y"])
+</pre>
+
+<h3>お菓子の虜</h3>
+
+<p><a href="https://sysbird.jp/profile/">鳥山優子さん</a>のコンビニお菓子の情報サイト<a href="https://sysbird.jp/toriko/">お菓子の虜</a>の<a href="https://sysbird.jp/toriko/webapi/">Web API</a>。</p>
+
+<pre>
+url = "https://sysbird.jp/toriko/api/"
+param = {"apikey": "guest", "format": "json", "keyword": "マシュマロ" }
+data = requests.get(url, param).json()
+print("菓子名・メーカー:")
+for i in data["item"]:
+    print(i["name"], i["maker"])
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-08 22:01:21</time>
+Last modified: <time>2020-01-09 10:51:36</time>
 <!-- hhmts end -->
 </p>
 </body>
