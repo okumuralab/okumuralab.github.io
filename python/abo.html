@@ -23,6 +23,16 @@ window.onload = function() {
 
 <h1>ABO血液型</h1>
 
+<h2>はじめに</h2>
+
+<p><a href="https://twitter.com/rocinate__/status/1210116674499694592">とあるツイッターでの血液型アンケート</a>では，297400票中，A 102229，O 89326，B 67376，AB 38469 という結果であった。割合では，A 34.4%，O 30.0%，B 22.7%，AB 12.9% である。</p>
+
+<p>より小規模な<a href="https://twitter.com/dempacat/status/1134610198906097664">こちらのアンケート</a>では，A 297，B 197，O 253，AB 123という結果であった。割合では，A 34.1%，B 22.6%，O 29.1%，AB 14.1% である。</p>
+
+<p>こういった結果は，母集団全体の比率と有意に異ならないか。もし異なるなら，何が原因だろう？</p>
+
+<p>そもそも母集団の比率が正確にわからなければならない。信頼のおけるデータはないか。ということで，下の古畑（田中）のデータと，より新しい高校生2.1万人のデータを吟味することにした。</p>
+
 <h2>古畑（田中）のデータ</h2>
 
 <p>古畑種基『血液型の話』（岩波新書467，1962年）に当時の県別血液型分布の表が載っている（202〜205ページ）。「田中が集計した日本人一一四万八六二三名」（196ページ）とあるだけで出典はよくわからない。余談だが，<a href="https://ja.wikipedia.org/wiki/%E5%8F%A4%E7%95%91%E7%A8%AE%E5%9F%BA">ウィキペディア「古畑種基」</a>によれば，古畑は四大死刑冤罪事件のうち3件に関わっている。冤罪を作り出した責任の一端を負うべき人物といえるが，本書にも犯人と同じA型だから犯人にされたといった記述が見られ，（当時の）検察の杜撰さも感じられる。</p>
@@ -90,13 +100,100 @@ s / sum(s)
 計AB    0.104772
 </pre>
 
+<h2>主成分分析</h2>
+
+<p>四つのABO血液型の合計は1であるから，3次元で表せる。これを主成分分析（PCA）で2次元に削減して表示する。</p>
+
+<p>古畑（田中）のデータ：</p>
+
+<pre>
+df1a = df1[["O型","A型","B型","AB型"]]
+df1a.index = df1["都道府県名"]
+
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+
+pca = PCA(n_components=2)
+x = -pca.fit_transform(df1a)  # 下と合わせるため向きを逆に
+pca.explained_variance_ratio_  # array([0.66142869, 0.28123841])
+
+plt.clf()
+plt.xlim(min(x[:,0]), max(x[:,0]))
+plt.ylim(min(x[:,1]), max(x[:,1]))
+for i in range(x.shape[0]):
+    plt.text(x[i,0], x[i,1], df1a.index[i],
+             horizontalalignment='center', verticalalignment='center')
+plt.axis('scaled')
+
+plt.savefig('abo1a.png', bbox_inches="tight")
+
+r = -pca.components_  # 下と合わせるため向きを逆に
+
+plt.clf()
+plt.xlim(-1, 1)
+plt.ylim(-1, 1)
+for i in range(4):
+    plt.arrow(0, 0, r[0,i], r[1,i], head_width=0.05,
+              head_length=0.05, length_includes_head=True, color='black')
+    plt.text(r[0,i], r[1,i], df1a.columns[i])
+plt.axis('scaled')
+
+plt.savefig('abo1b.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/abo1a.png" alt=""></figure>
+<figure><img src="img/abo1b.png" alt=""></figure>
+
+<p>南ほど右側つまりA型が多い。</p>
+
+<p>高校生のデータ：</p>
+
+<pre>
+df2a = df2[["計O","計A","計B","計AB"]]
+df2a.index = df2["都道府県名"]
+df2a = df2a[df2a.sum(axis=1) != 0]
+df2a = df2a.div(df2a.sum(axis=1), axis=0)
+
+pca = PCA(n_components=2)
+x = pca.fit_transform(df2a)
+pca.explained_variance_ratio_  # array([0.56825035, 0.31448043])
+
+plt.clf()
+plt.xlim(min(x[:,0]), max(x[:,0]))
+plt.ylim(min(x[:,1]), max(x[:,1]))
+for i in range(x.shape[0]):
+    plt.text(x[i,0], x[i,1], df2a.index[i],
+             horizontalalignment='center', verticalalignment='center')
+plt.axis('scaled')
+
+plt.savefig('abo2a.png', bbox_inches="tight")
+
+r = pca.components_
+
+plt.clf()
+plt.xlim(-1, 1)
+plt.ylim(-1, 1)
+for i in range(4):
+    plt.arrow(0, 0, r[0,i], r[1,i], head_width=0.05,
+              head_length=0.05, length_includes_head=True, color='black')
+    plt.text(r[0,i], r[1,i], df2a.columns[i])
+plt.axis('scaled')
+
+plt.savefig('abo2b.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/abo2a.png" alt=""></figure>
+<figure><img src="img/abo2b.png" alt=""></figure>
+
+<p>こちらも南ほど右側つまりA型が多い。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-09 15:54:05</time>
+Last modified: <time>2020-01-09 22:04:56</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -27,7 +27,7 @@
 <p>Python 3 の zipfile モジュール（zipfile.py）では</p>
 
 <pre>
-            if zinfo.flag_bits & 0x800:
+            if zinfo.flag_bits &amp; 0x800:
                 # UTF-8 filename
                 fname_str = fname.decode("utf-8")
             else:
@@ -43,19 +43,19 @@ import sys
 from zipfile import ZipFile
 from getpass import getpass
 
-with ZipFile(sys.argv[1]) as zip:
-    for zinfo in zip.infolist():
-        if zinfo.flag_bits & 0x1:
+with ZipFile(sys.argv[1]) as z:
+    for zinfo in z.infolist():
+        if zinfo.flag_bits &amp; 0x1:
             password = getpass('PASSWORD: ')
-            zip.setpassword(password.encode('utf-8'))
-        if not zinfo.flag_bits & 0x800:
+            z.setpassword(password.encode('utf-8'))
+        if not zinfo.flag_bits &amp; 0x800:
             try:
                 name = zinfo.filename.encode('cp437').decode('cp932')
             except:
                 name = zinfo.filename.encode('cp437').decode('utf-8')
             zinfo.filename = name
         print("Extracting", zinfo.filename)
-        zip.extract(zinfo)
+        z.extract(zinfo)
 </pre>
 
 <p>この19行ほどのファイルを <code>unzip.py</code> という名前で作成して実行可能にしておけば，<code>./unzip.py アーカイブ名.zip</code> で展開できる。</p>
@@ -111,7 +111,7 @@ Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-10-31 08:45:54</time>
+Last modified: <time>2020-01-09 22:39:50</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -60,11 +60,11 @@ import requests
 
 url = "https://zip-cloud.appspot.com/api/search"
 while True:
-    zip = input("7桁の郵便番号を入力してください: ")
-    if not zip:
+    z = input("7桁の郵便番号を入力してください: ")
+    if not z:
         break
-    print(zip)
-    param = {"zipcode": zip}
+    print(z)
+    param = {"zipcode": z}
     data = requests.get(url, param).json()
     address = data["results"][0]
     print(address["address1"], address["address2"], address["address3"])
@@ -130,13 +130,21 @@ for i in data["item"]:
     print(i["name"], i["maker"])
 </pre>
 
+<h3>NASA APIs</h3>
+
+<p><a href="https://api.nasa.gov">NASA APIs</a> は <code>api_key</code> として <code>DEMO_KEY</code> を指定することによって登録なしで使える（IPアドレスあたり毎時30回，1日50回の制限あり）。</p>
+
+<h3>chainFlyer API</h3>
+
+<p>ビットコイン取引の<a href="https://chainflyer.bitflyer.com">chainFlyer</a>の<a href="https://chainflyer.bitflyer.com/API/">API</a>。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-09 10:51:36</time>
+Last modified: <time>2020-01-09 22:34:27</time>
 <!-- hhmts end -->
 </p>
 </body>
