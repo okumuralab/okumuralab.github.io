@@ -13,6 +13,19 @@ window.onload = function() {
   [].forEach.call(a, function(x) {x.textContent = url});
 }
 </script>
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
 </head>
 <body>
 
@@ -35,7 +48,7 @@ window.onload = function() {
 
 <h2>古畑（田中）のデータ</h2>
 
-<p>古畑種基『血液型の話』（岩波新書467，1962年）に当時の県別血液型分布の表が載っている（202〜205ページ）。「田中が集計した日本人一一四万八六二三名」（196ページ）とあるだけで出典はよくわからない。余談だが，<a href="https://ja.wikipedia.org/wiki/%E5%8F%A4%E7%95%91%E7%A8%AE%E5%9F%BA">ウィキペディア「古畑種基」</a>によれば，古畑は四大死刑冤罪事件のうち3件に関わっている。冤罪を作り出した責任の一端を負うべき人物といえるが，本書にも犯人と同じA型だから犯人にされたといった記述が見られ，（当時の）検察の杜撰さも感じられる。</p>
+<p>古畑種基『血液型の話』（岩波新書467，1962年）に当時の県別血液型分布の表が載っている（202〜205ページ）。「田中が集計した日本人一一四万八六二三名」（196ページ）とあるだけで出典はよくわからない。余談だが，<a href="https://ja.wikipedia.org/wiki/%E5%8F%A4%E7%95%91%E7%A8%AE%E5%9F%BA">ウィキペディア「古畑種基」</a>によれば，古畑は四大死刑冤罪事件のうち3件に関わっている。冤罪を作り出した責任の一端を負うべき人物かもしれないが，本書にも犯人と同じA型だから犯人にされたといった記述が見られ，（当時の）検察の杜撰さが感じられる（「犯人はA型」から「A型だから犯人」は導けない）。</p>
 
 <p>古畑（田中）の表をOCRして目視チェックしたものを <a href="../stat/data/abo.xlsx">abo.xlsx</a> として置いておく。Pythonで読み出してみよう：</p>
 
@@ -58,7 +71,7 @@ df['検査人員'][49] - sum(df['検査人員'][:49])  # 12167
 max(abs(df[["O型","A型","B型","AB型"]].sum(axis=1) - 100))  # 0.01
 </pre>
 
-<p>O，A，B，AB型の比率は 31.51，37.34，22.06，9.10 となっている。</p>
+<p>全対象者についてのO，A，B，AB型の比率は 31.51%，37.34%，22.06%，9.10% となっている。都道府県別の対象者人数が人口に比例していないので，都道府県別の割合を人口で重み付けして平均しないといけないが，ここではそこまでやっていない。</p>
 
 <p>この表の「府県名」はJIS X 0401「都道府県コード」の順になっていない。また，当時はまだ沖縄は外地であった。JIS X 0401順に並べ替えるには，次のようにする：</p>
 
@@ -72,6 +85,8 @@ kenmei = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島
 pref = pd.DataFrame({"id": range(1,48), "都道府県名": kenmei})
 df1 = pd.merge(pref, df, left_on="都道府県名", right_on="府県名").drop(columns="府県名")
 </pre>
+
+<p>なお，田中の表には $p$，$q$，$r$ という欄があるが，これについては後述する。</p>
 
 <h2>2010年の高校生のデータ</h2>
 
@@ -100,9 +115,61 @@ s / sum(s)
 計AB    0.104772
 </pre>
 
+<p>こちらも，本来は都道府県別の割合を人口で重み付けして平均しないといけないが，ここではそこまでやっていない。</p>
+
+<h2>これら以外のデータ</h2>
+
+<p>天野 尹 <a href="https://doi.org/10.3925/jjtc1958.29.597">日本に於けるABO式血液型遺伝子頻度の年次及び歴史的変動について</a>（1984年）に1973〜1976年のいくつかの県の献血データによる血液型分布が掲載されている。</p>
+
+<p>私のサイトの <a href="../stat/140720.html">血液型と性格の無関連性</a>，<a href="../stat/190206.html">またまた血液型と性格</a>にも小規模であるがデータがある。</p>
+
+<h2>データの比較</h2>
+
+<p>古畑（田中）のデータ，高校生のデータ，冒頭で挙げたツイッターでのアンケート2通りを，グラフで比較してみる。</p>
+
+<pre>
+import matplotlib.pyplot as plt
+import numpy as np
+from statsmodels.stats.proportion import proportion_confint
+
+n1 = np.round(df[["O型","A型","B型","AB型"]].iloc[49] / 100 * df['検査人員'][49])
+n2 = df2[["計O","計A","計B","計AB"]].sum(axis=0)
+n3 = [89326, 102229, 67376, 38469]
+n4 = [253, 297, 197, 123]
+
+def prop(n):
+    n = np.array(n)
+    ntot = sum(n)
+    p = n / ntot
+    ci0, ci1 = proportion_confint(n, ntot, method='beta') # Clopper-Pearson
+    return p, np.array([p - ci0, ci1 - p])
+
+x = np.array([1,2,3,4])
+plt.clf()
+
+p, ci = prop(n1)
+plt.errorbar(x, p, ci, fmt="o")
+
+p, ci = prop(n2)
+plt.errorbar(x+0.1, p, ci, fmt="o", capsize=5)
+
+p, ci = prop(n3)
+plt.errorbar(x+0.2, p, ci, fmt="o", capsize=5)
+
+p, ci = prop(n4)
+plt.errorbar(x+0.3, p, ci, fmt="o", capsize=5)
+
+plt.xticks(x+0.15, ["O","A","B","AB"])
+plt.savefig('abo4.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/abo4.png" alt=""></figure>
+
+<p>エラーバーは95%信頼区間（Rの <code>binom.test()</code> と同じClopper-Pearson流）である。古畑（田中）のデータに比べ，高校生のデータはOが少なくABが多い。ツイッターのアンケート結果は平均に近づいているように見える。ランダムに答えた人がいるのかもしれない。</p>
+
 <h2>主成分分析</h2>
 
-<p>四つのABO血液型の合計は1であるから，3次元で表せる。これを主成分分析（PCA）で2次元に削減して表示する。</p>
+<p>四つのABO血液型の合計は1であるから，3次元で表せる。これを主成分分析（PCA）で2次元に削減して表示してみる。なお，割合は分散安定化変換 $(2/\pi)\arcsin\sqrt{x}$（拙著『Rで楽しむベイズ統計入門』参照）してから主成分分析するほうがいいかもしれないが，ここでは省略した。</p>
 
 <p>古畑（田中）のデータ：</p>
 
@@ -187,13 +254,62 @@ plt.savefig('abo2b.png', bbox_inches="tight")
 
 <p>こちらも南ほど右側つまりA型が多い。</p>
 
+<h2>遺伝子レベルの分布</h2>
+
+<p>A型はA型遺伝子を持ち，B型はB型遺伝子を持ち，AB型は両方の遺伝子を持ち，O型はどちらも持たない。これに基づいて，横軸にA型遺伝子を持つ割合（A+AB），縦軸にB型遺伝子を持つ割合（B+AB）をとってプロットしてみる。青が古畑（田中）のデータ，橙が高校生のデータである。</p>
+
+<pre>
+a1 = (df1["A型"] + df1["AB型"]) / 100
+b1 = (df1["B型"] + df1["AB型"]) / 100
+a2 = df2a["計A"] + df2a["計AB"]
+b2 = df2a["計B"] + df2a["計AB"]
+
+plt.clf()
+plt.xlim(min(min(a1),min(a2))-0.001, max(max(a1),max(a2))+0.001)
+plt.ylim(min(min(b1),min(b2))-0.001, max(max(b1),max(b2))+0.001)
+for i in range(len(a1)):
+    plt.text(a1[i], b1[i], df1a.index[i], color="C0",
+             horizontalalignment='center', verticalalignment='center')
+for i in range(len(a2)):
+    plt.text(a2[i], b2[i], df2a.index[i], color="C1",
+             horizontalalignment='center', verticalalignment='center')
+plt.axis('scaled')
+plt.xlabel('A+AB')
+plt.ylabel('B+AB')
+
+plt.savefig('abo3.png', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/abo3.png" alt=""></figure>
+
+<p>もうちょっと詳しく考えて，古畑の本にある A，B，O 遺伝子の割合 $p$，$q$，$r$ への分解をしてみる。</p>
+
+\[ p + q + r = 1 \]
+
+\[ (p + q + r)^2 = \underbrace{p^2 + 2pr}_{\mathrm{A}} + \underbrace{q^2 + 2qr}_{\mathrm{B}} + \underbrace{2pq}_{\mathrm{AB}} + \underbrace{r^2}_{\mathrm{O}} \]
+
+\[ r = \sqrt{\mathrm{O}}, \quad p_1 = 1 - \sqrt{\mathrm{B} + \mathrm{O}}, \quad q_1 = 1 - \sqrt{\mathrm{A} + \mathrm{O}} \]
+
+<p>しかし</p>
+
+\[
+  p_2 = \sqrt{\mathrm{A} + \mathrm{O}} - \sqrt{\mathrm{O}}, \quad
+  q_2 = \sqrt{\mathrm{B} + \mathrm{O}} - \sqrt{\mathrm{O}}
+\]
+
+<p>でもいいので，平均をとって</p>
+
+\[ p = \frac{p_1 + p_2}{2}, \quad q = \frac{q_1 + q_2}{2} \]
+
+<p>とする。さらに，上に挙げた田中のデータでは，この $p$，$q$，$r$ をそれぞれ10倍された値を使っている。なぜ10倍するかというと，ABOの割合をパーセントで表す場合に都合がよいからである。これを正三角形のグラフで描く方法が古畑の本に紹介されている。Pythonによる三角グラフ（ternary plot）の描き方については<a href="https://agilescientific.com/blog/2019/3/21/x-lines-of-python-ternary-diagrams">このページ</a>に解説がある。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-09 22:04:56</time>
+Last modified: <time>2020-01-11 10:31:15</time>
 <!-- hhmts end -->
 </p>
 </body>
