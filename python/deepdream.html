@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Deep Dream</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>DeepDream</h1>
+
+<p>Google の DeepDream は一時期流行った画像を夢のように奇怪にする技術。<a href="https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html">Inceptionism: Going Deeper into Neural Networks</a> で解説されている。</p>
+
+<p><a href="https://deepdreamgenerator.com">Deep Dream Generator</a> のようなサイトもあるが，個人情報を登録しなければならない。自前で実行するには，TensorFlow を使ったミニマルなコードが <a href="https://www.tensorflow.org/tutorials/generative/deepdream">DeepDream</a> で公開されているので，これを実行するだけである。ローカルマシンで実行した結果（最初はオリジナル）：</p>
+
+<figure><img src="img/deepdream0.jpg" alt=""></figure>
+<figure><img src="img/deepdream1.jpg" alt=""></figure>
+<figure><img src="img/deepdream2.jpg" alt=""></figure>
+<figure><img src="img/deepdream3.jpg" alt=""></figure>
+
+<p>最新の TensorFlow 2.1 でも問題なく実行できた。</p>
+
+<p>コードは Google Colab で実行できる形で書かれている。Jupyter Notebook でも実行できるはずであるが，それ以外のシェルでは次のように書き換えればよい。</p>
+
+<p><code>import IPython.display as display</code> は削除してよい。</p>
+
+<p><code>display.</code> を含む行はすべてコメントアウトする。</p>
+
+<p><code>url = '...'</code> は適宜書き換える。ローカルファイルの場合は例えば <code>url = 'file:///Users/okumura/hoge.jpg'</code> のようにすればよい。</p>
+
+<p><code>def show(img):</code> のところは次のように直す：</p>
+
+<pre>
+import matplotlib.pyplot as plt
+
+def show(img):
+    plt.imshow(img)
+</pre>
+
+<p>あるいは，表示された画像を保存するには，次のようにすればよいであろう：</p>
+
+<pre>
+imno = 0
+def show(img):
+    global imno
+    plt.imshow(img)
+    plt.imsave(f"deepdream{imno}.jpg", np.array(img))
+    imno += 1
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-01-11 16:02:20</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
