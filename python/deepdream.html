@@ -18,14 +18,15 @@
 
 <p>Google の DeepDream は一時期流行った画像を夢のように奇怪にする技術。<a href="https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html">Inceptionism: Going Deeper into Neural Networks</a> で解説されている。</p>
 
-<p><a href="https://deepdreamgenerator.com">Deep Dream Generator</a> のようなサイトもあるが，個人情報を登録しなければならない。自前で実行するには，TensorFlow を使ったミニマルなコードが <a href="https://www.tensorflow.org/tutorials/generative/deepdream">DeepDream</a> で公開されているので，これを実行するだけである。ローカルマシンで実行した結果（最初はオリジナル）：</p>
+<p><a href="https://deepdreamgenerator.com">Deep Dream Generator</a> のようなサイトもあるが，個人情報を登録しなければならない。自前で実行するには，TensorFlow を使ったミニマルなコードが <a href="https://www.tensorflow.org/tutorials/generative/deepdream">DeepDream</a> で公開されているので，これを実行するだけである。ローカルマシンで実行した結果（最初はオリジナル，最後は <code>run_deep_dream_with_octaves()</code> を2巡させ，リサイズを省略したもの）：</p>
 
 <figure><img src="img/deepdream0.jpg" alt=""></figure>
 <figure><img src="img/deepdream1.jpg" alt=""></figure>
 <figure><img src="img/deepdream2.jpg" alt=""></figure>
 <figure><img src="img/deepdream3.jpg" alt=""></figure>
+<figure><img src="img/deepdream4.jpg" alt=""></figure>
 
-<p>最新の TensorFlow 2.1 でも問題なく実行できた。</p>
+<p>最新の TensorFlow 2.1 でも問題なく実行できた。GPU がなくても十分速い。<code>InceptionV3</code> モデルをダウンロードするのに数分かかる（Google Colab では数秒）。</p>
 
 <p>コードは Google Colab で実行できる形で書かれている。Jupyter Notebook でも実行できるはずであるが，それ以外のシェルでは次のように書き換えればよい。</p>
 
@@ -44,7 +45,7 @@ def show(img):
     plt.imshow(img)
 </pre>
 
-<p>あるいは，表示された画像を保存するには，次のようにすればよいであろう：</p>
+<p>あるいは，表示された画像に連番を付けて保存するには，次のようにすればよいであろう：</p>
 
 <pre>
 imno = 0
@@ -61,7 +62,7 @@ def show(img):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-11 16:02:20</time>
+Last modified: <time>2020-01-11 17:55:55</time>
 <!-- hhmts end -->
 </p>
 </body>
