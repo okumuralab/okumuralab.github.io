@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Google Flu Trends</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<style>
+figcaption {
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Google Flu Trends のプロット</h1>
+
+<p><a href="https://en.wikipedia.org/wiki/Google_Flu_Trends">Google Flu Trends</a>（Wikipedia 記事）は Google が検索入力からインフルエンザの流行を調べたプロジェクトである。予測はあまり正確でなく，2015年に打ち切られた。当時の週ごとの予測データは<a href="https://www.google.org/flutrends/about/">こちら</a>で公開されている。</p>
+
+<p>日本についてのデータを読んでプロットしてみよう：</p>
+
+<pre>
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("https://www.google.org/flutrends/about/data/flu/jp/data.txt",
+                 index_col='Date', parse_dates=['Date'],
+                 skiprows=11)
+df.plot()
+plt.savefig('googleflu-jp.png', bbox_inches="tight")
+</pre>
+
+<figure>
+<img src="img/googleflu-jp.png" alt="Google Flu Trends, Japan">
+<figcaption><a href="https://www.google.org/flutrends/">Google Flu Trends</a>, Japan</figcaption>
+</figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-01-15 17:34:55</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
