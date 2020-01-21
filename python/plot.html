@@ -76,6 +76,19 @@ python3 -c "import matplotlib; print(matplotlib.matplotlib_fname())"
 </pre>
 </div>
 
+<div class="note">
+<p>OpenType の例えば Source Han Sans を使いたければ，いったん</p>
+<pre>
+plt.rcParams['font.family'] = 'Source Han Sans'
+plt.savefig('filename.svg', bbox_inches="tight")
+</pre>
+<p>で SVG 形式に保存してから，<code>rsvg-convert</code> コマンド（Mac では <code>brew install librsvg</code>，CentOS 7 では <code>yum install librsvg2-tools</code> で入る）を使ってターミナルで</p>
+<pre>
+rsvg-convert --format=pdf --output=filename.pdf filename.svg
+</pre>
+<p>で変換できます。文字はアウトライン化され，文字情報はなくなります。別の方法として，後述の PGF 経由で出力する方法があります。そちらの方法なら文字情報が保たれます。</p>
+</div>
+
 <p>簡単なプロットで試してみましょう。ターミナルで IPython を使うなら <code>ipython --matplotlib</code> として起動します（<code>--matplotlib</code> はデフォルトでオンになっている環境もあります）。Jupyter Notebook の環境なら</p>
 
 <pre>
@@ -150,6 +163,7 @@ plt.title('日本語タイトル')
 <pre>
 plt.savefig('filename.png', bbox_inches="tight")  # デフォルト: dpi=100
 plt.savefig('filename.pdf', bbox_inches="tight")
+plt.savefig('filename.svg', bbox_inches="tight")
 plt.savefig('filename.pgf', bbox_inches="tight")
 </pre>
 
@@ -325,7 +339,7 @@ plt.close("all")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-11-20 21:42:14</time>
+Last modified: <time>2020-01-21 13:47:18</time>
 <!-- hhmts end -->
 </p>
 </body>
