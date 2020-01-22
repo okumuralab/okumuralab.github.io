@@ -46,7 +46,7 @@ tf.disable_v2_behavior()
 </div>
 
 <div class="note">
-<p>TensorFlow 1.x のコードを 2.0 用に変換するには</p>
+<p>TensorFlow 1.x のコードを 2.x 用に変換するには</p>
 <pre>
 tf_upgrade_v2 --intree dir/ --outtree dir2/ --reportfile report.txt
 </pre>
@@ -61,6 +61,14 @@ tf_upgrade_v2 --intree dir/ --outtree dir2/ --reportfile report.txt
 <p>と打ち込むようだ。</p>
 </div>
 
+<div class="note">
+<p>Windows 10 で <code>pip install tensorflow</code> すると入ったように見えるが，実行すると Failed to load the native TensorFlow runtime. というエラーになる。Python 3.5 くらいにダウングレードすればうまくいくとか，TensorFlow もダウングレードするとか，pip でなく conda で入れるとうまくいくとか，いろいろ情報があるが，確認できていない。</p>
+</div>
+
+<div class="note">
+<p>MacBook Air Late 2010 (Core 2 Duo) でインストールすると Process Python illegal instruction: 4 というエラーで死ぬ。CPU が古いため？</p>
+</div>
+
 <p>インポートする：</p>
 
 <pre>
@@ -71,7 +79,7 @@ import tensorflow as tf
 
 <pre>
 In [ ]: tf.__version__
-Out[ ]: '2.0.0'
+Out[ ]: '2.1.0'
 
 In [ ]: tf.keras.__version__
 Out[ ]: '2.2.4-tf'
@@ -175,7 +183,7 @@ model = tf.keras.models.load_model("mymodel.h5")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-11 15:20:04</time>
+Last modified: <time>2020-01-22 15:39:17</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -28,7 +28,7 @@
 
 <p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが，今なら Python 3.7.5 の64ビット版 Windows x86-64 executable installer でいいと思います。初心者のかたは，インストーラの最初の画面で必ず「Add Python 3.7 to PATH」にチェックを付けておきましょう。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
 
-<p>確認として，Windows PowerShell（またはコマンドプロンプト）を立ち上げ，</p>
+<p>確認として，Windows PowerShell（あるいは VS Code のターミナル，またはコマンドプロンプト）を立ち上げ，</p>
 
 <pre>
 where.exe python
@@ -59,7 +59,7 @@ C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37\Scripts\pip.exe
 pip list --outdated
 </pre>
 
-<p>最初は pip そのものが古いはずですので，まずこれを <code>pip install --upgrade pip</code> としてアップグレードします。これ以外に必要なパッケージは，その都度インストールします。例：</p>
+<p>最初は pip そのものが古いはずですので，まずこれを <code>python -m pip install --upgrade pip</code> としてアップグレードします。これ以外に必要なパッケージは，その都度インストールします。例：</p>
 
 <pre>
 pip install numpy matplotlib pandas jupyter
@@ -311,7 +311,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-12-28 14:11:40</time>
+Last modified: <time>2020-01-22 14:35:08</time>
 <!-- hhmts end -->
 </p>
 </footer>
