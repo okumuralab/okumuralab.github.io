@@ -34,7 +34,7 @@
                 fname_str = fname.decode("cp437")
 </pre>
 
-<p>のような処理がされている。コードページ 437（DOS Latin US）はオリジナルの IBM PC の文字セットである。したがって，これを UTF-8 に変換して展開するには，次のようにすればよさそうである（Dora TeX さんによる暗号化 ZIP 対応をマージした）：</p>
+<p>のような処理がされている。コードページ 437（DOS Latin US）はオリジナルの IBM PC の文字セットである。したがって，これを UTF-8 に変換して展開するには，次のようにすればよさそうである（DoraTeX さんによる暗号化 ZIP 対応をマージした）：</p>
 
 <pre>
 #! /usr/bin/env python3
@@ -61,6 +61,8 @@ with ZipFile(sys.argv[1]) as z:
 <p>この19行ほどのファイルを <code>unzip.py</code> という名前で作成して実行可能にしておけば，<code>./unzip.py アーカイブ名.zip</code> で展開できる。</p>
 
 <p>Mac の展開ツール（ZIP アーカイブをダブルクリックすると現れる）はファイル名の文字コードの自動判断ができる（うまくいかない場合があるという話も聞いた）。Windows 8 以降の展開ツールも大丈夫らしい。Windows 7 は <a href="https://support.microsoft.com/ja-jp/help/2704299/japanese-characters-in-file-names-are-displayed-as-garbled-text-after">KB2704299</a> で対応したらしい。Mac の /usr/bin/unzip にはファイル名変換機能はない（CentOS 7 の /usr/bin/unzip には -O cp932 オプションがある）。</p>
+
+<p>[追記] DoraTeX さんが<a href="https://gist.github.com/doraTeX/0d79d8ff35710a27bc3e5176cc646b60">改良版</a>を作られた。</p>
 
 <h3>NFC，NFD</h3>
 
@@ -111,7 +113,7 @@ Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-09 22:39:50</time>
+Last modified: <time>2020-01-24 20:31:19</time>
 <!-- hhmts end -->
 </p>
 </body>

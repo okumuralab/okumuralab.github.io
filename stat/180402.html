@@ -18,6 +18,8 @@
 
 <p>[2020-01-21追記] このページの最初のグラフと同じもの（都道府県名がなくマーカーだけの散布図）が2020-01-19の大学入試センター試験「数学I」「数学I・数学A」に出た。いっしょに出ている「男の市区町村別の平均寿命の箱ひげ図」は厚労省<a href="https://www.mhlw.go.jp/toukei/saikin/hw/life/ckts15/index.html">平成27年市区町村別生命表の概況</a>からリンクされている ckts15-06.xls のデータを描いたものと思われる。この箱ひげ図の中で際立って長い「P10」は大阪府である（大阪市西成区の男の平均寿命73.5歳）。</p>
 
+<p>[2020-01-24追記] 上記Excelファイルをパースするのはかなり面倒。裏 RjpWiki さんの<a href="https://blog.goo.ne.jp/r-de-r/e/7b6ae83358fd059df03208d703ac1e20">この記事</a>参照。また，<a href="https://ameblo.jp/ken-pc-works/entry-12568760871.html">センター試験に出てきた平均寿命の箱ひげ図をExcelとPythonで作ってみる</a>にも書かれているように，<a href="https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00450012&tstat=000001031336&cycle=7&tclass1=000001060926&tclass2=000001114595&cycle_facet=tclass1%3Atclass2%3Acycle">e-Statのこちらのページ</a>にある Excel ファイルから0歳の余命をとるほうが楽かもしれない。</p>
+
 <h2>厚労省のExcelデータから散布図を描く</h2>
 
 <p>今日（2018-04-02）の日経新聞に<a href="https://www.nikkei.com/article/DGKKZO28791850Q8A330C1TCC000/">地域格差、最大で3.1歳</a>という記事があった。「平均寿命の延びは都道府県で格差がある」と題した図が付いており，都道府県別平均寿命（男女合計）を，横軸に1990年，縦軸に2015年をとってプロットしてある。「東京大学大学院国際保健政策学教室のデータをもとに作成」と書かれているが，e-Statか厚労省のデータに違いない。e-Statを探したが見つからず（要確認），厚労省を探すと<a href="http://www.mhlw.go.jp/toukei/saikin/hw/life/tdfk15/index.html">平成27年都道府県別生命表の概況</a>というページがあった。ここに「図表データのダウンロード」という項目があり，Excelファイル <a href="http://www.mhlw.go.jp/toukei/saikin/hw/life/tdfk15/dl/tdfk15-09.xls">tdfk15-09.xls</a> がダウンロードできるようになっている（デフォルト .xls な Excel 2003 は2014年4月9日にサポート終了したはずだが・・・）。</p>
@@ -164,7 +166,7 @@ abline(h=x$L2015[1])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-21 10:23:10</time>
+Last modified: <time>2020-01-24 11:21:26</time>
 <!-- hhmts end -->
 </p>
 </footer>
