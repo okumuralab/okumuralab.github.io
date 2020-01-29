@@ -16,13 +16,13 @@
 
 <h1>QRコード</h1>
 
-<p><a href="https://github.com/lincolnloop/python-qrcode">Pure python QR Code generator</a> を使います。<code>pip install qrcode</code> などとしてインストールします。Python ライブラリだけでなく，<code>qr</code> というスクリプトもインストールされます。Mac のターミナルで</p>
+<p><a href="https://github.com/lincolnloop/python-qrcode">Pure python QR Code generator</a> を使います。<code>pip install qrcode</code> などとしてインストールします（<code>pillow</code> もインストールしておく必要があるようです）。Python ライブラリだけでなく，<code>qr</code> というスクリプトもインストールされます。Mac のターミナルまたは Windows のコマンドプロンプト等で</p>
 
 <pre>
 qr '奥村晴彦です' &gt; test.png
 </pre>
 
-<p>として全角文字のQRコードも正しく生成できることを確認しました。</p>
+<p>として全角文字のQRコードも正しく生成できます（Windows の VS Code のターミナルではうまくいかないという報告があります）。</p>
 
 <hr>
 
@@ -30,7 +30,7 @@ qr '奥村晴彦です' &gt; test.png
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-27 09:20:48</time>
+Last modified: <time>2019-11-13 15:29:28</time>
 <!-- hhmts end -->
 </p>
 </body>
