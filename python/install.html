@@ -112,6 +112,8 @@ pip3 install --user ipython numpy matplotlib pandas jupyter
 
 <p>ソースでしか提供されていないパッケージには，ビルドに gfortran が必要な場合もあります。Homebrew なら brew install gcc で入ります。</p>
 
+<p>アンインストールするには /Library/Frameworks の中の Python.framework 全体を消します。/usr/local/bin にもこの中へのシンボリックリンクがいくつかできているはずですので，それも消します。~/.bash_profile に追加した PATH も消します。</p>
+
 <h3>Microsoft Store 版 Python</h3>
 
 <p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら，PowerShell かコマンドプロンプトで「python」と打ち込むと，「ストア」が立ち上がって「Python」をインストールする画面が出てきます。インストール場所は C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps です。</p>
@@ -139,6 +141,8 @@ pip3 install --user ipython numpy matplotlib pandas jupyter
 <p>巨大な Xcode はたいていの場合に不要ですが，ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は，Mac を使っている開発者にとって必需品です。さらに，<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合，ターミナルに <code>brew install python</code> と打ち込めば，簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等です（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。</p>
 
 <p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip</code>（<code>pip3</code>）などのコマンドが入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
+
+<p><code>/usr/local/bin</code> のシンボリックリンクは python.org のものをインストールしたら上書きされてしまいますので，Homebrew のものを主に使う場合は <code>brew link --overwrite python</code> と打ち込みます。</p>
 
 <p>パッケージのインストールや更新は <code>pip</code> で行います（上参照）。</p>
 
@@ -311,7 +315,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-22 14:35:08</time>
+Last modified: <time>2020-01-31 10:11:37</time>
 <!-- hhmts end -->
 </p>
 </footer>
