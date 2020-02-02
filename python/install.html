@@ -150,7 +150,7 @@ pip3 install --user ipython numpy matplotlib pandas jupyter
 pip3 install --upgrade pip
 </pre>
 
-<p>とします。つまりパッケージ名は <code>pip</code>，コマンド名は <code>pip3</code> なのがややこしいところです。</p>
+<p>とします。つまりパッケージ名は <code>pip</code>，コマンド名は <code>pip3</code> なのがややこしいところです（<a href="https://docs.brew.sh/Homebrew-and-Python">ここ</a>参照）。ただ，Homebrew の Python 3 だけをインストールした場合，<code>pip</code> コマンドと <code>pip3</code> コマンドは同じものになるようです。</p>
 
 <p>これで <code>python</code> と打ち込むと macOS 側の Python 2 が，<code>python3</code> と打ち込むと Homebrew 側の Python 3 が動くことになります。<code>ipython</code> は macOS 側にないので <code>3</code> を付ける必要はありません（付けてもかまいません）。<code>python</code> と打ち込んで Python 3 が動くようにしたければ，<code>/usr/local/opt/python/libexec/bin</code> のパスを <code>/usr/bin</code> より先に設定します。</p>
 
@@ -321,7 +321,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-02 11:07:02</time>
+Last modified: <time>2020-02-02 11:18:50</time>
 <!-- hhmts end -->
 </p>
 </footer>
