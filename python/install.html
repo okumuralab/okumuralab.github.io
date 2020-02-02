@@ -138,13 +138,19 @@ pip3 install --user ipython numpy matplotlib pandas jupyter
 
 <h3>Homebrew によるインストール（Mac）</h3>
 
-<p>巨大な Xcode はたいていの場合に不要ですが，ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は，Mac を使っている開発者にとって必需品です。さらに，<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合，ターミナルに <code>brew install python</code> と打ち込めば，簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等です（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。</p>
+<p>巨大な Xcode はたいていの場合に不要ですが，ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は，Mac を使っている開発者にとって必需品です。さらに，<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合，ターミナルに <code>brew install python3</code> と打ち込めば，簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等です（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。</p>
 
-<p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip</code>（<code>pip3</code>）などのコマンドが入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
+<p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンドが入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
-<p><code>/usr/local/bin</code> のシンボリックリンクは python.org のものをインストールしたら上書きされてしまいますので，Homebrew のものを主に使う場合は <code>brew link --overwrite python</code> と打ち込みます。</p>
+<p><code>/usr/local/bin</code> のシンボリックリンクは python.org のものをインストールしたら上書きされてしまいますので，Homebrew のものを主に使う場合は <code>brew link --overwrite python</code> と打ち込みます。さらにわけがわからなくなったら <code>brew reinstall python3</code> で再インストールできます。</p>
 
-<p>パッケージのインストールや更新は <code>pip</code> で行います（上参照）。</p>
+<p>パッケージのインストールや更新は <code>pip3</code> コマンドで行います。<code>pip</code> 自身の更新は</p>
+
+<pre>
+pip3 install --upgrade pip
+</pre>
+
+<p>とします。つまりパッケージ名は <code>pip</code>，コマンド名は <code>pip3</code> なのがややこしいところです。</p>
 
 <p>これで <code>python</code> と打ち込むと macOS 側の Python 2 が，<code>python3</code> と打ち込むと Homebrew 側の Python 3 が動くことになります。<code>ipython</code> は macOS 側にないので <code>3</code> を付ける必要はありません（付けてもかまいません）。<code>python</code> と打ち込んで Python 3 が動くようにしたければ，<code>/usr/local/opt/python/libexec/bin</code> のパスを <code>/usr/bin</code> より先に設定します。</p>
 
@@ -315,7 +321,7 @@ c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea5
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-31 10:11:37</time>
+Last modified: <time>2020-02-02 11:07:02</time>
 <!-- hhmts end -->
 </p>
 </footer>
