@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>気温のスクレイピング</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>気温のスクレイピング</h1>
+
+<p>今日は昨日よりずいぶん寒いみたいだ。どれくらい寒いだろう？</p>
+
+<p>気象庁の<a href="http://www.jma.go.jp/jp/amedas_h/index.html">アメダス表形式</a>のページから三重県の津を選ぶと表が出てくるので，Pythonでスクレイプすればよい：</p>
+
+<pre>
+import pandas as pd
+import matplotlib.pyplot as plt
+
+yesterday = pd.read_html('http://www.jma.go.jp/jp/amedas_h/yesterday-53133.html')
+df0 = yesterday[4].iloc[2:,[0,1]].astype(float)
+plt.plot(df0[0], df0[1], "o-")
+
+today = pd.read_html('http://www.jma.go.jp/jp/amedas_h/today-53133.html')
+df = today[4].iloc[2:,[0,1]].astype(float)
+plt.plot(df[0], df[1], "o-")
+
+plt.legend(['yesterday','today'])
+</pre>
+
+<figure><img src="img/200205.svg" alt="三重県津市の気温"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-02-05 22:24:26</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
