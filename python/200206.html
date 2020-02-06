@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>7歳児は事故に会いやすい？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>7歳児は事故に会いやすい？</h1>
+
+<p>交通事故件数が7歳にピークがあるという話を聞いて，検証しようとした。</p>
+
+<p><a href="https://www.e-stat.go.jp">e-Stat</a>で「人口動態調査」を検索して，「ファイル」をクリックすると，<a href="https://www.e-stat.go.jp/stat-search/files?page=1&toukei=00450011&tstat=000001028897">こちら</a>の画面になる。最初の「死因」→「年次」をクリックし，最新の「2018年」をクリックすると，<a href="https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00450011&tstat=000001028897&cycle=7&year=20180&month=0&tclass1=000001053058&tclass2=000001053061&tclass3=000001053073&tclass4=000001053082&result_back=1">こちら</a>の画面になる。「3」の「死亡数，死因（死因簡単分類）・性・年齢（各歳・小学生－中学生再掲）別」の「CSV」をクリックすると，<a href="https://www.e-stat.go.jp/stat-search/file-download?statInfId=000031884094&fileKind=1">jch030000.csv</a>というCSVファイルがダウンロードされる。これを読んでグラフにしてみる：</p>
+
+<pre>
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('jch030000.csv', encoding='cp932', skiprows=2, na_values='-')
+x = df[df.iloc[:,0].astype(str).str.contains('交通事故')].T
+# または x = df.iloc[['交通事故' in str(i) for i in df.iloc[:,0]]].T
+
+plt.plot(range(0,117), x[3:120].astype(float), "o-")
+plt.xlabel('年齢')
+plt.ylabel('死亡数')
+plt.savefig('200206a.svg', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/200206a.svg" alt=""></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-02-06 22:38:40</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
