@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>7歳児は事故に会いやすい？</title>
+<title>歩行中の交通事故の7歳ピーク</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -14,7 +14,7 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>7歳児は事故に会いやすい？</h1>
+<h1>歩行中の交通事故の7歳ピーク</h1>
 
 <p>交通事故件数が7歳にピークがあるという話を聞いて，検証しようとした。</p>
 
@@ -34,7 +34,45 @@ plt.ylabel('死亡数')
 plt.savefig('200206a.svg', bbox_inches="tight")
 </pre>
 
-<figure><img src="img/200206a.svg" alt=""></figure>
+<figure><img src="img/200206a.svg" alt="2018年の交通事故による死亡数"></figure>
+
+<p>20歳前後と80歳前後に山があるが，7歳のピークは見えない。なお，上のようなデータフレームの文字列の扱いについては <a href="https://jakevdp.github.io/PythonDataScienceHandbook/">Python Data Science Handbook</a> の <a href="https://jakevdp.github.io/PythonDataScienceHandbook/03.10-working-with-strings.html">Vectorized String Operations</a> が参考になる。</p>
+
+<p>7歳ピークの発端は<a href="https://www.itarda.or.jp">公益財団法人交通事故総合分析センター</a>の<a href="https://www.itarda.or.jp/itardainfomation">イタルダインフォメーション</a> No.116「子供の歩行中の事故」のようだ。ここに載っている歩行中の交通事故死傷者数のグラフは7歳に鋭いピークがある。</p>
+
+<p>さらに教えていただいたことによれば，元の研究は<a href="https://www.itarda.or.jp/presentation/19">平成28年　第１９回 交通事故・調査分析研究発表会</a>の「子供の歩行中の交通事故」で，このデータは<a href="https://www.itarda.or.jp/materials/others/free">こちら</a>からPDF形式でダウンロードできる（無料の会員登録が必要）。ほかにもたくさんのデータが1000円〜2000円の値段でダウンロードできるようである。オープンデータではなく，<a href="https://www.itarda.or.jp/members/agree">会員規約</a>によれば「提供されたデータは、会員の作成する報告書、論文、パンフレット等にデータの提供元（分析センター）を明示することを条件として使用できるものとします（掲載された時はコピーを１部FAX又は郵送にて分析センターへ提出願います。）」「他社から委託を受けて行う業務などに使用することを禁止します」などの制約がある。</p>
+
+<p>とりあえず上記PDFをいただいてきてCSVに変換し，グラフを描いてみた。1995年には顕著だった7歳の鋭いピークが，2015年ではかなり緩和されていることがわかる。なお，最左端は1歳以下，最右端は81歳以上である。
+
+<pre>
+df = pd.read_csv('19_02data_1.csv')
+plt.plot(df['年齢'], df['1995年'], "o-")
+plt.plot(df['年齢'], df['2015年'], "o-")
+plt.grid()
+plt.legend(['1995年','2015年'])
+plt.xlabel('年齢')
+plt.ylabel('歩行中の交通事故 死傷者数')
+plt.savefig('200207a.svg', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/200207a.svg" alt="歩行中の交通事故 死傷者数"></figure>
+
+<p><a href="https://www.npa.go.jp">警察庁</a>の<a href="https://www.npa.go.jp/publications/whitepaper/index_keisatsu.html">警察白書</a>の<a href="https://www.npa.go.jp/hakusyo/r01/honbun/index.html">令和元年版</a>第5章第2節第1項 歩行者の安全確保 の図表5-12にも同様なグラフがあり，データがExcel形式でダウンロードできる。こちらは絶対数ではなく人口10万人あたり，2014〜2018年平均，分母の人口は2016年10月1日のものである。</p>
+
+<pre>
+df = pd.read_excel('v5z05120.xlsx', skiprows=1, skipfooter=1)
+df.columns = ['年齢', '歩行中死者数', '歩行中死傷者数']
+df['年齢'] = df['年齢'].str.extract('(\d+)').astype(int)
+
+plt.clf()
+plt.plot(df['年齢'], df['歩行中死傷者数'], "o-")
+plt.grid()
+plt.xlabel('年齢')
+plt.ylabel('歩行中死傷者数')
+plt.savefig('200207b.svg', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/200207b.svg" alt="歩行中死傷者数"></figure>
 
 <hr>
 
@@ -42,7 +80,7 @@ plt.savefig('200206a.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-06 22:38:40</time>
+Last modified: <time>2020-02-07 13:54:31</time>
 <!-- hhmts end -->
 </p>
 </body>
