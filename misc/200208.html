@@ -21,6 +21,8 @@ blockquote > p { margin-block-start: 1em; margin-block-end: 1em; }
 
 <p>毎日新聞の<a href="https://mainichi.jp/articles/20200207/k00/00m/040/384000c">厚労省HP、新型肺炎の外国語情報で誤訳多発　「手洗い重要」が「トイレ重要」</a>という記事によれば，厚労省の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000164708_00001.html">新型コロナウイルス感染症について</a>のホームページ自動翻訳が，「例えば「手洗いが重要」が韓国語で「トイレが重要」、「水際対策」が中国語で「水辺の対策」と誤訳されている。韓国語も「物価の対策」とも読めるという。「入国される人」という敬語は中、韓両国語とも「入国を受ける人」と受け身に訳されている」と書かれている。確認してみた。</p>
 
+<p>結論：厚労省の翻訳ソフト（高電社J-SERVER）の品質に問題がある。もっと良い翻訳ツールはいくらでもある。一番良いのは，何もせず，ブラウザの翻訳機能を使ってもらうことである（このページの最後参照）。</p>
+
 <h3>原文</h3>
 
 <p>厚労省<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000164708_00001.html">新型コロナウイルス感染症について</a>の冒頭：</p>
@@ -101,6 +103,37 @@ National message to everybody</p>
 
 <p>細かな違いを除いて，ほぼ同じである。</p>
 
+<h3>追記：GOOGLETRANSLATE関数</h3>
+
+<p>GoogleスプレッドシートのGOOGLETRANSLATE関数で<a href="https://twitter.com/ishidashuji/status/1226140968446857216">試していただいた</a>。Web版Google Translateよりずいぶん品質が劣る。</p>
+
+<blockquote>
+<p>"For the new coronavirus infection<br>
+Message to the people of everybody</p>
+
+<p>The new coronavirus infection, in Japan, currently, is not a situation epidemic has been observed. Is placed in the public everyone is cold and implementation, such as seasonal flu as well as per person per person of cough etiquette and hand washing is very important. We ask that you strive to infectious diseases.</p>
+
+<p>After When it is put to the people who have contact with people who or of these are returned, immigration from Hubei, if you have symptoms such as cough and fever, which for example, by wearing a mask, and contact us in advance to the health center in, so that you will be asked to visit, thank you for your cooperation. In addition, in the consultation of medical institution, please offered in advance that you have contact with people where there is a stay history to be or Hubei there is a stay history of Hubei Province."</p>
+</blockquote>
+
+<p>この件については <a href="https://qiita.com/kazinoue/items/82779a11af8a2dea0d21">Google Spreadsheet の googletranslate 関数の代わりに LanguageApp を使うワークシート関数を作ってイケてる翻訳ができるようにする</a> 参照。</p>
+
+<h3>さらに追記：Google翻訳機能</h3>
+
+<img src="img/200209a.jpg" alt="厚労省新型コロナウイルスのページをiPhoneのChromeで翻訳" style="float: right; margin: 0 0 1em 1em; border:1px solid;">
+
+<p>私の住む<a href="https://www.info.city.tsu.mie.jp">津市</a>は高電社J-SERVERを組み込んでいるので意味不明の英語になるが，近場では例えば<a href="http://www.city.kuwana.lg.jp/">桑名市</a>はGoogle Translate機能を埋め込んでいるのでまともな英語になる。しかし，<a href="https://www.weblab.co.jp/staff/marketing/8004.html">Google ウェブサイト翻訳ツールがサービス終了！代替案を解説</a>に解説されているように，この機能を新たに組み込むことはできないようだ。</p>
+
+<p>そもそも今はGoogle Chromeなら右クリックで簡単にページを翻訳できる（他ブラウザでも追加機能を入れればできる）ので，わざわざサイト側が翻訳機能を用意する必要はなくなったのであろう。同じことは音声読み上げ機能や文字拡大機能についてもいえる。</p>
+
+<p>そして，サイト側が注意すべきことは，翻訳friendlyな（そして読み上げfriendlyな）サイト作りを心がけることであろう。例えば文字を画像にするのはやめる。時間があれば英語だけでもうまく翻訳できているかチェックする（英語に翻訳できれば他言語にも翻訳できる可能性が大きい）。</p>
+
+<p>パソコンのGoogle Chromeを右クリックすると，最初は「日本語に翻訳」しか出ないが，翻訳時に出るポップアップの「オプション」から言語が変更できるので，「英語」にする。</p>
+
+<p>スマホのGoogle Chromeは，画面右下の「…」→「設定」→「言語」→「ページの翻訳」をオンにして，画面右下の「…」→「翻訳」で翻訳メニューを出す。最初は候補が日本語になっているが，⚙→「その他の言語…」→「英語」を選ぶと英語に翻訳できる。厚労省の新型コロナウイルスのページを訳すと右のようになる。</p>
+
+<p>これでページの問題点が明らかになる。例えば「令和2年度」は reiwa 2 year になって意味不明。</p>
+
 <hr>
 
 <footer>
@@ -108,7 +141,7 @@ National message to everybody</p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-08 22:33:02</time>
+Last modified: <time>2020-02-09 22:40:55</time>
 <!-- hhmts end -->
 </p>
 </footer>
