@@ -24,44 +24,44 @@
 <p>RからSQLiteを使うには <a href="https://cran.r-project.org/web/packages/RSQLite/">RSQLite</a> パッケージを使う。現在は Hadley Wickham がメンテナンスしており，開発版はGitHubの <a href="https://github.com/hadley/RSQLite">hadley/RSQLite</a> にある。</p>
 
 <pre>
-<code>install.packages("RSQLite")</code>
-<code>library("RSQLite")</code>
-<code>con = dbConnect(SQLite(), "tmp.db", synchronous="off")</code>
+<code class="prom">install.packages("RSQLite")</code>
+<code class="prom">library("RSQLite")</code>
+<code class="prom">con = dbConnect(SQLite(), "tmp.db", synchronous="off")</code>
 </pre>
 
 <p><code>dbConnect()</code> の最初の引数は必ず <code>SQLite()</code> とする。2番目の引数はデータベースファイルのファイル名（パス）である。ただし，空文字列 <code>""</code> はテンポラリファイルで自動消去される。<code>":memory:"</code> はメモリ上に作成される。オプション <code>synchronous="off"</code> を付けておくとSQLiteへの書き込みがかなり速くなる可能性がある。</p>
 
 <pre>
-<code>dbSendQuery(con, "create table hoge(hinmei text, nedan int)")</code>
-<code>dbListTables(con)</code>
+<code class="prom">dbSendQuery(con, "create table hoge(hinmei text, nedan int)")</code>
+<code class="prom">dbListTables(con)</code>
 [1] "hoge"
-<code>dbListFields(con, "hoge")</code>
+<code class="prom">dbListFields(con, "hoge")</code>
 [1] "hinmei" "nedan"
-<code>dbSendQuery(con, "insert into hoge values('りんご', 500)")</code>
-<code>dbSendQuery(con, "insert into hoge values('みかん', 300);")</code>
-<code>dbGetQuery(con, "select * from hoge")</code>
+<code class="prom">dbSendQuery(con, "insert into hoge values('りんご', 500)")</code>
+<code class="prom">dbSendQuery(con, "insert into hoge values('みかん', 300);")</code>
+<code class="prom">dbGetQuery(con, "select * from hoge")</code>
   hinmei nedan
 1 りんご   500
 2 みかん   300
-<code>dbSendQuery(con, "update hoge set nedan=200 where hinmei='みかん'")</code>
-<code>dbGetQuery(con, "select * from hoge")</code>
+<code class="prom">dbSendQuery(con, "update hoge set nedan=200 where hinmei='みかん'")</code>
+<code class="prom">dbGetQuery(con, "select * from hoge")</code>
   hinmei nedan
 1 りんご   500
 2 みかん   200
-<code>dbReadTable(con, "hoge")</code>
+<code class="prom">dbReadTable(con, "hoge")</code>
   hinmei nedan
 1 りんご   500
 2 みかん   200
-<code>dbWriteTable(con, "iris", iris)</code>
+<code class="prom">dbWriteTable(con, "iris", iris)</code>
 [1] TRUE
-<code>dbListTables(con)</code>
+<code class="prom">dbListTables(con)</code>
 [1] "hoge" "iris"
-<code>dbGetQuery(con, "select * from iris order by 'Sepal.Length' limit 3")</code>
+<code class="prom">dbGetQuery(con, "select * from iris order by 'Sepal.Length' limit 3")</code>
   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 1          5.1         3.5          1.4         0.2  setosa
 2          4.9         3.0          1.4         0.2  setosa
 3          4.7         3.2          1.3         0.2  setosa
-<code>dbDisconnect(con)</code>
+<code class="prom">dbDisconnect(con)</code>
 </pre>
 
 <p><code>dbGetQuery()</code> や <code>dbReadTable()</code> の返す値は data.frame であるが，文字列を自動で factor に変換することはない。</p>

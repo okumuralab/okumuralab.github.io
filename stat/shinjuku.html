@@ -177,9 +177,9 @@ s = shinjuku[datetime %between% c(as.POSIXct("2013/07/26"),as.POSIXct("2013/08/0
 <p>XMLパッケージの <code>readHTMLTable()</code> を使えばもっと簡単にできると教えていただきました（<a href="http://abrahamcow.hatenablog.com/entry/2015/02/12/003525?utm_medium=twitter&utm_source=twitterfeed">R から HTML の表を読み込む - 廿TT</a>）。</p>
 
 <pre>
-<code>library(XML)</code>
-<code>shinjuku = readHTMLTable("http://monitoring.tokyo-eiken.go.jp/mp_shinjuku_air_data.html")</code>
-<code>head(shinjuku[[1]])</code>
+<code class="prom">library(XML)</code>
+<code class="prom">shinjuku = readHTMLTable("http://monitoring.tokyo-eiken.go.jp/mp_shinjuku_air_data.html")</code>
+<code class="prom">head(shinjuku[[1]])</code>
                            V1     V2     V3     V4
 1 2015/02/12 \r\n07:01～08:00 0.0364 0.0326 0.0346
 2 2015/02/12 \r\n06:01～07:00 0.0366 0.0323 0.0344
@@ -196,10 +196,10 @@ s = shinjuku[datetime %between% c(as.POSIXct("2013/07/26"),as.POSIXct("2013/08/0
 <p>Hadley Wickhamが <a href="http://cran.r-project.org/web/packages/rvest/index.html">rvest</a> というWebスクレーピング用パッケージを作っています。</p>
 
 <pre>
-<code>library(rvest)</code>
-<code>x = read_html("http://monitoring.tokyo-eiken.go.jp/mp_shinjuku_air_data.html")</code>
-<code>t = html_table(x, header=FALSE, fill=TRUE)</code>
-<code>head(t[[1]][-1:-2,])</code>
+<code class="prom">library(rvest)</code>
+<code class="prom">x = read_html("http://monitoring.tokyo-eiken.go.jp/mp_shinjuku_air_data.html")</code>
+<code class="prom">t = html_table(x, header=FALSE, fill=TRUE)</code>
+<code class="prom">head(t[[1]][-1:-2,])</code>
                            X1     X2     X3     X4
 3 2015/12/30 \r\n20:01～21:00 0.0321 0.0285 0.0306
 4 2015/12/30 \r\n19:01～20:00 0.0324 0.0292 0.0307

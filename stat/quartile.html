@@ -100,14 +100,14 @@ MathJax = {
 <p>RにはTukeyの定義通りの <code>fivenum(x, na.rm=TRUE)</code> という関数がある：</p>
 
 <pre>
-<code>fivenum(c(23, 24, 25, 26, 26, 29, 30, 34, 39))</code>
+<code class="prom">fivenum(c(23, 24, 25, 26, 26, 29, 30, 34, 39))</code>
 [1] 23 25 26 30 39
 </pre>
 
 <p>また，一般の分位数を求める <code>quantile(x, probs=seq(0,1,0.25), na.rm=FALSE, names=TRUE, type=7, ...)</code> もある。デフォルトでは四分位数を返す：</p>
 
 <pre>
-<code>quantile(c(23, 24, 25, 26, 26, 29, 30, 34, 39))</code>
+<code class="prom">quantile(c(23, 24, 25, 26, 26, 29, 30, 34, 39))</code>
   0%  25%  50%  75% 100% 
   23   25   26   30   39 
 </pre>

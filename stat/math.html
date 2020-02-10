@@ -35,13 +35,13 @@ MathJax = {
 <p>Rのプロットの中にちょっとした数式を書き込みたいときは <code>expression()</code> という関数を使う。</p>
 
 <pre>
-<code>?plotmath</code>
+<code class="prom">?plotmath</code>
 </pre>
 
 <p>でヘルプを見ると説明がある。</p>
 
 <pre>
-<code>demo(plotmath)</code>
+<code class="prom">demo(plotmath)</code>
 </pre>
 
 <p>でデモが見られる。</p>
@@ -92,8 +92,8 @@ curve(dnorm(x), xlim=c(-3,3), ylab="",
 <p>われわれは数式の記法としては $\mathrm{\LaTeX}$ に慣れている。その記法を上記plotmathの記法に変換してくれる <code>TeX()</code> という関数がパッケージ <a href="https://cran.r-project.org/web/packages/latex2exp/index.html">latex2exp</a> により提供されている。これはあくまでplotmathの枠内で数式を書くものであり，新しい機能を追加するものではないが，plotmathの独自記法を覚える必要がないという点で便利である。</p>
 
 <pre>
-<code>install.packages("latex2exp")</code>
-<code>library(latex2exp)</code>
+<code class="prom">install.packages("latex2exp")</code>
+<code class="prom">library(latex2exp)</code>
 </pre>
 
 <p>詳細はGitHubの <a href="https://github.com/stefano-meschiari/latex2exp">stefano-meschiari/latex2exp</a> に解説がある。</p>
@@ -120,7 +120,7 @@ curve(dnorm(x), xlim=c(-3,3), xlab=TeX("$\\mathit{x}$"), ylab="",
 <p>TikZの解説は拙著<a href="http://oku.edu.mie-u.ac.jp/~okumura/bibun6/">［改訂第6版］LaTeX2e 美文書作成入門</a>の付録Dにある。RでtikzDeviceを使う方法はpp.368-369にある。ここではR-Forgeからインストールするように書かれているが，現在はCRANに入っているので，単に</p>
 
 <pre>
-<code>install.packages("tikzDevice")</code>
+<code class="prom">install.packages("tikzDevice")</code>
 </pre>
 
 <p>でインストールできる。開発はGitHubの <a href="https://github.com/yihui/tikzDevice">yihui/tikzDevice</a> で行われている。</p>

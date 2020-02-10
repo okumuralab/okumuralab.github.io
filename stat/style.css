@@ -21,11 +21,11 @@ pre {
   margin-left: 2em;
   overflow: auto;
 }
-pre > code::before {
+code.prom::before {
   content: "> ";
   color: gray;
 }
-pre > code.cont::before {
+code.cont::before {
   content: "+ ";
   color: gray;
 }

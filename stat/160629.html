@@ -191,10 +191,10 @@ cat kaito?.csv &gt;kaito.csv
 <p>できたCSVを読み出す：</p>
 
 <pre>
-<code>kaito = read.csv("kaito.csv", header=FALSE, colClasses="character", fileEncoding="UTF-8")</code>
-<code>dim(kaito)</code>
+<code class="prom">kaito = read.csv("kaito.csv", header=FALSE, colClasses="character", fileEncoding="UTF-8")</code>
+<code class="prom">dim(kaito)</code>
 [1] 30793   274
-<code>head(kaito)</code>
+<code class="prom">head(kaito)</code>
       V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12  V13 V14 V15 V16 V17 V18 V19  V20
 1 000001  0  0  1  0  0  0  1  0   0   0   0 0000   0   0   0   0   0   2 0000
 2 000002  0  1  0  0  0  0  0  0   1   0   1 0000   0   0   0   0   0   1 0000
@@ -208,10 +208,10 @@ cat kaito?.csv &gt;kaito.csv
 <p>いただいたCSVファイルのほうも読み出してみる：</p>
 
 <pre>
-<code>kaito2 = read.csv("all.csv", colClasses="character")</code>
-<code>dim(kaito2)</code>
+<code class="prom">kaito2 = read.csv("all.csv", colClasses="character")</code>
+<code class="prom">dim(kaito2)</code>
 [1] 30793   274
-<code>head(kaito2)</code>
+<code class="prom">head(kaito2)</code>
   X1 X2 X3 X4 X5 X6 X7 X8 X9 X10 X11 X12  X13 X14 X15 X16 X17 X18 X19  X20 X21
 1  1  0  0  1  0  0  0  1  0   0   0   0    0   0   0   0   0   0   2    0   0
 2  2  0  1  0  0  0  0  0  0   1   0   1    0   0   0   0   0   0   1    0   0

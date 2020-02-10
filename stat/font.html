@@ -108,7 +108,7 @@ title(main="正規分布", family="HiraKakuProN-W6")
 <p>実はQuartzのフォントは別の方法でも設定できる。</p>
 
 <pre>
-<code>quartzFonts()</code>
+<code class="prom">quartzFonts()</code>
 $serif
 [1] "Times-Roman"      "Times-Bold"       "Times-Italic"     "Times-BoldItalic"
 
@@ -124,7 +124,7 @@ $mono
 <p>という定義済みのリストがあるので，これを変更する。例えば</p>
 
 <pre>
-<code>quartzFonts(sans=quartzFont(c("Helvetica","HiraKakuProN-W3","HiraKakuProN-W6","HiraMaruProN-W4")))</code>
+<code class="prom">quartzFonts(sans=quartzFont(c("Helvetica","HiraKakuProN-W3","HiraKakuProN-W6","HiraMaruProN-W4")))</code>
 </pre>
 
 <p>もう一度 <code>quartzFonts()</code> と打って，変わったことを確認する。</p>
@@ -201,9 +201,9 @@ dev.off()
 
 <!--
 <pre>
-<code>install.packages('extrafont')</code>
-<code>library(extrafont)</code>
-<code>font_import()</code>
+<code class="prom">install.packages('extrafont')</code>
+<code class="prom">library(extrafont)</code>
+<code class="prom">font_import()</code>
 Importing fonts may take a few minutes, depending on the number of fonts and the speed of the system.
 Continue? [y/n] y
 Scanning ttf files in /Library/Fonts/, /System/Library/Fonts, ~/Library/Fonts/ ...
@@ -216,7 +216,7 @@ Extracting .afm files from .ttf files...
 <p>かなり時間をかけて <code>~/Library/R/3.2/library/extrafontdb/metrics</code> に148個の <code>*.afm.gz</code> が生成された。これを読み込む（初回だけ）：</p>
 
 <pre>
-<code>loadfonts()</code>
+<code class="prom">loadfonts()</code>
 </pre>
 -->
 

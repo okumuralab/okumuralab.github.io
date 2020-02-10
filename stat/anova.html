@@ -63,8 +63,8 @@ has seven degrees of freedom</span>）。</p>
 <p>各値をグループの平均で置き換えたものは，自由度が3個です：</p>
 
 <pre>
-<code>y = ave(x, g)</code>
-<code>y</code>
+<code class="prom">y = ave(x, g)</code>
+<code class="prom">y</code>
 [1] 2 2 6 6 6 3 3
 </pre>
 
@@ -72,7 +72,7 @@ has seven degrees of freedom</span>）。</p>
 <p>この <code>ave()</code> はとても便利です。もうちょっと一般的な <code>aggregate()</code>
 という関数もあります。</p>
 <pre>
-<code>aggregate(x, by=list(g), FUN=mean)</code>
+<code class="prom">aggregate(x, by=list(g), FUN=mean)</code>
   Group.1 x
 1       1 2
 2       2 6
@@ -84,15 +84,15 @@ has seven degrees of freedom</span>）。</p>
 <p>全部の値を全体の平均4で置き換えたものは，自由度が1個です：</p>
 
 <pre>
-<code>z = ave(x)</code>
-<code>z</code>
+<code class="prom">z = ave(x)</code>
+<code class="prom">z</code>
 [1] 4 4 4 4 4 4 4
 </pre>
 
 <p>$y$ から $z$ を引いたもの</p>
 
 <pre>
-<code>y - z</code>
+<code class="prom">y - z</code>
 [1] -2 -2  2  2  2 -1 -1
 </pre>
 
@@ -100,7 +100,7 @@ has seven degrees of freedom</span>）。</p>
 に固定されていますので，自由度が一つ少ないのです。この2乗和（平方和）は 22 です：</p>
 
 <pre>
-<code>sum((y - z)^2)</code>
+<code class="prom">sum((y - z)^2)</code>
 [1] 22
 </pre>
 
@@ -111,7 +111,7 @@ has seven degrees of freedom</span>）。</p>
 <p>同様に，$x$ から $y$ を引いたもの</p>
 
 <pre>
-<code>x - y</code>
+<code class="prom">x - y</code>
 [1] -1  1 -1  2 -1  1 -1
 </pre>
 
@@ -120,7 +120,7 @@ has seven degrees of freedom</span>）。</p>
 という3個の条件があるので，自由度が3個減っています。この2乗和は 10 です：</p>
 
 <pre>
-<code>sum((x - y)^2)</code>
+<code class="prom">sum((x - y)^2)</code>
 [1] 10
 </pre>
 
@@ -131,7 +131,7 @@ has seven degrees of freedom</span>）。</p>
 <p>ベクトル $x - y$ と $y - z$ は直交します（なぜならば $y - z$ の同じ値の成分が続くグループ内で $x - y$ の成分の和は0だから，内積をとると0になります）ので，それらの2乗和の和は $x - z$ の2乗和になります：</p>
 
 <pre>
-<code>sum((x - z)^2)</code>
+<code class="prom">sum((x - z)^2)</code>
 [1] 32
 </pre>
 
@@ -142,7 +142,7 @@ has seven degrees of freedom</span>）。</p>
 <p>ということになります。ここで，比</p>
 
 <pre>
-<code>(sum((y-z)^2) / 2) / (sum((x-y)^2) / 4)</code>
+<code class="prom">(sum((y-z)^2) / 2) / (sum((x-y)^2) / 4)</code>
 [1] 4.4
 </pre>
 
@@ -151,7 +151,7 @@ has seven degrees of freedom</span>）。</p>
 は $SS_\text{within}$ をその自由度4で割ったものです。ここでもし $x$ の分布が正規分布なら，この比の分布は自由度 (2,4) の $F$ 分布です（下の「復習」参照）。したがって，</p>
 
 <pre>
-<code>1 - pf(4.4, 2, 4)</code>
+<code class="prom">1 - pf(4.4, 2, 4)</code>
 [1] 0.09765625
 </pre>
 
@@ -214,7 +214,7 @@ oneway.test(x ~ g, var.equal=TRUE)
 のときのWelchの方法と同じ方法で，等分散を仮定しないで分散分析をします：</p>
 
 <pre>
-<code>oneway.test(x ~ g)</code>
+<code class="prom">oneway.test(x ~ g)</code>
 
         One-way analysis of means (not assuming equal variances)
 
@@ -277,7 +277,7 @@ $\chi^2_n = X_1^2 + X_2^2 + \cdots + X_n^2$
 <p>上の <code>oneway.test(x ~ g)</code> に相当するノンパラメトリックな（分布を仮定しない）検定です：</p>
 
 <pre>
-<code>kruskal.test(x ~ g)</code>
+<code class="prom">kruskal.test(x ~ g)</code>
 
 	Kruskal-Wallis rank sum test
 

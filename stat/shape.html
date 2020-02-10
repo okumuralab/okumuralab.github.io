@@ -41,8 +41,8 @@ library(sf)
 <p>ここでは国土数値情報の「行政区域」の三重県を使ってみる。ファイル名は <!a href="http://nlftp.mlit.go.jp/ksj/gml/data/N03/N03-18/N03-180101_24_GML.zip" rel="nofollow">N03-180101_24_GML.zip</a> である。これを展開し，Rでシェープファイルを読み込む。中身がシフトJIS（CP932）のため，エンコーディングの指定が必要である。ファイル名を指定する場合は shp のファイル名だけでよいし，shp，shx，dbf の入っているディレクトリを指定するだけでもよい（カレントディレクトリなら <code>"."</code>）。</p>
 
 <pre>
-<code>options(stringsAsFactors=FALSE)</code>
-<code>mie = st_read("N03-180101_24_GML/", options="ENCODING=CP932")</code>
+<code class="prom">options(stringsAsFactors=FALSE)</code>
+<code class="prom">mie = st_read("N03-180101_24_GML/", options="ENCODING=CP932")</code>
 options:        ENCODING=CP932 
 Reading layer `N03-18_24_180101' from data source `/.../.../N03-180101_24_GML' using driver `ESRI Shapefile'
 Simple feature collection with 7480 features and 5 fields
@@ -56,7 +56,7 @@ proj4string:    +proj=longlat +ellps=GRS80 +no_defs
 <p>中を見てみよう：</p>
 
 <pre>
-<code>mie</code>
+<code class="prom">mie</code>
 Simple feature collection with 7480 features and 5 fields
 geometry type:  POLYGON
 dimension:      XY
@@ -77,7 +77,7 @@ proj4string:    +proj=longlat +ellps=GRS80 +no_defs
  9 三重県  NA      NA      四日市市 24202   ((136.673 34.99794, 136.6728 34.99…
 10 三重県  NA      NA      四日市市 24202   ((136.5404 35.06994, 136.5407 35.0…
 # ... with 7,470 more rows
-<code>table(mie$N03_003)</code>
+<code class="prom">table(mie$N03_003)</code>
 
   員弁郡   桑名郡   三重郡   多気郡   度会郡 南牟婁郡 北牟婁郡 
        1        1        6        7     2301       27     1362 
@@ -105,7 +105,7 @@ plot(mie)
 <p>ポリゴンデータの部分は <code>mie$geometry</code> でもアクセスできるが，より一般的には <code>st_geometry(mie)</code> とする：</p>
 
 <pre>
-<code>st_geometry(mie)</code>
+<code class="prom">st_geometry(mie)</code>
 Geometry set for 7480 features 
 geometry type:  POLYGON
 dimension:      XY
@@ -168,8 +168,8 @@ plot(st_geometry(mie3), col=rgb(cols(mie3$x/100)/255))
 <p>国土数値情報の <!a href="http://nlftp.mlit.go.jp/ksj/gml/data/N03/N03-18/N03-180101_GML.zip" rel="nofollow">N03-180101_GML.zip</a> をいただいてきて展開する。こちらのほうはシフトJISではないのでエンコーディングのオプションは不要であった。</p>
 
 <pre>
-<code>options(stringsAsFactors=FALSE)</code>
-<code>japan = st_read("N03-180101_GML/")</code>
+<code class="prom">options(stringsAsFactors=FALSE)</code>
+<code class="prom">japan = st_read("N03-180101_GML/")</code>
 Reading layer `N03-18_180101' from data source `/.../N03-180101_GML' using driver `ESRI Shapefile'
 Simple feature collection with 116929 features and 5 fields
 geometry type:  POLYGON
@@ -361,9 +361,9 @@ text(st_coordinates(c), japan2$N03_004, cex=0.5)
 <p>ついでに，福島第一原発と三重大学の距離（大円距離）は500kmくらいである：</p>
 
 <pre>
-<code>f1 = st_sfc(st_point(c(141.032339,37.422778)), crs="+proj=longlat")</code>
-<code>mieu = st_sfc(st_point(c(136.5248,34.7468)), crs="+proj=longlat")</code>
-<code>st_distance(f1, mieu, by_element=TRUE)</code>
+<code class="prom">f1 = st_sfc(st_point(c(141.032339,37.422778)), crs="+proj=longlat")</code>
+<code class="prom">mieu = st_sfc(st_point(c(136.5248,34.7468)), crs="+proj=longlat")</code>
+<code class="prom">st_distance(f1, mieu, by_element=TRUE)</code>
 502871.3 [m]
 </pre>
 

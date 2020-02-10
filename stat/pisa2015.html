@@ -35,17 +35,17 @@ window.onload = function() {
 という1.5Gバイトほどのファイルになる。これをRで読むには次のようにする：</p>
 
 <pre>
-<code># install.packages("foreign")</code>
-<code>library(foreign)</code>
-<code>data = read.spss("CY6_MS_CMB_STU_QQQ.sav", to.data.frame=TRUE)</code>
-<code>object.size(data)</code>  # 2.5Gバイト
+<code class="prom"># install.packages("foreign")</code>
+<code class="prom">library(foreign)</code>
+<code class="prom">data = read.spss("CY6_MS_CMB_STU_QQQ.sav", to.data.frame=TRUE)</code>
+<code class="prom">object.size(data)</code>  # 2.5Gバイト
 </pre>
 
 <p>2.5Gバイトという巨大なメモリを占有する。これを</p>
 
 <pre>
-<code>data = read.spss("CY6_MS_CMB_STU_QQQ.sav", to.data.frame=TRUE, use.value.labels=FALSE)</code>
-<code>object.size(data)</code>  # 3.8Gバイト
+<code class="prom">data = read.spss("CY6_MS_CMB_STU_QQQ.sav", to.data.frame=TRUE, use.value.labels=FALSE)</code>
+<code class="prom">object.size(data)</code>  # 3.8Gバイト
 </pre>
 
 <p>とするとさらに巨大なメモリを要する。</p>
@@ -54,9 +54,9 @@ window.onload = function() {
 パッケージを試してみよう。これは zip で固めたままでも読むことができるが，以下では展開したものを読み込んでいる。</p>
 
 <pre>
-<code>library(haven)</code>
-<code>data = read_sav("CY6_MS_CMB_STU_QQQ.sav")</code>
-<code>object.size(data)</code>  # 3.8Gバイト
+<code class="prom">library(haven)</code>
+<code class="prom">data = read_sav("CY6_MS_CMB_STU_QQQ.sav")</code>
+<code class="prom">object.size(data)</code>  # 3.8Gバイト
 </pre>
 
 <p>これもかなりメモリを占有する。</p>
@@ -110,14 +110,14 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 <p>上記いずれかの方法で <code>data</code> という名前でデータを読み込んだとする。データの大きさを調べてみよう：</p>
 
 <pre>
-<code>dim(data)</code>
+<code class="prom">dim(data)</code>
 [1] 519334    921
 </pre>
 
 <p>519334行921列のデータだとわかる。確かに大きい。項目名（列名）を一覧してみよう：</p>
 
 <pre>
-<code>names(data)</code>
+<code class="prom">names(data)</code>
   [1] "CNTRYID"       "CNT"           "CNTSCHID"      "CNTSTUID"     
   [5] "CYC"           "NatCen"        "Region"        "STRATUM"      
   [9] "SUBNATIO"      "OECD"          "ADMINMODE"     "Option_CPS"   
@@ -145,7 +145,7 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 <p><code>ST</code> で始まる項目名が生徒に対する質問の回答である。質問の内容は <a href="https://www.oecd.org/pisa/data/CY6_QST_MS_STQ_CBA_Final.pdf">Student questionnaire</a>  (computer-based assessment) に書かれている。例えば ST011「Which of the following are in your home?」の中の <code>ST011Q04TA</code>「A computer you can use for school work」では 1（Yes），2（No）が回答である。それぞれの回答数を表にしてみよう：</p>
 
 <pre>
-<code>table(data$ST011Q04TA)</code>
+<code class="prom">table(data$ST011Q04TA)</code>
 
      1      2 
 426698  71943 
@@ -156,7 +156,7 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 <p>日本の生徒についての内訳を見るには</p>
 
 <pre>
-<code>table(data$ST011Q04TA[data$CNT=="JPN"])</code>
+<code class="prom">table(data$ST011Q04TA[data$CNT=="JPN"])</code>
 
    1    2 
 4095 2477 
@@ -165,8 +165,8 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 <p>とする。国とのクロス集計をしてみよう：</p>
 
 <pre>
-<code>x = table(data$CNT, data$ST011Q04TA)</code>
-<code>head(x)</code>
+<code class="prom">x = table(data$CNT, data$ST011Q04TA)</code>
+<code class="prom">head(x)</code>
      
           1     2
   ALB     0     0
@@ -180,7 +180,7 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 <p>手抜き棒グラフにしてみよう：</p>
 
 <pre>
-<code>barplot(sort(x[,1] / rowSums(x[,1:2])), horiz=TRUE, las=1)</code>
+<code class="prom">barplot(sort(x[,1] / rowSums(x[,1:2])), horiz=TRUE, las=1)</code>
 </pre>
 
 <figure><img src="img/161207a.png" alt=""></figure>

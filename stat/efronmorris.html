@@ -33,9 +33,9 @@ MathJax = {
 <p><span lang="en">Bradley Efron and Carl Morris, “Data analysis using Stein's estimator and its generalizations”, <i>Journal of the American Statistical Association</i>, Vol. 70, No. 350, pp. 311--319 (1975)</span> という有名な論文に掲載された1970年の大リーグ選手18人の打率データを扱う。このデータは例えばパッケージ pscl に含まれている：</p>
 
 <pre>
-<code>install.packages("pscl")</code>
-<code>library(pscl)</code>
-<code>EfronMorris</code>
+<code class="prom">install.packages("pscl")</code>
+<code class="prom">library(pscl)</code>
+<code class="prom">EfronMorris</code>
                name  team league  r     y   n     p
 1  Roberto Clemente Pitts     NL 18 0.400 367 0.346
 2    Frank Robinson  Balt     AL 17 0.378 426 0.298
@@ -64,10 +64,10 @@ MathJax = {
 <p>「45打席で何安打か」のデータ <code>EfronMorris$r</code> は2項分布であるが，ここでは打率 $x_i =$ <code>EfronMorris$r / 45</code> を「分散安定化変換」$y_i = \arcsin\sqrt{x_i}$ で変換し，正規分布として扱う。変換後の値 $y_i$ の誤差分散はおおよそ $\sigma_i^2 = 1/(4 \times 45)$ である。パッケージ bayesmeta を使い，階層モデル $y_i \sim \mathcal{N}(\theta_i, \sigma_i^2)$, $\theta_i \sim \mathcal{N}(\mu, \tau^2)$ のパラメータを推定する。$\tau^2$ の事前分布としては Jeffreys（reference prior）を使う（詳細は拙著『Rで楽しむベイズ統計入門』参照）。Jeffreys にする意味がわからなければ，例えば $\tau$ についての一様分布 <code>tau.prior="uniform"</code> を選べばよい（「一様分布」といっても $\tau$ についての一様分布，$\tau^2$ についての一様分布，$\log\tau$ についての一様分布はみな異なることに注意）。</p>
 
 <pre>
-<code>library(bayesmeta)</code>
-<code>x = asin(sqrt(EfronMorris$r/45))</code>
-<code>rj = bayesmeta(x, rep(sqrt(1/(4*45)),18), tau.prior="Jeffreys")</code>
-<code>rj</code>
+<code class="prom">library(bayesmeta)</code>
+<code class="prom">x = asin(sqrt(EfronMorris$r/45))</code>
+<code class="prom">rj = bayesmeta(x, rep(sqrt(1/(4*45)),18), tau.prior="Jeffreys")</code>
+<code class="prom">rj</code>
  'bayesmeta' object.
 
 18 estimates:
@@ -101,7 +101,7 @@ sd        0.022868462 0.02139456
 <p>$\theta_i$ の推定値は次のようになる：</p>
 
 <pre>
-<code>rj$theta</code>
+<code class="prom">rj$theta</code>
                    1          2          3          4          5          6
 y         0.68471920 0.66192481 0.63886514 0.61547971 0.59170064 0.59170064
 sigma     0.07453560 0.07453560 0.07453560 0.07453560 0.07453560 0.07453560
@@ -158,30 +158,30 @@ matplot(1:5, rbind(x,z,rj$theta[5,],ru$theta[5,],rs$theta[5,]), type="b", xlab="
 <p>ご覧のように（あるいは <code>var(rj$theta[3,])</code> 等で確認できるように），Jeffreysの分散が一番大きく，その中でもモードより中央値，中央値より平均値のほうが分散が大きい。見た感じでは分散が大きいほうが予測すべきシーズン残りの打率に近そうだが，実際には僅差である：</p>
 
 <pre>
-<code>mean((z - rj$theta[3,])^2)</code>
+<code class="prom">mean((z - rj$theta[3,])^2)</code>
 [1] 0.001556614
-<code>mean((z - rj$theta[4,])^2)</code>
+<code class="prom">mean((z - rj$theta[4,])^2)</code>
 [1] 0.001543662
-<code>mean((z - rj$theta[5,])^2)</code>
+<code class="prom">mean((z - rj$theta[5,])^2)</code>
 [1] 0.001587429
-<code>mean((z - ru$theta[3,])^2)</code>
+<code class="prom">mean((z - ru$theta[3,])^2)</code>
 [1] 0.001643058
-<code>mean((z - ru$theta[4,])^2)</code>
+<code class="prom">mean((z - ru$theta[4,])^2)</code>
 [1] 0.001544991
-<code>mean((z - ru$theta[5,])^2)</code>
+<code class="prom">mean((z - ru$theta[5,])^2)</code>
 [1] 0.001542212
-<code>mean((z - rs$theta[3,])^2)</code>
+<code class="prom">mean((z - rs$theta[3,])^2)</code>
 [1] 0.00169758
-<code>mean((z - rs$theta[4,])^2)</code>
+<code class="prom">mean((z - rs$theta[4,])^2)</code>
 [1] 0.001618288
-<code>mean((z - rs$theta[5,])^2)</code>
+<code class="prom">mean((z - rs$theta[5,])^2)</code>
 [1] 0.001563295
 </pre>
 
 <p>比較のため，最初の45打席の結果をそのまま使うと，これらよりずっと大きな予測誤差になる：</p>
 
 <pre>
-<code>mean((z - x)^2)</code>
+<code class="prom">mean((z - x)^2)</code>
 [1] 0.00542305
 </pre>
 

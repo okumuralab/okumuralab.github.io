@@ -24,7 +24,7 @@
 <p>地球は太陽から約1.5億km（1.5×10<sup>8</sup> km，<code>1.5e8</code> km）のところを1年間で一周しますので，それだけでも30 km/秒で動いているはずです：</p>
 
 <pre>
-<code>2*pi*1.5e8/365/24/60/60</code>
+<code class="prom">2*pi*1.5e8/365/24/60/60</code>
 [1] 29.88577
 </pre>
 
@@ -37,7 +37,7 @@
 <p>Rのサンプルデータとして含まれているものは，1879年のデータです：</p>
 
 <pre>
-<code>head(morley)</code>
+<code class="prom">head(morley)</code>
     Expt Run Speed
 001    1   1   850
 002    1   2   740
@@ -50,7 +50,7 @@
 <p>Exptは実験番号で1〜5まであり，そのそれぞれについてRunが1〜20まであり，全部で100の計測値が収められています。Speedは光速（km/s）から299000を引いた値です。データはすべて整数型です：</p>
 
 <pre>
-<code>sapply(morley, class)</code>
+<code class="prom">sapply(morley, class)</code>
      Expt       Run     Speed 
 "integer" "integer" "integer" 
 </pre>
@@ -63,8 +63,8 @@
 <p>同じデータがMASSパッケージにも <code>michelson</code> という名前で収められています：</p>
 
 <pre>
-<code>library(MASS)</code>   # MASSライブラリをロードする
-<code>head(michelson)</code> # 最初の数行を表示してみる
+<code class="prom">library(MASS)</code>   # MASSライブラリをロードする
+<code class="prom">head(michelson)</code> # 最初の数行を表示してみる
   Speed Run Expt
 1   850   1    1
 2   740   2    1
@@ -77,13 +77,13 @@
 <p>MASSは，<i>Modern Applied Statistics with S-PLUS</i>（邦訳『S-PLUSによる統計解析』シュプリンガー・フェアラーク東京，2001年）という有名な本のコードやデータを収めたパッケージです。こちらのSpeed，Run，Exptは，モードは数値で，型は整数ですが，RunとExptのクラスは名義尺度の因子（factor）です：</p>
 
 <pre>
-<code>sapply(michelson, mode)</code>
+<code class="prom">sapply(michelson, mode)</code>
     Speed       Run      Expt 
 "numeric" "numeric" "numeric" 
-<code>sapply(michelson, typeof)</code>
+<code class="prom">sapply(michelson, typeof)</code>
     Speed       Run      Expt 
 "integer" "integer" "integer" 
-<code>sapply(michelson, class)</code>
+<code class="prom">sapply(michelson, class)</code>
     Speed       Run      Expt 
 "integer"  "factor"  "factor" 
 </pre>
@@ -131,14 +131,14 @@ arrows(1:5, m-s, 1:5, m+s, length=0.05, angle=90, code=3)
 <p><a href="anova.html">分散分析</a>をした結果です：</p>
 
 <pre>
-<code>oneway.test(Speed ~ Expt, data=morley)</code>
+<code class="prom">oneway.test(Speed ~ Expt, data=morley)</code>
 
 	One-way analysis of means (not assuming equal variances)
 
 data:  Speed and Expt
 F = 3.0061, num df = 4.000, denom df = 47.044, p-value = 0.02738
 
-<code>oneway.test(Speed ~ Expt, data=morley, var.equal=TRUE)</code>
+<code class="prom">oneway.test(Speed ~ Expt, data=morley, var.equal=TRUE)</code>
 
 	One-way analysis of means
 

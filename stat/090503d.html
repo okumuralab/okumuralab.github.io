@@ -49,10 +49,10 @@ mtext("国立大学法人運営費交付金", cex=1.4, line=0.5, family="HiraKak
 <p>折れ線グラフのほうが2013年の異常さが見やすくなります。この年と，減少が止まった20167年以降を省いて，単純に最小2乗法で直線をあてはめると（上図の橙色の直線），傾きは -133.6 で，法人化元年の2004年の 12415 の1%を超えています：</p>
 
 <pre>
-<code>x = c(2004:2012, 2014:2015)</code>
-<code>y = 運営費交付金[c(1:9,11:12)]</code>
-<code>r = lm(y ~ x)</code>
-<code>r</code>
+<code class="prom">x = c(2004:2012, 2014:2015)</code>
+<code class="prom">y = 運営費交付金[c(1:9,11:12)]</code>
+<code class="prom">r = lm(y ~ x)</code>
+<code class="prom">r</code>
 
 Call:
 lm(formula = y ~ x)
@@ -61,7 +61,7 @@ Coefficients:
 (Intercept)            x  
    280206.4       -133.6  
 
-<code>abline(r, col="#ff9900", lwd=2)</code>
+<code class="prom">abline(r, col="#ff9900", lwd=2)</code>
 </pre>
 
 <p>ちなみに，文科省の<a href="http://www.mext.go.jp/a_menu/koutou/houjin/1295896.htm">「国立大学法人化後の現状と課題について（中間まとめ）」について</a>の最初のPDFファイルの図は次のような0で始まらない悪い棒グラフの例となっています。</p>

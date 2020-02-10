@@ -136,13 +136,13 @@ plot(as.POSIXct(rhr$time), rhr$restingHeartRate, pch=16, type="o")
 <p>睡眠データは次のようにして取得できる：</p>
 
 <pre>
-<code>sleep = get_sleep_data(cookie, start_date="2016-07-01", end_date="2016-08-10")</code>
+<code class="prom">sleep = get_sleep_data(cookie, start_date="2016-07-01", end_date="2016-08-10")</code>
 </pre>
 
 <p>結果のデータ構造は <code>str(sleep)</code> と打ち込んで出てくる長いリストを読めばよいが，ややこしいので，以下では実例で示す。</p>
 
 <pre>
-<code>sleep$df$date</code>
+<code class="prom">sleep$df$date</code>
 [1] "2016-07-18" "2016-07-29" "2016-08-01" "2016-08-02" "2016-08-03"
 [6] "2016-08-04" "2016-08-10"
 </pre>
@@ -152,15 +152,15 @@ plot(as.POSIXct(rhr$time), rhr$restingHeartRate, pch=16, type="o")
 <figure><img src="img/160810a.png" alt="酷い睡眠状態の例"></figure>
 
 <pre>
-<code>sleep$df[4,]$date</code>
+<code class="prom">sleep$df[4,]$date</code>
 [1] "2016-08-02"
-<code>sleep$df[4,]$startDateTime</code>
+<code class="prom">sleep$df[4,]$startDateTime</code>
 [1] "2016-8-01 23:11:00"
-<code>sleep$df[4,]$endDateTime</code>
+<code class="prom">sleep$df[4,]$endDateTime</code>
 [1] "2016-8-02 06:40:00"
-<code>sleep$df[4,]$sleepDuration</code>
+<code class="prom">sleep$df[4,]$sleepDuration</code>
 [1] 449
-<code>sleep$df[4,]$breaks</code>
+<code class="prom">sleep$df[4,]$breaks</code>
 [[1]]
    startTime magnitude duration            startDateTime
 1      23:23         2        3 2016, 8, 1, 23, 23, 0, 0
@@ -176,10 +176,10 @@ plot(as.POSIXct(rhr$time), rhr$restingHeartRate, pch=16, type="o")
 11      3:34         2        1  2016, 8, 2, 3, 34, 0, 0
 12      3:57         2        1  2016, 8, 2, 3, 57, 0, 0
 13      4:53         2        5  2016, 8, 2, 4, 53, 0, 0
-<code>sleep$df[4,]$breaks[[1]]$startTime</code>
+<code class="prom">sleep$df[4,]$breaks[[1]]$startTime</code>
  [1] "23:23" "23:27" "23:28" "23:34" "23:39" "0:33"  "0:40"  "0:42"  "2:12" 
 [10] "2:52"  "3:34"  "3:57"  "4:53" 
-<code>sleep$df[4,]$breaks[[1]]$startDateTime[[13]]</code>
+<code class="prom">sleep$df[4,]$breaks[[1]]$startDateTime[[13]]</code>
 [1] 2016    8    2    4   53    0    0
 </pre>
 

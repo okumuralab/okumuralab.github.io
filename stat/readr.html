@@ -85,24 +85,24 @@ x = read_csv("魔,方,陣
 <p>現実的な例でやってみましょう。<a href="rgooglemaps.html">RgoogleMapsを使った放射線地図</a>で使った福島県の放射線データ <a href="data/fukushima.csv">fukushima.csv</a> は，422656地点の緯度（lat），経度（lon），放射線（radiation，μSv/h単位），日時（datetime）を収めたものです。これをローカルにダウンロードして，読み込んで，それぞれの欄の平均値を表示し，時間を計測してみましょう（Macを買い換えたので新しく計測し直しました）。</p>
 
 <pre>
-<code># 従来のread.csv()</code>
-<code>system.time({x1 = read.csv("~/public_html/stat/data/fukushima.csv", as.is=TRUE)})</code>
+<code class="prom"># 従来のread.csv()</code>
+<code class="prom">system.time({x1 = read.csv("~/public_html/stat/data/fukushima.csv", as.is=TRUE)})</code>
    ユーザ   システム       経過  
      0.973      0.029      1.002 
-<code>system.time(print(mean(x1$lat)))</code>
+<code class="prom">system.time(print(mean(x1$lat)))</code>
 [1] 37.59176
    ユーザ   システム       経過  
      0.001      0.000      0.001 
-<code>system.time(print(mean(x1$lon)))</code>
+<code class="prom">system.time(print(mean(x1$lon)))</code>
 [1] 140.4282
    ユーザ   システム       経過  
      0.001      0.000      0.001 
-<code>system.time(print(mean(as.POSIXct(x1$datetime))))</code>
+<code class="prom">system.time(print(mean(as.POSIXct(x1$datetime))))</code>
 [1] "2011-07-18 01:52:49 JST"
    ユーザ   システム       経過  
      7.978      3.138     11.164 
-<code># 新しいread_csv()</code>
-<code>system.time({x2 = read_csv("~/public_html/stat/data/fukushima.csv")})</code>
+<code class="prom"># 新しいread_csv()</code>
+<code class="prom">system.time({x2 = read_csv("~/public_html/stat/data/fukushima.csv")})</code>
 Parsed with column specification:
 cols(
   lat = col_double(),
@@ -112,15 +112,15 @@ cols(
 )
    ユーザ   システム       経過  
      0.304      0.014      0.319 
-<code>system.time(print(mean(x2$lat)))</code>
+<code class="prom">system.time(print(mean(x2$lat)))</code>
 [1] 37.59176
    ユーザ   システム       経過  
      0.001      0.000      0.001 
-<code>system.time(print(mean(x2$lon)))</code>
+<code class="prom">system.time(print(mean(x2$lon)))</code>
 [1] 140.4282
    ユーザ   システム       経過  
      0.001      0.000      0.001 
-<code>system.time(print(mean(as.POSIXct(x2$datetime))))</code>
+<code class="prom">system.time(print(mean(as.POSIXct(x2$datetime))))</code>
 [1] "2011-07-18 01:52:49 JST"
    ユーザ   システム       経過  
      7.816      3.181     11.011 
@@ -129,11 +129,11 @@ cols(
 <p>読み込みは劇的に早くなりましたが，他の計算は当然ながら変わりません。特に，日時を表す文字列を内部形式に変換する <code>as.POSIXct()</code> の遅さが目立ちます。そこで，readr に含まれている <code>parse_datetime()</code> を使ってみます。</p>
 
 <pre>
-<code>system.time(print(mean(parse_datetime(x2$datetime, format="%Y/%m/%d %H:%M:%S"))))</code>
+<code class="prom">system.time(print(mean(parse_datetime(x2$datetime, format="%Y/%m/%d %H:%M:%S"))))</code>
 [1] "2011-07-18 01:52:49 UTC"
    ユーザ   システム       経過  
      0.082      0.001      0.084 
-<code>system.time(print(mean(parse_datetime(x2$datetime, format="%Y/%m/%d %H:%M:%S", locale=locale(tz="Asia/Tokyo")))))</code>
+<code class="prom">system.time(print(mean(parse_datetime(x2$datetime, format="%Y/%m/%d %H:%M:%S", locale=locale(tz="Asia/Tokyo")))))</code>
 [1] "2011-07-18 01:52:49 JST"
    ユーザ   システム       経過  
      1.146      0.008      1.155 
@@ -144,7 +144,7 @@ cols(
 <p>次のように読み込み時点で日時のフォーマットを指定することが可能ですが，現時点ではロケールは指定できないようです：</p>
 
 <pre>
-<code>system.time({x2 = read_csv("~/public_html/stat/data/fukushima.csv",</code>
+<code class="prom">system.time({x2 = read_csv("~/public_html/stat/data/fukushima.csv",</code>
 <code class="cont">                           col_types=cols(</code>
 <code class="cont">                             datetime=col_datetime(format="%Y/%m/%d %H:%M:%S")</code>
 <code class="cont">                           ))})</code>

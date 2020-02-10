@@ -101,14 +101,14 @@ td, th { padding: 0.2em 0.7em }
 <p>この表を縦に読んでいくと，次のようになります：</p>
 
 <pre>
-<code>c(231, 26, 23036, 10813)</code>
+<code class="prom">c(231, 26, 23036, 10813)</code>
 [1]   231    26 23036 10813
 </pre>
 
 <p>これを2行2列の行列の形にするには，次のように行数（<code>nrow</code>），列数（<code>ncol</code>）のどちらかを指定します：</p>
 
 <pre>
-<code>matrix(c(231,26,23036,10813), nrow=2)</code>
+<code class="prom">matrix(c(231,26,23036,10813), nrow=2)</code>
      [,1]  [,2]
 [1,]  231 23036
 [2,]   26 10813
@@ -117,7 +117,7 @@ td, th { padding: 0.2em 0.7em }
 <div class="note">
 <p>数値を横に（行ごとに）読んでいった場合は，次のように <code>byrow=TRUE</code> というオプションを与えます：</p>
 <pre>
-<code>matrix(c(231,23036,26,10813), nrow=2, byrow=TRUE)</code>
+<code class="prom">matrix(c(231,23036,26,10813), nrow=2, byrow=TRUE)</code>
      [,1]  [,2]
 [1,]  231 23036
 [2,]   26 10813
@@ -127,8 +127,8 @@ td, th { padding: 0.2em 0.7em }
 <p>変数に代入しましょう：</p>
 
 <pre>
-<code>x = matrix(c(231,26,23036,10813), nrow=2)</code>
-<code>x</code>
+<code class="prom">x = matrix(c(231,26,23036,10813), nrow=2)</code>
+<code class="prom">x</code>
      [,1]  [,2]
 [1,]  231 23036
 [2,]   26 10813
@@ -136,9 +136,9 @@ td, th { padding: 0.2em 0.7em }
 
 <p>行・列に名前を付けるには次のようにします：</p>
 <pre>
-<code>rownames(x) = c("喫煙","非喫煙")</code>
-<code>colnames(x) = c("肺がんあり","肺がんなし")</code>
-<code>x</code>
+<code class="prom">rownames(x) = c("喫煙","非喫煙")</code>
+<code class="prom">colnames(x) = c("肺がんあり","肺がんなし")</code>
+<code class="prom">x</code>
        肺がんあり 肺がんなし
 喫煙          231      23036
 非喫煙         26      10813
@@ -149,8 +149,8 @@ td, th { padding: 0.2em 0.7em }
 <p>手計算と照合しやすいように，数値例を簡単なものに変えました。以下では次のデータについて計算しています：</p>
 
 <pre>
-<code>x = matrix(c(12,5,6,12), nrow=2)</code>
-<code>x</code>
+<code class="prom">x = matrix(c(12,5,6,12), nrow=2)</code>
+<code class="prom">x</code>
      [,1] [,2]
 [1,]   12    6
 [2,]    5   12
@@ -161,15 +161,15 @@ td, th { padding: 0.2em 0.7em }
 <p>オッズ比は 4.8，その対数（1.5686）の分散は 0.5333，正規分布近似の $p$ 値は 0.0317，95%信頼区間は [1.147127, 20.084960] になります：</p>
 
 <pre>
-<code>(x[1,1]/x[1,2]) / (x[2,1]/x[2,2])</code>
+<code class="prom">(x[1,1]/x[1,2]) / (x[2,1]/x[2,2])</code>
 [1] 4.8
-<code>log((x[1,1]/x[1,2]) / (x[2,1]/x[2,2]))</code>
+<code class="prom">log((x[1,1]/x[1,2]) / (x[2,1]/x[2,2]))</code>
 [1] 1.568616
-<code>1/x[1,1] + 1/x[1,2] + 1/x[2,1] + 1/x[2,2]</code>
+<code class="prom">1/x[1,1] + 1/x[1,2] + 1/x[2,1] + 1/x[2,2]</code>
 [1] 0.5333333
-<code>pnorm(-1.568616 / sqrt(0.5333333)) * 2</code>
+<code class="prom">pnorm(-1.568616 / sqrt(0.5333333)) * 2</code>
 [1] 0.03172043
-<code>exp(1.568616 + qnorm(c(0.025,0.975)) * sqrt(0.5333333))</code>
+<code class="prom">exp(1.568616 + qnorm(c(0.025,0.975)) * sqrt(0.5333333))</code>
 [1]  1.147127 20.084960
 </pre>
 
@@ -178,7 +178,7 @@ td, th { padding: 0.2em 0.7em }
 <p>関数 <code>fisher.test()</code> を使ってもオッズ比とその信頼区間が求められますが，上で定義したオッズ比とは少し違った定義（周辺分布を固定したときの最尤推定量，conditional MLE）を使っています。詳しくは<a href="fishertest.html">Fisherの正確検定</a>をご覧ください。</p>
 
 <pre>
-<code>fisher.test(x)</code>
+<code class="prom">fisher.test(x)</code>
 
 	Fisher's Exact Test for Count Data
 
@@ -199,14 +199,14 @@ odds ratio
 <p>これはオッズ比などを求めるものではありませんが，行・列の独立性の検定をします。デフォルトでは連続性の補正をします。</p>
 
 <pre>
-<code>chisq.test(x)</code> # 補正あり
+<code class="prom">chisq.test(x)</code> # 補正あり
 
 	Pearson's Chi-squared test with Yates' continuity correction
 
 data:  x
 X-squared = 3.4808, df = 1, p-value = 0.06208
 
-<code>chisq.test(x, correct=FALSE)</code> # 補正なし
+<code class="prom">chisq.test(x, correct=FALSE)</code> # 補正なし
 
 	Pearson's Chi-squared test
 
@@ -221,9 +221,9 @@ X-squared = 4.8577, df = 1, p-value = 0.02752
 <p>Epiパッケージで2×2の表を扱う関数は <code>twoby2()</code> です。いろいろ出力しますが，オッズ比は通常の定義（unconditional MLE）を使い，信頼区間はWaldの方法（正規分布による近似）で求めています。</p>
 
 <pre>
-<code>install.packages("Epi")</code>  # 初めての場合はパッケージをインストールする
-<code>library(Epi)</code>             # ライブラリとして読み込む
-<code>twoby2(x)</code>
+<code class="prom">install.packages("Epi")</code>  # 初めての場合はパッケージをインストールする
+<code class="prom">library(Epi)</code>             # ライブラリとして読み込む
+<code class="prom">twoby2(x)</code>
 2 by 2 table analysis: 
 ------------------------------------------------------ 
 Outcome   : Col 1 
@@ -260,9 +260,9 @@ Conditional MLE Odds Ratio: 4.5683    0.9465  25.7201
 <p>上のEpiパッケージの <code>twoby2()</code> のオッズ比と同じ結果を出すのは <code>oddsratio.wald()</code> です。オッズ比とその信頼区間は <code>$measure</code> の Exposed2 欄に出力されます：</p>
 
 <pre>
-<code>install.packages("epitools")</code>  # 初めての場合はパッケージをインストールする
-<code>library(epitools)</code>             # ライブラリとして読み込む
-<code>oddsratio.wald(x)</code>
+<code class="prom">install.packages("epitools")</code>  # 初めての場合はパッケージをインストールする
+<code class="prom">library(epitools)</code>             # ライブラリとして読み込む
+<code class="prom">oddsratio.wald(x)</code>
 $data
           Outcome
 Predictor  Disease1 Disease2 Total
@@ -292,32 +292,32 @@ attr(,"method")
 <p>ほかの方法もまとめて，違うところだけ記します：</p>
 
 <pre>
-<code>oddsratio.wald(x)</code>
+<code class="prom">oddsratio.wald(x)</code>
   Exposed2      4.8 1.147127 20.08496
-<code>oddsratio.midp(x)</code>
+<code class="prom">oddsratio.midp(x)</code>
   Exposed2 4.503795 1.105796 21.10137
-<code>oddsratio.fisher(x)</code>
+<code class="prom">oddsratio.fisher(x)</code>
   Exposed2 4.568253 0.9465292 25.72015
-<code>oddsratio.small(x)</code>
+<code class="prom">oddsratio.small(x)</code>
   Exposed2 3.428571 1.099686 17.37077
 </pre>
 
 <h3>vcdパッケージによる方法</h3>
 
 <pre>
-<code>install.packages("vcd")</code>
-<code>library(vcd)</code>
-<code>oddsratio(x, log=FALSE)</code>
+<code class="prom">install.packages("vcd")</code>
+<code class="prom">library(vcd)</code>
+<code class="prom">oddsratio(x, log=FALSE)</code>
 [1] 4.8
 </pre>
 
 <p>Waldの方法が使われます。単純明快にオッズ比（unconditional）だけ出力されます。信頼区間や $p$ 値は次のようにします：</p>
 
 <pre>
-<code>confint(oddsratio(x, log=FALSE))</code>
+<code class="prom">confint(oddsratio(x, log=FALSE))</code>
           lwr      upr
 [1,] 1.147127 20.08496
-<code>summary(oddsratio(x))</code>
+<code class="prom">summary(oddsratio(x))</code>
      Log Odds Ratio Std. Error z value Pr(>|z|)  
 [1,]         1.5686     0.7303  2.1479  0.03172 *
 ---
@@ -331,9 +331,9 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <p>この <code>oddsratio()</code> は，行列の指定と同様，縦順に数値を4つ並べます。</p>
 
 <pre>
-<code>install.packages("fmsb")</code>
-<code>library(fmsb)</code>
-<code>oddsratio(12, 5, 6, 12)</code>
+<code class="prom">install.packages("fmsb")</code>
+<code class="prom">library(fmsb)</code>
+<code class="prom">oddsratio(12, 5, 6, 12)</code>
            Disease Nondisease Total
 Exposed         12          6    18
 Nonexposed       5         12    17
@@ -358,9 +358,9 @@ sample estimates:
 <p>exact2x2については<a href="fishertest.html">Fisherの正確検定</a>にも少し書きました。このパッケージは <code>exact2x2()</code> という関数を定義していますが，特によく使うオプションについては <code>fisher.exact()</code>，<code>blaker.exact()</code>，<code>mcnemar.exact()</code> という名前でもアクセスできます。</p>
 
 <pre>
-<code>install.packages("exact2x2")</code>
-<code>library(exact2x2)</code>
-<code>fisher.exact(x)</code>
+<code class="prom">install.packages("exact2x2")</code>
+<code class="prom">library(exact2x2)</code>
+<code class="prom">fisher.exact(x)</code>
 
 	Two-sided Fisher's Exact Test (usual method using minimum likelihood)
 
@@ -373,7 +373,7 @@ sample estimates:
 odds ratio 
   4.568253 
 
-<code>blaker.exact(x)</code>
+<code class="prom">blaker.exact(x)</code>
 
 	Blaker's Exact Test
 
@@ -416,10 +416,10 @@ odds ratio
 <p>行列ではなく生データが次のように与えられている場合の方法です。<code>logistic.display()</code> はepiDisplay（旧epicalc）パッケージの関数です。</p>
 
 <pre>
-<code>x = rep(0:1, c(18,17))</code>
-<code>y = rep(c(0,1,0,1), c(12,6,5,12))</code>
-<code>r = glm(y ~ x, family="binomial")</code>
-<code>logistic.display(r)</code>
+<code class="prom">x = rep(0:1, c(18,17))</code>
+<code class="prom">y = rep(c(0,1,0,1), c(12,6,5,12))</code>
+<code class="prom">r = glm(y ~ x, family="binomial")</code>
+<code class="prom">logistic.display(r)</code>
 
 Logistic regression predicting y 
  
@@ -452,22 +452,22 @@ AIC value = 47.5116
 <p>2通りの定義でさきほどの行列 <code>x</code> のファイ係数を求めてみましょう：</p>
 
 <pre>
-<code>sqrt(chisq.test(x,correct=FALSE)$statistic / sum(x))</code>
+<code class="prom">sqrt(chisq.test(x,correct=FALSE)$statistic / sum(x))</code>
  X-squared 
 0.04054061
-<code>a = x[1,1]; b = x[1,2]; c = x[2,1]; d = x[2,2]</code>
-<code>(a*d-b*c) / sqrt((a+b)*(c+d)*(a+c)*(b+d))</code>
+<code class="prom">a = x[1,1]; b = x[1,2]; c = x[2,1]; d = x[2,2]</code>
+<code class="prom">(a*d-b*c) / sqrt((a+b)*(c+d)*(a+c)*(b+d))</code>
 [1] 0.04054061
 </pre>
 
 <p>ライブラリ psych にファイ係数（絶対値なし）を求める関数があります：</p>
 
 <pre>
-<code>install.packages("psych")</code>
-<code>library(psych)</code>
-<code>phi(x)</code>
+<code class="prom">install.packages("psych")</code>
+<code class="prom">library(psych)</code>
+<code class="prom">phi(x)</code>
 [1] 0.04
-<code>phi(x, digits=8)</code>
+<code class="prom">phi(x, digits=8)</code>
 [1] 0.04054061
 </pre>
 
@@ -478,9 +478,9 @@ AIC value = 47.5116
 <p>これは psych パッケージの <code>Yule()</code> で計算できます：</p>
 
 <pre>
-<code>Yule(x)</code>
+<code class="prom">Yule(x)</code>
 [1] 0.6131828
-<code>(a*d-b*c) / (a*d+b*c)</code>
+<code class="prom">(a*d-b*c) / (a*d+b*c)</code>
 [1] 0.6131828
 </pre>
 

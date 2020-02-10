@@ -38,10 +38,10 @@ td, th { padding: 0.2em 0.7em }
 <p><a href="data/Nagoya-HPVV-data-01.zip">Nagoya-HPVV-data-01.zip</a> を展開して kaito.csv を取り出して読む：</p>
 
 <pre>
-<code>kaito = read.csv("kaito.csv", header=FALSE, colClasses="character", fileEncoding="UTF-8")</code>
-<code>dim(kaito)</code>
+<code class="prom">kaito = read.csv("kaito.csv", header=FALSE, colClasses="character", fileEncoding="UTF-8")</code>
+<code class="prom">dim(kaito)</code>
 [1] 30793   274
-<code>head(kaito)</code>
+<code class="prom">head(kaito)</code>
       V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12  V13 V14 V15 V16 V17 V18 V19  V20
 1 000001  0  0  1  0  0  0  1  0   0   0   0 0000   0   0   0   0   0   2 0000
 2 000002  0  1  0  0  0  0  0  0   1   0   1 0000   0   0   0   0   0   1 0000
@@ -66,7 +66,7 @@ kaito_readr = read_csv("kaito.csv", col_names=FALSE, col_types=paste0(rep("c",27
 <p>子宮頸がん予防接種（HPVV）の有無を表にしてみる：</p>
 
 <pre>
-<code>table(kaito$V233)</code>
+<code class="prom">table(kaito$V233)</code>
 
     0     1     2     3 
   624  9245 20912    12 
@@ -79,7 +79,7 @@ kaito_readr = read_csv("kaito.csv", col_names=FALSE, col_types=paste0(rep("c",27
 <p>症状はいろいろある。ここではHPVV副作用としか考えられない症状（実際には思春期によく見られる）として「身体が自分の意思に反して動く」（V145）を例として調べる。なお，これはあくまでもデータ解析法の検討のための例示で，これだけから何らかの結論を導き出そうとしているわけではない。</p>
 
 <pre>
-<code>table(kaito$V145)</code>
+<code class="prom">table(kaito$V145)</code>
 
     0     1     2 
   259 30272   262 
@@ -88,7 +88,7 @@ kaito_readr = read_csv("kaito.csv", col_names=FALSE, col_types=paste0(rep("c",27
 <p>チェックなし259人，なし30272人，あり262人である。これをHPVV有無とクロス集計すれば</p>
 
 <pre>
-<code>table(kaito$V233, kaito$V145)</code>
+<code class="prom">table(kaito$V233, kaito$V145)</code>
 
         0     1     2
   0    36   582     6
@@ -110,7 +110,7 @@ kaito_readr = read_csv("kaito.csv", col_names=FALSE, col_types=paste0(rep("c",27
 <p><a href="fishertest.html">Fisherの正確検定</a>をしてみる：</p>
 
 <pre>
-<code>fisher.test(matrix(c(9107,20571,58,198),nrow=2))</code>
+<code class="prom">fisher.test(matrix(c(9107,20571,58,198),nrow=2))</code>
 
 	Fisher's Exact Test for Count Data
 
@@ -129,7 +129,7 @@ odds ratio
 <p>まずは年齢が交絡しているかどうか調べる。まず年齢が必要である。この調査では列5〜11にそれぞれ平成6〜12年度生まれをチェックさせている。</p>
 
 <pre>
-<code>table(rowSums(kaito[,5:11] == "1"))</code>
+<code class="prom">table(rowSums(kaito[,5:11] == "1"))</code>
 
     0     1     2 
   456 30334     3 
@@ -169,7 +169,7 @@ birth = ifelse(birth %in% 6:12, birth, NA)
 <p>分布は次の通り：</p>
 
 <pre>
-<code>table(birth, useNA="ifany")</code>
+<code class="prom">table(birth, useNA="ifany")</code>
 birth
    6    7    8    9   10   11   12 &lt;NA&gt;
 4102 4227 4235 4484 4501 4241 4544  459 
@@ -178,8 +178,8 @@ birth
 <p>生まれた年度とHPVV接種率には強い関係がある：</p>
 
 <pre>
-<code>s = table(kaito$V233, birth)</code>
-<code>s</code>
+<code class="prom">s = table(kaito$V233, birth)</code>
+<code class="prom">s</code>
    birth
        6    7    8    9   10   11   12
   0   56   64   90   72   96   90  126
@@ -200,8 +200,8 @@ plot(6:12, s[3,]/(s[2,]+s[3,])*100, ylim=c(0,100), type="o",
 <p>生まれた年度と「身体が自分の意思に反して動く」のクロス集計は次の通り：</p>
 
 <pre>
-<code>u = table(kaito$V145, birth)</code>
-<code>u</code>
+<code class="prom">u = table(kaito$V145, birth)</code>
+<code class="prom">u</code>
    birth
        6    7    8    9   10   11   12
   0   22   37   26   35   48   35   33
@@ -225,8 +225,8 @@ arrows(6:12, 100*ci[1,], 6:12, 100*ci[2,], length=0.03, angle=90, code=3)
 <p>横に生まれた年度（6〜12），縦に「症状なし・接種なし」「症状なし・接種あり」「症状あり・接種なし」「症状あり・接種あり」の度数を並べたクロス集計は次の通り：</p>
 
 <pre>
-<code>t = sapply(1:7, function(x)as.numeric(table(kaito$V233, kaito$V145, birth)[2:3,2:3,x]))</code>
-<code>t</code>
+<code class="prom">t = sapply(1:7, function(x)as.numeric(table(kaito$V233, kaito$V145, birth)[2:3,2:3,x]))</code>
+<code class="prom">t</code>
      [,1] [,2] [,3] [,4] [,5] [,6] [,7]
 [1,]  486  412  447  651 1232 2014 3722
 [2,] 3496 3669 3627 3689 3097 2073  647

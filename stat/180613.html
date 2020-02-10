@@ -28,15 +28,15 @@
 <div class="note">
 <p>同じことを素のRで行うには，次のように打ち込む：</p>
 <pre>
-<code>library(readxl)</code> # これがエラーになるなら install.packages("readxl") する
-<code>seito = read_excel("1404609_2_1.xlsx")</code> # Excelファイルの保存場所に注意
+<code class="prom">library(readxl)</code> # これがエラーになるなら install.packages("readxl") する
+<code class="prom">seito = read_excel("1404609_2_1.xlsx")</code> # Excelファイルの保存場所に注意
 </pre>
 </div>
 
 <p>これで seito という変数に生徒データが読み込まれた。</p>
 
 <pre>
-<code>seito</code>  # 中を見てみる
+<code class="prom">seito</code>  # 中を見てみる
 # A tibble: 2,000 x 430
    実施年 地域規模 解答用紙番号  性別 生徒質問紙種別 正答数_国Ａ 正答数_国Ｂ
     &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;                &lt;dbl&gt;       &lt;dbl&gt;
@@ -61,14 +61,14 @@
 <p>データ行列の行数・列数を調べる：</p>
 
 <pre>
-<code>dim(seito)</code>
+<code class="prom">dim(seito)</code>
 [1] 2000  430
 </pre>
 
 <p>変数名一覧を列挙する：</p>
 
 <pre>
-<code>names(seito)</code>
+<code class="prom">names(seito)</code>
   [1] "実施年"             "地域規模"           "解答用紙番号"      
   [4] "性別"               "生徒質問紙種別"     "正答数_国Ａ"       
   [7] "正答数_国Ｂ"        "正答数_数Ａ"        "正答数_数Ｂ"       
@@ -185,7 +185,7 @@ legend("topleft", c("男","女"), pch=16, col=cols)
 <p>相関係数は <code>cor()</code> または <code>cor.test()</code> で求める：</p>
 
 <pre>
-<code>cor.test(seito$正答率_国, seito$正答率_数)</code>
+<code class="prom">cor.test(seito$正答率_国, seito$正答率_数)</code>
 
 	Pearson's product-moment correlation
 
@@ -202,16 +202,16 @@ sample estimates:
 <p>数学は男子のほうができるのであろうか？</p>
 
 <pre>
-<code>mean(seito$正答率_数[seito$性別 == 1])</code>
+<code class="prom">mean(seito$正答率_数[seito$性別 == 1])</code>
 [1] 53.6175
-<code>mean(seito$正答率_数[seito$性別 == 2])</code>
+<code class="prom">mean(seito$正答率_数[seito$性別 == 2])</code>
 [1] 53.49639
 </pre>
 
 <div class="note">
 <p>次のように書くこともできる：</p>
 <pre>
-<code>with(seito, tapply(正答率_数, 性別, mean))</code>
+<code class="prom">with(seito, tapply(正答率_数, 性別, mean))</code>
        1        2 
 53.61750 53.49639 
 </pre>
@@ -228,13 +228,13 @@ boxplot(正答率_数 ~ 性別, data=seito, ylim=c(0,100), names=c("男","女"))
 <p>差はなさそうである。念のため <i>t</i> 検定をしてみる：</p>
 
 <pre>
-<code>t.test(seito$正答率_数[seito$性別==1], seito$正答率_数[seito$性別==2])</code>
+<code class="prom">t.test(seito$正答率_数[seito$性別==1], seito$正答率_数[seito$性別==2])</code>
 </pre>
 
 <p>または同じことであるが次のようにするほうが楽である：</p>
 
 <pre>
-<code>t.test(正答率_数 ~ 性別, data=seito)</code>
+<code class="prom">t.test(正答率_数 ~ 性別, data=seito)</code>
 </pre>
 
 <p>結果は次のようになる：</p>
@@ -255,8 +255,8 @@ mean in group 1 mean in group 2
 <p>同様に，5科目平均正答率が地域規模と関係しているか，箱ひげ図と分散分析で調べてみる：</p>
 
 <pre>
-<code>boxplot(正答率 ~ 地域規模, data=seito)</code>
-<code>oneway.test(正答率 ~ 地域規模, data=seito)</code>
+<code class="prom">boxplot(正答率 ~ 地域規模, data=seito)</code>
+<code class="prom">oneway.test(正答率 ~ 地域規模, data=seito)</code>
 
 	One-way analysis of means (not assuming equal variances)
 
@@ -269,7 +269,7 @@ F = 0.94629, num df = 3.00, denom df = 629.17, p-value = 0.4178
 <p>「生徒質問紙回答_001」は<a href="http://www.nier.go.jp/15chousa/15chousa.htm">平成27年度全国学力・学習状況調査の調査問題・正答例・解説資料について</a>の「生徒質問紙」によれば「朝食を毎日食べている」で，1:している，2:どちらかといえば，している，3:あまりしていない，4:全くしていないの4択である。それぞれの数は次のようにして求められる：</p>
 
 <pre>
-<code>table(seito$生徒質問紙回答_001)</code>
+<code class="prom">table(seito$生徒質問紙回答_001)</code>
 
    1    2    3 
 1332  626   42 

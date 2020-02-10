@@ -39,14 +39,14 @@ afplay *.wav
 <p>Rでオーディオを扱う定番のパッケージは<a href="http://cran.r-project.org/web/packages/tuneR/index.html">tuneR</a>である（2013年8月のバージョン1.0で大きく仕様が変わっている）。以下の例をRで実行するにはあらかじめ</p>
 
 <pre>
-<code>install.packages("tuneR")</code>
-<code>library(tuneR)</code>
+<code class="prom">install.packages("tuneR")</code>
+<code class="prom">library(tuneR)</code>
 </pre>
 
 <p>と打ち込んでおく。このパッケージの <code>play()</code> という関数でWAVファイルなどをプレイすることができる。そのためにはあらかじめMacなら</p>
 
 <pre>
-<code>setWavPlayer("/usr/bin/afplay")</code>
+<code class="prom">setWavPlayer("/usr/bin/afplay")</code>
 </pre>
 
 <p>と打ち込んでおく。</p>
@@ -79,11 +79,11 @@ flac -d Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988
 <p>Rでこれを読み込む：</p>
 
 <pre>
-<code>library(tuneR)</code>
-<code>bach = readWave("Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.wav")</code>
-<code>object.size(bach)</code>
+<code class="prom">library(tuneR)</code>
+<code class="prom">bach = readWave("Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.wav")</code>
+<code class="prom">object.size(bach)</code>
 206337672 bytes
-<code>str(bach)</code>
+<code class="prom">str(bach)</code>
 Formal class 'Wave' [package "tuneR"] with 6 slots
   ..@ left     : num [1:12896016] 0 0 0 0 0 0 0 0 0 0 ...
   ..@ right    : num [1:12896016] 0 0 0 0 0 0 0 0 0 0 ...
@@ -100,7 +100,7 @@ Formal class 'Wave' [package "tuneR"] with 6 slots
 <p>冒頭の度数分布を調べてみる：</p>
 
 <pre>
-<code>table(bach@left[1:100000])</code>
+<code class="prom">table(bach@left[1:100000])</code>
 
 -2304 -2048 -1792 -1536 -1280 -1024  -768  -512  -256     0   256   512   768 
     5   167   353   468   830  1101  1446 13575  4101 72289  1133  1124  1117 
@@ -132,25 +132,25 @@ points((s:t)/44100, bachr[s:t], type="l", col="#f3980080")
 <p>全体のヒストグラムを描いてみる。左右チャンネルはアペンドする：</p>
 
 <pre>
-<code>a = append(bachl, bachr)</code>
-<code>length(a)</code>
+<code class="prom">a = append(bachl, bachr)</code>
+<code class="prom">length(a)</code>
 [1] 25792032
-<code>range(a)</code>
+<code class="prom">range(a)</code>
 [1] -9322  8909
-<code>hist(a, main="", xlab="", ylab="", col="gray")</code>
+<code class="prom">hist(a, main="", xlab="", ylab="", col="gray")</code>
 </pre>
 
 <p>実はこのように広いヒストグラムになるのは階級の幅が広すぎるためである。階級の幅を1にして比べてみよう。もっと0に集中している。</p>
 
 <pre>
-<code>hist(a, main="", xlab="", ylab="", col="gray", breaks=20000)</code>
+<code class="prom">hist(a, main="", xlab="", ylab="", col="gray", breaks=20000)</code>
 </pre>
 
 <p>もっと詳しく見るために，プロットせず度数分布だけ取り出してみよう：</p>
 
 <pre>
-<code>h = hist(a, breaks=20000, plot=FALSE)</code>
-<code>str(h)</code>  # hの構造を確認
+<code class="prom">h = hist(a, breaks=20000, plot=FALSE)</code>
+<code class="prom">str(h)</code>  # hの構造を確認
 List of 6
  $ breaks  : num [1:18232] -9322 -9321 -9320 -9319 -9318 ...
  $ counts  : int [1:18231] 2 0 0 0 0 0 0 0 0 0 ...
@@ -159,7 +159,7 @@ List of 6
  $ xname   : chr "a"
  $ equidist: logi TRUE
  - attr(*, "class")= chr "histogram"
-<code>sum(h$density)</code>
+<code class="prom">sum(h$density)</code>
 [1] 1
 </pre>
 
@@ -171,7 +171,7 @@ List of 6
 <p><code>h$density</code> に確率分布が入る。この分布のエントロピーを求めてみよう：</p>
 
 <pre>
-<code>-sum(h$density * log2(h$density), na.rm=TRUE)</code>
+<code class="prom">-sum(h$density * log2(h$density), na.rm=TRUE)</code>
 [1] 11.94497
 </pre>
 
@@ -181,9 +181,9 @@ List of 6
 を使ってもできる：</p>
 
 <pre>
-<code>t = table(a)</code>
-<code>p = t / sum(t)</code>
-<code>-sum(p * log2(p))</code>
+<code class="prom">t = table(a)</code>
+<code class="prom">p = t / sum(t)</code>
+<code class="prom">-sum(p * log2(p))</code>
 [1] 11.94497
 </pre>
 
@@ -216,11 +216,11 @@ $ ./dumpwave Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBw
 </pre>
 <p>できたテキストファイルは179573070バイト（約180MB）ある。これをRで読み込むには <code>read.table()</code> でもよいが，非常に遅いので，<a href="datatable.html">data.table</a>を使うとよい：</p>
 <pre>
-<code>library("data.table")</code>
-<code>x = fread("x.txt")</code>
-<code>dim(x)</code>
+<code class="prom">library("data.table")</code>
+<code class="prom">x = fread("x.txt")</code>
+<code class="prom">dim(x)</code>
 [1] 12896016        2
-<code>head(x)</code>
+<code class="prom">head(x)</code>
    V1 V2
 1:  0  0
 2:  0  0
@@ -228,13 +228,13 @@ $ ./dumpwave Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBw
 4:  0  0
 5:  0  0
 6:  0  0
-<code>object.size(x)</code>
+<code class="prom">object.size(x)</code>
 103169360 bytes
 # または
-<code>library(pryr)</code>
-<code>object_size(x)</code>
+<code class="prom">library(pryr)</code>
+<code class="prom">object_size(x)</code>
 103 MB
-<code>str(x)</code>
+<code class="prom">str(x)</code>
 Classes ‘data.table’ and 'data.frame':	12896016 obs. of  2 variables:
  $ V1: int  0 0 0 0 0 0 0 0 0 0 ...
  $ V2: int  0 0 0 0 0 0 0 0 0 0 ...
@@ -270,9 +270,9 @@ setnames(x, c("L","R"))
 <p>真相はともかく，ここではSONYの<a href="http://helpguide.sony.net/high-res/sample1/v1/ja/">サンプル音源ダウンロード</a>からダウンロードしたハイレゾデータを調べてみよう。「Blue Monday FM　“Bee Moved”より」，ZIPファイルで提供されているが，中身のFLACファイルのほうがサイズが若干小さい。展開してFLACでWAVに変換し，Rで読み込む：</p>
 
 <pre>
-<code>library(tuneR)</code>
-<code>bee = readWave("Sample_BeeMoved_96kHz24bit.wav")</code>
-<code>str(bee)</code>
+<code class="prom">library(tuneR)</code>
+<code class="prom">bee = readWave("Sample_BeeMoved_96kHz24bit.wav")</code>
+<code class="prom">str(bee)</code>
 Formal class 'Wave' [package "tuneR"] with 6 slots
   ..@ left     : num [1:3828096] -2 1 2 -8 11 -13 9 -6 7 3 ...
   ..@ right    : num [1:3828096] 0 3 -5 8 -11 16 -10 -2 -1 7 ...
@@ -280,28 +280,28 @@ Formal class 'Wave' [package "tuneR"] with 6 slots
   ..@ samp.rate: int 96000
   ..@ bit      : int 24
   ..@ pcm      : logi TRUE
-<code>range(bee@left)</code>
+<code class="prom">range(bee@left)</code>
 [1] -8292596  8292598
-<code>range(bee@right)</code>
+<code class="prom">range(bee@right)</code>
 [1] -8292595  8292598
 </pre>
 
 <p>24ビット（±8388607）ほぼフルに使っているところがすごい。</p>
 
 <pre>
-<code>t = table(a)</code>
-<code>p = t / sum(t)</code>
-<code>-sum(p * log2(p))</code>
+<code class="prom">t = table(a)</code>
+<code class="prom">p = t / sum(t)</code>
+<code class="prom">-sum(p * log2(p))</code>
 [1] 22.04475
 </pre>
 
 <p>これを48000サンプル/秒，16ビットに丸めてみる：</p>
 
 <pre>
-<code>left = floor(((bee@left[seq(1,3828096,2)] + bee@left[seq(2,3828096,2)]) / 2 + 128) / 256)</code>
-<code>right = floor(((bee@right[seq(1,3828096,2)] + bee@right[seq(2,3828096,2)]) / 2 + 128) / 256)</code>
-<code>bee2 = Wave(left, right, samp.rate=48000, bit=16)</code>
-<code>writeWave(bee2, "bee2.wav")  # あるいは play(bee2)</code>
+<code class="prom">left = floor(((bee@left[seq(1,3828096,2)] + bee@left[seq(2,3828096,2)]) / 2 + 128) / 256)</code>
+<code class="prom">right = floor(((bee@right[seq(1,3828096,2)] + bee@right[seq(2,3828096,2)]) / 2 + 128) / 256)</code>
+<code class="prom">bee2 = Wave(left, right, samp.rate=48000, bit=16)</code>
+<code class="prom">writeWave(bee2, "bee2.wav")  # あるいは play(bee2)</code>
 </pre>
 
 <p>聴き比べてみたが，再生装置がハイレゾ対応していないので当然ながらまったく同じ音に聞こえた。</p>
@@ -309,12 +309,12 @@ Formal class 'Wave' [package "tuneR"] with 6 slots
 <p><em>[追記]</em> ると <a href="https://twitter.com/cocoa_ruto">@cocoa_ruto</a> さんが <a href="http://www.tatapa.org/~takuo/resample/index.html">Rによる音声のサンプリング周波数変換</a> を書いてくださった。要は，単純に隣同士の平均をとるだけでは折り返し雑音（エイリアシング）が生じる。次のようにするのが正しい（<code>16</code> は調整可能）：</p>
 
 <pre>
-<code>library(signal)</code>
-<code>left = resample(bee@left, 1, 2, 16)</code>
-<code>right = resample(bee@right, 1, 2, 16)</code>
-<code>range(left)</code>
+<code class="prom">library(signal)</code>
+<code class="prom">left = resample(bee@left, 1, 2, 16)</code>
+<code class="prom">right = resample(bee@right, 1, 2, 16)</code>
+<code class="prom">range(left)</code>
 [1] -8515382  8356196
-<code>range(right)</code>
+<code class="prom">range(right)</code>
 [1] -8352250  8552039
 </pre>
 
@@ -347,9 +347,9 @@ writeWave(bee3, "bee3.wav")  # または play(bee3)
 <p>高い音がどこまで聞こえるか確かめてみる。</p>
 
 <pre>
-<code>library(tuneR)</code>
-<code>s20k = sine(freq=20000, duration=96000*10, samp.rate=96000, bit=16, pcm=TRUE, stereo=TRUE)</code>
-<code>writeWave(s20k, "s20k.wav")</code>
+<code class="prom">library(tuneR)</code>
+<code class="prom">s20k = sine(freq=20000, duration=96000*10, samp.rate=96000, bit=16, pcm=TRUE, stereo=TRUE)</code>
+<code class="prom">writeWave(s20k, "s20k.wav")</code>
 </pre>
 
 <p>のようにしてファイルに出力してから再生するか，あるいは設定さえ正しければ</p>

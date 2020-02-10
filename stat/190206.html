@@ -70,13 +70,13 @@ x$ABO = tbl[x[[1]]]                           # 表現型を表に追加
 <p>論文では年齢・性別でコントロールしたMANCOVAが使われているが，年齢・性別がわからないので，ここでは単なるMANOVAを使ってみる：</p>
 
 <pre>
-<code>r1 = manova(cbind(NS,HA,RD,P,SD,C,ST) ~ `Blood types`, data=x)</code>
-<code>summary(r1)</code>
+<code class="prom">r1 = manova(cbind(NS,HA,RD,P,SD,C,ST) ~ `Blood types`, data=x)</code>
+<code class="prom">summary(r1)</code>
                 Df   Pillai approx F num Df den Df Pr(>F)
 `Blood types`    5 0.027593   1.1241     35   7090 0.2822
 Residuals     1420                                       
-<code>r2 = manova(cbind(NS,HA,RD,P,SD,C,ST) ~ ABO, data=x)</code>
-<code>summary(r2)</code>
+<code class="prom">r2 = manova(cbind(NS,HA,RD,P,SD,C,ST) ~ ABO, data=x)</code>
+<code class="prom">summary(r2)</code>
             Df  Pillai approx F num Df den Df Pr(>F)
 ABO          3 0.01985   1.3493     21   4254 0.1318
 Residuals 1422                                      
@@ -87,14 +87,14 @@ Residuals 1422
 <p>論文では特に Persistence（「持続」）が血液型と有意に関係するとされているので，それを計算してみる：</p>
 
 <pre>
-<code>oneway.test(P ~ `Blood types`, data=x)</code>
+<code class="prom">oneway.test(P ~ `Blood types`, data=x)</code>
 
 	One-way analysis of means (not assuming equal variances)
 
 data:  P and `Blood types`
 F = 2.5173, num df = 5.00, denom df = 285.15, p-value = 0.02993
 
-<code>oneway.test(P ~ ABO, data=x)</code>
+<code class="prom">oneway.test(P ~ ABO, data=x)</code>
 
 	One-way analysis of means (not assuming equal variances)
 

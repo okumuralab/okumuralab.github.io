@@ -21,8 +21,8 @@
 <p><a href="https://rapportjapan.info">ラポール・ジャパン</a>から政治資金データのCSVファイルが公開されている。<a href="https://rapportjapan.info/shikin_data.zip">shikin_data.zip</a> をダウンロードして展開すると，SJISとUTF-8のCSVファイルが出てくるので，Rで読み込んでみる。</p>
 
 <pre>
-<code>shikin = read.csv("shikin_data_utf8.csv", fileEncoding="UTF-8", as.is=TRUE)</code>
-<code>summary(shikin)</code>
+<code class="prom">shikin = read.csv("shikin_data_utf8.csv", fileEncoding="UTF-8", as.is=TRUE)</code>
+<code class="prom">summary(shikin)</code>
     政治家            報告書名             対象年        収入総額        
  Length:1999        Length:1999        Min.   :2014   Min.   :        0  
  Class :character   Class :character   1st Qu.:2014   1st Qu.:  1831568  
@@ -36,21 +36,21 @@
 <p>とりあえずタイピングを楽にするため，主要な列を取り出しておく：</p>
 
 <pre>
-<code>n = shikin$政治家</code>  # 政治家の名前
-<code>head(n)</code>
+<code class="prom">n = shikin$政治家</code>  # 政治家の名前
+<code class="prom">head(n)</code>
 [1] "青山 周平" "青山 周平" "赤松 広隆" "赤松 広隆" "荒木 清寛" "池田 佳隆"
-<code>s = shikin$収入総額</code>
-<code>head(s)</code>
+<code class="prom">s = shikin$収入総額</code>
+<code class="prom">head(s)</code>
 [1]  36896515  23211567 153443703   3445847    672217         0
 </pre>
 
 <p>政治家の名前は複数出現するので，ユニークな名前だけにする。</p>
 
 <pre>
-<code>u = unique(n)</code>
-<code>length(u)</code>
+<code class="prom">u = unique(n)</code>
+<code class="prom">length(u)</code>
 [1] 671
-<code>head(u)</code>
+<code class="prom">head(u)</code>
 [1] "青山 周平"   "赤松 広隆"   "荒木 清寛"   "池田 佳隆"   "伊藤 忠彦"  
 [6] "今枝 宗一郎"
 </pre>
@@ -58,11 +58,11 @@
 <p>ユニークな名前について，収入総額を集計し直す。</p>
 
 <pre>
-<code>t = sapply(u, function(x)sum(s[n==x]))</code>
-<code>head(t)</code>
+<code class="prom">t = sapply(u, function(x)sum(s[n==x]))</code>
+<code class="prom">head(t)</code>
   青山 周平   赤松 広隆   荒木 清寛   池田 佳隆   伊藤 忠彦 今枝 宗一郎 
    60108082   183880578     9586548   109602955    72589067   122498395 
-<code>head(sort(t, decreasing=TRUE))</code>
+<code class="prom">head(sort(t, decreasing=TRUE))</code>
 安倍 晋三 亀井 静香   竹下 亘 小沢 一郎 伊達 忠一 丹羽 雄哉 
 562866655 427624422 427337518 420027499 355661871 350146479 
 </pre>
@@ -70,7 +70,7 @@
 <p>安倍晋三氏は5億6286万6655円といったことがわかる。</p>
 
 <pre>
-<code>hist(t/100000000, col="gray", breaks=50, xlab="収入総額（億円）", ylab="人数", main="")</code>
+<code class="prom">hist(t/100000000, col="gray", breaks=50, xlab="収入総額（億円）", ylab="人数", main="")</code>
 </pre>
 
 <figure><img src="img/160604h.png" alt="政治資金"></figure>

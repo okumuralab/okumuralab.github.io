@@ -27,7 +27,7 @@
 <p>Rで現在の日時を調べるにはつぎのようにする。</p>
 
 <pre>
-<code>Sys.time()</code>
+<code class="prom">Sys.time()</code>
 [1] "2011-03-20 12:34:56 JST"
 </pre>
 
@@ -36,40 +36,40 @@
 <p>これらは文字列のように見えるが，内部表現は1970年元旦からの秒数で，POSIXct型という衣を着ている（「ct」はcalendar time）。衣（クラス）を剥がしてみれば，整数値が現れる。単に数値に変換しても同じ結果になる。</p>
 
 <pre>
-<code>unclass(Sys.time())</code>
+<code class="prom">unclass(Sys.time())</code>
 [1] 1300592096
-<code>as.numeric(Sys.time())</code>
+<code class="prom">as.numeric(Sys.time())</code>
 [1] 1300592096
 </pre>
 
 <p><code>"2011-03-20 12:34:56"</code> のような文字列からPOSIXct型の値に変換するには</p>
 
 <pre>
-<code>t = as.POSIXct("2011-03-20 12:34:56")</code>
+<code class="prom">t = as.POSIXct("2011-03-20 12:34:56")</code>
 </pre>
 
 <p>のようにすればよい。<code>"2011-03-20"</code> の代わりに <code>"2011-3-20"</code> でも <code>"2011/3/20"</code> でもよい。別の方法として次のようにもできる。</p>
 
 <pre>
-<code>t = ISOdatetime(2011, 3, 20, 12, 34, 56)</code>
+<code class="prom">t = ISOdatetime(2011, 3, 20, 12, 34, 56)</code>
 </pre>
 
 <p>POSIXct型は内部では秒単位の整数であるため，秒を加算することができる。例えば時刻 <code>t</code> を起点として10分ごと1時間の数列を作るには次のようにする（最後の <code>600</code> は <code>"10 min"</code> でもよい）。</p>
 
 <pre>
-<code>seq(t, t+3600, 600)</code>
+<code class="prom">seq(t, t+3600, 600)</code>
 </pre>
 
 <p>ちなみに，日本の環境では日時は日本標準時（JST）で扱われる（ただし下で述べるようにJDTという例外がある）。JSTは協定世界時（UTC）から9時間（32400秒）ずれている：</p>
 
 <pre>
-<code>as.numeric(as.POSIXct("1970-01-01 00:00:00"))</code>
+<code class="prom">as.numeric(as.POSIXct("1970-01-01 00:00:00"))</code>
 [1] -32400
-<code>as.numeric(as.POSIXct("1970-01-01 00:00:00", tz="Asia/Tokyo"))</code>
+<code class="prom">as.numeric(as.POSIXct("1970-01-01 00:00:00", tz="Asia/Tokyo"))</code>
 [1] -32400
-<code>as.numeric(as.POSIXct("1970-01-01 00:00:00", tz="Japan"))</code>
+<code class="prom">as.numeric(as.POSIXct("1970-01-01 00:00:00", tz="Japan"))</code>
 [1] -32400
-<code>as.numeric(as.POSIXct("1970-01-01 00:00:00", tz="UTC"))</code>
+<code class="prom">as.numeric(as.POSIXct("1970-01-01 00:00:00", tz="UTC"))</code>
 [1] 0
 </pre>
 
@@ -140,28 +140,28 @@ axis.POSIXct(1, at=seq(r[1],r[2],by="4 hours"), format="%d日%H時")
 <p>R 3.5.0/3.5.1 (Windows/Mac) で <code>as.POSIXct("1948-05-02")</code> がエラーになる：</p>
 
 <pre>
-<code>as.POSIXct("1948-05-01")</code>
+<code class="prom">as.POSIXct("1948-05-01")</code>
 [1] "1948-05-01 JST"
-<code>as.POSIXct("1948-05-02")</code>
+<code class="prom">as.POSIXct("1948-05-02")</code>
  as.POSIXlt.character(x, tz, ...) でエラー: 
    文字列は標準的な曖昧さのない書式にはなっていません 
-<code>as.POSIXct("1948-05-03")</code>
+<code class="prom">as.POSIXct("1948-05-03")</code>
 [1] "1948-05-03 JDT"
 </pre>
 
 <p>原因はどうやら日本でも1948年〜1951年にあった夏時間（JDT）のためらしい。<code>"1948-05-02"</code> は <code>"1948-05-02 00:00:00"</code> と解釈されて，夏時間を考慮すれば存在しない時刻になるのだろう。ただ，同じコードでもLinux上ではエラーにならない：</p>
 
 <pre>
-<code>as.POSIXct("1948-05-02")</code>
+<code class="prom">as.POSIXct("1948-05-02")</code>
 [1] "1948-05-01 23:00:00 JST"
 </pre>
 
 <p><code>as.POSIXct()</code> の第2引数は <code>tz</code> つまりタイムゾーンである。何も指定しなければシステムのタイムゾーンになる。日本語環境では <code>Asia/Tokyo</code> または同じことだが <code>Japan</code> になる。</p>
 
 <pre>
-<code>as.POSIXct("1948-05-03", "Asia/Tokyo")</code>
+<code class="prom">as.POSIXct("1948-05-03", "Asia/Tokyo")</code>
 [1] "1948-05-03 JDT"
-<code>as.POSIXct("1948-05-03", "UTC")</code>
+<code class="prom">as.POSIXct("1948-05-03", "UTC")</code>
 [1] "1948-05-03 UTC"
 </pre>
 
@@ -178,33 +178,33 @@ zdump -v /usr/share/zoneinfo/Asia/Tokyo # または zdump -v Asia/Tokyo
 <p>気象庁の過去データの日時はJSTで統一されているそうである。この場合，タイムゾーンとして <code>Etc/GMT-9</code> を指定すればよい：</p>
 
 <pre>
-<code>as.POSIXct("1948-05-02 00:01", tz="Etc/GMT-9")</code>
+<code class="prom">as.POSIXct("1948-05-02 00:01", tz="Etc/GMT-9")</code>
 [1] "1948-05-02 00:01:00 +09"
 </pre>
 
 <p>日本以外の例を挙げると，米国東海岸の春（EST/EDT）は，Mac上のR 3.5.1では次のようになる：</p>
 
 <pre>
-<code>as.POSIXct("2018-03-11 01:59", "US/Eastern")</code>
+<code class="prom">as.POSIXct("2018-03-11 01:59", "US/Eastern")</code>
 [1] "2018-03-11 01:59:00 EST"
-<code>as.POSIXct("2018-03-11 02:00", "US/Eastern")</code> // 存在しない
+<code class="prom">as.POSIXct("2018-03-11 02:00", "US/Eastern")</code> // 存在しない
 [1] "2018-03-11 EST"
-<code>as.POSIXct("2018-03-11 02:59", "US/Eastern")</code> // 存在しない
+<code class="prom">as.POSIXct("2018-03-11 02:59", "US/Eastern")</code> // 存在しない
 [1] "2018-03-11 EST"
-<code>as.POSIXct("2018-03-11 03:00", "US/Eastern")</code>
+<code class="prom">as.POSIXct("2018-03-11 03:00", "US/Eastern")</code>
 [1] "2018-03-11 03:00:00 EDT"
 </pre>
 
 <p>Linux上のR 3.5.1では次のようになる
 
 <pre>
-<code>as.POSIXct("2018-03-11 01:59", "US/Eastern")</code>
+<code class="prom">as.POSIXct("2018-03-11 01:59", "US/Eastern")</code>
 [1] "2018-03-11 01:59:00 EST"
-<code>as.POSIXct("2018-03-11 02:00", "US/Eastern")</code> // 存在しない
+<code class="prom">as.POSIXct("2018-03-11 02:00", "US/Eastern")</code> // 存在しない
 [1] "2018-03-11 01:00:00 EST"
-<code>as.POSIXct("2018-03-11 02:59", "US/Eastern")</code> // 存在しない
+<code class="prom">as.POSIXct("2018-03-11 02:59", "US/Eastern")</code> // 存在しない
 [1] "2018-03-11 01:59:00 EST"
-<code>as.POSIXct("2018-03-11 03:00", "US/Eastern")</code>
+<code class="prom">as.POSIXct("2018-03-11 03:00", "US/Eastern")</code>
 [1] "2018-03-11 03:00:00 EDT"
 </pre>
 
@@ -213,25 +213,25 @@ zdump -v /usr/share/zoneinfo/Asia/Tokyo # または zdump -v Asia/Tokyo
 <p><a href="https://CRAN.R-project.org/package=readr">readr</a> の <code>parse_datetime()</code> は次のようにおかしくなる：</p>
 
 <pre>
-<code>parse_datetime("1948-05-01", locale=locale(tz="Asia/Tokyo"))</code>
+<code class="prom">parse_datetime("1948-05-01", locale=locale(tz="Asia/Tokyo"))</code>
 [1] "1948-05-01 JST"
-<code>parse_datetime("1948-05-02", locale=locale(tz="Asia/Tokyo"))</code>
+<code class="prom">parse_datetime("1948-05-02", locale=locale(tz="Asia/Tokyo"))</code>
 [1] "1970-01-01 08:59:59 JST"
-<code>parse_datetime("1948-05-03", locale=locale(tz="Asia/Tokyo"))</code>
+<code class="prom">parse_datetime("1948-05-03", locale=locale(tz="Asia/Tokyo"))</code>
 [1] "1948-05-03 JDT"
 </pre>
 
 <p>[2018年8月追記] 2020年の東京オリンピックで+2時間の夏時間を採用して，7時開始を5時開始相当にしようという話があるらしい。夏の5時は米国西海岸では何時だろうか？ <code>as.POSIXlt()</code> も援用して</p>
 
 <pre>
-<code>as.POSIXlt(as.POSIXct("2020-07-24 05:00", tz="Asia/Tokyo"), tz="US/Pacific")</code>
+<code class="prom">as.POSIXlt(as.POSIXct("2020-07-24 05:00", tz="Asia/Tokyo"), tz="US/Pacific")</code>
 [1] "2020-07-23 13:00:00 PDT"
 </pre>
 
 <p>とすればよい（<a href="http://ill-identified.hatenablog.com/entry/2015/01/13/211024">参考</a>）。<code>as.POSIXct()</code> で統一したければ</p>
 
 <pre>
-<code>as.POSIXct(as.numeric(as.POSIXct("2020-07-24 05:00", tz="Asia/Tokyo")), origin="1970-01-01 00:00", tz="US/Pacific")</code>
+<code class="prom">as.POSIXct(as.numeric(as.POSIXct("2020-07-24 05:00", tz="Asia/Tokyo")), origin="1970-01-01 00:00", tz="US/Pacific")</code>
 [1] "2020-07-23 13:00:00 PDT"
 </pre>
 
@@ -244,18 +244,18 @@ zdump -v /usr/share/zoneinfo/Asia/Tokyo # または zdump -v Asia/Tokyo
 <p>日時なら <code>as.POSIXct()</code>，日だけなら <code>as.Date()</code> で扱うのが基本であるが，月ごとのデータや曜日に意味がある日ごとのデータは，<code>ts()</code> で時系列オブジェクトに変換すると便利なことがある。例えば<a href="leukemia2.html">グラフの例：白血病による死亡率の推移</a>のデータの場合，</p>
 
 <pre>
-<code>leu = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/leukemia2.csv")</code>
-<code>x = ts(leu$rate, start=c(2001,1), frequency=12)</code>
-<code>x</code>
+<code class="prom">leu = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/leukemia2.csv")</code>
+<code class="prom">x = ts(leu$rate, start=c(2001,1), frequency=12)</code>
+<code class="prom">x</code>
      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
 2001 5.4 5.2 5.4 5.8 5.6 5.8 5.5 5.7 5.7 5.3 5.7 5.3
 2002 5.5 5.4 5.8 5.6 5.3 5.3 5.4 5.6 5.6 5.7 6.1 5.2
 2003 5.8 5.8 5.5 5.2 5.4 5.6 5.4 5.0 6.0 6.1 5.5 5.5
 ……
 2016 7.0 7.0 7.2 7.4 6.8 7.4 6.8 7.0 6.9 7.3 7.0 6.8
-<code>class(x)</code>
+<code class="prom">class(x)</code>
 [1] "ts"
-<code>head(time(x))</code>
+<code class="prom">head(time(x))</code>
 [1] 2001.000 2001.083 2001.167 2001.250 2001.333 2001.417
 </pre>
 

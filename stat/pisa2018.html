@@ -35,10 +35,10 @@ window.onload = function() {
 という1.8Gバイトほどのファイルになる。これをRで読むには次のようにする（かなり時間がかかる）：</p>
 
 <pre>
-<code>library(haven)</code>
-<code>data = read_sav("CY07_MSU_STU_QQQ.sav")</code>
-<code>object.size(data)</code>  # 約5.5Gバイト
-<!-- <code>write.csv(data, "CY07_MSU_STU_QQQ.csv", quote=FALSE, row.names=FALSE)</code> # 念のためCSVで保存 -->
+<code class="prom">library(haven)</code>
+<code class="prom">data = read_sav("CY07_MSU_STU_QQQ.sav")</code>
+<code class="prom">object.size(data)</code>  # 約5.5Gバイト
+<!-- <code class="prom">write.csv(data, "CY07_MSU_STU_QQQ.csv", quote=FALSE, row.names=FALSE)</code> # 念のためCSVで保存 -->
 </pre>
 
 <!-- <p>念のためCSV化したものをzipで固めた <a href="data/CY07_MSU_STU_QQQ.zip">CY07_MSU_STU_QQQ.zip</a> も置いておく。</p> -->
@@ -48,14 +48,14 @@ window.onload = function() {
 <p>データの大きさを調べてみよう：</p>
 
 <pre>
-<code>dim(data)</code>
+<code class="prom">dim(data)</code>
 [1] 612004   1118
 </pre>
 
 <p>612004行1118列のデータだとわかる。確かに大きい。項目名（列名）を一覧してみよう：</p>
 
 <pre>
-<code>names(data)</code>
+<code class="prom">names(data)</code>
    [1] "CNTRYID"      "CNT"          "CNTSCHID"     "CNTSTUID"    
    [5] "CYC"          "NatCen"       "STRATUM"      "SUBNATIO"    
    [9] "OECD"         "ADMINMODE"    "LANGTEST_QQQ" "LANGTEST_COG"
@@ -83,7 +83,7 @@ window.onload = function() {
 <p>さらに下に見ていくと，例えば <code>IC001Q01TA</code> Available for you to use at home: Desktop computer という項目があり，1 が Yes, and I use it，2 が Yes, but I dont use it，3 が No である。それぞれの回答数を表にしてみよう：</p>
 
 <pre>
-<code>table(data$IC001Q01TA)</code>
+<code class="prom">table(data$IC001Q01TA)</code>
 
      1      2      3 
 207182  50529  97676 
@@ -92,7 +92,7 @@ window.onload = function() {
 <p>日本の生徒についての内訳を見るには</p>
 
 <pre>
-<code>table(data$IC001Q01TA[data$CNT=="JPN"])</code>
+<code class="prom">table(data$IC001Q01TA[data$CNT=="JPN"])</code>
 
    1    2    3 
 2200 1790 2029 
@@ -101,8 +101,8 @@ window.onload = function() {
 <p>とする。国とのクロス集計をしてみよう：</p>
 
 <pre>
-<code>x = table(data$CNT, data$IC001Q01TA)</code>
-<code>head(x)</code>
+<code class="prom">x = table(data$CNT, data$IC001Q01TA)</code>
+<code class="prom">head(x)</code>
      
          1    2    3
   ALB 3940  558 1589
@@ -116,7 +116,7 @@ window.onload = function() {
 <p>手抜き棒グラフにしてみよう：</p>
 
 <pre>
-<code>barplot(sort(x[,1] / rowSums(x[,1:3])), horiz=TRUE, las=1)</code>
+<code class="prom">barplot(sort(x[,1] / rowSums(x[,1:3])), horiz=TRUE, las=1)</code>
 </pre>
 
 <figure><img src="img/191204a.png" alt=""></figure>

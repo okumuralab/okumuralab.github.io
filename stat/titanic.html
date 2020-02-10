@@ -36,7 +36,7 @@ MathJax = {
 <p>タイタニック号の生存統計（諸説あるがそのうちの一つ）がRの <code>Titanic</code> というデータセットに収められている。このデータ構造を <code>str()</code> 関数で調べてみよう：</p>
 
 <pre>
-<code>str(Titanic)</code>
+<code class="prom">str(Titanic)</code>
  'table' num [1:4, 1:2, 1:2, 1:2] 0 0 35 0 0 0 17 0 118 154 ...
  - attr(*, "dimnames")=List of 4
   ..$ Class   : chr [1:4] "1st" "2nd" "3rd" "Crew"
@@ -48,20 +48,20 @@ MathJax = {
 <p>これからわかるように，<code>Titanic</code> は4個の添字を持つ人数の表（$4 \times 2 \times 2 \times 2$ の表）で，各添字は，乗客クラス（ファーストクラス，セカンドクラス，サードクラス，乗組員），性別（男，女），年齢（子ども，大人），生存（No，Yes）を表す。</p>
 
 <pre>
-<code>sum(Titanic)</code> # 全員
+<code class="prom">sum(Titanic)</code> # 全員
 [1] 2201
-<code>sum(Titanic[,,,"Yes"])</code> # 生存者
+<code class="prom">sum(Titanic[,,,"Yes"])</code> # 生存者
 [1] 711
-<code>sum(Titanic[,,,"No"])</code> # 死亡者
+<code class="prom">sum(Titanic[,,,"No"])</code> # 死亡者
 [1] 1490
 </pre>
 
 <p>これと同じことは <code>margin.table()</code> 関数でもできる：</p>
 
 <pre>
-<code>margin.table(Titanic)</code>
+<code class="prom">margin.table(Titanic)</code>
 [1] 2201
-<code>margin.table(Titanic, 4)</code>
+<code class="prom">margin.table(Titanic, 4)</code>
 Survived
   No  Yes 
 1490  711 
@@ -70,12 +70,12 @@ Survived
 <p><code>margin.table()</code> は次のようなこともできる：</p>
 
 <pre>
-<code>margin.table(Titanic, c(2,4))</code>
+<code class="prom">margin.table(Titanic, c(2,4))</code>
         Survived
 Sex        No  Yes
   Male   1364  367
   Female  126  344
-<code>margin.table(Titanic, c(2,4,1))</code>
+<code class="prom">margin.table(Titanic, c(2,4,1))</code>
 , , Class = 1st
 
         Survived
@@ -116,14 +116,14 @@ oddsratio = function(x) (x[2,2]/x[2,1])/(x[1,2]/x[1,1])
 <p>これを使えば，全体のオッズ比は</p>
 
 <pre>
-<code>oddsratio(margin.table(Titanic, c(2,4)))</code>
+<code class="prom">oddsratio(margin.table(Titanic, c(2,4)))</code>
 [1] 10.14697
 </pre>
 
 <p>乗客クラスごとのオッズ比は</p>
 
 <pre>
-<code>for (i in 1:4) cat(i, oddsratio(margin.table(Titanic, c(2,4,1))[,,i]), "\n")</code>
+<code class="prom">for (i in 1:4) cat(i, oddsratio(margin.table(Titanic, c(2,4,1))[,,i]), "\n")</code>
 1 67.08871 
 2 44.06769 
 3 4.071612 
@@ -133,7 +133,7 @@ oddsratio = function(x) (x[2,2]/x[2,1])/(x[1,2]/x[1,1])
 <p>またはもっとRらしく</p>
 
 <pre>
-<code>apply(margin.table(Titanic, c(2,4,1)), 3, oddsratio)</code>
+<code class="prom">apply(margin.table(Titanic, c(2,4,1)), 3, oddsratio)</code>
       1st       2nd       3rd      Crew 
 67.088710 44.067692  4.071612 23.263889 
 </pre>
@@ -145,7 +145,7 @@ oddsratio = function(x) (x[2,2]/x[2,1])/(x[1,2]/x[1,1])
 <p>個数を表す $2 \times 2$ の表，あるいは一般に $I \times J$ の表で，行と列の独立性を調べるには，<a href="chisqtest.html">カイ2乗検定</a>または<a href="fishertest.html">Fisherの正確検定</a>を使う。例えばタイタニック号での生存が性別によらないという帰無仮説を検定するには，次のようにすればよい：</p>
 
 <pre>
-<code>chisq.test(margin.table(Titanic, c(2,4)))</code>
+<code class="prom">chisq.test(margin.table(Titanic, c(2,4)))</code>
 
 	Pearson's Chi-squared test with Yates' continuity correction
 
@@ -156,7 +156,7 @@ X-squared = 454.5, df = 1, p-value &lt; 2.2e-16
 <p>あるいは</p>
 
 <pre>
-<code>fisher.test(margin.table(Titanic, c(2,4)))</code>
+<code class="prom">fisher.test(margin.table(Titanic, c(2,4)))</code>
 
 	Fisher's Exact Test for Count Data
 
@@ -191,7 +191,7 @@ odds ratio
 <p>Rには標準で <code>mantelhaen.test()</code> という関数が備わっている。これは $2 \times 2 \times K$ の表に対して，（デフォルトでは連続性の補正をした）Mantel-Haenszel 検定を行う：</p>
 
 <pre>
-<code>mantelhaen.test(margin.table(Titanic, c(2,4,1)))</code>
+<code class="prom">mantelhaen.test(margin.table(Titanic, c(2,4,1)))</code>
 
 	Mantel-Haenszel chi-squared test with continuity correction
 
@@ -225,7 +225,7 @@ x = array(c(21, 2,71,42,
 <p>これは，男女について，ある治療をした結果を表す：</p>
 
 <pre>
-<code>x</code>
+<code class="prom">x</code>
 , , Sex = Male
 
            Survival
@@ -244,20 +244,20 @@ Treatment   Alive Dead
 <p>男女をまとめて1つの表にしてしまおう：</p>
 
 <pre>
-<code>y = margin.table(x, c(1,2))</code>
-<code>y</code>
+<code class="prom">y = margin.table(x, c(1,2))</code>
+<code class="prom">y</code>
            Survival
 Treatment   Alive Dead
   Treated      39   72
   Untreated    72   74
-<code>oddsratio(y)</code>
+<code class="prom">oddsratio(y)</code>
 [1] 0.556713
 </pre>
 
 <p>これを見ると，治療しなければ生死はほぼ等しいのに，治療したら死亡のほうが増えてしまうという，まずい治療の例のようである。Fisherの正確検定をしてみる：</p>
 
 <pre>
-<code>fisher.test(y)</code>
+<code class="prom">fisher.test(y)</code>
 
 	Fisher's Exact Test for Count Data
 
@@ -284,7 +284,7 @@ apply(x, 3, oddsratio)
 <p>どちらもオッズ比は 1 より大きく，治療したほうがよい。Mantel-Haenszel 検定は</p>
 
 <pre>
-<code>mantelhaen.test(x)</code>
+<code class="prom">mantelhaen.test(x)</code>
 
 	Mantel-Haenszel chi-squared test with continuity correction
 
@@ -305,7 +305,7 @@ common odds ratio
 <div class="note">
 <p><code>mantelhaen.test()</code> の中を調べると，common odds ratio 6.930492 は次のようにして求めているようである（136，121はそれぞれ男女の総数）：</p>
 <pre>
-<code>(21*42/136 + 18*32/121) / (71*2/136 + 1*70/121)</code>
+<code class="prom">(21*42/136 + 18*32/121) / (71*2/136 + 1*70/121)</code>
 [1] 6.930492
 </pre>
 </div>

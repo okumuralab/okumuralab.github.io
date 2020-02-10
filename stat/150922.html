@@ -35,7 +35,7 @@ MathJax = {
 <p>Rには標準で <code>power.prop.test()</code> という関数が備わっています。これを使えば，</p>
 
 <pre>
-<code>power.prop.test(p1=0.1, p2=0.2, power=0.9, strict=TRUE)</code>
+<code class="prom">power.prop.test(p1=0.1, p2=0.2, power=0.9, strict=TRUE)</code>
 
      Two-sample comparison of proportions power calculation 
 
@@ -54,8 +54,8 @@ NOTE: n is number in *each* group
 <p>また，pwrパッケージにも同様な関数 <code>pwr.2p.test()</code> や，両群のサイズが異なる場合にも使える <code>pwr.2p2n.test()</code> があります。</p>
 
 <pre>
-<code>library(pwr)</code>
-<code>pwr.2p.test(ES.h(0.1,0.2), power=0.9)</code>
+<code class="prom">library(pwr)</code>
+<code class="prom">pwr.2p.test(ES.h(0.1,0.2), power=0.9)</code>
 
      Difference of proportion power calculation for binomial distribution (arcsine transformation) 
 
@@ -77,19 +77,19 @@ NOTE: same sample sizes
 <p>シミュレーションを使って，もっと正確な結果を求めてみましょう。元となる検定には <code>fisher.test()</code> を使うことにします。速さを考えていない素朴なコードです。無駄に回数を多くしていますが，1000回か10000回でも十分です。</p>
 
 <pre>
-<code>foo = function(n) {</code>
+<code class="prom">foo = function(n) {</code>
 <code class="cont">    n1 = rbinom(1, n, 0.1)</code>
 <code class="cont">    n2 = n - n1</code>
 <code class="cont">    n3 = rbinom(1, n, 0.2)</code>
 <code class="cont">    n4 = n - n3</code>
 <code class="cont">    fisher.test(matrix(c(n1,n2,n3,n4), nrow=2))$p.value</code>
 <code class="cont">}</code>
-<code>p = replicate(1000000, foo(260)); mean(p &lt;= 0.05)  # 0.874301</code>
-<code>p = replicate(1000000, foo(265)); mean(p &lt;= 0.05)  # 0.880944</code>
-<code>p = replicate(1000000, foo(270)); mean(p &lt;= 0.05)  # 0.888573</code>
-<code>p = replicate(1000000, foo(275)); mean(p &lt;= 0.05)  # 0.894095</code>
-<code>p = replicate(1000000, foo(280)); mean(p &lt;= 0.05)  # 0.899182</code>
-<code>p = replicate(1000000, foo(285)); mean(p &lt;= 0.05)  # 0.905091</code>
+<code class="prom">p = replicate(1000000, foo(260)); mean(p &lt;= 0.05)  # 0.874301</code>
+<code class="prom">p = replicate(1000000, foo(265)); mean(p &lt;= 0.05)  # 0.880944</code>
+<code class="prom">p = replicate(1000000, foo(270)); mean(p &lt;= 0.05)  # 0.888573</code>
+<code class="prom">p = replicate(1000000, foo(275)); mean(p &lt;= 0.05)  # 0.894095</code>
+<code class="prom">p = replicate(1000000, foo(280)); mean(p &lt;= 0.05)  # 0.899182</code>
+<code class="prom">p = replicate(1000000, foo(285)); mean(p &lt;= 0.05)  # 0.905091</code>
 </pre>
 
 <p>グラフを描くと次のようになり，検出力0.9を得るにはだいたい280症例くらい必要なことがわかります。</p>
