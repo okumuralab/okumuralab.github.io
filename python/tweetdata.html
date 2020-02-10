@@ -20,8 +20,8 @@
 
 <p>JSONはふつう <code>[ ... ]</code> または <code>{ ... }</code> のような形式になっているが，この tweet.js は <code>window.YTD.tweet.part0 = [ ... ]</code> のように頭に変数名が付いている（つまりJSONというよりはJavaScriptファイルになっている）。この部分を削除して読まなければならない。具体的には次のようにする。ここではツイートのID，日時（日本時間に変換したもの），ツイート内容をタブで区切り，ツイート中の改行は適当な文字（ここでは <code>↩︎</code>）で置き換えた。</p>
 
-<pre><code>
-#! /usr/bin/env python3
+<pre>
+<code>#! /usr/bin/env python3
 
 import json
 from dateutil.parser import parse

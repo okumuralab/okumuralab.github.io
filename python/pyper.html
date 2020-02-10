@@ -18,8 +18,8 @@
 
 <p>Python から R を使うには <a href="http://bioinfo.ihb.ac.cn/softwares/PypeR/">PypeR</a>（パイパー）というライブラリが便利です（ほかに <a href="https://rpy2.bitbucket.io">rpy2</a> というライブラリもあります）。PypeR は <code>pip install pyper</code> でインストールできます。</p>
 
-<pre><code>
-In [ ]: import pyper
+<pre>
+<code>In [ ]: import pyper
 
 In [ ]: r = pyper.R()  # Rのインスタンスを作る
 
@@ -55,8 +55,8 @@ In [ ]: !open hoge.png  # Macならこれで画像ファイルを表示できる
 
 <p>Jupyter Notebook なら次のようにすればカレントディレクトリの画像ファイルをブラウザにインライン表示できます：</p>
 
-<pre><code>
-from IPython.display import Image
+<pre>
+<code>from IPython.display import Image
 
 Image('hoge.png')
 </code></pre>
@@ -65,8 +65,8 @@ Image('hoge.png')
 
 <p>R で reticulate を使って R のオブジェクトを Python の npy 形式または npz 形式で保存することができます（参考：<a href="https://cran.r-project.org/web/packages/RcppCNPy/vignettes/UsingReticulate.pdf">Using reticulate to read and write NumPy files</a>）：</p>
 
-<pre><code>
-library(reticulate)
+<pre>
+<code>library(reticulate)
 
 np = import("numpy")
 np$savez("data.npz", x=x, y=y)
@@ -74,8 +74,8 @@ np$savez("data.npz", x=x, y=y)
 
 <p>Python 側での読み込みは次の通りです：</p>
 
-<pre><code>
-import numpy as np
+<pre>
+<code>import numpy as np
 
 data = np.load("data.npz")
 data.files   # ['y', 'x']
@@ -85,14 +85,14 @@ data['y']
 
 <p>逆に Python からの保存：</p>
 
-<pre><code>
-np.savez("data.npz", x=x, y=y)
+<pre>
+<code>np.savez("data.npz", x=x, y=y)
 </code></pre>
 
 <p>R での読み込み：</p>
 
-<pre><code>
-data = np$load("data.npz")
+<pre>
+<code>data = np$load("data.npz")
 data["files"]  # "y" "x"
 data["x"]
 data["y"]

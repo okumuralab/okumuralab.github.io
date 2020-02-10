@@ -18,8 +18,8 @@
 
 <p><a href="https://www.mathjax.org">MathJax</a> がバージョン3になった。以前は</p>
 
-<pre><code>
-&lt;script type="text/x-mathjax-config"&gt;
+<pre>
+<code>&lt;script type="text/x-mathjax-config"&gt;
 MathJax.Hub.Config({
   tex2jax: {
     inlineMath: [['$','$']],
@@ -33,8 +33,8 @@ MathJax.Hub.Config({
 
 <p>などと書いていたものを</p>
 
-<pre><code>
-&lt;script&gt;
+<pre>
+<code>&lt;script&gt;
 MathJax = {
   chtml: {
     matchFontHeight: false
@@ -53,8 +53,8 @@ MathJax = {
 
 <p>上書きは怖いので，カレントディレクトリに <code>new</code> というサブディレクトリを作り，そこに書き出すことにした。<a href="https://docs.python.org/3/library/re.html">正規表現</a>をうまく使うことがキモである：</p>
 
-<pre><code>
-#! /usr/bin/env python3
+<pre>
+<code>#! /usr/bin/env python3
 
 import sys
 import re
@@ -87,8 +87,8 @@ MathJax = {
 
 <p>別の例として，<code>&lt;pre&gt;...&lt;/pre&gt;</code> を <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> に直すコード：</p>
 
-<pre><code>
-for arg in sys.argv[1:]:
+<pre>
+<code>for arg in sys.argv[1:]:
     with open(arg) as f:
         orig = f.read()
     text = orig
@@ -101,8 +101,8 @@ for arg in sys.argv[1:]:
 
 <p>さらに別の例として，<code>&lt;pre&gt;...&lt;/pre&gt;</code> の中の <code>&lt;code&gt;</code> を <code>&lt;code class="prom"&gt;</code> に直す：</p>
 
-<pre><code>
-def foo(x):
+<pre>
+<code>def foo(x):
     t = x.group(0)
     while True:
         u = re.sub('&lt;code&gt;', '&lt;code class="prom"&gt;', t)

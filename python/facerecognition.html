@@ -22,15 +22,15 @@
 
 <p>開発環境が入っていない Windows の場合は <a href="https://colab.research.google.com">Google Colaboratory</a> を使うほうが楽であろう。ただ，なぜだか不明だが <code>dlib</code> がうまく動かないので CUDA を使わないように再インストールした（かなり時間がかかる）：</p>
 
-<pre><code>
-!pip install --upgrade -v --install-option="--no" --install-option="DLIB_USE_CUDA" dlib
+<pre>
+<code>!pip install --upgrade -v --install-option="--no" --install-option="DLIB_USE_CUDA" dlib
 !pip install face-recognition
 </code></pre>
 
 <p>以下では <code>faces_me</code> というディレクトリに私の顔写真が10枚，弟の顔写真が1枚入っているとする。私の顔写真は，メガネをしていなかったころの比較的若いころのものから現在のものまで入っている。</p>
 
-<pre><code>
-import face_recognition
+<pre>
+<code>import face_recognition
 import pathlib
 
 path = pathlib.Path("faces_me")
@@ -56,8 +56,8 @@ for i in range(1, len(names)):
 
 <p>結果は次のようになった：</p>
 
-<pre><code>
- 0.24 
+<pre>
+<code> 0.24 
  0.37  0.35 
  0.32  0.34  0.29 
  0.37  0.38  0.33  0.35 
@@ -73,8 +73,8 @@ for i in range(1, len(names)):
 
 <p>ネットで拾ってきた顔写真10枚を入れたフォルダでも同様に試してみた：</p>
 
-<pre><code>
- 0.70*
+<pre>
+<code> 0.70*
  0.63* 0.65*
  0.60* 0.77* 0.64*
  0.55* 0.69* 0.60* 0.61*
@@ -89,8 +89,8 @@ for i in range(1, len(names)):
 
 <p>ひょっとして米国人ならもっと見分けられるのか。そこで Wikipedia の <a href="https://en.wikipedia.org/wiki/2020_Democratic_Party_presidential_primaries">2020 Democratic Party presidential primaries</a> にある15人の民主党候補の顔写真を取ってきて調べたら，113x160 ないし 123x160 の小さな画像にもかかわらず，どの距離も 0.6 を超えていた。</p>
 
-<pre><code>
- 0.82*
+<pre>
+<code> 0.82*
  0.85* 0.91*
  0.89* 0.98* 0.90*
  0.85* 0.83* 0.98* 0.90*

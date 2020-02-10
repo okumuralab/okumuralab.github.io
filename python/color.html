@@ -30,8 +30,8 @@
 
 <p>簡単な例で説明します。例えば</p>
 
-<pre><code>
-import matplotlib.pyplot as plt
+<pre>
+<code>import matplotlib.pyplot as plt
 
 plt.plot([[1,2], [3,4]])
 </code></pre>
@@ -71,8 +71,8 @@ plt.plot([[1,2], [3,4]])
 
 <p>これらの値は次のようにして確認できます：</p>
 
-<pre><code>
-In [ ]: plt.rcParams['axes.prop_cycle']
+<pre>
+<code>In [ ]: plt.rcParams['axes.prop_cycle']
 Out[ ]: cycler('color', ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', ...])
 </code></pre>
 
@@ -80,15 +80,15 @@ Out[ ]: cycler('color', ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', ...])
 
 <p>もし色をいつも黒にしたいなら，</p>
 
-<pre><code>
-from cycler import cycler
+<pre>
+<code>from cycler import cycler
 plt.rcParams['axes.prop_cycle'] = cycler(color=["black"])
 </code></pre>
 
 <p>あるいは現在のプロットの次の描画からの色を変えるなら，</p>
 
-<pre><code>
-plt.gca().set_prop_cycle(color=['black'])
+<pre>
+<code>plt.gca().set_prop_cycle(color=['black'])
 </code></pre>
 
 <p>とすればよさそうです。</p>

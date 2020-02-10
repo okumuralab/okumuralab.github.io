@@ -25,15 +25,15 @@ window.onload = function() {
 
 <p>まず，<a href="https://www.nier.go.jp/19chousakekkahoukoku/index.html">報告書・調査結果資料</a>からリンクされているファイル群を全部ダウンロードする（これはPythonではなくUNIXのコマンドである）。実際に全部を使うわけではないので，もっと絞ることも可能であるが，とりあえず：</p>
 
-<pre><code>
-wget --timestamping --recursive --no-parent --wait=1 \
+<pre>
+<code>wget --timestamping --recursive --no-parent --wait=1 \
      https://www.nier.go.jp/19chousakekkahoukoku/index.html
 </code></pre>
 
 <p>必要なファイル名のリストを得るには <a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> と正規表現ライブラリ <a href="https://docs.python.org/3/library/re.html">re</a> を使う：</p>
 
-<pre><code>
-import pathlib, re
+<pre>
+<code>import pathlib, re
 
 path = pathlib.Path("www.nier.go.jp/19chousakekkahoukoku/factsheet/19prefecture-City")
 names = sorted([p for p in path.glob("**/*.xlsx") if re.search(r"/\d\dp_19r\.xlsx$", str(p))])
@@ -41,8 +41,8 @@ names = sorted([p for p in path.glob("**/*.xlsx") if re.search(r"/\d\dp_19r\.xls
 
 <p>まず小学校についてExcelファイルを読んで平均正答率を計算する：</p>
 
-<pre><code>
-from openpyxl import load_workbook
+<pre>
+<code>from openpyxl import load_workbook
 import numpy as np
 
 def f(n):
@@ -62,8 +62,8 @@ sho = np.array([f(n) for n in names])
 
 <p>同様に中学校も：</p>
 
-<pre><code>
-names = sorted([p for p in path.glob("**/*.xlsx") if re.search(r"/\d\dm_19r\.xlsx$", str(p))])
+<pre>
+<code>names = sorted([p for p in path.glob("**/*.xlsx") if re.search(r"/\d\dm_19r\.xlsx$", str(p))])
 
 def f(n):
     wb = load_workbook(n, read_only=True)
@@ -86,14 +86,14 @@ chu = np.array([f(n) for n in names])
 
 <p>水平方向に結合する：</p>
 
-<pre><code>
-shochu = np.hstack((sho, chu))
+<pre>
+<code>shochu = np.hstack((sho, chu))
 </code></pre>
 
 <p>CSV形式で保存（Excelや「メモ帳」で文字化けしないようにBOM付きUTF-8，行末CRLF）：</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 
 pd.DataFrame(shochu).to_csv("atest2019.csv", index=False,
                             encoding="utf_8_sig", line_terminator="\r\n",
@@ -104,8 +104,8 @@ pd.DataFrame(shochu).to_csv("atest2019.csv", index=False,
 
 <p>都道府県名は特に付けていない。必要なら次のリストを使う：</p>
 
-<pre><code>
-kenmei = ["北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県",
+<pre>
+<code>kenmei = ["北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県",
   "福島県", "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都",
   "神奈川県", "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県",
   "岐阜県", "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府",
@@ -116,8 +116,8 @@ kenmei = ["北海道", "青森県", "岩手県", "宮城県", "秋田県", "山�
 
 <p>ついでに，各科目の正答数分布（全国，国・公・私立）をリストの形で挙げておく。それぞれ正答数0問，1問，2問，…の生徒（児童）数を並べたものである：</p>
 
-<pre><code>
-mkokugo = [6341, 15894, 25438, 36646, 50880, 69370, 95185, 127786,
+<pre>
+<code>mkokugo = [6341, 15894, 25438, 36646, 50880, 69370, 95185, 127786,
            166953, 203279, 179498]
 
 msuugaku = [8047, 19454, 31928, 40278, 46123, 50376, 53171, 56251,
@@ -137,8 +137,8 @@ psansuu = [2483, 6363, 16106, 27530, 38028, 48859, 61497, 74694,
 
 <p>ついでに主成分分析をしてみる：</p>
 
-<pre><code>
-import numpy as np
+<pre>
+<code>import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 import pandas as pd
@@ -170,8 +170,8 @@ plt.savefig('atest2019pca1.png', bbox_inches="tight")
 
 <p>各主成分の分散の割合は <code>pca.explained_variance_ratio_</code> で調べられる。第一主成分61.8%，第二主成分26.6%である。回転後の座標軸は次の通り：</p>
 
-<pre><code>
-r = pca.components_
+<pre>
+<code>r = pca.components_
 
 plt.clf()
 plt.xlim(-1, 1)

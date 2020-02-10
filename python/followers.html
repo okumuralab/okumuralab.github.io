@@ -20,8 +20,8 @@
 
 <p><a href="https://twilog.org/">Twilog</a> の該当者（ここでは<a href="https://twilog.org/h_okumura/">私</a>）のページの「Stats」をクリックし，ページのソースから <code>ar_</code> を含む部分をコピペする。</p>
 
-<pre><code>
-var ar_data = [];
+<pre>
+<code>var ar_data = [];
 ar_data[1] = [...];
 ar_data[2] = [...];
 ar_data[3] = [...];
@@ -43,8 +43,8 @@ ar_lbl[6] = [...];
 
 <p>この後に次のコードを追加して，全体を実行する。</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 
 t = [pd.to_datetime(x, format="%y%m%d") for x in ar_lbl[6]]
 df = pd.DataFrame(index=t, data={'followers':ar_data[7]})
@@ -57,16 +57,16 @@ df.plot()
 
 <p>最近を見てみよう。例えば10月以降：</p>
 
-<pre><code>
-df[df.index &gt;= "2019-10-01"].plot(marker="o")
+<pre>
+<code>df[df.index &gt;= "2019-10-01"].plot(marker="o")
 </code></pre>
 
 <figure><img src="img/191229b.png" alt="ツイッターのフォロワー数の推移"></figure>
 
 <p>増えたり減ったりしている。10月下旬に急増している日がある。</p>
 
-<pre><code>
-df[(df.index &gt;= "2019-10-20") & (df.index &lt;= "2019-10-31")].plot(marker="o")
+<pre>
+<code>df[(df.index &gt;= "2019-10-20") & (df.index &lt;= "2019-10-31")].plot(marker="o")
 </code></pre>
 
 <p>どうやら10月26日に急増したみたいだ。多分<a href="https://twitter.com/h_okumura/status/1187861548699512832">これ</a>の影響だろう。</p>

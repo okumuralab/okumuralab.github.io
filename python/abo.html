@@ -52,31 +52,31 @@ MathJax = {
 
 <p>古畑（田中）の表をOCRして目視チェックしたものを <a href="../stat/data/abo.xlsx">abo.xlsx</a> として置いておく。Pythonで読み出してみよう：</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 
 df = pd.read_excel("<span class="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/abo.xlsx")
 </code></pre>
 
 <p>これで読めたはずだが，合計が合わない：</p>
 
-<pre><code>
-sum(df['検査人員'][:49])  # 1136456
+<pre>
+<code>sum(df['検査人員'][:49])  # 1136456
 df['検査人員'][49] - sum(df['検査人員'][:49])  # 12167
 </code></pre>
 
 <p>血液型の合計は誤差範囲内で100%になっている：</p>
 
-<pre><code>
-max(abs(df[["O型","A型","B型","AB型"]].sum(axis=1) - 100))  # 0.01
+<pre>
+<code>max(abs(df[["O型","A型","B型","AB型"]].sum(axis=1) - 100))  # 0.01
 </code></pre>
 
 <p>全対象者についてのO，A，B，AB型の比率は 31.51%，37.34%，22.06%，9.10% となっている。都道府県別の対象者人数が人口に比例していないので，都道府県別の割合を人口で重み付けして平均しないといけないが，ここではそこまでやっていない。</p>
 
 <p>この表の「府県名」はJIS X 0401「都道府県コード」の順になっていない。また，当時はまだ沖縄は外地であった。JIS X 0401順に並べ替えるには，次のようにする：</p>
 
-<pre><code>
-kenmei = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
+<pre>
+<code>kenmei = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
           "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山",
           "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重",
           "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根",
@@ -94,22 +94,22 @@ df1 = pd.merge(pref, df, left_on="都道府県名", right_on="府県名").drop(c
 
 <p>こちらも，JIS X 0401順に並べ替えるには，次のようにする：</p>
 
-<pre><code>
-df2 = pd.read_excel("<span class="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/abo2010.xlsx")
+<pre>
+<code>df2 = pd.read_excel("<span class="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/abo2010.xlsx")
 df2 = pd.merge(pref, df2, on="都道府県名")
 </code></pre>
 
 <p>簡単な集計をしてみる：</p>
 
-<pre><code>
-s = df2[["計O","計A","計B","計AB"]].sum()
+<pre>
+<code>s = df2[["計O","計A","計B","計AB"]].sum()
 s / sum(s)
 </code></pre>
 
 <p>結果は次のとおり：</p>
 
-<pre><code>
-計O     0.297807
+<pre>
+<code>計O     0.297807
 計A     0.378646
 計B     0.218775
 計AB    0.104772
@@ -127,8 +127,8 @@ s / sum(s)
 
 <p>古畑（田中）のデータ，高校生のデータ，冒頭で挙げたツイッターでのアンケート2通りを，グラフで比較してみる。</p>
 
-<pre><code>
-import matplotlib.pyplot as plt
+<pre>
+<code>import matplotlib.pyplot as plt
 import numpy as np
 from statsmodels.stats.proportion import proportion_confint
 
@@ -173,8 +173,8 @@ plt.savefig('abo4.png', bbox_inches="tight")
 
 <p>古畑（田中）のデータ：</p>
 
-<pre><code>
-df1a = df1[["O型","A型","B型","AB型"]]
+<pre>
+<code>df1a = df1[["O型","A型","B型","AB型"]]
 df1a.index = df1["都道府県名"]
 
 import matplotlib.pyplot as plt
@@ -215,8 +215,8 @@ plt.savefig('abo1b.png', bbox_inches="tight")
 
 <p>高校生のデータ：</p>
 
-<pre><code>
-df2a = df2[["計O","計A","計B","計AB"]]
+<pre>
+<code>df2a = df2[["計O","計A","計B","計AB"]]
 df2a.index = df2["都道府県名"]
 df2a = df2a[df2a.sum(axis=1) != 0]
 df2a = df2a.div(df2a.sum(axis=1), axis=0)
@@ -258,8 +258,8 @@ plt.savefig('abo2b.png', bbox_inches="tight")
 
 <p>A型はA型遺伝子を持ち，B型はB型遺伝子を持ち，AB型は両方の遺伝子を持ち，O型はどちらも持たない。これに基づいて，横軸にA型遺伝子を持つ割合（A+AB），縦軸にB型遺伝子を持つ割合（B+AB）をとってプロットしてみる。青が古畑（田中）のデータ，橙が高校生のデータである。</p>
 
-<pre><code>
-a1 = (df1["A型"] + df1["AB型"]) / 100
+<pre>
+<code>a1 = (df1["A型"] + df1["AB型"]) / 100
 b1 = (df1["B型"] + df1["AB型"]) / 100
 a2 = df2a["計A"] + df2a["計AB"]
 b2 = df2a["計B"] + df2a["計AB"]

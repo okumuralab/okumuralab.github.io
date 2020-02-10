@@ -22,16 +22,16 @@
 
 <p>デフォルトの設定では <code>python</code> というコマンドで動く Python インタープリタが使われる。これが Python 2.x であり，使いたい Python 3.x が <code>python3</code> というコマンドで動く場合は，ターミナルで次のように打ち込んで <code>pythontex</code> というシンボリックリンクのリンク先を変えてしまうのが楽であるように思う（TeX Live の場合）：</p>
 
-<pre><code>
-cd $(dirname `which pythontex`)
+<pre>
+<code>cd $(dirname `which pythontex`)
 mv pythontex pythontex.bak  # 念のため
 ln -sf ../../texmf-dist/scripts/pythontex/pythontex3.py pythontex
 </code></pre>
 
 <p>試しに次のような LaTeX ファイルを <code>test.tex</code> というファイル名で作る：</p>
 
-<pre><code>
-\documentclass{jsarticle}
+<pre>
+<code>\documentclass{jsarticle}
 \usepackage{pythontex}
 \begin{document}
 \begin{pycode}
@@ -49,8 +49,8 @@ def fibn(n):
 
 <p>これを処理するには</p>
 
-<pre><code>
-platex test
+<pre>
+<code>platex test
 pythontex test
 platex test
 dvipdfmx test

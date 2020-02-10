@@ -29,8 +29,8 @@ window.onload = function() {
 
 <p>厚労省<a href="https://www.mhlw.go.jp/toukei/saikin/hw/life/life18/index.html">平成30年簡易生命表の概況</a>にある平成30年簡易生命表の「年齢」および男女「生存数」（10万人あたり）を抜き出したものを読んでプロットする。</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 import matplotlib.pyplot as plt
 
 df = pd.read_csv("<span id="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/lifetable2018.csv")
@@ -50,8 +50,8 @@ plt.savefig('190731a.png', bbox_inches="tight")
 
 <p>ついでに平均寿命の推移も：</p>
 
-<pre><code>
-df2 = pd.read_csv("<span id="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/life_expectancy_Japan.csv",
+<pre>
+<code>df2 = pd.read_csv("<span id="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/life_expectancy_Japan.csv",
                   comment="#")
 plt.plot(df2.Year, df2.Male, "o-")
 plt.plot(df2.Year, df2.Female, "o-")
@@ -66,8 +66,8 @@ plt.savefig('190731b.png', bbox_inches="tight")
 
 <p>1990年以降に限ってプロット：</p>
 
-<pre><code>
-df3 = df2[df2.Year >= 1990]
+<pre>
+<code>df3 = df2[df2.Year >= 1990]
 plt.plot(df3.Year, df3.Male, "o-")
 plt.plot(df3.Year, df3.Female, "o-")
 plt.xlabel("年")

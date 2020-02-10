@@ -18,24 +18,24 @@
 
 <p>Fisher の有名な「あやめ」のデータをプロットしてみます。まず，データをロードします：</p>
 
-<pre><code>
-from sklearn.datasets import load_iris
+<pre>
+<code>from sklearn.datasets import load_iris
 
 iris = load_iris()
 </code></pre>
 
 <p>ざっとプロットしてみます：</p>
 
-<pre><code>
-import matplotlib.pyplot as plt
+<pre>
+<code>import matplotlib.pyplot as plt
 
 plt.scatter(iris.data[:,0], iris.data[:,1], c=iris.target)
 </code></pre>
 
 <p>もっと丁寧に：</p>
 
-<pre><code>
-plt.clf()  # クリア
+<pre>
+<code>plt.clf()  # クリア
 markers = ['o', '^', 'v']
 for i in range(3):
     d = iris.data[iris.target == i, :]
@@ -49,8 +49,8 @@ plt.legend(iris.target_names)
 
 <p>主成分分析（<a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA">PCA</a>）で2次元にしてからプロットしてみます：</p>
 
-<pre><code>
-from sklearn.decomposition import PCA
+<pre>
+<code>from sklearn.decomposition import PCA
 
 x = PCA(n_components=2).fit_transform(iris.data)
 
@@ -67,8 +67,8 @@ plt.legend(iris.target_names)
 
 <p>次のようにすれば主成分ごとの分散の割合がわかります：</p>
 
-<pre><code>
-pca = PCA(n_components=2)
+<pre>
+<code>pca = PCA(n_components=2)
 x = pca.fit_transform(iris.data)
 pca.explained_variance_ratio_
 </code></pre>
@@ -77,16 +77,16 @@ pca.explained_variance_ratio_
 
 <p>PCAする前に変数ごとに標準化するか，あるいは<a href="https://scikit-learn.org/stable/modules/preprocessing.html">ここ</a>の「Scaling vs Whitening」にあるように <code>PCA(n_components=2, whiten=True)</code> するといいかもしれません。標準化は次のようにします：</p>
 
-<pre><code>
-from sklearn import preprocessing
+<pre>
+<code>from sklearn import preprocessing
 t = preprocessing.scale(iris.data)
 x = PCA(n_components=2).fit_transform(t)
 </code></pre>
 
 <p>3次元ならどうなるでしょうか：</p>
 
-<pre><code>
-x = PCA(n_components=3).fit_transform(iris.data)
+<pre>
+<code>x = PCA(n_components=3).fit_transform(iris.data)
 
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -104,8 +104,8 @@ ax.set_zlabel("3rd")
 
 <p>細かな操作のためには pandas のデータフレームに変換するほうが扱いやすいかもしれません：</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 
 df = pd.DataFrame(iris.data, columns=iris.feature_names)
 df['species'] = iris.target  # または df['species'] = iris.target_names[iris.target]

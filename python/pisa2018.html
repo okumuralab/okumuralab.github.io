@@ -22,29 +22,29 @@
 
 <p>SPSSのsavデータを読むにはpandasの <code>read_spss()</code> でもできるが，これはpyreadstatパッケージを呼び出しているだけである。以下ではpyreadstatを直接使う：</p>
 
-<pre><code>
-import pyreadstat
+<pre>
+<code>import pyreadstat
 </code></pre>
 
 <h2>全部一度に読む（これがエラーになるなら次に進んでください）</h2>
 
 <p>メモリの多いマシンなら全部読み込んでしまうのが手っ取り早い（手元のマシンでは24分ほどかかった）：</p>
 
-<pre><code>
-df, meta = pyreadstat.read_sav('CY07_MSU_STU_QQQ.sav')
+<pre>
+<code>df, meta = pyreadstat.read_sav('CY07_MSU_STU_QQQ.sav')
 </code></pre>
 
 <p>dfは</p>
 
-<pre><code>
-import sys
+<pre>
+<code>import sys
 sys.getsizeof(df)
 </code></pre>
 
 <p>とすればわかるように，約6Gのメモリを占める。</p>
 
-<pre><code>
-df.shape
+<pre>
+<code>df.shape
 </code></pre>
 
 <p>と打ち込めば612004行1118列であることがわかる。</p>
@@ -55,20 +55,20 @@ df.shape
 
 <p>まずはメタデータだけ読んでみよう：</p>
 
-<pre><code>
-df, meta = pyreadstat.read_sav('CY07_MSU_STU_QQQ.sav', metadataonly=True)
+<pre>
+<code>df, meta = pyreadstat.read_sav('CY07_MSU_STU_QQQ.sav', metadataonly=True)
 </code></pre>
 
 <p>メタデータに含まれる変数名とその説明を表示する（長い出力に注意！）：</p>
 
-<pre><code>
-meta.column_names_to_labels
+<pre>
+<code>meta.column_names_to_labels
 </code></pre>
 
 <p>出力は次のようになる：</p>
 
-<pre><code>
-{'CNTRYID': 'Country Identifier',
+<pre>
+<code>{'CNTRYID': 'Country Identifier',
  'CNT': 'Country code 3-character',
  'CNTSCHID': 'Intl. School ID',
  'CNTSTUID': 'Intl. Student ID',
@@ -78,8 +78,8 @@ meta.column_names_to_labels
 
 <p>これでは見にくいので，JSON形式で保存しておくことにする：</p>
 
-<pre><code>
-import json
+<pre>
+<code>import json
 
 with open("column_names_to_labels.json", "w") as f:
     json.dump(meta.column_names_to_labels, f, ensure_ascii=False, indent=2)
@@ -90,14 +90,14 @@ with open("variable_value_labels.json", "w") as f:
 
 <p>これらはそれぞれ変数ラベルとその説明，変数ラベルとその値の説明である。例えば <code>"IC001Q01TA"</code> というラベルについては前者が</p>
 
-<pre><code>
-  "IC001Q01TA": "Available for you to use at home: Desktop computer",
+<pre>
+<code>  "IC001Q01TA": "Available for you to use at home: Desktop computer",
 </code></pre>
 
 <p>後者が</p>
 
-<pre><code>
-  "IC001Q01TA": {
+<pre>
+<code>  "IC001Q01TA": {
     "1.0": "Yes, and I use it",
     "2.0": "Yes, but I don’t use it",
     "3.0": "No",
@@ -110,34 +110,34 @@ with open("variable_value_labels.json", "w") as f:
 
 <p>となっている。国名（3文字）とこの項目だけを改めて読み込んでみよう：</p>
 
-<pre><code>
-df, meta = pyreadstat.read_sav('CY07_MSU_STU_QQQ.sav', usecols=['CNT', 'IC001Q01TA'])
+<pre>
+<code>df, meta = pyreadstat.read_sav('CY07_MSU_STU_QQQ.sav', usecols=['CNT', 'IC001Q01TA'])
 </code></pre>
 
 <p><code>"IC001Q01TA"</code> の回答の度数分布を表示する：</p>
 
-<pre><code>
-df["IC001Q01TA"].value_counts()
+<pre>
+<code>df["IC001Q01TA"].value_counts()
 </code></pre>
 
 <p>結果は</p>
 
-<pre><code>
-1.0    207182
+<pre>
+<code>1.0    207182
 3.0     97676
 2.0     50529
 </code></pre>
 
 <p>となって順番通りにならない。<code>value_counts(sort=False)</code> としてもランダムな順序になる。そこで</p>
 
-<pre><code>
-df.groupby('IC001Q01TA').count()
+<pre>
+<code>df.groupby('IC001Q01TA').count()
 </code></pre>
 
 <p>とすると</p>
 
-<pre><code>
-               CNT
+<pre>
+<code>               CNT
 IC001Q01TA        
 1.0         207182
 2.0          50529
@@ -146,16 +146,16 @@ IC001Q01TA
 
 <p>のように表らしくなってくれる。あるいは別解として</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 
 pd.crosstab(df["IC001Q01TA"], "count")  # "count" はダミー
 </code></pre>
 
 <p>とすると</p>
 
-<pre><code>
-col_0        count
+<pre>
+<code>col_0        count
 IC001Q01TA        
 1.0         207182
 2.0          50529
@@ -164,14 +164,14 @@ IC001Q01TA
 
 <p>になってくれるようだ。<code>crosstab()</code> の本来の使い方は</p>
 
-<pre><code>
-pd.crosstab(df["CNT"], df["IC001Q01TA"])
+<pre>
+<code>pd.crosstab(df["CNT"], df["IC001Q01TA"])
 </code></pre>
 
 <p>のようにして国名と回答の度数分布を</p>
 
-<pre><code>
-IC001Q01TA    1.0   2.0   3.0
+<pre>
+<code>IC001Q01TA    1.0   2.0   3.0
 CNT                          
 ALB          3940   558  1589
 AUS          6858  2406  2738
@@ -183,8 +183,8 @@ BGR          3400   548   503
 
 <p>のように出力することである。日本に限れば</p>
 
-<pre><code>
-df["IC001Q01TA"][df["CNT"] == "JPN"].value_counts()
+<pre>
+<code>df["IC001Q01TA"][df["CNT"] == "JPN"].value_counts()
 # または df[df["CNT"] == "JPN"].groupby('IC001Q01TA').count()
 </code></pre>
 
@@ -192,15 +192,15 @@ df["IC001Q01TA"][df["CNT"] == "JPN"].value_counts()
 
 <p>国ごとに回答1の割合を求めるには</p>
 
-<pre><code>
-s = pd.crosstab(df["CNT"], df["IC001Q01TA"]).apply(lambda x: x.iloc[0]/sum(x), axis=1)
+<pre>
+<code>s = pd.crosstab(df["CNT"], df["IC001Q01TA"]).apply(lambda x: x.iloc[0]/sum(x), axis=1)
 s.sort_values(inplace=True)
 </code></pre>
 
 <p>手抜き棒グラフにする：</p>
 
-<pre><code>
-import matplotlib.pyplot as plt
+<pre>
+<code>import matplotlib.pyplot as plt
 
 plt.barh(s.index, s)
 plt.savefig('191205a.png', bbox_inches="tight")
@@ -212,8 +212,8 @@ plt.savefig('191205a.png', bbox_inches="tight")
 
 <p>国名を日本語にし，ドットプロットにしてみる：</p>
 
-<pre><code>
-co = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/countries.csv")
+<pre>
+<code>co = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/countries.csv")
 dic = { r['三字']: r['国名'] for i,r in co.iterrows() }
 cj = [ dic[x] for x in s.index ]
 

@@ -20,14 +20,14 @@
 
 <p>pip でインストールできる。動作確認は</p>
 
-<pre><code>
-python3 -m pygame.examples.aliens
+<pre>
+<code>python3 -m pygame.examples.aliens
 </code></pre>
 
 <p><a href="https://www.python.org">python.org</a> の Python ではうまくいったが，Homebrew 版 Python では音が出ても画像が出ない。<a href="https://github.com/pygame/pygame/issues/555">対策</a>：</p>
 
-<pre><code>
-pip3 uninstall pygame
+<pre>
+<code>pip3 uninstall pygame
 brew install sdl2 sdl2_gfx sdl2_image sdl2_mixer sdl2_net sdl2_ttf
 git clone https://github.com/pygame/pygame.git
 cd pygame

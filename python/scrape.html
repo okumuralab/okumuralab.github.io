@@ -20,8 +20,8 @@
 
 <p>例えば，このサイトにどれだけリンクがあるかを調べてみよう。まず urllib.request による方法：</p>
 
-<pre><code>
-import urllib.request
+<pre>
+<code>import urllib.request
 import re
 
 with urllib.request.urlopen('http://example.jp/') as f:
@@ -31,8 +31,8 @@ with urllib.request.urlopen('http://example.jp/') as f:
 
 <p>requests による方法：</p>
 
-<pre><code>
-import requests
+<pre>
+<code>import requests
 import re
 
 r = requests.get('http://example.jp/')
@@ -46,8 +46,8 @@ a = re.findall('&lt;a href="(.*?)"', r.text)
 
 <p>ファイルのダウンロードは例えば次のようにする：</p>
 
-<pre><code>
-import requests
+<pre>
+<code>import requests
 import pathlib
 
 r = requests.get('http://example.jp/hoge.png')
@@ -58,14 +58,14 @@ pathlib.Path("hoge.png").write_bytes(r.content)
 
 <p>User Agent（ブラウザの種類）は <code>"python-requests/2.22.0"</code> のような感じで先方のログに残る。これが嫌なら適当に変えられる：</p>
 
-<pre><code>
-r = requests.get('http://example.jp/', headers={'User-Agent': 'hogehoge/001'})
+<pre>
+<code>r = requests.get('http://example.jp/', headers={'User-Agent': 'hogehoge/001'})
 </code></pre>
 
 <p>最後に，いらすとやさんから「科学」ジャンルの画像のサムネール（256x256）をスクレイプする簡単なコード例を挙げておく。カレントディレクトリ下に <code>irasutoya</code> というサブディレクトリがあるとする。</p>
 
-<pre><code>
-import requests
+<pre>
+<code>import requests
 import re
 import pathlib
 import time
@@ -103,8 +103,8 @@ while True:
 
 <p>さらについでに，いらすとやさんの<a href="https://www.irasutoya.com/2014/10/faceicons.html">いろいろな顔アイコン</a>（動物・モンスターを除く人間だけ）以下の256×256サムネールを全部取得してカレントディレクトリの <code>irasutoya2</code> サブディレクトリに入れる：</p>
 
-<pre><code>
-path = pathlib.Path("irasutoya2")
+<pre>
+<code>path = pathlib.Path("irasutoya2")
 names = [re.sub("^.*/", "", str(n)) for n in path.iterdir()]
 
 urls = [

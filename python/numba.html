@@ -20,28 +20,28 @@
 
 <p>速さ比べのため，まずは100万個の乱数を用意します：</p>
 
-<pre><code>
-import numpy as np
+<pre>
+<code>import numpy as np
 
 a = np.random.random(1000000)
 </code></pre>
 
 <p>これをPython標準の <code>sum()</code> 関数を使って合計するのに要する時間を計測します：</p>
 
-<pre><code>
-%timeit sum(a)
+<pre>
+<code>%timeit sum(a)
 </code></pre>
 
 <p>結果：</p>
 
-<pre><code>
-99.9 ms ± 460 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<pre>
+<code>99.9 ms ± 460 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </code></pre>
 
 <p>約100ミリ秒（0.1秒）です。次は，自前の関数を作って，時間を計測します：</p>
 
-<pre><code>
-def sum1(a):
+<pre>
+<code>def sum1(a):
     s = 0
     for x in a:
         s += x
@@ -52,14 +52,14 @@ def sum1(a):
 
 <p>結果：</p>
 
-<pre><code>
-122 ms ± 287 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<pre>
+<code>122 ms ± 287 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </code></pre>
 
 <p>やはり100ミリ秒少々です。次はNumbaを使ってみましょう。<code>pip install numba</code> などとしてインストールしてから，次を実行します：</p>
 
-<pre><code>
-from numba import jit
+<pre>
+<code>from numba import jit
 
 @jit(nopython=True)
 def sum2(a):
@@ -73,20 +73,20 @@ def sum2(a):
 
 <p>結果：</p>
 
-<pre><code>
-1.01 ms ± 5.1 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+<pre>
+<code>1.01 ms ± 5.1 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
 </code></pre>
 
 <p>約1ミリ秒です。100倍速くなりました。最後にNumPyの <code>np.sum()</code> も試します：</p>
 
-<pre><code>
-%timeit np.sum(a)
+<pre>
+<code>%timeit np.sum(a)
 </code></pre>
 
 <p>結果：</p>
 
-<pre><code>
-505 µs ± 3.12 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+<pre>
+<code>505 µs ± 3.12 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
 </code></pre>
 
 <p>Numbaで高速化したものより2倍高速です。</p>

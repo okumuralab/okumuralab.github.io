@@ -18,8 +18,8 @@
 
 <p><a href="https://developer.twitter.com/en/docs/basics/twitter-ids">Twitter ID</a> は snowflake という仕組みで日時から生成される。下位22ビットはユニークな値で，上位は 2010-11-04 01:42:54.657 UTC (2010-11-04 10:42:54.657 JST) を起点としたミリ秒単位の時刻を表す。したがって，IDからツイートのタイムスタンプを求めるには次のようにすればよい：</p>
 
-<pre><code>
-import time
+<pre>
+<code>import time
 
 def id2time(id):
     return ((id >> 22) + 1288834974657) / 1000
@@ -30,8 +30,8 @@ print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(id2time(id))))
 
 <p>2019-09-26 20:52:16 と出力される。あるいは次のようにしてもよい：</p>
 
-<pre><code>
-import numpy as np
+<pre>
+<code>import numpy as np
 
 print(np.datetime64("2010-11-04 10:42:54.657") + np.timedelta64(id >> 22, "ms"))
 </code></pre>
@@ -40,8 +40,8 @@ print(np.datetime64("2010-11-04 10:42:54.657") + np.timedelta64(id >> 22, "ms"))
 
 <p>逆は次のようにすればよい。例えばタイムスタンプ 2019-09-26 20:52:16 のIDは</p>
 
-<pre><code>
-t = '2019-09-26 20:52:16'
+<pre>
+<code>t = '2019-09-26 20:52:16'
 print((np.datetime64(t) - np.datetime64("2010-11-04 10:42:54.657")).astype(int) << 22)
 </code></pre>
 

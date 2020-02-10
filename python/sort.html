@@ -18,8 +18,8 @@
 
 <p>Python には小さい順に並べ替える関数が二つあります。<code>sort()</code> と <code>sorted()</code> です。この違いを，例で体験してみましょう。</p>
 
-<pre><code>
-In [ ]: a = [3, 5, 2, 4, 1]   # 適当なリストを作る
+<pre>
+<code>In [ ]: a = [3, 5, 2, 4, 1]   # 適当なリストを作る
 
 In [ ]: sorted(a)             # 並べ替えたリストを返す
 Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
@@ -40,8 +40,8 @@ Out[ ]: ['an', 'apple', 'have', 'i']  # 文字列は辞書順に
 
 <p>並べ替えをする簡単な関数を作ってみましょう。いろいろなアルゴリズムがありますが，次のものは選択ソート（selection sort）というものです：</p>
 
-<pre><code>
-def selectsort(a):
+<pre>
+<code>def selectsort(a):
     n = len(a)
     for i in range(n):
         k = i
@@ -55,8 +55,8 @@ def selectsort(a):
 
 <p>うまくいくか試してみましょう：</p>
 
-<pre><code>
-In [ ]: a = [3, 5, 2, 4, 1]   # 適当なリストを作る
+<pre>
+<code>In [ ]: a = [3, 5, 2, 4, 1]   # 適当なリストを作る
 
 In [ ]: selectsort(a)         # うまくいくかな？
 
@@ -66,8 +66,8 @@ Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
 
 <p>もっと速いアルゴリズムとしてクイックソート（quicksort）が知られています：</p>
 
-<pre><code>
-def quicksort(a, first=0, last=None):
+<pre>
+<code>def quicksort(a, first=0, last=None):
     if last is None:
         last = len(a) - 1
     x = a[(first + last) // 2]
@@ -95,8 +95,8 @@ def quicksort(a, first=0, last=None):
 
 <p>時間を比べてみましょう。Wall time が実時間（壁にかかっている時計で計った時間）です：</p>
 
-<pre><code>
-In [ ]: import random
+<pre>
+<code>In [ ]: import random
 
 In [ ]: a = [random.random() for _ in range(10000)]
 

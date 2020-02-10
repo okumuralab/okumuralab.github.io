@@ -18,8 +18,8 @@
 
 <p>Twitter を Python から使うライブラリは <a href="https://developer.twitter.com/en/docs/developer-utilities/twitter-libraries.html">Twitter libraries</a> の Python の項にいくつかリストされている。どれがいいかわからないが，とりあえず一番上の <a href="https://github.com/bear/python-twitter/">python-twitter</a> を試してみる。インストールは</p>
 
-<pre><code>
-pip install python-twitter
+<pre>
+<code>pip install python-twitter
 </code></pre>
 
 <p>でできる。</p>
@@ -30,8 +30,8 @@ pip install python-twitter
 
 <p>試してみよう：</p>
 
-<pre><code>
-import twitter
+<pre>
+<code>import twitter
 
 api = twitter.Api(consumer_key='...',
                   consumer_secret='...',
@@ -47,8 +47,8 @@ home = api.GetHomeTimeline() # ホームタイムラインを取得（デフォ�
 
 <p>これで <code>home</code> を表示すればだいたいの感じがわかる。このクラスの詳細は <code>??twitter.models.Status</code> と打ち込めば出てくる。この中の必要な項目を自分好みに出力すればよい。簡単な例を挙げておく：</p>
 
-<pre><code>
-for t in home:
+<pre>
+<code>for t in home:
     if (t.retweeted_status):
         t = t.retweeted_status
     for u in t.urls:
@@ -60,8 +60,8 @@ for t in home:
 
 <p>書き込みはこんな感じ（通常はツイート本文だけでよい）：</p>
 
-<pre><code>
-api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
+<pre>
+<code>api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
                media="hoge.jpg",  # 添付画像ファイル
                in_reply_to_status_id=1140050903828819970, # リプライ先のツイートID
                auto_populate_reply_metadata=True, # リプライ先の @... を自動挿入
@@ -78,8 +78,8 @@ api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
 
 <p>毎時cronで起動して日毎のホームタイムラインをファイルにするコード例：</p>
 
-<pre><code>
-#! /usr/local/bin/python3
+<pre>
+<code>#! /usr/local/bin/python3
 
 import twitter
 import time
@@ -133,8 +133,8 @@ with open(time.strftime("%Y%m%d"), "a", newline="\n") as f:
 
 <p>検索は python-twitter の<a href="https://python-twitter.readthedocs.io/en/latest/searching.html">ドキュメント</a>や，Twitter API の <a href="https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets">Search Tweets</a>，<a href="https://developer.twitter.com/en/docs/tweets/search/guides">Search Tweet Guides</a> 参照。例：</p>
 
-<pre><code>
-import urllib.parse
+<pre>
+<code>import urllib.parse
 
 query = {"q": "ほげ ふが",        # 検索文字列（スペース区切り）
          "result_type": "recent", # 新しいもの順に取得
@@ -155,8 +155,8 @@ while True:
 
 <p>結果をMeCabで形態素解析し，名詞の出現頻度をグラフにしてみよう：</p>
 
-<pre><code>
-import MeCab
+<pre>
+<code>import MeCab
 import collections
 
 text = ""

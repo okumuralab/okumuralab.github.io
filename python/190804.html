@@ -29,8 +29,8 @@ window.onload = function() {
 
 <p><a href="https://ganjoho.jp/reg_stat/statistics/brochure/monitoring.html">全国がん罹患モニタリング集計</a>にある<a href="https://ganjoho.jp/data/reg_stat/statistics/brochure/mcij2015_report.pdf">全国がん罹患モニタリング集計　2015年罹患数・率報告（平成31年3月）（PDF：31,131KB) </a>から各都道府県の白血病についてのデータを抜き出してCSVにしたもの <a href="data/mcij2015leu.csv">mcij2015leu.csv</a> を作成した（方法は後述）。この年齢調整罹患率（日本人口）を使って日本地図を描く。</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 import japanmap as jp
 import matplotlib.pyplot as plt
 
@@ -65,14 +65,14 @@ with open("190804e.svg", "w") as f:
 
 <p>まずPDFをテキストに変換する：</p>
 
-<pre><code>
-pdftotext -raw mcij2015_report.pdf
+<pre>
+<code>pdftotext -raw mcij2015_report.pdf
 </code></pre>
 
 <p>できたテキストファイルからデータを取り出す次のようなスクリプトを作る。<a href="https://docs.python.org/3/library/fileinput.html">fileinput</a> と正規表現ライブラリ <a href="https://docs.python.org/3/library/re.html">re</a> を使う：</p>
 
-<pre><code>
-#! /usr/bin/env python3
+<pre>
+<code>#! /usr/bin/env python3
 
 import re
 import fileinput

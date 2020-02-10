@@ -26,8 +26,8 @@
 
 <p>ライブラリ自体は <code>pip install fitbit</code> で入る。後で <code>cherrypy</code> も必要になる。<a href="https://github.com/orcasgit/python-fitbit">リポジトリ</a> にある gather_keys_oauth2.py を同じディレクトリに置いて作業する。</p>
 
-<pre><code>
-import fitbit
+<pre>
+<code>import fitbit
 import gather_keys_oauth2 as Oauth2
 import pandas as pd 
 import datetime
@@ -43,8 +43,8 @@ REFRESH_TOKEN = str(server.fitbit.client.session.token['refresh_token'])
 
 <p>これを実行すると，ブラウザが開き，アクセス機能を求める画面が出る。「すべて許可する」をチェックして「許可」ボタンを押すと，「You are now authorized to access the Fitbit API! You can close this window」と出る。次からはログイン画面だけになる。これらを使ってクライアントを作る：</p>
 
-<pre><code>
-auth2_client = fitbit.Fitbit(CLIENT_ID, CLIENT_SECRET, oauth2=True,
+<pre>
+<code>auth2_client = fitbit.Fitbit(CLIENT_ID, CLIENT_SECRET, oauth2=True,
                              access_token=ACCESS_TOKEN, refresh_token=REFRESH_TOKEN)
 </code></pre>
 
@@ -52,8 +52,8 @@ auth2_client = fitbit.Fitbit(CLIENT_ID, CLIENT_SECRET, oauth2=True,
 
 <p>例として昨日の心拍数を取得してみる：</p>
 
-<pre><code>
-yesterday = str((datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y%m%d"))
+<pre>
+<code>yesterday = str((datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y%m%d"))
 yesterday2 = str((datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d"))
 today = str(datetime.datetime.now().strftime("%Y%m%d"))
 
@@ -64,8 +64,8 @@ fit_statsHR = auth2_client.intraday_time_series('activities/heart',
 
 <p><code>fit_statsHR</code> にデータが入る。最初の10個くらいを眺めてみる：</p>
 
-<pre><code>
-In [ ]: fit_statsHR['activities-heart-intraday']['dataset'][:10]
+<pre>
+<code>In [ ]: fit_statsHR['activities-heart-intraday']['dataset'][:10]
 Out[ ]: 
 [{'time': '08:40:10', 'value': 70},
  {'time': '08:40:25', 'value': 70},
@@ -81,8 +81,8 @@ Out[ ]:
 
 <p>だいたい5〜15秒ごとのデータが取れているようである。このままでは扱いにくいので，pandas の　DataFrame に直す：</p>
 
-<pre><code>
-date = fit_statsHR['activities-heart'][0]['dateTime']
+<pre>
+<code>date = fit_statsHR['activities-heart'][0]['dateTime']
 t = [pd.to_datetime(date + ' ' + x['time'])
      for x in fit_statsHR['activities-heart-intraday']['dataset']]
 v = [x['value'] for x in fit_statsHR['activities-heart-intraday']['dataset']]
@@ -91,28 +91,28 @@ df = pd.DataFrame({'Heart Rate':v}, index=t)
 
 <p>日付入りのファイル名で CSV に保存する：</p>
 
-<pre><code>
-df.to_csv('heart' + yesterday + '.csv')
+<pre>
+<code>df.to_csv('heart' + yesterday + '.csv')
 </code></pre>
 
 <p>読むには次のようにする：</p>
 
-<pre><code>
-df = pd.read_csv("heart20190718.csv", index_col=0, parse_dates=[0])
+<pre>
+<code>df = pd.read_csv("heart20190718.csv", index_col=0, parse_dates=[0])
 </code></pre>
 
 <p>簡単なプロット：</p>
 
-<pre><code>
-df.plot(figsize=(10,5))
+<pre>
+<code>df.plot(figsize=(10,5))
 </code></pre>
 
 <figure><img src="img/heart190718.png" alt="心拍数"></figure>
 
 <p>もうちょっと軸を読みやすくするには，次のようにする：</p>
 
-<pre><code>
-import matplotlib.dates as mdates
+<pre>
+<code>import matplotlib.dates as mdates
 
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
@@ -124,8 +124,8 @@ ax.plot(df)
 
 <p>さらに点ごとに色を付けてみる：</p>
 
-<pre><code>
-cm = plt.get_cmap('jet')
+<pre>
+<code>cm = plt.get_cmap('jet')
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 plt.gca().xaxis.set_major_locator(locator)
@@ -137,8 +137,8 @@ plt.ylim(50, 170)
 
 <p>Seaborn を使ってみる：</p>
 
-<pre><code>
-import seaborn as sns
+<pre>
+<code>import seaborn as sns
 
 pd.plotting.register_matplotlib_converters()
 cm = plt.get_cmap('jet')

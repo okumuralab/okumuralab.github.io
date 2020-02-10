@@ -30,14 +30,14 @@
 
 <p>確認として，Windows PowerShell（あるいは VS Code のターミナル，またはコマンドプロンプト）を立ち上げ，</p>
 
-<pre><code>
-where.exe python
+<pre>
+<code>where.exe python
 </code></pre>
 
 <p>と打ち込んで，正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell では <code>.exe</code> を省略できないようです）。うまくいっていれば</p>
 
-<pre><code>
-C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37\python.exe
+<pre>
+<code>C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37\python.exe
 C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 </code></pre>
 
@@ -45,8 +45,8 @@ C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 
 <p>同様に <code>pip</code> も確認します。</p>
 
-<pre><code>
-C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37\Scripts\pip.exe
+<pre>
+<code>C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37\Scripts\pip.exe
 </code></pre>
 
 <p>ほかに <a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされますが，ここでは使いません。</p>
@@ -55,14 +55,14 @@ C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37\Scripts\pip.exe
 
 <p>まずは，アップデートの必要なパッケージを，次のコマンドで調べます：</p>
 
-<pre><code>
-pip list --outdated
+<pre>
+<code>pip list --outdated
 </code></pre>
 
 <p>最初は pip そのものが古いはずですので，まずこれを <code>python -m pip install --upgrade pip</code> としてアップグレードします。これ以外に必要なパッケージは，その都度インストールします。例：</p>
 
-<pre><code>
-pip install numpy matplotlib pandas jupyter
+<pre>
+<code>pip install numpy matplotlib pandas jupyter
 </code></pre>
 
 <p>念のため，Windows PowerShell でパスを確認するには <code>$env:path</code> と打ち込みます。コマンドプロンプトなら <code>path</code> と打ち込みます。</p>
@@ -75,8 +75,8 @@ pip install numpy matplotlib pandas jupyter
 
 <p>インストールすると，Mac では <code>~/.bash_profile</code> の最後にパスが付け加えられます：</p>
 
-<pre><code>
-PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
+<pre>
+<code>PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
 export PATH
 </code></pre>
 
@@ -86,28 +86,28 @@ export PATH
 
 <p>まずは，アップデートの必要なパッケージを，次のコマンドで調べます：</p>
 
-<pre><code>
-pip3 list --outdated
+<pre>
+<code>pip3 list --outdated
 </code></pre>
 
 <p>最初は pip そのものが古いはずですので，まずこれをアップデートしましょう。単に <code>pip3 install --upgrade pip</code> とすれば Permission denied のエラーになると思いますので，次のようにターミナルに打ち込みます：</p>
 
-<pre><code>
-pip3 install --user --upgrade pip
+<pre>
+<code>pip3 install --user --upgrade pip
 </code></pre>
 
 <p>このように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> にさきほど追加されたものを</p>
 
-<pre><code>
-PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
+<pre>
+<code>PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
 PATH="${HOME}/Library/Python/3.7/bin:${PATH}"
 export PATH
 </code></pre>
 
 <p>と編集すればいいでしょう。これ以外に必要なパッケージは，その都度インストールします。例：</p>
 
-<pre><code>
-pip3 install --user ipython numpy matplotlib pandas jupyter
+<pre>
+<code>pip3 install --user ipython numpy matplotlib pandas jupyter
 </code></pre>
 
 <p>ソースでしか提供されていないパッケージには，ビルドに gfortran が必要な場合もあります。Homebrew なら brew install gcc で入ります。</p>
@@ -124,8 +124,8 @@ pip3 install --user ipython numpy matplotlib pandas jupyter
 
 <p>2019-10-08 に出た macOS Catalina には，以前からの /usr/bin/python（バージョン 2.7.16）に加えて，/usr/bin/python3 が入っています。現時点のバージョンは 3.7.3 です。ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールしてから使います。まずは</p>
 
-<pre><code>
-/usr/bin/pip3 install --user --upgrade pip
+<pre>
+<code>/usr/bin/pip3 install --user --upgrade pip
 </code></pre>
 
 <p>で pip を更新します。新しい pip コマンド等が ~/Library/Python/3.7/bin に入りますので，そちらにパスを通しておきます。あとは本家のものと同じように使えそうです。</p>
@@ -146,8 +146,8 @@ pip3 install --user ipython numpy matplotlib pandas jupyter
 
 <p>パッケージのインストールや更新は <code>pip3</code> コマンドで行います。<code>pip</code> 自身の更新は</p>
 
-<pre><code>
-pip3 install --upgrade pip
+<pre>
+<code>pip3 install --upgrade pip
 </code></pre>
 
 <p>とします。つまりパッケージ名は <code>pip</code>，コマンド名は <code>pip3</code> なのがややこしいところです（<a href="https://docs.brew.sh/Homebrew-and-Python">ここ</a>参照）。ただ，Homebrew の Python 3 だけをインストールした場合，<code>pip</code> コマンドと <code>pip3</code> コマンドは同じものになるようです。</p>
@@ -164,28 +164,28 @@ pip3 install --upgrade pip
 
 <p>まず <code>~/.bash_profile</code> に次を書き込みます：</p>
 
-<pre><code>
-PYENV_ROOT="$HOME/.pyenv"
+<pre>
+<code>PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 </code></pre>
 
 <p>次のコマンドでインストール可能なバージョンを確認します：</p>
 
-<pre><code>
-pyenv install --list
+<pre>
+<code>pyenv install --list
 </code></pre>
 
 <p>例えば Python 3.7.3 をインストールしたいなら</p>
 
-<pre><code>
-pyenv install 3.7.3
+<pre>
+<code>pyenv install 3.7.3
 </code></pre>
 
 <p>と打ち込みます。<code>pyenv versions</code> でバージョンを確認します。おそらく <code>system</code> と <code>3.7.3</code> があり，デフォルトでは前者になっているので，新しいほうに替えます：</p>
 
-<pre><code>
-pyenv global 3.7.3
+<pre>
+<code>pyenv global 3.7.3
 pyenv rehash
 </code></pre>
 
@@ -195,8 +195,8 @@ pyenv rehash
 
 <p>あとは pip で更新・追加インストールします。例：</p>
 
-<pre><code>
-pip list --outdated
+<pre>
+<code>pip list --outdated
 pip install --upgrade pip
 pip install ipython numpy scipy matplotlib pandas jupyter
 </code></pre>
@@ -209,16 +209,16 @@ pip install ipython numpy scipy matplotlib pandas jupyter
 
 <p>Mac にも pkg 形式のインストーラがありますが，私は Mac や CentOS で bash installer を使いました：</p>
 
-<pre><code>
-bash Miniconda3-latest-*-x86_64.sh
+<pre>
+<code>bash Miniconda3-latest-*-x86_64.sh
 </code></pre>
 
 <p>まずは ENTER を押せと言ってきます。Enter を押すと，ライセンスを表示して，アクセプトするかと聞いてくるので，<code>yes</code> と答えます。次に，インストールの場所は <code>~/miniconda3</code> で良いかと聞いてくるので，それで良ければ Enter を，別の場所（例えば <code>/usr/local/miniconda3</code>）に変えたければその場所を打ち込みます。最後に <code>conda init</code> を実行するかと聞いてくるので，<code>yes</code> と打つと，Mac では <code>~/.bash_profile</code> の最後に，Linux では <code>~/.bashrc</code> の最後に，コードが追加されます。シェルを開き直すか <code>~/.bash何々</code> を再読み込みすると，Mac なら自動でプロンプトの最初に <code>(base)</code> が出て，基本設定の Miniconda 環境が使えるようになります。Linux では安全のため毎回 <code>conda activate</code> と打たないと Miniconda 環境になりません。元の環境（システムの <code>/usr/bin/python</code> を使う）に戻すには <code>conda deactivate</code> します。Mac でも自動アクティベートをオフにしたければ <code>conda config --set auto_activate_base false</code> と打ち込みます（<code>~/.condarc</code> に <code>auto_activate_base: false</code> と書き込まれます）。</p>
 
 <p>パッケージ管理は <code>conda</code> コマンドで行います：</p>
 
-<pre><code>
-conda update --all
+<pre>
+<code>conda update --all
 conda list
 conda install ipython numpy scipy matplotlib pandas scikit-learn
 </code></pre>
@@ -237,8 +237,8 @@ conda install ipython numpy scipy matplotlib pandas scikit-learn
 
 <p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し，ビルドします。次は3.7.4の場合です：</p>
 
-<pre><code>
-wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz
+<pre>
+<code>wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz
 tar xvJf Python-3.7.4.tar.xz
 cd Python-3.7.4
 ./configure --enable-optimizations
@@ -249,15 +249,15 @@ make install
 <!--
 <div class="note">
 <p>ある CentOS 7 マシンで Python 3.7.3 をインストールしようとしたら <code>make install</code> で次のようなエラーに遭遇：</p>
-<pre><code>
-  File "/usr/local/src/Python-3.7.3/Lib/ctypes/__init__.py", line 7, in <module>
+<pre>
+<code>  File "/usr/local/src/Python-3.7.3/Lib/ctypes/__init__.py", line 7, in <module>
     from _ctypes import Union, Structure, Array
 ModuleNotFoundError: No module named '_ctypes'
 make: *** [install] エラー 1
 </code></pre>
 <p>次のようにして <code>libffi-devel</code> をインストールして再度 <code>make install</code> したらうまくいった：</p>
-<pre><code>
-# yum install libffi-devel
+<pre>
+<code># yum install libffi-devel
 </code></pre>
 </div>
 -->
@@ -280,8 +280,8 @@ make: *** [install] エラー 1
 
 <p>サーバ側に Python をインストールし，jupyter 等を入れておきます。サーバ側で <code>jupyter notebook --generate-config</code> を実行し，生成された <code>~/.jupyter/jupyter_notebook_config.py</code> を編集してリモートからの接続を許可します。</p>
 
-<pre><code>
-c.NotebookApp.allow_remote_access = True
+<pre>
+<code>c.NotebookApp.allow_remote_access = True
 c.NotebookApp.ip = '*'
 c.NotebookApp.open_browser = False
 c.NotebookApp.port = 8888
@@ -289,8 +289,8 @@ c.NotebookApp.port = 8888
 
 <p>パスワードを設定するには，Python で <code>from notebook.auth import passwd; passwd()</code> を実行し，パスワードを打ち込み，表示されるパスワードのハッシュを <code>~/.jupyter/jupyter_notebook_config.py</code> に記入します：</p>
 
-<pre><code>
-c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea58f8d'
+<pre>
+<code>c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea58f8d'
 </code></pre>
 
 <p>これで，サーバ側で，重要なものの入っていないディレクトリの中で <code>nohup jupyter notebook &amp;</code> を実行し，リモートのブラウザで <code>http://ホスト名:8888</code> をアクセスします。</p>

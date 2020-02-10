@@ -22,28 +22,28 @@
 
 <p>まずはパッケージなしでやってみます。データを与えます：</p>
 
-<pre><code>
-x = [2, 3, 4, 5]
+<pre>
+<code>x = [2, 3, 4, 5]
 </code></pre>
 
 <p>これは他のプログラミング言語でいう配列に近いもので，Python では list（リスト）といいます。単に <code>x</code> と打ち込めばデータがそのまま表示されます。これの和は</p>
 
-<pre><code>
-sum(x)
+<pre>
+<code>sum(x)
 </code></pre>
 
 <p>で求められます。平均を求める関数はないので，和を長さで割って</p>
 
-<pre><code>
-sum(x) / len(x)
+<pre>
+<code>sum(x) / len(x)
 </code></pre>
 
 <p>で平均がわかります。</p>
 
 <p>リスト以外に，Python には tuple（タプルまたはテュープルと読む）という1次元の配列のようなものがあります。<code>[ ]</code> を使えばリスト，<code>( )</code> を使えばタプルです：</p>
 
-<pre><code>
-t = (2, 3, 4, 5)
+<pre>
+<code>t = (2, 3, 4, 5)
 sum(t) / len(t)
 </code></pre>
 
@@ -51,8 +51,8 @@ sum(t) / len(t)
 
 <p>リストは要素を変えられますが，タプルは変えられません：</p>
 
-<pre><code>
-x = [2, 3, 4, 5]
+<pre>
+<code>x = [2, 3, 4, 5]
 t = (2, 3, 4, 5)
 x[2] = 30
 t[2] = 30    # TypeError: 'tuple' object does not support item assignment
@@ -64,14 +64,14 @@ t.append(6)  # AttributeError: 'tuple' object has no attribute 'append'
 
 <p>次に，<code>statistics</code> という標準パッケージを使ってみます。</p>
 
-<pre><code>
-import statistics as st
+<pre>
+<code>import statistics as st
 </code></pre>
 
 <p>これで試してみましょう：</p>
 
-<pre><code>
-st.mean(x)      # 平均
+<pre>
+<code>st.mean(x)      # 平均
 st.median(x)    # 中央値
 st.variance(x)  # n-1 で割る方式の分散
 st.pvariance(x) # n で割る方式の分散
@@ -85,14 +85,14 @@ st.pstdev(x)    # n で割る方式の標準偏差
 
 <p>NumPy パッケージはベクトルや行列を扱う科学技術計算に不可欠なものです。</p>
 
-<pre><code>
-import numpy as np
+<pre>
+<code>import numpy as np
 </code></pre>
 
 <p>これで，例えば平均を求める <code>np.mean()</code> 関数が使えます：</p>
 
-<pre><code>
-np.mean(x)        # 平均
+<pre>
+<code>np.mean(x)        # 平均
 np.median(x)      # 中央値
 np.var(x)         # n で割る方式の分散
 np.var(x, ddof=1) # n-1 で割る方式の分散
@@ -103,28 +103,28 @@ np.quantile(x, [0, 0.25, 0.5, 0.75, 1])  # 四分位数など
 
 <p>NumPy の本当の威力を発揮するには，データを次のようにして作ります：</p>
 
-<pre><code>
-x = np.array([2, 3, 4, 5])
+<pre>
+<code>x = np.array([2, 3, 4, 5])
 </code></pre>
 
 <p>こうすると，標準の <code>list</code> 型ではなく，<code>numpy.ndarray</code> 型になります。この型のものは</p>
 
-<pre><code>
-x.mean()   # np.mean(x) と同じ
+<pre>
+<code>x.mean()   # np.mean(x) と同じ
 </code></pre>
 
 <p>のような書き方もできます。これだけならどうでもいいことですが，</p>
 
-<pre><code>
-np.sqrt(x)  # x の一つ一つの要素について平方根を求める
+<pre>
+<code>np.sqrt(x)  # x の一つ一つの要素について平方根を求める
 </code></pre>
 
 <p>のように，ベクトルや行列の個々の要素に対する計算が一度にできます。</p>
 
 <p><code>np.*</code> の形のものの一覧を挙げておきます：</p>
 
-<pre><code>
-np.ALLOW_THREADS                np.AxisError                    np.BUFSIZE
+<pre>
+<code>np.ALLOW_THREADS                np.AxisError                    np.BUFSIZE
 np.CLIP                         np.ComplexWarning               np.DataSource
 np.ERR_CALL                     np.ERR_DEFAULT                  np.ERR_IGNORE
 np.ERR_LOG                      np.ERR_PRINT                    np.ERR_RAISE
@@ -332,14 +332,14 @@ np.who                          np.zeros                        np.zeros_like
 
 <p><code>pandas</code> は一番 R に近い機能を提供するパッケージです。</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 </code></pre>
 
 <p>pandas での1次元配列に相当するものは Series というデータ型です。これは <code>numpy.ndarray</code> 型を拡張したもので，ベクトルというよりは，1個の列だけのデータフレーム（2次元データ）です：</p>
 
-<pre><code>
-s = pd.Series([1,2,3,4])
+<pre>
+<code>s = pd.Series([1,2,3,4])
 s.sum()       # 和 pd.Series.sum(s) と同じ（以下同）
 s.mean()      # 平均
 s.median()    # 中央値

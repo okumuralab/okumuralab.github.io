@@ -39,8 +39,8 @@ window.onload = function() {
 
 <p>このデータから，周産期死亡率の推移をグラフにしてみよう：</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 import matplotlib.pyplot as plt
 
 birth = pd.read_csv("<span class="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/python/</span>data/birth.csv")
@@ -70,8 +70,8 @@ plt.savefig('190802a.png', bbox_inches="tight")
 
 <p>論文では2012年の影響が大きいようなグラフになっていたが，2012年の死亡率分布を地図にしてみよう：</p>
 
-<pre><code>
-import japanmap as jp
+<pre>
+<code>import japanmap as jp
 
 x = perinatal['2012'] / birth['2012']
 x = (x - min(x)) / (max(x) - min(x))
@@ -93,8 +93,8 @@ with open("190802b.svg", "w") as f:
 
 <p>念のため，ちょっと見にくいが，全都道府県のグラフを（透明度を少し入れて）重ね書きしてみる：</p>
 
-<pre><code>
-rate = perinatal / birth[[str(y) for y in range(1998,2018)]]
+<pre>
+<code>rate = perinatal / birth[[str(y) for y in range(1998,2018)]]
 for i in range(47):
     if i in control:
         plt.plot(years, rate.iloc[i,:], c="C0", alpha=0.5)

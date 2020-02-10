@@ -19,16 +19,16 @@
 <p><a href="http://www.oecd.org/education/talis/">TALIS - The OECD Teaching and Learning International Survey</a> のデータを R で読んで解析する手順は，りん先生の <a href="https://www.con3.com/rinlab/?p=3552">RでTALIS2018</a> に書かれている通りである。ここでは Python で同じことをやってみる。</p>
 
 <p>pandas の <a href="http://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">IO Tools</a> のページにいろいろなファイルの読み方が書いてあるが，SPSS のファイルについては書かれていない。書いてないだけで，<code>read_spss()</code> という関数があるが，それは <a href="https://github.com/Roche/pyreadstat">pyreadstat</a> パッケージを使っているだけである。ここでは pyreadstat を直接使うことにする。これは R の haven パッケージと同程度に高速である。試しに中学校のデータを読んでみる：</p>
-<pre><code>
-import pyreadstat
+<pre>
+<code>import pyreadstat
 
 df, meta = pyreadstat.read_sav("BTGINTT3.sav")
 </code></pre>
 
 <p>これで <code>df</code> に 153682 行 397 列のデータが，<code>meta</code> にメタデータが入る。メタデータには次のものがある：</p>
 
-<pre><code>
-meta.column_labels 	meta.column_names 	meta.file_encoding
+<pre>
+<code>meta.column_labels 	meta.column_names 	meta.file_encoding
 meta.file_format 	meta.file_label 	meta.missing_ranges
 meta.missing_user_values 	meta.notes 	meta.number_columns
 meta.number_rows 	meta.original_variable_types 	meta.table_name
@@ -39,32 +39,32 @@ meta.variable_value_labels
 
 <p>国別の行数は次のようにして求められる：</p>
 
-<pre><code>
-df['CNTRY'].value_counts()
+<pre>
+<code>df['CNTRY'].value_counts()
 </code></pre>
 
 <p>日本（<code>JPN</code>）は 3555 件ある。</p>
 
 <p>例えばアンケート 34. In your teaching, to what extent can you do the following? の中の m) Support student learning through the use of digital technology (e.g. computers, tablets, smart boards) の回答（1 = Not at all, 2 = To some extent, 3 = Quite a bit, 4 = A lot）については <code>df['TT3G34M']</code> にある。この度数分布は <code>df['TT3G34M'].value_counts()</code> で求められる。日本に限定した度数分布は</p>
 
-<pre><code>
-df['TT3G34M'][df['CNTRY'] == 'JPN'].value_counts()
+<pre>
+<code>df['TT3G34M'][df['CNTRY'] == 'JPN'].value_counts()
 </code></pre>
 
 <p>で求められる。</p>
 
 <p>データを国で分類し，上記アンケート結果の平均を求め，昇順に並べ，NaN でないものだけを残す：</p>
 
-<pre><code>
-s = df.groupby('CNTRY')['TT3G34M'].mean()
+<pre>
+<code>s = df.groupby('CNTRY')['TT3G34M'].mean()
 s.sort_values(inplace=True)
 s = s[s.notna()]
 </code></pre>
 
 <p>とりあえず簡単な棒グラフで表す：</p>
 
-<pre><code>
-import matplotlib.pyplot as plt
+<pre>
+<code>import matplotlib.pyplot as plt
 
 plt.figure(figsize=[6.4, 9])
 plt.barh(s.index, s)
@@ -73,16 +73,16 @@ plt.xlim(1, 4)
 
 <p>ドットプロットにしてみる：</p>
 
-<pre><code>
-plt.plot(s, s.index, "o")
+<pre>
+<code>plt.plot(s, s.index, "o")
 plt.grid()
 plt.xlim(1, 4)
 </code></pre>
 
 <p>国名を日本語にするには，次のようにすればよい：</p>
 
-<pre><code>
-co = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/countries.csv")
+<pre>
+<code>co = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/countries.csv")
 dic = { r['三字']: r['国名'] for i,r in co.iterrows() }
 cj = [ dic[x] for x in s.index ]
 

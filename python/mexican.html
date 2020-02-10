@@ -18,8 +18,8 @@
 
 <p>3次元で <a href="https://en.wikipedia.org/wiki/Mexican_hat_wavelet">Mexican hat</a> を描いてみます：</p>
 
-<pre><code>
-import numpy as np
+<pre>
+<code>import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -44,28 +44,28 @@ plt.savefig('mexican.png', bbox_inches="tight")
 
 <p><code>Axes3D</code> をインポートしないでも，<code>ax = ...</code> の行を</p>
 
-<pre><code>
-ax = fig.gca(projection='3d')
+<pre>
+<code>ax = fig.gca(projection='3d')
 </code></pre>
 
 <p>または</p>
 
-<pre><code>
-ax = fig.add_subplot(111, projection='3d')
+<pre>
+<code>ax = fig.add_subplot(111, projection='3d')
 </code></pre>
 
 <p>のようにするだけでも3次元になります。</p>
 
 <p>等高線を描くには <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.contour.html">plt.contour</a> を使います：</p>
 
-<pre><code>
-plt.contour(x, y, z) # 塗りつぶすなら plt.contourf(x, y, z)
+<pre>
+<code>plt.contour(x, y, z) # 塗りつぶすなら plt.contourf(x, y, z)
 </code></pre>
 
 <p>いろいろ指定できます：</p>
 
-<pre><code>
-cs = plt.contour(x, y, z, levels=[-0.06,-0.04,-0.02,0,0.1,0.2,0.3])
+<pre>
+<code>cs = plt.contour(x, y, z, levels=[-0.06,-0.04,-0.02,0,0.1,0.2,0.3])
 plt.axis("scaled")  # または plt.axis("equal")
 cs.clabel()  # あるいは例えば cs.clabel([-0.04,0,0.2], fmt="%g")
 

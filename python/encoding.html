@@ -26,8 +26,8 @@
 
 <p>Python 3 の zipfile モジュール（zipfile.py）では</p>
 
-<pre><code>
-            if zinfo.flag_bits &amp; 0x800:
+<pre>
+<code>            if zinfo.flag_bits &amp; 0x800:
                 # UTF-8 filename
                 fname_str = fname.decode("utf-8")
             else:
@@ -36,8 +36,8 @@
 
 <p>のような処理がされている。コードページ 437（DOS Latin US）はオリジナルの IBM PC の文字セットである。したがって，これを UTF-8 に変換して展開するには，次のようにすればよさそうである（DoraTeX さんによる暗号化 ZIP 対応をマージした）：</p>
 
-<pre><code>
-#! /usr/bin/env python3
+<pre>
+<code>#! /usr/bin/env python3
 
 import sys
 from zipfile import ZipFile
@@ -68,8 +68,8 @@ with ZipFile(sys.argv[1]) as z:
 
 <p>Mac の場合，ファイル名の Unicode 正規化がほぼ NFD という形式になっている。例えばカレントディレクトリに「パンダ.txt」というファイルを作り，<a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> でファイル名を読み出す：</p>
 
-<pre><code>
-!touch パンダ.txt  # カレントディレクトリに「パンダ.txt」を作る
+<pre>
+<code>!touch パンダ.txt  # カレントディレクトリに「パンダ.txt」を作る
 
 import pathlib
 
@@ -79,8 +79,8 @@ s = str(list(path.glob("*ン*.txt"))[0])
 
 <p>ところが</p>
 
-<pre><code>
-In [ ]: s
+<pre>
+<code>In [ ]: s
 Out[ ]: 'パンダ.txt'
 
 In [ ]: list(s)
@@ -89,16 +89,16 @@ Out[ ]: ['ハ', '゚', 'ン', 'タ', '゙', '.', 't', 'x', 't']
 
 <p>このように濁点・半濁点が分離されている。これが NFD である。通常の NFC に直すには <a href="https://docs.python.org/3/library/unicodedata.html">unicodedata</a> モジュールを使う：</p>
 
-<pre><code>
-import unicodedata
+<pre>
+<code>import unicodedata
 
 t = unicodedata.normalize('NFC', s)
 </code></pre>
 
 <p>とする。今度は</p>
 
-<pre><code>
-In [ ]: t
+<pre>
+<code>In [ ]: t
 Out[ ]: 'パンダ.txt'
 
 In [ ]: list(t)

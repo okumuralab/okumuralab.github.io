@@ -18,8 +18,8 @@
 
 <p>基本は順に割っていけばよい：</p>
 
-<pre><code>
-import math
+<pre>
+<code>import math
 
 def isprime(n):
     if n < 2:
@@ -31,8 +31,8 @@ def isprime(n):
 
 <p>いろいろ改良が可能である。2を除けば偶数で割ってみる必要はないので，計算量は半分にできる。</p>
 
-<pre><code>
-import math
+<pre>
+<code>import math
 
 def isprime(n):
     if n < 2:
@@ -48,8 +48,8 @@ def isprime(n):
 
 <p>今日（例えば 20190823）は素数か？</p>
 
-<pre><code>
-import time
+<pre>
+<code>import time
 
 n = int(time.strftime('%Y%m%d', time.localtime()))
 isprime(n)
@@ -57,8 +57,8 @@ isprime(n)
 
 <p><code>math.sqrt()</code> は平方数については正確な平方根を与えるはずだが，浮動小数点数の精度を超える整数の場合は心配である。整数の平方根を整数の範囲で求める次の <code>isqrt()</code> を使うとよい（<code>isqrt()</code> は下に紹介する primefac パッケージに含まれている）：</p>
 
-<pre><code>
-def isqrt(n):
+<pre>
+<code>def isqrt(n):
     if n == 0:
         return 0
     x, y = n, (n + 1) // 2
@@ -69,8 +69,8 @@ def isqrt(n):
 
 <p>これを使った関数：</p>
 
-<pre><code>
-def isprime(n):
+<pre>
+<code>def isprime(n):
     if n < 2:
         return False
     for i in range(2, isqrt(n)+1):
@@ -81,16 +81,16 @@ def isprime(n):
 
 <p>もっと大きい数の素因数分解をするライブラリ <a href="https://pypi.org/project/primefac/">primefac</a>（旧 pyfac）は今のところ Python 2 にしか対応していない。Python 3 に対応させた <a href="https://github.com/elliptic-shiho/primefac-fork">primefac-fork</a> がある。インストールするには：</p>
 
-<pre><code>
-pip install git+git://github.com/elliptic-shiho/primefac-fork@master
+<pre>
+<code>pip install git+git://github.com/elliptic-shiho/primefac-fork@master
 </code></pre>
 
 <p><a href="https://pypi.org/project/factordb-pycli/">factordb-pycli</a> と <a href="https://pypi.org/project/gmpy/">gmpy</a> もインストールされる。</p>
 
 <p>使い方：</p>
 
-<pre><code>
-import primefac
+<pre>
+<code>import primefac
 
 primefac.factorint(5040)
 # ==&gt; {2: 4, 3: 2, 5: 1, 7: 1}

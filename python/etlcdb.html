@@ -28,8 +28,8 @@
 
 <p>ここでは <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> ライブラリを使って ETL1.zip だけ読み込む：</p>
 
-<pre><code>
-from zipfile import ZipFile
+<pre>
+<code>from zipfile import ZipFile
 import struct
 import numpy as np
 import matplotlib.pyplot as plt
@@ -54,8 +54,8 @@ with ZipFile('ETL1.zip') as etl1:
 
 <p>ラベルは <a href="https://ja.wikipedia.org/wiki/JIS_X_0201">JIS X 0201</a> 文字コードである。画像はモノクロで 0〜15 の値を持つ。数字の部分をランダムに表示させた：</p>
 
-<pre><code>
-lst = [i for i in range(len(etl)) if etl[i][1] in range(48,58)]  # 数字だけ
+<pre>
+<code>lst = [i for i in range(len(etl)) if etl[i][1] in range(48,58)]  # 数字だけ
 perm = np.random.permutation(lst)
 for k in range(24):
     plt.subplot(3, 8, k+1)
@@ -71,8 +71,8 @@ fig.savefig("etlcdb.png", bbox_inches="tight")
 
 <p>数字以外にもたくさん文字が入っている：</p>
 
-<pre><code>
-perm = np.random.permutation(len(etl))
+<pre>
+<code>perm = np.random.permutation(len(etl))
 </code></pre>
 
 <figure><img src="img/etlcdb2.png" alt="ETL文字データベース"></figure>

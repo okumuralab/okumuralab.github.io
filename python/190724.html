@@ -28,8 +28,8 @@
 
 <p>これを読んでプロットしてみよう。両軸の目盛が等しくなるようにした。</p>
 
-<pre><code>
-import matplotlib.pyplot as plt
+<pre>
+<code>import matplotlib.pyplot as plt
 import pandas as pd
 
 niigata = pd.read_csv("niigata.csv")
@@ -47,8 +47,8 @@ plt.savefig('190724a.png', bbox_inches="tight")
 
 <p>ついでに<a href="http://www.pref.mie.lg.jp/SENKAN/HP/000228984.htm">三重県</a>も調べてみた。データは <a href="data/mie2019.csv">mie2019.csv</a> である（BOM付きUTF-8，行末CRLF）。</p>
 
-<pre><code>
-plt.figure(figsize=[7, 4])
+<pre>
+<code>plt.figure(figsize=[7, 4])
 plt.plot(mie["山本太郎"], mie["山田太郎"], "o")
 plt.axis('equal')
 for i, v in mie.iterrows():
@@ -59,8 +59,8 @@ plt.ylabel("山田太郎")
 
 <p>さらに，四日市市以外の傾向を直線で書き込んでみる：</p>
 
-<pre><code>
-plt.plot([0, mie["山本太郎"][mie["開票区名"] != "四日市市"].sum()],
+<pre>
+<code>plt.plot([0, mie["山本太郎"][mie["開票区名"] != "四日市市"].sum()],
          [0, mie["山田太郎"][mie["開票区名"] != "四日市市"].sum()],
          scalex=False, scaley=False)
 plt.savefig('190724b.png', bbox_inches="tight")
@@ -72,8 +72,8 @@ plt.savefig('190724b.png', bbox_inches="tight")
 
 <p>両対数グラフにしてみる：</p>
 
-<pre><code>
-plt.figure(figsize=[5, 5])
+<pre>
+<code>plt.figure(figsize=[5, 5])
 ...
 plt.xscale('log')
 plt.yscale('log')
@@ -86,8 +86,8 @@ plt.savefig('190724d.png', bbox_inches="tight")
 
 <p>両候補の得票率でもプロットしてみよう。</p>
 
-<pre><code>
-plt.plot(mie['山本太郎']/mie['投票者数'], mie['山田太郎']/mie['投票者数'], "o")
+<pre>
+<code>plt.plot(mie['山本太郎']/mie['投票者数'], mie['山田太郎']/mie['投票者数'], "o")
 for i, v in mie.iterrows():
     plt.text(v["山本太郎"]/v['投票者数'], v["山田太郎"]/v['投票者数'], v["開票区名"])
 plt.axis('equal')

@@ -31,16 +31,16 @@ MathJax = {
 
 <p>Rでの<a href="../stat/logistic.html">ロジスティック回帰</a>について復習しましょう。例えばRに</p>
 
-<pre><code>
-x = c(4,5,17,17,19,19,29,41,45,47,49,54,56,58,70,76,88,88,93,97)
+<pre>
+<code>x = c(4,5,17,17,19,19,29,41,45,47,49,54,56,58,70,76,88,88,93,97)
 y = c(0,0,0,0,0,0,1,1,1,0,0,1,1,0,1,1,1,1,1,1)
 glm(y ~ x, family=binomial(link="logit"))
 </code></pre>
 
 <p>と打ち込めば</p>
 
-<pre><code>
-Call:  glm(formula = y ~ x, family = binomial(link = "logit"))
+<pre>
+<code>Call:  glm(formula = y ~ x, family = binomial(link = "logit"))
 
 Coefficients:
 (Intercept)            x  
@@ -59,8 +59,8 @@ Residual Deviance: 15.19 	AIC: 19.19
 
 <p>ちょっといたずらをしてみましょう。<code>x</code> の値を $1/1000$ にしてみます：</p>
 
-<pre><code>
-x = x / 1000
+<pre>
+<code>x = x / 1000
 glm(y ~ x, family=binomial(link="logit"))
 </code></pre>
 
@@ -68,8 +68,8 @@ glm(y ~ x, family=binomial(link="logit"))
 
 <p>同じことをPythonでやってみましょう。<a href="sklearn.html">scikit-learn</a>がインストールされているとします：</p>
 
-<pre><code>
-import numpy as np
+<pre>
+<code>import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 X = np.array([4,5,17,17,19,19,29,41,45,47,49,54,56,58,70,76,88,88,93,97]).reshape(-1,1)
@@ -83,8 +83,8 @@ print(model.coef_, model.intercept_)
 
 <p>同じようないたずらとして，<code>X</code> を $1/1000$ にしてみます：</p>
 
-<pre><code>
-X = X / 1000
+<pre>
+<code>X = X / 1000
 model = LogisticRegression().fit(X, y)
 print(model.coef_, model.intercept_)
 </code></pre>
@@ -93,8 +93,8 @@ print(model.coef_, model.intercept_)
 
 <p>この理由は，Rを作った統計屋とscikit-learnを作った機械学習屋の考え方の相違にあるようです。scikit-learnの <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">LogisticRegression()</a> では係数が 0 に近くなるような正則化（regularization）が行われます。ベイズ推定のことばでいえば，係数が 0 に近くなるような事前分布が設定されています。正則化のパラメータ <code>C</code> はデフォルトでは 1 に設定されており，この値が小さいほど強い正則化が行われます。ならば，<code>C</code> に $\infty$ を設定すれば正則化が行われなくなるはずです。やってみましょう：</p>
 
-<pre><code>
-model = LogisticRegression(C=np.inf).fit(X, y)
+<pre>
+<code>model = LogisticRegression(C=np.inf).fit(X, y)
 print(model.coef_, model.intercept_)
 </code></pre>
 

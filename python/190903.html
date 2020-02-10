@@ -28,14 +28,14 @@
 
 <p>PDFをテキスト化するツールはいろいろあるが，ここでは<a href="http://www.xpdfreader.com">Xpdf</a>の一部として配布されているpdftotextコマンドを使う。ターミナルに</p>
 
-<pre><code>
-pdftotext -raw kameiten_touroku_list.pdf
+<pre>
+<code>pdftotext -raw kameiten_touroku_list.pdf
 </code></pre>
 
 <p>と打ち込めば kameiten_touroku_list.txt ができる。これを次のPythonスクリプトでCSV化する：</p>
 
-<pre><code>
-#! /usr/bin/env python3
+<pre>
+<code>#! /usr/bin/env python3
 
 import sys
 import re
@@ -71,8 +71,8 @@ for line in sys.stdin:
 
 <p>上記スクリプトが test.py ならば</p>
 
-<pre><code>
-./test.py &lt; kameiten_touroku_list.txt &gt; kameiten_touroku_list.csv
+<pre>
+<code>./test.py &lt; kameiten_touroku_list.txt &gt; kameiten_touroku_list.csv
 </code></pre>
 
 <p>でCSVになる。念のため <a href="https://oku.edu.mie-u.ac.jp/~okumura/python/data/kameiten_touroku_list.csv">kameiten_touroku_list.csv</a> として置いておく（文字コードは<del>UTF-8</del><ins>BOM付きUTF-8</ins>）。</p>

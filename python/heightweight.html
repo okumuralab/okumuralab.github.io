@@ -22,8 +22,8 @@
 
 <p>まず男子。</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -58,14 +58,14 @@ plt.savefig('191027a.png', bbox_inches="tight")
 
 <p>相関係数</p>
 
-<pre><code>
-np.corrcoef([weight, height, height**2, height**3, height**4])
+<pre>
+<code>np.corrcoef([weight, height, height**2, height**3, height**4])
 </code></pre>
 
 <p>は</p>
 
-<pre><code>
-array([[1.        , 0.42350688, 0.42390102, 0.42405993, 0.42398417],
+<pre>
+<code>array([[1.        , 0.42350688, 0.42390102, 0.42405993, 0.42398417],
        [0.42350688, 1.        , 0.99970906, 0.99883893, 0.99739424],
        [0.42390102, 0.99970906, 1.        , 0.99971011, 0.99884296],
        [0.42405993, 0.99883893, 0.99971011, 1.        , 0.99971108],
@@ -76,8 +76,8 @@ array([[1.        , 0.42350688, 0.42390102, 0.42405993, 0.42398417],
 
 <p>女子。</p>
 
-<pre><code>
-df1 = pd.read_excel("h30_hoken_eturan_01.xlsx", "10-041",
+<pre>
+<code>df1 = pd.read_excel("h30_hoken_eturan_01.xlsx", "10-041",
                     skiprows=[0,1,2,4], na_values="-")
 df2 = pd.read_excel("h30_hoken_eturan_01.xlsx", "10-042",
                     skiprows=[0,1,2,4], na_values="-")
@@ -104,8 +104,8 @@ np.corrcoef([weight, height, height**2, height**3, height**4])
 
 <figure><img src="img/191027b.png" alt="17歳 女 身長と体重の関係"></figure>
 
-<pre><code>
-array([[1.        , 0.43228155, 0.43256623, 0.43261141, 0.43241617],
+<pre>
+<code>array([[1.        , 0.43228155, 0.43256623, 0.43261141, 0.43241617],
        [0.43228155, 1.        , 0.99972306, 0.99889131, 0.9975034 ],
        [0.43256623, 0.99972306, 1.        , 0.99972231, 0.99888773],
        [0.43261141, 0.99889131, 0.99972231, 1.        , 0.99972126],
@@ -116,8 +116,8 @@ array([[1.        , 0.43228155, 0.43256623, 0.43261141, 0.43241617],
 
 <p>分布の形から見て女子のデータのほうがサチってないので，こちらで計算を続けると，分布が左右対称であれば歪度（skewness）は 0 になるはずであるので，調べてみる：</p>
 
-<pre><code>
-pd.DataFrame(height).skew()           # 0.092451
+<pre>
+<code>pd.DataFrame(height).skew()           # 0.092451
 pd.DataFrame(height**3).skew()        # 0.293783
 pd.DataFrame(weight).skew()           # 1.077402
 pd.DataFrame(weight**(1/2)).skew()    # 0.765789

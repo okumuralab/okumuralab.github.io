@@ -20,22 +20,22 @@
 
 <p>まずインストール：</p>
 
-<pre><code>
-pip install japanmap
+<pre>
+<code>pip install japanmap
 pip install --upgrade opencv-python pillow  # 必要に応じて
 </code></pre>
 
 <p>都道府県名：</p>
 
-<pre><code>
-In [ ]: jp.pref_names
+<pre>
+<code>In [ ]: jp.pref_names
 Out[ ]: ['_', '北海道', '青森県', ……, '沖縄県']
 </code></pre>
 
 <p>PNG画像の白地図：</p>
 
-<pre><code>
-import japanmap as jp
+<pre>
+<code>import japanmap as jp
 import matplotlib.pyplot as plt
 
 plt.imshow(jp.picture())
@@ -43,8 +43,8 @@ plt.imshow(jp.picture())
 
 <p>例として，<a href="../stat/190117.html">がんの分布</a>で紹介したデータを読み込んで地図に色を塗る：</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 
 data = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/gansokuhou2016.csv")
 x = data['年齢調整罹患率日本総数'][1:48]
@@ -73,8 +73,8 @@ plt.savefig('190613a.png', bbox_inches="tight")
 
 <p>SVG の図を出力することもできる：</p>
 
-<pre><code>
-cmap = plt.get_cmap('coolwarm')
+<pre>
+<code>cmap = plt.get_cmap('coolwarm')
 cols = ['#%02X%02X%02X' % (cmap(x[i], bytes=True)[:3]) for i in range(1,48)]
 s = jp.pref_map(range(1,48), # qpqo=jp.get_data(move_okinawa=True),
                 cols=cols, tostr=True)

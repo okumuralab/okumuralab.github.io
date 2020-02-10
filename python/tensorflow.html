@@ -22,14 +22,14 @@
 
 <p>TensorFlow 2 正式版が出た。</p>
 
-<pre><code>
-pip install tensorflow
+<pre>
+<code>pip install tensorflow
 </code></pre>
 
 <p>で入るはずである。もし古いものが入っていたら</p>
 
-<pre><code>
-pip install --upgrade tensorflow
+<pre>
+<code>pip install --upgrade tensorflow
 </code></pre>
 
 <p>で 2 に更新される。</p>
@@ -38,8 +38,8 @@ pip install --upgrade tensorflow
 
 <div class="note">
 <p>TensorFlow 2 で 1.x のコードを走らるには</p>
-<pre><code>
-import tensorflow.compat.v1 as tf
+<pre>
+<code>import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 </code></pre>
 <p>とする。</p>
@@ -47,16 +47,16 @@ tf.disable_v2_behavior()
 
 <div class="note">
 <p>TensorFlow 1.x のコードを 2.x 用に変換するには</p>
-<pre><code>
-tf_upgrade_v2 --intree dir/ --outtree dir2/ --reportfile report.txt
+<pre>
+<code>tf_upgrade_v2 --intree dir/ --outtree dir2/ --reportfile report.txt
 </code></pre>
 <p>と打ち込む。<code>dir/</code> が元のディレクトリ，<code>dir2/</code> は新しく作られるディレクトリ（あらかじめ作成しておいてはいけない）。必ずしもうまくいくとは限らない。</p>
 </div>
 
 <div class="note">
 <p>Google Colab は現時点ではまだ 1.14.0 である。2.x を使うには，インポートの前に</p>
-<pre><code>
-%tensorflow_version 2.x
+<pre>
+<code>%tensorflow_version 2.x
 </code></pre>
 <p>と打ち込むようだ。</p>
 </div>
@@ -71,14 +71,14 @@ tf_upgrade_v2 --intree dir/ --outtree dir2/ --reportfile report.txt
 
 <p>インポートする：</p>
 
-<pre><code>
-import tensorflow as tf
+<pre>
+<code>import tensorflow as tf
 </code></pre>
 
 <p>バージョンを確認する：</p>
 
-<pre><code>
-In [ ]: tf.__version__
+<pre>
+<code>In [ ]: tf.__version__
 Out[ ]: '2.1.0'
 
 In [ ]: tf.keras.__version__
@@ -87,21 +87,21 @@ Out[ ]: '2.2.4-tf'
 
 <p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="mnist.html">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
 
-<pre><code>
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+<pre>
+<code>(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 </code></pre>
 
 <p>ピクセルは0〜255の整数値だが，0〜1の実数に変換する：</p>
 
-<pre><code>
-x_train = x_train / 255.0
+<pre>
+<code>x_train = x_train / 255.0
 x_test  = x_test  / 255.0
 </code></pre>
 
 <p>ごくごく簡単なモデルを定義する：</p>
 
-<pre><code>
-model = tf.keras.models.Sequential([
+<pre>
+<code>model = tf.keras.models.Sequential([
   tf.keras.layers.Flatten(input_shape=(28, 28)),
   tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Dropout(0.2),
@@ -115,34 +115,34 @@ model.compile(optimizer='adam',
 
 <p>いよいよフィット（重い）：</p>
 
-<pre><code>
-model.fit(x_train, y_train, epochs=5)
+<pre>
+<code>model.fit(x_train, y_train, epochs=5)
 </code></pre>
 
 <p>最後に評価：</p>
 
-<pre><code>
-model.evaluate(x_test, y_test)
+<pre>
+<code>model.evaluate(x_test, y_test)
 </code></pre>
 
 <p>正解率 0.978 程度である。</p>
 
 <p>上記ページのサンプルには載っていないが，予測は次のようにして求められる：</p>
 
-<pre><code>
-y_pred = model.predict_classes(x_test)
+<pre>
+<code>y_pred = model.predict_classes(x_test)
 </code></pre>
 
 <p>混同行列を求める：</p>
 
-<pre><code>
-tf.math.confusion_matrix(y_test, y_pred)
+<pre>
+<code>tf.math.confusion_matrix(y_test, y_pred)
 </code></pre>
 
 <p>結果の例：</p>
 
-<pre><code>
-&lt;tf.Tensor: id=69328, shape=(10, 10), dtype=int32, numpy=
+<pre>
+<code>&lt;tf.Tensor: id=69328, shape=(10, 10), dtype=int32, numpy=
 array([[ 971,    0,    1,    2,    0,    0,    2,    1,    3,    0],
        [   0, 1129,    1,    1,    0,    1,    1,    0,    2,    0],
        [   5,    4,  999,    5,    4,    0,    2,    9,    3,    1],
@@ -158,21 +158,21 @@ array([[ 971,    0,    1,    2,    0,    0,    2,    1,    3,    0],
 
 <p>表示されない場合は次のようにする：</p>
 
-<pre><code>
-sess = tf.Session()
+<pre>
+<code>sess = tf.Session()
 tf.math.confusion_matrix(y_test, y_pred).eval(session=sess)
 </code></pre>
 
 <p>学習済みのモデルをHDF5形式で保存する：</p>
 
-<pre><code>
-model.save("mymodel.h5")
+<pre>
+<code>model.save("mymodel.h5")
 </code></pre>
 
 <p>保存したモデルは次のようにして読み出す：</p>
 
-<pre><code>
-model = tf.keras.models.load_model("mymodel.h5")
+<pre>
+<code>model = tf.keras.models.load_model("mymodel.h5")
 </code></pre>
 
 <p>詳細は <a href="https://www.tensorflow.org/beta/guide/keras/overview">Keras: A quick overview</a> 参照。</p>

@@ -18,8 +18,8 @@
 
 <p>Ruby の</p>
 
-<pre><code>
-while line = gets
+<pre>
+<code>while line = gets
   puts line
 end
 </code></pre>
@@ -28,8 +28,8 @@ end
 
 <p>これと同じことをするためのパッケージが <a href="https://docs.python.org/3/library/fileinput.html">fileinput</a> である：</p>
 
-<pre><code>
-import fileinput
+<pre>
+<code>import fileinput
 
 for line in fileinput.input():
     print(line, end="")  # または print(line.rstrip())
@@ -41,8 +41,8 @@ for line in fileinput.input():
 
 <p>標準入力だけ読めばよいなら，次のようにできる：</p>
 
-<pre><code>
-import sys
+<pre>
+<code>import sys
 
 for line in sys.stdin:
     print(line, end="")  # または print(line.rstrip())
@@ -50,40 +50,40 @@ for line in sys.stdin:
 
 <p>ループではなく，標準入力から1行だけ読むには，次のようにする：</p>
 
-<pre><code>
-line = sys.stdin.readline()
+<pre>
+<code>line = sys.stdin.readline()
 </code></pre>
 
 <p>プロンプトで入力を促すには，次のようにする：</p>
 
-<pre><code>
-n = int(input('正の整数を入力してください: '))
+<pre>
+<code>n = int(input('正の整数を入力してください: '))
 </code></pre>
 
 <p>全部の行を行（文字列）のリストの形で読み込むには，次のようにする：</p>
 
-<pre><code>
-lines = sys.stdin.readlines()
+<pre>
+<code>lines = sys.stdin.readlines()
 </code></pre>
 
 <p>全部の行を一つの文字列の形で読み込むには，次のようにする：</p>
 
-<pre><code>
-lines = sys.stdin.read()
+<pre>
+<code>lines = sys.stdin.read()
 </code></pre>
 
 <p>標準入力でないファイルの場合は，次のようにする：</p>
 
-<pre><code>
-with open("filename") as f:
+<pre>
+<code>with open("filename") as f:
     for line in f:
         print(line, end="")
 </code></pre>
 
 <p>あるいは</p>
 
-<pre><code>
-with open("filename") as f:
+<pre>
+<code>with open("filename") as f:
     lines = f.readlines()  # または f.read()
 </code></pre>
 

@@ -36,8 +36,8 @@
 
 <p><a href="https://www.ibsnet.co.jp">株式会社アイビス</a>が提供している<a href="https://zip-cloud.appspot.com/doc/api">郵便番号検索API</a>。</p>
 
-<pre><code>
-import requests
+<pre>
+<code>import requests
 
 url = "https://zip-cloud.appspot.com/api/search"
 param = {"zipcode": "5140007"}
@@ -53,8 +53,8 @@ print(address["address1"], address["address2"], address["address3"])
 
 <p>入力を含むプログラム：</p>
 
-<pre><code>
-#! /usr/bin/env python3
+<pre>
+<code>#! /usr/bin/env python3
 
 import requests
 
@@ -74,8 +74,8 @@ while True:
 
 <p><a href="http://www.livedoor.com">livedoor</a>（LINE Corporation）の提供する<a href="http://weather.livedoor.com/weather_hacks/">Weather Hacks</a>は，場所を指定しすると3日分の天気予報が取得できる。詳細は<a href="http://weather.livedoor.com/weather_hacks/webservice">Webサービス仕様</a>参照。</p>
 
-<pre><code>
-url = "http://weather.livedoor.com/forecast/webservice/json/v1"
+<pre>
+<code>url = "http://weather.livedoor.com/forecast/webservice/json/v1"
 param = {"city": "240010"} # 三重県津市
 data = requests.get(url, param).json()
 print("今日の天気:", data["forecasts"][0]["telop"])
@@ -87,8 +87,8 @@ print("明後日の天気:", data["forecasts"][2]["telop"])
 
 <p><a href="https://calil.jp">カーリル</a>・<a href="https://www.hanmoto.com">版元ドットコム</a>の<a href="https://openbd.jp">openBD</a>は書誌情報・書影を提供する。</p>
 
-<pre><code>
-url = "https://api.openbd.jp/v1/get"
+<pre>
+<code>url = "https://api.openbd.jp/v1/get"
 param = {"isbn": "978-4-7741-9690-9"}
 data = requests.get(url, param).json()
 print("著者名:", data[0]["summary"]["author"])
@@ -101,8 +101,8 @@ print("出版年月:", data[0]["summary"]["pubdate"])
 
 <p><a href="https://www.heartrails.com">ハートレイルズ</a>の<a href="http://express.heartrails.com">HeartRails Express</a>は路線／駅名データ等の地理情報を提供する。</p>
 
-<pre><code>
-url = "http://express.heartrails.com/api/json"
+<pre>
+<code>url = "http://express.heartrails.com/api/json"
 
 param = {"method": "getLines", "prefecture": "三重県" }
 data = requests.get(url, param).json()
@@ -121,8 +121,8 @@ for i in data["response"]["station"]:
 
 <p><a href="https://sysbird.jp/profile/">鳥山優子さん</a>のコンビニお菓子の情報サイト<a href="https://sysbird.jp/toriko/">お菓子の虜</a>の<a href="https://sysbird.jp/toriko/webapi/">Web API</a>。</p>
 
-<pre><code>
-url = "https://sysbird.jp/toriko/api/"
+<pre>
+<code>url = "https://sysbird.jp/toriko/api/"
 param = {"apikey": "guest", "format": "json", "keyword": "マシュマロ" }
 data = requests.get(url, param).json()
 print("菓子名・メーカー:")

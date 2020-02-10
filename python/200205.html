@@ -25,8 +25,8 @@
 
 <p>気象庁の<a href="http://www.jma.go.jp/jp/amedas_h/index.html">アメダス表形式</a>のページから三重県の津を選ぶと表が出てくるので，Pythonでスクレイプすればよい：</p>
 
-<pre><code>
-import pandas as pd
+<pre>
+<code>import pandas as pd
 import matplotlib.pyplot as plt
 
 yesterday = pd.read_html('http://www.jma.go.jp/jp/amedas_h/yesterday-53133.html')
