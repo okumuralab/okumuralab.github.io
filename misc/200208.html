@@ -159,9 +159,10 @@ Message to the people of everybody</p>
 <p>これでページの問題点がいろいろ明らかになる：</p>
 
 <ul>
-  <li>SVGも含め，画像の文字列は訳せない。</li>
+  <li>インラインSVGも含め，画像の文字列は訳せない。</li>
   <li>例えば「令和2年度」は reiwa 2 year になる。場合によっては Ryowa になることも。西暦に統一するか，少なくとも西暦を必ず付ける。</li>
-  <li><code>&lt;code&gt;...&lt;/code&gt;</code> の中は訳されず，そのまま表示される。<code>&lt;pre&gt;...&lt;/pre&gt;</code> の中は訳される。複数行にわたって訳されないコードを書くには <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> のようにネストする。</li>
+  <li><code>&lt;code&gt;...&lt;/code&gt;</code> の中は訳されず，そのまま表示される。<code>&lt;pre&gt;...&lt;/pre&gt;</code> だけでは訳される可能性がある。複数行にわたって訳されないコードを書くには <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> のようにネストする。</li>
+  <li>本文中に <code>&lt;code&gt;...&lt;/code&gt;</code> があると，Google翻訳はその前後を別々に訳すので，語順がおかしくなる（バグ？）。</li>
 </ul>
 
 <p>[追記の追記] WindowsのEdge（新）も右クリックで翻訳できる。Bing翻訳を使っている。</p>
@@ -173,7 +174,7 @@ Message to the people of everybody</p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-10 15:11:46</time>
+Last modified: <time>2020-02-10 21:20:34</time>
 <!-- hhmts end -->
 </p>
 </footer>
