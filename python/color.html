@@ -30,11 +30,11 @@
 
 <p>簡単な例で説明します。例えば</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 
 plt.plot([[1,2], [3,4]])
-</pre>
+</code></pre>
 
 <p>とすると，青とオレンジのグラフができます。もう一度 <code>plt.plot([[1,2], [3,4]])</code> を打ち込むと，今度は緑と赤になります。これらの色は matplotlib のデフォルトのパレット <code>tab10</code> から順にとっています。これは <a href="https://www.tableau.com">Tableau</a>（タブロー）という有名な可視化ツールの <a href="https://www.tableau.com/about/blog/2016/7/colors-upgrade-tableau-10-56782">Tableau 10</a> というカラーマップの旧版に基づいています：</p>
 
@@ -71,25 +71,25 @@ plt.plot([[1,2], [3,4]])
 
 <p>これらの値は次のようにして確認できます：</p>
 
-<pre>
+<pre><code>
 In [ ]: plt.rcParams['axes.prop_cycle']
 Out[ ]: cycler('color', ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', ...])
-</pre>
+</code></pre>
 
 <p>この中の色は <code>color="C0"</code> から <code>color="C9"</code> までで指定できます。</p>
 
 <p>もし色をいつも黒にしたいなら，</p>
 
-<pre>
+<pre><code>
 from cycler import cycler
 plt.rcParams['axes.prop_cycle'] = cycler(color=["black"])
-</pre>
+</code></pre>
 
 <p>あるいは現在のプロットの次の描画からの色を変えるなら，</p>
 
-<pre>
+<pre><code>
 plt.gca().set_prop_cycle(color=['black'])
-</pre>
+</code></pre>
 
 <p>とすればよさそうです。</p>
 

@@ -18,43 +18,43 @@
 
 <p>Python の matplotlib で曲線を描く基本は次のようにします：</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 import numpy as np
 
 x = np.linspace(0, 2 * np.pi, 101)  # 区間[0,2π]を100等分する101点
 plt.plot(x, np.sin(x))
-</pre>
+</code></pre>
 
 <p>これだけで図が現れなければ最後に <code>plt.show()</code> を入れます。</p>
 
 <p>コサインも追加してみましょう：</p>
 
-<pre>
+<pre><code>
 plt.plot(x, np.cos(x))
-</pre>
+</code></pre>
 
 <p>凡例（レジェンド）を入れましょう：</p>
 
-<pre>
+<pre><code>
 plt.legend(["sin x", "cos x"])
-</pre>
+</code></pre>
 
 <p>タンジェントも加えてみましょう：</p>
 
-<pre>
+<pre><code>
 plt.plot(x, np.tan(x))
-</pre>
+</code></pre>
 
 <p>あれれ，おかしくなりましたか。y の範囲を限定しましょう：</p>
 
-<pre>
+<pre><code>
 plt.ylim(-2, 2)
-</pre>
+</code></pre>
 
 <p>もし変な縦線が入るのが嫌なら，次のようにするといいでしょう：</p>
 
-<pre>
+<pre><code>
 eps = 0.000001
 x1 = np.linspace(0, np.pi/2 - eps)
 x2 = np.linspace(np.pi/2 + eps, 3*np.pi/2 - eps)
@@ -64,7 +64,7 @@ plt.plot(x2, np.tan(x2), color="C2")  # 色: C0，C1，C2，…
 plt.plot(x3, np.tan(x3), color="C2")
 plt.ylim(-2, 2)
 plt.legend(["sin x","cos x", "tan x"])
-</pre>
+</code></pre>
 
 <hr>
 

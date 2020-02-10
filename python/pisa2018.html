@@ -22,30 +22,30 @@
 
 <p>SPSSのsavデータを読むにはpandasの <code>read_spss()</code> でもできるが，これはpyreadstatパッケージを呼び出しているだけである。以下ではpyreadstatを直接使う：</p>
 
-<pre>
+<pre><code>
 import pyreadstat
-</pre>
+</code></pre>
 
 <h2>全部一度に読む（これがエラーになるなら次に進んでください）</h2>
 
 <p>メモリの多いマシンなら全部読み込んでしまうのが手っ取り早い（手元のマシンでは24分ほどかかった）：</p>
 
-<pre>
+<pre><code>
 df, meta = pyreadstat.read_sav('CY07_MSU_STU_QQQ.sav')
-</pre>
+</code></pre>
 
 <p>dfは</p>
 
-<pre>
+<pre><code>
 import sys
 sys.getsizeof(df)
-</pre>
+</code></pre>
 
 <p>とすればわかるように，約6Gのメモリを占める。</p>
 
-<pre>
+<pre><code>
 df.shape
-</pre>
+</code></pre>
 
 <p>と打ち込めば612004行1118列であることがわかる。</p>
 
@@ -55,30 +55,30 @@ df.shape
 
 <p>まずはメタデータだけ読んでみよう：</p>
 
-<pre>
+<pre><code>
 df, meta = pyreadstat.read_sav('CY07_MSU_STU_QQQ.sav', metadataonly=True)
-</pre>
+</code></pre>
 
 <p>メタデータに含まれる変数名とその説明を表示する（長い出力に注意！）：</p>
 
-<pre>
+<pre><code>
 meta.column_names_to_labels
-</pre>
+</code></pre>
 
 <p>出力は次のようになる：</p>
 
-<pre>
+<pre><code>
 {'CNTRYID': 'Country Identifier',
  'CNT': 'Country code 3-character',
  'CNTSCHID': 'Intl. School ID',
  'CNTSTUID': 'Intl. Student ID',
 ・・・（以下略）・・・
 }
-</pre>
+</code></pre>
 
 <p>これでは見にくいので，JSON形式で保存しておくことにする：</p>
 
-<pre>
+<pre><code>
 import json
 
 with open("column_names_to_labels.json", "w") as f:
@@ -86,17 +86,17 @@ with open("column_names_to_labels.json", "w") as f:
 
 with open("variable_value_labels.json", "w") as f:
     json.dump(meta.variable_value_labels, f, ensure_ascii=False, indent=2)
-</pre>
+</code></pre>
 
 <p>これらはそれぞれ変数ラベルとその説明，変数ラベルとその値の説明である。例えば <code>"IC001Q01TA"</code> というラベルについては前者が</p>
 
-<pre>
+<pre><code>
   "IC001Q01TA": "Available for you to use at home: Desktop computer",
-</pre>
+</code></pre>
 
 <p>後者が</p>
 
-<pre>
+<pre><code>
   "IC001Q01TA": {
     "1.0": "Yes, and I use it",
     "2.0": "Yes, but I don’t use it",
@@ -106,71 +106,71 @@ with open("variable_value_labels.json", "w") as f:
     "8.0": "Invalid",
     "9.0": "No Response"
   },
-</pre>
+</code></pre>
 
 <p>となっている。国名（3文字）とこの項目だけを改めて読み込んでみよう：</p>
 
-<pre>
+<pre><code>
 df, meta = pyreadstat.read_sav('CY07_MSU_STU_QQQ.sav', usecols=['CNT', 'IC001Q01TA'])
-</pre>
+</code></pre>
 
 <p><code>"IC001Q01TA"</code> の回答の度数分布を表示する：</p>
 
-<pre>
+<pre><code>
 df["IC001Q01TA"].value_counts()
-</pre>
+</code></pre>
 
 <p>結果は</p>
 
-<pre>
+<pre><code>
 1.0    207182
 3.0     97676
 2.0     50529
-</pre>
+</code></pre>
 
 <p>となって順番通りにならない。<code>value_counts(sort=False)</code> としてもランダムな順序になる。そこで</p>
 
-<pre>
+<pre><code>
 df.groupby('IC001Q01TA').count()
-</pre>
+</code></pre>
 
 <p>とすると</p>
 
-<pre>
+<pre><code>
                CNT
 IC001Q01TA        
 1.0         207182
 2.0          50529
 3.0          97676
-</pre>
+</code></pre>
 
 <p>のように表らしくなってくれる。あるいは別解として</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 
 pd.crosstab(df["IC001Q01TA"], "count")  # "count" はダミー
-</pre>
+</code></pre>
 
 <p>とすると</p>
 
-<pre>
+<pre><code>
 col_0        count
 IC001Q01TA        
 1.0         207182
 2.0          50529
 3.0          97676
-</pre>
+</code></pre>
 
 <p>になってくれるようだ。<code>crosstab()</code> の本来の使い方は</p>
 
-<pre>
+<pre><code>
 pd.crosstab(df["CNT"], df["IC001Q01TA"])
-</pre>
+</code></pre>
 
 <p>のようにして国名と回答の度数分布を</p>
 
-<pre>
+<pre><code>
 IC001Q01TA    1.0   2.0   3.0
 CNT                          
 ALB          3940   558  1589
@@ -179,32 +179,32 @@ AUT          4797   626   972
 BEL          5098   925  1585
 BGR          3400   548   503
 ・・・後略・・・
-</pre>
+</code></pre>
 
 <p>のように出力することである。日本に限れば</p>
 
-<pre>
+<pre><code>
 df["IC001Q01TA"][df["CNT"] == "JPN"].value_counts()
 # または df[df["CNT"] == "JPN"].groupby('IC001Q01TA').count()
-</pre>
+</code></pre>
 
 <p>とすればよい。</p>
 
 <p>国ごとに回答1の割合を求めるには</p>
 
-<pre>
+<pre><code>
 s = pd.crosstab(df["CNT"], df["IC001Q01TA"]).apply(lambda x: x.iloc[0]/sum(x), axis=1)
 s.sort_values(inplace=True)
-</pre>
+</code></pre>
 
 <p>手抜き棒グラフにする：</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 
 plt.barh(s.index, s)
 plt.savefig('191205a.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/191205a.png" alt=""></figure>
 
@@ -212,7 +212,7 @@ plt.savefig('191205a.png', bbox_inches="tight")
 
 <p>国名を日本語にし，ドットプロットにしてみる：</p>
 
-<pre>
+<pre><code>
 co = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/countries.csv")
 dic = { r['三字']: r['国名'] for i,r in co.iterrows() }
 cj = [ dic[x] for x in s.index ]
@@ -220,7 +220,7 @@ cj = [ dic[x] for x in s.index ]
 plt.plot(s, cj, "o")
 plt.grid()
 plt.savefig('191205b.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/191205b.png" alt=""></figure>
 

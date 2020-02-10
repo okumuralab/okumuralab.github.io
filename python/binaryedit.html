@@ -18,7 +18,7 @@
 
 <p>写真をたくさんいただいたが，JPEGファイル内に記録されている日付が間違っている！ 一括置換したいが，バイナリファイルである。どうするか。日付はファイルの冒頭近くに3箇所書き込まれているので，安全のため3箇所だけ置換する。読み書きはバイナリモードで行う。</p>
 
-<pre>
+<pre><code>
 #! /usr/bin/env python3
 
 import sys
@@ -30,7 +30,7 @@ for arg in sys.argv[1:]:
     newfile = re.sub(b'2021:11:14 ', b'2019:11:15 ', file, count=3)
     with open('new/' + arg, 'wb') as f:
         f.write(newfile)
-</pre>
+</code></pre>
 
 <hr>
 

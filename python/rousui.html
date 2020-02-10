@@ -40,7 +40,7 @@ window.onload = function() {
 
 <p>そうこうしているうちに，<a href="https://www.e-stat.go.jp/">e-Stat</a>にもうちょっと完全なデータがあることに気づいた。e-Statを「人口動態調査」で検索し，「ファイル」をクリック，確定数→死亡→年次，2017年と進んで，5-14 死因年次推移分類別にみた性別年齢調整死亡率（人口10万対）のCSVをダウンロードする。ファイル名は mc140000.csv となる。これをまともなCSVにした <a href="data/mc140000a.csv">mc140000a.csv</a> を置いておく（文字コード：BOM付きUTF-8）。これをPythonでプロットする：</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -53,7 +53,7 @@ plt.ylabel('年齢調整死亡率（人口10万対）')
 plt.title('老衰による死亡率の推移')
 plt.legend(['男','女'])
 plt.savefig('190714c.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/190714c.png" alt="老衰による死亡率の推移"></figure>
 

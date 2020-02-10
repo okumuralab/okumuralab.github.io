@@ -23,14 +23,14 @@ window.onload = function() {
 
 <p><a href="https://www.nhk.or.jp/bunken/research/yoron/index.html">NHK世論調査</a>の中で政党の支持率などを問う<a href="https://www.nhk.or.jp/bunken/research/yoron/political/2017.html">政治意識月例調査 2017年</a>の調査方式が変更（固定電話＋携帯電話）された4月以降の内閣支持率データを <a href="data/nhk-yoron.csv">nhk-yoron.csv</a> に収めた（文字コードUTF-8，行末LF，<code>#</code>以下はコメント）。これを読んでグラフを描いてみよう：</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 
 df = pd.read_csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/nhk-yoron.csv",
                  index_col='調査日', parse_dates=['調査日'], comment='#')
 df.plot(marker="o", xlim=("2017-03-20","2019-07-31"))
 plt.savefig('nhk-yoron.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/nhk-yoron.png" alt="NHK政治意識月例調査より内閣支持率"></figure>
 

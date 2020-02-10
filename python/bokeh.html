@@ -20,14 +20,14 @@
 
 <p><code>pip install bokeh</code> などでインストールして，試してみましょう。</p>
 
-<pre>
+<pre><code>
 from bokeh.plotting import figure, output_file, show
 
 output_file("test.html")  # カレントディレクトリに作るHTMLファイルの名前
 p = figure(title="簡単な例", x_axis_label='x', y_axis_label='y')
 p.line([1,2], [3,4], legend="線", line_width=2)
 show(p)
-</pre>
+</code></pre>
 
 <p>matplotlibとは独立ですので，ブラウザとネット接続があれば，どんな環境でも使えます。</p>
 

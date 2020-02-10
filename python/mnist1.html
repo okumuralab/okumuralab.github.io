@@ -32,7 +32,7 @@
 
 <p>プログラムはちょっと強引で，もっとエレガントに書けそうだけれど，とりあえず：</p>
 
-<pre>
+<pre><code>
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
@@ -64,7 +64,7 @@ def toimg(nx, ny, ax, ay):
 img = toimg(1024, 1024, y[:,0], y[:,1])
 plt.imshow(img, cmap='gray_r')
 plt.imsave("mnistpca.png", img, cmap='gray_r')
-</pre>
+</code></pre>
 
 <p>t-SNE，UMAPも同様。</p>
 

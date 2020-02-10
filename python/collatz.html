@@ -20,7 +20,7 @@
 
 <p>Pythonのプログラムで調べてみましょう。</p>
 
-<pre>
+<pre><code>
 def collatz(n):
     print(n, end="")
     while (n &gt; 1):
@@ -30,15 +30,15 @@ def collatz(n):
             n = 3 * n + 1
         print(" →", n, end="")
     print()
-</pre>
+</code></pre>
 
 <p>ここで <code>n % 2</code> はnを2で割った余りです。</p>
 
 <p>例えば <code>collatz(3)</code> と打つと次のように出ます。</p>
 
-<pre>
+<pre><code>
 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1
-</pre>
+</code></pre>
 
 <p>いろいろな数から出発して，Collatzの予想が正しいかどうか確かめてください。Pythonの整数はどんな大きな数でも扱えますので，桁あふれする心配はありません。</p>
 
@@ -50,16 +50,16 @@ def collatz(n):
 
 <p>入力を促すためには次のようにします：</p>
 
-<pre>
+<pre><code>
 n = int(input('正の整数を入力してください: '))
 collatz(n)
-</pre>
+</code></pre>
 
 <p>関数 <code>input()</code> はキーボード入力を文字列として読み込みます。整数にしたいときは <code>int()</code>，浮動小数点数にしたいときは <code>float()</code> で変換します。</p>
 
 <p>Collatz の問題で，最後は 1 になるとしても，途中でどれくらい大きい数になるでしょうか。これを調べるための関数を作ってみましょう：</p>
 
-<pre>
+<pre><code>
 def collatz_max(n):
     max = n
     while (n &gt; 1):
@@ -70,18 +70,18 @@ def collatz_max(n):
             if n &gt; max:
                 max = n
     return max
-</pre>
+</code></pre>
 
 <p>これは <code>n</code> が大きくなるにつれてどれくらい大きくなるでしょうか。</p>
 
-<pre>
+<pre><code>
 max = 0
 for n in range(10000):
     m = collatz(n)
     if m &gt; max:
         print(n, m)
         max = m
-</pre>
+</code></pre>
 
 <p><code>range()</code> の数をもっと大きくしてやってみましょう。</p>
 

@@ -22,7 +22,7 @@
 
 <p>情報処理学会の<a href="https://www.ipsj.or.jp/member/nendomatu-kaiinsu.html">年度末会員数</a>をプロットする。データは <a href="data/ipsj.csv">ipsj.csv</a> である（BOM付きUTF-8，行末CRLF）。</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -32,14 +32,14 @@ plt.legend(ipsj.columns[2:7])
 plt.xlabel('年度')
 plt.ylabel('会員数')
 plt.savefig('ipsj.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <p>これでも十分だが，会員種別によってマーカーを変えるには <code>plt.plot(...)</code> を次のようにする：</p>
 
-<pre>
+<pre><code>
 for i, m in zip(range(2,8), "ov^<>"):
     plt.plot(ipsj['年度'], ipsj.iloc[:,i], m + '-')
-</pre>
+</code></pre>
 
 <figure><img src="img/ipsj.png" alt="情報処理学会会員数推移"></figure>
 

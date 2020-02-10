@@ -18,68 +18,68 @@
 
 <p><a href="https://scikit-learn.org/">scikit-learn</a>（サイキット・ラーン）は標準的な機械学習ライブラリである。インストールは次のようにする：</p>
 
-<pre>
+<pre><code>
 pip install scikit-learn  # または conda install scikit-learn
-</pre>
+</code></pre>
 
 <p>簡単な例として，多層パーセプトロン（multi-layer perceptron，MLP）による数字の識別（分類）を試す。データとしては，有名な MNIST ではなく，scikit-learn にサンプルとして入っている8×8ピクセル1797個の画像を使う。ピクセル値は0から16までの整数である。元々の出所は<a href="http://archive.ics.uci.edu/ml/datasets/Optical+Recognition+of+Handwritten+Digits">こちら</a>で，MNIST の元となった NIST のデータベースからの抜粋である。</p>
 
-<pre>
+<pre><code>
 import numpy as np
 from sklearn.datasets import load_digits
 
 digits = load_digits()
 print(digits.DESCR)   # 解説を表示
-</pre>
+</code></pre>
 
 <p><code>digits</code> に入っている画像をいくつか表示させてみよう：</p>
 
-<pre>
+<pre><code>
 digits.images[0]
 
 import matplotlib.pyplot as plt
 
 plt.imshow(digits.images[0])  # あれっ，色が着いちゃった
 plt.gray()                    # グレースケールに直す
-</pre>
+</code></pre>
 
 <p>この <code>digits.images[0]</code> とまったく同じものが <code>digits.data[0]</code> にも入っている。前者は8×8行列，後者は64要素の配列である。これが <code>digits.data[1796]</code> まで続く。このそれぞれがどの数字に対応するかの正解が <code>digits.target</code> に入っている。</p>
 
 <p>まずはこれら1797組をトレーニング用とテスト用に分ける。以下では行列を大文字，ベクトルを小文字で表し，データを <code>X</code>，ターゲット（正解）を <code>y</code> としている。全体の3割をテスト用にする：</p>
 
-<pre>
+<pre><code>
 from sklearn.model_selection import train_test_split
 
 X = digits.data
 y = digits.target
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
-</pre>
+</code></pre>
 
 <p>実際に分類してみよう。幅20の隠れ層を1層だけ使う。</p>
 
-<pre>
+<pre><code>
 from sklearn.neural_network import MLPClassifier
 
 model = MLPClassifier(hidden_layer_sizes=(20,), max_iter=500)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
-</pre>
+</code></pre>
 
 <p>正解率（accuracy）を求める：</p>
 
-<pre>
+<pre><code>
 from sklearn.metrics import accuracy_score
 
 accuracy_score(y_test, y_pred)
-</pre>
+</code></pre>
 
 <p>混同行列を求める：</p>
 
-<pre>
+<pre><code>
 from sklearn.metrics import confusion_matrix
 
 confusion_matrix(y_test, y_pred)
-</pre>
+</code></pre>
 
 <hr>
 

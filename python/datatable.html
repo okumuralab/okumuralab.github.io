@@ -22,18 +22,18 @@
 
 <p>使い方：</p>
 
-<pre>
+<pre><code>
 import datatable as dt
 
 dfr = dt.fread("hoge.csv")
 dfr.head()  # 頭だけ見る
 df = dfr.to_pandas()  # pandasのデータフレームに変換
 a = dfr.to_numpy()    # numpyの配列に変換
-</pre>
+</code></pre>
 
 <p>次のものが使える：</p>
 
-<pre>
+<pre><code>
 dfr.append         dfr.cbind          dfr.colindex       dfr.copy           dfr.countna
 dfr.countna1       dfr.head           dfr.key            dfr.keys           dfr.ltypes
 dfr.materialize    dfr.max            dfr.max1           dfr.mean           dfr.mean1
@@ -44,7 +44,7 @@ dfr.scalar         dfr.sd             dfr.sd1            dfr.shape          dfr.
 dfr.stypes         dfr.sum            dfr.sum1           dfr.tail           dfr.to_csv
 dfr.to_dict        dfr.to_jay         dfr.to_list        dfr.to_numpy       dfr.to_pandas
 dfr.to_tuples      dfr.view
-</pre>
+</code></pre>
 
 <hr>
 

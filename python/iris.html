@@ -18,23 +18,23 @@
 
 <p>Fisher の有名な「あやめ」のデータをプロットしてみます。まず，データをロードします：</p>
 
-<pre>
+<pre><code>
 from sklearn.datasets import load_iris
 
 iris = load_iris()
-</pre>
+</code></pre>
 
 <p>ざっとプロットしてみます：</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 
 plt.scatter(iris.data[:,0], iris.data[:,1], c=iris.target)
-</pre>
+</code></pre>
 
 <p>もっと丁寧に：</p>
 
-<pre>
+<pre><code>
 plt.clf()  # クリア
 markers = ['o', '^', 'v']
 for i in range(3):
@@ -43,13 +43,13 @@ for i in range(3):
 plt.xlabel('sepal length (cm)')
 plt.ylabel('sepal width (cm)')
 plt.legend(iris.target_names)
-</pre>
+</code></pre>
 
 <p>印刷用には <code>'o'</code> を <code>'ko'</code> にすれば黒になります。</p>
 
 <p>主成分分析（<a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA">PCA</a>）で2次元にしてからプロットしてみます：</p>
 
-<pre>
+<pre><code>
 from sklearn.decomposition import PCA
 
 x = PCA(n_components=2).fit_transform(iris.data)
@@ -61,31 +61,31 @@ for i in range(3):
 plt.xlabel('1st')
 plt.ylabel('2nd')
 plt.legend(iris.target_names)
-</pre>
+</code></pre>
 
 <figure><img src="img/iris.png" alt="あやめ"></figure>
 
 <p>次のようにすれば主成分ごとの分散の割合がわかります：</p>
 
-<pre>
+<pre><code>
 pca = PCA(n_components=2)
 x = pca.fit_transform(iris.data)
 pca.explained_variance_ratio_
-</pre>
+</code></pre>
 
 <p>出力は <code>array([0.92461872, 0.05306648])</code> のようになります。第1主成分92%，第2主成分5%ほどの寄与があります。</p>
 
 <p>PCAする前に変数ごとに標準化するか，あるいは<a href="https://scikit-learn.org/stable/modules/preprocessing.html">ここ</a>の「Scaling vs Whitening」にあるように <code>PCA(n_components=2, whiten=True)</code> するといいかもしれません。標準化は次のようにします：</p>
 
-<pre>
+<pre><code>
 from sklearn import preprocessing
 t = preprocessing.scale(iris.data)
 x = PCA(n_components=2).fit_transform(t)
-</pre>
+</code></pre>
 
 <p>3次元ならどうなるでしょうか：</p>
 
-<pre>
+<pre><code>
 x = PCA(n_components=3).fit_transform(iris.data)
 
 from mpl_toolkits.mplot3d import Axes3D
@@ -96,7 +96,7 @@ ax.scatter(x[:,0], x[:,1], x[:,2], c=iris.target)
 ax.set_xlabel("1st")
 ax.set_ylabel("2nd")
 ax.set_zlabel("3rd")
-</pre>
+</code></pre>
 
 <p>マウスでぐりぐりできます。</p>
 
@@ -104,7 +104,7 @@ ax.set_zlabel("3rd")
 
 <p>細かな操作のためには pandas のデータフレームに変換するほうが扱いやすいかもしれません：</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 
 df = pd.DataFrame(iris.data, columns=iris.feature_names)
@@ -116,7 +116,7 @@ df.describe()
 df.isnull().sum()  # 列ごとの欠測値の数を調べる
 df.groupby('species').size()
 df.corr()
-</pre>
+</code></pre>
 
 <hr>
 

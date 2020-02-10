@@ -6,6 +6,11 @@
 <title>厚労省ホームページ自動翻訳の品質</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@h_okumura">
+<meta name="twitter:title" content="厚労省ホームページ自動翻訳の品質">
+<meta name="twitter:description" content="サイトに低品質の翻訳ツールを付けるより，ブラウザの翻訳機能の邪魔をしないページを作るべし。">
+<meta name="twitter:image" content="https://oku.edu.mie-u.ac.jp/~okumura/misc/img/200209a.jpg">
 <style>
 blockquote > p { margin-block-start: 1em; margin-block-end: 1em; }
 </style>
@@ -40,7 +45,7 @@ blockquote > p { margin-block-start: 1em; margin-block-end: 1em; }
 
 <p>ご覧のように，「手洗い」が「トイレ」になるなど，ほとんど意味不明の英語である：</p>
 
-<blockquote>
+<blockquote lang="en">
 <p>About new-style coronavirus infectious disease.<br>
 National message to everybody</p>
 
@@ -53,7 +58,7 @@ National message to everybody</p>
 
 <h3>Google Translate</h3>
 
-<blockquote>
+<blockquote lang="en">
 <p>About New Coronavirus Infections<br>
 Message to the people</p>
 
@@ -64,7 +69,7 @@ Message to the people</p>
 
 <h3>NICT みんなの自動翻訳@TexTra</h3>
 
-<blockquote>
+<blockquote lang="en">
 <p>Message to the Public on New Strains of Coronavirus infection<br>
 New strains of Coronavirus infection are not currently recognized as an epidemic in Japan.<br>
 As well as taking measures against colds and seasonal influenza, it is very important for the people of Japan to implement cough etiquette and hand washing.<br>
@@ -75,13 +80,26 @@ Also, when you visit a medical institution, please tell in advance that you have
 
 <h3>みらい翻訳</h3>
 
-<blockquote>
+<blockquote lang="en">
 <p>New type of coronavirus infection<br>
 Message to the people of Japan</p>
 
 <p>New coronavirus infections are not currently endemic in our country. It is very important for the people of Japan to implement cough etiquette and hand washing as well as measures against colds and seasonal influenza. Please do your best to prevent infectious diseases.</p>
 
 <p>Those who return from or enter Hubei Province, or those who have been in contact with such persons, are requested to wear a mask and contact the public health center in advance if they have symptoms such as cough or fever. In addition, when you visit a medical institution, you should tell them in advance that you have been in Hubei or have been in contact with someone who has been in Hubei.</p>
+</blockquote>
+
+<h3>Bing翻訳</h3>
+
+<p>Microsoftの<a href="https://www.bing.com/translator">Bing翻訳</a>：</p>
+
+<blockquote lang="en">
+<p>New Coronavirus Infection<br>
+Message to the people</p>
+
+<p>The new coronavirus infection is not currently a condition in which an epidemic is recognized in Japan. As well as measures against colds and seasonal influenza, it is very important for the public to implement cough etiquette and hand washing for each person. We ask that you make efforts to prevent infectious diseases.</p>
+
+<p>If you are returning to or entered the country from Hubei Province, or if you have any symptoms such as coughing or fever, please wear a mask, contact the public health center in advance, and then visit us. In addition, please inform us in advance that you have stayed in Hubei Province or have been in contact with a person who has lived in Hubei Province.</p>
 </blockquote>
 
 <h3>結論</h3>
@@ -92,7 +110,7 @@ Message to the people of Japan</p>
 
 <p>厚労省の使っているのは高電社のJ-SERVERらしいという情報を<a href="https://twitter.com/ken_sugar/status/1226127016212062208">教えていただいた</a>。同じエンジンを使っている<a href="https://www.excite.co.jp/world/english/">Excite翻訳</a>と翻訳結果が似ている<a href="https://twitter.com/ken_sugar/status/1226130875089207296">とのこと</a>。そこで，Excite翻訳も試してみる：</p>
 
-<blockquote>
+<blockquote lang="en">
 <p>About a new-style coronavirus infection.<br>
 National message to everybody</p>
 
@@ -107,7 +125,7 @@ National message to everybody</p>
 
 <p>GoogleスプレッドシートのGOOGLETRANSLATE関数で<a href="https://twitter.com/ishidashuji/status/1226140968446857216">試していただいた</a>。Web版Google Translateよりずいぶん品質が劣る。</p>
 
-<blockquote>
+<blockquote lang="en">
 <p>"For the new coronavirus infection<br>
 Message to the people of everybody</p>
 
@@ -128,9 +146,9 @@ Message to the people of everybody</p>
 
 <p>そして，サイト側が注意すべきことは，翻訳friendlyな（そして読み上げfriendlyな）サイト作りを心がけることであろう。例えば文字を画像にするのはやめる。時間があれば英語だけでもうまく翻訳できているかチェックする（英語に翻訳できれば少なくともGoogle翻訳の中間表現への翻訳ができていることになるし，そもそもマイナーな言語は英語を介して訳されるので，品質の上限が見極められる）。</p>
 
-<p>パソコンのGoogle Chromeを右クリックすると，最初は「日本語に翻訳」しか出ないが，翻訳時に出るポップアップの「オプション」から言語が変更できるので，「英語」にする。</p>
+<p>パソコンのGoogle Chromeを右クリックすると，最初は「日本語に翻訳」しか出ないが，翻訳時に出るポップアップ（もし消えてしまったらアドレスバーの右側の「このページを翻訳」アイコンをクリック）の「オプション」から「言語を変更…」を選び，翻訳言語を「英語」にする。</p>
 
-<p>スマホのGoogle Chromeは，画面右下の「…」→「設定」→「言語」→「ページの翻訳」をオンにして，画面右下の「…」→「翻訳」で翻訳メニューを出す。最初は候補が日本語になっているが，⚙→「その他の言語…」→「英語」を選ぶと英語に翻訳できる。厚労省の新型コロナウイルスのページを訳すと右のようになる。</p>
+<p>スマホやiPadのGoogle Chromeは，右下（iPadなら右上）の「…」をクリックすると「翻訳」がある。グレイアウトされていて押せない場合は，別言語のページで試す。最下部に翻訳ツールバーが出る。最初は日本語への翻訳になるが，⚙→「その他の言語…」→「英語」を選ぶと英語に翻訳できる。翻訳ツールバーで「日本語」「英語」が切り替えられる。厚労省の新型コロナウイルスのページを訳すと右のようになる。</p>
 
 <p>これでページの問題点がいろいろ明らかになる：</p>
 
@@ -140,6 +158,8 @@ Message to the people of everybody</p>
   <li><code>&lt;code&gt;...&lt;/code&gt;</code> の中は訳されず，そのまま表示される。<code>&lt;pre&gt;...&lt;/pre&gt;</code> の中は訳される。複数行にわたって訳されないコードを書くには <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> のようにネストする。</li>
 </ul>
 
+<p>[追記の追記] WindowsのEdge（新）も右クリックで翻訳できる。これも優秀な翻訳である。</p>
+
 <hr>
 
 <footer>
@@ -147,7 +167,7 @@ Message to the people of everybody</p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-10 08:25:25</time>
+Last modified: <time>2020-02-10 12:50:37</time>
 <!-- hhmts end -->
 </p>
 </footer>

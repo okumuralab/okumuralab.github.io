@@ -25,7 +25,7 @@ figcaption {
 
 <p>日本についてのデータを読んでプロットしてみよう：</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -34,7 +34,7 @@ df = pd.read_csv("https://www.google.org/flutrends/about/data/flu/jp/data.txt",
                  skiprows=11)
 df.plot()
 plt.savefig('googleflu-jp.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/googleflu-jp.png" alt="Google Flu Trends, Japan">

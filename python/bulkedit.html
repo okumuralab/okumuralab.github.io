@@ -18,7 +18,7 @@
 
 <p><a href="https://www.mathjax.org">MathJax</a> がバージョン3になった。以前は</p>
 
-<pre>
+<pre><code>
 &lt;script type="text/x-mathjax-config"&gt;
 MathJax.Hub.Config({
   tex2jax: {
@@ -29,11 +29,11 @@ MathJax.Hub.Config({
 });
 &lt;/script&gt;
 &lt;script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"&gt;&lt;/script&gt;
-</pre>
+</code></pre>
 
 <p>などと書いていたものを</p>
 
-<pre>
+<pre><code>
 &lt;script&gt;
 MathJax = {
   chtml: {
@@ -47,13 +47,13 @@ MathJax = {
 &lt;script id="MathJax-script" async
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"&gt;
 &lt;/script&gt;
-</pre>
+</code></pre>
 
 <p>に一括置換したい。</p>
 
-<p>上書きは怖いので，カレントディレクトリに <code>new</code> というサブディレクトリを作り，そこに書き出すことにした：</p>
+<p>上書きは怖いので，カレントディレクトリに <code>new</code> というサブディレクトリを作り，そこに書き出すことにした。<a href="https://docs.python.org/3/library/re.html">正規表現</a>をうまく使うことがキモである：</p>
 
-<pre>
+<pre><code>
 #! /usr/bin/env python3
 
 import sys
@@ -81,9 +81,23 @@ MathJax = {
     if text != orig:
         with open('new/' + arg, 'w') as f:
             f.write(text)
-</pre>
+</code></pre>
 
 <p>うまくいったようである。</p>
+
+<p>別の例として，<code>&lt;pre&gt;...&lt;/pre&gt;</code> を <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> に直すコード：</p>
+
+<pre><code>
+for arg in sys.argv[1:]:
+    with open(arg) as f:
+        orig = f.read()
+    text = orig
+    text = re.sub(r'^&lt;pre&gt;$', '&lt;pre&gt;&lt;code&gt;', text, flags=re.MULTILINE)
+    text = re.sub(r'^&lt;/pre&gt;$', '&lt;/code&gt;&lt;/pre&gt;', text, flags=re.MULTILINE)
+    if text != orig:
+        with open('new/' + arg, 'w') as f:
+            f.write(text)
+</code></pre>
 
 <hr>
 
@@ -91,7 +105,7 @@ MathJax = {
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-12-20 16:43:01</time>
+Last modified: <time>2020-02-10 12:56:23</time>
 <!-- hhmts end -->
 </p>
 </body>

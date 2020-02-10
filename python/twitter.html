@@ -18,9 +18,9 @@
 
 <p>Twitter を Python から使うライブラリは <a href="https://developer.twitter.com/en/docs/developer-utilities/twitter-libraries.html">Twitter libraries</a> の Python の項にいくつかリストされている。どれがいいかわからないが，とりあえず一番上の <a href="https://github.com/bear/python-twitter/">python-twitter</a> を試してみる。インストールは</p>
 
-<pre>
+<pre><code>
 pip install python-twitter
-</pre>
+</code></pre>
 
 <p>でできる。</p>
 
@@ -30,7 +30,7 @@ pip install python-twitter
 
 <p>試してみよう：</p>
 
-<pre>
+<pre><code>
 import twitter
 
 api = twitter.Api(consumer_key='...',
@@ -43,24 +43,24 @@ api = twitter.Api(consumer_key='...',
 api.VerifyCredentials() # 自分が正しく認識できているかチェック
 
 home = api.GetHomeTimeline() # ホームタイムラインを取得（デフォルト20件）
-</pre>
+</code></pre>
 
 <p>これで <code>home</code> を表示すればだいたいの感じがわかる。このクラスの詳細は <code>??twitter.models.Status</code> と打ち込めば出てくる。この中の必要な項目を自分好みに出力すればよい。簡単な例を挙げておく：</p>
 
-<pre>
+<pre><code>
 for t in home:
     if (t.retweeted_status):
         t = t.retweeted_status
     for u in t.urls:
         t.full_text = t.full_text.replace(u.url, u.expanded_url)
     print(t.id, t.created_at, t.user.screen_name, t.full_text)
-</pre>
+</code></pre>
 
 <p>これを少しいじれば，自家製Twitterクライアントができる。これ以外に，位置情報 <code>t.place</code>，正確な位置情報 <code>t.geo</code> などが得られる。普段はEmacsのtwittering-modeを使っているが，自動処理にはコマンドラインで使えるほうが便利だ。</p>
 
 <p>書き込みはこんな感じ（通常はツイート本文だけでよい）：</p>
 
-<pre>
+<pre><code>
 api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
                media="hoge.jpg",  # 添付画像ファイル
                in_reply_to_status_id=1140050903828819970, # リプライ先のツイートID
@@ -68,7 +68,7 @@ api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
                attachment_url="https://twitter.com/.../status/...", # 引用リツイート
                latitude=34.7468, longitude=136.5248, # 位置情報
                display_coordinates=True) # 正確な位置情報にするか
-</pre>
+</code></pre>
 
 <p>引用リツイートは従来のようにツイート本文末尾にURLを書いてもいいが，<code>attachment_url="..."</code> で指定すると文字数カウントに入らない。リプライの先頭に付ける <code>@...</code> も，手で書く代わりに <code>auto_populate_reply_metadata=True</code> にすれば自動で入り，文字数カウントに入らない。</p>
 
@@ -78,7 +78,7 @@ api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
 
 <p>毎時cronで起動して日毎のホームタイムラインをファイルにするコード例：</p>
 
-<pre>
+<pre><code>
 #! /usr/local/bin/python3
 
 import twitter
@@ -125,7 +125,7 @@ with open(time.strftime("%Y%m%d"), "a", newline="\n") as f:
             s = s.replace(u.url, u.expanded_url)
         c = parse(t.created_at).astimezone(timezone('Asia/Tokyo')).strftime("%Y-%m-%d %H:%M:%S")
         print(t.id, c, t.user.screen_name, s.replace("\n", "\r"), sep="\t", file=f)
-</pre>
+</code></pre>
 
 <p>grepしやすいように1ツイート1行にするために，ツイート中の改行は <code>"\r"</code> に変換している。</p>
 
@@ -133,7 +133,7 @@ with open(time.strftime("%Y%m%d"), "a", newline="\n") as f:
 
 <p>検索は python-twitter の<a href="https://python-twitter.readthedocs.io/en/latest/searching.html">ドキュメント</a>や，Twitter API の <a href="https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets">Search Tweets</a>，<a href="https://developer.twitter.com/en/docs/tweets/search/guides">Search Tweet Guides</a> 参照。例：</p>
 
-<pre>
+<pre><code>
 import urllib.parse
 
 query = {"q": "ほげ ふが",        # 検索文字列（スペース区切り）
@@ -149,13 +149,13 @@ while True:
     results.extend(r)
     query['max_id'] = results[-1].id - 1
     time.sleep(1)
-</pre>
+</code></pre>
 
 <p>この方法で取得できるものは，検索語によっては，大部分が重複（リツイート）である。</p>
 
 <p>結果をMeCabで形態素解析し，名詞の出現頻度をグラフにしてみよう：</p>
 
-<pre>
+<pre><code>
 import MeCab
 import collections
 
@@ -198,7 +198,7 @@ plt.figure(figsize=[5, 5])
 plt.barh(range(len(mc),0,-1), mc.values())
 plt.yticks(range(len(mc),0,-1), mc.keys())
 plt.savefig('hist.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <hr>
 

@@ -18,41 +18,41 @@
 
 <p>Python には <a href="https://docs.python.org/3/library/tkinter.html">Tkinter</a>（ティーケーインター）という簡単な GUI 作成用ライブラリ（Tcl/Tk（ティクル・ティーケー）インターフェース）が標準で備わっています：</p>
 
-<pre>
+<pre><code>
 import tkinter as tk
-</pre>
+</code></pre>
 
 <p>まずは対話型の環境で窓を一つ作ってみましょう：</p>
 
-<pre>
+<pre><code>
 root = tk.Tk()                # 窓を作る
 root.title("Tkinterの練習")   # 窓のタイトルを設定
 root.geometry("640x480")      # 窓の大きさを設定
-</pre>
+</code></pre>
 
 <p>この中にラベル（テキスト）を書き込んでみます：</p>
 
-<pre>
+<pre><code>
 label = tk.Label(root, text="テスト")  # ラベルを作成
 label.pack()                           # 実際に表示する
-</pre>
+</code></pre>
 
 <p>ボタンも作ってみます：</p>
 
-<pre>
+<pre><code>
 button = tk.Button()                        # ボタンを作成
 button["text"] = "クリックしてね！"         # ボタンにラベルを設定
 button["command"] = lambda: print("ほげ！") # ボタンの動作を設定
 button.pack()                               # 実際に表示する
-</pre>
+</code></pre>
 
 <p>ここで <code>lambda:</code> は無名関数を作るための命令です。もっと複雑なコマンドをボタンに設定するには，関数を定義し，その関数名を <code>button["command"]</code> に代入します。</p>
 
 <p>対話型環境では，このように部品を一つずつ追加して確認できますが，一つのスクリプトにすると，すぐに終了してしまいます。そこで，プログラムの最後に</p>
 
-<pre>
+<pre><code>
 root.mainloop()  # ループ（対話型環境では不要）
-</pre>
+</code></pre>
 
 <p>と書いて，無限ループにします。終了するには，窓の「終了」ボタンをクリックします。</p>
 

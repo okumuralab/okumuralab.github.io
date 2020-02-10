@@ -18,20 +18,20 @@
 
 <p>Python と R の性格を比較するために，R なら</p>
 
-<pre>
+<pre><code>
 curve(dnorm(x), -3, 3)
-</pre>
+</code></pre>
 
 <p>で描ける正規分布の密度関数のグラフを Python で描いてみます。R では標準で済んでしまうものが，Python では Matplotlib，NumPy，SciPy という三つのパッケージが必要です。Rの <code>dnorm()</code> に相当する正規分布の密度関数は，Python では <code>scipy.stats.norm.pdf()</code> を使います。</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
 
 x = np.linspace(-3, 3, 101)  # 区間[-3,3]を100等分する101点
 plt.plot(x, norm.pdf(x))
-</pre>
+</code></pre>
 
 <figure><img src="img/dnormcurve.png" alt="正規分布の密度関数"></figure>
 

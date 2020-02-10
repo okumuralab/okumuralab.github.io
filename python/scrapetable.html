@@ -22,17 +22,17 @@
 
 <p>表自体をスクレーピングするのは簡単である。あらかじめpandasとlxmlがインストールされているとする：</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 
 tables = pd.read_html('http://monitoring.tokyo-eiken.go.jp/report/shinjuku/mon_air_week_201112w.html')
 len(tables)     # => 1
 df = tables[0]  # 最初の表を取り出す
-</pre>
+</code></pre>
 
 <p>この <code>df</code> を表示すると，次のようになる（多少編集してある）：</p>
 
-<pre>
+<pre><code>
      測定日時(Measurement time) 線量率 (dose rate)μGy/h (microgray per hour)
      測定日時(Measurement time)              最大値(max) 最小値(min) 平均値(average)
 0    2011/03/20 23:00～23:59                0.0515   0.0465       0.0494
@@ -42,33 +42,33 @@ df = tables[0]  # 最初の表を取り出す
 4    2011/03/20 19:00～19:59                0.0468   0.0425       0.0445
 ..                      ...                   ...      ...          ...
 [168 rows x 4 columns]
-</pre>
+</code></pre>
 
 <p>列見出しに階層構造があることがわかる。列名を表示してみる：</p>
 
-<pre>
+<pre><code>
 df.columns
-</pre>
+</code></pre>
 
 <p><code>MultiIndex([...],)</code> のように出力される。</p>
 
-<pre>
+<pre><code>
 In [ ]: df.columns[0]
 Out[ ]: ('測定日時(Measurement time)', '測定日時(Measurement time)')
 
 In [ ]: df.columns[3]
 Out[ ]: ('線量率 (dose rate)μGy/h (microgray per hour)', '平均値(average)')
-</pre>
+</code></pre>
 
 <p>このように，列名にあたる部分がtupleになっていることがわかる。したがって，一番右の列を取得するには</p>
 
-<pre>
+<pre><code>
 df['線量率 (dose rate)μGy/h (microgray per hour)', '平均値(average)']
-</pre>
+</code></pre>
 
 <p>とすればよいが，番号で <code>df.iloc[:,3]</code> でもよい。手っ取り早くプロットしてみよう：</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 
 df.iloc[:,0] = [pd.Timestamp(x[:16]) for x in df.iloc[:,0]]
@@ -77,7 +77,7 @@ plt.legend(['線量率（μGy/h）'])
 plt.xlabel('')
 plt.ylabel('')
 plt.savefig('190929a.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/190929a.png" alt="新宿の線量率"></figure>
 

@@ -18,22 +18,22 @@
 
 <p>Ruby の</p>
 
-<pre>
+<pre><code>
 while line = gets
   puts line
 end
-</pre>
+</code></pre>
 
 <p>は，コマンドライン引数で与えられたファイルを一つずつ開いて1行ずつ読み込み，出力するループである。コマンドライン引数でファイルを指定しなければ，標準入力から1行ずつ読み込む。</p>
 
 <p>これと同じことをするためのパッケージが <a href="https://docs.python.org/3/library/fileinput.html">fileinput</a> である：</p>
 
-<pre>
+<pre><code>
 import fileinput
 
 for line in fileinput.input():
     print(line, end="")  # または print(line.rstrip())
-</pre>
+</code></pre>
 
 <p><code>fileinput.input()</code> に引数でファイル名（のリスト）を与えれば，それが優先される。</p>
 
@@ -41,51 +41,51 @@ for line in fileinput.input():
 
 <p>標準入力だけ読めばよいなら，次のようにできる：</p>
 
-<pre>
+<pre><code>
 import sys
 
 for line in sys.stdin:
     print(line, end="")  # または print(line.rstrip())
-</pre>
+</code></pre>
 
 <p>ループではなく，標準入力から1行だけ読むには，次のようにする：</p>
 
-<pre>
+<pre><code>
 line = sys.stdin.readline()
-</pre>
+</code></pre>
 
 <p>プロンプトで入力を促すには，次のようにする：</p>
 
-<pre>
+<pre><code>
 n = int(input('正の整数を入力してください: '))
-</pre>
+</code></pre>
 
 <p>全部の行を行（文字列）のリストの形で読み込むには，次のようにする：</p>
 
-<pre>
+<pre><code>
 lines = sys.stdin.readlines()
-</pre>
+</code></pre>
 
 <p>全部の行を一つの文字列の形で読み込むには，次のようにする：</p>
 
-<pre>
+<pre><code>
 lines = sys.stdin.read()
-</pre>
+</code></pre>
 
 <p>標準入力でないファイルの場合は，次のようにする：</p>
 
-<pre>
+<pre><code>
 with open("filename") as f:
     for line in f:
         print(line, end="")
-</pre>
+</code></pre>
 
 <p>あるいは</p>
 
-<pre>
+<pre><code>
 with open("filename") as f:
     lines = f.readlines()  # または f.read()
-</pre>
+</code></pre>
 
 <hr>
 

@@ -39,13 +39,13 @@ MathJax = {
 
 <p>2次関数 $y = x^2$ のグラフを $-3 \leqq x \leqq 3$ の範囲で描きます（Jupyter Notebook では <code>%matplotlib inline</code> という行を最初に追加してください）：</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 import numpy as np
 
 x = np.linspace(-3, 3, 101)
 plt.plot(x, x ** 2)
-</pre>
+</code></pre>
 
 <p>プロットが現れない場合は <code>plt.show()</code> という行を最後に追加してください。その場合は，プロット窓を閉じないと次に進めなくなります。これは以下でも同じです。</p>
 
@@ -55,57 +55,57 @@ plt.plot(x, x ** 2)
 
 <p>2次関数 $y = x^3 - x$ のグラフを $x$ 軸（$y = 0$ の線）とともに $-1.2 \leqq x \leqq 1.2$ の範囲で描きます（IPython などの対話型環境では，まず <code>plt.clf()</code> と打ち込んで，前のグラフをクリアしてください）：</p>
 
-<pre>
+<pre><code>
 x = np.linspace(-1.2, 1.2, 101)
 plt.plot(x, x ** 3 - x)
 plt.axhline()
-</pre>
+</code></pre>
 
 <h3>データファイルの読み方</h3>
 
 <p>ライブラリ <code>pandas</code>, <code>xlrd</code> を使っています。</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 
 birthdeath = pd.read_excel("https://okumuralab.org/literacy3/birthdeath.xlsx")
 birthdeath.head()
-</pre>
+</code></pre>
 
 <h3>データのグラフ化</h3>
 
-<pre>
+<pre><code>
 plt.plot(birthdeath['年'], birthdeath['出生数'], 'o-')
 plt.plot(birthdeath['年'], birthdeath['死亡数'], 'o-')
-</pre>
+</code></pre>
 
 <h3>CSVファイルの読み込みと直線のあてはめ</h3>
 
 <p>気象庁のデータを読み込んでプロットします：</p>
 
-<pre>
+<pre><code>
 df = pd.read_csv('http://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv',
                  encoding='sjis')
 plt.plot(df['年'], df['世界全体'], 'o-')
-</pre>
+</code></pre>
 
 <p>直線をあてはめます。</p>
 
-<pre>
+<pre><code>
 slope, intercept = np.polyfit(df['年'], df['世界全体'], 1)
 print("傾き", slope, "y切片", intercept)
-</pre>
+</code></pre>
 
 <p>前のプロットに続けて次のように打ち込むと，予測直線が重ね書きされます：</p>
 
-<pre>
+<pre><code>
 plt.plot(df['年'], df['年'] * slope + intercept)
-</pre>
+</code></pre>
 
 <div class="note">
 <p>別のやり方として，機械学習でよく用いられるライブラリ <code>scikit-learn</code> を使う方法も書いておきます。</p>
 
-<pre>
+<pre><code>
 from sklearn.linear_model import LinearRegression
 
 x = np.array(df['年']).reshape(-1,1)
@@ -114,21 +114,21 @@ model = LinearRegression()
 model.fit(x, y)
 print("傾き", model.coef_, "y切片", model.intercept_)
 plt.plot(x, model.predict(x))
-</pre>
+</code></pre>
 
 <p>ほかに，Rのような統計寄りのライブラリ <code>statsmodels</code> も使えます。</p>
-</pre>
+</code></pre>
 </div>
 
 <h3>データの集計</h3>
 
 <p>学生のデータを読み込み，学部ごとに集計して棒グラフを描きます（日本語フォントが設定されていない環境では文字化けしますので<a href="plot.html">プロット</a>の項を見て環境設定してください）：</p>
 
-<pre>
+<pre><code>
 students = pd.read_csv("https://okumuralab.org/literacy3/students.csv")
 s = students.groupby('学部')['学生数'].sum()
 plt.bar(s.index, s)
-</pre>
+</code></pre>
 
 <p>学年ごとに集計するには，上の「学部」を「学年」に変えます。</p>
 
@@ -138,36 +138,36 @@ plt.bar(s.index, s)
 
 <p>まずディレクトリ名（ここではカレントディレクトリ <code>"."</code>）を与えてファイル名一覧を取得します（Excel で開いているとファイル名の頭に <code>~$</code> の付いたテンポラリファイル名を拾ってしまうことがあるので要注意）：</p>
 
-<pre>
+<pre><code>
 import pathlib
 
 path = pathlib.Path(".")
 names = [p for p in path.iterdir() if p.match("*.xlsx")]
-</pre>
+</code></pre>
 
 <p>ファイル名を与えると，ワークブックを開いて，最初のワークシートのセル B2，B3，B4，C2，C3，C4 の中身をリストとして返す関数を定義します。</p>
 
-<pre>
+<pre><code>
 def f(n):
     a = pd.read_excel(n, usecols="B:C", header=None, skiprows=1, nrows=3)
     return a.values.flatten("F")
-</pre>
+</code></pre>
 
 <p>縦横に並んだセルを1列に並べる <code>flatten()</code> を使っています。デフォルトでは B2，C2，B3，C3，B4，C4 の順に並びますが，<code>"F"</code> を与えると，縦読み（Fortran流）の B2，B3，B4，C2，C3，C4 の順になります。これを次々に呼び出して，リストのリストを作ります。</p>
 
-<pre>
+<pre><code>
 x = [f(n) for n in names]
-</pre>
+</code></pre>
 
 <p>CSV形式で保存します。</p>
 
-<pre>
+<pre><code>
 pd.DataFrame(x).to_csv("x.csv", index=False, header=False, encoding="sjis")
-</pre>
+</code></pre>
 
 <div class="note">
 <p><a href="https://openpyxl.readthedocs.io">openpyxl</a> ライブラリを直接使えばもっと細かいこともできます（この例ではたいして変わりませんが Excel と同じ形でセル範囲が書けます）：</p>
-<pre>
+<pre><code>
 from openpyxl import load_workbook
 
 def f(n):
@@ -175,7 +175,7 @@ def f(n):
     ws = wb.worksheets[0]
     return [ws['B2:C4'][i][j].value for j in range(2) for i in range(3)]
 # あるいは return [x.value for x in np.array(ws['B2:C4']).flatten("F")]
-</pre>
+</code></pre>
 </div>
 
 <hr>

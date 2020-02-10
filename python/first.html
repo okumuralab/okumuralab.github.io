@@ -22,14 +22,14 @@
 
 <p>まず足し算です。生のPython（<code>python</code> または <code>python3</code> コマンド）ならプロンプト <code>&gt;&gt;&gt;</code> の右側に，IPython（<code>ipython</code> または <code>ipython3</code> コマンド）ならプロンプト <code>In [1]:</code> の右側に，Jupyter Notebookなら最初の枠内に，<code>123+456</code> と打ち込んでEnterキーを打ちます（Jupyter Notebookなら Shift + Enter です）。次の行に答えが出ます。以下ではIPythonの表示を示します。</p>
 
-<pre>
+<pre><code>
 In [1]: 123+456
 Out[1]: 579
-</pre>
+</code></pre>
 
 <p>掛け算は <code>*</code>，割り算は <code>/</code>，累乗は <code>**</code> です（<code>^</code> は累乗ではなくビットごとの排他的論理和です）。計算の順序は，通常の数式と同様，累乗が一番先で，その次が掛け算・割り算，最後が足し算・引き算です。</p>
 
-<pre>
+<pre><code>
 In [2]: 23-4*5
 Out[2]: 3
 
@@ -41,7 +41,7 @@ Out[4]: 0.3333333333333333
 
 In [5]: 6.02*10**23
 Out[5]: 6.019999999999999e+23
-</pre>
+</code></pre>
 
 <p>最後の <code>e+23</code> は「×10<sup>23</sup>」の意味です。実数（浮動小数点数）の表示は上に示すように微妙に誤差が出ますが，これはコンピュータが内部で10進法ではなく2進法を使っているためです。</p>
 
@@ -49,28 +49,28 @@ Out[5]: 6.019999999999999e+23
 
 <p>おもしろいことに，文字列を足し算，掛け算することもできます（以下では入力の行番号は省略します）：</p>
 
-<pre>
+<pre><code>
 In [ ]: "ほげ" + "げほ"
 Out[ ]: 'ほげげほ'
 
 In [ ]: "ほげ" * 3
 Out[ ]: 'ほげほげほげ'
-</pre>
+</code></pre>
 
 <p>値は変数に代入することができます。</p>
 
-<pre>
+<pre><code>
 In [ ]: x = 1/3
 
 In [ ]: x*3
 Out[ ]: 1.0
-</pre>
+</code></pre>
 
 <p><code>x = 1/3</code> のようにスペースを空けなくても <code>x=1/3</code> のように詰めて書いてもまったく同じですが，多くのプログラマは，見やすいように，<code>x = 1/3</code> または <code>x = 1 / 3</code> のようにスペースを入れて，ゆったりと書きます。</p>
 
 <p>この <code>x</code> のようなものを「変数」と呼びます。変数名は，大文字と小文字を区別します。</p>
 
-<pre>
+<pre><code>
 In [ ]: x
 Out[ ]: 0.3333333333333333
 
@@ -81,32 +81,32 @@ NameError                                 Traceback (most recent call last)
 ----&gt; 1 X
 
 NameError: name 'X' is not defined
-</pre>
+</code></pre>
 
 <p>この <code>NameError</code> は変数名などを間違えたときに出ます。</p>
 
 <p>対話型の環境では，一つ前の出力結果が，特別な変数 <code>_</code> に入ります：</p>
 
-<pre>
+<pre><code>
 In [ ]: 2 ** 16
 Out[ ]: 65536
 
 In [ ]: _ ** 2      # この場合 65536 ** 2 と同じ
 Out[ ]: 4294967296
-</pre>
+</code></pre>
 
 <p>上の例では <code>_ ** 2</code> は <code>65536 ** 2</code> と同じです。IPython では <code>__</code> が二つ前，<code>___</code> が三つ前です（四つ前はありません）。</p>
 
 <p>対話型の環境なら，これまでの例で示したように，式を打ち込めばそのまま答えが表示されますが，対話型でないプログラム中では <code>print()</code> 関数を使わないと出力されません：</p>
 
-<pre>
+<pre><code>
 In [ ]: print("Hello")
 Hello
-</pre>
+</code></pre>
 
 <p><code>print</code> のような関数と同じ名前の変数を作ることもできます（お勧めしません）：</p>
 
-<pre>
+<pre><code>
 In [ ]: print = 3
 
 In [ ]: print
@@ -115,82 +115,82 @@ Out[ ]: 3
 In [ ]: print("Hello")
 ...
 TypeError: 'int' object is not callable
-</pre>
+</code></pre>
 
 <p>あらら！ 元に戻すには，自分の作った <code>print</code> を削除します：</p>
 
-<pre>
+<pre><code>
 In [ ]: del print
 
 In [ ]: print("Hello")
 Hello
-</pre>
+</code></pre>
 
 <p>ほかにどういう関数があるのでしょうか。三角関数は？</p>
 
-<pre>
+<pre><code>
 In [ ]: sin(pi/2)
 ...
 NameError: name 'sin' is not defined
-</pre>
+</code></pre>
 
 <p>駄目ですね。数学関数はいくつかのライブラリで定義されていますが，ここでは標準ライブラリ <code>math</code> のものを使います（ほかに <a href="https://www.numpy.org">NumPy</a> や <a href="https://www.scipy.org">SciPy</a> でも定義されています）。ライブラリ <code>math</code> を使うには，次のようにインポートします：</p>
 
-<pre>
+<pre><code>
 In [ ]: import math
-</pre>
+</code></pre>
 
 <p>これで <code>math.</code> で始まる定数や関数が使えるようになります：</p>
 
-<pre>
+<pre><code>
 In [ ]: math.pi   # 円周率
 Out[ ]: 3.141592653589793
 
 In [ ]: math.e    # 自然対数の底
 Out[ ]: 2.718281828459045
-</pre>
+</code></pre>
 
 <p>丸めて文字列にするには <code>format()</code> を使います：</p>
 
-<pre>
+<pre><code>
 In [ ]: format(math.pi, ".4f")
 Out[ ]: '3.1416'
-</pre>
+</code></pre>
 
 <p>いげた印 <code>#</code> より右側はコメント（説明のための注釈）です。以下では説明のためにコメントをいろいろ書いていますが，実際に打ち込むときはコメントは必要ありません。</p>
 
-<pre>
+<pre><code>
 In [ ]: math.sin(math.pi / 2)
 Out[ ]: 1.0
 
 In [ ]: math.sin(math.pi)
 Out[ ]: 1.2246467991473532e-16
-</pre>
+</code></pre>
 
 <p>数値計算の誤差のため sin(π) は 0 にならず，1.22 × 10<sup>-16</sup> という小さな値になりました。</p>
 
 <div class="note">
 <p>NumPy で定義されているものは配列の形で引数を与えることもできます。NumPy を読み込むには</p>
-<pre>
+<pre><code>
 In [ ]: import numpy as np
-</pre>
+</code></pre>
 <p>とします。これは <code>numpy</code> を <code>np</code> という省略名で読み込む（インポートする）ことを意味します。よく使うライブラリには伝統的な省略名があるので，それに従いましょう。</p>
-<pre>
+<pre><code>
 In [ ]: np.sin(0.1)
 Out[ ]: 0.09983341664682815
 
 In [ ]: np.sin([0.1,0.2,0.3])
 Out[ ]: array([0.09983342, 0.19866933, 0.29552021])
-</pre>
+</code></pre>
 </div>
 
 <p>関数の括弧を閉じないとどうなるでしょうか。</p>
 
-<pre>
+<pre><code>
 In [ ]: math.sin(math.pi/2
    ...: )
 Out[ ]: 1.0
-</pre>
+</code></pre>
 
 <p>このように，続きの入力を促すプロンプト <code>...</code> が出ますので，入れ忘れた <code>)</code> を入力してEnterを押します。あるいは，わけがわからなくなったなら Control+C で止まります（Emacs中では Control-C を2回）。</p>
 
@@ -198,7 +198,7 @@ Out[ ]: 1.0
 
 <p>例えば <code>print()</code> という関数のヘルプを読むには，生の Python では <code>help(print)</code> としますが，IPython や Jupyter Notebook では <code>?print</code> または <code>print?</code> と打ち込みます（うまくいかない場合は <code>help(print)</code> も試してください）：</p>
 
-<pre>
+<pre><code>
 In [ ]: ?print
 Docstring:
 print(value, ..., sep=' ', end='\n', file=sys.stdout, flush=False)
@@ -210,18 +210,18 @@ sep:   string inserted between values, default a space.
 end:   string appended after the last value, default a newline.
 flush: whether to forcibly flush the stream.
 Type:      builtin_function_or_method
-</pre>
+</code></pre>
 
 <p>これで改行をなくすには <code>end=''</code> または <code>end=""</code> とすればよいことが推測できます（Python ではシングルクォート <code>'</code> とダブルクォート <code>"</code> はまったく同じ意味です）：</p>
 
-<pre>
+<pre><code>
 In [ ]: print("Hello", end=""); print(" World")
 Hello World
-</pre>
+</code></pre>
 
 <p><code>?</code> または <code>??</code> を前置または後置することでヘルプが表示される IPython の機能は，自分の作ったオブジェクト等にも適用されます：</p>
 
-<pre>
+<pre><code>
 In [ ]: x = [2, 3, 4, 5]
 
 In [ ]: ?x
@@ -233,7 +233,7 @@ Built-in mutable sequence.
 
 If no argument is given, the constructor creates a new empty list.
 The argument must be an iterable if specified.
-</pre>
+</code></pre>
 
 <p>浮動小数点表示の精度は，例えば <code>%precision 3</code> で小数第3位まで，<code>%precision %.7g</code> で7桁精度になります。 <code>%precision</code> だけ打てばデフォルトに戻ります。</p>
 
@@ -247,14 +247,14 @@ The argument must be an iterable if specified.
 
 <p>眠れない夜は，ひつじを数えてみましょう🐑🐑🐑🐑🐑🐑🐑🐑🐑🐑。</p>
 
-<pre>
+<pre><code>
 for i in range(1,11):
     print("ひつじが", i, "ひき")
-</pre>
+</code></pre>
 
 <p><code>range(1,11)</code> は 1 以上 11 未満の整数を表します。Pythonはインデント（字下げ）でブロック構造を表しますので，必ず上の2行目は（半角の）スペースかタブでインデントします。多くの Python プログラマは（半角の）スペース4個でインデントする（そうなるようにテキストエディタを設定している）と思います。</p>
 
-<pre>
+<pre><code>
 ひつじが 1 ひき
 ひつじが 2 ひき
 ひつじが 3 ひき
@@ -265,51 +265,51 @@ for i in range(1,11):
 ひつじが 8 ひき
 ひつじが 9 ひき
 ひつじが 10 ひき
-</pre>
+</code></pre>
 
 <p>もしもプログラムを間違えて止まらなくなったら，Ctrl + C を入力します（Emacs 環境なら Ctrl + C を2回入力します）。</p>
 
 <p>眠れない夜がまだまだ続くときは，ひつじを数える関数を作りましょう。</p>
 
-<pre>
+<pre><code>
 def hitsuji(n):
     for i in range(1,n+1):
         print("ひつじが", i, "ひき")
-</pre>
+</code></pre>
 
 <p>これで <code>hitsuji(100)</code> と打てば，ひつじが100ひき数えられます。</p>
 
 <div class="note">
 <p>文字列に値を割り込ませる方法として <code>"ひつじが {} ひき".format(i)</code> あるいは <code>f"ひつじが {i} ひき"</code> という書き方もできます。中括弧の中に例えば <code>:2d</code> のような<a href="https://docs.python.org/3/library/string.html#formatstrings">書式指定</a>をすれば2桁右詰めになります：</p>
-<pre>
+<pre><code>
 for i in range(1,11):
     print("ひつじが {:2d} ひき".format(i))
 
 for i in range(1,11):
     print(f"ひつじが {i:2d} ひき")
-</pre>
+</code></pre>
 <p><code>"ひつじが %2d ひき" % i</code> のような古い<a href="https://docs.python.org/3/library/stdtypes.html#old-string-formatting">C言語スタイルの書式指定</a>もできます。次の例はいずれも出力が <code>'円周率はだいたい 3.1416 です。'</code> になります：</p>
-<pre>
+<pre><code>
 In [ ]: "円周率はだいたい {:.4f} です。".format(math.pi)
 In [ ]: f"円周率はだいたい {math.pi:.4f} です。"
 In [ ]: "円周率はだいたい %.4f です。" % math.pi
-</pre>
+</code></pre>
 </div>
 
 <h2>フィボナッチ数列</h2>
 
 <p>Python では複数の代入を並行して行うことができます。このことを使えば，フィボナッチ数列の生成が次のように少しだけ簡単に書けます：</p>
 
-<pre>
+<pre><code>
 a, b = 1, 1
 while a < 100:
     print(a)
     a, b = b, a+b
-</pre>
+</code></pre>
 
 <p>リストの形で返す関数にしてみます：</p>
 
-<pre>
+<pre><code>
 def fib(n):
     """n未満のフィボナッチ数列を返す"""
     r = []          # 空のリスト
@@ -318,17 +318,17 @@ def fib(n):
         r.append(a) # リストにアペンド
         a, b = b, a+b
     return r
-</pre>
+</code></pre>
 
 <p>先頭に <code>"""..."""</code> の形で与えたものは関数の説明（docstring）です。説明はヘルプに表示されます：</p>
 
-<pre>
+<pre><code>
 In [ ]: ?fib
 Signature: fib(n)
 Docstring: n未満のフィボナッチ数列を返す
 File:      ...
 Type:      function
-</pre>
+</code></pre>
 
 <div class="note">
 <p><code>"""..."""</code> または <code>'''...'''</code> は途中で改行が入ることを許す文字列です。説明（docstring）は途中で改行が入ることが多いので，一般に <code>"""..."""</code> が使われます。ただ，上の例のように1行だけの場合は，<code>"..."</code> でもかまいません。</p>
@@ -336,36 +336,36 @@ Type:      function
 
 <p>実行してみます：</p>
 
-<pre>
+<pre><code>
 In [ ]: fib(100)
 Out[ ]: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
-</pre>
+</code></pre>
 
 <p>フィボナッチ数列のn番目を返すには次のように再帰を使うのが簡単です：</p>
 
-<pre>
+<pre><code>
 def fibn(n):
     if n < 3:
         return 1
     else:
         return fibn(n-2) + fibn(n-1)
-</pre>
+</code></pre>
 
 <p>テストしてみます：</p>
 
-<pre>
+<pre><code>
 In [ ]: [fibn(n) for n in range(1,11)]
 Out[ ]: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
-</pre>
+</code></pre>
 
 <p>他の言語のように，最初に一定の長さの配列を宣言しておきたい場合は，次のように，あらかじめ（例えば）<code>0</code> を100個並べたものを作っておくことができます：</p>
 
-<pre>
+<pre><code>
 a = [0] * 100
 a[0] = a[1] = 1
 for i in range(2,100):
     a[i] = a[i-2] + a[i-1]
-</pre>
+</code></pre>
 
 <p><code>0</code> の代わりに，未定義であることを示す <code>None</code> を使うほうがいいかもしれません。</p>
 

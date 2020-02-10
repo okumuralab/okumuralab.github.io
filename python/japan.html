@@ -20,30 +20,30 @@
 
 <p>まずインストール：</p>
 
-<pre>
+<pre><code>
 pip install japanmap
 pip install --upgrade opencv-python pillow  # 必要に応じて
-</pre>
+</code></pre>
 
 <p>都道府県名：</p>
 
-<pre>
+<pre><code>
 In [ ]: jp.pref_names
 Out[ ]: ['_', '北海道', '青森県', ……, '沖縄県']
-</pre>
+</code></pre>
 
 <p>PNG画像の白地図：</p>
 
-<pre>
+<pre><code>
 import japanmap as jp
 import matplotlib.pyplot as plt
 
 plt.imshow(jp.picture())
-</pre>
+</code></pre>
 
 <p>例として，<a href="../stat/190117.html">がんの分布</a>で紹介したデータを読み込んで地図に色を塗る：</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 
 data = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/gansokuhou2016.csv")
@@ -63,7 +63,7 @@ plt.tick_params(bottom=False, top=False, left=False, right=False,
                 labelbottom=False, labeltop=False, labelleft=False, labelright=False)
 
 plt.savefig('190613a.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/190613a.png" alt="がんの分布"></figure>
 
@@ -73,7 +73,7 @@ plt.savefig('190613a.png', bbox_inches="tight")
 
 <p>SVG の図を出力することもできる：</p>
 
-<pre>
+<pre><code>
 cmap = plt.get_cmap('coolwarm')
 cols = ['#%02X%02X%02X' % (cmap(x[i], bytes=True)[:3]) for i in range(1,48)]
 s = jp.pref_map(range(1,48), # qpqo=jp.get_data(move_okinawa=True),
@@ -88,7 +88,7 @@ s = s.replace('&lt;svg ',
 
 with open("190613b.svg", "w") as f:
     f.write(s)
-</pre>
+</code></pre>
 
 <figure><img src="img/190613b.svg" alt="がんの分布"></figure>
 

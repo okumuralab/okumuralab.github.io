@@ -19,16 +19,16 @@
 
 <p><a href="../stat/ROC.html">ROC曲線</a>をPythonで描いてみよう。まずデータ：</p>
 
-<pre>
+<pre><code>
 import numpy as np
 
 s = np.array([16,15,14,13,12,11,10, 9, 8, 8, 8, 8, 7, 6, 5])
 t = np.array([ 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0])
-</pre>
+</code></pre>
 
 <p>真陽性率と偽陽性率を求める簡単な関数：</p>
 
-<pre>
+<pre><code>
 # TP / (TP + FN) = sensitivity = recall
 def tpr(x):
     return sum(t[s >= x]) / sum(t)
@@ -36,17 +36,17 @@ def tpr(x):
 # FP / (FP + TN) = 1 - specificity
 def fpr(x):
     return sum(t[s >= x] == 0) / sum(t == 0)
-</pre>
+</code></pre>
 
 <p>スコアに ∞ をアペンドして，ソートしユニークなものだけ選ぶ：</p>
 
-<pre>
+<pre><code>
 u = np.unique(np.append(s, np.inf))
-</pre>
+</code></pre>
 
 <p>グラフを描く：</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 
 plt.plot([fpr(x) for x in u], [tpr(x) for x in u], "ko-")
@@ -54,31 +54,31 @@ plt.axis("scaled")  # アスペクト比を1にする
 plt.xlabel("False Positive Rate")
 plt.ylabel("True Positive Rate")
 plt.savefig('190506a.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/190506a.png" alt="ROC曲線"></figure>
 
 <p>どの点がどの閾値に対応するかも書き込みたければ次のようにする：</p>
 
-<pre>
+<pre><code>
 for x in u:
     plt.text(fpr(x), tpr(x), format(x,'g'),
              verticalalignment='top', horizontalalignment='left')
-</pre>
+</code></pre>
 
 <p><code>verticalalignment</code> は <code>'center'</code>, <code>'top'</code>, <code>'bottom'</code>, <code>'baseline'</code>, <code>'center_baseline'</code> から，<code>horizontalalignment</code> <code>'center'</code>, <code>'right'</code>, <code>'left'</code> から選ぶ。</p>
 
 <p>真陽性率は，検診では感度 sensitivity，機械学習では再現率 recall とも呼ばれる。一方，検診で陽性適中率 positive predictive value と呼ばれる次の値は，機械学習では適合率 precision と呼ばれる：</p>
 
-<pre>
+<pre><code>
 # TP / (TP + FP) = PPV = precision
 def ppv(x):
     return sum(t[s >= x]) / sum(s >= x)
-</pre>
+</code></pre>
 
 <p>横軸に再現率，縦軸に適合率をとったグラフを，機械学習ではPR曲線（precision-recall curve）と呼び，よく使われる。</p>
 
-<pre>
+<pre><code>
 plt.plot([tpr(x) for x in u], [ppv(x) for x in u], "ko-")  # PR
 plt.axis('scaled')
 plt.xlim(-0.05, 1.05)
@@ -86,7 +86,7 @@ plt.ylim(-0.05, 1.05)
 plt.xlabel("Recall")
 plt.ylabel("Precision")
 plt.savefig('190506b.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/190506b.png" alt="PR曲線"></figure>
 

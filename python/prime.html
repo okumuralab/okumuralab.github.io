@@ -18,7 +18,7 @@
 
 <p>基本は順に割っていけばよい：</p>
 
-<pre>
+<pre><code>
 import math
 
 def isprime(n):
@@ -27,11 +27,11 @@ def isprime(n):
     for i in range(2, int(math.sqrt(n)) + 1):
         if n % i == 0: return False
     return True
-</pre>
+</code></pre>
 
 <p>いろいろ改良が可能である。2を除けば偶数で割ってみる必要はないので，計算量は半分にできる。</p>
 
-<pre>
+<pre><code>
 import math
 
 def isprime(n):
@@ -44,20 +44,20 @@ def isprime(n):
     for i in range(3, int(math.sqrt(n)) + 1, 2):
         if n % i == 0: return False
     return True
-</pre>
+</code></pre>
 
 <p>今日（例えば 20190823）は素数か？</p>
 
-<pre>
+<pre><code>
 import time
 
 n = int(time.strftime('%Y%m%d', time.localtime()))
 isprime(n)
-</pre>
+</code></pre>
 
 <p><code>math.sqrt()</code> は平方数については正確な平方根を与えるはずだが，浮動小数点数の精度を超える整数の場合は心配である。整数の平方根を整数の範囲で求める次の <code>isqrt()</code> を使うとよい（<code>isqrt()</code> は下に紹介する primefac パッケージに含まれている）：</p>
 
-<pre>
+<pre><code>
 def isqrt(n):
     if n == 0:
         return 0
@@ -65,11 +65,11 @@ def isqrt(n):
     while y < x:
         x, y = y, (y + n // y) // 2
     return x
-</pre>
+</code></pre>
 
 <p>これを使った関数：</p>
 
-<pre>
+<pre><code>
 def isprime(n):
     if n < 2:
         return False
@@ -77,19 +77,19 @@ def isprime(n):
         if n % i == 0:
             return False
     return True
-</pre>
+</code></pre>
 
 <p>もっと大きい数の素因数分解をするライブラリ <a href="https://pypi.org/project/primefac/">primefac</a>（旧 pyfac）は今のところ Python 2 にしか対応していない。Python 3 に対応させた <a href="https://github.com/elliptic-shiho/primefac-fork">primefac-fork</a> がある。インストールするには：</p>
 
-<pre>
+<pre><code>
 pip install git+git://github.com/elliptic-shiho/primefac-fork@master
-</pre>
+</code></pre>
 
 <p><a href="https://pypi.org/project/factordb-pycli/">factordb-pycli</a> と <a href="https://pypi.org/project/gmpy/">gmpy</a> もインストールされる。</p>
 
 <p>使い方：</p>
 
-<pre>
+<pre><code>
 import primefac
 
 primefac.factorint(5040)
@@ -97,7 +97,7 @@ primefac.factorint(5040)
 
 primefac.factorint(20190823)
 # ==&gt; {20190823: 1}
-</pre>
+</code></pre>
 
 <hr>
 

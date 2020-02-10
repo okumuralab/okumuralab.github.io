@@ -31,15 +31,15 @@ MathJax = {
 
 <p>Rでの<a href="../stat/logistic.html">ロジスティック回帰</a>について復習しましょう。例えばRに</p>
 
-<pre>
+<pre><code>
 x = c(4,5,17,17,19,19,29,41,45,47,49,54,56,58,70,76,88,88,93,97)
 y = c(0,0,0,0,0,0,1,1,1,0,0,1,1,0,1,1,1,1,1,1)
 glm(y ~ x, family=binomial(link="logit"))
-</pre>
+</code></pre>
 
 <p>と打ち込めば</p>
 
-<pre>
+<pre><code>
 Call:  glm(formula = y ~ x, family = binomial(link = "logit"))
 
 Coefficients:
@@ -49,7 +49,7 @@ Coefficients:
 Degrees of Freedom: 19 Total (i.e. Null);  18 Residual
 Null Deviance:	    27.53 
 Residual Deviance: 15.19 	AIC: 19.19
-</pre>
+</code></pre>
 
 <p>と出力されます。これは</p>
 
@@ -59,16 +59,16 @@ Residual Deviance: 15.19 	AIC: 19.19
 
 <p>ちょっといたずらをしてみましょう。<code>x</code> の値を $1/1000$ にしてみます：</p>
 
-<pre>
+<pre><code>
 x = x / 1000
 glm(y ~ x, family=binomial(link="logit"))
-</pre>
+</code></pre>
 
 <p>当然ながら，表示の誤差範囲内で <code>x</code> の係数が1000倍になったはずです。</p>
 
 <p>同じことをPythonでやってみましょう。<a href="sklearn.html">scikit-learn</a>がインストールされているとします：</p>
 
-<pre>
+<pre><code>
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
@@ -77,26 +77,26 @@ y = np.array([0,0,0,0,0,0,1,1,1,0,0,1,1,0,1,1,1,1,1,1])
 
 model = LogisticRegression().fit(X, y)
 print(model.coef_, model.intercept_)
-</pre>
+</code></pre>
 
 <p>結果は <code>[[0.08308145]] [-3.5620736]</code> で，係数がやや小さめに出たようです。</p>
 
 <p>同じようないたずらとして，<code>X</code> を $1/1000$ にしてみます：</p>
 
-<pre>
+<pre><code>
 X = X / 1000
 model = LogisticRegression().fit(X, y)
 print(model.coef_, model.intercept_)
-</pre>
+</code></pre>
 
 <p>結果は <code>[[0.20155727]] [0.19087727]</code> で，Rとはまったく異なる結果になってしまいました。</p>
 
 <p>この理由は，Rを作った統計屋とscikit-learnを作った機械学習屋の考え方の相違にあるようです。scikit-learnの <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html">LogisticRegression()</a> では係数が 0 に近くなるような正則化（regularization）が行われます。ベイズ推定のことばでいえば，係数が 0 に近くなるような事前分布が設定されています。正則化のパラメータ <code>C</code> はデフォルトでは 1 に設定されており，この値が小さいほど強い正則化が行われます。ならば，<code>C</code> に $\infty$ を設定すれば正則化が行われなくなるはずです。やってみましょう：</p>
 
-<pre>
+<pre><code>
 model = LogisticRegression(C=np.inf).fit(X, y)
 print(model.coef_, model.intercept_)
-</pre>
+</code></pre>
 
 <p>結果は <code>[[83.18706659]] [-3.56667989]</code> で，Rと同じになりました。</p>
 

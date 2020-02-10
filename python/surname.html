@@ -24,12 +24,12 @@
 
 <p>ここでは，<a href="http://www.masaki.j.u-tokyo.ac.jp/utas/utasp.html">東大谷口研サイト</a>にあるCSVファイルをPythonで読み込んで調べてみよう。</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 
 df = pd.read_csv("http://www.masaki.j.u-tokyo.ac.jp/utas/2019UTASP20191109.csv",
                  encoding="cp932")
-</pre>
+</code></pre>
 
 <p><code>df.shape</code> と打ち込めばわかるように，491行126列のデータである。</p>
 
@@ -42,14 +42,14 @@ df = pd.read_csv("http://www.masaki.j.u-tokyo.ac.jp/utas/2019UTASP20191109.csv",
 99 無回答
 である。<code>df['Q4_10'].value_counts(sort=False)</code> で集計できる：</p>
 
-<pre>
+<pre><code>
 1     200
 2      73
 3      89
 4      26
 5      22
 99     81
-</pre>
+</code></pre>
 
 <p>491人中200人が明確に「賛成」と回答している。</p>
 
@@ -71,7 +71,7 @@ df = pd.read_csv("http://www.masaki.j.u-tokyo.ac.jp/utas/2019UTASP20191109.csv",
 15 安楽死制度を考える会
 である。<code>pd.crosstab(df['PARTY'], df['Q4_10'])</code> でクロス集計してみよう：</p>
 
-<pre>
+<pre><code>
 Q4_10  1   2   3   4   5   99
 PARTY                        
 1       7  11  43  13  13  51
@@ -89,7 +89,7 @@ PARTY
 13      2   2   4   1   0   1
 14     10   0   0   0   0   0
 15      0   0  10   0   0   0
-</pre>
+</code></pre>
 
 <p>選択的夫婦別姓に反対が多いのは，自民党，幸福実現党，NHKから国民を守る党である。</p>
 

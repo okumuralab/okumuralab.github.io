@@ -20,18 +20,18 @@
 
 <p>例えば，このサイトにどれだけリンクがあるかを調べてみよう。まず urllib.request による方法：</p>
 
-<pre>
+<pre><code>
 import urllib.request
 import re
 
 with urllib.request.urlopen('http://example.jp/') as f:
     s = f.read().decode('utf-8')
     a = re.findall('&lt;a href="(.*?)"', s)
-</pre>
+</code></pre>
 
 <p>requests による方法：</p>
 
-<pre>
+<pre><code>
 import requests
 import re
 
@@ -40,31 +40,31 @@ if r.status_code != 200:  # エラーチェックが必要なら
     raise ConnectionError()
 r.encoding = 'utf-8'  # 自動判断では 'ISO-8859-1' に間違えられることがある
 a = re.findall('&lt;a href="(.*?)"', r.text)
-</pre>
+</code></pre>
 
 <p>これで <code>a</code> には <code>['../', '../stat/', 'install.html', ...]</code> という配列が入る。</p>
 
 <p>ファイルのダウンロードは例えば次のようにする：</p>
 
-<pre>
+<pre><code>
 import requests
 import pathlib
 
 r = requests.get('http://example.jp/hoge.png')
 pathlib.Path("hoge.png").write_bytes(r.content)
-</pre>
+</code></pre>
 
 <p>ほか，例えば <code>r.headers['Last-Modified']</code> で更新日時がわかるので，<code>os.utime()</code> でファイルのタイムスタンプを変えるといったことも可能であろう。</p>
 
 <p>User Agent（ブラウザの種類）は <code>"python-requests/2.22.0"</code> のような感じで先方のログに残る。これが嫌なら適当に変えられる：</p>
 
-<pre>
+<pre><code>
 r = requests.get('http://example.jp/', headers={'User-Agent': 'hogehoge/001'})
-</pre>
+</code></pre>
 
 <p>最後に，いらすとやさんから「科学」ジャンルの画像のサムネール（256x256）をスクレイプする簡単なコード例を挙げておく。カレントディレクトリ下に <code>irasutoya</code> というサブディレクトリがあるとする。</p>
 
-<pre>
+<pre><code>
 import requests
 import re
 import pathlib
@@ -99,11 +99,11 @@ while True:
     if not m:
         break
     url = m.group(1)
-</pre>
+</code></pre>
 
 <p>さらについでに，いらすとやさんの<a href="https://www.irasutoya.com/2014/10/faceicons.html">いろいろな顔アイコン</a>（動物・モンスターを除く人間だけ）以下の256×256サムネールを全部取得してカレントディレクトリの <code>irasutoya2</code> サブディレクトリに入れる：</p>
 
-<pre>
+<pre><code>
 path = pathlib.Path("irasutoya2")
 names = [re.sub("^.*/", "", str(n)) for n in path.iterdir()]
 
@@ -145,7 +145,7 @@ for u in urls:
             print("Status:", r1.status_code)
             continue
         pathlib.Path("irasutoya2/" + name).write_bytes(r1.content)
-</pre>
+</code></pre>
 
 <hr>
 

@@ -18,32 +18,32 @@
 
 <p>Python の Matplotlib のデフォルトのヒストグラムは，かっこわるい。</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 import numpy as np
 
 x = np.random.rand(1000)   # np.random.random(1000) でも同じ
 plt.hist(x)
-</pre>
+</code></pre>
 
 <figure><img src="img/hist1.png" alt="ヒストグラム1"></figure>
 
 <p>R 風に描くには，次のようにする：</p>
 
-<pre>
+<pre><code>
 plt.hist(x, color="lightgray", edgecolor="black")
-</pre>
+</code></pre>
 
 <figure><img src="img/hist2.png" alt="ヒストグラム2"></figure>
 
 <p>seaborn 風（やや ggplot2 風）に描くには，次のようにする：</p>
 
-<pre>
+<pre><code>
 import seaborn as sns
 
 sns.set()
 plt.hist(x)
-</pre>
+</code></pre>
 
 <figure><img src="img/hist3.png" alt="ヒストグラム3"></figure>
 

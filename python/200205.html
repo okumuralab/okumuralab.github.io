@@ -25,7 +25,7 @@
 
 <p>気象庁の<a href="http://www.jma.go.jp/jp/amedas_h/index.html">アメダス表形式</a>のページから三重県の津を選ぶと表が出てくるので，Pythonでスクレイプすればよい：</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -38,7 +38,7 @@ df = today[4].iloc[2:,[0,1]].astype(float)
 plt.plot(df[0], df[1], "o-")
 
 plt.legend(['yesterday','today'])
-</pre>
+</code></pre>
 
 <figure><img src="img/200205.svg" alt="三重県津市の気温"></figure>
 

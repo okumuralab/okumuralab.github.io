@@ -38,23 +38,23 @@
 
 <p><code>def show(img):</code> のところは次のように直す：</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 
 def show(img):
     plt.imshow(img)
-</pre>
+</code></pre>
 
 <p>あるいは，表示された画像に連番を付けて保存するには，次のようにすればよいであろう：</p>
 
-<pre>
+<pre><code>
 imno = 0
 def show(img):
     global imno
     plt.imshow(img)
     plt.imsave(f"deepdream{imno}.jpg", np.array(img))
     imno += 1
-</pre>
+</code></pre>
 
 <hr>
 

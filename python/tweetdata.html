@@ -20,7 +20,7 @@
 
 <p>JSONはふつう <code>[ ... ]</code> または <code>{ ... }</code> のような形式になっているが，この tweet.js は <code>window.YTD.tweet.part0 = [ ... ]</code> のように頭に変数名が付いている（つまりJSONというよりはJavaScriptファイルになっている）。この部分を削除して読まなければならない。具体的には次のようにする。ここではツイートのID，日時（日本時間に変換したもの），ツイート内容をタブで区切り，ツイート中の改行は適当な文字（ここでは <code>↩︎</code>）で置き換えた。</p>
 
-<pre>
+<pre><code>
 #! /usr/bin/env python3
 
 import json
@@ -40,7 +40,7 @@ with open("tweet.tsv", "w") as f:
                 s = s.replace(u['url'], u['expanded_url'])
         c = parse(t['created_at']).astimezone(timezone('Asia/Tokyo')).strftime("%Y-%m-%d %H:%M:%S")
         print(t['id'], c, s.replace("\n", "↩︎"), sep="\t", file=f)
-</pre>
+</code></pre>
 
 <p>これを実行するとカレントディレクトリに tweet.tsv というタブ区切りファイルができる。これをExcelで読むには，Excelを立ち上げて「ファイル」→「開く…」で開く。テキストファイルウィザードが現れるので，「元のファイル:」を「Unicode (UTF-8)」にして「次へ＞」を2回クリックし，左端の列のデータ形式を「文字列」にして「完了」をクリックする。列の幅を適当に広げる（AとBの間，BとCの間をダブルクリックするのが簡単）。なお私自身はExcelを使っていないので不具合があったらお教えください。</p>
 

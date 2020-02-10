@@ -39,7 +39,7 @@ window.onload = function() {
 
 <p>このデータから，周産期死亡率の推移をグラフにしてみよう：</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -64,13 +64,13 @@ plt.plot(years, list(pf.values()), "o-", c="C3")
 plt.legend(["study region","control region","Fukushima"])
 plt.xticks(range(1998,2018,2))
 plt.savefig('190802a.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/190802a.png" alt="perinatal mortality"></figure>
 
 <p>論文では2012年の影響が大きいようなグラフになっていたが，2012年の死亡率分布を地図にしてみよう：</p>
 
-<pre>
+<pre><code>
 import japanmap as jp
 
 x = perinatal['2012'] / birth['2012']
@@ -83,7 +83,7 @@ s = s.replace('&lt;svg ',
 s = s.replace('&lt;path ', '&lt;path stroke="black" stroke-width="0.001" ')
 with open("190802b.svg", "w") as f:
     f.write(s)
-</pre>
+</code></pre>
 
 <p>赤ほど死亡率が大きい：</p>
 
@@ -93,7 +93,7 @@ with open("190802b.svg", "w") as f:
 
 <p>念のため，ちょっと見にくいが，全都道府県のグラフを（透明度を少し入れて）重ね書きしてみる：</p>
 
-<pre>
+<pre><code>
 rate = perinatal / birth[[str(y) for y in range(1998,2018)]]
 for i in range(47):
     if i in control:
@@ -104,7 +104,7 @@ for i in range(47):
 plt.plot(years, rate.iloc[6,:], c="C3", alpha=0.5)
 plt.xticks(range(1998,2018,2))
 plt.savefig('190803a.png', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/190803a.png" alt="perinatal mortality"></figure>
 

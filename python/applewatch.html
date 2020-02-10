@@ -22,7 +22,7 @@
 
 <p>MacのFinderでiCloud Driveにアクセスし，「書き出したデータ.zip」というファイルをカレントディレクトリに持ってきて（あるいは以下のZipファイル名としてフルパスで <code>'/Users/自分の名前/Library/Mobile Documents/com~apple~CloudDocs/書き出したデータ.zip'</code> を指定して），次のスクリプトを走らせる：</p>
 
-<pre>
+<pre><code>
 #! /usr/bin/env python3
 
 from zipfile import ZipFile
@@ -37,11 +37,11 @@ for x in root.findall('Record'):
     if x.get('type') == 'HKQuantityTypeIdentifierHeartRate':
         y = x.find('MetadataEntry')
         print(x.get('startDate')[:19], x.get('value'), y.get('value'), sep=',')
-</pre>
+</code></pre>
 
 <p>標準出力に日時・心拍数・そのときの運動状態（0，1，2）のCSVが出力されるので，適当にリダイレクトしてファイルに収める。あとは<a href="fitbit.html">Fitbit</a>と同様にグラフを描けばよい。CSVからグラフを描く簡単なプログラムを挙げておく：</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import seaborn as sns
@@ -63,13 +63,13 @@ ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 plt.xlim(min(df.index), max(df.index))
 plt.ylim(50, 170)
-</pre>
+</code></pre>
 
 <p>もしプログラム上で日時を制限したいなら，例えば次のようにすればよい：</p>
 
-<pre>
+<pre><code>
 df = df[df.index &gt;= pd.Timestamp("2019-09-30 00:00:00")]
-</pre>
+</code></pre>
 
 <p>ほかにも，例えば <code>HKQuantityTypeIdentifierHeartRateVariabilitySDNN</code> というタイプには心拍変動がミリ秒単位で入る。これらHKで始まる長い名前は<a href="https://developer.apple.com/documentation/healthkit">HealthKit</a>関連のものである。</p>
 

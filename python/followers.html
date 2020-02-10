@@ -20,7 +20,7 @@
 
 <p><a href="https://twilog.org/">Twilog</a> の該当者（ここでは<a href="https://twilog.org/h_okumura/">私</a>）のページの「Stats」をクリックし，ページのソースから <code>ar_</code> を含む部分をコピペする。</p>
 
-<pre>
+<pre><code>
 var ar_data = [];
 ar_data[1] = [...];
 ar_data[2] = [...];
@@ -37,19 +37,19 @@ ar_lbl[3] = [...];
 ar_lbl[4] = [...];
 ar_lbl[5] = [...];
 ar_lbl[6] = [...];
-</pre>
+</code></pre>
 
 <p>ここで <code>var ar_data = [];</code> を <code>ar_data = {}</code> に，<code>var ar_lbl = [];</code> を <code>ar_lbl = {}</code> に書き換える。各行末の <code>;</code> は不要であるが，あっても問題ないので，消す必要はない。</p>
 
 <p>この後に次のコードを追加して，全体を実行する。</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 
 t = [pd.to_datetime(x, format="%y%m%d") for x in ar_lbl[6]]
 df = pd.DataFrame(index=t, data={'followers':ar_data[7]})
 df.plot()
-</pre>
+</code></pre>
 
 <figure><img src="img/191229a.png" alt="ツイッターのフォロワー数の推移"></figure>
 
@@ -57,17 +57,17 @@ df.plot()
 
 <p>最近を見てみよう。例えば10月以降：</p>
 
-<pre>
+<pre><code>
 df[df.index &gt;= "2019-10-01"].plot(marker="o")
-</pre>
+</code></pre>
 
 <figure><img src="img/191229b.png" alt="ツイッターのフォロワー数の推移"></figure>
 
 <p>増えたり減ったりしている。10月下旬に急増している日がある。</p>
 
-<pre>
+<pre><code>
 df[(df.index &gt;= "2019-10-20") & (df.index &lt;= "2019-10-31")].plot(marker="o")
-</pre>
+</code></pre>
 
 <p>どうやら10月26日に急増したみたいだ。多分<a href="https://twitter.com/h_okumura/status/1187861548699512832">これ</a>の影響だろう。</p>
 

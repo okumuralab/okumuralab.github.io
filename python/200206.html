@@ -20,7 +20,7 @@
 
 <p><a href="https://www.e-stat.go.jp">e-Stat</a>で「人口動態調査」を検索して，「ファイル」をクリックすると，<a href="https://www.e-stat.go.jp/stat-search/files?page=1&toukei=00450011&tstat=000001028897">こちら</a>の画面になる。最初の「死因」→「年次」をクリックし，最新の「2018年」をクリックすると，<a href="https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00450011&tstat=000001028897&cycle=7&year=20180&month=0&tclass1=000001053058&tclass2=000001053061&tclass3=000001053073&tclass4=000001053082&result_back=1">こちら</a>の画面になる。「3」の「死亡数，死因（死因簡単分類）・性・年齢（各歳・小学生－中学生再掲）別」の「CSV」をクリックすると，<a href="https://www.e-stat.go.jp/stat-search/file-download?statInfId=000031884094&fileKind=1">jch030000.csv</a>というCSVファイルがダウンロードされる。これを読んでグラフにしてみる：</p>
 
-<pre>
+<pre><code>
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -32,7 +32,7 @@ plt.plot(range(0,117), x[3:120].astype(float), "o-")
 plt.xlabel('年齢')
 plt.ylabel('死亡数')
 plt.savefig('200206a.svg', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/200206a.svg" alt="2018年の交通事故による死亡数"></figure>
 
@@ -44,7 +44,7 @@ plt.savefig('200206a.svg', bbox_inches="tight")
 
 <p>とりあえず上記PDFをいただいてきてCSVに変換し，グラフを描いてみた。1995年には顕著だった7歳の鋭いピークが，2015年ではかなり緩和されていることがわかる。なお，最左端は1歳以下，最右端は81歳以上である。
 
-<pre>
+<pre><code>
 df = pd.read_csv('19_02data_1.csv')
 plt.plot(df['年齢'], df['1995年'], "o-")
 plt.plot(df['年齢'], df['2015年'], "o-")
@@ -53,13 +53,13 @@ plt.legend(['1995年','2015年'])
 plt.xlabel('年齢')
 plt.ylabel('歩行中の交通事故 死傷者数')
 plt.savefig('200207a.svg', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/200207a.svg" alt="歩行中の交通事故 死傷者数"></figure>
 
 <p><a href="https://www.npa.go.jp">警察庁</a>の<a href="https://www.npa.go.jp/publications/whitepaper/index_keisatsu.html">警察白書</a>の<a href="https://www.npa.go.jp/hakusyo/r01/honbun/index.html">令和元年版</a>第5章第2節第1項 歩行者の安全確保 の図表5-12にも同様なグラフがあり，データがExcel形式でダウンロードできる。こちらは絶対数ではなく人口10万人あたり，2014〜2018年平均，分母の人口は2016年10月1日のものである。</p>
 
-<pre>
+<pre><code>
 df = pd.read_excel('v5z05120.xlsx', skiprows=1, skipfooter=1)
 df.columns = ['年齢', '歩行中死者数', '歩行中死傷者数']
 df['年齢'] = df['年齢'].str.extract('(\d+)').astype(int)
@@ -70,7 +70,7 @@ plt.grid()
 plt.xlabel('年齢')
 plt.ylabel('歩行中死傷者数')
 plt.savefig('200207b.svg', bbox_inches="tight")
-</pre>
+</code></pre>
 
 <figure><img src="img/200207b.svg" alt="歩行中死傷者数"></figure>
 

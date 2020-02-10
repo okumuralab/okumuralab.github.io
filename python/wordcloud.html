@@ -20,14 +20,14 @@
 
 <p>英語のワードクラウドは wordcloud ライブラリで簡単に描けます。あらかじめ <code>pip install wordcloud</code> などとしてインストールしておきます。テキストとしては何でもいいのですが，ここでは <code>WordCloud()</code> の説明文（docstring）を用いてみます：</p>
 
-<pre>
+<pre><code>
 from wordcloud import WordCloud
 
 text = WordCloud.__doc__
 wc = WordCloud(width=480, height=320)
 wc.generate(text)
 wc.to_file('wc1.png')
-</pre>
+</code></pre>
 
 <figure><img src="img/wc1.png" alt="WordCloudの説明のワードクラウド"></figure>
 
@@ -35,14 +35,14 @@ wc.to_file('wc1.png')
 
 <p>まず MeCab と辞書をインストールします。Mac では Homebrew でインストールするのが簡単です。また，MeCab を Python から使うためのライブラリもインストールします。</p>
 
-<pre>
+<pre><code>
 brew install mecab mecab-ipadic
 pip install mecab-python3
-</pre>
+</code></pre>
 
 <p>動作確認してみましょう：</p>
 
-<pre>
+<pre><code>
 In [ ]: import MeCab
 
 In [ ]: mecab = MeCab.Tagger()
@@ -75,13 +75,13 @@ In [ ]: wakati = MeCab.Tagger("-Owakati")
 
 In [ ]: print(wakati.parse("すもももももももものうち"))
 すもも も もも も もも の うち 
-</pre>
+</code></pre>
 
 <p>とりあえず最後の例のようにして分かち書きにすればワードクラウドが作れそうです。</p>
 
 <p>サンプルとして，寺田寅彦の<a href="https://www.aozora.gr.jp/cards/000042/files/43260_17028.html">流言蜚語</a>を題材としてみます。青空文庫のサイトからコピペしてください。改行を含む長い文章ですので，全体を <code>"""..."""</code> で囲みます。</p>
 
-<pre>
+<pre><code>
 text = """
 長い管の中へ、水素と酸素とを適当な割合に混合したものを入れておく、
 （中略）
@@ -92,7 +92,7 @@ wc = WordCloud(width=480, height=320, background_color="white",
                font_path="/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc")
 wc.generate(words)
 wc.to_file('wc2.png')
-</pre>
+</code></pre>
 
 <figure><img src="img/wc2.png" alt="流言蜚語ワードクラウド"></figure>
 
@@ -100,7 +100,7 @@ wc.to_file('wc2.png')
 
 <p>もっと楽に済ませるには，せっかく MeCab で品詞がわかるのですから，名詞だけにしてしまうという手もあります：</p>
 
-<pre>
+<pre><code>
 nodes = mecab.parseToNode(text)
 s = []
 while nodes:
@@ -112,16 +112,16 @@ wc = WordCloud(width=480, height=320, background_color="white",
                font_path="/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc")
 wc.generate(" ".join(s))
 wc.to_file('wc3.png')
-</pre>
+</code></pre>
 
 <figure><img src="img/wc3.png" alt="流言蜚語ワードクラウド"></figure>
 
 <p>ちなみに，プログラム中にテキストを書き込むのは面倒なので，テキストは別ファイルにして，次のようにして読み込むのが楽です：</p>
 
-<pre>
+<pre><code>
 with open('filename.txt') as f:
     text = f.read()
-</pre>
+</code></pre>
 
 <hr>
 

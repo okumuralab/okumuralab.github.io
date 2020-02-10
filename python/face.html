@@ -20,7 +20,7 @@
 
 <p>あらかじめ学習済みモデル <a href="http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2">shape_predictor_68_face_landmarks.dat.bz2</a> をダウンロードし，bunzip2 で展開したものを，カレントディレクトリに置いておく。</p>
 
-<pre>
+<pre><code>
 import cv2
 import dlib
 import numpy as np
@@ -37,7 +37,7 @@ for d in detector(gray, 1):
 cv2.imshow("Landmarks", white)
 cv2.imwrite("191001a.png", white)
 cv2.destroyAllWindows()
-</pre>
+</code></pre>
 
 <figure><img src="img/191001a.png" alt="Landmarks"></figure>
 

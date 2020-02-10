@@ -26,9 +26,9 @@
 
 <p>コードセル（カーソルの点滅しているところ）に何か計算式を入れてみましょう。例えば</p>
 
-<pre>
+<pre><code>
 2+3
-</pre>
+</code></pre>
 
 <p>と打ち込んで，Shift + Enter します。答え（上の計算の場合は 5）が現れ，その下に新しいコードセルが出ます。</p>
 
@@ -42,22 +42,22 @@
 
 <p>念のため，<code>python</code> あるいは <code>python3</code> で起動する Python のバージョンを確認しておきましょう：</p>
 
-<pre>
+<pre><code>
 python --version
 python3 --version
-</pre>
+</code></pre>
 
 <p>ターミナル（Windows であれば PowerShell など）に</p>
 
-<pre>
+<pre><code>
 python3
-</pre>
+</code></pre>
 
 <p>とだけ打ち込むと，<code>&gt;&gt;&gt;</code> というプロンプトが現れますので，その右側に Python の命令を打ち込みます。例えば</p>
 
-<pre>
+<pre><code>
 2+3
-</pre>
+</code></pre>
 
 <p>と打ち込んで Enter すれば，答え「5」が現れます。</p>
 
@@ -77,17 +77,17 @@ python3
 
 <p>IPython なら，もう少し対話的に（interactive に）Python を使えます。ターミナル（Windows であれば PowerShell など）に</p>
 
-<pre>
+<pre><code>
 ipython
-</pre>
+</code></pre>
 
 <p>と打ち込みます（もし古い Python 2 が出てくるようなら <code>ipython3</code> としてみてください）。</p>
 
 <p>実際には，いくつかオプションを付けて起動することが多いと思います。例えば，matplotlib を使い，文字に色を付けたくないなら</p>
 
-<pre>
+<pre><code>
 ipython --matplotlib --colors=NoColor
-</pre>
+</code></pre>
 
 <p>とします。</p>
 
@@ -103,65 +103,65 @@ ipython --matplotlib --colors=NoColor
 
 <p>Python プログラム，例えば</p>
 
-<pre>
+<pre><code>
 for i in range(3):
     print("大事なので3回言います")
-</pre>
+</code></pre>
 
 <p>は，テキストファイルとして保存してから実行することができます。テキストファイルとして保存した実行可能なプログラムを「スクリプト」と呼びます。テキストファイルですから，Windows の「メモ帳」や Mac の「テキストエディット」などの標準テキストエディタで作成できますが，本格的にプログラミングをするなら，<a href="https://atom.io">Atom</a> や <a href="https://code.visualstudio.com">Visual Studio Code</a> や Emacs や Vim のようなプログラミング専用テキストエディタが便利です。</p>
 
 <p>Python スクリプトのファイル名は <code>test.py</code> のように拡張子を <code>py</code> にします。保存の際の文字コードは UTF-8 にします。実行するには，ターミナル（Windows ならコマンドプロンプトか PowerShell）で（スクリプトを保存したディレクトリに移動してから）</p>
 
-<pre>
+<pre><code>
 python3 test.py
-</pre>
+</code></pre>
 
 <p>と打ち込みます。文字化けする場合は，文字コードが UTF-8 になっているか確認してください。</p>
 
 <p>Linux や Mac などの UNIX 環境で実行可能なスクリプトにするには，先頭に <code>#! /usr/bin/env python3</code> を付けます（複数の <code>python3</code> があって具体的に指定したい場合は <code>#! /usr/local/bin/python3</code> などのようにします）：</p>
 
-<pre>
+<pre><code>
 #! /usr/bin/env python3
 
 for i in range(3):
     print("大事なので3回言います")
-</pre>
+</code></pre>
 
 <p>この場合も文字コードは UTF-8 ですが，特に <code>#!</code> で始まる場合は BOM を付けないように注意する必要があります。実行可能にするには，ターミナルで</p>
 
-<pre>
+<pre><code>
 chmod 755 test.py
-</pre>
+</code></pre>
 
 <p>のように打ち込みます。これで，ターミナルに</p>
 
-<pre>
+<pre><code>
 ./test.py
-</pre>
+</code></pre>
 
 <p>と打ち込めば実行されます。便利なスクリプトなら，拡張子を付けないで <code>/usr/local/bin</code> のようなパスの通った場所に置いておくといいかもしれません。</p>
 
 <p>もしどうしても別の文字コード，例えば Shift JIS にしたいなら，</p>
 
-<pre>
+<pre><code>
 #! /usr/bin/env python3
 # -*- coding: shift_jis -*-
 
 for i in range(3):
     print("大事なので3回言います")
-</pre>
+</code></pre>
 
 <p>のようにします。</p>
 
 <p>スクリプトとして実行する場合は，コマンドライン引数が <code>sys.argv</code> というリストに入ります。次のような簡単なスクリプトで実験できます：</p>
 
-<pre>
+<pre><code>
 #! /usr/bin/env python3
 
 import sys
 
 print(sys.argv)
-</pre>
+</code></pre>
 
 <p>もし Python 2 で書かれたスクリプト <code>filename.py</code> があれば，コマンド <code>2to3 -w filename.py</code> で Python 3 の文法に書き直してくれます。オリジナルは <code>filename.py.bak</code> にリネームされます。詳しくはマニュアルの <a href="https://docs.python.org/3/library/2to3.html">2to3</a> 参照。</p>
 
@@ -169,10 +169,10 @@ print(sys.argv)
 
 <p>ターミナルで1行だけの Python スクリプトを実行できます：</p>
 
-<pre>
+<pre><code>
 $ python3 -c 'x=2;y=32;print(x**y)'
 4294967296
-</pre>
+</code></pre>
 
 <h3>Jupyter Notebook</h3>
 
@@ -180,9 +180,9 @@ $ python3 -c 'x=2;y=32;print(x**y)'
 
 <p>ターミナルに</p>
 
-<pre>
+<pre><code>
 jupyter notebook
-</pre>
+</code></pre>
 
 <p>と打ち込むと，Web ブラウザが立ち上がって，カレントディレクトリのファイル名一覧が表示されます（Mac や Linux なら <code>jupyter notebook &amp;</code> と打ち込めばバックグラウンド動作になります）。もし拡張子が ipynb のファイルがあれば，それを開けば前回の続きの計算ができます。新しいノートブックを開くには，この画面で [New ▼] ボタンを押し Python 3 を選びます。一番上の Untitled をクリックすると，ノートブックの名前が変えられます。ちなみに，拡張子 ipynb は，Jupyter Notebook が IPython Notebook と呼ばれていたころの名残りです。</p>
 
@@ -198,9 +198,9 @@ jupyter notebook
 
 <p>Jupyter Notebook の新しい顔です。<code>pip install jupyterlab</code> で入ります。ターミナルに</p>
 
-<pre>
+<pre><code>
 jupyter lab
-</pre>
+</code></pre>
 
 <p>と打てば立ち上がります。使い方は Jupyter Notebook と同様です。</p>
 
@@ -232,10 +232,10 @@ jupyter lab
 
 <p><code>~/.emacs.d/init.el</code> には例えば次のように書いておきます：</p>
 
-<pre>
+<pre><code>
 (setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "--simple-prompt --matplotlib --no-automagic -i")
-</pre>
+</code></pre>
 
 <p>拡張子 <code>py</code> のファイルを開くと，自動的に Python モードになります。まずは C-c C-p (run-python) で IPython プロセスを起動します（拡張子 <code>py</code> のファイルを開かなくても直接 M-x run-python でも起動できます）。バッファ全体を実行するには C-c C-c (python-shell-send-buffer)，選択したリージョンを実行するには C-c C-r (python-shell-send-region) とします。詳しくは，M-x help の次に m と打つと，モードのヘルプが現れます。</p>
 

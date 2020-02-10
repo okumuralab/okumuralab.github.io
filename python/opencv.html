@@ -22,84 +22,84 @@
 
 <p>まずは適当な画像を読み込んでみる：</p>
 
-<pre>
+<pre><code>
 import numpy as np
 import cv2
 
 img = cv2.imread("画像ファイル名")
 type(img)   # numpy.ndarray
 img.shape   # (縦ピクセル数, 横ピクセル数, チャンネル数)
-</pre>
+</code></pre>
 
 <p>これでエラーが出ればうまく読めていないことになる。私の環境では  URL や <code>~/</code> で始まるパス名はうまくいかなかった。Windows 環境では全角ファイル名が読み込めないらしい（<a href="https://qiita.com/SKYS/items/cbde3775e2143cad7455">Python OpenCV の cv2.imread 及び cv2.imwrite で日本語を含むファイルパスを取り扱う際の問題への対処について</a> 参照）。</p>
 
 <p>このように読み込んだ画像を OpenCV で表示するには</p>
 
-<pre>
+<pre><code>
 cv2.imshow('Image', img)  # 最初の引数（ウィンドウ名）は何でもよい
-</pre>
+</code></pre>
 
 <p>とすればよいが，この挙動はシステムごとに異なるようである。うまくいかなければ諦めて，次に示すように matplotlib で表示すればよい。なお，OpenCV の窓をすべて閉じるには次のようにする：</p>
 
-<pre>
+<pre><code>
 cv2.destroyAllWindows()
-</pre>
+</code></pre>
 
 <p>上の方法でうまくいかない場合，matplotlib で表示すればよいが，OpenCV で読み込んだ画像は BGR の順，matplotlib の画像は RGB の順なので，そのまま matplotlib で表示すると色がおかしくなる。<a href="https://stackoverflow.com/questions/15072736/extracting-a-region-from-an-image-using-slicing-in-python-opencv">ここ</a>で論じられているように，<code>img2 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)</code> で変換してから <code>plt.imshow(img2)</code> すればよい。あるいは次のようにすればよい：</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 
 plt.imshow(img[..., ::-1])  # ::-1 は逆順にするハック
-</pre>
+</code></pre>
 
 <p>画像は NumPy の ndarray で，成分は <code>'uint8'</code> である。チャンネルは [B,G,R] の順に入る。例えば青だけの縦150，横100の画像は次のようにして生成できる：</p>
 
-<pre>
+<pre><code>
 img = np.array([[[255,0,0] for x in range(100)] for y in range(150)], dtype='uint8')
 # または img = np.array([[[255,0,0]] * 100] * 150, dtype="uint8")
-</pre>
+</code></pre>
 
 <p>保存するには，次のようにする：</p>
 
-<pre>
+<pre><code>
 cv2.imwrite("hoge.png", img)
-</pre>
+</code></pre>
 
 <div class="note">
 <p>Matplotlib でも画像を読み書きできるが，チャンネルは RGB の順である。デフォルトで読めるのは PNG だけだが，<a href="http://pillow.readthedocs.io/">Pillow</a> をインストール（<code>conda install pillow</code> または <code>pip install pillow</code>）すれば他の画像形式も読める。</p>
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 img = plt.imread("画像ファイル名")
 plt.imshow(img)
 plt.imsave("hoge.png", img)
-</pre>
+</code></pre>
 <p>あるいは，画像の読み書きに特化した <a href="https://pypi.org/project/imageio/">imageio</a> ライブラリが多機能である：</p>
-<pre>
+<pre><code>
 import imageio
 img = imageio.imread("入力画像ファイル名")
 imageio.imsave("出力画像ファイル名", img)
-</pre>
+</code></pre>
 <p>Jupyter Notebook なら次のようにすればカレントディレクトリの画像ファイルをブラウザにインライン表示できる：</p>
-<pre>
+<pre><code>
 from IPython.display import Image
 Image("画像ファイル名")
-</pre>
+</code></pre>
 </div>
 
 <h2>画像の加工</h2>
 
 <p>いろいろな加工ができる。例：</p>
 
-<pre>
+<pre><code>
 img2 = cv2.GaussianBlur(img, (9,9), 0)  # カーネルサイズは奇数に
-</pre>
+</code></pre>
 
 <h2>線画化</h2>
 
 <p>いらすとやさんの<a href="https://www.irasutoya.com/2019/03/blog-post_831.html">蝶と遊ぶ子供のイラスト</a>を線画化してみる：</p>
 
-<pre>
+<pre><code>
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
@@ -139,7 +139,7 @@ plt.set_cmap("gray")
 contour = makecontour("bug_chou_tawamureru_kids.png")
 plt.imshow(contour)
 cv2.imwrite("190831a.png", contour)
-</pre>
+</code></pre>
 
 <figure><img src="img/190831a.png" alt="蝶と遊ぶ子供のイラスト"></figure>
 
@@ -147,7 +147,7 @@ cv2.imwrite("190831a.png", contour)
 
 <p>顔が写っている画像を読み込み，顔の部分を赤い四角形で囲む：</p>
 
-<pre>
+<pre><code>
 import matplotlib.pyplot as plt
 import cv2
 
@@ -162,7 +162,7 @@ for (x, y, w, h) in faces:
     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255))
 
 plt.imshow(img[..., ::-1])
-</pre>
+</code></pre>
 
 <hr>
 

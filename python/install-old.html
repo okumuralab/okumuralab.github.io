@@ -28,32 +28,32 @@
 
 <p>開発環境を入れたMacで，ターミナルに</p>
 
-<pre>
+<pre><code>
 python --version
-</pre>
+</code></pre>
 
 <p>と打ち込むと，「Python 2.7.10」などと出力されます。</p>
 
 <p>Python 3.xを入れるにはいくつかの方法がありますが，ここでは <a href="https://www.python.org/download/">Download Python</a> のOS X用のインストーラを使います。インストールすると，例えばPython 3.5なら，/Library/Frameworks/Python.framework/Versions/3.5/bin/ に実行ファイルが入り，/usr/local/bin/ からシンボリックリンクされます（シンボリックリンクは ../../../Library/… という相対リンクなので，/usr/local の実体によってはうまくリンクされないかもしれません）。また，~/.bash_profile に次のようなパス設定がアペンドされます：</p>
 
-<pre>
+<pre><code>
 # Setting PATH for Python 3.5
 # The orginal version is saved in .bash_profile.pysave
 PATH="/Library/Frameworks/Python.framework/Versions/3.5/bin:${PATH}"
 export PATH
-</pre>
+</code></pre>
 
 <p>元の .bash_profile .bash_profile.pysave とリネームされて残ります。ターミナルをすでに起動している場合には，<code>source ~/.bash_profile</code> と打ち込んで，この設定を生かさなければなりません。うまくいったかどうか確かめるには，ターミナルに</p>
 
-<pre>
+<pre><code>
 python3 --version
-</pre>
+</code></pre>
 
 <p>と打ち込みます。「Python 3.5.1」などと出ればOKです。ついでに</p>
 
-<pre>
+<pre><code>
 which python3
-</pre>
+</code></pre>
 
 <p>と打ち込めば，/Library/Frameworks/Python.framework/Versions/3.5/bin/python3 であることがわかります。</p>
 
@@ -63,60 +63,60 @@ which python3
 
 <p>IPythonやpandasなど追加でよく使うものをインストールするには，ターミナルに</p>
 
-<pre>
+<pre><code>
 sudo pip3 install ipython pandas matplotlib pyzmq jinja2
-</pre>
+</code></pre>
 
 <p>のように打ち込みます（一般ユーザの場合はあらかじめ <code>su 管理者の名前</code> と打ち込んで管理者に昇格します）。どれだけインストールできたかは，</p>
 
-<pre>
+<pre><code>
 pip3 list
-</pre>
+</code></pre>
 
 <p>で確かめられます。あるいは</p>
 
-<pre>
+<pre><code>
 pip3 list --outdated
-</pre>
+</code></pre>
 
 <p>で古いものだけリストできます。更新するには，例えば</p>
 
-<pre>
+<pre><code>
 sudo pip3 install --upgrade ipython pandas
-</pre>
+</code></pre>
 
 <p>のようにします。</p>
 
 <p>プロットライブラリmatplotlibで使うフォントの設定については，<a href="http://nbviewer.ipython.org/gist/mkatsura/6129979">このページ</a>が参考になります。具体的には，ターミナルに</p>
 
-<pre>
+<pre><code>
 mkdir ~/.matplotlib
 cp /Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/site-packages/matplotlib/mpl-data/matplotlibrc ~/.matplotlib/
-</pre>
+</code></pre>
 
 <p>と打ち込み，~/.matplotlib/matplotlibrc というテキストファイルをテキストエディタで開いて，</p>
 
-<pre>
+<pre><code>
 #font.family         : sans-serif
-</pre>
+</code></pre>
 
 <p>と書かれた行を見つけます。標準フォントを例えばヒラギノ角ゴシックProNにするには，この行の下あたりに</p>
 
-<pre>
+<pre><code>
 font.family	     : Hiragino Kaku Gothic ProN
-</pre>
+</code></pre>
 
 <p>と書き加えます。ただし，PDF出力にはTrueTypeフォントしか使えないようなので，PDF出力をよく使うなら，<a href="http://ipafont.ipa.go.jp/">IPAexフォント/IPAフォント</a>のサイトから例えばIPAexゴシックをダウンロードして展開し，</p>
 
-<pre>
+<pre><code>
 sudo cp -a ipaexg.ttf /Library/Frameworks/Python.framework/Versions/3.4/lib/python3.4/site-packages/matplotlib/mpl-data/fonts/ttf/
-</pre>
+</code></pre>
 
 <p>のようにしてコピーまたは移動し，~/.matplotlib/matplotlibrc には</p>
 
-<pre>
+<pre><code>
 font.family	     : IPAexGothic
-</pre>
+</code></pre>
 
 <p>と書いておきます（もしうまく読み込めないようなら ~/.matplotlib/fontList.py3k.cache をいったん消します）。</p>
 
@@ -124,12 +124,12 @@ font.family	     : IPAexGothic
 
 <p>ソースからインストールするには，<a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し，その中で次のように打ち込むだけです。</p>
 
-<pre>
+<pre><code>
 ./configure
 make
 make test
 make install
-</pre>
+</code></pre>
 
 <p>実行ファイルは /usr/local/bin に入りますので，そこにパスを通しておきます。</p>
 

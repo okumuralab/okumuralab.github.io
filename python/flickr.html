@@ -24,7 +24,7 @@
 
 <p>Flickr には https://flic.kr/p/... という短縮 URL もある。これについては <a href="https://www.flickr.com/groups/api/discuss/72157616713786392/">manufacturing flic.kr style photo URLs</a> で説明されているように最後の部分は画像 ID の <a href="https://ja.wikipedia.org/wiki/Base58">Base58</a> である。画像 ID の Base58 エンコード・デコードは次の Python コードでできる：</p>
 
-<pre>
+<pre><code>
 alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
 
 def encode(n):
@@ -41,13 +41,13 @@ def decode(e):
         n += m * alphabet.find(c)
         m *= 58
     return n
-</pre>
+</code></pre>
 
 <p>この仕組みを使えば，画像 ID が 276298625 のページは</p>
 
-<pre>
+<pre><code>
 print("https://flic.kr/p/" + encode(276298625))
-</pre>
+</code></pre>
 
 <p>で求められる。<a href="https://flic.kr/p/qq6Xp">https://flic.kr/p/qq6Xp</a> である。</p>
 

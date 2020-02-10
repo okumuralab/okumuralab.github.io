@@ -34,32 +34,32 @@
 
 <p>Pythonも標準では同じことが起きます：</p>
 
-<pre>
+<pre><code>
 In [ ]: 0.3 - 0.2 - 0.1
 Out[ ]: -2.7755575615628914e-17
-</pre>
+</code></pre>
 
 <p>Pythonでは <a href="https://docs.python.org/3/library/decimal.html">decimal</a> というパッケージを使えば任意精度の10進演算ができます。</p>
 
-<pre>
+<pre><code>
 In [ ]: from decimal import Decimal, getcontext
 
 In [ ]: getcontext().prec = 100  # 100桁精度にする（デフォルトは28桁）
 
 In [ ]: Decimal('0.3') - Decimal('0.2') - Decimal('0.1')
 Out[ ]: Decimal('0.0')
-</pre>
+</code></pre>
 
 <p>2進でも正確に表せる数（整数など）なら文字列として与える必要はありません：</p>
 
-<pre>
+<pre><code>
 In [ ]: Decimal(2).sqrt()
 Out[ ]: Decimal('1.41421356237309504880168872420969807856967187537694...') # 略
-</pre>
+</code></pre>
 
 <p>使える関数は <code>sqrt()</code>，<code>exp()</code>，<code>ln()</code>，<code>log10()</code> くらいのものです。<code>pi()</code>，<code>sin()</code>，<code>cos()</code> の定義例は <a href="https://docs.python.org/3/library/decimal.html">decimal</a> のページに載っています。これを使って 74724506 / 23785549 - π の値を求めてみましょう：</p>
 
-<pre>
+<pre><code>
 from decimal import Decimal, getcontext
 
 def pi():
@@ -83,13 +83,13 @@ def pi():
 
 getcontext().prec = 100  # 100桁精度にする（デフォルトは28桁）
 print(Decimal(74724506) / Decimal(23785549) - pi())
-</pre>
+</code></pre>
 
 <p>結果が <code>-2.22712210211597472...E-15</code> のように出力されます。</p>
 
 <p>ちなみに，74724506 / 23785549 がほぼ π になることは次のようにして探索しました：</p>
 
-<pre>
+<pre><code>
 import math
 
 a = 1
@@ -101,34 +101,34 @@ for i in range(1, 100000000):
         print(j, i, a)
         if a == 0:
             break
-</pre>
+</code></pre>
 
 <p>ループを使わないで1から100までの整数を列挙できるかという問題もやってみましょう（<a href="https://www.quora.com/How-can-I-print-1-to-100-in-C%2B%2B-without-a-loop-goto-or-recursion">How can I print 1 to 100 in C++ without a loop, goto or recursion?</a> にある Conner Davis の方法）：</p>
 
-<pre>
+<pre><code>
 In [ ]: getcontext().prec = 298
 
 In [ ]: 1000 / Decimal(999)**2
 Out[ ]: Decimal('0.001002003004005006007008009010011012...(中略)...098099100')
-</pre>
+</code></pre>
 
 <p>Wikipediaの<a href="https://ja.wikipedia.org/wiki/%E7%B2%BE%E5%BA%A6%E4%BF%9D%E8%A8%BC%E4%BB%98%E3%81%8D%E6%95%B0%E5%80%A4%E8%A8%88%E7%AE%97">精度保証付き数値計算</a>に載っているRumpの例題をやってみましょう。まず普通のコードです（行末の <code>\</code> は行が続く意味です）：</p>
 
-<pre>
+<pre><code>
 def f(a, b):
     return 333.75 * b**6 + a**2 * (11 * a**2 * b**2 - b**6 - 121 * b**4 - 2) \
         + 5.5 * b**8 + a / (2 * b);
-</pre>
+</code></pre>
 
 <p>これで <code>f(77617, 33096)</code> や <code>f(77617.0, 33096.0)</code> を表示してみると，まったくわけのわからない値になります。そこで</p>
 
-<pre>
+<pre><code>
 getcontext().prec = 100
 
 def decimalf(a, b):
     return Decimal('333.75') * b**6 + a**2 * (11 * a**2 * b**2 - b**6 - 121 * b**4 - 2) \
         + Decimal('5.5') * b**8 + a / (2 * b);
-</pre>
+</code></pre>
 
 <p>として <code>decimalf(Decimal('77617'), Decimal('33096'))</code> を求めると，正しい -0.827396... になります。</p>
 
