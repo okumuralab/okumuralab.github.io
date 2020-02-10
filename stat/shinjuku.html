@@ -31,18 +31,18 @@
 <p>例えば2013年の全データ（第1週〜第52週）は http://monitoring.tokyo-eiken.go.jp/report/shinjuku/ の中の mon_air_week_2013XXw.html（XX = 01〜52）というファイルに収められています。これらを一括でダウンロードするには，UNIX系OS（Linux，Macなど）では，例えば次のようなコマンドで行います（Macではwgetをインストールしておくか，元々入っているcurlを使うように手直しします）。</p>
 
 <pre>
-for x in `seq 1 52`
+<code>for x in `seq 1 52`
 do
   wget `printf "http://monitoring.tokyo-eiken.go.jp/report/shinjuku/mon_air_week_2013%02dw.html" $x`
   sleep 1
 done
-</pre>
+</code></pre>
 
 <p>もちろんこれくらいであれば1行で</p>
 
 <pre>
-for x in `seq 1 52`; do wget `printf "http://monitoring.tokyo-eiken.go.jp/report/shinjuku/mon_air_week_2013%02dw.html" $x`; sleep 1; done
-</pre>
+<code>for x in `seq 1 52`; do wget `printf "http://monitoring.tokyo-eiken.go.jp/report/shinjuku/mon_air_week_2013%02dw.html" $x`; sleep 1; done
+</code></pre>
 
 <p>と打ってしまう人が多いかもしれません。</p>
 
@@ -51,17 +51,17 @@ for x in `seq 1 52`; do wget `printf "http://monitoring.tokyo-eiken.go.jp/report
 <p>中を見ると，実際のデータは次のような形で入っています。日時と，μGy/h単位の線量率の最大値・最小値・平均値です。Gy（グレイ）はほぼSv（シーベルト）と同程度の単位です（厳密には違います）。</p>
 
 <pre>
-						&lt;th&gt;2014/02/09 
+<code>						&lt;th&gt;2014/02/09 
 23:01～24:00&lt;/th&gt;
 						&lt;td&gt;0.0358&lt;/td&gt;
 						&lt;td&gt;0.0314&lt;/td&gt;
 						&lt;td&gt;0.0334&lt;/td&gt;
-</pre>
+</code></pre>
 
 <p>無駄にインデントされていたり改行が入っていたりしますが，気にしないことにします。これを読んでCSVに出力するには，Rubyなら例えば次のようにできます。</p>
 
 <pre>
-#! /usr/bin/ruby
+<code>#! /usr/bin/ruby
 # -*- coding: utf-8 -*-
 
 buf = ARGF.read
@@ -70,7 +70,7 @@ while buf =~ %r{&lt;th&gt;([\d/]+)\s*([\d:]+)[^&lt;]*&lt;/th&gt;\s*&lt;td&gt;([\
   print "#{$1} #{$2},#{$3},#{$4},#{$5}\n"
   buf = $'  # 前回のマッチの直後から始める
 end
-</pre>
+</code></pre>
 
 <p>これで <code>./hoge.rb * &gt;x.csv</code> のように出力し，<code>sort x.csv &gt;shinjuku.csv</code> のように並べ替え，頭に <code>datetime,max,min,avg</code> のような列名を付ければ，完成です。</p>
 
@@ -88,7 +88,7 @@ end
 <p>なお，こんな簡単な場合はかえって煩わしいかもしれませんが，より一般的な方法として，Ruby の <a href="http://nokogiri.org/">Nokogiri</a> を使えば，次のようにできます。この例では，最新のデータを収めたURLから直接読み込んでいます。</p>
 
 <pre>
-#! /usr/bin/ruby
+<code>#! /usr/bin/ruby
 # -*- coding: utf-8 -*-
 
 require 'open-uri'
@@ -113,7 +113,7 @@ doc.xpath('//tbody/tr').each do |tr|
     puts
   end
 end
-</pre>
+</code></pre>
 </div>
 
 <p>欠測の詳細は<a href="http://monitoring.tokyo-eiken.go.jp/information.html">環境放射線測定結果 - 新着情報</a>に載っていますが，一番長いのは 2013/07/23 から 2013/07/25 のもので，次のように書かれています：</p>
@@ -130,7 +130,7 @@ end
 と，そこで説明した fasttime を使うことにします。</p>
 
 <pre>
-library(data.table)
+<code>library(data.table)
 library(fasttime)
 shinjuku = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/shinjuku.csv")
 shinjuku$datetime = fastPOSIXct(shinjuku$datetime) - 9*3600
@@ -144,15 +144,15 @@ r = as.POSIXct(round(range(s$datetime), "days"))
 axis.POSIXct(1, at=seq(r[1],r[2],by="day"), format="%b/%d")
 segments(s$datetime, s$min, s$datetime, s$max, col=gray(0.5))
 points(s$datetime, s$avg, type="o", pch=16, col="black")
-</pre>
+</code></pre>
 
 <img src="img/140210a.png" alt="2011年3月頭の新宿の線量率">
 
 <p>ついでに 2013/07/23 の移設前の10日間もプロットしてみましょう。</p>
 
 <pre>
-s = shinjuku[datetime %between% c(as.POSIXct("2013/07/13"),as.POSIXct("2013/07/23"))]
-</pre>
+<code>s = shinjuku[datetime %between% c(as.POSIXct("2013/07/13"),as.POSIXct("2013/07/23"))]
+</code></pre>
 
 <p><code>plot</code> 以下は同じです。</p>
 
@@ -163,8 +163,8 @@ s = shinjuku[datetime %between% c(as.POSIXct("2013/07/13"),as.POSIXct("2013/07/2
 <p>さらに移設後の10日間です。</p>
 
 <pre>
-s = shinjuku[datetime %between% c(as.POSIXct("2013/07/26"),as.POSIXct("2013/08/05"))]
-</pre>
+<code>s = shinjuku[datetime %between% c(as.POSIXct("2013/07/26"),as.POSIXct("2013/08/05"))]
+</code></pre>
 
 <p><code>plot</code> 以下は同じです。</p>
 
@@ -180,13 +180,13 @@ s = shinjuku[datetime %between% c(as.POSIXct("2013/07/26"),as.POSIXct("2013/08/0
 <code class="prom">library(XML)</code>
 <code class="prom">shinjuku = readHTMLTable("http://monitoring.tokyo-eiken.go.jp/mp_shinjuku_air_data.html")</code>
 <code class="prom">head(shinjuku[[1]])</code>
-                           V1     V2     V3     V4
-1 2015/02/12 \r\n07:01～08:00 0.0364 0.0326 0.0346
-2 2015/02/12 \r\n06:01～07:00 0.0366 0.0323 0.0344
-3 2015/02/12 \r\n05:01～06:00 0.0367 0.0327 0.0342
-4 2015/02/12 \r\n04:01～05:00 0.0364 0.0317 0.0340
-5 2015/02/12 \r\n03:01～04:00 0.0360 0.0306 0.0338
-6 2015/02/12 \r\n02:01～03:00 0.0354 0.0323 0.0340
+<code>                           V1     V2     V3     V4</code>
+<code>1 2015/02/12 \r\n07:01～08:00 0.0364 0.0326 0.0346</code>
+<code>2 2015/02/12 \r\n06:01～07:00 0.0366 0.0323 0.0344</code>
+<code>3 2015/02/12 \r\n05:01～06:00 0.0367 0.0327 0.0342</code>
+<code>4 2015/02/12 \r\n04:01～05:00 0.0364 0.0317 0.0340</code>
+<code>5 2015/02/12 \r\n03:01～04:00 0.0360 0.0306 0.0338</code>
+<code>6 2015/02/12 \r\n02:01～03:00 0.0354 0.0323 0.0340</code>
 </pre>
 
 <p>ヘッダは，セル結合を使っているためか，うまく取得できません。日時は途中で改行 <code>\r\n</code> が入っています。再パースが必要ですが，かなり楽そうです。</p>
@@ -200,13 +200,13 @@ s = shinjuku[datetime %between% c(as.POSIXct("2013/07/26"),as.POSIXct("2013/08/0
 <code class="prom">x = read_html("http://monitoring.tokyo-eiken.go.jp/mp_shinjuku_air_data.html")</code>
 <code class="prom">t = html_table(x, header=FALSE, fill=TRUE)</code>
 <code class="prom">head(t[[1]][-1:-2,])</code>
-                           X1     X2     X3     X4
-3 2015/12/30 \r\n20:01～21:00 0.0321 0.0285 0.0306
-4 2015/12/30 \r\n19:01～20:00 0.0324 0.0292 0.0307
-5 2015/12/30 \r\n18:01～19:00 0.0332 0.0286 0.0305
-6 2015/12/30 \r\n17:01～18:00 0.0328 0.0292 0.0306
-7 2015/12/30 \r\n16:01～17:00 0.0325 0.0291 0.0309
-8 2015/12/30 \r\n15:01～16:00 0.0329 0.0293 0.0308
+<code>                           X1     X2     X3     X4</code>
+<code>3 2015/12/30 \r\n20:01～21:00 0.0321 0.0285 0.0306</code>
+<code>4 2015/12/30 \r\n19:01～20:00 0.0324 0.0292 0.0307</code>
+<code>5 2015/12/30 \r\n18:01～19:00 0.0332 0.0286 0.0305</code>
+<code>6 2015/12/30 \r\n17:01～18:00 0.0328 0.0292 0.0306</code>
+<code>7 2015/12/30 \r\n16:01～17:00 0.0325 0.0291 0.0309</code>
+<code>8 2015/12/30 \r\n15:01～16:00 0.0329 0.0293 0.0308</code>
 </pre>
 
 <p>ちなみにrvest（アー（ル）ヴェスト）はharvest（収穫する＝scrapeする）の語呂合わせと思われます。</p>

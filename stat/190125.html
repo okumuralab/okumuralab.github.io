@@ -1671,7 +1671,7 @@ L.circleMarker([37.8995,140.5724], { radius:5, color:"green" }).addTo(map).bindT
 <p>コードはこのページのHTMLソースを見ての通りであるが，<code>L.circleMarker</code> で始まる行はRで次のコードで生成した：</p>
 
 <pre>
-for (i in 1:length(rad)) {
+<code>for (i in 1:length(rad)) {
   if (!is.na(rad[i]/avi[i])) {
     cat('L.circleMarker([', lat[i], ',', lon[i],
         '], { radius:5, color:"',
@@ -1681,7 +1681,7 @@ for (i in 1:length(rad)) {
         '/', avi[i], '")', "\n", sep="")
   }
 }
-</pre>
+</code></pre>
 
 <p>ここに行くまでの部分のコードは<a href="190118.html">空間線量率の航空機モニタリング</a>にある。</p>
 

@@ -25,7 +25,7 @@
 <p>データを<a href="data/chainletters.csv">chainletters.csv</a>に書き込んで，次のようにして描きました：</p>
 
 <pre>
-par(las=1)           # 縦軸の文字を横向きにしない
+<code>par(las=1)           # 縦軸の文字を横向きにしない
 par(mgp=c(2,0.8,0))  # 目盛の位置の微調整
 chainletters = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/chainletters.csv",
                         as.is=TRUE, fileEncoding="SJIS", comment.char="#")
@@ -36,7 +36,7 @@ r = as.POSIXct(range(t))
 axis.POSIXct(1, at=seq(r[1],r[2]+3.5*24*60*60,by="month"), format="%b月")
 title("日本データ通信協会迷惑メール相談センターへ寄せられたチェーンメールの転送数",
       line=0.5) # 必要なら文字サイズをcex.mainで調整する
-</pre>
+</code></pre>
 
 <p>時間の表し方については<a href="timeseries.html">時系列データ</a>をご覧ください。</p>
 

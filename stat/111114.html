@@ -27,7 +27,7 @@
 <p>データは <a href="data/h_okumura.csv">h_okumura.csv</a> というCSVファイルに収めました。</p>
 
 <pre>
-x = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/h_okumura.csv", as.is=TRUE)
+<code>x = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/h_okumura.csv", as.is=TRUE)
 t = as.POSIXct(x$date)
 f = x$followers
 par(mgp=c(2,0.8,0))  
@@ -37,7 +37,7 @@ points(as.POSIXct("2011/03/11"), f[t == as.POSIXct("2011/03/11")], pch=16, col="
 text(as.POSIXct("2011/03/11"), f[t == as.POSIXct("2011/03/11")], "3/11", pos=1)
 points(as.POSIXct("2011/06/11"), f[t == as.POSIXct("2011/06/11")], pch=16, col="red")
 text(as.POSIXct("2011/06/11"), f[t == as.POSIXct("2011/06/11")], "6/11", pos=3)
-</pre>
+</code></pre>
 
 <p>Twilogからのデータの簡単な取り出し方は
 <a href="http://d.hatena.ne.jp/oxon/20120116/1326711797">twilog の統計情報から follower 数の変化を数値で取り出す方法 - 宇宙線実験の覚え書き</a>
@@ -50,11 +50,11 @@ text(as.POSIXct("2011/06/11"), f[t == as.POSIXct("2011/06/11")], "6/11", pos=3)
 <p>ところで，ごく最近，ツイッターの不正アカウント対策のおかげで，フォロワー数が急に減っている場合があるという噂があります。私の場合はそのようなことはなさそうです：</p>
 
 <pre>
-f = f[t >= as.POSIXct("2018/01/01")]
+<code>f = f[t >= as.POSIXct("2018/01/01")]
 t = t[t >= as.POSIXct("2018/01/01")]
 plot(t, f, pch=16, type="o", xlab="", ylab="", xaxt="n")
 axis.POSIXct(1, at=as.POSIXct(paste0(2018, c("/01/01","/02/01","/02/23"))), format="%m/%d")
-</pre>
+</code></pre>
 
 <figure><img src="img/180223c.png" alt="h_okumuraのフォロワー数の推移"></figure>
 

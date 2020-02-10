@@ -34,45 +34,45 @@
 <p>Macで普通に画面に描いてスクリーンショットをとります：</p>
 
 <pre>
-quartz(width=7, height=4)
+<code>quartz(width=7, height=4)
 par(mgp=c(2,0.8,0))
 curve(dnorm(x), xlim=c(-3,3), main="正規分布")
-</pre>
+</code></pre>
 
 <figure><img src="img/dnorm-quartz.png" alt="Quartzグラフィックの例"></figure>
 
 <p>標準（cairo）の <code>svg()</code> を使います：</p>
 
 <pre>
-svg("dnorm-cairo.svg", family="Japan1GothicBBB", width=7, height=4)
+<code>svg("dnorm-cairo.svg", family="Japan1GothicBBB", width=7, height=4)
 par(mgp=c(2,0.8,0))
 curve(dnorm(x), xlim=c(-3,3), main="正規分布")
 dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/dnorm-cairo.svg" alt="CairoのSVGの例"></figure>
 
 <p>RSVGTipsDevice の <code>devSVGTips()</code> を使います：</p>
 
 <pre>
-library(RSVGTipsDevice)
+<code>library(RSVGTipsDevice)
 devSVGTips("dnorm-svgtips.svg", width=7, height=4)
 par(mgp=c(2,0.8,0))
 curve(dnorm(x), xlim=c(-3,3), main="正規分布")
 dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/dnorm-svgtips.svg" alt="RSVGTipsDeviceのSVGの例"></figure>
 
 <p>svglite の <code>svglite()</code> を使います：</p>
 
 <pre>
-library(svglite)
+<code>library(svglite)
 svglite("dnorm-svglite.svg", width=7, height=4)
 par(mgp=c(2,0.8,0))
 curve(dnorm(x), xlim=c(-3,3), main="正規分布")
 dev.off()
-</pre>
+</code></pre>
 
 <p>生成された図は幅情報がなく，画面幅いっぱいに出力されてしまうので，ここでは <code>&lt;img src="..." width="600" alt=""&gt;</code> のように幅を指定しています。</p>
 
@@ -81,16 +81,16 @@ dev.off()
 <p>日本語の部分だけ位置がおかしくなってしまいました。気になるなら</p>
 
 <pre>
-&lt;text x='266.40' y='34.67' style='font-size: 14.40pt; font-weight: bold;
+<code>&lt;text x='266.40' y='34.67' style='font-size: 14.40pt; font-weight: bold;
   font-family: Arial;'&gt;正規分布&lt;/text&gt;
-</pre>
+</code></pre>
 
 <p>を</p>
 
 <pre>
-&lt;text x='266.40' y='34.67' style='font-size: 14.40pt; font-weight: bold;
+<code>&lt;text x='266.40' y='34.67' style='font-size: 14.40pt; font-weight: bold;
   font-family: sans-serif;' text-anchor="middle"&gt;正規分布&lt;/text&gt;
-</pre>
+</code></pre>
 
 <p>に直せばよさそうです。ついでですので，<code>Arial</code> になっているところを全部 <code>sans-serif</code> に直し，dnorm(x) と書いてあるところだけ <code>monospace</code> に直してみました（以下参照）。</p>
 
@@ -99,21 +99,21 @@ dev.off()
 <figure><img src="img/dnorm-svglite120.svg" width="600" alt="svglite 1.2.0のSVGの例"></figure>
 
 <pre>
-&lt;text x='245.40' y='34.53' style='font-size: 14.40px; font-weight: bold; font-family: Arial;'
+<code>&lt;text x='245.40' y='34.53' style='font-size: 14.40px; font-weight: bold; font-family: Arial;'
   textLength='42.00px' lengthAdjust='spacingAndGlyphs'&gt;正規分布&lt;/text&gt;
-</pre>
+</code></pre>
 
 <p>単純に中央揃えをサポートしてくれたほうがよかったのに。</p>
 
 <p>[2018-04-08] <a href="https://github.com/davidgohel/rvg">rvg</a> という新しいパッケージがCRANに入ったようなので，試してみます：</p>
 
 <pre>
-library(rvg)
+<code>library(rvg)
 dsvg("dnorm-rvg.svg", width=7, height=4)
 par(mgp=c(2,0.8,0))
 curve(dnorm(x), xlim=c(-3,3), main="正規分布")
 dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/dnorm-rvg.svg" alt="rvgのSVGの例"></figure>
 
@@ -124,18 +124,18 @@ dev.off()
 <p>以下では，前節の最後に書いたように修正したsvglite出力を使います。</p>
 
 <pre>
-library(rsvg)
+<code>library(rsvg)
 bitmap = rsvg("dnorm-svglite.svg", width=600)
 png::writePNG(bitmap, "dnorm-svglite.png")
-</pre>
+</code></pre>
 
 <figure><img src="img/dnorm-svglite.png" alt="svgliteのSVGをrsvgでpngにしたもの"></figure>
 
 <p>PDFに変換するには次のようにします：</p>
 
 <pre>
-rsvg_pdf("dnorm-svglite.svg", "dnorm-svglite.pdf")
-</pre>
+<code>rsvg_pdf("dnorm-svglite.svg", "dnorm-svglite.pdf")
+</code></pre>
 
 <p>変換したPDFはちゃんとフォントが埋め込まれています：</p>
 
@@ -150,8 +150,8 @@ rsvg_pdf("dnorm-svglite.svg", "dnorm-svglite.pdf")
 <p>なお，Macでは <code>brew install librsvg</code>，CentOS 7では <code>yum install librsvg2-tools</code> で入る <code>rsvg-convert</code> コマンドを使えばRを使わなくてもSVG→PNG/PDF変換ができます。ターミナルで</p>
 
 <pre>
-rsvg-convert --format=pdf --output=hoge.pdf hoge.svg
-</pre>
+<code>rsvg-convert --format=pdf --output=hoge.pdf hoge.svg
+</code></pre>
 
 <p>のようにして使います。</p>
 

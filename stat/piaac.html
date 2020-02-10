@@ -24,7 +24,7 @@
 <p>まずこれを <code>cat prg*.csv &gt; all.csv</code> のようにして一つにまとめてRで読む。</p>
 
 <pre>
-&gt; library(data.table)
+<code>&gt; library(data.table)
 &gt; data = fread("all.csv")
 Read 200618 rows and 1328 (of 1328) columns from 0.656 GB file in 00:03:31
  50 件以上の警告がありました (最初の 50 個の警告を見るには warnings() を使って下さい) 
@@ -32,7 +32,7 @@ Read 200618 rows and 1328 (of 1328) columns from 0.656 GB file in 00:03:31
 3512730392 bytes
 &gt; dim(data)
 [1] 200618   1328
-</pre>
+</code></pre>
 
 <p>メモリ3.5Gを占める大きなデータである。</p>
 
@@ -46,17 +46,17 @@ Read 200618 rows and 1328 (of 1328) columns from 0.656 GB file in 00:03:31
 <p>これらを数値として別の変数に収め，箱ひげ図を描いてみる：</p>
 
 <pre>
-&gt; wh = as.numeric(data$D_Q10)  # 週あたり仕事時間
+<code>&gt; wh = as.numeric(data$D_Q10)  # 週あたり仕事時間
 &gt; ll = as.numeric(data$I_Q04d) # 新しいことを学ぶのが好き
 boxplot(wh ~ ll)
-</pre>
+</code></pre>
 
 <figure><img src="img/171114a.png" alt=""></figure>
 
 <p>まったく相関がないように見える。ただ，強引に相関係数を求めて検定してみると，</p>
 
 <pre>
-&gt; cor.test(wh, ll)
+<code>&gt; cor.test(wh, ll)
 
 	Pearson's product-moment correlation
 
@@ -68,14 +68,14 @@ alternative hypothesis: true correlation is not equal to 0
 sample estimates:
         cor 
 -0.02293946 
-</pre>
+</code></pre>
 
 <p>-0.02 という非常に小さな負の相関があり，非常に小さいにもかかわらずp値はほぼ0で非常に有意である。このあたりが大量のデータを扱う上での落とし穴である。</p>
 
 <p>この落とし穴をもうちょっと詳しく調べてみよう。例えば日本（392）だけに限って調べる。</p>
 
 <pre>
-&gt; cntry = as.numeric(data$CNTRYID)
+<code>&gt; cntry = as.numeric(data$CNTRYID)
 &gt; boxplot(wh[cntry==392] ~ ll[cntry==392])
 &gt; cor.test(wh[cntry==392], ll[cntry==392])
 
@@ -89,14 +89,14 @@ alternative hypothesis: true correlation is not equal to 0
 sample estimates:
        cor 
 0.04147432 
-</pre>
+</code></pre>
 
 <p>やはり目で見ても顕著ではないが，正の小さな相関 0.04 があり，p = 0.01 で有意である。</p>
 
 <p>では，知的好奇心が労働時間と国の両方に関係しているというモデルで調べてみよう。</p>
 
 <pre>
-&gt; summary(lm(ll ~ wh + factor(cntry)))
+<code>&gt; summary(lm(ll ~ wh + factor(cntry)))
 
 Call:
 lm(formula = ll ~ wh + factor(cntry))
@@ -113,14 +113,14 @@ factor(cntry)124  0.043631   0.016299   2.677 0.007431 **
 factor(cntry)152 -0.458062   0.020939 -21.876  &lt; 2e-16 ***
 factor(cntry)196  0.398174   0.022319  17.840  &lt; 2e-16 ***
 ...
-</pre>
+</code></pre>
 
 <p>労働時間が1時間増えるごとに知的好奇心は 0.001 増える。非常に有意（p = 5e-12）である。</p>
 
 <p>これらは個人レベルの話であるが，国レベルではどうなるか。</p>
 
 <pre>
-&gt; whc = tapply(wh, factor(cntry), function(x)mean(x,na.rm=TRUE))
+<code>&gt; whc = tapply(wh, factor(cntry), function(x)mean(x,na.rm=TRUE))
 &gt; llc = tapply(ll, factor(cntry), function(x)mean(x,na.rm=TRUE))
 &gt; plot(whc, llc)
 &gt; cor.test(whc, llc)
@@ -135,7 +135,7 @@ alternative hypothesis: true correlation is not equal to 0
 sample estimates:
        cor 
 -0.5806858 
-</pre>
+</code></pre>
 
 <p>驚くべきことに，国レベルでは -0.58 という非常に大きな負の相関があり，非常に有意（p &lt; 0.001）である。散布図からもよくわかる。</p>
 

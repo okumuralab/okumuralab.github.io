@@ -23,7 +23,7 @@
 <p>Rのプログラムで調べてみましょう。</p>
 
 <pre>
-collatz = function(n) {
+<code>collatz = function(n) {
   cat(n)
   while (n &gt; 1) {
     if (n %% 2 == 0) {
@@ -35,22 +35,22 @@ collatz = function(n) {
   }
   cat("\n")
 }
-</pre>
+</code></pre>
 
 <p>ここで <code>n %% 2</code> はnを2で割った余りです。</p>
 
 <p>例えば <code>collatz(3)</code> と打つと次のように出ます。</p>
 
 <pre>
-3 → 10 → 5 → 16 → 8 → 4 → 2 → 1
-</pre>
+<code>3 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+</code></pre>
 
 <p>いろいろな数から出発して，Collatzの予想が正しいかどうか確かめてください。</p>
 
 <p>ところで，Rではもうちょっと簡単に書くこともできます。例えば</p>
 
 <pre>
-collatz = function(n) {
+<code>collatz = function(n) {
   cat(n)
   while (n &gt; 1) {
     n = ifelse(n %% 2 == 0, n / 2, 3 * n + 1)
@@ -58,12 +58,12 @@ collatz = function(n) {
   }
   cat("\n")
 }
-</pre>
+</code></pre>
 
 <p>あるいは</p>
 
 <pre>
-collatz = function(n) {
+<code>collatz = function(n) {
   a = n
   while (n &gt; 1) {
     n = ifelse(n %% 2 == 0, n / 2, 3 * n + 1)
@@ -71,7 +71,7 @@ collatz = function(n) {
   }
   a
 }
-</pre>
+</code></pre>
 
 <p>と書くことができます。</p>
 

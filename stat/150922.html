@@ -37,16 +37,16 @@ MathJax = {
 <pre>
 <code class="prom">power.prop.test(p1=0.1, p2=0.2, power=0.9, strict=TRUE)</code>
 
-     Two-sample comparison of proportions power calculation 
+<code>     Two-sample comparison of proportions power calculation </code>
 
-              n = 265.8559
-             p1 = 0.1
-             p2 = 0.2
-      sig.level = 0.05
-          power = 0.9
-    alternative = two.sided
+<code>              n = 265.8559</code>
+<code>             p1 = 0.1</code>
+<code>             p2 = 0.2</code>
+<code>      sig.level = 0.05</code>
+<code>          power = 0.9</code>
+<code>    alternative = two.sided</code>
 
-NOTE: n is number in *each* group
+<code>NOTE: n is number in *each* group</code>
 </pre>
 
 <p>つまり片群で266例あればよいことになります（この場合 <code>strict=TRUE</code> がなくても結果はほとんど変わりません）。</p>
@@ -57,15 +57,15 @@ NOTE: n is number in *each* group
 <code class="prom">library(pwr)</code>
 <code class="prom">pwr.2p.test(ES.h(0.1,0.2), power=0.9)</code>
 
-     Difference of proportion power calculation for binomial distribution (arcsine transformation) 
+<code>     Difference of proportion power calculation for binomial distribution (arcsine transformation) </code>
 
-              h = 0.2837941
-              n = 260.9272
-      sig.level = 0.05
-          power = 0.9
-    alternative = two.sided
+<code>              h = 0.2837941</code>
+<code>              n = 260.9272</code>
+<code>      sig.level = 0.05</code>
+<code>          power = 0.9</code>
+<code>    alternative = two.sided</code>
 
-NOTE: same sample sizes
+<code>NOTE: same sample sizes</code>
 </pre>
 
 <p>片群で261例あればよいことになります。どちらの結果も，最初に挙げた本とは少しだけ違います。本はどういうソフトで計算したのでしょうか。</p>
@@ -96,10 +96,10 @@ NOTE: same sample sizes
 
 <!--
 <pre>
-x = seq(260, 285, 5)
+<code>x = seq(260, 285, 5)
 y = c(0.874301, 0.880944, 0.888573, 0.894095, 0.899182, 0.905091)
 plot(x, y, type="o", pch=16, xlab="", ylab="", las=1, panel.first=grid())
-</pre>
+</code></pre>
 -->
 
 <figure><img src="img/150922a.png" alt=""></figure>

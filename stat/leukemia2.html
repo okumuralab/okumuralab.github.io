@@ -41,23 +41,23 @@ window.onload = function() {
 <figure><img src="img/181229a.png" alt="白血病による死亡率の推移"></figure>
 
 <pre>
-leu = read.csv("<span class="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/leukemia3.csv")
+<code>leu = read.csv("<span class="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/leukemia3.csv")
 with(leu, plot(year+(month-1)/12, rate, type="o", pch=16, xlab="年", ylab="死亡率/10万/年"))
-</pre>
+</code></pre>
 
 <p>あるいは次のようにまず時系列に変換してもよい：</p>
 
 <pre>
-x = ts(leu$rate, start=c(2001,1), frequency=12)   # convert to time-series object
+<code>x = ts(leu$rate, start=c(2001,1), frequency=12)   # convert to time-series object
 plot(x, type="o", pch=16, xlab="年", ylab="死亡率/10万/年")
-</pre>
+</code></pre>
 
 <p>トレンドと季節変動に分解してみる：</p>
 
 <pre>
-y = decompose(x)
+<code>y = decompose(x)
 ts.plot(cbind(y$trend, y$trend+y$seasonal), lty=1:2, xlab="年", ylab="死亡率/10万/年")
-</pre>
+</code></pre>
 
 <figure><img src="img/181229b.png" alt="白血病による死亡率の推移"></figure>
 
@@ -66,7 +66,7 @@ ts.plot(cbind(y$trend, y$trend+y$seasonal), lty=1:2, xlab="年", ylab="死亡率
 <p>死亡率の増加の原因の一つは高齢化である。高齢化の影響を差し引くには，年齢調整をしなければならない。国立がん研究センター<a href="https://ganjoho.jp/reg_stat/statistics/dl/index.html">がんに関する統計データのダウンロード</a>の死亡データ <code>cancer_mortality(1958-2017).xls</code> には年齢調整した値が収められている。</p>
 
 <pre>
-library(readxl)
+<code>library(readxl)
 y = 1958:2017
 data = read_excel("cancer_mortality(1958-2017).xls", "asr", col_types=c(rep("text",8),rep("numeric",length(y))))
 leu = subset(data, 部位=="白血病" & 性別=="男女計" & 標準人口=="昭和60年モデル人口")
@@ -75,7 +75,7 @@ z = as.numeric(leu[as.character(y)])
 # par(mar=c(3,3,1,1), mgp=c(2,0.8,0))
 plot(y, z, type="o", pch=16, xlab="年", ylab="全国年齢調整死亡率（対10万人）", panel.first=grid())
 # dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/190324c.png" alt="白血病の年齢調整死亡率の推移"></figure>
 
@@ -88,7 +88,7 @@ plot(y, z, type="o", pch=16, xlab="年", ylab="全国年齢調整死亡率（対
 <p>上と同様に，国立がん研究センター<a href="https://ganjoho.jp/reg_stat/statistics/dl/index.html">がんに関する統計データのダウンロード</a>から罹患データ（全国推計値）のファイル <code>cancer_incidence(1975-2015).xls</code> をいただいてくる。</p>
 
 <pre>
-library(readxl)
+<code>library(readxl)
 data = read_excel("cancer_incidence(1975-2015).xls", "asr")
 leu = subset(data, 部位=="白血病" & 性別=="男女計" & 標準人口=="昭和60年モデル人口")
 y = 1975:2015
@@ -97,29 +97,29 @@ z = as.numeric(leu[as.character(y)])
 # par(mar=c(3,3,1,1), mgp=c(2,0.8,0))
 plot(y, z, type="o", pch=16, xlab="年", ylab="全国推定年齢調整罹患率（対10万人）", panel.first=grid())
 # dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/190804a.png" alt="白血病罹患率の推移"></figure>
 
 <p>[追記] このようなグラフは0オリジンで描くほうがわかりやすいというコメントをいただいたので，棒グラフも載せておく：</p>
 
 <pre>
-barplot(z, xlab="年", names.arg=y, ylab="全国推定年齢調整罹患率（対10万人）")
-</pre>
+<code>barplot(z, xlab="年", names.arg=y, ylab="全国推定年齢調整罹患率（対10万人）")
+</code></pre>
 
 <figure><img src="img/190804c.png" alt="白血病罹患率の推移"></figure>
 
 <p>比較のため，上の「白血病」を「全部位」に変えたものを挙げておく：</p>
 
 <pre>
-zen = subset(data, 部位=="全部位" & 性別=="男女計" & 標準人口=="昭和60年モデル人口")
+<code>zen = subset(data, 部位=="全部位" & 性別=="男女計" & 標準人口=="昭和60年モデル人口")
 y = 1975:2015
 z = as.numeric(zen[as.character(y)])
 # quartz(width=7, height=5, type="png", file="190804b.png")
 # par(mar=c(3,3,1,1), mgp=c(2,0.8,0))
 plot(y, z, type="o", pch=16, xlab="年", ylab="全国推定年齢調整罹患率（対10万人）", panel.first=grid())
 # dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/190804b.png" alt="がん（全部位）罹患率の推移"></figure>
 

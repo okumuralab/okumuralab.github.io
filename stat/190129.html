@@ -24,7 +24,7 @@
 <p>上は次のようにして描いた。コメント（<code>#</code> の右側）に詳しく説明を書いた。1〜2行目と最後の行はコメントアウトしたままで実行し，微調整した上で，Macなら2行目と最後の行頭の <code>#</code> を外して実行すると <code>example.pdf</code> ができる（上の図はそれをPNGに変換したもの）。Windowsでは試していないが，1行目と最後の行頭の <code>#</code> を外して実行するとできるかもしれない。</p>
 
 <pre>
-# pdf("example.pdf", width=5, height=4)  # Rから直接PDF出力（幅・高さの単位はインチ）
+<code># pdf("example.pdf", width=5, height=4)  # Rから直接PDF出力（幅・高さの単位はインチ）
 # quartz(type="pdf", file="example.pdf", width=5, height=4)  # MacのQuartz経由でPDF出力
 par(mar=c(3,3,1,1))  # 下・左・上・右マージン（単位：行）
 par(family="Times")  # フォント（機種依存）
@@ -65,7 +65,7 @@ legend("topright", bty="n", c("Theory","Simulation"),  # 右上レジェンド�
 legend("bottomleft", bty="n", inset=c(-0.02,0.02),  # 同じく左下のレジェンド
        c("QPSK","Rayleigh fading","Perfect channel estimation"))
 # dev.off()   # 書き出し終了
-</pre>
+</code></pre>
 
 
 <hr>

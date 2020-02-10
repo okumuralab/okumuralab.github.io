@@ -28,37 +28,37 @@
 <p>関数 <code>pdf()</code> を使う方法である。フォントについては <a href="https://cran.r-project.org/doc/Rnews/">R News</a> の Volume 6/2 pp.41-46 に詳しい。</p>
 
 <pre>
-pdf("pdf-ex.pdf", family="Japan1GothicBBB", width=7, height=4)
+<code>pdf("pdf-ex.pdf", family="Japan1GothicBBB", width=7, height=4)
 par(mgp=c(2,0.8,0))
 curve(dnorm(x), xlim=c(-3,3), main="正規分布")
 dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/pdf-ex.pdf" alt="pdf() example"></figure>
 
 <p>これで GothicBBB-Medium という和文フォントが名前参照で使われるが，フォントは埋め込まれない。フォントを埋め込むには別途 <code>embedFonts()</code> という関数を使う。これはGhostscriptを呼び出してフォントを埋め込む。システムにGhostscriptがインストールされていなければならない。実際の挙動はGhostscriptの設定に依存する。</p>
 
 <pre>
-embedFonts("pdf-ex.pdf", outfile="pdf-ex-embed.pdf")
-</pre>
+<code>embedFonts("pdf-ex.pdf", outfile="pdf-ex-embed.pdf")
+</code></pre>
 
 <p>Ghostscriptの日本語フォント関係の設定は面倒（Mac使いなら <code>quartz()</code> を使うほうが楽）だが，欧文なら，例えば <code>family="Palatino"</code> などと指定すれば，これで問題なく埋め込める。ただ，数式のSymbolフォントなど，PostScriptの基本フォントはデフォルトでは埋め込まない。すべてのフォントを埋め込むためには，<a href="https://stackoverflow.com/questions/41205112/ghostscript-stubbornly-refuses-to-embed-fonts">ここ</a>によれば</p>
 
 <pre>
-embedFonts("pdf-ex.pdf", outfile="pdf-ex-embed.pdf",
+<code>embedFonts("pdf-ex.pdf", outfile="pdf-ex-embed.pdf",
            options="-c \"&lt;&lt;/NeverEmbed []&gt;&gt; setdistillerparams\" -f ")
-</pre>
+</code></pre>
 
 <p>とすればよい。GhostscriptさえインストールされていればMacでもLinuxでも環境を選ばないので便利な方法である。</p>
 
 <h2>cairo_pdf() による方法</h2>
 
 <pre>
-cairo_pdf("cairo-ex.pdf", family="Japan1GothicBBB", width=7, height=4)
+<code>cairo_pdf("cairo-ex.pdf", family="Japan1GothicBBB", width=7, height=4)
 par(mgp=c(2,0.8,0))
 curve(dnorm(x), xlim=c(-3,3), main="正規分布")
 dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/cairo-ex.pdf" alt="cairo_pdf() example"></figure>
 
@@ -69,19 +69,19 @@ dev.off()
 <p>MacのPDFレンダリングエンジンを使う方法である。Macでしか使えないが，Macの任意のシステムフォントが埋め込める。</p>
 
 <pre>
-quartz(type="pdf", file="quartz-ex.pdf", width=7, height=4)
+<code>quartz(type="pdf", file="quartz-ex.pdf", width=7, height=4)
 par(family="HiraKakuProN-W3")
 par(mgp=c(2,0.8,0))
 curve(dnorm(x), xlim=c(-3,3), main="正規分布")
 dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/quartz-ex.pdf" alt="quartz() example"></figure>
 
 <p><code>family=...</code> で指定するフォント名は，/Library/Fonts や /System/Library/Fonts にあるフォントファイル名から拡張子を外したものを基本として，別名も用意されている。以下はEl Capitanで使える和文用のヒラギノフォントである。</p>
 
 <pre>
-par(family="ヒラギノ明朝 ProN W3")    # 3,6
+<code>par(family="ヒラギノ明朝 ProN W3")    # 3,6
 par(family="Hiragino Mincho ProN W3") # 同上
 par(family="HiraMinProN-W3")          # 同上
 
@@ -96,29 +96,29 @@ par(family="HiraMaruProN-W4")         # 同上
 par(family="ヒラギノ角ゴ ProN W3")    # 3,6（旧）
 par(family="Hiragino Kaku Gothic ProN W3") # 同上
 par(family="HiraKakuProN-W3")         # 同上
-</pre>
+</code></pre>
 
 <p>部分ごとにフォントを変えることもできる。例えば軸にHelvetica，タイトルにヒラギノを使うのであれば，次のようにする。</p>
 
 <pre>
-curve(dnorm(x), xlim=c(-3,3), family="Helvetica")
+<code>curve(dnorm(x), xlim=c(-3,3), family="Helvetica")
 title(main="正規分布", family="HiraKakuProN-W6")
-</pre>
+</code></pre>
 
 <p>実はQuartzのフォントは別の方法でも設定できる。</p>
 
 <pre>
 <code class="prom">quartzFonts()</code>
-$serif
-[1] "Times-Roman"      "Times-Bold"       "Times-Italic"     "Times-BoldItalic"
+<code>$serif</code>
+<code>[1] "Times-Roman"      "Times-Bold"       "Times-Italic"     "Times-BoldItalic"</code>
 
-$sans
-[1] "Helvetica"             "Helvetica-Bold"        "Helvetica-Oblique"    
-[4] "Helvetica-BoldOblique"
+<code>$sans</code>
+<code>[1] "Helvetica"             "Helvetica-Bold"        "Helvetica-Oblique"    </code>
+<code>[4] "Helvetica-BoldOblique"</code>
 
-$mono
-[1] "Courier"             "Courier-Bold"        "Courier-Oblique"    
-[4] "Courier-BoldOblique"
+<code>$mono</code>
+<code>[1] "Courier"             "Courier-Bold"        "Courier-Oblique"    </code>
+<code>[4] "Courier-BoldOblique"</code>
 </pre>
 
 <p>という定義済みのリストがあるので，これを変更する。例えば</p>
@@ -132,22 +132,22 @@ $mono
 <p>こうして <code>quartzFonts()</code> で登録された各ファミリの4個のフォントのうち何番目をどこに使うかはデフォルトでは次のように定められている：</p>
 
 <pre>
-par(font.axis=1, font.lab=1, font.main=2, font.sub=1)
-</pre>
+<code>par(font.axis=1, font.lab=1, font.main=2, font.sub=1)
+</code></pre>
 
 <p>これも自由に変更できる。変更したら <code>par()</code> と打ち込んで確認できる。</p>
 
 <p>このことを使った例：</p>
 
 <pre>
-quartzFonts(sans=quartzFont(c("Helvetica","HiraKakuProN-W3","HiraKakuProN-W6","HiraMaruProN-W4")))
+<code>quartzFonts(sans=quartzFont(c("Helvetica","HiraKakuProN-W3","HiraKakuProN-W6","HiraMaruProN-W4")))
 quartz(type="pdf", file="quartz-ex2.pdf", width=7, height=4)
 par(family="sans")
 par(font.axis=1, font.lab=2, font.main=3, font.sub=4)
 par(mgp=c(2,0.8,0))
 curve(dnorm(x), xlim=c(-3,3), xlab="横軸 x", ylab="縦軸 dnorm(x)", main="正規分布")
 dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/quartz-ex2.pdf" alt="quartz() example"></figure>
 
@@ -156,8 +156,8 @@ dev.off()
 <p>欧文の場合，<code>par(family="Palatino")</code> だけで済むようなフォントもあるが，例えばLatin Modernを使う場合は</p>
 
 <pre>
-quartzFonts(serif=quartzFont(c("LMRoman10-Regular","LMRoman10-Bold","LMRoman10-Italic","LMRoman10-BoldItalic")))
-</pre>
+<code>quartzFonts(serif=quartzFont(c("LMRoman10-Regular","LMRoman10-Bold","LMRoman10-Italic","LMRoman10-BoldItalic")))
+</code></pre>
 
 <p>のようにする必要がある（これらはシステムにインストールしたLatin Modern RomanのPostScript名）。</p>
 
@@ -166,7 +166,7 @@ quartzFonts(serif=quartzFont(c("LMRoman10-Regular","LMRoman10-Bold","LMRoman10-I
 <p><a href="https://cran.r-project.org/web/packages/showtext/index.html">showtext</a> パッケージを使えば任意のシステムフォントが使える。ただし文字情報はなくなり，アウトライン化される。使い方は <a href="http://statr.me/2014/01/using-system-fonts-in-r-graphs/">Using system fonts in R graphs</a> やGitHubの <a href="https://github.com/yixuan/showtext/">yixuan/showtext</a> を見る。</p>
 
 <pre>
-install.packages("showtext")
+<code>install.packages("showtext")
 library(showtext)
 font.add("marugo", "ヒラギノ丸ゴ ProN W4.ttc")
 pdf("showfont-ex.pdf", width=7, height=4)
@@ -175,21 +175,21 @@ showtext.begin()
 curve(dnorm(x), xlim=c(-3,3), main="正規分布", family="marugo")
 showtext.end()
 dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/showfont-ex.pdf" alt="showfont example"></figure>
 
 <p>Windowsでもやってみた。</p>
 
 <pre>
-font.add("meiryo", "meiryo.ttc")
+<code>font.add("meiryo", "meiryo.ttc")
 pdf("showfont-ex.pdf", width=7, height=4)
 par(mgp=c(2,0.8,0))
 showtext.begin()
 curve(dnorm(x), xlim=c(-3,3), main="正規分布", family="meiryo")
 showtext.end()
 dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/showfont-win-ex.pdf" alt="showfont example"></figure>
 
@@ -204,13 +204,13 @@ dev.off()
 <code class="prom">install.packages('extrafont')</code>
 <code class="prom">library(extrafont)</code>
 <code class="prom">font_import()</code>
-Importing fonts may take a few minutes, depending on the number of fonts and the speed of the system.
-Continue? [y/n] y
-Scanning ttf files in /Library/Fonts/, /System/Library/Fonts, ~/Library/Fonts/ ...
-Extracting .afm files from .ttf files...
-/Library/Fonts/Andale Mono.ttf => /Users/okumura/Library/R/3.2/library/extrafontdb/metrics/Andale Mono
-/Library/Fonts/Apple Chancery.ttf : No FontName. Skipping.
-...
+<code>Importing fonts may take a few minutes, depending on the number of fonts and the speed of the system.</code>
+<code>Continue? [y/n] y</code>
+<code>Scanning ttf files in /Library/Fonts/, /System/Library/Fonts, ~/Library/Fonts/ ...</code>
+<code>Extracting .afm files from .ttf files...</code>
+<code>/Library/Fonts/Andale Mono.ttf => /Users/okumura/Library/R/3.2/library/extrafontdb/metrics/Andale Mono</code>
+<code>/Library/Fonts/Apple Chancery.ttf : No FontName. Skipping.</code>
+<code>...</code>
 </pre>
 
 <p>かなり時間をかけて <code>~/Library/R/3.2/library/extrafontdb/metrics</code> に148個の <code>*.afm.gz</code> が生成された。これを読み込む（初回だけ）：</p>

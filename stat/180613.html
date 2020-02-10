@@ -37,52 +37,52 @@
 
 <pre>
 <code class="prom">seito</code>  # 中を見てみる
-# A tibble: 2,000 x 430
-   実施年 地域規模 解答用紙番号  性別 生徒質問紙種別 正答数_国Ａ 正答数_国Ｂ
-    &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;                &lt;dbl&gt;       &lt;dbl&gt;
- 1   2015        3            1     2 NA                      27           7
- 2   2015        1            2     2 NA                      26           4
- 3   2015        1            3     2 NA                      27           7
- 4   2015        2            4     1 NA                      22           7
- 5   2015        1            5     2 NA                      27           8
- 6   2015        2            6     2 NA                      27           3
- 7   2015        4            7     2 NA                      19           7
- 8   2015        1            8     1 NA                      23           6
- 9   2015        3            9     1 NA                      20           5
-10   2015        3           10     1 NA                      32           9
-# ... with 1,990 more rows, and 423 more variables: 正答数_数Ａ &lt;dbl&gt;,
-#   正答数_数Ｂ &lt;dbl&gt;, 正答数_理 &lt;dbl&gt;, 正答数_理Ａ &lt;dbl&gt;, 正答数_理Ｂ &lt;dbl&gt;,
-#   正答率_国Ａ &lt;dbl&gt;, 正答率_国Ｂ &lt;dbl&gt;, 正答率_数Ａ &lt;dbl&gt;, 正答率_数Ｂ &lt;dbl&gt;,
-#   正答率_理 &lt;dbl&gt;, 正答率_理Ａ &lt;dbl&gt;, 正答率_理Ｂ &lt;dbl&gt;, 学力層_国Ａ &lt;dbl&gt;,
-#   学力層_国Ｂ &lt;dbl&gt;, 学力層_数Ａ &lt;dbl&gt;, 学力層_数Ｂ &lt;dbl&gt;, 学力層_理科 &lt;dbl&gt;,
-#   学力層_理科Ａ &lt;dbl&gt;, 学力層_理科Ｂ &lt;dbl&gt;, 正答数_国Ａ_領域１ &lt;dbl&gt;, …
+<code># A tibble: 2,000 x 430</code>
+<code>   実施年 地域規模 解答用紙番号  性別 生徒質問紙種別 正答数_国Ａ 正答数_国Ｂ</code>
+<code>    &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;                &lt;dbl&gt;       &lt;dbl&gt;</code>
+<code> 1   2015        3            1     2 NA                      27           7</code>
+<code> 2   2015        1            2     2 NA                      26           4</code>
+<code> 3   2015        1            3     2 NA                      27           7</code>
+<code> 4   2015        2            4     1 NA                      22           7</code>
+<code> 5   2015        1            5     2 NA                      27           8</code>
+<code> 6   2015        2            6     2 NA                      27           3</code>
+<code> 7   2015        4            7     2 NA                      19           7</code>
+<code> 8   2015        1            8     1 NA                      23           6</code>
+<code> 9   2015        3            9     1 NA                      20           5</code>
+<code>10   2015        3           10     1 NA                      32           9</code>
+<code># ... with 1,990 more rows, and 423 more variables: 正答数_数Ａ &lt;dbl&gt;,</code>
+<code>#   正答数_数Ｂ &lt;dbl&gt;, 正答数_理 &lt;dbl&gt;, 正答数_理Ａ &lt;dbl&gt;, 正答数_理Ｂ &lt;dbl&gt;,</code>
+<code>#   正答率_国Ａ &lt;dbl&gt;, 正答率_国Ｂ &lt;dbl&gt;, 正答率_数Ａ &lt;dbl&gt;, 正答率_数Ｂ &lt;dbl&gt;,</code>
+<code>#   正答率_理 &lt;dbl&gt;, 正答率_理Ａ &lt;dbl&gt;, 正答率_理Ｂ &lt;dbl&gt;, 学力層_国Ａ &lt;dbl&gt;,</code>
+<code>#   学力層_国Ｂ &lt;dbl&gt;, 学力層_数Ａ &lt;dbl&gt;, 学力層_数Ｂ &lt;dbl&gt;, 学力層_理科 &lt;dbl&gt;,</code>
+<code>#   学力層_理科Ａ &lt;dbl&gt;, 学力層_理科Ｂ &lt;dbl&gt;, 正答数_国Ａ_領域１ &lt;dbl&gt;, …</code>
 </pre>
 
 <p>データ行列の行数・列数を調べる：</p>
 
 <pre>
 <code class="prom">dim(seito)</code>
-[1] 2000  430
+<code>[1] 2000  430</code>
 </pre>
 
 <p>変数名一覧を列挙する：</p>
 
 <pre>
 <code class="prom">names(seito)</code>
-  [1] "実施年"             "地域規模"           "解答用紙番号"      
-  [4] "性別"               "生徒質問紙種別"     "正答数_国Ａ"       
-  [7] "正答数_国Ｂ"        "正答数_数Ａ"        "正答数_数Ｂ"       
- [10] "正答数_理"          "正答数_理Ａ"        "正答数_理Ｂ"       
- [13] "正答率_国Ａ"        "正答率_国Ｂ"        "正答率_数Ａ"       
- [16] "正答率_数Ｂ"        "正答率_理"          "正答率_理Ａ"       
- [19] "正答率_理Ｂ"        "学力層_国Ａ"        "学力層_国Ｂ"       
-（以下略）
+<code>  [1] "実施年"             "地域規模"           "解答用紙番号"      </code>
+<code>  [4] "性別"               "生徒質問紙種別"     "正答数_国Ａ"       </code>
+<code>  [7] "正答数_国Ｂ"        "正答数_数Ａ"        "正答数_数Ｂ"       </code>
+<code> [10] "正答数_理"          "正答数_理Ａ"        "正答数_理Ｂ"       </code>
+<code> [13] "正答率_国Ａ"        "正答率_国Ｂ"        "正答率_数Ａ"       </code>
+<code> [16] "正答率_数Ｂ"        "正答率_理"          "正答率_理Ａ"       </code>
+<code> [19] "正答率_理Ｂ"        "学力層_国Ａ"        "学力層_国Ｂ"       </code>
+<code>（以下略）</code>
 </pre>
 
 <p>1〜19番の変数のサマリー（最小値，第1四分位数，中央値，平均値，第3四分位数，最大値）を出力する：</p>
 
 <pre>
-summary(seito[,1:19])
+<code>summary(seito[,1:19])
      実施年        地域規模     解答用紙番号         性別     生徒質問紙種別
  Min.   :2015   Min.   :1.00   Min.   :   1.0   Min.   :1.0   Mode:logical  
  1st Qu.:2015   1st Qu.:2.00   1st Qu.: 500.8   1st Qu.:1.0   NA's:2000     
@@ -98,87 +98,87 @@ summary(seito[,1:19])
  3rd Qu.:28.00   3rd Qu.:7.000   3rd Qu.:28.00   3rd Qu.: 9.000  
  Max.   :33.00   Max.   :9.000   Max.   :36.00   Max.   :15.000  
 （以下略）
-</pre>
+</code></pre>
 
 <p>詳しくは<a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/__icsFiles/afieldfile/2018/05/15/1404609_1.pdf">データレイアウト（PDF:784KB）</a>にあるが，実施年はすべて2015，地域規模は1:大都市，2:中核市，3:その他の市，4:町村，性別は1:男子，2:女子，0:不明，生徒質問紙種別はすべて欠測値（NA）である。その次からが正答数と，100点満点に換算した正答率が続く。</p>
 
 <p>国語A，国語B，数学A，数学B，理科の5科目それぞれ45分で答える。Aは基本，Bは応用である。それぞれの満点はデータの最大値に等しい。データでは理科以外に理科A，理科Bがあるが，便宜上二つに分けたようで，基本・応用という区別ではなさそうである。5科目を単純にプロットしてみる：</p>
 
 <pre>
-plot(seito[,6:10])
-</pre>
+<code>plot(seito[,6:10])
+</code></pre>
 
 <figure><img src="img/180727c.png" alt="5科目のプロット"></figure>
 
 <p>数学Aの正答数分布のヒストグラムを描いてみよう（<a href="histogram.html">グラフの例：ヒストグラム</a>参照）。<code>seito</code> の8番目の変数である数学Aの正答数をベクトル（数値の列）として取り出すには <code>seito$正答数_数Ａ</code> または <code>seito[[8]]</code> とする。全角・半角を区別するので <code>seito$正答数_数A</code> ではエラーになる。また，<code>seito[,8]</code> でもいいような気がするが，<code>read_excel()</code> の出力するtibbleというデータ構造は，<code>seito[,8]</code> では1列だけのtibbleとなって，ベクトル（数値の列）を要求する場面ではエラーになる。</p>
 
 <pre>
-hist(seito[[8]], breaks=0:37, right=FALSE, include.lowest=FALSE, col="gray")
-</pre>
+<code>hist(seito[[8]], breaks=0:37, right=FALSE, include.lowest=FALSE, col="gray")
+</code></pre>
 
 <p>もうちょっとがんばって綺麗にする：</p>
 
 <pre>
-par(mar=c(2,3,1,1)+0.1)  # 下・左・上・右マージン（デフォルト: c(5,4,4,2)+0.1）
+<code>par(mar=c(2,3,1,1)+0.1)  # 下・左・上・右マージン（デフォルト: c(5,4,4,2)+0.1）
 par(mgp=c(2,0.8,0))      # 軸マージン（デフォルト: c(3,1,0)）
 par(las=1)               # 文字は水平に
 hist(seito[[8]], breaks=0:37, right=FALSE, include.lowest=FALSE, col="gray", 
      main="", freq=FALSE, xlab="", ylab="", xaxt="n")
 t = c(0, 10, 20, 30, 36) # 目盛位置
 axis(1, t+0.5, t)        # 位置を0.5ずらす
-</pre>
+</code></pre>
 
 <p>ついでに，平均・標準偏差の等しい正規分布の密度関数を重ね書きしてみる：</p>
 
 <pre>
-curve(dnorm(x, mean(seito[[8]])+0.5, sd(seito[[8]])), add=TRUE, col="#ff990080", lwd=3)
-</pre>
+<code>curve(dnorm(x, mean(seito[[8]])+0.5, sd(seito[[8]])), add=TRUE, col="#ff990080", lwd=3)
+</code></pre>
 
 <figure><img src="img/180726a.png" alt="数学Aヒストグラム"></figure>
 
 <p>国語Aと国語Bの正答率の平均，数学Aと数学Bの正答率の平均，5科目の正答率の平均を求めて，<code>seito</code> に追加する：</p>
 
 <pre>
-seito$正答率_国 = (seito$正答率_国Ａ + seito$正答率_国Ｂ) / 2  # あるいは rowMeans(seito[,13:14]
+<code>seito$正答率_国 = (seito$正答率_国Ａ + seito$正答率_国Ｂ) / 2  # あるいは rowMeans(seito[,13:14]
 seito$正答率_数 = (seito$正答率_数Ａ + seito$正答率_数Ｂ) / 2  # あるいは rowMeans(seito[,15:16]
 seito$正答率 = rowMeans(seito[,13:17])
-</pre>
+</code></pre>
 
 <p>これらの散布図（相関図）を描く：</p>
 
 <pre>
-plot(seito$正答率_国, seito$正答率_数)
-</pre>
+<code>plot(seito$正答率_国, seito$正答率_数)
+</code></pre>
 
 <p>もうちょっとがんばってきれいにする。重なりを避けるため，ほんの少し（±0.2）ジッター（ぶれ）を付けてみた：</p>
 
 <pre>
-par(mgp=c(2,0.8,0))      # 軸マージン（デフォルト: c(3,1,0)）
+<code>par(mgp=c(2,0.8,0))      # 軸マージン（デフォルト: c(3,1,0)）
 plot(jitter(seito$正答率_国,amount=0.2), jitter(seito$正答率_数,amount=0.2),
      xlim=c(0,100), ylim=c(0,100), xlab="国語", ylab="数学")
-</pre>
+</code></pre>
 
 <figure><img src="img/180726b.png" alt="国語・数学の散布図"></figure>
 
 <p>半透明の黒丸を使う手もある：</p>
 
 <pre>
-plot(seito$正答率_国, seito$正答率_数, pch=16, col="#00000080",
+<code>plot(seito$正答率_国, seito$正答率_数, pch=16, col="#00000080",
      xlim=c(0,100), ylim=c(0,100), xlab="国語", ylab="数学")
-</pre>
+</code></pre>
 
 <figure><img src="img/180726c.png" alt="国語・数学の散布図"></figure>
 
 <p>例えば男女を別の色にすることによって情報量が増す：</p>
 
 <pre>
-par(mar=c(3,3,1,1)+0.1)  # 下・左・上・右マージン（デフォルト: c(5,4,4,2)+0.1）
+<code>par(mar=c(3,3,1,1)+0.1)  # 下・左・上・右マージン（デフォルト: c(5,4,4,2)+0.1）
 par(mgp=c(2,0.8,0))      # 軸マージン（デフォルト: c(3,1,0)）
 cols = c("#0041ff80","#ff280080")
 plot(seito$正答率_国, seito$正答率_数, pch=16, col=cols[seito$性別],
      xlim=c(0,100), ylim=c(0,100), xlab="国語", ylab="数学")
 legend("topleft", c("男","女"), pch=16, col=cols)
-</pre>
+</code></pre>
 
 <figure><img src="img/180727a.png" alt="国語・数学の散布図"></figure>
 
@@ -187,41 +187,41 @@ legend("topleft", c("男","女"), pch=16, col=cols)
 <pre>
 <code class="prom">cor.test(seito$正答率_国, seito$正答率_数)</code>
 
-	Pearson's product-moment correlation
+<code>	Pearson's product-moment correlation</code>
 
-data:  seito$正答率_国 and seito$正答率_数
-t = 39.736, df = 1998, p-value &lt; 2.2e-16
-alternative hypothesis: true correlation is not equal to 0
-95 percent confidence interval:
- 0.6391802 0.6881876
-sample estimates:
-      cor 
-0.6643974 
+<code>data:  seito$正答率_国 and seito$正答率_数</code>
+<code>t = 39.736, df = 1998, p-value &lt; 2.2e-16</code>
+<code>alternative hypothesis: true correlation is not equal to 0</code>
+<code>95 percent confidence interval:</code>
+<code> 0.6391802 0.6881876</code>
+<code>sample estimates:</code>
+<code>      cor </code>
+<code>0.6643974 </code>
 </pre>
 
 <p>数学は男子のほうができるのであろうか？</p>
 
 <pre>
 <code class="prom">mean(seito$正答率_数[seito$性別 == 1])</code>
-[1] 53.6175
+<code>[1] 53.6175</code>
 <code class="prom">mean(seito$正答率_数[seito$性別 == 2])</code>
-[1] 53.49639
+<code>[1] 53.49639</code>
 </pre>
 
 <div class="note">
 <p>次のように書くこともできる：</p>
 <pre>
 <code class="prom">with(seito, tapply(正答率_数, 性別, mean))</code>
-       1        2 
-53.61750 53.49639 
+<code>       1        2 </code>
+<code>53.61750 53.49639 </code>
 </pre>
 </div>
 
 <p>男子（1）のほうが女子（2）より多少平均点が高いように見える。箱ひげ図で比べてみよう。</p>
 
 <pre>
-boxplot(正答率_数 ~ 性別, data=seito, ylim=c(0,100), names=c("男","女"))
-</pre>
+<code>boxplot(正答率_数 ~ 性別, data=seito, ylim=c(0,100), names=c("男","女"))
+</code></pre>
 
 <figure><img src="img/180727b.png" alt="数学の箱ひげ図"></figure>
 
@@ -240,7 +240,7 @@ boxplot(正答率_数 ~ 性別, data=seito, ylim=c(0,100), names=c("男","女"))
 <p>結果は次のようになる：</p>
 
 <pre>
-	Welch Two Sample t-test
+<code>	Welch Two Sample t-test
 
 data:  正答率_数 by 性別
 t = 0.14809, df = 1996.7, p-value = 0.8823
@@ -250,7 +250,7 @@ alternative hypothesis: true difference in means is not equal to 0
 sample estimates:
 mean in group 1 mean in group 2 
        53.61750        53.49639 
-</pre>
+</code></pre>
 
 <p>同様に，5科目平均正答率が地域規模と関係しているか，箱ひげ図と分散分析で調べてみる：</p>
 
@@ -258,10 +258,10 @@ mean in group 1 mean in group 2
 <code class="prom">boxplot(正答率 ~ 地域規模, data=seito)</code>
 <code class="prom">oneway.test(正答率 ~ 地域規模, data=seito)</code>
 
-	One-way analysis of means (not assuming equal variances)
+<code>	One-way analysis of means (not assuming equal variances)</code>
 
-data:  正答率 and 地域規模
-F = 0.94629, num df = 3.00, denom df = 629.17, p-value = 0.4178
+<code>data:  正答率 and 地域規模</code>
+<code>F = 0.94629, num df = 3.00, denom df = 629.17, p-value = 0.4178</code>
 </pre>
 
 <p>図は略す。有意な差はない。</p>
@@ -271,8 +271,8 @@ F = 0.94629, num df = 3.00, denom df = 629.17, p-value = 0.4178
 <pre>
 <code class="prom">table(seito$生徒質問紙回答_001)</code>
 
-   1    2    3 
-1332  626   42 
+<code>   1    2    3 </code>
+<code>1332  626   42 </code>
 </pre>
 
 <p><code>boxplot()</code> と <code>oneway.test()</code> で調べてみるとよい。</p>

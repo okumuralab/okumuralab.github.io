@@ -23,14 +23,14 @@
 <pre>
 <code class="prom">shikin = read.csv("shikin_data_utf8.csv", fileEncoding="UTF-8", as.is=TRUE)</code>
 <code class="prom">summary(shikin)</code>
-    政治家            報告書名             対象年        収入総額        
- Length:1999        Length:1999        Min.   :2014   Min.   :        0  
- Class :character   Class :character   1st Qu.:2014   1st Qu.:  1831568  
- Mode  :character   Mode  :character   Median :2014   Median : 13699563  
-                                       Mean   :2014   Mean   : 25675979  
-                                       3rd Qu.:2014   3rd Qu.: 38246712  
-                                       Max.   :2014   Max.   :392871358  
-……略……
+<code>    政治家            報告書名             対象年        収入総額        </code>
+<code> Length:1999        Length:1999        Min.   :2014   Min.   :        0  </code>
+<code> Class :character   Class :character   1st Qu.:2014   1st Qu.:  1831568  </code>
+<code> Mode  :character   Mode  :character   Median :2014   Median : 13699563  </code>
+<code>                                       Mean   :2014   Mean   : 25675979  </code>
+<code>                                       3rd Qu.:2014   3rd Qu.: 38246712  </code>
+<code>                                       Max.   :2014   Max.   :392871358  </code>
+<code>……略……</code>
 </pre>
 
 <p>とりあえずタイピングを楽にするため，主要な列を取り出しておく：</p>
@@ -38,10 +38,10 @@
 <pre>
 <code class="prom">n = shikin$政治家</code>  # 政治家の名前
 <code class="prom">head(n)</code>
-[1] "青山 周平" "青山 周平" "赤松 広隆" "赤松 広隆" "荒木 清寛" "池田 佳隆"
+<code>[1] "青山 周平" "青山 周平" "赤松 広隆" "赤松 広隆" "荒木 清寛" "池田 佳隆"</code>
 <code class="prom">s = shikin$収入総額</code>
 <code class="prom">head(s)</code>
-[1]  36896515  23211567 153443703   3445847    672217         0
+<code>[1]  36896515  23211567 153443703   3445847    672217         0</code>
 </pre>
 
 <p>政治家の名前は複数出現するので，ユニークな名前だけにする。</p>
@@ -49,10 +49,10 @@
 <pre>
 <code class="prom">u = unique(n)</code>
 <code class="prom">length(u)</code>
-[1] 671
+<code>[1] 671</code>
 <code class="prom">head(u)</code>
-[1] "青山 周平"   "赤松 広隆"   "荒木 清寛"   "池田 佳隆"   "伊藤 忠彦"  
-[6] "今枝 宗一郎"
+<code>[1] "青山 周平"   "赤松 広隆"   "荒木 清寛"   "池田 佳隆"   "伊藤 忠彦"  </code>
+<code>[6] "今枝 宗一郎"</code>
 </pre>
 
 <p>ユニークな名前について，収入総額を集計し直す。</p>
@@ -60,11 +60,11 @@
 <pre>
 <code class="prom">t = sapply(u, function(x)sum(s[n==x]))</code>
 <code class="prom">head(t)</code>
-  青山 周平   赤松 広隆   荒木 清寛   池田 佳隆   伊藤 忠彦 今枝 宗一郎 
-   60108082   183880578     9586548   109602955    72589067   122498395 
+<code>  青山 周平   赤松 広隆   荒木 清寛   池田 佳隆   伊藤 忠彦 今枝 宗一郎 </code>
+<code>   60108082   183880578     9586548   109602955    72589067   122498395 </code>
 <code class="prom">head(sort(t, decreasing=TRUE))</code>
-安倍 晋三 亀井 静香   竹下 亘 小沢 一郎 伊達 忠一 丹羽 雄哉 
-562866655 427624422 427337518 420027499 355661871 350146479 
+<code>安倍 晋三 亀井 静香   竹下 亘 小沢 一郎 伊達 忠一 丹羽 雄哉 </code>
+<code>562866655 427624422 427337518 420027499 355661871 350146479 </code>
 </pre>
 
 <p>安倍晋三氏は5億6286万6655円といったことがわかる。</p>

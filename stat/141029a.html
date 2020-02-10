@@ -29,7 +29,7 @@
 <p>これら（gunzipで伸長）をRで読み込む。</p>
 
 <pre>
-fertility = read.table("tgs00100.tsv", header=TRUE, as.is=TRUE, na.strings=":")
+<code>fertility = read.table("tgs00100.tsv", header=TRUE, as.is=TRUE, na.strings=":")
 popden = read.table("tgs00024.tsv", header=TRUE, as.is=TRUE, na.strings=":")
 fertility[,1] = sub("TOTAL,", "", fertility[,1])
 all = merge(fertility, popden, by.x=1, by.y=1)
@@ -37,7 +37,7 @@ fert = all$X2012.x
 pden = all$X2012.y
 plot(pden, fert, xlim=c(0,8000), xlab="人口密度（km2あたり）", ylab="出生率")
 abline(lm(fert ~ pden))
-</pre>
+</code></pre>
 
 <figure>
   <img src="img/141029a.png" alt="人口密度と出生率">
@@ -47,9 +47,9 @@ abline(lm(fert ~ pden))
 <p>横軸を対数目盛にしてみる。</p>
 
 <pre>
-plot(pden, fert, xlim=c(3,8000), xlab="人口密度（km2あたり）", ylab="出生率", log="x")
+<code>plot(pden, fert, xlim=c(3,8000), xlab="人口密度（km2あたり）", ylab="出生率", log="x")
 abline(lm(fert ~ log10(pden)))
-</pre>
+</code></pre>
 
 <figure>
   <img src="img/141029b.png" alt="人口密度と出生率">

@@ -64,11 +64,11 @@
 <p>グラフにするためにRで読み込む。話題の<a href="datatable.html">data.table</a>を使ってみる。</p>
 
 <pre>
-library(data.table)
+<code>library(data.table)
 library(fasttime)
 x = fread("201103_recdat25_kamihatori.txt", skip=29)
 x[, t:=fastPOSIXct(paste(V1,V2))-9*3600]
-</pre>
+</code></pre>
 
 <p>ニュースでやっていた14:40:40の値は <code>x[t==as.POSIXct("2011-03-12 14:40:40")]</code>
 で調べられる。CH006 MIN（14列目），MAX（15列目）はそれぞれ4.4463mGy/h，4.6132mGy/hで，4.6mSv/hはMAXを丸めて単位をGy→Svに読み替えたもののようである。</p>
@@ -76,7 +76,7 @@ x[, t:=fastPOSIXct(paste(V1,V2))-9*3600]
 <p>プルームが来る前から最大値のあたりまで片対数でプロットしてみる：</p>
 
 <pre>
-x1 = subset(x, t &gt;= as.POSIXct("2011-03-12 08:00:00") &amp;
+<code>x1 = subset(x, t &gt;= as.POSIXct("2011-03-12 08:00:00") &amp;
                t &lt;= as.POSIXct("2011-03-12 16:00:00"))
 plot(x1$t, x1$V4, type="n", log="y",
      ylim=range(c(x1$V15,x1$V4)), xlab="", ylab="nGy/h")
@@ -86,7 +86,7 @@ points(x1$t, x1$V12, type="l", col="#0041ff80") # CH005MIN青
 points(x1$t, x1$V13, type="l", col="#0041ff80") # CH005MAX青
 points(x1$t, x1$V14, type="l", col="#ff280080") # CH006MIN赤
 points(x1$t, x1$V15, type="l", col="#ff280080") # CH006MAX赤
-</pre>
+</code></pre>
 
 <img src="img/140316d.png" alt="双葉町上羽鳥MPの2011年3月12日の線量率">
 
@@ -95,7 +95,7 @@ points(x1$t, x1$V15, type="l", col="#ff280080") # CH006MAX赤
 <p>NHKの図と同じようにリニアに描いてみる：</p>
 
 <pre>
-x1 = subset(x, t &gt;= as.POSIXct("2011-03-12 14:00:00") &amp;
+<code>x1 = subset(x, t &gt;= as.POSIXct("2011-03-12 14:00:00") &amp;
                t &lt;= as.POSIXct("2011-03-12 15:36:00"))
 plot(x1$t, x1$V15, type="n",
      ylim=range(c(x1$V15,0)), xlab="", ylab="nGy/h")
@@ -105,7 +105,7 @@ points(x1$t, x1$V12, type="l", col="#0041ff80") # CH005MIN青
 points(x1$t, x1$V13, type="l", col="#0041ff80") # CH005MAX青
 points(x1$t, x1$V14, type="l", col="#ff280080") # CH006MIN赤
 points(x1$t, x1$V15, type="l", col="#ff280080") # CH006MAX赤
-</pre>
+</code></pre>
 
 <img src="img/140316e.png" alt="双葉町上羽鳥MPの2011年3月12日の線量率">
 

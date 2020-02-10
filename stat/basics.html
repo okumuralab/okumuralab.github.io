@@ -40,10 +40,10 @@ MathJax = {
 <p>平均値を意味する英語は mean と average の二通りがあります。平均値を求めるのにExcelでは <code>average()</code> という関数を使いますが，Rでは短いほうの <code>mean()</code> が関数名になっています。</p>
 
 <pre>
-&gt; x = c(0, 7, 8, 9, 100)
+<code>&gt; x = c(0, 7, 8, 9, 100)
 &gt; mean(x)
 [1] 24.8
-</pre>
+</code></pre>
 
 <div class="note">
 <p>上で定義したものを相加平均または算術平均（arithmetic mean）ともいいます。これに対して，積の $n$ 乗根</p>
@@ -56,16 +56,16 @@ MathJax = {
 <p>運動競技などの採点で，極端な点数を付ける審査員の影響を少なくするために，点数を大きさの順に並べて，両側から同数ずつ削除してから平均を求めることがあります。このような平均を，トリム平均（トリムド平均），調整平均，刈り込み平均（trimmed mean）などと呼びます。Rでは <code>mean()</code> に <code>trim=...</code> というオプションを与えて計算します。次の例では20%ずつ両側から（合わせて約40%）外します（正確には，個数×0.2 を切り捨てて整数にした個数ずつ両側から外します）。</p>
 
 <pre>
-&gt; mean(x, trim=0.2)
+<code>&gt; mean(x, trim=0.2)
 [1] 8
-</pre>
+</code></pre>
 
 <p>このトリム平均を推し進めて，両側からどんどん外していき，残りが1個または2個になったときのトリム平均を，中央値またはメジアン（メディアン，median）といいます（学習指導要領では中学校1年の数学に「中央値」という用語が現れます）。つまり，$x_1 \leqq x_2 \leqq \cdots \leqq x_n$ となるように並べ替えて，$n$ が奇数なら $x_{(n+1)/2}$，$n$ が偶数なら $(x_{n/2} + x_{n/2+1}) / 2$ がメジアンです。Rでは <code>median()</code> という関数で求めます。</p>
 
 <pre>
-&gt; median(x)
+<code>&gt; median(x)
 [1] 8
-</pre>
+</code></pre>
 
 <p>これら三つの代表値の使い分けとしては，データの分布が後で説明する正規分布に近いなら平均値，後で説明するコーシー分布のように極端な値が非常に多いならメジアンのほうが安定した結果が得られます。トリム平均は，分布にかかわらず，最善ではないけれども妥当な代表値となるものとして，近年よく使われています。</p>
 
@@ -222,24 +222,24 @@ MathJax = {
 <p>Excelには $n$ で割る分散を求める <code>varp()</code> という関数があります（Excel 2010以降は <code>var.p()</code> も同義）。$n-1$ で割る分散はExcelでもRでも <code>var()</code> という関数で求めます（Excel 2010以降は <code>var.s()</code> も同義）。Excelの <code>varp()</code> に相当するものはRにはありません（だってそんなものを統計学者は使わないので）が，次のように打ち込めば作ることができます：</p>
 
 <pre>
-&gt; varp = function(x) { var(x) * (length(x)-1) / length(x) }
-</pre>
+<code>&gt; varp = function(x) { var(x) * (length(x)-1) / length(x) }
+</code></pre>
 
 <p>これらを試してみましょう：</p>
 
 <pre>
-&gt; x = 1:3   # x = c(1,2,3) でも同じ
+<code>&gt; x = 1:3   # x = c(1,2,3) でも同じ
 &gt; var(x)
 [1] 1
 &gt; varp(x)
 [1] 0.6666667
-</pre>
+</code></pre>
 
 <div class="note">
 <p>母集団からランダムに取り出した標本でなくても，例えば10個の固定した値を4個と6個に分ける場合，両者を比較するには何で割った分散を使うかという問題についても，一貫して $n-1$ で割るほうが比較としては正しくなります：</p>
 
 <pre>
-&gt; x = 1:10
+<code>&gt; x = 1:10
 &gt; var(x)                   # n-1で割る分散
 [1] 9.166667
 &gt; mean(combn(x, 4, var))   # xから4個選んだ組合せのvar()の平均
@@ -252,7 +252,7 @@ MathJax = {
 [1] 6.875
 &gt; mean(combn(x, 6, varp))  # xから6個選んだ組合せのvarp()の平均
 [1] 7.638889
-</pre>
+</code></pre>
 
 <p>ここで <code>combn(x, n, func)</code> は，ベクトル <code>x</code>
 から <code>n</code> 個選んだすべての組合せについて関数 <code>func(x)</code>
@@ -272,10 +272,10 @@ MathJax = {
 <p>Rで標準偏差 $s$ を求めるには <code>sd()</code> を使います。</p>
 
 <pre>
-&gt; x = 1:10
+<code>&gt; x = 1:10
 &gt; sd(x)
 [1] 3.027650
-</pre>
+</code></pre>
 
 <div class="note">
 <p>$n$ で割る分散 <code>varp()</code> の計算式は，数学上は</p>
@@ -308,19 +308,19 @@ MathJax = {
 <p>一番簡単な乱数は，ある範囲の数がまんべんなく出る一様乱数（uniform random numbers）です。Rの関数 <code>runif(<i>n</i>)</code> は，$0 < x < 1$ の範囲の一様乱数を $n$ 個取り出します（Rはデフォルトではメルセンヌ・ツイスターというアルゴリズムで乱数を発生します。<code>RNGkind()</code> で変更できます）。</p>
 
 <pre>
-&gt; runif(1)
+<code>&gt; runif(1)
 [1] 0.388267
 &gt; runif(10)
  [1] 0.2146394 0.2765450 0.5433135 0.4784538 0.8147103 0.1141375
  [7] 0.6488306 0.7947468 0.1698610 0.2440027
-</pre>
+</code></pre>
 
 <p>もっとたくさんの数，例えば百万個でやってみましょう。</p>
 
 <pre>
-&gt; x = runif(1000000)  % 百万個の乱数
+<code>&gt; x = runif(1000000)  % 百万個の乱数
 &gt; hist(x, freq=FALSE) % ヒストグラム（度数分布図）を描く
-</pre>
+</code></pre>
 
 <p>ヒストグラム（度数分布図）を描く <code>hist()</code> を使いました。オプション <code>freq = FALSE</code> は縦軸の目盛りを，デフォルトの個数（frequency）でなく，密度（density）にすることを意味します。密度とは，棒グラフの棒の面積の和が 1 になるように付けた目盛りです。下で説明する確率密度関数の縦軸と同じものになります。</p>
 
@@ -343,9 +343,9 @@ MathJax = {
 <p>この <code>runif()</code> を二つ加えたらどうなるでしょうか。2倍するのではなく，独立な乱数を二つ加えるのです。</p>
 
 <pre>
-&gt; x = runif(1000000) + runif(1000000)
+<code>&gt; x = runif(1000000) + runif(1000000)
 &gt; hist(x, freq=FALSE)
-</pre>
+</code></pre>
 
 <figure>
   <img src="img/runif2.png" alt="">
@@ -354,9 +354,9 @@ MathJax = {
 <p>三個ならどうなるでしょうか。</p>
 
 <pre>
-&gt; x = runif(1000000) + runif(1000000) + runif(1000000)
+<code>&gt; x = runif(1000000) + runif(1000000) + runif(1000000)
 &gt; hist(x, freq=FALSE)
-</pre>
+</code></pre>
 
 <figure>
   <img src="img/runif3.png" alt="">
@@ -386,11 +386,11 @@ MathJax = {
 <p>$\int_{-\infty}^{\infty} \exp(-x^2\!/2) dx$ の計算ができなければ，Rで数値計算してみましょう。数値積分の関数 <code>integrate()</code> を使えば簡単にできます。積分範囲の指定には，無限大を表す <code>Inf</code> を使いました。</p>
 
 <pre>
-&gt; integrate(function(x){exp(-x^2/2)},-Inf,+Inf)
+<code>&gt; integrate(function(x){exp(-x^2/2)},-Inf,+Inf)
 2.506628 with absolute error < 0.00023
 &gt; sqrt(2*pi)
 [1] 2.506628
-</pre>
+</code></pre>
 
 <p>よって，$\int_{-\infty}^{\infty} \exp(-x^2\!/2) dx = \sqrt{2\pi}$ です。:-)</p>
 </div>
@@ -441,12 +441,12 @@ MathJax = {
 <div class="note">
 <p>上の図の描き方：</p>
 <pre>
-x = (-35:15)/10
+<code>x = (-35:15)/10
 y = dnorm(x)
 plot(NULL, xlim=c(-3.5,3.5), ylim=c(0,0.4), xlab="", ylab="")
 polygon(c(x,x[length(x)],x[1]), c(y,0,0), col="gray")
 curve(dnorm, lwd=2, add=TRUE)
-</pre>
+</code></pre>
 </div>
 
 <p>これらは，<code>dnorm(<i>x</i>, mean=<i>&mu;</i>, sd=<i>s</i>)</code> のように平均と標準偏差を与えることもできます。省略すれば <code>dnorm(<i>x</i>, mean=0, sd=1)</code> の意味になります。</p>
@@ -458,16 +458,16 @@ curve(dnorm, lwd=2, add=TRUE)
 <p>正規分布 $N(\mu, \sigma^2)$ に従う変数 $X$ が平均±標準偏差の範囲内に入る確率，つまり $\mu - \sigma < X < \mu + \sigma$ になる確率は，標準正規分布 $N(0,1)$ に従う変数 $Z$ が $-1 < Z < 1$ になる確率に等しく，Rで次のようにして求められます。</p>
 
 <pre>
-&gt; pnorm(1) - pnorm(-1)
+<code>&gt; pnorm(1) - pnorm(-1)
 [1] 0.6826895
-</pre>
+</code></pre>
 
 <p>正規分布が左右対称であることを使えば，次のようにするほうが簡単です。</p>
 
 <pre>
-&gt; 1 - 2 * pnorm(-1)
+<code>&gt; 1 - 2 * pnorm(-1)
 [1] 0.6826895
-</pre>
+</code></pre>
 
 <p>つまり，ほぼ68%の確率で正規分布は $\mu \pm \sigma$ の範囲に入ります。</p>
 
@@ -503,24 +503,24 @@ curve(dnorm, lwd=2, add=TRUE)
 <p>実験をしてみましょう。100万個のコーシー分布の乱数を作ります。</p>
 
 <pre>
-x = rcauchy(1000000)
-</pre>
+<code>x = rcauchy(1000000)
+</code></pre>
 
 <p>この度数分布を表示するために <code>hist(x)</code> としても，まともに表示されません。<code>x = sort(x)</code> で並べ替えて，最初の数個を <code>head(x)</code> で表示させたり，最後の数個を <code>tail(x)</code> で表示させたりすると，6〜7桁のとんでもない値が含まれることがわかります。そのため，平均 <code>mean(x)</code> を求めると，0からかなり外れてしまいます。このような分布は，分散はもとより，平均値を求めることにも意味がありません。強いて求めるなら，メジアンが最適です。</p>
 
 <p>分散についても，平均を求める操作をメジアンに焼き直したMAD（median absolute deviation）と呼ばれるものを使えば，このような分布でも求めることができます。これは，データからメジアンを引いたものの絶対値のメジアン，つまりRで書くと</p>
 
 <pre>
-median(abs(x-median(x)))
-</pre>
+<code>median(abs(x-median(x)))
+</code></pre>
 
 <p>になります。</p>
 
 <p>ところで，標準正規分布の <code>median(abs(x-median(x)))</code> は <code>qnorm(0.75)</code> ≒ 1/1.4826 なので，正規分布の場合に標準偏差と比較しやすくするために，MADの定義を1.4826倍しておくことがあります。Rで <code>mad(x)</code> で求められる値はデフォルトでは</p>
 
 <pre>
-1.4826*median(abs(x-median(x)))
-</pre>
+<code>1.4826*median(abs(x-median(x)))
+</code></pre>
 
 <p>になっています。</p>
 
@@ -583,17 +583,17 @@ median(abs(x-median(x)))
 <p>$n$ が大きいと $t$ 分布は正規分布に近づきます。母集団が正規分布でなくても，分散が有限であれば，多くの場合，$n$ が大きければ $t$ 分布が当たらずとも遠からずの結果を与えます。たとえば1〜5の5段階で答えるアンケートに50人が答え，分布が一様とするとき，$t$ に相当するものを100万回作ってみます。いろいろな方法がありますが <code>replicate()</code> を使うのが簡単でしょう。</p>
 
 <pre>
-t = replicate(1000000, { x = sample(1:5,50,replace=TRUE);
+<code>t = replicate(1000000, { x = sample(1:5,50,replace=TRUE);
               (mean(x) - 3) / sqrt(var(x) / 50) })
-</pre>
+</code></pre>
 
 <p>これが本物の $t$ 分布の95%区間から外れる割合を計算すると</p>
 
 <pre>
-&gt; t0 = -qt(0.025,50-1)
+<code>&gt; t0 = -qt(0.025,50-1)
 &gt; mean(abs(t) > t0)
 [1] 0.050288
-</pre>
+</code></pre>
 
 <p>となり，正しい値 0.05 と非常に近い値になります。$n$ や乱数の分布をいろいろ変えて，母集団が正規分布から外れたときの $t$ 分布からの外れの度合を感じ取ってください（上の <code>1:5</code> を <code>c(1,2,2,3,3,3,4,4,4,4,5,5,5,5,5)</code> のような無茶苦茶な分布に変えてみてください）。ちなみに <code>abs(t) &gt; t0</code> は <code>t</code> と同じ長さのベクトルで，<code>t</code> の要素が <code>t0</code> より大きければ <code>TRUE</code>，そうでなければ <code>FALSE</code> を要素に持ちます。それの平均 <code>mean()</code> を計算すると，<code>TRUE</code> = 1，<code>FALSE</code> = 0 として計算するので，結局 <code>abs(t) &gt; t0</code> が真である割合を数えていることになります。</p>
 </div>
@@ -658,9 +658,9 @@ t = replicate(1000000, { x = sample(1:5,50,replace=TRUE);
 <p>このように，物理学では特定の有意水準を使わず，正規分布の 1<i>&sigma;</i> に相当する誤差（標準誤差）の何倍という書き方をすることがよくあります。確率（片側確率）に直すには</p>
 
 <pre>
-&gt; pnorm(-5.4)
+<code>&gt; pnorm(-5.4)
 [1] 3.332045e-08
-</pre>
+</code></pre>
 
 <p>のような計算をして 3.33×10<sup>-8</sup> のような答えが一応出ますが，こんな小さな確率が正確な意味を持つとはあまり考えないほうがよいでしょう。</p>
 
@@ -684,23 +684,23 @@ t = replicate(1000000, { x = sample(1:5,50,replace=TRUE);
 <p>より具体的な問題で説明しましょう。ある実験をしたところ，次のデータを得ました：</p>
 
 <pre>
-X = c(-0.59, -0.06, 0.14, -0.52, 0.73, -0.08, -0.71, -1.73, 0.69, -1.78)
-</pre>
+<code>X = c(-0.59, -0.06, 0.14, -0.52, 0.73, -0.08, -0.71, -1.73, 0.69, -1.78)
+</code></pre>
 
 <p>この平均と標準偏差は次のとおりです：</p>
 
 <pre>
-&gt; mean(X)
+<code>&gt; mean(X)
 [1] -0.391
 &gt; sd(X)
 [1] 0.8688236
-</pre>
+</code></pre>
 
 <p>実はこのデータは私がRに次のコマンドを打ち込んで生成したものです：</p>
 
 <pre>
-&gt; X = round(rnorm(10), 2)
-</pre>
+<code>&gt; X = round(rnorm(10), 2)
+</code></pre>
 
 <p>つまり，このデータは単に標準正規分布 $N(0,1)$ の乱数を10個並べただけのものです。このことを隠しておいて，次の問題を考えましょう。</p>
 
@@ -715,9 +715,9 @@ X = c(-0.59, -0.06, 0.14, -0.52, 0.73, -0.08, -0.71, -1.73, 0.69, -1.78)
 <p>を求めてみると，</p>
 
 <pre>
-&gt;  2 * pnorm(-0.391, mean=0, sd=1/sqrt(10))
+<code>&gt;  2 * pnorm(-0.391, mean=0, sd=1/sqrt(10))
 [1] 0.2162911
-</pre>
+</code></pre>
 
 <p>で，ほぼ $p = 0.22$ です。この値を，$N(0,1)$ を仮定して $\bar{X} = -0.391$ を得たことについての $p$ 値（ピーち，$p$-value）といいます。</p>
 
@@ -795,11 +795,11 @@ significance chosen.</p>
 <p>は自由度 $n-1$ の $t$ 分布をします。$n = 10$ 程度以上であれば，上の値は95%の確率でほぼ ±2 以内に収まります。正確には次のようにして $t$ 分布の2.5%点，97.5%点を求めれば，95%の確率で入る範囲がわかります：</p>
 
 <pre>
-&gt; qt(0.025,9)
+<code>&gt; qt(0.025,9)
 [1] -2.262157
 &gt; qt(0.975,9)
 [1] 2.262157
-</pre>
+</code></pre>
 
 <p>$n$ が大きければ，$t$ 分布は正規分布に近づき，95%の確率で ±1.96 の範囲に入ります。母集団が正規分布でなくても，$n$ が大きければ中心極限定理によりさきほどの値の分布は正規分布に近づくので，いずれにしても近似的に95%の確率で</p>
 

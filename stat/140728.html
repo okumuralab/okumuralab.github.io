@@ -21,7 +21,7 @@
 <p>e-Statで公開されている「1-12　気象官署別気温，相対湿度，日照時間，降水量，霜，雪（平年値）（昭和56年～平成22年平均）」というデータ（y0112000.xls）の散布図を描く。</p>
 
 <pre>
-気象官署,年平均気温（℃）,年間降水量（mm）
+<code>気象官署,年平均気温（℃）,年間降水量（mm）
 稚内,6.8,1063
 旭川,6.9,1042
 根室,6.3,1021
@@ -78,34 +78,34 @@
 屋久島,19.4,4477
 名瀬,21.6,2838
 那覇,23.1,2041
-</pre>
+</code></pre>
 
 <p>上のデータをファイル <code>weather.csv</code> に保存して，Rで</p>
 
 <pre>
-data = read.csv("weather.csv")
-</pre>
+<code>data = read.csv("weather.csv")
+</code></pre>
 
 <p>のようにして読み込む。あるいは，データをクリップボードにコピーし，</p>
 
 <pre>
-data = read.csv("clipboard")     # Windows
+<code>data = read.csv("clipboard")     # Windows
 data = read.csv(pipe("pbpaste")) # Mac
-</pre>
+</code></pre>
 
 <p>のどちらかを打ち込む。このデータの2列目（気温）を横軸，3列目（降水量）を縦軸にとって散布図をプロットする。</p>
 
 <pre>
-plot(data[,2], data[,3])
-</pre>
+<code>plot(data[,2], data[,3])
+</code></pre>
 
 <p>これではそっけないので，いくつかオプションを渡してみる。</p>
 
 <pre>
-par(mgp=c(2,0.8,0))   # マージンの調節（デフォルト: c(3,1,0)）
+<code>par(mgp=c(2,0.8,0))   # マージンの調節（デフォルト: c(3,1,0)）
 plot(data[,2], data[,3], xlim=c(5,25), ylim=c(0,5000),
      xlab="気温（℃）", ylab="降水量（mm）", pch=16, col="#0068b7")
-</pre>
+</code></pre>
 
 <div><img src="img/140728a.png" alt="気温と降水量"></div>
 

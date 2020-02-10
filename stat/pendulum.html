@@ -73,9 +73,9 @@ MathJax = {
 <code class="prom">library(pracma)</code>
 <code class="prom">f = function(x) { 2 / pi * ellipke(sin(x*pi/360)^2)$k }</code>
 <code class="prom">f(45)</code>
-[1] 1.039973
+<code>[1] 1.039973</code>
 <code class="prom">f(90)</code>
-[1] 1.180341
+<code>[1] 1.180341</code>
 </pre>
 
 <p>つまり，±45度まで振ると周期は4%伸び，±90度までだと18%伸びる。</p>
@@ -83,9 +83,9 @@ MathJax = {
 <p>0度から90度までの周期の相対値をプロットしてみよう。</p>
 
 <pre>
-x = 0:90
+<code>x = 0:90
 plot(x, f(x), type="l", xlab="振幅（度）", ylab="周期")
-</pre>
+</code></pre>
 
 <figure><img src="img/160602b.png" alt="振り子の周期"></figure>
 

@@ -24,9 +24,9 @@
 <p>地球は太陽から約1.5億km（1.5×10<sup>8</sup> km，<code>1.5e8</code> km）のところを1年間で一周しますので，それだけでも30km/秒で動いているはずです：</p>
 
 <pre>
-&gt; 2*pi*1.5e8/365/24/60/60
+<code>&gt; 2*pi*1.5e8/365/24/60/60
 [1] 29.88577
-</pre>
+</code></pre>
 
 <p>もし光の速度が「宇宙」（昔の言葉で「エーテル」）に対して一定であれば，光速を測る向きによって少なくとも60km/秒の違いが出るはずです。実際には太陽も銀河系の中心のまわりをもっと速く回っているはずですし，銀河系も動いているはずですから，光速は向きによってもっともっと違うはずです。</p>
 
@@ -37,7 +37,7 @@
 <p>Rのサンプルデータとして含まれているものは，1879年のデータです：</p>
 
 <pre>
-&gt; library(MASS)   # MASSライブラリをロードする
+<code>&gt; library(MASS)   # MASSライブラリをロードする
 &gt; head(michelson) # 最初の数行を表示してみる
   Speed Run Expt
 1   850   1    1
@@ -46,14 +46,14 @@
 4  1070   4    1
 5   930   5    1
 6   850   6    1
-</pre>
+</code></pre>
 
 <p>MASSは，<i>Modern Applied Statistics with S-PLUS</i>（邦訳『S-PLUSによる統計解析』シュプリンガー・フェアラーク東京，2001年）という有名な本のコードやデータを収めたパッケージです。michelsonデータのExptは実験番号で1〜5まであり，そのそれぞれについてRunが1〜20まであり，全部で100の計測値が収められています。Speedは光速（km/s）から299000を引いた値と説明されています（Michelsonの原論文を調べたわけではないのですが）。現在では光速は 299792458m/s です（ぴったりそうなるように1メートルの長さが定められています）。</p>
 
 <p>Speed，Run，Exptのモードは数値で，型は整数ですが，RunとExptのクラスは名義尺度の因子（factor）にしてあります。</p>
 
 <pre>
-&gt; sapply(michelson, mode)
+<code>&gt; sapply(michelson, mode)
     Speed       Run      Expt 
 "numeric" "numeric" "numeric" 
 &gt; sapply(michelson, typeof)
@@ -62,15 +62,15 @@
 &gt; sapply(michelson, class)
     Speed       Run      Expt 
 "integer"  "factor"  "factor" 
-</pre>
+</code></pre>
 
 <p>実は，MASSパッケージを読み込まなくても，標準のdatasetsパッケージに「morley」という名前で同じデータが入っています。しかし，こちらのほうは，すべて整数扱いになっています：</p>
 
 <pre>
-&gt; sapply(morley,class)
+<code>&gt; sapply(morley,class)
      Expt       Run     Speed 
 "integer" "integer" "integer" 
-</pre>
+</code></pre>
 
 <p>以下ではMASSパッケージのデータを使います。</p>
 
@@ -83,8 +83,8 @@
 と書かないとアクセスできません。これを</p>
 
 <pre>
-&gt; attach(michelson)
-</pre>
+<code>&gt; attach(michelson)
+</code></pre>
 
 <p>とすれば
 <code>Speed</code>,
@@ -93,7 +93,7 @@
 の名前でアクセスできるようになります。この時点で，これらは次のように打ち込んだのと同じことになります：</p>
 
 <pre>
-Speed = c(85, 74, 90, 107, 93, 85, 95, 98, 98, 88, 100, 98, 93, 65,
+<code>Speed = c(85, 74, 90, 107, 93, 85, 95, 98, 98, 88, 100, 98, 93, 65,
     76, 81, 100, 100, 96, 96, 96, 94, 96, 94, 88, 80, 85, 88, 90, 84,
     83, 79, 81, 88, 88, 83, 80, 79, 76, 80, 88, 88, 88, 86, 72, 72,
     62, 86, 97, 95, 88, 91, 85, 87, 84, 84, 85, 84, 84, 84, 89, 81,
@@ -102,7 +102,7 @@ Speed = c(85, 74, 90, 107, 93, 85, 95, 98, 98, 88, 100, 98, 93, 65,
     81, 94, 95, 80, 81, 87) * 10
 Run = factor(rep(1:20, 5))
 Expt = factor(rep(1:5, c(20,20,20,20,20)))
-</pre>
+</code></pre>
 
 <p><code>attach(michelson)</code> を元に戻すには <code>detach(michelson)</code>
 と打ち込みます。</p>
@@ -110,23 +110,23 @@ Expt = factor(rep(1:5, c(20,20,20,20,20)))
 <p><img src="img/081231a.png" alt="michelson" class="right">グラフを描いてみましょう：</p>
 
 <pre>
-plot(Speed ~ Expt)
-</pre>
+<code>plot(Speed ~ Expt)
+</code></pre>
 
 <p>これだけでもいいのですが，少し色を添えましょう：</p>
 
 <pre>
-par(mgp=c(1.8,0.6,0))  # 数字を軸に少し近づける
+<code>par(mgp=c(1.8,0.6,0))  # 数字を軸に少し近づける
 plot(Speed ~ Expt, col="wheat")  # 適当な色を付ける
-</pre>
+</code></pre>
 
 <p>ここで使っている図はボックスプロット（boxplot，box-and-whisker plot，箱ひげ図）と呼ばれるものです。ボックスプロットにはいろいろな流儀がありますが，ここでは，真ん中の横線が中央値（メディアン），箱の両側が第1・第3四分位点（25%・75%点），ひげの先端が最小値・最大値を示しますが，どちらのひげも長さは箱の長さの1.5倍を限度とし，それより極端な値はoutlier（外れ値）として個々の点をプロットします。その場合，ひげの先端は外れ値を除いた最小値・最大値になります。</p>
 
 <div class="note">
 <p>わざわざ <code>attach(michelson)</code> しないでも</p>
 <pre>
-plot(Speed ~ Expt, data=michelson)
-</pre>
+<code>plot(Speed ~ Expt, data=michelson)
+</code></pre>
 <p>という便利な書き方もあります。</p>
 </div>
 
@@ -138,20 +138,20 @@ plot(Speed ~ Expt, data=michelson)
 <p style="clear:both"><img src="img/090103a.png" alt="michelson" class="right">ほかにもいろいろなグラフが描けます。右のものは次のコマンドで描いたものです：</p>
 
 <pre>
-stripchart(Speed ~ Expt, vert=TRUE, method="stack", pch=1, at=1:5+0.1)
+<code>stripchart(Speed ~ Expt, vert=TRUE, method="stack", pch=1, at=1:5+0.1)
 m = tapply(Speed, Expt, mean)                  # 平均
 s = tapply(Speed, Expt, sd) / sqrt(20)         # 標準誤差
 points(1:5, tapply(Speed, Expt, mean), pch=16) # 平均は黒丸で
 segments(1:5, m-s, 1:5, m+s)                   # ±標準誤差は線分で
-</pre>
+</code></pre>
 
 <p><code>segments()</code>
 の代わりに <code>arrows()</code>
 を次のように使えば両端にセリフの付いたエラーバーになります：</p>
 
 <pre>
-arrows(1:5, m-s, 1:5, m+s, length=0.05, angle=90, code=3)
-</pre>
+<code>arrows(1:5, m-s, 1:5, m+s, length=0.05, angle=90, code=3)
+</code></pre>
 
 <p>stripchart の変形（改良版？）<a href="http://www.cbs.dtu.dk/~eklund/beeswarm/">beeswarm</a>（ビースウォーム）も便利です。この名前はbee（蜂）のswarm（群れ）から来ています。beeswarm パッケージには boxplot のシンプル版 <code>bxplot()</code> も入っています。<code>beeswarm()</code> と <code>boxplot()</code> または <code>bxplot()</code> を組み合わせるとわかりやすくなります。</p>
 
@@ -160,7 +160,7 @@ arrows(1:5, m-s, 1:5, m+s, length=0.05, angle=90, code=3)
 <p><a href="anova.html">分散分析</a>をした結果です：</p>
 
 <pre>
-&gt; oneway.test(Speed ~ Expt, data=michelson)
+<code>&gt; oneway.test(Speed ~ Expt, data=michelson)
 
 	One-way analysis of means (not assuming equal variances)
 
@@ -173,14 +173,14 @@ F = 3.0061, num df = 4.000, denom df = 47.044, p-value = 0.02738
 
 data:  Speed and Expt
 F = 4.2878, num df = 4, denom df = 95, p-value = 0.003114
-</pre>
+</code></pre>
 
 <p>仮に第1実験を外せば変動は有意でなくなります：</p>
 
 <pre>
-oneway.test(Speed ~ Expt, data=michelson, subset=(Expt!=1))
+<code>oneway.test(Speed ~ Expt, data=michelson, subset=(Expt!=1))
 # または oneway.test(Speed[Expt!=1] ~ Expt[Expt!=1], data=michelson)
-</pre>
+</code></pre>
 
 <p>物理実験ではこういうのは常日頃のことです。原因は温度変化などいろいろです。</p>
 

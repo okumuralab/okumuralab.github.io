@@ -55,15 +55,15 @@ Ihaka (2009): ``Customizing Sweave to Produce Better Looking LaTeX Output''
 <p>TeX側では，Rに同梱されているSweave.styを入れる必要がある。Mac版Rならば<p>
 
 <pre>
-/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/
-</pre>
+<code>/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/
+</code></pre>
 
 <p>の下にあるものを例えば texmf-local/tex/latex/R/ を作ってそこにコピーするか，シンボリックリンクする：</p>
 
 <pre>
-cd /usr/local/texlive/texmf-local/tex/latex (例えば)
+<code>cd /usr/local/texlive/texmf-local/tex/latex (例えば)
 ln -s /Library/Frameworks/R.framework/Resources/share/texmf/tex/latex ./R
-</pre>
+</code></pre>
 
 <p>texmf-local 以下を変更した場合は <code>mktexlsr</code> コマンドを忘れないように。</p>
 
@@ -72,7 +72,7 @@ ln -s /Library/Frameworks/R.framework/Resources/share/texmf/tex/latex ./R
 <p>次のファイルを作り，foo.Rnw（またはfoo.Snw）という名前でUTF-8で保存する。拡張子の nw は上記 noweb が起源らしい。</p>
 
 <pre>
-\documentclass{jsarticle}
+<code>\documentclass{jsarticle}
 \begin{document}
 
 一様乱数を5個作って平均する。
@@ -82,22 +82,22 @@ x
 mean(x)
 @
 \end{document}
-</pre>
+</code></pre>
 
 <p>Rのコンソールで次のように打ち込む：</p>
 
 <pre>
-Sweave("foo.Rnw", encoding="utf-8")
-</pre>
+<code>Sweave("foo.Rnw", encoding="utf-8")
+</code></pre>
 
 <p>あるいは，次のように（たとえ不要でも）入力がUTF-8であることがわかる行を書いておけば自動判断される：</p>
 
 <pre>
-\documentclass{jsarticle}
+<code>\documentclass{jsarticle}
 \usepackage[utf8]{inputenc}
 \begin{document}
 ……
-</pre>
+</code></pre>
 
 <p>これで foo.tex が生成されるので，platex + dvipdfmx でPDFにする。platex の代わりに uplatex を使う場合は1行目を <code>\documentclass[uplatex]{jsarticle}</code> にすればよい。</p>
 
@@ -106,18 +106,18 @@ Sweave("foo.Rnw", encoding="utf-8")
 <p>Ihaka（上記参照）の推奨（例えば *.Rnw の <code>\begin{document}</code> の直後に入れる）：</p>
 
 <pre>
-\DefineVerbatimEnvironment{Sinput}{Verbatim} {xleftmargin=2em}
+<code>\DefineVerbatimEnvironment{Sinput}{Verbatim} {xleftmargin=2em}
 \DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=2em}
 \DefineVerbatimEnvironment{Scode}{Verbatim}{xleftmargin=2em}
 \fvset{listparameters={\setlength{\topsep}{0pt}}}
 \renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
-</pre>
+</code></pre>
 
 <p>日本語なら，左マージンは全角幅（zw）の整数倍にしたい。また，jsarticleの本文行送りは日本語なので広めにしているが，Rコードの行送りは少し減らしたい：</p>
 
 <pre>
-\fvset{xleftmargin=2zw,baselinestretch=0.75}
-</pre>
+<code>\fvset{xleftmargin=2zw,baselinestretch=0.75}
+</code></pre>
 
 <hr>
 

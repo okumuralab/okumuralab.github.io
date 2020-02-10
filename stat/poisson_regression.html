@@ -47,11 +47,11 @@ figure {
 <div class="note">
 <p>念のため，右の図を描いたコード：</p>
 <pre>
-par(mgp=c(2,0.8,0))
+<code>par(mgp=c(2,0.8,0))
 plot(x, y, type="p", pch=16, xlim=c(0,5), ylim=c(0,6), asp=1)
 abline(1.5, 0.8)
 text(x, y, pos=1, labels=c("(1,2)","(2,3)","(3,5)","(4,4)"))
-</pre>
+</code></pre>
 </div>
 
 <p>最も一般的なフィットのしかたは，残差 $y - (ax + b)$ の2乗和</p>
@@ -63,7 +63,7 @@ text(x, y, pos=1, labels=c("(1,2)","(2,3)","(3,5)","(4,4)"))
 <p>実際に上の式を最小にする $a$ と $b$ を求めてみましょう。何でも最小化してくれるRの関数 <code>optim()</code> を使ってみます。</p>
 
 <pre>
-x = c(1,2,3,4)  # x = 1:4 とも書ける
+<code>x = c(1,2,3,4)  # x = 1:4 とも書ける
 y = c(2,3,5,4)
 
 f = function(arg) {
@@ -74,15 +74,15 @@ f = function(arg) {
 }
 
 optim(c(1,1), f)  # 初期値(a,b)=(1,1)から始めてfを最小化する
-</pre>
+</code></pre>
 
 <p>$y \sim 0.8x + 1.5$ が得られました。</p>
 
 <p>実際には，わざわざこんなことをしなくても，</p>
 
 <pre>
-lm(y ~ x)
-</pre>
+<code>lm(y ~ x)
+</code></pre>
 
 <p>と打ち込むだけでもっと早く正確に計算してくれます。<code>lm()</code> という関数名はlinear modelから来ています。<code>y ~ x</code> は <code>y</code> を <code>x</code> の一次式でフィットするという意味です（つまり $y \sim ax + b$）。もし定数項 $b$ が不要なら <code>lm(y ~ x - 1)</code> とします。</p>
 
@@ -123,22 +123,22 @@ lm(y ~ x)
 <p>を最大にすればいいことになります。さっそくやってみましょう。</p>
 
 <pre>
-f = function(arg) {
+<code>f = function(arg) {
   a = arg[1]
   b = arg[2]
   lambda = a * x + b
   return(-sum(y * log(lambda) - lambda))
 }
 optim(c(1,1), f)
-</pre>
+</code></pre>
 
 <p>だいたい $y \sim 0.89x + 1.28$ になります。上の最小2乗法の結果とかなり違います。</p>
 
 <p>実はこれも，もっと速く正確に計算する <code>glm()</code> という関数があります。この関数名は generalized linear model（一般化線形モデル）から来ています。</p>
 
 <pre>
-glm(y ~ x, family=poisson(link="identity"))
-</pre>
+<code>glm(y ~ x, family=poisson(link="identity"))
+</code></pre>
 
 <p>オプション <code>family=poisson(link="identity")</code> は，誤差がポアソン分布で，その平均が $\lambda_i = ax_i + b$ のように表される（左辺が $\lambda_i$ そのものである）ことを意味します。<code>family=poisson(link="log")</code> とすれば，$\log \lambda_i = ax_i + b$ つまり左辺は $\lambda_i$ そのものではなく対数をとったモデルになります。この対数関数（や前者の恒等関数 identity function）のように左辺に付ける関数をリンク関数といいます。なお，$\log \lambda_i = ax_i + b$ は $\lambda_i = e^{ax_i + b}$ と同じですので，$\lambda$ が負になることを心配しないでいいので，ポアソン分布のときはこちらのほうがよく使われます。単に <code>family=poisson</code> と書けば <code>link="log"</code> と見なして計算します。</p>
 
@@ -151,20 +151,20 @@ glm(y ~ x, family=poisson(link="identity"))
 <p>ポアソン分布では，分散が期待値と等しくなります（$V(y_i) = E(y_i)$）ので，ポアソン回帰の近似として，カイ2乗最小化で $\sigma_i^2 = y_i$ とすることがあります：</p>
 
 <pre>
-f = function(arg) {
+<code>f = function(arg) {
   a = arg[1]
   b = arg[2]
   lambda = a * x + b
   return(sum((y - lambda)^2 / y))
 }
 optim(c(1,1), f)
-</pre>
+</code></pre>
 
 <p>これは次の重み付き最小2乗法と同じことです：</p>
 
 <pre>
-lm(y ~ x, weights=1/y)
-</pre>
+<code>lm(y ~ x, weights=1/y)
+</code></pre>
 
 <p>結果は $y \sim 0.82x + 1.34$ になります。</p>
 
@@ -173,14 +173,14 @@ lm(y ~ x, weights=1/y)
 <p>「その1」の方法では，データ $y$ に0が含まれると計算できません。そこで，実現値 $y_i$ でなくモデル値 $\lambda_i = ax_i + b$ を $\sigma_i^2$ と置いて，カイ2乗最小化をすることが考えられます：</p>
 
 <pre>
-f = function(arg) {
+<code>f = function(arg) {
   a = arg[1]
   b = arg[2]
   lambda = a * x + b
   return(sum((y - lambda)^2 / lambda))
 }
 optim(c(1,1), f)
-</pre>
+</code></pre>
 
 <p>結果は $y \sim 0.93x + 1.23$ になります。なお，この場合には <code>lm()</code> を使うことはできません。</p>
 
@@ -189,14 +189,14 @@ optim(c(1,1), f)
 <p><code>r = lm(...)</code> のように代入しておくと，回帰式の係数は <code>r$coef</code> に入ります。これを使って $y_i$ の予測値（ここでは $\lambda_i = ax_i + b$）を求めてもいいのですが，関数 <code>predict(r)</code> を使っても同じ結果が得られます。いずれにせよ，この予測値を使って，次のような繰返しをすると，何が得られるでしょうか：</p>
 
 <pre>
-w = c(1,1,1,1)    # 適当な初期値
+<code>w = c(1,1,1,1)    # 適当な初期値
 for (i in 1:10) { # 収束するまで続ける
   r = lm(y ~ x, weights=w)
   lambda = predict(r)
   print(c(as.numeric(r$coef), -sum(y*log(lambda)-lambda)))
   w = 1 / lambda
 }
-</pre>
+</code></pre>
 
 <p>「その2」と同じだと思われるかもしれませんが，そうではなく，「その3」は実は本物のポアソン回帰と一致します。</p>
 
@@ -207,12 +207,12 @@ for (i in 1:10) { # 収束するまで続ける
 <div class="note">
 <p>このことから，nlmeパッケージの非線形な最小2乗法 <code>gnls()</code> でオプション <code>weights=varPower(fixed=0.5)</code> を与えると非線形ポアソン回帰ができる理由が推測できます。この関数は初期値によってはうまく収束しないので，なるべく正解に近い初期値を与えてやってみてください：</p>
 <pre>
-library(nlme)
+<code>library(nlme)
 data = data.frame(y=y, x=x)
 gnls(y ~ a * x + b, data=data,
      start=list(a=0.9,b=1.3),
      weights=varPower(fixed=0.5))
-</pre>
+</code></pre>
 </div>
 
 <h2>ポアソン回帰のあてはまりの良さ</h2>
@@ -220,7 +220,7 @@ gnls(y ~ a * x + b, data=data,
 <p>最初のポアソン回帰の問題をもう一度，標準的な方法で，しっかり解いてみましょう。</p>
 
 <pre>
-&gt; x = c(1,2,3,4)
+<code>&gt; x = c(1,2,3,4)
 &gt; y = c(2,3,5,4)
 &gt; r = glm(y ~ x, family=poisson(link="identity"))
 &gt; summary(r)
@@ -244,7 +244,7 @@ Residual deviance: 0.4271  on 2  degrees of freedom
 AIC: 16.779
 
 Number of Fisher Scoring iterations: 5
-</pre>
+</code></pre>
 
 <p>ここで出てくる deviance（ディーヴィアンス，逸脱度，乖離度，尤離度）というのが，あてはまりの良さを表す量です。定義は</p>
 
@@ -253,19 +253,19 @@ Number of Fisher Scoring iterations: 5
 <p>です。つまり，考えているモデルで最大にした対数尤度と，データとぴったり合うモデル $\lambda_i = y_i$ の対数尤度との差の2倍です。実際に計算してみましょう：</p>
 
 <pre>
-&gt; lambda = predict(r)
+<code>&gt; lambda = predict(r)
 &gt; 2 * sum((y*log(y)-y) - (y*log(lambda)-lambda))
 [1] 0.4270962
-</pre>
+</code></pre>
 
 <p>これが「Residual deviance」として出ているものです。これは，正規分布のときのカイ2乗統計量に相当するものです（正規分布で対数尤度に $-2$ を掛ければカイ2乗になるという話をさきほどしましたね）。これが自由度の数（データの数からモデルのパラメータの数を引いたもの）と比べて大きすぎると，あてはまりが悪いことになります。逆に，小さすぎる（0 に近すぎる）と，ポアソン分布であるというモデル自体がおかしい可能性があります。</p>
 
 <p>ちなみに，$\lambda_i$ はどれも等しくてデータ $y_i$ の平均値に等しいという，まったく平らなモデル $\lambda_i = 3.5$ を考えると，</p>
 
 <pre>
-&gt; 2 * sum((y*log(y)-y) - (y*log(3.5)-3.5))
+<code>&gt; 2 * sum((y*log(y)-y) - (y*log(3.5)-3.5))
 [1] 1.471633
-</pre>
+</code></pre>
 
 <p>となります。これが「Null deviance」として出ているものです。</p>
 
@@ -278,7 +278,7 @@ Number of Fisher Scoring iterations: 5
 <div class="note">
 <p>これは次のようにして描きました：</p>
 <pre>
-l = numeric(4)
+<code>l = numeric(4)
 h = numeric(4)
 for (i in 1:4) {
   t = poisson.test(y[i])
@@ -290,25 +290,25 @@ par(mgp=c(2,0.8,0))
 plot(x, y, type="p", pch=16, xlim=c(0,5), ylim=range(c(0,h)))
 abline(r)
 arrows(x, l, x, h, length=0.05, angle=90, code=3)
-</pre>
+</code></pre>
 
 <p>これは <code>sapply()</code> を使えばもうちょっとシンプルに書けます：</p>
 
 <pre>
-ci = sapply(1:4, function(i){poisson.test(y[i])$conf.int})
+<code>ci = sapply(1:4, function(i){poisson.test(y[i])$conf.int})
 r = glm(y ~ x, family=poisson(link="identity"))
 par(mgp=c(2,0.8,0))
 plot(x, y, type="p", pch=16, xlim=c(0,5), ylim=range(c(0,ci)))
 abline(r)
 arrows(x, ci[1,], x, ci[2,], length=0.05, angle=90, code=3)
-</pre>
+</code></pre>
 </div>
 
 <p>ちなみに，$y$ が 0 を含むことはよくありますが，$0 \times \log 0 = 0$ として計算します。具体的には</p>
 
 <pre>
-2 * sum((y*log(y)-y) - (y*log(lambda)-lambda), na.rm=TRUE)
-</pre>
+<code>2 * sum((y*log(y)-y) - (y*log(lambda)-lambda), na.rm=TRUE)
+</code></pre>
 
 <p>とします。</p>
 
@@ -321,51 +321,51 @@ arrows(x, ci[1,], x, ci[2,], length=0.05, angle=90, code=3)
 <p>四つの町があります。各町の人口（10万人単位）は</p>
 
 <pre>
-p = c(0.01, 1, 1, 0.1)
-</pre>
+<code>p = c(0.01, 1, 1, 0.1)
+</code></pre>
 
 <p>でした。また，各町の汚染度を調べたところ，それぞれ</p>
 
 <pre>
-x = c(1, 2, 3, 4)
-</pre>
+<code>x = c(1, 2, 3, 4)
+</code></pre>
 
 <p>でした。これらの町で，ある病気で受診した患者の数が</p>
 
 <pre>
-y = c(0, 12, 9, 1)
-</pre>
+<code>y = c(0, 12, 9, 1)
+</code></pre>
 
 <p>人でした。これは10万人あたりの人数で表すと</p>
 
 <pre>
-z = y / p
-</pre>
+<code>z = y / p
+</code></pre>
 
 <p>です。これを $z \sim ax + b$ のような1次式でフィットしたいのですが，そのまま最小2乗法でフィットすると，図の実線のようになります。</p>
 
 <pre>
-r1 = lm(z ~ x)
+<code>r1 = lm(z ~ x)
 plot(x, z, type="p", pch=16, xlim=c(0.5,4.5), ylim=c(0,15))
 abline(r1)
-</pre>
+</code></pre>
 
 <p>でも，これでは人口1000人の村も人口10万人の都市も同じ重さでフィットされてしまいます。人口に比例した重みを付けてみましょう：</p>
 
 <pre>
-r2 = lm(z ~ x, weights=p)
+<code>r2 = lm(z ~ x, weights=p)
 abline(r2, lty=2)
-</pre>
+</code></pre>
 
 <p>破線のようになりました。</p>
 
 <p>この問題をポアソン回帰で考えてみましょう。$y/p \sim ax + b$ のようにフィットしたいのですが，実際の人数は $y$ ですので，ポアソン回帰では $y \sim axp + bp$ のフィットになります。$q = xp$ と置いて <code>glm(y ~ q + p, ...)</code> と書けそうですが，この場合は定数項は不要なので，<code>glm(y ~ q + p - 1, ...)</code> という書き方をします。図は点線のようになり，ほぼ破線と一致します。</p>
 
 <pre>
-q = x * p
+<code>q = x * p
 r3 = glm(y ~ q + p - 1, family=poisson(link="identity"))
 abline(r3$coef['p'], r3$coef['q'], lty=3)
-</pre>
+</code></pre>
 
 <p>つまり，単純な最小2乗法では，汚染（$x$）と発病率（$z = y/p$）は正の相関をしますが，ポアソン回帰や，その近似としての重み付き最小2乗法では，負の相関になります。</p>
 

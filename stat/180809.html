@@ -51,36 +51,36 @@
 <p>90%が朝ごはんを食べた円グラフは次のようにしてRで描いた：</p>
 
 <pre>
-x = c(90,10)
+<code>x = c(90,10)
 c = c("#ff2800", "#0041ff")
 pie(x, clockwise=TRUE, radius=0.95, labels=NA, col=c)
 text(0, -0.4, "朝ごはんを\n食べた", cex=2, col="white", family="HiraKakuStdN-W8")
-</pre>
+</code></pre>
 
 <figure><img src="img/180809b.png" alt=""></figure>
 
 <p>死亡事故を起こした人の走行距離の円グラフは次のようになる。色はカラーユニバーサルデザイン推奨配色セットのベースカラーを用いた（<a href="colors.html">統計グラフの色</a>参照）：</p>
 
 <pre>
-x = c(50.1, 18.2, 9.0, 5.2, 2.3, 4.8, 10.4)
+<code>x = c(50.1, 18.2, 9.0, 5.2, 2.3, 4.8, 10.4)
 l = c("100km未満", "〜200km", "〜300km", "〜400km", "〜500km", "500km以上", "不明")
 c = c("#ffd1d1", "#ffff99", "#cbf266", "#b4ebfa", "#edc58f", "#87e7b0", "#c7b2de")
 pie(x, clockwise=TRUE, radius=0.95, labels=l, col=c)
-</pre>
+</code></pre>
 
 <figure><img src="img/180812a.png" alt=""></figure>
 
 <p>同じものをヒストグラムで描いてみよう：</p>
 
 <pre>
-t = c(0, 100, 200, 300, 400, 500, 800)
+<code>t = c(0, 100, 200, 300, 400, 500, 800)
 dt = diff(t)
 x = c(50.1, 18.2, 9.0, 5.2, 2.3, 4.8)
 barplot(x/dt, dt, space=0, axes=FALSE)
 axis(1, c(t[1:6],550), c(t[1:6],"km"), lwd=0, mgp=c(1,0.5,0))
 text(t[1:6]+dt/2, x/dt, paste0(x,"%"), pos=3, xpd=TRUE)
 mtext("km", 1, 0.5, at=545)
-</pre>
+</code></pre>
 
 <figure><img src="img/180812b.png" alt=""></figure>
 
@@ -88,7 +88,7 @@ mtext("km", 1, 0.5, at=545)
 
 <pre>
 <code class="prom">sum((t[1:6]+50) * x) / sum(x)</code>
-[1] 144.8661
+<code>[1] 144.8661</code>
 </pre>
 
 <p>これは Simon_Sin さんの挙げておられる平均走行距離よりずっと長い。ということは・・・</p>

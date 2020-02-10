@@ -36,13 +36,13 @@ td { text-align: left }
 <p>これをRで読み込む。<a href="datatable.html">data.table</a> を使う。</p>
 
 <pre>
-yuki = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_snow.csv")
+<code>yuki = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_snow.csv")
 ooyuki = subset(yuki, 最深積雪cm >= 5)
 dim(ooyuki)
 t = as.Date(ooyuki$年月日)
 table(month(t))    # 1月:14, 2月:17, 3月:1
 table(weekdays(t))
-</pre>
+</code></pre>
 
 <p>大雪が32日，うち土曜日は10日，日曜日は8日である（祝日は調べてません^^;）。</p>
 
@@ -59,20 +59,20 @@ table(weekdays(t))
 <p>32日中18日が土日。このようなことが起こる <i>p</i> 値は？</p>
 
 <pre>
-binom.test(18, 32, 2/7)
-</pre>
+<code>binom.test(18, 32, 2/7)
+</code></pre>
 
 <p><i>p</i> = 0.001242，うーん。かなり有意だ。</p>
 
 <p>中澤先生から「積雪だと大雪の次の日も残るので、大雪が土日祝日に多いかどうか調べるには、日最深積雪よりも降雪量合計の方が適しているように思います。参照された記事は少し一貫してなくて、大雪の基準を降雪5cmとしながら、その後は「5cm以上の積雪」と書いていますが。」という天の声をいただいたので，降雪量合計のデータも取ってみた。整形したものを <a href="data/tokyo_snow2.csv">tokyo_snow2.csv</a> とする。</p>
 
 <pre>
-yuki2 = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_snow2.csv")
+<code>yuki2 = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_snow2.csv")
 ooyuki2 = subset(yuki2, 降雪量合計cm >= 5)
 dim(ooyuki2)
 t = as.Date(ooyuki2$年月日)
 table(weekdays(t))
-</pre>
+</code></pre>
 
 <table>
   <tr><th>日曜日</th><td>＊＊</td></tr>
@@ -87,8 +87,8 @@ table(weekdays(t))
 <p>今度は15日のうち10日が土日だ。</p>
 
 <pre>
-binom.test(10, 15, 2/7)
-</pre>
+<code>binom.test(10, 15, 2/7)
+</code></pre>
 
 <p><i>p</i> = 0.002446，うーん。やっぱり有意だ。</p>
 
@@ -99,7 +99,7 @@ binom.test(10, 15, 2/7)
 <p>坂本さんからは「大雪が28日あったうち16日が土日なので実際多いのですが、土日気温が低めなのか？とかの関連データも気になります。」（2014年2月9日までのデータの時点）というご意見をいただいた。<a href="data/tokyo_temp.csv">tokyo_temp.csv</a> に整形したものを置く。</p>
 
 <pre>
-temp = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_temp.csv")
+<code>temp = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_temp.csv")
 t = as.Date(temp$年月日)
 w = weekdays(t)
 we = subset(temp, w == "日曜日" | w == "土曜日")
@@ -107,7 +107,7 @@ wd = subset(temp, w != "日曜日" & w != "土曜日")
 mean(we$平均気温)  # 16.47607
 mean(wd$平均気温)  # 16.57771
 t.test(wd$平均気温, we$平均気温)
-</pre>
+</code></pre>
 
 <p>あ，こんなt検定なんかやっても無意味だ。どなたかちゃんとやって教えてください m(__)m</p>
 
@@ -122,7 +122,7 @@ t.test(wd$平均気温, we$平均気温)
 <p>乱数のジッターにするより，年を使ったほうがいいという気がしてきたので，年でもやってみましたが，特に新しいことはわかりませんでした。</p>
 
 <pre>
-library(data.table)
+<code>library(data.table)
 temp = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_temp.csv")
 t = as.Date(temp$年月日)
 temp[,y:=year(t)]  # 年
@@ -138,7 +138,7 @@ axis(1, 1:7, you)
 # points(jitter(temp1$w), temp1$平均気温, pch=1) # 乱数のジッター
 points(temp1$w-0.4*(temp1$y-2002)/24, temp1$平均気温, pch=1) # 年をジッターにする
 points(1:7, mt, type="l") # 平均気温を折れ線で
-</pre>
+</code></pre>
 
 <hr>
 

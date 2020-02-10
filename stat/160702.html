@@ -40,26 +40,26 @@ td, th { padding: 0.2em 0.7em }
 <pre>
 <code class="prom">kaito = read.csv("kaito.csv", header=FALSE, colClasses="character", fileEncoding="UTF-8")</code>
 <code class="prom">dim(kaito)</code>
-[1] 30793   274
+<code>[1] 30793   274</code>
 <code class="prom">head(kaito)</code>
-      V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12  V13 V14 V15 V16 V17 V18 V19  V20
-1 000001  0  0  1  0  0  0  1  0   0   0   0 0000   0   0   0   0   0   2 0000
-2 000002  0  1  0  0  0  0  0  0   1   0   1 0000   0   0   0   0   0   1 0000
-3 000003  0  1  0  0  1  0  0  0   0   0   2 0000   2   0   1   0   0   1 0000
-4 000004  0  0  1  0  0  0  0  0   0   1   1 0000   0   0   0   0   0   1 0000
-5 000005  0  0  1  0  0  0  0  1   0   0   2 2610   1   1   0   0   0   2 2610
-6 000006  1  0  0  0  1  0  0  0   0   0   1 0000   0   0   0   0   0   1 0000
-……
+<code>      V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12  V13 V14 V15 V16 V17 V18 V19  V20</code>
+<code>1 000001  0  0  1  0  0  0  1  0   0   0   0 0000   0   0   0   0   0   2 0000</code>
+<code>2 000002  0  1  0  0  0  0  0  0   1   0   1 0000   0   0   0   0   0   1 0000</code>
+<code>3 000003  0  1  0  0  1  0  0  0   0   0   2 0000   2   0   1   0   0   1 0000</code>
+<code>4 000004  0  0  1  0  0  0  0  0   0   1   1 0000   0   0   0   0   0   1 0000</code>
+<code>5 000005  0  0  1  0  0  0  0  1   0   0   2 2610   1   1   0   0   0   2 2610</code>
+<code>6 000006  1  0  0  0  1  0  0  0   0   0   1 0000   0   0   0   0   0   1 0000</code>
+<code>……</code>
 </pre>
 
 <div class="note">
 <p>同じことが <a href="datatable.html">data.table</a> の fread() や <a href="readr.html">readr</a> の read_csv() でもできる：</p>
 <pre>
-library(data.table)
+<code>library(data.table)
 kaito_fread = fread("kaito.csv", header=FALSE, colClasses="character")
 library(readr)
 kaito_readr = read_csv("kaito.csv", col_names=FALSE, col_types=paste0(rep("c",274), collapse=""))
-</pre>
+</code></pre>
 <p>readr の read_csv() では変数名が X1，X2，… となることに注意する。</p>
 </div>
 
@@ -68,8 +68,8 @@ kaito_readr = read_csv("kaito.csv", col_names=FALSE, col_types=paste0(rep("c",27
 <pre>
 <code class="prom">table(kaito$V233)</code>
 
-    0     1     2     3 
-  624  9245 20912    12 
+<code>    0     1     2     3 </code>
+<code>  624  9245 20912    12 </code>
 </pre>
 
 <p>チェックなしが624人，なし9245人，あり20912人，両方チェックあり12人である。チェックなしや重複チェックは，他の項目の回答と照らし合わせて吟味するべきかもしれないが，ここでは単に無視する。</p>
@@ -81,8 +81,8 @@ kaito_readr = read_csv("kaito.csv", col_names=FALSE, col_types=paste0(rep("c",27
 <pre>
 <code class="prom">table(kaito$V145)</code>
 
-    0     1     2 
-  259 30272   262 
+<code>    0     1     2 </code>
+<code>  259 30272   262 </code>
 </pre>
 
 <p>チェックなし259人，なし30272人，あり262人である。これをHPVV有無とクロス集計すれば</p>
@@ -90,11 +90,11 @@ kaito_readr = read_csv("kaito.csv", col_names=FALSE, col_types=paste0(rep("c",27
 <pre>
 <code class="prom">table(kaito$V233, kaito$V145)</code>
 
-        0     1     2
-  0    36   582     6
-  1    80  9107    58
-  2   143 20571   198
-  3     0    12     0
+<code>        0     1     2</code>
+<code>  0    36   582     6</code>
+<code>  1    80  9107    58</code>
+<code>  2   143 20571   198</code>
+<code>  3     0    12     0</code>
 </pre>
 
 <p>つまり次のようになる：</p>
@@ -112,16 +112,16 @@ kaito_readr = read_csv("kaito.csv", col_names=FALSE, col_types=paste0(rep("c",27
 <pre>
 <code class="prom">fisher.test(matrix(c(9107,20571,58,198),nrow=2))</code>
 
-	Fisher's Exact Test for Count Data
+<code>	Fisher's Exact Test for Count Data</code>
 
-data:  matrix(c(9107, 20571, 58, 198), nrow = 2)
-p-value = 0.005159
-alternative hypothesis: true odds ratio is not equal to 1
-95 percent confidence interval:
- 1.121378 2.063976
-sample estimates:
-odds ratio 
-  1.511313 
+<code>data:  matrix(c(9107, 20571, 58, 198), nrow = 2)</code>
+<code>p-value = 0.005159</code>
+<code>alternative hypothesis: true odds ratio is not equal to 1</code>
+<code>95 percent confidence interval:</code>
+<code> 1.121378 2.063976</code>
+<code>sample estimates:</code>
+<code>odds ratio </code>
+<code>  1.511313 </code>
 </pre>
 
 <p>非常に有意な関連がありそうである。しかし，他の変数と交絡しているかもしれないので，慎重に調べる必要がある。</p>
@@ -131,14 +131,14 @@ odds ratio
 <pre>
 <code class="prom">table(rowSums(kaito[,5:11] == "1"))</code>
 
-    0     1     2 
-  456 30334     3 
+<code>    0     1     2 </code>
+<code>  456 30334     3 </code>
 </pre>
 
 <p>チェックなしが456人，二つの年度にわたってチェックしているのが3人いる。これらを除いて年齢を調べる（もっとエレガントな方法があるだろうが，面倒なので…）：</p>
 
 <pre>
-birth = ifelse(rowSums(kaito[,5:11]=="1") != 1, NA,
+<code>birth = ifelse(rowSums(kaito[,5:11]=="1") != 1, NA,
   ifelse(kaito[,5]=="1", 6,
   ifelse(kaito[,6]=="1", 7,
   ifelse(kaito[,7]=="1", 8,
@@ -146,33 +146,33 @@ birth = ifelse(rowSums(kaito[,5:11]=="1") != 1, NA,
   ifelse(kaito[,9]=="1", 10,
   ifelse(kaito[,10]=="1", 11,
   ifelse(kaito[,11]=="1", 12, NA))))))))
-</pre>
+</code></pre>
 
 <div class="note">
 <p>よりエレガントな方法を<a href="https://twitter.com/__fusion/status/749410534512947200">教えていただいた</a>：</p>
 <pre>
-birth &lt;- as.numeric(apply(kaito[ ,5:11], 1, paste, collapse=""))
+<code>birth &lt;- as.numeric(apply(kaito[ ,5:11], 1, paste, collapse=""))
 birth &lt;- match(birth, 10^(6:0)) + 5
-</pre>
+</code></pre>
 <p>さらに<a href="https://twitter.com/anonymous124816/status/749422290694090752">別解</a>をいただいた：</p>
 <pre>
-birth = as.matrix(kaito[,5:11] == "1") %*% 6:12
+<code>birth = as.matrix(kaito[,5:11] == "1") %*% 6:12
 birth = ifelse(birth &lt; 6 | birth &gt; 12, NA, birth)
-</pre>
+</code></pre>
 <p>これは次のようにしてもよさそう。</p>
 <pre>
-birth = (kaito[,5:11] == "1") %*% 6:12
-birth = ifelse(birth %in% 6:12, birth, NA)
+<code>birth = (kaito[,5:11] == "1") %*% 6:12</code>
+<code>birth = ifelse(birth %in% 6:12, birth, NA)</code>
 </pre> 
-</div>
+<code></div></code>
 
-<p>分布は次の通り：</p>
+<code><p>分布は次の通り：</p></code>
 
 <pre>
 <code class="prom">table(birth, useNA="ifany")</code>
-birth
-   6    7    8    9   10   11   12 &lt;NA&gt;
-4102 4227 4235 4484 4501 4241 4544  459 
+<code>birth</code>
+<code>   6    7    8    9   10   11   12 &lt;NA&gt;</code>
+<code>4102 4227 4235 4484 4501 4241 4544  459 </code>
 </pre>
 
 <p>生まれた年度とHPVV接種率には強い関係がある：</p>
@@ -180,20 +180,20 @@ birth
 <pre>
 <code class="prom">s = table(kaito$V233, birth)</code>
 <code class="prom">s</code>
-   birth
-       6    7    8    9   10   11   12
-  0   56   64   90   72   96   90  126
-  1  496  428  452  663 1260 2038 3761
-  2 3549 3735 3690 3745 3143 2112  656
-  3    1    0    3    4    2    1    1
+<code>   birth</code>
+<code>       6    7    8    9   10   11   12</code>
+<code>  0   56   64   90   72   96   90  126</code>
+<code>  1  496  428  452  663 1260 2038 3761</code>
+<code>  2 3549 3735 3690 3745 3143 2112  656</code>
+<code>  3    1    0    3    4    2    1    1</code>
 </pre>
 
 <p>グラフにしてみよう：</p>
 
 <pre>
-plot(6:12, s[3,]/(s[2,]+s[3,])*100, ylim=c(0,100), type="o",
+<code>plot(6:12, s[3,]/(s[2,]+s[3,])*100, ylim=c(0,100), type="o",
      pch=16, xlab="生まれた年度（平成）", ylab="接種率（%）")
-</pre>
+</code></pre>
 
 <figure><img src="img/160702b.png" alt="生まれた年度とHPVV接種率"></figure>
 
@@ -202,21 +202,21 @@ plot(6:12, s[3,]/(s[2,]+s[3,])*100, ylim=c(0,100), type="o",
 <pre>
 <code class="prom">u = table(kaito$V145, birth)</code>
 <code class="prom">u</code>
-   birth
-       6    7    8    9   10   11   12
-  0   22   37   26   35   48   35   33
-  1 4037 4141 4162 4414 4423 4176 4487
-  2   43   49   47   35   30   30   24
+<code>   birth</code>
+<code>       6    7    8    9   10   11   12</code>
+<code>  0   22   37   26   35   48   35   33</code>
+<code>  1 4037 4141 4162 4414 4423 4176 4487</code>
+<code>  2   43   49   47   35   30   30   24</code>
 </pre>
 
 <p>グラフにしてみよう（95%信頼区間も付けた）：</p>
 
 <pre>
-plot(6:12, u[3,]/(u[2,]+u[3,])*100, ylim=c(0,2), type="o", pch=16,
+<code>plot(6:12, u[3,]/(u[2,]+u[3,])*100, ylim=c(0,2), type="o", pch=16,
      xlab="生まれた年度（平成）", ylab="症状の割合（%）")
 ci = sapply(1:7, function(x)binom.test(u[3,x],u[2,x]+u[3,x])$conf.int)
 arrows(6:12, 100*ci[1,], 6:12, 100*ci[2,], length=0.03, angle=90, code=3)
-</pre>
+</code></pre>
 
 <figure><img src="img/160702e.png" alt="生まれた年度と症状の割合"></figure>
 
@@ -227,17 +227,17 @@ arrows(6:12, 100*ci[1,], 6:12, 100*ci[2,], length=0.03, angle=90, code=3)
 <pre>
 <code class="prom">t = sapply(1:7, function(x)as.numeric(table(kaito$V233, kaito$V145, birth)[2:3,2:3,x]))</code>
 <code class="prom">t</code>
-     [,1] [,2] [,3] [,4] [,5] [,6] [,7]
-[1,]  486  412  447  651 1232 2014 3722
-[2,] 3496 3669 3627 3689 3097 2073  647
-[3,]    6    9    1    6    8    9   18
-[4,]   37   40   44   29   21   21    3
+<code>     [,1] [,2] [,3] [,4] [,5] [,6] [,7]</code>
+<code>[1,]  486  412  447  651 1232 2014 3722</code>
+<code>[2,] 3496 3669 3627 3689 3097 2073  647</code>
+<code>[3,]    6    9    1    6    8    9   18</code>
+<code>[4,]   37   40   44   29   21   21    3</code>
 </pre>
 
 <p>グラフにしてみよう（オレンジが接種あり，青が接種なし）：</p>
 
 <pre>
-# 接種なし
+<code># 接種なし
 plot(6:12, t[3,]/(t[1,]+t[3,])*100, ylim=c(0,2.5), type="o",
      col="#0068b7", xlab="生まれた年度（平成）", ylab="症状の割合（%）")
 ci = sapply(1:7, function(x)binom.test(t[3,x],t[1,x]+t[3,x])$conf.int)
@@ -246,7 +246,7 @@ arrows(6:12, 100*ci[1,], 6:12, 100*ci[2,], length=0.03, angle=90, code=3, col="#
 points(6:12, t[4,]/(t[2,]+t[4,])*100, type="o", pch=16, col="#f39800")
 ci = sapply(1:7, function(x)binom.test(t[4,x],t[2,x]+t[4,x])$conf.int)
 arrows(6:12, 100*ci[1,], 6:12, 100*ci[2,], length=0.03, angle=90, code=3, col="#f39800")
-</pre>
+</code></pre>
 
 <figure><img src="img/160702d.png" alt="生まれた年度と症状の割合"></figure>
 
@@ -255,11 +255,11 @@ arrows(6:12, 100*ci[1,], 6:12, 100*ci[2,], length=0.03, angle=90, code=3, col="#
 <p><a href="meta.html">メタアナリシス</a>で解説したフォレストプロットを，生まれた年度ごとに描いてみよう：</p>
 
 <pre>
-library(metafor)
+<code>library(metafor)
 dat = escalc(measure="OR", ai=t[4,], bi=t[2,], ci=t[3,], di=t[1,])
 res = rma(yi, vi, data=dat)
 forest(res, slab=paste0("平成", 6:12, "年度生まれ"))
-</pre>
+</code></pre>
 
 <figure><img src="img/160702a.png" alt="Log Odds Ratio"></figure>
 
@@ -272,7 +272,7 @@ forest(res, slab=paste0("平成", 6:12, "年度生まれ"))
 <p>上の例は症例数が少ないのでサンプリング誤差も大きい。そこで，もうちょっと人数の多い（平凡な）症状を調べてみよう。V96（No.13）の「なかなか眠れない」である：</p>
 
 <pre>
-t = sapply(1:7, function(x)as.numeric(table(kaito$V233, kaito$V96, birth)[2:3,2:3,x]))
+<code>t = sapply(1:7, function(x)as.numeric(table(kaito$V233, kaito$V96, birth)[2:3,2:3,x]))
 # 接種あり
 plot(6:12, t[3,]/(t[1,]+t[3,])*100, ylim=c(0,21), type="o",
      col="#0068b7", xlab="生まれた年度（平成）", ylab="症状の割合（%）")
@@ -284,16 +284,16 @@ ci = sapply(1:7, function(x)binom.test(t[4,x],t[2,x]+t[4,x])$conf.int)
 arrows(6:12, 100*ci[1,], 6:12, 100*ci[2,], length=0.03, angle=90, code=3, col="#f39800")
 plot(6:12, t[3,]/(t[1,]+t[3,])*100, ylim=c(0,21), type="o",
      col="#0068b7", xlab="生まれた年度（平成）", ylab="症状の割合（%）")
-</pre>
+</code></pre>
 
 <figure><img src="img/160703a.png" alt="「なかなか眠れない」"></figure>
 
 <pre>
-library(metafor)
+<code>library(metafor)
 dat = escalc(measure="OR", ai=t[4,], bi=t[2,], ci=t[3,], di=t[1,])
 res = rma(yi, vi, data=dat)
 forest(res, slab=paste0("平成", 6:12, "年度生まれ"))
-</pre>
+</code></pre>
 
 <figure><img src="img/160703b.png" alt="Log Odds Ratio"></figure>
 

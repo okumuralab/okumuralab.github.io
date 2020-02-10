@@ -31,15 +31,15 @@ Shoko Tsuchimine, Junji Saruwatari, Ayako Kaneda, Norio Yasui-Furukori, “ABO B
 <p>まずはデータを読み込んでみる：</p>
 
 <pre>
-library(readxl)
+<code>library(readxl)
 x = read_excel("journal.pone.0126983.s001.XLSX")
-</pre>
+</code></pre>
 
 <p>1573×36の表である（論文には1572とある）。<code>names(x)</code> で項目名が一覧できる。以下で使うのは血液型と性格検査の7項目であるので，それだけを抜き出す：</p>
 
 <pre>
-x = x[,c(4,6,11,16,20,21,27,33)]
-</pre>
+<code>x = x[,c(4,6,11,16,20,21,27,33)]
+</code></pre>
 
 <p>性格検査の7項目はそれぞれ
 NS (Novelty Seeking),
@@ -54,32 +54,32 @@ ST (Self-transcendence)
 <p>これら全変数が揃っているものだけ抜き出そう：</p>
 
 <pre>
-x = subset(x, complete.cases(x))
-</pre>
+<code>x = subset(x, complete.cases(x))
+</code></pre>
 
 <p>これで1426行に減る（論文では1427とされている）。</p>
 
 <p>この表の「Blood types」は遺伝子型（AA, AB, AO, BB, BO, OO）で，これらに対応する表現型はそれぞれ A, AB, A, B, B, O である。遺伝子型を表現型に変換するには，Rではいろいろなやりかたがあるが，@hoxo_m さんの<a href="https://qiita.com/hoxo_m/items/b526d174d9d0291c7264">Rでハッシュテーブルの速度比較</a>を参考に，ここでは一番簡単な名前付きベクトルを使うことにする：</p>
 
 <pre>
-tbl = c("A","AB","A","B","B","O")             # 表現型
+<code>tbl = c("A","AB","A","B","B","O")             # 表現型
 names(tbl) = c("AA","AB","AO","BB","BO","OO") # 遺伝子型
 x$ABO = tbl[x[[1]]]                           # 表現型を表に追加
-</pre>
+</code></pre>
 
 <p>論文では年齢・性別でコントロールしたMANCOVAが使われているが，年齢・性別がわからないので，ここでは単なるMANOVAを使ってみる：</p>
 
 <pre>
 <code class="prom">r1 = manova(cbind(NS,HA,RD,P,SD,C,ST) ~ `Blood types`, data=x)</code>
 <code class="prom">summary(r1)</code>
-                Df   Pillai approx F num Df den Df Pr(>F)
-`Blood types`    5 0.027593   1.1241     35   7090 0.2822
-Residuals     1420                                       
+<code>                Df   Pillai approx F num Df den Df Pr(>F)</code>
+<code>`Blood types`    5 0.027593   1.1241     35   7090 0.2822</code>
+<code>Residuals     1420                                       </code>
 <code class="prom">r2 = manova(cbind(NS,HA,RD,P,SD,C,ST) ~ ABO, data=x)</code>
 <code class="prom">summary(r2)</code>
-            Df  Pillai approx F num Df den Df Pr(>F)
-ABO          3 0.01985   1.3493     21   4254 0.1318
-Residuals 1422                                      
+<code>            Df  Pillai approx F num Df den Df Pr(>F)</code>
+<code>ABO          3 0.01985   1.3493     21   4254 0.1318</code>
+<code>Residuals 1422                                      </code>
 </pre>
 
 <p>いずれも有意ではない（Pillai 以外の方法については <code>manova()</code> のマニュアル参照）。</p>
@@ -89,17 +89,17 @@ Residuals 1422
 <pre>
 <code class="prom">oneway.test(P ~ `Blood types`, data=x)</code>
 
-	One-way analysis of means (not assuming equal variances)
+<code>	One-way analysis of means (not assuming equal variances)</code>
 
-data:  P and `Blood types`
-F = 2.5173, num df = 5.00, denom df = 285.15, p-value = 0.02993
+<code>data:  P and `Blood types`</code>
+<code>F = 2.5173, num df = 5.00, denom df = 285.15, p-value = 0.02993</code>
 
 <code class="prom">oneway.test(P ~ ABO, data=x)</code>
 
-	One-way analysis of means (not assuming equal variances)
+<code>	One-way analysis of means (not assuming equal variances)</code>
 
-data:  P and ABO
-F = 2.714, num df = 3.00, denom df = 483.28, p-value = 0.04434
+<code>data:  P and ABO</code>
+<code>F = 2.714, num df = 3.00, denom df = 483.28, p-value = 0.04434</code>
 </pre>
 
 <p>論文ではそれぞれ <i>p</i> = 0.020, 0.032 だが，年齢・性別でコントロールしていないためか，ここでの計算結果は <i>p</i> = 0.030, 0.044 となった。しかし，7変数のうち1変数である。多重性まで考えれば，有意な結果が得られたとは言い難い。</p>
@@ -107,18 +107,18 @@ F = 2.714, num df = 3.00, denom df = 483.28, p-value = 0.04434
 <p>Persistence の度数分布は次の通りである。これを見てもあまり意味のある差がありそうにない。</p>
 
 <pre>
-a = names(table(x$ABO))
+<code>a = names(table(x$ABO))
 p = sapply(a, function(b) { t = table(subset(x, ABO==b)$P); t / sum(t) })
 matplot(0:8, p, type="b", pch=" ", col="black", xlab="Persistence", ylab="")
 sapply(a, function(b) text(0:8, p[,b], b))
-</pre>
+</code></pre>
 
 <figure><img src="img/190206c.png" alt="Persistence の度数分布"></figure>
 
 <p>血液型ごとに平均±標準誤差をエラーバーで表してみる：</p>
 
 <pre>
-n = table(x$ABO)
+<code>n = table(x$ABO)
 m = sapply(names(n), function(a) mean(subset(x, ABO==a)$P))
 s = sapply(names(n), function(a) sd(subset(x, ABO==a)$P))
 se = s / sqrt(n)
@@ -126,7 +126,7 @@ plot(1:4, m, pch=16, xlim=c(0.5,4.5), ylim=range(c(m+se,m-se)),
      xaxt="n", xlab="Phenotype", ylab="Persistence")
 arrows(1:4, m-se, 1:4, m+se, length=0.05, angle=90, code=3)
 axis(1, at=1:4, labels=names(n))
-</pre>
+</code></pre>
 
 <figure><img src="img/190207a.png" alt="Persistence の度数分布"></figure>
 

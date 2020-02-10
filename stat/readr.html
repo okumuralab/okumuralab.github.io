@@ -24,8 +24,8 @@
 <p>CRANからのインストールは</p>
 
 <pre>
-install.packages("readr")
-</pre>
+<code>install.packages("readr")
+</code></pre>
 
 <p>でできます。</p>
 
@@ -34,9 +34,9 @@ install.packages("readr")
 <p>例えばCSVファイルを読むには</p>
 
 <pre>
-library(readr)
+<code>library(readr)
 x = read_csv("ファイル名またはURL")
-</pre>
+</code></pre>
 
 <p>とします。主なオプションは次の通りです：</p>
 
@@ -54,8 +54,8 @@ x = read_csv("ファイル名またはURL")
 <p>文字コード（エンコーディング）はデフォルトではUTF-8ですが，次のようにすれば任意のロケールが指定できます：</p>
 
 <pre>
-x = read_csv("test.csv", locale=locale(encoding="CP932"))  # またはSJISなど
-</pre>
+<code>x = read_csv("test.csv", locale=locale(encoding="CP932"))  # またはSJISなど
+</code></pre>
 
 <p>ロケールについては <code>locale()</code>，<code>default_locale()</code>
 を調べてください。おもしろいのは，デフォルトでは3桁ごとのカンマを含む数値をちゃんとパースできることです。Excelで3桁ごとにカンマを付けて表示しているときにCSV保存すると，例えば123456789は <code>"123,456,789 "</code> のように（なぜか余分なスペースも付いて）保存されます。これをR標準の <code>read.csv()</code> で読むと文字列になってしまいますが，<code>read_csv()</code> なら正しくパースできます。</p>
@@ -63,22 +63,22 @@ x = read_csv("test.csv", locale=locale(encoding="CP932"))  # またはSJISなど
 <p>おもしろい使い方として，<code>x = read_csv("</code> まで打ってから，データをRコンソールにコピペし，<code>")</code> を打ち込むという方法も使えます。例えば</p>
 
 <pre>
-x = read_csv("魔,方,陣
+<code>x = read_csv("魔,方,陣
 2,9,4
 7,5,3
 6,1,8")
-</pre>
+</code></pre>
 
 <p>のような感じです。これで <code>x</code> と打ち込むと</p>
 
 <pre>
-# A tibble: 3 x 3
+<code># A tibble: 3 x 3
      魔    方    陣
   &lt;int&gt; &lt;int&gt; &lt;int&gt;
 1     2     9     4
 2     7     5     3
 3     6     1     8
-</pre>
+</code></pre>
 
 <p>と表示されます。この表示からもわかるように，結果は通常のデータフレームではなく tibble という型になります。この1行目は <code>x[1,]</code> で得られますが，この1列目は <code>x[,1]</code> とするとベクトルではなく1列の tibble になってしまいます。1列目をベクトルとして取り出すには <code>x[[1]]</code> とする必要があります。</p>
 
@@ -87,56 +87,56 @@ x = read_csv("魔,方,陣
 <pre>
 <code class="prom"># 従来のread.csv()</code>
 <code class="prom">system.time({x1 = read.csv("~/public_html/stat/data/fukushima.csv", as.is=TRUE)})</code>
-   ユーザ   システム       経過  
-     0.973      0.029      1.002 
+<code>   ユーザ   システム       経過  </code>
+<code>     0.973      0.029      1.002 </code>
 <code class="prom">system.time(print(mean(x1$lat)))</code>
-[1] 37.59176
-   ユーザ   システム       経過  
-     0.001      0.000      0.001 
+<code>[1] 37.59176</code>
+<code>   ユーザ   システム       経過  </code>
+<code>     0.001      0.000      0.001 </code>
 <code class="prom">system.time(print(mean(x1$lon)))</code>
-[1] 140.4282
-   ユーザ   システム       経過  
-     0.001      0.000      0.001 
+<code>[1] 140.4282</code>
+<code>   ユーザ   システム       経過  </code>
+<code>     0.001      0.000      0.001 </code>
 <code class="prom">system.time(print(mean(as.POSIXct(x1$datetime))))</code>
-[1] "2011-07-18 01:52:49 JST"
-   ユーザ   システム       経過  
-     7.978      3.138     11.164 
+<code>[1] "2011-07-18 01:52:49 JST"</code>
+<code>   ユーザ   システム       経過  </code>
+<code>     7.978      3.138     11.164 </code>
 <code class="prom"># 新しいread_csv()</code>
 <code class="prom">system.time({x2 = read_csv("~/public_html/stat/data/fukushima.csv")})</code>
-Parsed with column specification:
-cols(
-  lat = col_double(),
-  lon = col_double(),
-  radiation = col_double(),
-  datetime = col_character()
-)
-   ユーザ   システム       経過  
-     0.304      0.014      0.319 
+<code>Parsed with column specification:</code>
+<code>cols(</code>
+<code>  lat = col_double(),</code>
+<code>  lon = col_double(),</code>
+<code>  radiation = col_double(),</code>
+<code>  datetime = col_character()</code>
+<code>)</code>
+<code>   ユーザ   システム       経過  </code>
+<code>     0.304      0.014      0.319 </code>
 <code class="prom">system.time(print(mean(x2$lat)))</code>
-[1] 37.59176
-   ユーザ   システム       経過  
-     0.001      0.000      0.001 
+<code>[1] 37.59176</code>
+<code>   ユーザ   システム       経過  </code>
+<code>     0.001      0.000      0.001 </code>
 <code class="prom">system.time(print(mean(x2$lon)))</code>
-[1] 140.4282
-   ユーザ   システム       経過  
-     0.001      0.000      0.001 
+<code>[1] 140.4282</code>
+<code>   ユーザ   システム       経過  </code>
+<code>     0.001      0.000      0.001 </code>
 <code class="prom">system.time(print(mean(as.POSIXct(x2$datetime))))</code>
-[1] "2011-07-18 01:52:49 JST"
-   ユーザ   システム       経過  
-     7.816      3.181     11.011 
+<code>[1] "2011-07-18 01:52:49 JST"</code>
+<code>   ユーザ   システム       経過  </code>
+<code>     7.816      3.181     11.011 </code>
 </pre>
 
 <p>読み込みは劇的に早くなりましたが，他の計算は当然ながら変わりません。特に，日時を表す文字列を内部形式に変換する <code>as.POSIXct()</code> の遅さが目立ちます。そこで，readr に含まれている <code>parse_datetime()</code> を使ってみます。</p>
 
 <pre>
 <code class="prom">system.time(print(mean(parse_datetime(x2$datetime, format="%Y/%m/%d %H:%M:%S"))))</code>
-[1] "2011-07-18 01:52:49 UTC"
-   ユーザ   システム       経過  
-     0.082      0.001      0.084 
+<code>[1] "2011-07-18 01:52:49 UTC"</code>
+<code>   ユーザ   システム       経過  </code>
+<code>     0.082      0.001      0.084 </code>
 <code class="prom">system.time(print(mean(parse_datetime(x2$datetime, format="%Y/%m/%d %H:%M:%S", locale=locale(tz="Asia/Tokyo")))))</code>
-[1] "2011-07-18 01:52:49 JST"
-   ユーザ   システム       経過  
-     1.146      0.008      1.155 
+<code>[1] "2011-07-18 01:52:49 JST"</code>
+<code>   ユーザ   システム       経過  </code>
+<code>     1.146      0.008      1.155 </code>
 </pre>
 
 <p>ロケールを指定しなければ2桁高速化できました。指定した場合はやや遅くなりますが，それでも <code>as.POSIXct()</code> よりは高速です。</p>
@@ -148,8 +148,8 @@ cols(
 <code class="cont">                           col_types=cols(</code>
 <code class="cont">                             datetime=col_datetime(format="%Y/%m/%d %H:%M:%S")</code>
 <code class="cont">                           ))})</code>
-   ユーザ   システム       経過  
-     0.359      0.015      0.374 
+<code>   ユーザ   システム       経過  </code>
+<code>     0.359      0.015      0.374 </code>
 </pre>
 
 <h2>haven</h2>

@@ -25,7 +25,7 @@
 
 <pre>
 <code class="prom">2*pi*1.5e8/365/24/60/60</code>
-[1] 29.88577
+<code>[1] 29.88577</code>
 </pre>
 
 <p>もし光の速度が「宇宙」（昔の言葉で「エーテル」）に対して一定であれば，光速を測る向きによって少なくとも60 km/秒の違いが出るはずです。実際には太陽も銀河系の中心のまわりをもっと速く回っているはずですし，銀河系も動いているはずですから，光速は向きによってもっともっと違うはずです。</p>
@@ -38,21 +38,21 @@
 
 <pre>
 <code class="prom">head(morley)</code>
-    Expt Run Speed
-001    1   1   850
-002    1   2   740
-003    1   3   900
-004    1   4  1070
-005    1   5   930
-006    1   6   850
+<code>    Expt Run Speed</code>
+<code>001    1   1   850</code>
+<code>002    1   2   740</code>
+<code>003    1   3   900</code>
+<code>004    1   4  1070</code>
+<code>005    1   5   930</code>
+<code>006    1   6   850</code>
 </pre>
 
 <p>Exptは実験番号で1〜5まであり，そのそれぞれについてRunが1〜20まであり，全部で100の計測値が収められています。Speedは光速（km/s）から299000を引いた値です。データはすべて整数型です：</p>
 
 <pre>
 <code class="prom">sapply(morley, class)</code>
-     Expt       Run     Speed 
-"integer" "integer" "integer" 
+<code>     Expt       Run     Speed </code>
+<code>"integer" "integer" "integer" </code>
 </pre>
 
 <div class="note">
@@ -65,27 +65,27 @@
 <pre>
 <code class="prom">library(MASS)</code>   # MASSライブラリをロードする
 <code class="prom">head(michelson)</code> # 最初の数行を表示してみる
-  Speed Run Expt
-1   850   1    1
-2   740   2    1
-3   900   3    1
-4  1070   4    1
-5   930   5    1
-6   850   6    1
+<code>  Speed Run Expt</code>
+<code>1   850   1    1</code>
+<code>2   740   2    1</code>
+<code>3   900   3    1</code>
+<code>4  1070   4    1</code>
+<code>5   930   5    1</code>
+<code>6   850   6    1</code>
 </pre>
 
 <p>MASSは，<i>Modern Applied Statistics with S-PLUS</i>（邦訳『S-PLUSによる統計解析』シュプリンガー・フェアラーク東京，2001年）という有名な本のコードやデータを収めたパッケージです。こちらのSpeed，Run，Exptは，モードは数値で，型は整数ですが，RunとExptのクラスは名義尺度の因子（factor）です：</p>
 
 <pre>
 <code class="prom">sapply(michelson, mode)</code>
-    Speed       Run      Expt 
-"numeric" "numeric" "numeric" 
+<code>    Speed       Run      Expt </code>
+<code>"numeric" "numeric" "numeric" </code>
 <code class="prom">sapply(michelson, typeof)</code>
-    Speed       Run      Expt 
-"integer" "integer" "integer" 
+<code>    Speed       Run      Expt </code>
+<code>"integer" "integer" "integer" </code>
 <code class="prom">sapply(michelson, class)</code>
-    Speed       Run      Expt 
-"integer"  "factor"  "factor" 
+<code>    Speed       Run      Expt </code>
+<code>"integer"  "factor"  "factor" </code>
 </pre>
 </div>
 
@@ -94,35 +94,35 @@
 <p><img src="img/081231a.png" alt="michelson" class="right">箱ひげ図を描いてみましょう：</p>
 
 <pre>
-boxplot(Speed ~ Expt, data=morley)
-</pre>
+<code>boxplot(Speed ~ Expt, data=morley)
+</code></pre>
 
 <p>これだけでもいいのですが，少し色を添えましょう：</p>
 
 <pre>
-par(mgp=c(1.8,0.6,0))  # 数字を軸に少し近づける
+<code>par(mgp=c(1.8,0.6,0))  # 数字を軸に少し近づける
 boxplot(Speed ~ Expt, col="wheat", data=morley, xlab="Expt", ylab="Speed")
-</pre>
+</code></pre>
 
 <p>ここで使っている図はボックスプロット（boxplot，box-and-whisker plot，箱ひげ図）と呼ばれるものです。ボックスプロットにはいろいろな流儀がありますが，ここでは，真ん中の横線が中央値（メディアン），箱の両側が第1・第3四分位点（25%・75%点），ひげの先端が最小値・最大値を示しますが，どちらのひげも長さは箱の長さの1.5倍を限度とし，それより極端な値はoutlier（外れ値）として個々の点をプロットします。その場合，ひげの先端は外れ値を除いた最小値・最大値になります。</p>
 
 <p style="clear:both"><img src="img/090103a.png" alt="michelson" class="right">ほかにもいろいろなグラフが描けます。右のものは次のコマンドで描いたものです：</p>
 
 <pre>
-stripchart(Speed ~ Expt, vert=TRUE, method="stack", pch=1, at=1:5+0.1, data=morley)
+<code>stripchart(Speed ~ Expt, vert=TRUE, method="stack", pch=1, at=1:5+0.1, data=morley)
 m = with(morley, tapply(Speed, Expt, mean))           # 平均
 s = with(morley, tapply(Speed, Expt, sd)) / sqrt(20)  # 標準誤差
 points(1:5, m, pch=16)                         # 平均は黒丸で
 segments(1:5, m-s, 1:5, m+s)                   # ±標準誤差は線分で
-</pre>
+</code></pre>
 
 <p><code>segments()</code>
 の代わりに <code>arrows()</code>
 を次のように使えば両端にセリフの付いたエラーバーになります：</p>
 
 <pre>
-arrows(1:5, m-s, 1:5, m+s, length=0.05, angle=90, code=3)
-</pre>
+<code>arrows(1:5, m-s, 1:5, m+s, length=0.05, angle=90, code=3)
+</code></pre>
 
 <p>stripchart の変形（改良版？）<a href="http://www.cbs.dtu.dk/~eklund/beeswarm/">beeswarm</a>（ビースウォーム）も便利です。この名前はbee（蜂）のswarm（群れ）から来ています。beeswarm パッケージには boxplot のシンプル版 <code>bxplot()</code> も入っています。<code>beeswarm()</code> と <code>boxplot()</code> または <code>bxplot()</code> を組み合わせるとわかりやすくなります。</p>
 
@@ -133,25 +133,25 @@ arrows(1:5, m-s, 1:5, m+s, length=0.05, angle=90, code=3)
 <pre>
 <code class="prom">oneway.test(Speed ~ Expt, data=morley)</code>
 
-	One-way analysis of means (not assuming equal variances)
+<code>	One-way analysis of means (not assuming equal variances)</code>
 
-data:  Speed and Expt
-F = 3.0061, num df = 4.000, denom df = 47.044, p-value = 0.02738
+<code>data:  Speed and Expt</code>
+<code>F = 3.0061, num df = 4.000, denom df = 47.044, p-value = 0.02738</code>
 
 <code class="prom">oneway.test(Speed ~ Expt, data=morley, var.equal=TRUE)</code>
 
-	One-way analysis of means
+<code>	One-way analysis of means</code>
 
-data:  Speed and Expt
-F = 4.2878, num df = 4, denom df = 95, p-value = 0.003114
+<code>data:  Speed and Expt</code>
+<code>F = 4.2878, num df = 4, denom df = 95, p-value = 0.003114</code>
 </pre>
 
 <p>仮に第1実験を外せば変動は有意でなくなります：</p>
 
 <pre>
-oneway.test(Speed ~ Expt, data=morley, subset=(Expt!=1))
+<code>oneway.test(Speed ~ Expt, data=morley, subset=(Expt!=1))
 # または oneway.test(Speed[Expt!=1] ~ Expt[Expt!=1], data=morley)
-</pre>
+</code></pre>
 
 <p>物理実験ではこういうのは常日頃のことです。原因は温度変化などいろいろです。</p>
 

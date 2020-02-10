@@ -20,12 +20,12 @@
 <p>厚労省の<a href="https://www.mhlw.go.jp/toukei/list/36-19a.html">衛生行政報告例：結果の概要</a>から各年度の統計表10を含むExcelファイルをダウンロードする。統計表10には都道府県別の人工妊娠中絶件数・実施率（女子人口千対）が載っているが，ここでは実施率を使う。「「実施率」は、分母に15～49歳の女子人口を用い、分子に50歳以上の数値を除いた「人工妊娠中絶件数」を用いて計算した」，2010年度については「東日本大震災の影響により、福島県の相双保健福祉事務所管轄内の市町村が含まれていない」とのことである。2009年度以降の値を <a href="data/abortion.csv">abortion.csv</a>（文字コードUTF-8）にまとめておく。</p>
 
 <pre>
-par(mgp=c(2,0.8,0), las=1)  # ←好みでパラメータをいじっているが，なくてもよい
+<code>par(mgp=c(2,0.8,0), las=1)  # ←好みでパラメータをいじっているが，なくてもよい
 data = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/abortion.csv", fileEncoding="UTF-8")
 matplot(2009:2017, t(data[ ,2:10]), type="o", pch=16, lty=1, col="#66ccff",
         xlab="年度", ylab="人工妊娠中絶実施率（女子1000人あたり）")
 points(2009:2017, data[7,2:10], type="o", pch=16, col="#ff2800")
-</pre>
+</code></pre>
 
 <figure><img src="img/181105b.png" alt="人工妊娠中絶実施率（女子1000人あたり）"></figure>
 

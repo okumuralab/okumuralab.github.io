@@ -31,7 +31,7 @@
 <p>国立がん研究センターの<a href="https://ganjoho.jp/reg_stat/statistics/dl/index.html">がんに関する統計データのダウンロード</a>の都道府県別死亡データから，全がん死亡数・粗死亡率・年齢調整死亡率（1995年～2017年）pref_AllCancer_mortality(1995-2017).xls，部位別75歳未満年齢調整死亡率（1995年～2017年）pref_CancerSite_mortalityASR75(1995-2017).xls をいただいてくる。</p>
 
 <pre>
-library(readxl)
+<code>library(readxl)
 par(mgp=c(2,0.8,0), las=1)
 all = read_excel("pref_AllCancer_mortality(1995-2017).xls", "asr75")
 matplot(1995:2017, t(all[2:48, 4:26]), type="o", pch=16, lty=1, col="#66ccff", xlab="", ylab="")
@@ -42,7 +42,7 @@ bui = read_excel("pref_CancerSite_mortalityASR75(1995-2017).xls", "asr75", col_t
 matplot(1995:2017, t(bui[290:336, 6:28]), type="o", pch=16, lty=1, col="#66ccff", xlab="", ylab="")
 points(1995:2017, bui[296, 6:28], type="o", pch=16, col="#ff2800")
 mtext("胃がん死亡率の推移（赤は福島県）", line=-1.5, cex=1.5)
-</pre>
+</code></pre>
 
 <figure><img src="img/181228c.png" alt="全がん死亡率の推移（赤は福島県）"></figure>
 
@@ -53,8 +53,8 @@ mtext("胃がん死亡率の推移（赤は福島県）", line=-1.5, cex=1.5)
 <p>地域ごとの罹患率についてはPDFでしか公開されていないようだ。<a href="https://ganjoho.jp/reg_stat/statistics/brochure/monitoring.html">全国がん罹患モニタリング集計</a>から，フォーマットが現在と同じ2005年以降のものをいただいてくる。ファイル名は mcij*.pdf である。これらを一括でテキストファイルにする（要 pdftotext）：</p>
 
 <pre>
-for x in mcij*.pdf; do pdftotext -raw $x; done
-</pre>
+<code>for x in mcij*.pdf; do pdftotext -raw $x; done
+</code></pre>
 
 <p>これらのテキストから「胃 C16」という文字列の最後のものを見つけ，その後の表をコピーする。「*3」「*4」のような注が入っているものがあるので，それは削除する。できたUTF-8テキストファイルを
 <a href="data/mcij2005_C16.txt">mcij2005_C16.txt</a>,
@@ -71,7 +71,7 @@ for x in mcij*.pdf; do pdftotext -raw $x; done
 として置いておくので，間違いがないかPDFと比較していただければ助かる。これらをまずRで読み込む：</p>
 
 <pre>
-m05 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2005_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+<code>m05 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2005_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
 m06 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2006_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
 m07 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2007_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
 m08 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2008_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
@@ -82,7 +82,7 @@ m12 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2012_C16.tx
 m13 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2013_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
 m14 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2014_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
 m15 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2015_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
-</pre>
+</code></pre>
 
 <p>これらは次の項目から成る：</p>
 
@@ -106,7 +106,7 @@ m15 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2015_C16.tx
 <p>グラフは次のようにして描く：</p>
 
 <pre>
-x = merge(m05[,c(1,7)], m06[,c(1,7)], by="V1", all=TRUE)
+<code>x = merge(m05[,c(1,7)], m06[,c(1,7)], by="V1", all=TRUE)
 x = merge(x, m07[,c(1,7)], by="V1", all=TRUE)
 x = merge(x, m08[,c(1,7)], by="V1", all=TRUE)
 x = merge(x, m09[,c(1,7)], by="V1", all=TRUE)
@@ -131,7 +131,7 @@ y = merge(y, m14[,c(1,13)], by="V1", all=TRUE)
 y = merge(y, m15[,c(1,13)], by="V1", all=TRUE)
 matplot(2005:2015, t(y[,-1]), type="o", pch=16, lty=1, col="#66ccff", xlab="", ylab="", main="女 胃 年齢調整罹患率/10万")
 points(2005:2015, t(y[y[,1]=='福島県',-1]), type="o", pch=16, col="#ff2800")
-</pre>
+</code></pre>
 
 <figure><img src="img/190610c.png" alt="男 胃 年齢調整罹患率/10万（赤は福島県）"></figure>
 

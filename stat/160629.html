@@ -41,15 +41,15 @@
 <p>一つの方法は，まずこれらを1-155ページ，156-311ページと分割し，それぞれに対してAcrobatでExcel形式に変換し，Excelで編集して一つにまとめることである。もう一つの方法はpdftotextを使う方法である：</p>
 
 <pre>
-for x in kaitodeta*.pdf; do
+<code>for x in kaitodeta*.pdf; do
   pdftotext -raw $x
 done
-</pre>
+</code></pre>
 
 <p>これで kaitodeta1.txt から kaitodeta5.txt までができる。これを次のすごくいいかげんなRスクリプトで処理する（<a href="rscript.html">Rでのスクリプト処理</a>参照）：</p>
 
 <pre>
-#! /usr/bin/env Rscript
+<code>#! /usr/bin/env Rscript
 
 args = commandArgs(trailingOnly=TRUE)
 if (length(args) != 1) {
@@ -80,18 +80,18 @@ for (num in 1:99) {
     cat(outfile, cols, "\n")
     if (length(line) == 0) break
 }
-</pre>
+</code></pre>
 
 <p>上のファイルを do.R という名前で作り，実行許可を与え，</p>
 
 <pre>
-./do.R kaitodeta1.txt
-</pre>
+<code>./do.R kaitodeta1.txt
+</code></pre>
 
 <p>とすると，data??.csv というファイルがたくさんできる（?? は 01 から始まる連番）。これを一つずつ目で見て頭のゴミを取り除いてから，次のスクリプトで行数・列数をチェックする：</p>
 
 <pre>
-#! /usr/bin/env Rscript
+<code>#! /usr/bin/env Rscript
 
 args = commandArgs(trailingOnly=TRUE)
 for (arg in args) {
@@ -110,12 +110,12 @@ for (arg in args) {
     }
     cat(arg, lineno, minlen, maxlen, "\n")
 }
-</pre>
+</code></pre>
 
 <p>列数がおかしいものは，次のスクリプトで修正する。コマンドライン引数として，CSVファイル名と，空の場合はNAを埋める列番号を与える。</p>
 
 <pre>
-#! /usr/bin/env Rscript
+<code>#! /usr/bin/env Rscript
 
 args = commandArgs(trailingOnly=TRUE)
 nargs = length(args)
@@ -141,12 +141,12 @@ for (i in 1:nlines) {
 close(f)
 f = file(args[1], "w")
 writeLines(lines, con=f, sep="\n")
-</pre>
+</code></pre>
 
 <p>できた data??.csv を次のスクリプトで横方向にアペンドする（もうちょっとRらしくできるはずであるが手抜きした）：</p>
 
 <pre>
-#! /usr/bin/env Rscript
+<code>#! /usr/bin/env Rscript
 
 args = commandArgs(trailingOnly=TRUE)
 nargs = length(args)
@@ -168,19 +168,19 @@ for (j in 1:len) {
     }
     cat("\n")
 }
-</pre>
+</code></pre>
 
 <p>上のスクリプト append.R を使って</p>
 
 <pre>
-./append.R data??.csv &gt;kaito1.csv
-</pre>
+<code>./append.R data??.csv &gt;kaito1.csv
+</code></pre>
 
 <p>のようにして横方向にまとめる。こうしてできた kaito1.csv 〜 kaito5.csv を今度は縦方向にまとめる。こちらはOSのコマンド cat でできる：</p>
 
 <pre>
-cat kaito?.csv &gt;kaito.csv
-</pre>
+<code>cat kaito?.csv &gt;kaito.csv
+</code></pre>
 
 <p>最後の列275は無理なので諦めた。また，列229は，2〜4番目のファイル（006001-024000）では同じページに必須列がないのでpdftotextでは切り分け不能で，この部分だけNA（欠損値）にした。</p>
 
@@ -193,16 +193,16 @@ cat kaito?.csv &gt;kaito.csv
 <pre>
 <code class="prom">kaito = read.csv("kaito.csv", header=FALSE, colClasses="character", fileEncoding="UTF-8")</code>
 <code class="prom">dim(kaito)</code>
-[1] 30793   274
+<code>[1] 30793   274</code>
 <code class="prom">head(kaito)</code>
-      V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12  V13 V14 V15 V16 V17 V18 V19  V20
-1 000001  0  0  1  0  0  0  1  0   0   0   0 0000   0   0   0   0   0   2 0000
-2 000002  0  1  0  0  0  0  0  0   1   0   1 0000   0   0   0   0   0   1 0000
-3 000003  0  1  0  0  1  0  0  0   0   0   2 0000   2   0   1   0   0   1 0000
-4 000004  0  0  1  0  0  0  0  0   0   1   1 0000   0   0   0   0   0   1 0000
-5 000005  0  0  1  0  0  0  0  1   0   0   2 2610   1   1   0   0   0   2 2610
-6 000006  1  0  0  0  1  0  0  0   0   0   1 0000   0   0   0   0   0   1 0000
-……
+<code>      V1 V2 V3 V4 V5 V6 V7 V8 V9 V10 V11 V12  V13 V14 V15 V16 V17 V18 V19  V20</code>
+<code>1 000001  0  0  1  0  0  0  1  0   0   0   0 0000   0   0   0   0   0   2 0000</code>
+<code>2 000002  0  1  0  0  0  0  0  0   1   0   1 0000   0   0   0   0   0   1 0000</code>
+<code>3 000003  0  1  0  0  1  0  0  0   0   0   2 0000   2   0   1   0   0   1 0000</code>
+<code>4 000004  0  0  1  0  0  0  0  0   0   1   1 0000   0   0   0   0   0   1 0000</code>
+<code>5 000005  0  0  1  0  0  0  0  1   0   0   2 2610   1   1   0   0   0   2 2610</code>
+<code>6 000006  1  0  0  0  1  0  0  0   0   0   1 0000   0   0   0   0   0   1 0000</code>
+<code>……</code>
 </pre>
 
 <p>いただいたCSVファイルのほうも読み出してみる：</p>
@@ -210,16 +210,16 @@ cat kaito?.csv &gt;kaito.csv
 <pre>
 <code class="prom">kaito2 = read.csv("all.csv", colClasses="character")</code>
 <code class="prom">dim(kaito2)</code>
-[1] 30793   274
+<code>[1] 30793   274</code>
 <code class="prom">head(kaito2)</code>
-  X1 X2 X3 X4 X5 X6 X7 X8 X9 X10 X11 X12  X13 X14 X15 X16 X17 X18 X19  X20 X21
-1  1  0  0  1  0  0  0  1  0   0   0   0    0   0   0   0   0   0   2    0   0
-2  2  0  1  0  0  0  0  0  0   1   0   1    0   0   0   0   0   0   1    0   0
-3  3  0  1  0  0  1  0  0  0   0   0   2    0   2   0   1   0   0   1    0   0
-4  4  0  0  1  0  0  0  0  0   0   1   1    0   0   0   0   0   0   1    0   0
-5  5  0  0  1  0  0  0  0  1   0   0   2 2610   1   1   0   0   0   2 2610   1
-6  6  1  0  0  0  1  0  0  0   0   0   1    0   0   0   0   0   0   1    0   0
-……
+<code>  X1 X2 X3 X4 X5 X6 X7 X8 X9 X10 X11 X12  X13 X14 X15 X16 X17 X18 X19  X20 X21</code>
+<code>1  1  0  0  1  0  0  0  1  0   0   0   0    0   0   0   0   0   0   2    0   0</code>
+<code>2  2  0  1  0  0  0  0  0  0   1   0   1    0   0   0   0   0   0   1    0   0</code>
+<code>3  3  0  1  0  0  1  0  0  0   0   0   2    0   2   0   1   0   0   1    0   0</code>
+<code>4  4  0  0  1  0  0  0  0  0   0   1   1    0   0   0   0   0   0   1    0   0</code>
+<code>5  5  0  0  1  0  0  0  0  1   0   0   2 2610   1   1   0   0   0   2 2610   1</code>
+<code>6  6  1  0  0  0  1  0  0  0   0   0   1    0   0   0   0   0   0   1    0   0</code>
+<code>……</code>
 </pre>
 
 <p>いただいたファイルのほうはleading zerosはsuppressされている（これは問題ない）。</p>
@@ -227,7 +227,7 @@ cat kaito?.csv &gt;kaito.csv
 <p>二つのファイルを数値として比較してみる。比較には <a href="http://www.cookbook-r.com/Manipulating_data/Comparing_vectors_or_factors_with_NA/">Comparing vectors or factors with NA</a> にある compareNA() を使った。</p>
 
 <pre>
-compareNA = function(v1, v2) {
+<code>compareNA = function(v1, v2) {
     same = (v1 == v2) | (is.na(v1) &amp; is.na(v2))
     same[is.na(same)] = FALSE
     return(same)
@@ -241,12 +241,12 @@ for (j in 1:274) {
         cat(kaito2[d,j], "\n")
     }
 }
-</pre>
+</code></pre>
 
 <p>結果は次の通り：</p>
 
 <pre>
-●変数 180 に 1 個の相違あり
+<code>●変数 180 に 1 個の相違あり
 NA 
 1 
 ●変数 181 に 1 個の相違あり
@@ -267,7 +267,7 @@ NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
 ●変数 222 に 1 個の相違あり
 00 
 進路変更のため 
-</pre>
+</code></pre>
 
 </article>
 

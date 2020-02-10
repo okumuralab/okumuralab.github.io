@@ -74,7 +74,7 @@ td, th { padding: 0.2em 0.7em }
 <p>以下は Tom Fawcett, An introduction to ROC analysis, <i>Pattern Recognition Letters</i> <b>27</b>, 861-874 (2006) のアルゴリズムに基づいて作ったものです：</p>
 
 <pre>
-ROC = function(score, actual, add=FALSE,
+<code>ROC = function(score, actual, add=FALSE,
     col="black", col.area="", type="l", pch=16) {
   o = order(score, decreasing=TRUE)
   fp = tp = fp_prev = tp_prev = 0
@@ -134,22 +134,22 @@ ROC = function(score, actual, add=FALSE,
   print(table(score &gt;= th, actual, dnn=c("Predicted","Actual")))
   invisible(list(rx=rx, ry=ry, AUC=area/(nF*nT), th=th))
 }
-</pre>
+</code></pre>
 
 <p>このページの冒頭の例題は次のようにして実行できます。</p>
 
 <pre>
-s = c(16,15,14,13,12,11,10, 9, 8, 8, 8, 8, 7, 6, 5)
+<code>s = c(16,15,14,13,12,11,10, 9, 8, 8, 8, 8, 7, 6, 5)
 t = c( T, T, F, T, T, T, F, T, T, T, T, F, F, T, F)
 ROC(s, t)
-</pre>
+</code></pre>
 
 <p>実際には上の図は次のようにして描きました：</p>
 
 <pre>
-par(mgp=c(2,0.8,0))
+<code>par(mgp=c(2,0.8,0))
 ROC(s, t, col.area=gray(0.9), type="o", pch=16)
-</pre>
+</code></pre>
 
 <p>描いた後でマウスでグラフの縦横比を調節して，見やすいようにしてください。</p>
 
@@ -158,16 +158,16 @@ ROC(s, t, col.area=gray(0.9), type="o", pch=16)
 <p>もうちょっと詳しく説明すると，上のデータを11以上，11未満で分けるなら，Rで</p>
 
 <pre>
-table(s &gt;= 11, t)
-</pre>
+<code>table(s &gt;= 11, t)
+</code></pre>
 
 <p>と打ち込めば，分割表</p>
 
 <pre>
-        FALSE TRUE
+<code>        FALSE TRUE
   FALSE     4    5
   TRUE      1    5
-</pre>
+</code></pre>
 
 <p>が得られます。このような分割表を混同行列（confusion matrix）と呼ぶことがあります。</p>
 

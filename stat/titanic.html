@@ -37,72 +37,72 @@ MathJax = {
 
 <pre>
 <code class="prom">str(Titanic)</code>
- 'table' num [1:4, 1:2, 1:2, 1:2] 0 0 35 0 0 0 17 0 118 154 ...
- - attr(*, "dimnames")=List of 4
-  ..$ Class   : chr [1:4] "1st" "2nd" "3rd" "Crew"
-  ..$ Sex     : chr [1:2] "Male" "Female"
-  ..$ Age     : chr [1:2] "Child" "Adult"
-  ..$ Survived: chr [1:2] "No" "Yes"
+<code> 'table' num [1:4, 1:2, 1:2, 1:2] 0 0 35 0 0 0 17 0 118 154 ...</code>
+<code> - attr(*, "dimnames")=List of 4</code>
+<code>  ..$ Class   : chr [1:4] "1st" "2nd" "3rd" "Crew"</code>
+<code>  ..$ Sex     : chr [1:2] "Male" "Female"</code>
+<code>  ..$ Age     : chr [1:2] "Child" "Adult"</code>
+<code>  ..$ Survived: chr [1:2] "No" "Yes"</code>
 </pre>
 
 <p>これからわかるように，<code>Titanic</code> は4個の添字を持つ人数の表（$4 \times 2 \times 2 \times 2$ の表）で，各添字は，乗客クラス（ファーストクラス，セカンドクラス，サードクラス，乗組員），性別（男，女），年齢（子ども，大人），生存（No，Yes）を表す。</p>
 
 <pre>
 <code class="prom">sum(Titanic)</code> # 全員
-[1] 2201
+<code>[1] 2201</code>
 <code class="prom">sum(Titanic[,,,"Yes"])</code> # 生存者
-[1] 711
+<code>[1] 711</code>
 <code class="prom">sum(Titanic[,,,"No"])</code> # 死亡者
-[1] 1490
+<code>[1] 1490</code>
 </pre>
 
 <p>これと同じことは <code>margin.table()</code> 関数でもできる：</p>
 
 <pre>
 <code class="prom">margin.table(Titanic)</code>
-[1] 2201
+<code>[1] 2201</code>
 <code class="prom">margin.table(Titanic, 4)</code>
-Survived
-  No  Yes 
-1490  711 
+<code>Survived</code>
+<code>  No  Yes </code>
+<code>1490  711 </code>
 </pre>
 
 <p><code>margin.table()</code> は次のようなこともできる：</p>
 
 <pre>
 <code class="prom">margin.table(Titanic, c(2,4))</code>
-        Survived
-Sex        No  Yes
-  Male   1364  367
-  Female  126  344
+<code>        Survived</code>
+<code>Sex        No  Yes</code>
+<code>  Male   1364  367</code>
+<code>  Female  126  344</code>
 <code class="prom">margin.table(Titanic, c(2,4,1))</code>
-, , Class = 1st
+<code>, , Class = 1st</code>
 
-        Survived
-Sex       No Yes
-  Male   118  62
-  Female   4 141
+<code>        Survived</code>
+<code>Sex       No Yes</code>
+<code>  Male   118  62</code>
+<code>  Female   4 141</code>
 
-, , Class = 2nd
+<code>, , Class = 2nd</code>
 
-        Survived
-Sex       No Yes
-  Male   154  25
-  Female  13  93
+<code>        Survived</code>
+<code>Sex       No Yes</code>
+<code>  Male   154  25</code>
+<code>  Female  13  93</code>
 
-, , Class = 3rd
+<code>, , Class = 3rd</code>
 
-        Survived
-Sex       No Yes
-  Male   422  88
-  Female 106  90
+<code>        Survived</code>
+<code>Sex       No Yes</code>
+<code>  Male   422  88</code>
+<code>  Female 106  90</code>
 
-, , Class = Crew
+<code>, , Class = Crew</code>
 
-        Survived
-Sex       No Yes
-  Male   670 192
-  Female   3  20
+<code>        Survived</code>
+<code>Sex       No Yes</code>
+<code>  Male   670 192</code>
+<code>  Female   3  20</code>
 </pre>
 
 <p>これを見れば，全体として，男性の多くが死に，女性の多くは助かったことがわかる。しかし，サードクラスでは女性も死者のほうが多い。</p>
@@ -110,32 +110,32 @@ Sex       No Yes
 <p>男と比べた女の生存者の多さは，例えばオッズ比（odds ratio）という指標で表せる（<a href="2by2.html">2×2の表，オッズ比，相対危険度</a> 参照）。オッズ比を計算する関数はいろいろなパッケージで定義されているが，自前で作っても，次のように1行でできる：</p>
 
 <pre>
-oddsratio = function(x) (x[2,2]/x[2,1])/(x[1,2]/x[1,1])
-</pre>
+<code>oddsratio = function(x) (x[2,2]/x[2,1])/(x[1,2]/x[1,1])
+</code></pre>
 
 <p>これを使えば，全体のオッズ比は</p>
 
 <pre>
 <code class="prom">oddsratio(margin.table(Titanic, c(2,4)))</code>
-[1] 10.14697
+<code>[1] 10.14697</code>
 </pre>
 
 <p>乗客クラスごとのオッズ比は</p>
 
 <pre>
 <code class="prom">for (i in 1:4) cat(i, oddsratio(margin.table(Titanic, c(2,4,1))[,,i]), "\n")</code>
-1 67.08871 
-2 44.06769 
-3 4.071612 
-4 23.26389 
+<code>1 67.08871 </code>
+<code>2 44.06769 </code>
+<code>3 4.071612 </code>
+<code>4 23.26389 </code>
 </pre>
 
 <p>またはもっとRらしく</p>
 
 <pre>
 <code class="prom">apply(margin.table(Titanic, c(2,4,1)), 3, oddsratio)</code>
-      1st       2nd       3rd      Crew 
-67.088710 44.067692  4.071612 23.263889 
+<code>      1st       2nd       3rd      Crew </code>
+<code>67.088710 44.067692  4.071612 23.263889 </code>
 </pre>
 
 <p>つまり，ファーストクラスでは紳士的に女性の生存が優先されたが，クラスが下がるにつれその傾向が減っていることがわかる。</p>
@@ -147,10 +147,10 @@ oddsratio = function(x) (x[2,2]/x[2,1])/(x[1,2]/x[1,1])
 <pre>
 <code class="prom">chisq.test(margin.table(Titanic, c(2,4)))</code>
 
-	Pearson's Chi-squared test with Yates' continuity correction
+<code>	Pearson's Chi-squared test with Yates' continuity correction</code>
 
-data:  margin.table(Titanic, c(2, 4))
-X-squared = 454.5, df = 1, p-value &lt; 2.2e-16
+<code>data:  margin.table(Titanic, c(2, 4))</code>
+<code>X-squared = 454.5, df = 1, p-value &lt; 2.2e-16</code>
 </pre>
 
 <p>あるいは</p>
@@ -158,16 +158,16 @@ X-squared = 454.5, df = 1, p-value &lt; 2.2e-16
 <pre>
 <code class="prom">fisher.test(margin.table(Titanic, c(2,4)))</code>
 
-	Fisher's Exact Test for Count Data
+<code>	Fisher's Exact Test for Count Data</code>
 
-data:  margin.table(Titanic, c(2, 4))
-p-value < 2.2e-16
-alternative hypothesis: true odds ratio is not equal to 1
-95 percent confidence interval:
-  7.97665 12.92916
-sample estimates:
-odds ratio 
-   10.1319 
+<code>data:  margin.table(Titanic, c(2, 4))</code>
+<code>p-value < 2.2e-16</code>
+<code>alternative hypothesis: true odds ratio is not equal to 1</code>
+<code>95 percent confidence interval:</code>
+<code>  7.97665 12.92916</code>
+<code>sample estimates:</code>
+<code>odds ratio </code>
+<code>   10.1319 </code>
 </pre>
 
 <p>このオッズ比が <code>oddsratio(margin.table(Titanic, c(2,4)))</code> の結果 10.14697 と若干異なるのは，<a href="fishertest.html">Fisherの正確検定</a>に書いた（conditional MLE あたり）。</p>
@@ -193,16 +193,16 @@ odds ratio
 <pre>
 <code class="prom">mantelhaen.test(margin.table(Titanic, c(2,4,1)))</code>
 
-	Mantel-Haenszel chi-squared test with continuity correction
+<code>	Mantel-Haenszel chi-squared test with continuity correction</code>
 
-data:  margin.table(Titanic, c(2, 4, 1))
-Mantel-Haenszel X-squared = 360.33, df = 1, p-value < 2.2e-16
-alternative hypothesis: true common odds ratio is not equal to 1
-95 percent confidence interval:
-  8.232629 14.185153
-sample estimates:
-common odds ratio 
-         10.80653 
+<code>data:  margin.table(Titanic, c(2, 4, 1))</code>
+<code>Mantel-Haenszel X-squared = 360.33, df = 1, p-value < 2.2e-16</code>
+<code>alternative hypothesis: true common odds ratio is not equal to 1</code>
+<code>95 percent confidence interval:</code>
+<code>  8.232629 14.185153</code>
+<code>sample estimates:</code>
+<code>common odds ratio </code>
+<code>         10.80653 </code>
 </pre>
 
 <p>このデータについては，Mantel-Haenszel で求めた common odds ratio 10.80653 は，<code>oddsratio(margin.table(Titanic, c(2,4)))</code> で求めた 10.14697 とあまり違わない。どんな場合にもそうであろうか，というのが次節の話題である。</p>
@@ -214,31 +214,31 @@ common odds ratio
 <p>次のようなコマンドで作られる $2 \times 2 \times 2$ の表を考えよう。</p>
 
 <pre>
-x = array(c(21, 2,71,42,
+<code>x = array(c(21, 2,71,42,
             18,70, 1,32),
           dim=c(2,2,2),
           dimnames=list(Treatment=c("Treated","Untreated"),
                         Survival=c("Alive","Dead"),
                         Sex=c("Male","Female")))
-</pre>
+</code></pre>
 
 <p>これは，男女について，ある治療をした結果を表す：</p>
 
 <pre>
 <code class="prom">x</code>
-, , Sex = Male
+<code>, , Sex = Male</code>
 
-           Survival
-Treatment   Alive Dead
-  Treated      21   71
-  Untreated     2   42
+<code>           Survival</code>
+<code>Treatment   Alive Dead</code>
+<code>  Treated      21   71</code>
+<code>  Untreated     2   42</code>
 
-, , Sex = Female
+<code>, , Sex = Female</code>
 
-           Survival
-Treatment   Alive Dead
-  Treated      18    1
-  Untreated    70   32
+<code>           Survival</code>
+<code>Treatment   Alive Dead</code>
+<code>  Treated      18    1</code>
+<code>  Untreated    70   32</code>
 </pre>
 
 <p>男女をまとめて1つの表にしてしまおう：</p>
@@ -246,12 +246,12 @@ Treatment   Alive Dead
 <pre>
 <code class="prom">y = margin.table(x, c(1,2))</code>
 <code class="prom">y</code>
-           Survival
-Treatment   Alive Dead
-  Treated      39   72
-  Untreated    72   74
+<code>           Survival</code>
+<code>Treatment   Alive Dead</code>
+<code>  Treated      39   72</code>
+<code>  Untreated    72   74</code>
 <code class="prom">oddsratio(y)</code>
-[1] 0.556713
+<code>[1] 0.556713</code>
 </pre>
 
 <p>これを見ると，治療しなければ生死はほぼ等しいのに，治療したら死亡のほうが増えてしまうという，まずい治療の例のようである。Fisherの正確検定をしてみる：</p>
@@ -259,16 +259,16 @@ Treatment   Alive Dead
 <pre>
 <code class="prom">fisher.test(y)</code>
 
-	Fisher's Exact Test for Count Data
+<code>	Fisher's Exact Test for Count Data</code>
 
-data:  y
-p-value = 0.03049
-alternative hypothesis: true odds ratio is not equal to 1
-95 percent confidence interval:
- 0.3242247 0.9524200
-sample estimates:
-odds ratio 
- 0.5579833 
+<code>data:  y</code>
+<code>p-value = 0.03049</code>
+<code>alternative hypothesis: true odds ratio is not equal to 1</code>
+<code>95 percent confidence interval:</code>
+<code> 0.3242247 0.9524200</code>
+<code>sample estimates:</code>
+<code>odds ratio </code>
+<code> 0.5579833 </code>
 </pre>
 
 <p>オッズ比が 1 であるという帰無仮説は棄却される（$p = 0.03$）。</p>
@@ -276,26 +276,26 @@ odds ratio
 <p>しかし，男女別にオッズ比を計算すれば，</p>
 
 <pre>
-apply(x, 3, oddsratio)
+<code>apply(x, 3, oddsratio)
     Male   Female 
 6.211268 8.228571 
-</pre>
+</code></pre>
 
 <p>どちらもオッズ比は 1 より大きく，治療したほうがよい。Mantel-Haenszel 検定は</p>
 
 <pre>
 <code class="prom">mantelhaen.test(x)</code>
 
-	Mantel-Haenszel chi-squared test with continuity correction
+<code>	Mantel-Haenszel chi-squared test with continuity correction</code>
 
-data:  x
-Mantel-Haenszel X-squared = 11.222, df = 1, p-value = 0.0008084
-alternative hypothesis: true common odds ratio is not equal to 1
-95 percent confidence interval:
-  2.062906 23.283520
-sample estimates:
-common odds ratio 
-         6.930492 
+<code>data:  x</code>
+<code>Mantel-Haenszel X-squared = 11.222, df = 1, p-value = 0.0008084</code>
+<code>alternative hypothesis: true common odds ratio is not equal to 1</code>
+<code>95 percent confidence interval:</code>
+<code>  2.062906 23.283520</code>
+<code>sample estimates:</code>
+<code>common odds ratio </code>
+<code>         6.930492 </code>
 </pre>
 
 <p>となり，オッズ比はやはり 1 より大きい（$p = 0.0008$）。</p>
@@ -306,19 +306,19 @@ common odds ratio
 <p><code>mantelhaen.test()</code> の中を調べると，common odds ratio 6.930492 は次のようにして求めているようである（136，121はそれぞれ男女の総数）：</p>
 <pre>
 <code class="prom">(21*42/136 + 18*32/121) / (71*2/136 + 1*70/121)</code>
-[1] 6.930492
+<code>[1] 6.930492</code>
 </pre>
 </div>
 
 <div class="note">
 <p><a href="meta.html">メタアナリシス</a>のように考えることもできる：</p>
 <pre>
-library(metafor)
+<code>library(metafor)
 y = matrix(as.numeric(x), ncol=4, byrow=TRUE)
 dat = escalc(measure="OR", ai=y[,1], bi=y[,2], ci=y[,3], di=y[,4])
 res = rma(yi, vi, data=dat)
 forest(res, slab=c("Male","Female"))
-</pre>
+</code></pre>
 <figure><img src="img/190114a.png" alt=""></figure>
 </div>
 

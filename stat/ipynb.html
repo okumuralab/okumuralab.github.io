@@ -30,8 +30,8 @@
 <p>まずはPython，IPythonを<a href="/~okumura/python3/install.html">インストール</a>する必要があります。また，<a href="http://rpy.sourceforge.net/rpy2.html">rpy2</a>というPythonのパッケージが必要です。Pythonがインストールされたシステムであれば <code>pip</code> コマンド（Python 3なら <code>pip3</code>）で簡単にインストールできます：</p>
 
 <pre>
-sudo pip3 install rpy2
-</pre>
+<code>sudo pip3 install rpy2
+</code></pre>
 
 <p>使い方の詳細は<a href="http://rpy.sourceforge.net/rpy2/doc-2.5/html/overview.html">rpy2 documentation</a>をご覧ください。IPythonの<a href="http://ipython.org/ipython-doc/2/config/extensions/rmagic.html">rmagic</a>のページにも簡単にまとめられています。最低限のことは以下の例で説明します。</p>
 
@@ -40,16 +40,16 @@ sudo pip3 install rpy2
 <p>ターミナルを開いて，適当な作業用ディレクトリに移動し，そこでIPython Notebookを起動します：</p>
 
 <pre>
-ipython notebook
-</pre>
+<code>ipython notebook
+</code></pre>
 
 <p>これで自マシンの8888番ポート（つまり <a href="http://localhost:8888">http://localhost:8888</a>）でWebサーバが起動し，標準のWebブラウザが開いてそこに接続します。ブラウザはWebSocketをサポートする必要があります（IEなら10以降）。このブラウザの画面の右にある [New Notebook] ボタンをクリックし，新しいNotebookを作成します（デフォルトのNotebook名は <code>Untitled0.ipynb</code> ですが File メニューから Rename できます）。</p>
 
 <p>ブラウザ（Notebook）の In&nbsp;[&nbsp;]: の右に，Rと連携させるための仕組みをロードするために，次のように打ち込んで，Shift + Enter します（昔の <code>rmagic</code> は今は <code>rpy2.ipython</code> にしたほうがよいようです）：</p>
 
 <pre>
-%load_ext rpy2.ipython
-</pre>
+<code>%load_ext rpy2.ipython
+</code></pre>
 
 <p>次のセルからは，Rの命令であれば頭に <code>%%R</code> という行を付けます（これを付けなければPythonの命令になります）。セル内の改行は Enter，セルを実行するには Shift + Enter です。</p>
 
@@ -66,8 +66,8 @@ ipython notebook
 <p>IPython NotebookをHTMLに変換するには次のようにします（あらかじめpipで pygments パッケージをインストールしておきます）：</p>
 
 <pre>
-ipython nbconvert --to html Untitled0.ipynb 
-</pre>
+<code>ipython nbconvert --to html Untitled0.ipynb 
+</code></pre>
 
 <p>画像は<a href="http://ja.wikipedia.org/wiki/Data_URI_scheme">data URI scheme</a>でHTMLファイルに埋め込まれます。</p>
 

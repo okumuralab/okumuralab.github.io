@@ -38,13 +38,13 @@
 <p>まずNipponMapパッケージのインストール：</p>
 
 <pre>
-install.packages("NipponMap")
-</pre>
+<code>install.packages("NipponMap")
+</code></pre>
 
 <p>2020年度採用の高校「情報」教員採用試験で，副免許不要の都道府県は青，副免許必要の都道府県は黄を塗る。</p>
 
 <pre>
-library(NipponMap)
+<code>library(NipponMap)
 kenmei = c("北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
            "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山",
            "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重",
@@ -59,7 +59,7 @@ cols[c("北海道","宮城","茨城","埼玉","東京","神奈川","富山","長
 par(mar=c(0,0,0,0))
 JapanPrefMap(col=cols)
 legend(143, 33, c("副免許不要","副免許必要"), fill=c("blue","yellow"))
-</pre>
+</code></pre>
 
 <figure><img src="img/191105a.png" alt="2020年度高校「情報」教員採用試験状況"></figure>
 
@@ -70,7 +70,7 @@ legend(143, 33, c("副免許不要","副免許必要"), fill=c("blue","yellow"))
 <p>ついでに，<a href="http://nakano.ac/index.php?%B9%E2%B9%BB%A1%D6%BE%F0%CA%F3%A1%D7%B6%B5%B0%F7%BA%CE%CD%D1%BB%EE%B8%B3%BE%F5%B6%B7">中野先生のページ</a>から副免許の要・不要も書き込まれたデータをすべていただいてきて，アニメーションで表示する：</p>
 
 <pre>
-year = 2001:2020
+<code>year = 2001:2020
 cols = matrix(rep("white", 47*20), nrow=47)
 rownames(cols) = kenmei
 
@@ -123,7 +123,7 @@ saveGIF({
         legend(141, 33, c("副免許不要","副免許必要"), fill=c("blue","yellow"))
     }
 })
-</pre>
+</code></pre>
 
 <figure><img src="img/191105b.gif" alt="高校で「情報」教員が採用された都道府県"></figure>
 
@@ -132,7 +132,7 @@ saveGIF({
 <p><code>JapanPrefMap()</code> を少々改造し，投影法を UTM 54N に変えてみる。座標変換は sf パッケージの <code>st_transform()</code> を使う。</p>
 
 <pre>
-library(sf)
+<code>library(sf)
 
 JapanPrefMap2 &lt;-
 function (col = NULL, inset = TRUE, ...) 
@@ -160,22 +160,22 @@ function (col = NULL, inset = TRUE, ...)
     m.c &lt;- suppressWarnings(st_centroid(m))
     return(invisible(st_coordinates(m.c)))
 }
-</pre>
+</code></pre>
 
 <p>これで描いてみる。座標は経度/緯度ではなくEasting/Northing (km)になることに注意する（<code>axes=TRUE</code> を付けるとわかりやすい）。</p>
 
 <pre>
-JapanPrefMap2(col=cols)
+<code>JapanPrefMap2(col=cols)
 legend(600, 3700, c("副免許不要","副免許必要"), fill=c("blue","yellow"))
-</pre>
+</code></pre>
 
 <figure><img src="img/191105c.png" alt="2019年度高校「情報」教員採用試験状況"></figure>
 
 <p>UTM 54N以外に，<a href="http://gis.stackexchange.com/questions/73107/suitable-projection-for-a-map-of-japan">Suitable projection for a map of Japan</a> で次のような経線がまっすぐになるものも薦められている：</p>
 
 <pre>
-+proj=eqdc +lat_0=0 +lon_0=138 +lat_1=34 +lat_2=40 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs
-</pre>
+<code>+proj=eqdc +lat_0=0 +lon_0=138 +lat_1=34 +lat_2=40 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs
+</code></pre>
 
 <h2>参考文献</h2>
 

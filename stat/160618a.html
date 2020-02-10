@@ -17,7 +17,7 @@
 <p>数値実験してみよう。とりあえず1変数の <i lang="en">t</i> 検定で。</p>
 
 <pre>
-foo = function() {
+<code>foo = function() {
     x = rnorm(1000)
     for (i in 10:1000) {
         if (t.test(x[1:i])$p.value &lt; 0.05) return(i)
@@ -27,7 +27,7 @@ foo = function() {
 r = replicate(1000, foo())
 x = sapply(10:1000, function(t) sum(r &gt;= 10 &amp; r &lt;= t))
 plot(10:1000, x, log="x", ylim=c(0,500), xlab="", ylab="")
-</pre>
+</code></pre>
 
 <figure><img src="img/160618a.png" alt=""></figure>
 

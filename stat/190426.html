@@ -21,7 +21,7 @@
 <p>以下のデータはe-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&amp;layout=datalist&amp;toukei=00130002&amp;tstat=000001027458&amp;cycle=7&amp;year=20180&amp;month=0">道路の交通に関する統計＞交通死亡事故の特徴等について＞年次＞2018年</a>の「平成30年中の交通死亡事故の発生状況及び道路交通法違反取締り状況等について」のPDF（ファイル名：平成30年中の交通死亡事故.pdf）の26・27ページから抜き出したものである（追記：対人のみの件数も加えた）：</p>
 
 <pre>
-年齢,割合,件数,対人割合,対人件数
+<code>年齢,割合,件数,対人割合,対人件数
 0-,NA,5,NA,0
 16-,11.43,101,1.24,11
 20-,4.58,217,1.37,65
@@ -38,18 +38,18 @@
 75-,6.17,208,1.36,46
 80-,9.21,152,1.21,20
 85-,16.27,100,1.46,9
-</pre>
+</code></pre>
 
 <p>これをCSVファイルに保存して，グラフにしてみる：</p>
 
 <pre>
-x = read.csv("x.csv")
+<code>x = read.csv("x.csv")
 par(mgp=c(2,0.8,0))  
 t = barplot(x[[2]], names.arg=x[[1]], las=1,
             main="原付以上運転者（第1当事者）の事故類型別・年齢層別\n免許保有者10万人当たり死亡事故件数（平成30年中）")
 axis(2, labels="件", at=15, padj=-1, las=1)
 text(t, x[[2]], x[[2]], pos=3, cex=0.8, xpd=TRUE)
-</pre>
+</code></pre>
 
 <figure><img src="img/190426a.png" alt="原付以上運転者（第1当事者）の事故類型別・年齢層別免許保有者10万人当たり死亡事故件数（平成30年中）"></figure>
 
@@ -58,11 +58,11 @@ text(t, x[[2]], x[[2]], pos=3, cex=0.8, xpd=TRUE)
 <p>一方で，実際の死亡事故件数は，次の通りである：</p>
 
 <pre>
-t = barplot(x[[3]], names.arg=x[[1]], las=1,
+<code>t = barplot(x[[3]], names.arg=x[[1]], las=1,
             main="原付以上運転者（第1当事者）の事故類型別・年齢層別死亡事故件数（平成30年中）")
 axis(2, labels="件", at=250, padj=-1, las=1)
 text(t, x[[3]], x[[3]], pos=3, cex=0.8, xpd=TRUE)
-</pre>
+</code></pre>
 
 <figure><img src="img/190426b.png" alt="原付以上運転者（第1当事者）の事故類型別・年齢層別死亡事故件数（平成30年中）"></figure>
 

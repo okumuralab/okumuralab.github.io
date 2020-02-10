@@ -42,18 +42,18 @@ L.marker([34.7468,136.5248]).addTo(map)
 <p>上のような地図をページに埋め込むには，まず，ページの頭書き（head要素）に次のように書いておきます：</p>
 
 <pre>
-&lt;link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+<code>&lt;link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
   crossorigin=""&gt;
 &lt;script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
   integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
   crossorigin=""&gt;&lt;/script&gt;
-</pre>
+</code></pre>
 
 <p>そして，地図を入れたいところに次のように書きます：</p>
 
 <pre>
-&lt;div id="map" style="width:100%; height:300px"&gt;&lt;/div&gt;
+<code>&lt;div id="map" style="width:100%; height:300px"&gt;&lt;/div&gt;
 &lt;script&gt;
 var map = L.map('map').setView([34.7468,136.5248], 15);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -63,7 +63,7 @@ L.marker([34.7468,136.5248]).addTo(map)
     .bindPopup('ここにいます')
     .openPopup();
 &lt;/script&gt;
-</pre>
+</code></pre>
 
 <p>ここで <code>[34.7468,136.5248]</code> は緯度・経度です。<code>15</code> は大きな数にするほど拡大した地図になります。</p>
 
@@ -83,7 +83,7 @@ L.marker([34.7468,136.5248]).addTo(map2)
 <p>これは次のように書きました。</p>
 
 <pre>
-&lt;div id="map2" style="width:100%; height:300px"&gt;&lt;/div&gt;
+<code>&lt;div id="map2" style="width:100%; height:300px"&gt;&lt;/div&gt;
 &lt;script&gt;
 var map2 = L.map('map2').setView([34.7468,136.5248], 15);
 L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
@@ -93,7 +93,7 @@ L.marker([34.7468,136.5248]).addTo(map2)
     .bindPopup('ここにいます')
     .openPopup();
 &lt;/script&gt;
-</pre>
+</code></pre>
 
 <p>地理院地図にはいろいろな種類があります。詳しくは<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル一覧</a>をご覧ください。</p>
 
@@ -106,33 +106,33 @@ L.marker([34.7468,136.5248]).addTo(map2)
 <p>まず，CRANからパッケージをインストールし，読み込みます：</p>
 
 <pre>
-install.packages("leaflet")
+<code>install.packages("leaflet")
 library(leaflet)
-</pre>
+</code></pre>
 
 <p>上と同様の地図を描くには，Rのコンソールに次のように打ち込みます：</p>
 
 <pre>
-m = leaflet()
+<code>m = leaflet()
 m = addTiles(m)
 m = addMarkers(m, lat=34.7468, lng=136.5248, popup="ここにいます")
 m
-</pre>
+</code></pre>
 
 <p>地理院地図にするには2行目を次のようにします。</p>
 
 <pre>
-m = addTiles(m, "//cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png")
-</pre>
+<code>m = addTiles(m, "//cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png")
+</code></pre>
 
 <p>同じことですが，次のようなパイプ記法も使えます：</p>
 
 <pre>
-m = leaflet() %>%
+<code>m = leaflet() %>%
   addTiles() %>%
   addMarkers(lat=34.7468, lng=136.5248, popup="ここにいます")
 m
-</pre>
+</code></pre>
 
 <p>さらに詳しい説明が <a href="https://rstudio.github.io/leaflet/">こちら</a> にあります。</p>
 
@@ -141,7 +141,7 @@ m
 <p>もう古い話になりましたが，福島の42万点での放射線測定の結果を地図にする話が<a href="rgooglemaps.html">RgoogleMapsを使った放射線地図</a>にあります。leafletで42万点に耐えられるかどうか，やってみました。かなり重いのでご注意ください。<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>の淡色地図を使いました。マーカーの色遣いにもっと工夫が必要です。</p>
 
 <pre>
-library(leaflet)
+<code>library(leaflet)
 library(RColorBrewer)
 
 cols=c("white",brewer.pal(9, "YlOrRd"),rep("black",100))
@@ -155,7 +155,7 @@ m = setView(m, 140.2, 37.38, 9)
 m = addCircles(m, radius=10, color=cols[floor(fukushima[o,]$radiation*2)+1])
 m = addMarkers(m, lat=37.422778, lng=141.032339, popup="福島第一原発")
 m
-</pre>
+</code></pre>
 
 <figure><img src="img/fukushima-leaflet.png" alt="福島県の放射線地図"></figure>
 

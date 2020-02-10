@@ -38,7 +38,7 @@
 <p>鯖江市の<a href="http://www3.city.sabae.fukui.jp/xml/population/population.xml">人口XML</a>をWebブラウザで開いてもおそらく次のようなタグがたくさん入ったテキストとして扱われてしまうと思います。</p>
 
 <pre>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;dataroot ...&gt;
 &lt;population&gt;
 &lt;No&gt;1&lt;/No&gt;
@@ -49,59 +49,59 @@
 &lt;uri&gt;http://www3.city.sabae.fukui.jp/xml/population/#0001&lt;/uri&gt;
 &lt;/population&gt;
 ……
-</pre>
+</code></pre>
 
 <p>このようなXMLをデータとして読むためのRのパッケージXMLをインストールし，読み込んでおきます：</p>
 
 <pre>
-install.packages("XML")
+<code>install.packages("XML")
 library(XML)
-</pre>
+</code></pre>
 
 <p>これで次のようにURLを指定してデータが読み込めます：</p>
 
 <pre>
-options(stringsAsFactors=FALSE)
+<code>options(stringsAsFactors=FALSE)
 df = xmlToDataFrame("http://www3.city.sabae.fukui.jp/xml/population/population.xml")
-</pre>
+</code></pre>
 
 <p><code>head(df)</code> と打ち込むと，何となく読めているようです：</p>
 
 <pre>
-  No year age man fem                                                  uri
+<code>  No year age man fem                                                  uri
 1  1 2003   0 341 329 http://www3.city.sabae.fukui.jp/xml/population/#0001
 2  2 2003   1 366 374 http://www3.city.sabae.fukui.jp/xml/population/#0002
 3  3 2003   2 360 367 http://www3.city.sabae.fukui.jp/xml/population/#0003
 ……
-</pre>
+</code></pre>
 
 <p>「男」「女」が「man」「fem」というのは何となくおかしいですね。「uri」が何を指すのかもよくわかりません。……という突っ込みはさておいて，<code>str(df)</code> と打ち込んで，読み込んだデータの構造を調べてみましょう。</p>
 
 <pre>
-'data.frame':	1111 obs. of  6 variables:
+<code>'data.frame':	1111 obs. of  6 variables:
  $ No  : chr  "1" "2" "3" "4" ...
  $ year: chr  "2003" "2003" "2003" "2003" ...
  $ age : chr  "0" "1" "2" "3" ...
  $ man : chr  "341" "366" "360" "384" ...
  $ fem : chr  "329" "374" "367" "372" ...
  $ uri : chr  "http://www3.city.sabae.fukui.jp/xml/population/#0001" ...
-</pre>
+</code></pre>
 
 <p>ちゃんと文字列で読み込まれています。もし <code>options(stringsAsFactors=FALSE)</code> を最初に打ち込まなかったなら，全部factor（因子）として読み込まれてしまうでしょう。</p>
 
 <p>読み込むときに，次のように列ごとに型指定をしてもかまいません：</p>
 
 <pre>
-df = xmlToDataFrame("http://www3.city.sabae.fukui.jp/xml/population/population.xml",
+<code>df = xmlToDataFrame("http://www3.city.sabae.fukui.jp/xml/population/population.xml",
                     colClasses=c("integer","integer","integer",
                                  "integer","integer","character"))
-</pre>
+</code></pre>
 
 <p>望み通りの型で読めたか <code>str(df)</code> で確認しておきましょう。型を変更するには，</p>
 
 <pre>
-df$age = as.integer(df$age)
-</pre>
+<code>df$age = as.integer(df$age)
+</code></pre>
 
 <p>のようにしてもかまいません。</p>
 
@@ -110,14 +110,14 @@ df$age = as.integer(df$age)
 <p>Hadley Wickhamの新しいパッケージxml2を使ってみましょう。このパッケージについては <a href="http://blog.rstudio.org/2015/04/21/xml2/">Parse and process XML (and HTML) with xml2 | RStudio Blog</a> も参照してください。</p>
 
 <pre>
-install.packages("xml2")
+<code>install.packages("xml2")
 library(xml2)
 x = read_xml("http://www3.city.sabae.fukui.jp/xml/population/population.xml")
 year = as.integer(xml_text(xml_find_all(x, "//year")))
 age = as.integer(xml_text(xml_find_all(x, "//age")))
 man = as.integer(xml_text(xml_find_all(x, "//man")))
 fem = as.integer(xml_text(xml_find_all(x, "//fem")))
-</pre>
+</code></pre>
 
 <p>ここで指定した <code>"//year"</code> のような書き方は <a href="http://www.w3.org/TR/xpath/">XML Path Language (XPath)</a> といいます。この場合 <code>"//year"</code> は絶対パスで書けば <code>"/dataroot/population/year"</code> となりますが，略して <code>"//year"</code> と書くことができます。あるいは，トップレベル以外の <code>year</code> という意味で <code>".//year"</code> と書くこともあります。</p>
 
@@ -126,7 +126,7 @@ fem = as.integer(xml_text(xml_find_all(x, "//fem")))
 <figure><img src="img/151231.gif" alt="鯖江市の人口ピラミッドの推移"></figure>
 
 <pre>
-library(pyramid)
+<code>library(pyramid)
 library(animation)
 
 saveGIF({
@@ -136,7 +136,7 @@ saveGIF({
                  Cstep=10, Laxis=c(0,350,700), main=i)
     }
 })
-</pre>
+</code></pre>
 
 <p>xml2パッケージを使う例としては <a href="151230.html">SpringerLinkでISBNから書誌情報を得る</a> もご覧ください。</p>
 

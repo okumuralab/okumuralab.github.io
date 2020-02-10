@@ -45,19 +45,19 @@ td, th { padding: 0.2em 0.7em }
 <p>まず，この4つの数値をRの行列の形で表しておく：</p>
 
 <pre>
-&gt; x = matrix(c(14,1,41981-14,18327-1), ncol=2)
+<code>&gt; x = matrix(c(14,1,41981-14,18327-1), ncol=2)
 &gt; x
      [,1]  [,2]
 [1,]   14 41967
 [2,]    1 18326
 &gt; (x[1,1]/x[1,2]) / (x[2,1]/x[2,2])
 [1] 6.11347
-</pre>
+</code></pre>
 
 <p><a href="2by2.html">2×2の表</a>でオッズ比の信頼区間を計算する方法はいろいろある。<a href="fishertest.html">フィッシャーの正確検定</a>では信頼区間は [0.93, 258.25] である（ただしこの方法ではオッズ比の定義が上の計算とほんの少し違うことと，信頼区間と <i>p</i> 値を別の方法で計算していることに注意）：</p>
 
 <pre>
-&gt; fisher.test(x)
+<code>&gt; fisher.test(x)
 
 	Fisher's Exact Test for Count Data
 
@@ -69,12 +69,12 @@ alternative hypothesis: true odds ratio is not equal to 1
 sample estimates:
 odds ratio 
   6.113568 
-</pre>
+</code></pre>
 
 <p>Epiパッケージの <code>twoby2()</code> による信頼区間は [0.80, 46.49] である：</p>
 
 <pre>
-&gt; library(Epi)
+<code>&gt; library(Epi)
 &gt; twoby2(x)
 2 by 2 table analysis: 
 ------------------------------------------------------ 
@@ -92,12 +92,12 @@ Row 2     1 18326       1e-04     0e+00    4e-04
  
         Asymptotic P-value: 0.0803 
 ------------------------------------------------------
-</pre>
+</code></pre>
 
 <p>epitoolsパッケージの <code>oddsratio.wald()</code> による信頼区間も同じ（出力が長いので信頼区間以外を省略した）：</p>
 
 <pre>
-&gt; library(epitools)
+<code>&gt; library(epitools)
 &gt; oddsratio.wald(x)
 ...
           odds ratio with 95% C.I.
@@ -105,19 +105,19 @@ Predictor  estimate    lower    upper
   Exposed1  1.00000       NA       NA
   Exposed2  6.11347 0.803856 46.49404
 ...
-</pre>
+</code></pre>
 
 <p>同じくepitoolsパッケージの <code>oddsratio.midp()</code> では [1.08, 130.87] となる：</p>
 
 <pre>
-&gt; oddsratio.midp(x)
+<code>&gt; oddsratio.midp(x)
 ...
           odds ratio with 95% C.I.
 Predictor  estimate    lower    upper
   Exposed1  1.00000       NA       NA
   Exposed2  5.39444 1.082926 130.8747
 ...
-</pre>
+</code></pre>
 
 <p>5%水準で有意となる（95%信頼区間が 1 を含まない）のは最後の <code>oddsratio.midp()</code> だけである。津田先生が使っておられるのも，おそらくこれだと思われる（一部微妙な違いがあるが，使用ソフトの違いであろう）。</p>
 
@@ -152,7 +152,7 @@ Predictor  estimate    lower    upper
 <p>まず，表全体を行列の形にする：</p>
 
 <pre>
-&gt; a = matrix(c(14,12,11,23,8,14,6,1,
+<code>&gt; a = matrix(c(14,12,11,23,8,14,6,1,
                41981-14,50773-12,17969-11,54951-23,16912-8,47519-14,25876-6,18327-1),
              ncol=2)
 &gt; a
@@ -165,12 +165,12 @@ Predictor  estimate    lower    upper
 [6,]   14 47505
 [7,]    6 25870
 [8,]    1 18326
-</pre>
+</code></pre>
 
 <p>まずフィッシャーの正確検定。デフォルトの設定（<code>workspace=200000</code>）ではメモリが足りないといわれるので，順次増やしてみた：</p>
 
 <pre>
-&gt; fisher.test(a)
+<code>&gt; fisher.test(a)
  以下にエラー fisher.test(a) : FEXACT error 40.
 Out of workspace.
 &gt; fisher.test(a, workspace=2000000)
@@ -188,18 +188,18 @@ Try increasing the size of the workspace.
 data:  a
 p-value = 0.05154
 alternative hypothesis: two.sided
-</pre>
+</code></pre>
 
 <p>ぎりぎり5%で有意ではない。念のため，メモリ制約を受けないカイ2乗検定もしてみる：</p>
 
 <pre>
-&gt; chisq.test(a)
+<code>&gt; chisq.test(a)
 
 	Pearson's Chi-squared test
 
 data:  a
 X-squared = 13.393, df = 7, p-value = 0.06309
-</pre>
+</code></pre>
 
 <p>こちらも有意ではない。</p>
 
@@ -208,7 +208,7 @@ X-squared = 13.393, df = 7, p-value = 0.06309
 <p>念のため，「表3」のほうも有意でない：</p>
 
 <pre>
-&gt; b = matrix(c(14,12,11,23,8,19,7,9,0,
+<code>&gt; b = matrix(c(14,12,11,23,8,19,7,9,0,
                41813-14,50662-12,18168-11,53962-23,16457-8,47759-19,28535-7,32559-9,6151-0),
              ncol=2)
 &gt; b
@@ -239,7 +239,7 @@ X-squared = 10.9629, df = 8, p-value = 0.2038
 
  警告メッセージ: 
 In chisq.test(b) :  カイ自乗近似は不正確かもしれません 
-</pre>
+</code></pre>
 
 <hr>
 

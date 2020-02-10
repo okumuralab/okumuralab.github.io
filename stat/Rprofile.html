@@ -21,7 +21,7 @@
 というファイルです。ネットで流布しているものをコピペしてきたもので，オリジナリティはまったくありません。</p>
 
 <pre>
-Sys.setenv(TZ="Asia/Tokyo")
+<code>Sys.setenv(TZ="Asia/Tokyo")
 options(repos="https://cran.ism.ac.jp")
 if (interactive()) {
     if (capabilities("aqua")) {
@@ -90,17 +90,17 @@ if (interactive()) {
                     })
                 })
 }
-</pre>
+</code></pre>
 
 <p>上で <code>capabilities("X11")</code> をコメントアウトしているのは，これがあるだけでMacでX11が立ち上がってしまうからです。X11を使わないのであれば不要です。</p>
 
 <p>なお，最後に次のように書くことがあるようですが，MacのR.appではhistory関係は別メカニズムで行われていますので，<code>history()</code> や <code>savehistory()</code> の類はサポートされていません（<a href="http://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html">R for Mac OS X FAQ</a>の「History」参照）。</p>
 
 <pre>
-.Last = function() {
+<code>.Last = function() {
     if (interactive()) try(savehistory("~/.Rhistory"))
 }
-</pre>
+</code></pre>
 
 <hr>
 

@@ -113,14 +113,14 @@
 <p>これをExcelから「ファイル」→「名前を付けて保存...」→「CSV (コンマ区切り)」で保存すると，次のようなCSV形式のテキストファイルになる。</p>
 
 <pre>
-年/月,男,女
+<code>年/月,男,女
 2005/10,3930,2783
 2005/11,3901,2736
 2005/12,3881,2699
 2006/01,3864,2697
 2006/02,3855,2694
 ……
-</pre>
+</code></pre>
 
 <p>文字コードはShift_JIS（Windows-31J）になる。行末は<del>MacのExcelではCR，WindowsのExcelでは</del>CRLFになる。昔のMacのExcelはCRであったが，CSVの決まり（後述）ではCRLFを使うことになっているので統一されたのかもしれない（Rで読み込む場合は行末はCR/LF/CRLFどれでもよい）。文字コードは，時代の流れからすればUTF-8が好ましいが，日本語環境のExcelでは文字化けすることがある［新しいExcelではBOM付きUTF-8なら化けないようである］。</p>
 
@@ -149,7 +149,7 @@
 <p>このように不要部分を削ったCSVファイルは，それだけでは何のデータかわからないので，説明ページを別途用意しておく。あるいは，CSVの決まりごとには定められていないが，行頭に「#」などの目印を付けて注釈を書いておくこともしばしば行われる。Rの <code>read.csv()</code> 関数で読み込む場合はオプション <code>comment.char="#"</code> を付けると「#」で始まる行を無視する。</p>
 
 <pre>
-# 日本の労働力人口
+<code># 日本の労働力人口
 # Labor Force of Japan
 # 年/月,男,女
 Year/Month,Male,Female
@@ -160,7 +160,7 @@ Year/Month,Male,Female
 2006/02,3855,2694
 ……
 # 2011年3-8月は推定値
-</pre>
+</code></pre>
 
 <p><a href="lt01-01.csv">最終的なCSVファイル</a></p>
 
@@ -187,9 +187,9 @@ Year/Month,Male,Female
 <div class="note">
 <p>CSV形式で，文字コードや，ヘッダ行の有無を指定するには，MIMEタイプを使うことになっている：</p>
 <pre>
-text/csv; charset=UTF-8; header=present
+<code>text/csv; charset=UTF-8; header=present
 text/csv; charset=Shift_JIS; header=absent
-</pre>
+</code></pre>
 <p>RでURL指定で試してみたが，charsetもheaderも見ていないようである。</p>
 </div>
 
@@ -207,7 +207,7 @@ text/csv; charset=Shift_JIS; header=absent
 <p>紙への印刷を考えて途中で列を分けている。このままでは機械処理が難しい。一つにつなげて，簡単に計算できるものを省くと，次のようになる。</p>
 
 <pre>
-# 流山市の年齢・男女別人口（平成24年4月1日）
+<code># 流山市の年齢・男女別人口（平成24年4月1日）
 # Population of Nagareyama City as of April 1, 2012.
 # 年齢,男,女
 Age,Male,Female
@@ -220,7 +220,7 @@ Age,Male,Female
 100,4,42
 # 最後の行は100歳以上
 # Last row: 100 or older.
-</pre>
+</code></pre>
 
 <p>最後の行は「100〜」であったが，これでは文字列になってしまうので，「100」に変えて，注釈を入れた。</p>
 
@@ -229,11 +229,11 @@ Age,Male,Female
 <p>このCSVファイルから人口ピラミッドを描くには，Rで（あらかじめpyramidパッケージをインストールしておき）次のように打ち込む（<code>CP932</code> はSJISのWindows拡張）：</p>
 
 <pre>
-library(pyramid)
+<code>library(pyramid)
 data = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>h24nenreibetsudanjobetsu.csv",
                 fileEncoding="CP932", comment.char="#")
 pyramids(data$Male, data$Female, data$Age, Cstep=10)
-</pre>
+</code></pre>
 
 <script>document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];</script>
 
@@ -246,7 +246,7 @@ pyramids(data$Male, data$Female, data$Age, Cstep=10)
 <p>このCSVもどきのフォーマットは，最初は次のようであった：</p>
 
 <pre>
-2011/5/18 15:30 UPDATE
+<code>2011/5/18 15:30 UPDATE
 ピーク時供給力(万kW),時台,供給力情報更新日,供給力情報更新時刻
 4450,14:00,5/18,8:30
 
@@ -259,12 +259,12 @@ DATE,TIME,当日実績(万kW),前日実績(万kW)
 2011/5/18,2:00,2498,2482
 2011/5/18,3:00,2473,2456
 …
-</pre>
+</code></pre>
 
 <p>ところが，2011年7月1日から予告なく次のような形式に変わった：</p>
 
 <pre>
-2011/8/16 13:00 UPDATE
+<code>2011/8/16 13:00 UPDATE
 ピーク時供給力(万kW),時間帯,供給力情報更新日,供給力情報更新時刻
 5530,9:00～20:00,8/16,8:30
 
@@ -277,7 +277,7 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 2011/8/16,2:00,2684,0
 2011/8/16,3:00,2607,0
 …
-</pre>
+</code></pre>
 
 <p>つまり，「前日実績(万kW)」欄が突然「予測値（万kW)」に変わった（この開き括弧が全角，閉じ括弧が半角という変な書き方は現在もそのままであるが，下手に変えないほうがよい）。</p>
 
@@ -294,7 +294,7 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 <p>縦に長くなって印刷しにくいのでこのようにしたのであろうが，グラフを描くためには縦に並べるしかない。</p>
 
 <pre>
-DateTime,uGy/h
+<code>DateTime,uGy/h
 2011-03-13 00:00,0.12
 2011-03-13 01:00,0.12
 2011-03-13 02:00,0.11
@@ -302,7 +302,7 @@ DateTime,uGy/h
 2011-03-13 04:00,0.11
 2011-03-13 05:00,0.06
 ...
-</pre>
+</code></pre>
 
 <p>このような形にした<a href="data/KawauchiMP2.csv">KawauchiMP2.csv</a>を置いておく。これで次のようなグラフを描くのは簡単になる。</p>
 

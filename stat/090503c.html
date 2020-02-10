@@ -23,26 +23,26 @@
 <p>データを取得する：</p>
 
 <pre>
-data = read.csv("http://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv", fileEncoding="CP932")
-</pre>
+<code>data = read.csv("http://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv", fileEncoding="CP932")
+</code></pre>
 
 <div class="note">
 <p>[2019-01-21追記] ツイッターで教えていただいたが，おそらく一時的なものだと思うが，昨年末，このファイルに2018年の項目が付け加わった際に，</p>
 <pre>
-2018,+0.30*,+0.41*,+0.20*
-</pre>
+<code>2018,+0.30*,+0.41*,+0.20*
+</code></pre>
 <p>のようにゴミ（<code>*</code> 印）が付いた。<a href="http://www.data.jma.go.jp/cpdinfo/temp/list/an_wld.html">気象庁</a>によれば，「*：1月から11月までの月平均気温の偏差をもとに算出した速報値」とのことである。この余計な文字のおかげで，列全体が文字列と見なされる。さらにRの <code>read.csv()</code> などはデフォルトで文字列をファクター（列挙型のようなもの）として扱い，内部的に整数で保存される。これを <code>plot()</code> で使うと，強制的に数値に変換される際に，ファクターの内部表現としての整数値が使われてしまうため，次のようなでたらめなグラフになってしまう。</p>
 <figure><img src="img/190121c.png" alt="地球の平均気温の変化（間違い）"></figure>
 <p>これは少なくともエラーになったほうがいいので，文字列をファクターにしないためのおまじない</p>
 <pre>
-options(stringsAsFactors=FALSE)
-</pre>
+<code>options(stringsAsFactors=FALSE)
+</code></pre>
 <p>を冒頭で実行しておくほうが安全であろう。そうすれば，2018年の値は「強制変換により NA が生成されました」という警告メッセージが出て <code>NA</code> に変換され，無視される。もし2018年の値も使いたいなら，さらに</p>
 <pre>
-for (i in 1:dim(data)[2]) {
+<code>for (i in 1:dim(data)[2]) {
     data[,i] = as.numeric(gsub("[^0123456789.-]", "", data[,i]))
 }
-</pre>
+</code></pre>
 <p>とすればよい。これは <code>"[^0123456789.-]"</code> すなわち0〜9・ピリオド・マイナス以外を空文字列で置き換える。ここでは <code>data[,i]</code> は文字列として扱われるので，数値でも問題ないし，ファクターでもその内部表現ではなく文字列として扱われるので，意図通りに変換される。</p>
 <p><code>readr</code> パッケージの <code>read_csv()</code> を使えば，ファクターには変換されず，この場合は文字列になる。ただし <code>data[,i]</code> は <code>data[[i]]</code> にする必要がある。</p>
 </div>
@@ -50,39 +50,39 @@ for (i in 1:dim(data)[2]) {
 <p>まずは「世界全体」だけを描く。簡単には</p>
 
 <pre>
-plot(data$年, data$世界全体, type="l")
-</pre>
+<code>plot(data$年, data$世界全体, type="l")
+</code></pre>
 
 <p>とすればよいが，もう少し手をかけてみる：</p>
 
 <pre>
-par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
+<code>par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 par(las=1)              # 縦軸の文字を横向きにしない
 plot(data$年, data$世界全体, type="o", pch=16, xlab="", ylab="", xaxt="n")
 t = c(1891, seq(1900,max(data$年)-8,20), max(data$年))
 axis(1, t, t)
 axis(4, labels=FALSE)
-</pre>
+</code></pre>
 
 <p>ついでに回帰直線も加える：</p>
 
 <pre>
-r = lm(data$世界全体 ~ data$年)
+<code>r = lm(data$世界全体 ~ data$年)
 abline(r, col="gray")
-</pre>
+</code></pre>
 
 <figure><img src="img/180814a.png" alt="地球の平均気温の変化"></figure>
 
 <p>北半球と南半球に分けて描く：</p>
 
 <pre>
-matplot(data$年, data[c("北半球","南半球")], type="o", lty=1,
+<code>matplot(data$年, data[c("北半球","南半球")], type="o", lty=1,
         pch=c(16,15), col=c("#66ccff","#ff9900"), xlab="", ylab="", xaxt="n")
 t = c(1891, seq(1900,max(data$年)-8,20), max(data$年))
 axis(1, t, t)
 axis(4, labels=FALSE)
 legend("topleft", legend=c("北半球","南半球"), pch=c(16,15), col=c("#66ccff","#ff9900"))
-</pre>
+</code></pre>
 
 <figure><img src="img/180814b.png" alt="地球の平均気温の変化"></figure>
 

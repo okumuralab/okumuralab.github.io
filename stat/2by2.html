@@ -102,25 +102,25 @@ td, th { padding: 0.2em 0.7em }
 
 <pre>
 <code class="prom">c(231, 26, 23036, 10813)</code>
-[1]   231    26 23036 10813
+<code>[1]   231    26 23036 10813</code>
 </pre>
 
 <p>これを2行2列の行列の形にするには，次のように行数（<code>nrow</code>），列数（<code>ncol</code>）のどちらかを指定します：</p>
 
 <pre>
 <code class="prom">matrix(c(231,26,23036,10813), nrow=2)</code>
-     [,1]  [,2]
-[1,]  231 23036
-[2,]   26 10813
+<code>     [,1]  [,2]</code>
+<code>[1,]  231 23036</code>
+<code>[2,]   26 10813</code>
 </pre>
 
 <div class="note">
 <p>数値を横に（行ごとに）読んでいった場合は，次のように <code>byrow=TRUE</code> というオプションを与えます：</p>
 <pre>
 <code class="prom">matrix(c(231,23036,26,10813), nrow=2, byrow=TRUE)</code>
-     [,1]  [,2]
-[1,]  231 23036
-[2,]   26 10813
+<code>     [,1]  [,2]</code>
+<code>[1,]  231 23036</code>
+<code>[2,]   26 10813</code>
 </pre>
 </div>
 
@@ -129,9 +129,9 @@ td, th { padding: 0.2em 0.7em }
 <pre>
 <code class="prom">x = matrix(c(231,26,23036,10813), nrow=2)</code>
 <code class="prom">x</code>
-     [,1]  [,2]
-[1,]  231 23036
-[2,]   26 10813
+<code>     [,1]  [,2]</code>
+<code>[1,]  231 23036</code>
+<code>[2,]   26 10813</code>
 </pre>
 
 <p>行・列に名前を付けるには次のようにします：</p>
@@ -139,9 +139,9 @@ td, th { padding: 0.2em 0.7em }
 <code class="prom">rownames(x) = c("喫煙","非喫煙")</code>
 <code class="prom">colnames(x) = c("肺がんあり","肺がんなし")</code>
 <code class="prom">x</code>
-       肺がんあり 肺がんなし
-喫煙          231      23036
-非喫煙         26      10813
+<code>       肺がんあり 肺がんなし</code>
+<code>喫煙          231      23036</code>
+<code>非喫煙         26      10813</code>
 </pre>
 
 <h2>相対危険度やオッズ比の求め方</h2>
@@ -151,9 +151,9 @@ td, th { padding: 0.2em 0.7em }
 <pre>
 <code class="prom">x = matrix(c(12,5,6,12), nrow=2)</code>
 <code class="prom">x</code>
-     [,1] [,2]
-[1,]   12    6
-[2,]    5   12
+<code>     [,1] [,2]</code>
+<code>[1,]   12    6</code>
+<code>[2,]    5   12</code>
 </pre>
 
 <h3>手計算</h3>
@@ -162,15 +162,15 @@ td, th { padding: 0.2em 0.7em }
 
 <pre>
 <code class="prom">(x[1,1]/x[1,2]) / (x[2,1]/x[2,2])</code>
-[1] 4.8
+<code>[1] 4.8</code>
 <code class="prom">log((x[1,1]/x[1,2]) / (x[2,1]/x[2,2]))</code>
-[1] 1.568616
+<code>[1] 1.568616</code>
 <code class="prom">1/x[1,1] + 1/x[1,2] + 1/x[2,1] + 1/x[2,2]</code>
-[1] 0.5333333
+<code>[1] 0.5333333</code>
 <code class="prom">pnorm(-1.568616 / sqrt(0.5333333)) * 2</code>
-[1] 0.03172043
+<code>[1] 0.03172043</code>
 <code class="prom">exp(1.568616 + qnorm(c(0.025,0.975)) * sqrt(0.5333333))</code>
-[1]  1.147127 20.084960
+<code>[1]  1.147127 20.084960</code>
 </pre>
 
 <h3>Fisherの正確検定による方法</h3>
@@ -180,16 +180,16 @@ td, th { padding: 0.2em 0.7em }
 <pre>
 <code class="prom">fisher.test(x)</code>
 
-	Fisher's Exact Test for Count Data
+<code>	Fisher's Exact Test for Count Data</code>
 
-data:  x
-p-value = 0.04371
-alternative hypothesis: true odds ratio is not equal to 1
-95 percent confidence interval:
-  0.9465292 25.7201471
-sample estimates:
-odds ratio 
-  4.568253 
+<code>data:  x</code>
+<code>p-value = 0.04371</code>
+<code>alternative hypothesis: true odds ratio is not equal to 1</code>
+<code>95 percent confidence interval:</code>
+<code>  0.9465292 25.7201471</code>
+<code>sample estimates:</code>
+<code>odds ratio </code>
+<code>  4.568253 </code>
 </pre>
 
 <p>オッズ比はさきほどの 4.8 ではなく，4.568253 となりました。これは定義が微妙に違うためです。詳しくは<a href="fishertest.html">Fisherの正確検定</a>をご参照ください。また，95%信頼区間は $[0.95, 25.72]$ で，1 を含んでいるので有意でないように見えますが，$p$ 値は 0.05 未満です。</p>
@@ -201,17 +201,17 @@ odds ratio
 <pre>
 <code class="prom">chisq.test(x)</code> # 補正あり
 
-	Pearson's Chi-squared test with Yates' continuity correction
+<code>	Pearson's Chi-squared test with Yates' continuity correction</code>
 
-data:  x
-X-squared = 3.4808, df = 1, p-value = 0.06208
+<code>data:  x</code>
+<code>X-squared = 3.4808, df = 1, p-value = 0.06208</code>
 
 <code class="prom">chisq.test(x, correct=FALSE)</code> # 補正なし
 
-	Pearson's Chi-squared test
+<code>	Pearson's Chi-squared test</code>
 
-data:  x
-X-squared = 4.8577, df = 1, p-value = 0.02752
+<code>data:  x</code>
+<code>X-squared = 4.8577, df = 1, p-value = 0.02752</code>
 </pre>
 
 <p>補正あり・なしで $p$ 値はそれぞれ 0.06208，0.02752 です。</p>
@@ -224,24 +224,24 @@ X-squared = 4.8577, df = 1, p-value = 0.02752
 <code class="prom">install.packages("Epi")</code>  # 初めての場合はパッケージをインストールする
 <code class="prom">library(Epi)</code>             # ライブラリとして読み込む
 <code class="prom">twoby2(x)</code>
-2 by 2 table analysis: 
------------------------------------------------------- 
-Outcome   : Col 1 
-Comparing : Row 1 vs. Row 2 
+<code>2 by 2 table analysis: </code>
+<code>------------------------------------------------------ </code>
+<code>Outcome   : Col 1 </code>
+<code>Comparing : Row 1 vs. Row 2 </code>
 
-      Col 1 Col 2    P(Col 1) 95% conf. interval
-Row 1    12     6      0.6667    0.4288   0.8420
-Row 2     5    12      0.2941    0.1280   0.5419
+<code>      Col 1 Col 2    P(Col 1) 95% conf. interval</code>
+<code>Row 1    12     6      0.6667    0.4288   0.8420</code>
+<code>Row 2     5    12      0.2941    0.1280   0.5419</code>
 
-                                   95% conf. interval
-             Relative Risk: 2.2667    1.0128   5.0730
-         Sample Odds Ratio: 4.8000    1.1471  20.0850
-Conditional MLE Odds Ratio: 4.5683    0.9465  25.7201
-    Probability difference: 0.3725    0.0427   0.6073
+<code>                                   95% conf. interval</code>
+<code>             Relative Risk: 2.2667    1.0128   5.0730</code>
+<code>         Sample Odds Ratio: 4.8000    1.1471  20.0850</code>
+<code>Conditional MLE Odds Ratio: 4.5683    0.9465  25.7201</code>
+<code>    Probability difference: 0.3725    0.0427   0.6073</code>
 
-             Exact P-value: 0.0437 
-        Asymptotic P-value: 0.0317 
-------------------------------------------------------
+<code>             Exact P-value: 0.0437 </code>
+<code>        Asymptotic P-value: 0.0317 </code>
+<code>------------------------------------------------------</code>
 </pre>
 
 <p>相対リスクは 2.2667 で，95%信頼区間は $[1,01, 5.07]$ です。また，標本オッズ比は 4.8 で，95%信頼区間は $[1.15, 20.09]$ です。その下の Conditional MLE Odds Ratio は <code>fisher.test()</code> の出してくる値です。$p$ 値は Exact のほうは <code>fisher.test()</code> と同じ 0.0437 で，Asymptotic のほうは近似です。数が多い場合は Asymptotic だけの表示になり，場合によっては「0」と表示されることがありますが，その場合は「$p < 0.001$ で有意」と報告すればいいでしょう（丸める前の値を知りたければ <code>twoby2(x)$p.value</code> と打ち込みます）。</p>
@@ -263,43 +263,43 @@ Conditional MLE Odds Ratio: 4.5683    0.9465  25.7201
 <code class="prom">install.packages("epitools")</code>  # 初めての場合はパッケージをインストールする
 <code class="prom">library(epitools)</code>             # ライブラリとして読み込む
 <code class="prom">oddsratio.wald(x)</code>
-$data
-          Outcome
-Predictor  Disease1 Disease2 Total
-  Exposed1       12        6    18
-  Exposed2        5       12    17
-  Total          17       18    35
+<code>$data</code>
+<code>          Outcome</code>
+<code>Predictor  Disease1 Disease2 Total</code>
+<code>  Exposed1       12        6    18</code>
+<code>  Exposed2        5       12    17</code>
+<code>  Total          17       18    35</code>
 
-$measure
-          odds ratio with 95% C.I.
-Predictor  estimate    lower    upper
-  Exposed1      1.0       NA       NA
-  Exposed2      4.8 1.147127 20.08496
+<code>$measure</code>
+<code>          odds ratio with 95% C.I.</code>
+<code>Predictor  estimate    lower    upper</code>
+<code>  Exposed1      1.0       NA       NA</code>
+<code>  Exposed2      4.8 1.147127 20.08496</code>
 
-$p.value
-          two-sided
-Predictor  midp.exact fisher.exact chi.square
-  Exposed1         NA           NA         NA
-  Exposed2 0.03527143   0.04371017 0.02752225
+<code>$p.value</code>
+<code>          two-sided</code>
+<code>Predictor  midp.exact fisher.exact chi.square</code>
+<code>  Exposed1         NA           NA         NA</code>
+<code>  Exposed2 0.03527143   0.04371017 0.02752225</code>
 
-$correction
-[1] FALSE
+<code>$correction</code>
+<code>[1] FALSE</code>
 
-attr(,"method")
-[1] "Unconditional MLE & normal approximation (Wald) CI"
+<code>attr(,"method")</code>
+<code>[1] "Unconditional MLE & normal approximation (Wald) CI"</code>
 </pre>
 
 <p>ほかの方法もまとめて，違うところだけ記します：</p>
 
 <pre>
 <code class="prom">oddsratio.wald(x)</code>
-  Exposed2      4.8 1.147127 20.08496
+<code>  Exposed2      4.8 1.147127 20.08496</code>
 <code class="prom">oddsratio.midp(x)</code>
-  Exposed2 4.503795 1.105796 21.10137
+<code>  Exposed2 4.503795 1.105796 21.10137</code>
 <code class="prom">oddsratio.fisher(x)</code>
-  Exposed2 4.568253 0.9465292 25.72015
+<code>  Exposed2 4.568253 0.9465292 25.72015</code>
 <code class="prom">oddsratio.small(x)</code>
-  Exposed2 3.428571 1.099686 17.37077
+<code>  Exposed2 3.428571 1.099686 17.37077</code>
 </pre>
 
 <h3>vcdパッケージによる方法</h3>
@@ -308,20 +308,20 @@ attr(,"method")
 <code class="prom">install.packages("vcd")</code>
 <code class="prom">library(vcd)</code>
 <code class="prom">oddsratio(x, log=FALSE)</code>
-[1] 4.8
+<code>[1] 4.8</code>
 </pre>
 
 <p>Waldの方法が使われます。単純明快にオッズ比（unconditional）だけ出力されます。信頼区間や $p$ 値は次のようにします：</p>
 
 <pre>
 <code class="prom">confint(oddsratio(x, log=FALSE))</code>
-          lwr      upr
-[1,] 1.147127 20.08496
+<code>          lwr      upr</code>
+<code>[1,] 1.147127 20.08496</code>
 <code class="prom">summary(oddsratio(x))</code>
-     Log Odds Ratio Std. Error z value Pr(>|z|)  
-[1,]         1.5686     0.7303  2.1479  0.03172 *
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+<code>     Log Odds Ratio Std. Error z value Pr(>|z|)  </code>
+<code>[1,]         1.5686     0.7303  2.1479  0.03172 *</code>
+<code>---</code>
+<code>Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</code>
 </pre>
 
 <h3>fmsbパッケージによる方法</h3>
@@ -334,19 +334,19 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <code class="prom">install.packages("fmsb")</code>
 <code class="prom">library(fmsb)</code>
 <code class="prom">oddsratio(12, 5, 6, 12)</code>
-           Disease Nondisease Total
-Exposed         12          6    18
-Nonexposed       5         12    17
-Total           17         18    35
+<code>           Disease Nondisease Total</code>
+<code>Exposed         12          6    18</code>
+<code>Nonexposed       5         12    17</code>
+<code>Total           17         18    35</code>
 
-	Odds ratio estimate and its significance probability
+<code>	Odds ratio estimate and its significance probability</code>
 
-data:  12 5 6 12
-p-value = 0.02983
-95 percent confidence interval:
-  1.147127 20.084959
-sample estimates:
-[1] 4.8
+<code>data:  12 5 6 12</code>
+<code>p-value = 0.02983</code>
+<code>95 percent confidence interval:</code>
+<code>  1.147127 20.084959</code>
+<code>sample estimates:</code>
+<code>[1] 4.8</code>
 </pre>
 
 <p>Waldの方法を使っています。詳細は中澤先生の<a href="http://minato.sip21c.org/bulbul/20141227.html">鵯記878</a>をご覧ください。</p>
@@ -362,29 +362,29 @@ sample estimates:
 <code class="prom">library(exact2x2)</code>
 <code class="prom">fisher.exact(x)</code>
 
-	Two-sided Fisher's Exact Test (usual method using minimum likelihood)
+<code>	Two-sided Fisher's Exact Test (usual method using minimum likelihood)</code>
 
-data:  x
-p-value = 0.04371
-alternative hypothesis: true odds ratio is not equal to 1
-95 percent confidence interval:
-  1.0905 22.9610
-sample estimates:
-odds ratio 
-  4.568253 
+<code>data:  x</code>
+<code>p-value = 0.04371</code>
+<code>alternative hypothesis: true odds ratio is not equal to 1</code>
+<code>95 percent confidence interval:</code>
+<code>  1.0905 22.9610</code>
+<code>sample estimates:</code>
+<code>odds ratio </code>
+<code>  4.568253 </code>
 
 <code class="prom">blaker.exact(x)</code>
 
-	Blaker's Exact Test
+<code>	Blaker's Exact Test</code>
 
-data:  x
-p-value = 0.04371
-alternative hypothesis: true odds ratio is not equal to 1
-95 percent confidence interval:
-  1.0905 23.6488
-sample estimates:
-odds ratio 
-  4.568253 
+<code>data:  x</code>
+<code>p-value = 0.04371</code>
+<code>alternative hypothesis: true odds ratio is not equal to 1</code>
+<code>95 percent confidence interval:</code>
+<code>  1.0905 23.6488</code>
+<code>sample estimates:</code>
+<code>odds ratio </code>
+<code>  4.568253 </code>
 </pre>
 
 <p><code>fisher.exact()</code> の $p$ 値とオッズ比の点推定値（conditional）は <code>fisher.test()</code> と同じですが，信頼区間は $p$ 値と同じ方法で求めていますので，片方だけ有意ということがありません。</p>
@@ -421,14 +421,14 @@ odds ratio
 <code class="prom">r = glm(y ~ x, family="binomial")</code>
 <code class="prom">logistic.display(r)</code>
 
-Logistic regression predicting y 
- 
-           OR(95%CI)         P(Wald's test) P(LR-test)
-x: 1 vs 0  4.8 (1.15,20.08)  0.032          0.026     
-                                                      
-Log-likelihood = -21.7558
-No. of observations = 35
-AIC value = 47.5116
+<code>Logistic regression predicting y </code>
+<code> </code>
+<code>           OR(95%CI)         P(Wald's test) P(LR-test)</code>
+<code>x: 1 vs 0  4.8 (1.15,20.08)  0.032          0.026     </code>
+<code>                                                      </code>
+<code>Log-likelihood = -21.7558</code>
+<code>No. of observations = 35</code>
+<code>AIC value = 47.5116</code>
 </pre>
 
 <h2>雑</h2>
@@ -453,11 +453,11 @@ AIC value = 47.5116
 
 <pre>
 <code class="prom">sqrt(chisq.test(x,correct=FALSE)$statistic / sum(x))</code>
- X-squared 
-0.04054061
+<code> X-squared </code>
+<code>0.04054061</code>
 <code class="prom">a = x[1,1]; b = x[1,2]; c = x[2,1]; d = x[2,2]</code>
 <code class="prom">(a*d-b*c) / sqrt((a+b)*(c+d)*(a+c)*(b+d))</code>
-[1] 0.04054061
+<code>[1] 0.04054061</code>
 </pre>
 
 <p>ライブラリ psych にファイ係数（絶対値なし）を求める関数があります：</p>
@@ -466,9 +466,9 @@ AIC value = 47.5116
 <code class="prom">install.packages("psych")</code>
 <code class="prom">library(psych)</code>
 <code class="prom">phi(x)</code>
-[1] 0.04
+<code>[1] 0.04</code>
 <code class="prom">phi(x, digits=8)</code>
-[1] 0.04054061
+<code>[1] 0.04054061</code>
 </pre>
 
 <p>ファイ係数と似たものに Yule の $Q$ があります。これはオッズ比（OR）を -1 から 1 までの範囲に変換したものとも考えられます：</p>
@@ -479,9 +479,9 @@ AIC value = 47.5116
 
 <pre>
 <code class="prom">Yule(x)</code>
-[1] 0.6131828
+<code>[1] 0.6131828</code>
 <code class="prom">(a*d-b*c) / (a*d+b*c)</code>
-[1] 0.6131828
+<code>[1] 0.6131828</code>
 </pre>
 
 <p>これらの比較は次の論文をご覧ください：</p>

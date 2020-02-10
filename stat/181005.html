@@ -24,24 +24,24 @@
 <p>まず，西原さんの <code>tategaki()</code> 関数を定義しておきます：</p>
 
 <pre>
-tategaki = function(x) {
+<code>tategaki = function(x) {
   x = chartr("ー", "丨", x) # 長音符の処理
   x = strsplit(split="", x)
   sapply(x, paste, collapse="\n")
 }
-</pre>
+</code></pre>
 
 <p>実際に描くには次のようにします：</p>
 
 <pre>
-par(lheight=0.8)       # 行送りを調節
+<code>par(lheight=0.8)       # 行送りを調節
 par(las=1)             # 軸ラベルを横書きに
 par(mgp=c(1,-0.2,-1))  # 軸・軸ラベル位置調整
 par(xpd=TRUE)          # text()の描画位置を拡大
 x = barplot(population/1000000)
 axis(2, 12, "百万人", padj=-1)
 text(x, 0, tategaki(kenmei), pos=1, offset=1)
-</pre>
+</code></pre>
 
 <figure><img src="img/181005a.png" alt="都道府県の人口"></figure>
 

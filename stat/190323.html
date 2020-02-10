@@ -24,23 +24,23 @@ dt { float: left ; clear: left; margin-left:0.8em }
 <p>虫歯の本数については，<a href="https://www.e-stat.go.jp/stat-search/files?page=1&toukei=00400002&tstat=000001011648">学校保健統計調査</a>の「平成２９年度」「都道府県表」の「都道府県別　年齢別　疾病・異常被患率等（年齢ごと）」2017年度（2018-03-26）というExcelシートを使う。12歳児は <code>08-008</code> というシートにある。「永久歯の１人当り平均むし歯(う歯)等数」の「計」を読み取る。</p>
 
 <pre>
-library(readxl)
+<code>library(readxl)
 ushi = read_excel("h29_hoken_toukei_08.xlsx", "08-008", "AD13:AD59", col_names="total")
-</pre>
+</code></pre>
 
 <p>賃金については，<a href="https://www.e-stat.go.jp/stat-search/files?page=1&layout=normal&toukei=00450091&tstat=000001011429&survey=賃金構造基本統計調査&result_page=1">賃金構造基本統計調査</a>の「平成29年賃金構造基本統計調査」→「一般労働者」→「都道府県別」→「（参考表）都道府県別きまって支給する現金給与額、所定内給与額及び年間賞与その他特別給与額（47都道府県一覧）」を使う。記事では「所定内給与額」（現金給与額から超過労働給与額を差し引いた額）が使われているようだが，実態は「現金給与額」，さらにはその12倍に「年間賞与」を加えたもののほうが近いかもしれない。</p>
 
 <pre>
-income = read_excel("(1-8-sanko1).xls", "男女計", "I14:K60", col_names=c("現金","所定","賞与"), col_types="numeric")
-</pre>
+<code>income = read_excel("(1-8-sanko1).xls", "男女計", "I14:K60", col_names=c("現金","所定","賞与"), col_types="numeric")
+</code></pre>
 
 <p>散布図を描く。県名（<code>kenmei</code>）は<a href="prefectures.html">いろいろな都道府県別データ</a>から取った。</p>
 
 <pre>
-x = with(income, 現金*12+賞与) / 10  # 元が千円単位なので10で割って万円単位にした
+<code>x = with(income, 現金*12+賞与) / 10  # 元が千円単位なので10で割って万円単位にした
 plot(x, ushi$total, type="n", xlab="平均年収（万円）", ylab="永久歯の虫歯の本数")
 text(x, ushi$total, kenmei)
-</pre>
+</code></pre>
 
 <figure><img src="img/190323a.png" alt="年収と虫歯"></figure>
 
@@ -49,16 +49,16 @@ text(x, ushi$total, kenmei)
 <pre>
 <code class="prom">cor.test(x, ushi$total)</code>
 
-	Pearson's product-moment correlation
+<code>	Pearson's product-moment correlation</code>
 
-data:  x and ushi$total
-t = -2.9452, df = 45, p-value = 0.005094
-alternative hypothesis: true correlation is not equal to 0
-95 percent confidence interval:
- -0.6178427 -0.1298201
-sample estimates:
-       cor 
--0.4020004 
+<code>data:  x and ushi$total</code>
+<code>t = -2.9452, df = 45, p-value = 0.005094</code>
+<code>alternative hypothesis: true correlation is not equal to 0</code>
+<code>95 percent confidence interval:</code>
+<code> -0.6178427 -0.1298201</code>
+<code>sample estimates:</code>
+<code>       cor </code>
+<code>-0.4020004 </code>
 </pre>
 
 <p>例によって，県レベルの相関と個人レベルの相関は違うので，注意が必要である（Simpsonのパラドックス，生態学的誤謬）。</p>

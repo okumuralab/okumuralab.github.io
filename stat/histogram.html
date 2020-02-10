@@ -51,27 +51,27 @@ MathJax = {
 <p>例：100点満点のテストの点数が 10, 12, 20, 23, 25, 50, 100 であった。10点きざみの度数分布図を描け（実際にはこのような少数の度数分布図を描く意味はないが，単なる例示のため）。</p>
 
 <pre>
-x = c(10, 12, 20, 23, 25, 50, 100)
+<code>x = c(10, 12, 20, 23, 25, 50, 100)
 hist(x, breaks=(0:11)*10, right=FALSE, include.lowest=FALSE, col="gray")
-</pre>
+</code></pre>
 
 <figure><img src="img/180725a.png" alt="ヒストグラムの例"></figure>
 
 <p>この場合，最後の階級に100点を含めてしまうには，次のようにする：</p>
 
 <pre>
-hist(x, breaks=(0:10)*10, right=FALSE, col="gray")
-</pre>
+<code>hist(x, breaks=(0:10)*10, right=FALSE, col="gray")
+</code></pre>
 
 <figure><img src="img/180725b.png" alt="ヒストグラムの例"></figure>
 
 <p>実際には，もうちょっと工夫して見やすいものにする。</p>
 
 <pre>
-par(mgp=c(2,0.8,0.5))     # 軸マージン（デフォルト: c(3,1,0)）
+<code>par(mgp=c(2,0.8,0.5))     # 軸マージン（デフォルト: c(3,1,0)）
 hist(x, breaks=(0:10)*10, right=FALSE, col="gray", main="", xlab="", ylab="", yaxt="n")
 axis(2, 0:3, 0:3, las=1)
-</pre>
+</code></pre>
 
 <figure><img src="img/180725c.png" alt="ヒストグラムの例"></figure>
 

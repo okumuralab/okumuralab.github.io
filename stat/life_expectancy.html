@@ -31,11 +31,11 @@ window.onload = function() {
 <div><img src="img/170727a.png" alt="日本人の平均寿命の推移"></div>
 
 <pre>
-data = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/life_expectancy_Japan.csv", comment.char="#")
+<code>data = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/life_expectancy_Japan.csv", comment.char="#")
 par(mgp=c(2,0.8,0))
 matplot(data[,1], data[,2:3], type="o", pch=16, lty=1, col=c("#0080ff","#ff8000"), xlab="", ylab="平均寿命")
 axis(4, data[nrow(data),2:3], c("男","女"), las=1)
-</pre>
+</code></pre>
 
 <p>（[2014-07-31] にここに書いた部分は，上に新しいものを載せたので，次の1文を除き，削除した。）</p>
 

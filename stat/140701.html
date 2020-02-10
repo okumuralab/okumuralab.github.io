@@ -17,7 +17,7 @@
 <p>音源は何でもいいが，なるべく短い曲がいいので，「子犬のワルツ」（Valse du Petit Chien）を選んだ。手許にあったアシュケナージのCDから<a href="/~okumura/wavefmt.html">WAV形式</a>に落としたところ，20015564バイトになった。これを<a href="/~okumura/dumpwave.c">dumpwave.c</a>でテキストに落とした：</p>
 
 <pre>
-$ gcc dumpwave.c -o dumpwave
+<code>$ gcc dumpwave.c -o dumpwave
 $ ./dumpwave chien.wav &gt;chien.txt
 [RIFF] (20015556 bytes)
 [WAVEfmt ] (16 bytes)
@@ -29,24 +29,24 @@ $ ./dumpwave chien.wav &gt;chien.txt
   Bits / sample = 16
 
 [data] (20015520 bytes)
-</pre>
+</code></pre>
 
 <p>できたテキストファイルは47MBもあった。これをRで読み込む：</p>
 
 <pre>
-chien = read.table("chien.txt")
+<code>chien = read.table("chien.txt")
 dim(chien)   # サイズを調べる
 head(chien)  # 冒頭は0が続く
-</pre>
+</code></pre>
 
 <p>5003880サンプル，2チャンネル（左右）である。冒頭をプロットしてみる：</p>
 
 <pre>
-s = 25500      # 無音の部分は飛ばして25500番のサンプルから使う
+<code>s = 25500      # 無音の部分は飛ばして25500番のサンプルから使う
 t = 44100*0.1  # 0.1秒
 plot(1:t, chien[(s+1):(s+t), 2], type="l", xlab="", ylab="", col="#0068b7") # 右
 points(1:t, chien[(s+1):(s+t), 1], type="l", col="#f39800")                 # 左
-</pre>
+</code></pre>
 
 <div><img src="img/140702a.png" alt="子犬のワルツ 波形"></div>
 
@@ -55,28 +55,28 @@ points(1:t, chien[(s+1):(s+t), 1], type="l", col="#f39800")                 # �
 <p>全体のヒストグラムを描いてみる。左右チャンネルはアペンドする：</p>
 
 <pre>
-x = append(chien[,1], chien[,2])
+<code>x = append(chien[,1], chien[,2])
 length(x)  # 10007760
 hist(x, main="", xlab="", ylab="", col="gray")
-</pre>
+</code></pre>
 
 <div><img src="img/140702b.png" alt="子犬のワルツ ヒストグラム"></div>
 
 <p>実はこのように広いヒストグラムになるのは階級の幅が広すぎるためである。階級の幅を1にして比べてみよう。もっと0に集中している。</p>
 
 <pre>
-hist(x, main="", xlab="", ylab="", col="gray", breaks=30000)
-</pre>
+<code>hist(x, main="", xlab="", ylab="", col="gray", breaks=30000)
+</code></pre>
 
 <div><img src="img/140702c.png" alt="子犬のワルツ ヒストグラム"></div>
 
 <p>もっと詳しく見るために，プロットせず度数分布だけ取り出してみよう：</p>
 
 <pre>
-h = hist(x, breaks=30000, plot=FALSE)
+<code>h = hist(x, breaks=30000, plot=FALSE)
 str(h)
 sum(h$density)
-</pre>
+</code></pre>
 
 <div class="note">
 <p>上では分布の範囲がほぼ3万とわかっていたので <code>breaks=30000</code>
@@ -87,8 +87,8 @@ sum(h$density)
 <p><code>h$density</code> に確率分布が入る。この分布のエントロピーを求めてみよう：</p>
 
 <pre>
--sum(h$density * log2(h$density), na.rm=TRUE)
-</pre>
+<code>-sum(h$density * log2(h$density), na.rm=TRUE)
+</code></pre>
 
 <p>子犬のワルツの場合，約12.3ビット/サンプルである。</p>
 
@@ -96,10 +96,10 @@ sum(h$density)
 を使ってもできる：</p>
 
 <pre>
-t = as.numeric(table(x))
+<code>t = as.numeric(table(x))
 p = t / sum(t)
 -sum(p * log2(p))
-</pre>
+</code></pre>
 
 <p>ところで，<code>x</code> の代わりに，その差分 <code>diff(x)</code>
 を使ってみたらどうなるか？ 差分の差分（2階差分）ではどうか？ …</p>

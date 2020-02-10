@@ -51,7 +51,7 @@ MathJax = {
 <div><img src="img/140805b.png" alt=""></div>
 
 <pre>
-par(mgp=c(2,0.8,0)) # 軸マージン（デフォルト: c(3,1,0)）
+<code>par(mgp=c(2,0.8,0)) # 軸マージン（デフォルト: c(3,1,0)）
 par(mar=c(2,0.5,0.5,0.5))
 
 curve(dnorm(x), lwd=2, xlim=c(-3,3), ylim=c(0,0.42),
@@ -59,19 +59,19 @@ curve(dnorm(x), lwd=2, xlim=c(-3,3), ylim=c(0,0.42),
 curve(dnorm(x,mean=0.2), lwd=2, add=TRUE)
 segments(0, 0, 0, dnorm(0))
 segments(0.2, 0, 0.2, dnorm(0))
-</pre>
+</code></pre>
 
 <p>Facebookでニュースフィードのポジティブなポストとネガティブなポストの割合をユーザごとに変えたところ，そのユーザの書き込みもそれに応じてポジティブ・ネガティブな語の割合が変わったという論文 <a href="http://www.pnas.org/content/early/2014/05/29/1320040111.abstract">Experimental evidence of massive-scale emotional contagion through social networks</a> が2014年に話題になったが，そのときの効果量は Cohen's $d = 0.02$ だった。偏差値にして 0.2 ポイントの違いで，次のグラフのように，ほとんど重なってしまう。それでもFacebookのユーザはとても多いので $p < 0.001$ で有意となる。$p$ 値だけを見て，すごい効果があると勘違いしてはならない。効果量を見なければならない。</p>
 
 <div><img src="img/140805c.png" alt=""></div>
 
 <pre>
-curve(dnorm(x), lwd=2, xlim=c(-3,3), ylim=c(0,0.42),
+<code>curve(dnorm(x), lwd=2, xlim=c(-3,3), ylim=c(0,0.42),
       xlab="", ylab="", yaxt="n", yaxs="i")
 curve(dnorm(x,mean=0.02), lwd=2, add=TRUE)
 segments(0, 0, 0, dnorm(0))
 segments(0.02, 0, 0.02, dnorm(0))
-</pre>
+</code></pre>
 
 <p>Cohen's $d = 0.02$ の違いはFacebook規模でないと示すのは難しそうなので，$d = 0.2$ の違いを考えよう。それでも，このページの最初の図のように，かなり重なっている。でも，$N$ 人を集めれば，その平均の分散は $1/N$ になる。処理をした群（実験群）と，何もしない群（対照群）をそれぞれ $N$ 人集めれば，平均の差の分散は $2/N$ になる。$N = 200$ なら差の分散は 1/100，標準偏差にすれば 1/10 になる。$d = 0.2$ は元の標準偏差の 0.2 倍であったが，200人の差の標準偏差の 2 倍になり，正規分布なら 1.96 以上なので $p < 0.05$ で有意である。実際には $t$ 分布（自由度 398）を使うから 1.960 でなく 1.966 が境目だが，たいした違いではないので，以下では正規分布で話を進める。</p>
 
@@ -79,8 +79,8 @@ segments(0.02, 0, 0.02, dnorm(0))
 <p>もともとの Cohen's $d$ は，両群の平均値の差を，両群を合わせた（プールした）標準偏差 $\sqrt{((n_1-1)s_1^2 + (n_2-1)s_2^2) / (n_1 + n_2 - 2)}$ で割ったものである。これには若干のバイアスがある。通常は気にすることはないが，補正するには $d$ に $1 - 3 / (4(n_1+n_2)-9)$ を掛ける。この補正を掛けた値を Hedges's $g$ と呼ぶ。</p>
 <p>Cohen's $d$ は，Rのパッケージ effsize で求めることができる。</p>
 <pre>
-cohen.d(x, y, hedges.correction=TRUE)
-</pre>
+<code>cohen.d(x, y, hedges.correction=TRUE)
+</code></pre>
 <p>のようなオプションを与えるとHedgesの補正をする。</p>
 <p>一方，標準偏差をプールしないで，基準となる群（対照群）の標準偏差を基準とすべきであるという議論もある。こうして求めたものを Glass's $\Delta$ ということがある。</p>
 </div>
@@ -92,7 +92,7 @@ cohen.d(x, y, hedges.correction=TRUE)
 <div><img src="img/140805d.png" alt=""></div>
 
 <pre>
-plot(NULL, xlim=c(-3,3), ylim=c(0,0.42), xlab="", ylab="", yaxt="n", yaxs="i")
+<code>plot(NULL, xlim=c(-3,3), ylim=c(0,0.42), xlab="", ylab="", yaxt="n", yaxs="i")
 x = -1.96-(0:10)/10*(3-1.96)
 y = dnorm(x)
 polygon(c(x,x[length(x)],x[1]), c(y,0,0), col="#66ccff", border=NA)
@@ -102,14 +102,14 @@ polygon(c(x,x[length(x)],x[1]), c(y,0,0), col="#66ccff", border=NA)
 segments(-1.96, 0, -1.96, dnorm(-1.96))
 segments(1.96, 0, 1.96, dnorm(1.96))
 curve(dnorm(x), lwd=2, add=TRUE)
-</pre>
+</code></pre>
 
 <p>ところで，真の効果量（標本誤差を含まない）が例えば $\mu = 2$ のところにあったとしよう（母集団の平均を $\mu$ で表す）。この仮説を，帰無仮説 $H_0$ と対比させて，対立仮説 $H_1$ と呼ぶ（もちろん対立仮説は無数にあるが，その一つを考えている）。これはさきほどの帰無仮説を棄却する範囲に入っているが，実際の測定値（標本誤差を含む）は $x = 2$ のまわりに下の図のように分布するので，帰無仮説を棄却できない可能性（つまり実際の測定値が図のオレンジ色の部分に入る確率 $\beta$）はほぼ 1/2 である。この $\beta$ は「対立仮説 $H_1$ が正しいのに帰無仮説 $H_0$ を棄却できない確率」である。</p>
 
 <div><img src="img/140805e.png" alt=""></div>
 
 <pre>
-plot(NULL, xlim=c(-3,3), ylim=c(0,0.42), xlab="", ylab="", yaxt="n", yaxs="i")
+<code>plot(NULL, xlim=c(-3,3), ylim=c(0,0.42), xlab="", ylab="", yaxt="n", yaxs="i")
 x = -1.96-(0:10)/10*(3-1.96)
 y = dnorm(x)
 polygon(c(x,x[length(x)],x[1]), c(y,0,0), col="#66ccff", border=NA)
@@ -125,14 +125,14 @@ segments(0, 0, 0, dnorm(0))
 curve(dnorm(x), lwd=2, add=TRUE)
 segments(2, 0, 2, dnorm(0))
 curve(dnorm(x,mean=2), lwd=2, add=TRUE)
-</pre>
+</code></pre>
 
 <p>この対立仮説 $H_1$ による測定値の分布（$\mu = 2$ のまわりの分布）のうち $\beta$ 以外の部分，つまり「対立仮説 $H_1$ が正しいと仮定して帰無仮説 $H_0$ が棄却される確率」$1 - \beta$ を「検出力（検定力）」（power）と呼ぶ。下の図の緑の部分の面積が検出力に相当する。本当は $x \leq -1.96$ のところにも緑の部分があるが，ほとんど 0 であり，見えない。</p>
 
 <div><img src="img/140805f.png" alt=""></div>
 
 <pre>
-plot(NULL, xlim=c(-3,5), ylim=c(0,0.42), xlab="", ylab="", yaxt="n", yaxs="i")
+<code>plot(NULL, xlim=c(-3,5), ylim=c(0,0.42), xlab="", ylab="", yaxt="n", yaxs="i")
 segments(-1.96, 0, -1.96, dnorm(-1.96))
 x = 1.96+(0:20)/20*(5-1.96)
 y = dnorm(x,mean=2)
@@ -142,7 +142,7 @@ segments(0, 0, 0, dnorm(0))
 curve(dnorm(x), lwd=2, add=TRUE)
 segments(2, 0, 2, dnorm(0))
 curve(dnorm(x,mean=2), lwd=2, add=TRUE)
-</pre>
+</code></pre>
 
 <p>検出力は，実験をする前に，想定される対立仮説 $H_1$ について，計画している実験（例えば被験者の数 $N$）で十分かどうかを調べるために計算するものである。検出力が小さければ，もっと $N$ を増やすことを考えればよい。</p>
 
@@ -177,7 +177,7 @@ curve(dnorm(x,mean=2), lwd=2, add=TRUE)
 <div><img src="img/140805g.png" alt=""></div>
 
 <pre>
-plot(NULL, xlim=c(-3,1.644854*2+3), ylim=c(0,0.42), xlab="", ylab="", yaxt="n", yaxs="i")
+<code>plot(NULL, xlim=c(-3,1.644854*2+3), ylim=c(0,0.42), xlab="", ylab="", yaxt="n", yaxs="i")
 x = 1.644854+(0:10)/10*(3.5-1.644854)
 y = dnorm(x)
 polygon(c(x,x[length(x)],x[1]), c(y,0,0), col="#66ccff", border=NA)
@@ -189,7 +189,7 @@ segments(0, 0, 0, dnorm(0))
 curve(dnorm(x), lwd=2, add=TRUE)
 segments(1.644854*2, 0, 1.644854*2, dnorm(0))
 curve(dnorm(x,mean=1.644854*2), lwd=2, add=TRUE)
-</pre>
+</code></pre>
 
 <p>このような $\alpha$ と $\beta$ を同時に制御する点を minimum detectable activity (MDA) あるいは minimum detectable concentration (MDC) などと呼ぶ。これは Lloyd A. Currie（キュリー Curie ではなくカーリー Currie）による考え方のようで，よく誤解されて，誤検出の確率を 5% に抑えるには測定値が $3.29\sigma$ 以上でなければならないといわれることがある。これはまったくの間違いで，誤検出の確率を片側 5% に抑えたければ単純に $1.645\sigma$ で区切ればよい。</p>
 

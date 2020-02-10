@@ -22,7 +22,7 @@
 <p>まずは高校の普通科・総合学科の教科「情報」で教えている内容のデータ（スペース区切りテキスト）です：</p>
 
 <pre>
-教えている 一部教えている
+<code>教えている 一部教えている
 文字入力・タイピング 70.9 19.9
 Web検索 68.1 26.3
 ワープロソフト 81.4 14.0
@@ -47,43 +47,43 @@ Web制作 35.4 32.4
 他者の権利と法制度 74.3 23.5
 情報社会・コミュニケーション 74.0 23.7
 情報社会の安全性 74.1 23.5
-</pre>
+</code></pre>
 
 <p>Rでこのデータのグラフを描くための初期設定です：</p>
 
 <pre>
-# par(family="HiraKakuProN-W3") # Macのフォント指定
+<code># par(family="HiraKakuProN-W3") # Macのフォント指定
 par(las=1)                      # 縦軸の字も横向きに
 par(mgp=c(2,0.8,0))             # 目盛り位置調整
 par(mar=c(5,14,4,2)+0.1)        # マージン: デフォルト c(5,4,4,2)+0.1
-</pre>
+</code></pre>
 
 <p>このページの最初のデータをクリップボードにコピーして，次のどちらかを打ち込みます：</p>
 
 <pre>
-X = read.table(pipe("pbpaste")) # Mac（非X11環境）
+<code>X = read.table(pipe("pbpaste")) # Mac（非X11環境）
 X = read.table("clipboard")     # 上記以外
-</pre>
+</code></pre>
 
 <p>教えている＋一部教えているの順に並べた棒グラフを描きます：</p>
 
 <pre>
-X = transform(X, 教えていない=100-X[,1]-X[,2])
+<code>X = transform(X, 教えていない=100-X[,1]-X[,2])
 o = order(X[,1]+X[,2])
 barplot(t(as.matrix(X[o,])), horiz=TRUE, xlim=c(0,100))
-</pre>
+</code></pre>
 
 <p>もうちょっと凝ったところ：</p>
 
 <pre>
-barplot(t(as.matrix(X[o,])), horiz=TRUE, xlim=c(0,100),
+<code>barplot(t(as.matrix(X[o,])), horiz=TRUE, xlim=c(0,100),
         col=gray(c(0.2,0.8,1)), xaxt="n")
 t = seq(0,100,20)
 axis(1, t, paste(t, "%", sep=""))
 z = o[length(o)]
 mtext("教えている", at=X[z,1]/2, line=-1)
 mtext("一部教えている", at=X[z,1]+X[z,2]/2, line=-1)
-</pre>
+</code></pre>
 
 <p>次のようになりました：</p>
 

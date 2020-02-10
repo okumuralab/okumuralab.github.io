@@ -24,13 +24,13 @@
 <p>厚生労働省の<a href="http://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai12/index.html">平成24年人口動態統計月報年計（概数）の概況</a>の下のほうにリンクされている「統計表」というExcelファイルから出生数と死亡数を拾ってCSV形式（文字コード：UTF-8）にしたものを <a href="data/birthdeath.csv">ここ</a> に置いておきました。</p>
 
 <pre>
-data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/birthdeath.csv")
-</pre>
+<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/birthdeath.csv")
+</code></pre>
 
 <p>折れ線グラフにしてみます。前回の東京オリンピックの年（1964年）だけ赤点にしました。</p>
 
 <pre>
-par(las=1)              # 縦軸の文字を横向きにしない
+<code>par(las=1)              # 縦軸の文字を横向きにしない
 par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 
 plot(data$年, data$出生数/10000, type="o", pch=16,
@@ -42,7 +42,7 @@ points(data$年, data$死亡数/10000, type="o", pch=16,
 axis(2, "万人", at=250, padj=-1)
 text(1973, data$出生数[data$年==1973]/10000, "出生数", pos=3)
 text(1973, data$死亡数[data$年==1973]/10000, "死亡数", pos=3)
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/130910b.png" alt="出生数と死亡数">
@@ -51,16 +51,16 @@ text(1973, data$死亡数[data$年==1973]/10000, "死亡数", pos=3)
 <p>上の <code>plot()</code>，<code>points()</code> は，上書きを許せば，次のようにも書けます：</p>
 
 <pre>
-matplot(data[,1], data[,2:3]/10000, type="o", pch=16, col=c("black","blue"), xlab="", ylab="")
+<code>matplot(data[,1], data[,2:3]/10000, type="o", pch=16, col=c("black","blue"), xlab="", ylab="")
 points(rep(1964,2), data[data[,1]==1964,2:3]/10000, type="p", pch=16, col="red")
-</pre>
+</code></pre>
 
 <p>オリンピックの次の年だから出生数が増えたのではなく，その次の年（1966年）が「ひのえうま」の年（<a href="sexratio.html">出生性比</a>参照）のため出生数が激減し，その前後の年が増えたのでしょう。</p>
 
 <p>追記：出生数より出生率のほうがよかったかもしれません。また，「ひのえうま」前後は毎月のデータのほうがおもしろいかもしれません。e-Statの<a href="http://www.e-stat.go.jp/SG1/estat/GL02020101.do?method=extendTclass&amp;refTarget=toukeihyo&amp;listFormat=hierarchy&amp;statCode=00450013&amp;tstatCode=000001040871&amp;tclass1=&amp;tclass2=&amp;tclass3=&amp;tclass4=&amp;tclass5=">GL02020101</a>の2-2に月間出生率がありますので<a href="data/birthrate.csv">CSVファイル</a>にしてプロットしてみました。なお，月間出生率とは人口1000人に対する値のようです。</p>
 
 <pre>
-data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/birthrate.csv",
+<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/birthrate.csv",
                 as.is=TRUE)
 t = as.POSIXct(data$年月)
 t0 = as.POSIXct("1960-01-01")
@@ -68,7 +68,7 @@ t1 = as.POSIXct("1969-01-01")
 plot(t[t >= t0 & t < t1], data$出生率[t >= t0 & t < t1],
      type="o", pch=16, xlab="", ylab="")
 for (x in seq(t0,t1,"year")) abline(v=x, col="gray")
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/130910c.png" alt="月間出生率">

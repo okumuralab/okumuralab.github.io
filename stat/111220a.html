@@ -26,21 +26,21 @@
 をフィットしてみます。まずはRでデータを読み込み，図を描きます。</p>
 
 <pre>
-# quartz()                      # MacでX11を使わない場合
+<code># quartz()                      # MacでX11を使わない場合
 # par(family="HiraKakuProN-W3") # Mac：フォント（好み）
 # par(mgp=c(2,0.8,0))           # 好み
 data = read.csv("http://www.mikage.to/radiation/spviewer/data_fnf401/fnf401_milk.csv",
                 skip=22, nrow=1022, header=FALSE)
 names(data) = c("ch","sp")
 plot(data$ch, data$sp, type="l", xlab="Channel", ylab="Count", col="#f39800")
-</pre>
+</code></pre>
 
 <p>もっと細かいところを見てみます。</p>
 
 <pre>
-plot(data$ch, data$sp, type="l", xlim=c(250,450), ylim=c(0,100),
+<code>plot(data$ch, data$sp, type="l", xlim=c(250,450), ylim=c(0,100),
      xlab="Channel", ylab="Count", col="#f39800")
-</pre>
+</code></pre>
 
 <h2>2次関数のバックグラウンド＋三つ山</h2>
 
@@ -56,7 +56,7 @@ plot(data$ch, data$sp, type="l", xlim=c(250,450), ylim=c(0,100),
 <p>バックグラウンドを2次関数でフィットし，初期値に注意して次のようにフィットしました。エネルギーの校正がしっかりできていて，ピーク幅（のエネルギー依存性）もわかっていれば，パラメータをさらに減らすことができ，より安定なフィットができるはずです。</p>
 
 <pre>
-library(nlme)
+<code>library(nlme)
 fit = gnls(sp ~ c + d*(ch-350) + b*(ch-350)^2
            + e1*dnorm((ch-m1)/s1)
            + e2*dnorm((ch-m2)/s2)
@@ -66,20 +66,20 @@ fit = gnls(sp ~ c + d*(ch-350) + b*(ch-350)^2
                       m1=300,m2=325,m3=395,s1=7,s2=7,s3=7),
            weights=varPower(fixed=0.5),
            control=list(nlsTol=1e-4)) # 収束しないときは1e-3に直す
-</pre>
+</code></pre>
 
 <p>フィットを図に重ね書きしてみます。</p>
 
 <pre>
-points(data$ch[250:450], fitted(fit), type="l")
+<code>points(data$ch[250:450], fitted(fit), type="l")
 a = coef(fit)
 points(data$ch, a['c']+a['d']*(data$ch-350)+a['b']*(data$ch-350)^2, type="l")
-</pre>
+</code></pre>
 
 <p>バックグラウンドを除いた正規分布曲線の下の面積とその誤差の推定値は次のようにして求められます。</p>
 
 <pre>
-&gt; sum(a['e1']*dnorm((data$ch-a['m1'])/a['s1']))
+<code>&gt; sum(a['e1']*dnorm((data$ch-a['m1'])/a['s1']))
 [1] 318.0564
 &gt; sum(a['e2']*dnorm((data$ch-a['m2'])/a['s2']))
 [1] 373.5237
@@ -95,21 +95,21 @@ points(data$ch, a['c']+a['d']*(data$ch-350)+a['b']*(data$ch-350)^2, type="l")
 &gt; sqrt(v['e3','e3']/a['e3']^2 + v['s3','s3']/a['s3']^2 + 2*v['e3','s3']/(a['e3']*a['s3']))
       e3 
 0.1377409 
-</pre>
+</code></pre>
 
 <p>つまり，三山のカウントは318，374，362で，それぞれ相対誤差（1σ相当）は17%，15%，14%です。</p>
 
 <p>あてはまりの良さを表すカイ2乗の値は次のようになります。</p>
 
 <pre>
-&gt; sum((sp[250:450]-fitted(fit))^2/fitted(fit))
+<code>&gt; sum((sp[250:450]-fitted(fit))^2/fitted(fit))
 [1] 5688277
-</pre>
+</code></pre>
 
 <p>念のため詳しいサマリーも付けておきます：</p>
 
 <pre>
-&gt; summary(fit)
+<code>&gt; summary(fit)
 Generalized nonlinear least squares fit
   Model: sp ~ c + d * (ch - 350) + b * (ch - 350)^2 + e1 * dnorm((ch - m1)/s1) + e2 * dnorm((ch - m2)/s2) + e3 * dnorm((ch - m3)/s3) 
   Data: data 
@@ -159,7 +159,7 @@ Standardized residuals:
 
 Residual standard error: 0.9741925 
 Degrees of freedom: 201 total; 189 residual
-</pre>
+</code></pre>
 
 <h2>別のバックグラウンド＋四つ山</h2>
 
@@ -174,7 +174,7 @@ Degrees of freedom: 201 total; 189 residual
 <p>また，実は <sup>134</sup>Cs にはほかに569keV（15.4%）という小さなピークがあり，605keV（97.6%）の左裾を引き上げる形になります。ピークの面積は605keVの 15.4/97.6 = 0.158 倍ですが，ピークの幅がエネルギーの平方根に比例するとすれば幅が sqrt(569/605) = 0.97 倍になり，逆にピークの高さは 15.4/97.6 * sqrt(605/569) = 0.163 倍になります（実際にはエネルギーが下がれば効率が上がるのでもう少し大きな値になります）。これを含めて考えれば，フィットのしかたは例えば</p>
 
 <pre>
-fit = gnls(sp ~ c + d/ch + b/ch^2
+<code>fit = gnls(sp ~ c + d/ch + b/ch^2
            + e1*0.163*dnorm((ch-0.941*m1)/(0.97*s1))
            + e1*dnorm((ch-m1)/s1)
            + e2*dnorm((ch-m2)/s2)
@@ -184,15 +184,15 @@ fit = gnls(sp ~ c + d/ch + b/ch^2
                       m1=300,m2=325,m3=395,s1=7,s2=7,s3=7),
            weights=varPower(fixed=0.5),
            control=list(nlsTol=1e-4))
-</pre>
+</code></pre>
 
 <p>のようになります。グラフは次のようになります。</p>
 
 <pre>
-points(data$ch[250:450], fitted(fit), type="l")
+<code>points(data$ch[250:450], fitted(fit), type="l")
 a = coef(fit)
 points(data$ch, a['c']+a['d']/data$ch+a['b']/data$ch^2, type="l")
-</pre>
+</code></pre>
 
 <div>
 <img src="img/111227b.png" alt="">
@@ -201,7 +201,7 @@ points(data$ch, a['c']+a['d']/data$ch+a['b']/data$ch^2, type="l")
 <p>パラメータと各ピークのカウントは次のようになります。</p>
 
 <pre>
-&gt; sum((sp[250:450]-fitted(fit))^2/fitted(fit))
+<code>&gt; sum((sp[250:450]-fitted(fit))^2/fitted(fit))
 [1] 5686931
 &gt; a
             c             d             b            e1            e2 
@@ -226,7 +226,7 @@ points(data$ch, a['c']+a['d']/data$ch+a['b']/data$ch^2, type="l")
 &gt; sqrt(v['e3','e3']/a['e3']^2 + v['s3','s3']/a['s3']^2 + 2*v['e3','s3']/(a['e3']*a['s3']))
       e3 
 0.1331488
-</pre>
+</code></pre>
 
 <h2>効率曲線を仮定したフィット</h2>
 
@@ -235,7 +235,7 @@ points(data$ch, a['c']+a['d']/data$ch+a['b']/data$ch^2, type="l")
 <p>さらに，ピークの幅はエネルギーの平方根に比例すると仮定し，<sup>137</sup>Cs のエネルギー662keVが <sup>134</sup>Cs の605keVと796keVを 0.298:0.702 に内分することを使えば，パラメータの数はさらに減らせます：</p>
 
 <pre>
-fit = gnls(sp ~ c + d/ch + b/ch^2
+<code>fit = gnls(sp ~ c + d/ch + b/ch^2
            + e1*0.169*dnorm((ch-0.941*m1)/(sqrt(0.941*m1)*r))
            + e1*dnorm((ch-m1)/(sqrt(m1)*r))
            + e2*dnorm((ch-(0.702*m1+0.298*m3))/(sqrt(0.702*m1+0.298*m3)*r))
@@ -245,7 +245,7 @@ fit = gnls(sp ~ c + d/ch + b/ch^2
                       m1=300,m3=393,r=0.4),
            weights=varPower(fixed=0.5),
            control=list(nlsTol=1e-4))
-</pre>
+</code></pre>
 
 <p>フィット曲線は一つ上とほぼ同じですので省略します。</p>
 

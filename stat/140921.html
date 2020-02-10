@@ -52,23 +52,23 @@ MathJax = {
 <p>まず例題用のデータを乱数で作る。ここでは次のようにして100人×10個の説明変数と1個の目的変数とを作った：</p>
 
 <pre>
-set.seed(1)
+<code>set.seed(1)
 x = matrix(round(rnorm(1000,mean=50,sd=10)), ncol=10)
 invlogit = function(x){exp(x)/(1+exp(x))}
 y = sapply(1:100, function(i){rbinom(1, 1, invlogit((x[i,]-50) %*% (1:10)/100))})
-</pre>
+</code></pre>
 
 <p>実際のロジスティック回帰は次のコマンドで行う：</p>
 
 <pre>
-r1 = glm(y ~ x[,1] + x[,2] + x[,3] + x[,4] + x[,5] + x[,6] + x[,7] + x[,8] + x[,9] + x[,10],
+<code>r1 = glm(y ~ x[,1] + x[,2] + x[,3] + x[,4] + x[,5] + x[,6] + x[,7] + x[,8] + x[,9] + x[,10],
          family=binomial(link="logit"))
-</pre>
+</code></pre>
 
 <p>結果は <code>r1</code> に入る。そのサマリーを出力させる：</p>
 
 <pre>
-&gt; summary(r1)
+<code>&gt; summary(r1)
 
 Call:
 glm(formula = y ~ x[, 1] + x[, 2] + x[, 3] + x[, 4] + x[, 5] + 
@@ -101,30 +101,30 @@ Residual deviance:  69.291  on 89  degrees of freedom
 AIC: 91.291
 
 Number of Fisher Scoring iterations: 6
-</pre>
+</code></pre>
 
 <p>係数は非常に有意なもの（<code>***</code>）からまったく有意でないもの（無印）まで多様である。そこで，有意でない変数を外していけば，予測式はより安定する。どれくらい良い予測式であるかを評価するための指標はいろいろ考えられるが，ここではAIC（赤池情報量規準，An Information Criterion，Akaike's Information Criterion）という数値が使われている。</p>
 
 <p>あまり関係なさそうな変数を手作業で除いていってもよいが，自動化するには，<code>step()</code> という関数を使う：</p>
 
 <pre>
-r2 = step(r1)
-</pre>
+<code>r2 = step(r1)
+</code></pre>
 
 <p>これは，デフォルトではフルモデルから1個ずつ変数を外すことを試み，外すと一番AICが良く（小さく）なるものを実際に外す。外すことによってAICが改善しなくなるまで続ける。最終的には変数 2，1，3 がこの順に外され，変数 4〜10 が残る。その時点でのAICは 87.92 である。</p>
 
 <p>変数 4〜10 が残った時点であらためて計算してみる：</p>
 
 <pre>
-r3 = glm(y ~ x[,4] + x[,5] + x[,6] + x[,7] + x[,8] + x[,9] + x[,10],
+<code>r3 = glm(y ~ x[,4] + x[,5] + x[,6] + x[,7] + x[,8] + x[,9] + x[,10],
         family=binomial(link="logit"))
 summary(r3)
-</pre>
+</code></pre>
 
 <p>結果は次のようになる：</p>
 
 <pre>
-Call:
+<code>Call:
 glm(formula = y ~ x[, 4] + x[, 5] + x[, 6] + x[, 7] + x[, 8] + 
     x[, 9] + x[, 10], family = binomial(link = "logit"))
 
@@ -152,7 +152,7 @@ Residual deviance:  71.922  on 92  degrees of freedom
 AIC: 87.922
 
 Number of Fisher Scoring iterations: 6
-</pre>
+</code></pre>
 
 <p>つまり，予測式は次のようになる：</p>
 
@@ -161,9 +161,9 @@ Number of Fisher Scoring iterations: 6
 <p>この予測式から求めた $p_i$ は <code>fitted()</code> という関数で求められる。これを横軸に，実際の値 $y_i$ を縦軸にとってプロットすると次のようになる：</p>
 
 <pre>
-plot(fitted(r3), y, ylim=c(-0.2,1.2), yaxt="n")
+<code>plot(fitted(r3), y, ylim=c(-0.2,1.2), yaxt="n")
 axis(2, c(0,1))
-</pre>
+</code></pre>
 
 <p>なお，<code>fitted(r3)</code> は <code>invlogit(predict(r3))</code> とも書ける。</p>
 
@@ -172,14 +172,14 @@ axis(2, c(0,1))
 <p><a href="ROC.html">ROC曲線</a>も描いてみる：</p>
 
 <pre>
-&gt; ROC(fitted(r3), y)
+<code>&gt; ROC(fitted(r3), y)
 AUC = 0.9189081 th = 0.2447937 
 BER = 0.1533521 OR = 62.67857 
          Actual
 Predicted  0  1
     FALSE 39  2
     TRUE  14 45
-</pre>
+</code></pre>
 
 <figure><img src="img/140921b.png" alt=""></figure>
 
@@ -190,10 +190,10 @@ Predicted  0  1
 <p>場合によっては <code>glm()</code> が警告メッセージを出す：</p>
 
 <pre>
- 警告メッセージ: 
+<code> 警告メッセージ: 
 1:  glm.fit: アルゴリズムは収束しませんでした  
 2:  glm.fit: 数値的に 0 か 1 である確率が生じました
-</pre>
+</code></pre>
 
 <p>ここで <code>r1</code> を表示してみると，本当に 0 か 1 の値になってしまっている。こういう「完全な予測」は，人工データで起きることがあるようだ。きちんと予測できるなら，これでも問題ないだろう。</p>
 
@@ -202,21 +202,21 @@ Predicted  0  1
 <p>なお，通常の線形回帰分析 <code>lm()</code> でも同様の変数選択が行える。</p>
 
 <pre>
-r1 = lm(y ~ x[,1] + x[,2] + x[,3] + x[,4] + x[,5] + x[,6] + x[,7] + x[,8] + x[,9] + x[,10])
+<code>r1 = lm(y ~ x[,1] + x[,2] + x[,3] + x[,4] + x[,5] + x[,6] + x[,7] + x[,8] + x[,9] + x[,10])
 r2 = step(r1)
 ...
-</pre>
+</code></pre>
 
 <hr>
 
 <p><code>step()</code> は変数のサブセットを全部試してくれるわけではない。全部試したければ，<code>bestglm()</code> を使う：</p>
 
 <pre>
-&gt; install.packages("bestglm")
+<code>&gt; install.packages("bestglm")
 &gt; library(bestglm)
 &gt; Xy = data.frame(x, y)
 &gt; bestglm(Xy, family=binomial(link="logit"), IC="AIC")
-</pre>
+</code></pre>
 
 <p>AICだけでなく，BICやCV（cross-validation）などもできる。ただし，変数が多いと時間がかかる。</p>
 

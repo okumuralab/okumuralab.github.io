@@ -49,37 +49,37 @@ MathJax = {
 <p>標準正規分布の分布関数をプロットして，タイトルに $\dfrac{1}{\sqrt{2\pi}} \exp(-x^2/2)$ という数式を書いてみよう。</p>
 
 <pre>
-curve(dnorm(x), xlim=c(-3,3), ylab="",
+<code>curve(dnorm(x), xlim=c(-3,3), ylab="",
       main=expression(frac(1,sqrt(2*pi))*exp(-x^2/2)))
-</pre>
+</code></pre>
 
 <figure><img src="img/160103a.png" alt=""></figure>
 
 <p>私の環境のデフォルトのフォント（ヒラギノ）で何とか数式が表示された。しかし，このフォントではイタリック体がうまく出ない。そこで，フォントをTimesに変えてやってみる。文字 $x$ だけイタリック体にする。</p>
 
 <pre>
-curve(dnorm(x), xlim=c(-3,3), xlab=expression(italic(x)), ylab="",
+<code>curve(dnorm(x), xlim=c(-3,3), xlab=expression(italic(x)), ylab="",
       main=expression(frac(1,sqrt(2*pi))*exp(-italic(x)^2/2)),
       family="Times")
-</pre>
+</code></pre>
 
 <figure><img src="img/160103b.png" alt=""></figure>
 
 <div class="note">
 <p>微妙な違いだが exp(...) を数式扱いではなくテキストとして書くには次のようにする：</p>
 <pre>
-curve(dnorm(x), xlim=c(-3,3), ylab="",
+<code>curve(dnorm(x), xlim=c(-3,3), ylab="",
       main=expression(paste(frac(1,sqrt(2*pi)), "exp(", -x^2/2, ")")))
-</pre>
+</code></pre>
 <p>このほうが括弧が締まって見えるようにも思う。</p>
 </div>
 
 <div class="note">
 <p><code>expression(...)</code> と同じことだが <code>parse(text="...")</code> とすれば文字列として数式が与えられることを教えていただいた：</p>
 <pre>
-curve(dnorm(x), xlim=c(-3,3), ylab="",
+<code>curve(dnorm(x), xlim=c(-3,3), ylab="",
       main=parse(text="frac(1,sqrt(2*pi))*exp(-x^2/2)"))
-</pre>
+</code></pre>
 <p>この方法なら数式を表す文字列を <code>sprintf()</code> などで生成することも簡単である。</p>
 </div>
 
@@ -101,17 +101,17 @@ curve(dnorm(x), xlim=c(-3,3), ylab="",
 <p>これを使えば，このページの最初の例は次のように書くことができる。バックスラッシュは2重に書くことに気をつけなければならない。</p>
 
 <pre>
-curve(dnorm(x), xlim=c(-3,3), xlab=TeX("$x$"), ylab="",
+<code>curve(dnorm(x), xlim=c(-3,3), xlab=TeX("$x$"), ylab="",
       main=TeX("$\\frac{1}{\\sqrt{2\\pi}}\\exp(-x^2/2)$"))
-</pre>
+</code></pre>
 
 <p>ただ，文字は自動的にはイタリック体にならない。明示的に <code>\\mathit{x}</code> のように書く必要がある。</p>
 
 <pre>
-curve(dnorm(x), xlim=c(-3,3), xlab=TeX("$\\mathit{x}$"), ylab="",
+<code>curve(dnorm(x), xlim=c(-3,3), xlab=TeX("$\\mathit{x}$"), ylab="",
       main=TeX("$\\frac{1}{\\sqrt{2\\pi}}\\exp(-\\mathit{x}^2/2)$"),
       family="Times")
-</pre>
+</code></pre>
 
 <h2>tikzDevice</h2>
 

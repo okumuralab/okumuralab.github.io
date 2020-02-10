@@ -30,7 +30,7 @@
 <p>これで「CSVファイルをダウンロード」を選びます。次のようなdata.csvというファイルがダウンロードされます。文字コードはCP932（シフトJIS），行末はCRLF（Windowsの行末）になっているので，Excelでも開ますが，ここではテキストエディタで開いて中を見てみましょう：</p>
 
 <pre>
-ダウンロードした時刻：2018/04/08 20:59:25
+<code>ダウンロードした時刻：2018/04/08 20:59:25
 
 ,,東京,東京,東京
 年,月,降水量の合計(mm),降水量の合計(mm),平均気温(℃)
@@ -47,31 +47,31 @@
 2017,10,531.5,0,16.8
 2017,11,47.0,0,11.9
 2017,12,15.0,0,6.6
-</pre>
+</code></pre>
 
 <p>最初の5行を除いた部分がデータで，そのすぐ上（4行目）はデータの変数名としての意味を持っていません。したがって，これをRで読むときは，ヘッダなしの指定で，最初の5行は読み飛ばします：</p>
 
 <pre>
-x = read.csv("data.csv", header=FALSE, fileEncoding="CP932", skip=5)
-</pre>
+<code>x = read.csv("data.csv", header=FALSE, fileEncoding="CP932", skip=5)
+</code></pre>
 
 <p>確認します：</p>
 
 <pre>
 <code class="prom">x</code>
-     V1 V2    V3 V4   V5
-1  2017  1  26.0  0  5.8
-2  2017  2  15.5  0  6.9
-3  2017  3  85.5  0  8.5
-4  2017  4 122.0  0 14.7
-5  2017  5  49.0  0 20.0
-6  2017  6 106.5  0 22.0
-7  2017  7  81.0  0 27.3
-8  2017  8 141.5  0 26.4
-9  2017  9 209.5  0 22.8
-10 2017 10 531.5  0 16.8
-11 2017 11  47.0  0 11.9
-12 2017 12  15.0  0  6.6
+<code>     V1 V2    V3 V4   V5</code>
+<code>1  2017  1  26.0  0  5.8</code>
+<code>2  2017  2  15.5  0  6.9</code>
+<code>3  2017  3  85.5  0  8.5</code>
+<code>4  2017  4 122.0  0 14.7</code>
+<code>5  2017  5  49.0  0 20.0</code>
+<code>6  2017  6 106.5  0 22.0</code>
+<code>7  2017  7  81.0  0 27.3</code>
+<code>8  2017  8 141.5  0 26.4</code>
+<code>9  2017  9 209.5  0 22.8</code>
+<code>10 2017 10 531.5  0 16.8</code>
+<code>11 2017 11  47.0  0 11.9</code>
+<code>12 2017 12  15.0  0  6.6</code>
 </pre>
 
 <p>V2が月，V3が降水量（mm），V5が平均気温（℃）です。</p>
@@ -79,54 +79,54 @@ x = read.csv("data.csv", header=FALSE, fileEncoding="CP932", skip=5)
 <p>棒グラフと折れ線グラフを使い分けるとすれば，比例尺度の降水量は棒グラフで，間隔尺度の気温は折れ線グラフで表すのが適当です。まずは降水量を棒グラフで表します：</p>
 
 <pre>
-barplot(x$V3, names.arg=x$V2)
-</pre>
+<code>barplot(x$V3, names.arg=x$V2)
+</code></pre>
 
 <p>これだけでもいいのですが，パラメータを多少いじってみます：</p>
 
 <pre>
-par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
+<code>par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 par(las=1)              # 文字は回転しない
 t = barplot(x$V3, names.arg=x$V2)  # 棒グラフを描き，各棒の中心x座標をtに代入
 axis(1, labels="月", at=t[12], tick=FALSE, hadj=-1)  # 12番目の棒の隣に「月」と表示
 axis(2, labels="mm", at=500, padj=-1)   # 500の上に「mm」と表示
-</pre>
+</code></pre>
 
 <figure><img src="img/180408a.png" alt="東京の2017年の各月の降水量"></figure>
 
 <p>気温を折れ線グラフでプロットします：</p>
 
 <pre>
-plot(x$V2, x$V5, pch=16, type="o", xlab="月", ylab="")
+<code>plot(x$V2, x$V5, pch=16, type="o", xlab="月", ylab="")
 axis(2, labels="℃", at=25, padj=-1)   # 25の上に「℃」と表示
-</pre>
+</code></pre>
 
 <figure><img src="img/180408b.png" alt="東京の2017年の各月の平均気温"></figure>
 
 <p>両方重ねてみましょう：</p>
 
 <pre>
-t = barplot(x$V3, names.arg=x$V2)
+<code>t = barplot(x$V3, names.arg=x$V2)
 axis(2, labels="mm", at=500, padj=-1)
 axis(1, labels="月", at=t[12], tick=FALSE, hadj=-1)
 points(t, 18*x$V5, pch=16, type="o")
 axis(4, at=18*c(5,10,15,20,25), labels=c(5,10,15,20,25))
 axis(4, labels="℃", at=18*25, padj=-1)
-</pre>
+</code></pre>
 
 <figure><img src="img/180408c.png" alt="東京の2017年の各月の平均気温と降水量"></figure>
 
 <p>これでいいのでしょうか。各月の降水量は，28日しかない2月と，31日ある月とでは，単純に月の降水量を比較するのは不公平です。1日あたりの降水量を使うべきでしょう。逆に，棒の幅は，各月の日数に比例した幅にするほうがいいでしょう：</p>
 
 <pre>
-d = c(31,28,31,30,31,30,31,31,30,31,30,31)  # 毎月の日数
+<code>d = c(31,28,31,30,31,30,31,31,30,31,30,31)  # 毎月の日数
 t = barplot(x$V3/d, d, 0, names.arg=x$V2)
 axis(2, labels="mm", at=15, padj=-1)
 axis(1, labels="月", at=t[12], tick=FALSE, hadj=-1)
 points(t, 0.6*x$V5, pch=16, type="o", lwd=2)
 axis(4, at=0.6*c(5,10,15,20,25), labels=c(5,10,15,20,25))
 axis(4, labels="℃", at=0.6*25, padj=-1)
-</pre>
+</code></pre>
 
 <figure><img src="img/180412a.png" alt="東京の2017年の各月の平均気温と1日あたりの降水量"></figure>
 

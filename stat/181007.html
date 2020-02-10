@@ -53,14 +53,14 @@ MathJax = {
 <figure><img src="img/181010a.png" alt="y_i \sim N(ax_i + b, \sigma_i^2) の尤度"></figure>
 
 <pre>
-foo = function(a,b) exp(-0.5*sum((a*x+b-y)^2))
+<code>foo = function(a,b) exp(-0.5*sum((a*x+b-y)^2))
 x = 1:4; y = c(2,3,5,4)
 m1 = outer((0:160)/100, (0:450)/100, Vectorize(function(a,b) foo(a,b)))
 x = (1:4)-2.5; y = c(2,3,5,4)
 m2 = outer((0:160)/100, (0:450)/100, Vectorize(function(a,b) foo(a,b)))
 contour((0:160)/100, (0:450)/100, m1, asp=1, col="#0041ff")
 contour((0:160)/100, (0:450)/100, m2, asp=1, col="#ff2800", add=TRUE)
-</pre>
+</code></pre>
 
 <p>対数尤度は</p>
 
@@ -161,7 +161,7 @@ contour((0:160)/100, (0:450)/100, m2, asp=1, col="#ff2800", add=TRUE)
 <figure><img src="img/eotvos.png" alt="第五の力"></figure>
 
 <pre>
-x = c(0.94, 0.50, 0.00, -0.74, -0.86, -1.42, -1.71)
+<code>x = c(0.94, 0.50, 0.00, -0.74, -0.86, -1.42, -1.71)
 y = c(0.4, 0.4, 0.0, -0.3, -0.5, -0.7, -1.0)
 e = c(0.2, 0.1, 0.2, 0.2, 0.2, 0.2, 0.2)
 r = lm(y ~ x, weights=1/e^2)
@@ -175,7 +175,7 @@ sa2 = 1 / sum(((x - xbar) / e)^2)
 sqrt(sa2)  # 0.07165334
 sb2 = sa2 * sum(x^2 / e^2) / sum(1 / e^2)
 sqrt(sb2)  # 0.06453298
-</pre>
+</code></pre>
 
 <p><code>lm()</code> で求めた $a$ の標準誤差は 0.04 ほどだが，上の方法で求めれば $\sigma_a = 0.07$ ほどになる。</p>
 
@@ -184,14 +184,14 @@ sqrt(sb2)  # 0.06453298
 <p>例えば上の問題で</p>
 
 <pre>
-r = lm(y ~ x, weights=1/e^2)
+<code>r = lm(y ~ x, weights=1/e^2)
 summary(r)
-</pre>
+</code></pre>
 
 <p>とすると，次のように表示される（朱書きした部分に注目）：</p>
 
 <pre>
-Call:
+<code>Call:
 lm(formula = y ~ x, weights = 1/e^2)
 
 Weighted Residuals:
@@ -208,14 +208,14 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Residual standard error: <span style="color:#F30">0.5992</span> on 5 degrees of freedom
 Multiple R-squared:  0.9724,	Adjusted R-squared:  0.9669 
 F-statistic: 176.4 on 1 and 5 DF,  p-value: 4.327e-05
-</pre>
+</code></pre>
 
 <p>この Coefficients の Std. Error に Residual standard error の逆数をかければ，$\sigma_i^2$ の与えられた場合の係数の誤差が求められるのだ。あるいは次のように打ち込んでもよい：</p>
 
 <pre>
-sr = summary(r)
+<code>sr = summary(r)
 sr$coefficients[,2] / sr$sigma
-</pre>
+</code></pre>
 
 <p>これで 0.06453298 と 0.07165334 が得られる。この方法なら，係数が増えても大丈夫である。</p>
 

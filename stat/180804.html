@@ -25,27 +25,27 @@
 <p>詳しい情報が書かれているのは，<a href="http://www.nier.go.jp/18chousakekkahoukoku/factsheet/18prefecture-City/">このページ</a>からリンクされているExcelファイル群である。とりあえずこれらを全部ダウンロードしてみよう（これはRではなくUNIXのコマンドである）：</p>
 
 <pre>
-wget -m -np -w 5 http://www.nier.go.jp/18chousakekkahoukoku/factsheet/18prefecture-City/
-</pre>
+<code>wget -m -np -w 5 http://www.nier.go.jp/18chousakekkahoukoku/factsheet/18prefecture-City/
+</code></pre>
 
 <p>ディレクトリに分かれてたくさんのファイルが取得できる。このうち，小学校の成績の県ごとのファイルは 01p_18r.xlsx から 47p_18r.xlsr までである。これらの名前一覧を取得するRのコマンドは次の通りである（全部のファイルが見える上位のディレクトリで実行する）：</p>
 
 <pre>
-names = dir(pattern="^\\d\\dp_18r.xlsx$", full.names=TRUE, recursive=TRUE)
-</pre>
+<code>names = dir(pattern="^\\d\\dp_18r.xlsx$", full.names=TRUE, recursive=TRUE)
+</code></pre>
 
 <p>Excelで開いてみると，AE8〜AE20の範囲に国語Aの正答数の度数分布（12問〜0問）が並んでいることがわかる。これらを取得して，都道府県ごとの平均正答数を求めるRのコマンドは次の通りである（あらかじめ <code>library(readxl)</code> しておく）：</p>
 
 <pre>
-f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="AE8:AE20")) # 国語A
+<code>f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="AE8:AE20")) # 国語A
 x = sapply(names, f)
 pka = sapply(1:47, function(i) sum(x[,i]*12:0)/sum(x[,i]))
-</pre>
+</code></pre>
 
 <p>同様に他の科目や中学校も行えばよい。全体をまとめて，平均正答数を平均正答率（％）に変換してCSVファイルに収めるところまでは，次のスクリプトになる：</p>
 
 <pre>
-library(readxl)
+<code>library(readxl)
 
 # 小学校
 names = dir(pattern="^\\d\\dp_18r.xlsx$", full.names=TRUE, recursive=TRUE)
@@ -101,7 +101,7 @@ all = data.frame(番号=1:47,
                  中国A=mka*(100/32), 中国B=mkb*(100/9),
                  中数A=msa*(100/36), 中数B=msb*(100/14), 中理=mr*(100/27))
 write.csv(all, "atest2018.csv", quote=FALSE, row.names=FALSE)
-</pre>
+</code></pre>
 
 <p>このようにして作った <a href="data/atest2018.csv">atest2018.csv</a> を置いておく。文字コードはExcelで文字化けしにくいようにBOM付きUTF-8とした。MacのRなら <code>read.csv()</code> でそのまま読み込めるが，WindowsのRならオプション <code>fileEncoding="UTF-8-BOM"</code> が必要である（<code>fileEncoding="UTF-8"</code> だけではうまくいかないようだ）。</p>
 

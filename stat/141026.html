@@ -56,9 +56,9 @@ MathJax = {
 <p>地震をPoisson過程と見るなら，1年間に地震の起こる確率 $p_1$ は一定で，地震発生は毎年独立であり，30年間地震が起こらない確率は $(1 - p_1)^{30}$ である。これを $1 - 0.87 = 0.13$ と等しいとおけば，$p_1 = 1 - 0.13^{1/30} = 0.066$ である：</p>
 
 <pre>
-&gt; 1 - 0.13^(1/30)
+<code>&gt; 1 - 0.13^(1/30)
 [1] 0.0657464
-</pre>
+</code></pre>
 
 <p>この計算は上に挙げたブログの最初のものと同じである。</p>
 
@@ -85,7 +85,7 @@ MathJax = {
 <p>ちなみに，東海近辺で地震の起きた年をいくつか拾うと，</p>
 
 <pre>
-&gt; x = c(1498, 1605, 1707, 1854)
+<code>&gt; x = c(1498, 1605, 1707, 1854)
 &gt; dx = diff(x)
 &gt; mean(dx)
 [1] 118.6667
@@ -93,12 +93,12 @@ MathJax = {
 [1] 0.2078462
 &gt; 2011 - x[4]
 [1] 157
-</pre>
+</code></pre>
 
 <p>ということで，ざっくりと $\mu = 120$，$\alpha = 0.2$ でBPTモデルで計算すると，</p>
 
 <pre>
-&gt; m = 120
+<code>&gt; m = 120
 &gt; a = 0.2
 &gt; bpt = function(t) { (m/(2*pi*a^2*t^3))^(1/2)*exp(-(t-m)^2/(2*a^2*m*t)) }
 &gt; integrate(bpt, 157, 187)
@@ -107,14 +107,14 @@ MathJax = {
 0.07306916 with absolute error &lt; 9.1e-05
 &gt; 0.06356807 / 0.07306916
 [1] 0.8699713
-</pre>
+</code></pre>
 
 <p>ということで，最新の地震から157年目の2011年から30年間に地震の起こる確率は87%になる。</p>
 
 <figure><img src="img/141030a.png" alt=""></figure>
 
 <pre>
-plot(NULL, xlim=c(0,250), ylim=c(0,max(bpt(110:130))), axes=FALSE, xlab="", ylab="")
+<code>plot(NULL, xlim=c(0,250), ylim=c(0,max(bpt(110:130))), axes=FALSE, xlab="", ylab="")
 axis(1, c(0,120,157,187,250))
 x = seq(157,187,5)
 y = bpt(x)
@@ -123,16 +123,16 @@ x = seq(187,250,7)
 y = bpt(x)
 polygon(c(x,x[length(x)],x[1]), c(y,0,0), col=gray(0.9))
 curve(bpt(x), lwd=2, add=TRUE)
-</pre>
+</code></pre>
 
 <p>同様に，最初の1年では</p>
 
 <pre>
-&gt; integrate(bpt, 157, 158)
+<code>&gt; integrate(bpt, 157, 158)
 0.004361829 with absolute error &lt; 4.8e-17
 &gt; 0.004361829 / 0.07306916
 [1] 0.05969453
-</pre>
+</code></pre>
 
 <p>で，5.97%となる。「30年確率は87%」のPoissonモデルで計算した6.57%より少し小さい。</p>
 

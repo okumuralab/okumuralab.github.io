@@ -57,32 +57,32 @@
 <p>ここでは整形したデータを読む方法を書いておく：</p>
 
 <pre>
-icecream = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/icecream.csv", comment.char="#", fileEncoding="CP932")
+<code>icecream = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/icecream.csv", comment.char="#", fileEncoding="CP932")
 tokyo = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo-weather-2003-2012.csv", fileEncoding="CP932")
-</pre>
+</code></pre>
 
 <p>データによっては日あたりの量に直す必要があるので，年・月を与えるとその月の日数を求める関数が必要になる。例えば次のようにすればよい。</p>
 
 <pre>
-days = function(year, month) {
+<code>days = function(year, month) {
     m = c(31,28,31,30,31,30,31,31,30,31,30,31)
     m[month] + ((month == 2) &amp;&amp; ((year %% 4 == 0) && (year %% 100 != 0) || (year %% 400 == 0)))
 }
-</pre>
+</code></pre>
 
 <p>プロットは例えば次のようになる。</p>
 
 <pre>
-plot(tokyo[,3], icecream[,3]/days(icecream$年,icecream$月),
+<code>plot(tokyo[,3], icecream[,3]/days(icecream$年,icecream$月),
      pch=16, xlab="平均最高気温（℃）", ylab="アイスクリーム購入額（円）")
-</pre>
+</code></pre>
 
 <figure><img src="img/160126b.png" alt="平均最高気温・アイスクリーム購入額"></figure>
 
 <p>ダウンロードしたファイルをRで直接読むこともできる。これが本来は望ましい（手作業が入らないので）。おおよそ次のようにすればよい（ファイル名はご自分のものに直してください）。<code>fileEncoding="SJIS"</code> はWindowsではデフォルトなので省略可。</p>
 
 <pre>
-x = read.csv("気象.csv", header=FALSE, fileEncoding="SJIS", skip=7)
+<code>x = read.csv("気象.csv", header=FALSE, fileEncoding="SJIS", skip=7)
 y = read.csv("アイスクリーム.csv", header=FALSE, fileEncoding="SJIS", skip=11)
 y$V1 = NULL
 y$V2 = NULL
@@ -91,7 +91,7 @@ y$V4 = as.numeric(gsub("[,*]", "", y$V4))
 z = merge(x, y, by.x="V1", by.y="V3")
 z$年 = gsub("/.*", "", z$V1)
 z$月 = gsub(".*/", "", z$V1)
-</pre>
+</code></pre>
 
 <hr>
 

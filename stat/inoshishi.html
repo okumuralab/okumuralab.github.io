@@ -28,8 +28,8 @@
 <p>展開したファイル「merged.csv」をRで読み込むには次のようにします。</p>
 
 <pre>
-data = read.csv("merged.csv", header=FALSE, as.is=TRUE)
-</pre>
+<code>data = read.csv("merged.csv", header=FALSE, as.is=TRUE)
+</code></pre>
 
 <p>ヘッダ行がないので <code>header=FALSE</code> と指定しています。<code>as.is=TRUE</code> は，なくてもいいのですが，これを指定すると，数値以外の列を文字列として扱います。これを指定しないと，数値以外を因子（ファクター）として扱います。</p>
 
@@ -38,40 +38,40 @@ data = read.csv("merged.csv", header=FALSE, as.is=TRUE)
 <p>以下はRで説明します。まず品目名が「イノシシ」を含むデータを抽出します。</p>
 
 <pre>
-ino = subset(data, grepl('イノシシ', V10))
-</pre>
+<code>ino = subset(data, grepl('イノシシ', V10))
+</code></pre>
 
 <p><code>dim(ino)</code> で調べてみると1019件あります（2013年8月14日時点）。19列目 <code>ino$V19</code> がCs合計値ですが，<code>&lt;20</code> のような不検出（ND）がありますので，文字列扱いになってしまっています。これをまず数値に変換します。</p>
 
 <pre>
-inocs = as.numeric(ino$V19)
-</pre>
+<code>inocs = as.numeric(ino$V19)
+</code></pre>
 
 <p>数値に変換できない <code>&lt;20</code> のようなものは「NA」（not available）というRの特別な値に変換されます。</p>
 
 <p>イノシシの例はこれで大丈夫なのですが，ぴったり「0」というありえない値が出現することがありましたので，念のため0以下の値を「NA」に直します。</p>
 
 <pre>
-inocs = ifelse(inocs <= 0, NA, inocs)
-</pre>
+<code>inocs = ifelse(inocs <= 0, NA, inocs)
+</code></pre>
 
 <p>「NA」の扱いはいろいろ考えられますが，ここでは単に「NA」を削除することにします。</p>
 
 <pre>
-inocs = na.omit(inocs)
-</pre>
+<code>inocs = na.omit(inocs)
+</code></pre>
 
 <p><code>length(inocs)</code> で長さを調べてみると，ちょうど873で，Webでの検索結果と一致します。</p>
 
 <p>この分布を「正規確率プロット」で描いてみます。</p>
 
 <pre>
-par(mgp=c(2,0.8,0))  # 特に必要ない描画パラメータの調整
+<code>par(mgp=c(2,0.8,0))  # 特に必要ない描画パラメータの調整
 qqnorm(inocs, log="y", xlab="パーセンタイル",
        ylab="Cs合計 (Bq/kg)", xaxt="n", main="イノシシ")
 p = c(0.01, 0.1, 1, 10, 50, 90, 99, 99.9, 99.99)
 axis(1, at=qnorm(p/100), labels=p)
-</pre>
+</code></pre>
 
 <div><img src="img/130815a.png" alt="イノシシ"></div>
 
@@ -83,16 +83,16 @@ axis(1, at=qnorm(p/100), labels=p)
 <p>この <code>qqnorm()</code> は，横軸は 0.5/873，1.5/873，2.5/873，…，872.5/873
 を正規分布の（累積）分布関数の逆関数で変換したもの，縦軸は値を小さい順に並べ替えたもので，次と等価です。</p>
 <pre>
-plot(qnorm((1:873-0.5)/873), sort(inocs), log="y")
-</pre>
+<code>plot(qnorm((1:873-0.5)/873), sort(inocs), log="y")
+</code></pre>
 <p>厳密に言えば，横軸は <code>ppoints()</code> という関数を使っているので，件数 <code>n</code> が10以下の場合は <code>(1:n-3/8)/(n+1/4)</code> で計算されます。<code>help(ppoints)</code> をご覧ください。</p>
 </div>
 
 <div class="note">
 <p>上の解析では <code>&lt;20</code> のような文字列は無視しましたが，これを上限の 20 で置き換えるという考え方もありえます。そのようにするには，</p>
 <pre>
-inocs = as.numeric(sub("<", "", inocs))
-</pre>
+<code>inocs = as.numeric(sub("<", "", inocs))
+</code></pre>
 <p>とすればいいでしょう。こうすれば件数は 1019 になります。正規確率プロットは次のようになります。</p>
 <div><img src="img/130815c.png" alt="イノシシ"></div>
 </div>
@@ -100,9 +100,9 @@ inocs = as.numeric(sub("<", "", inocs))
 <p>ちなみに，このようなロングテールの分布は，横軸を（着目する側から数えた）順位にして，両対数でプロットすることがよくあります。</p>
 
 <pre>
-plot(1:873, sort(inocs,decreasing=TRUE), log="xy",
+<code>plot(1:873, sort(inocs,decreasing=TRUE), log="xy",
      xlab="順位", ylab="Cs合計 (Bq/kg)")
-</pre>
+</code></pre>
 
 <div><img src="img/130815b.png" alt="イノシシ"></div>
 

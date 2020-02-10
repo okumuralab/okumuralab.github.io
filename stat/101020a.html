@@ -39,18 +39,18 @@
 <p>これをグラフにしてみましょう。まず準備です。</p>
 
 <pre>
-# par(family="HiraKakuProN-W3") # これはMacだけの和文フォント設定
+<code># par(family="HiraKakuProN-W3") # これはMacだけの和文フォント設定
 par(las=1)              # 縦軸の文字を横向きにしない
 par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
-</pre>
+</code></pre>
 
 <p>棒グラフなら，例えば次のように描けます。</p>
 
 <pre>
-barplot(死者数, names.arg=substr(年,3,4), col="#77aaee")
+<code>barplot(死者数, names.arg=substr(年,3,4), col="#77aaee")
 axis(2, "人", at=10000, padj=-1)
 title("交通事故死者数", line=-1)
-</pre>
+</code></pre>
 
 <div><img src="img/101020a.png" alt="交通事故死者数"></div>
 
@@ -59,18 +59,18 @@ title("交通事故死者数", line=-1)
 <p>折れ線グラフなら，例えば次のようにすれば描けます：</p>
 
 <pre>
-plot(年, 死者数, type="o", pch=16, xlab="", ylab="", xaxt="n")
+<code>plot(年, 死者数, type="o", pch=16, xlab="", ylab="", xaxt="n")
 t = c(1995, 2000, 2005, 2009)
 axis(1, t, t)
 axis(4, labels=FALSE)
 title("交通事故死者数", line=0.5)
 axis(2, "人", at=10000, padj=-1)
-</pre>
+</code></pre>
 
 <p>実は1970年（昭和45年）のデータもあるので，これを加えると次のようになります：</p>
 
 <pre>
-plot(年, 死者数, type="o", pch=16, xlab="", ylab="", xaxt="n",
+<code>plot(年, 死者数, type="o", pch=16, xlab="", ylab="", xaxt="n",
      xlim=c(1970,2009), ylim=range(c(16765,死者数)))
 points(1970, 16765, pch=16)
 lines(c(1970,1995), c(16765,10679), type="b", col="gray")
@@ -79,7 +79,7 @@ axis(1, t, t)
 axis(4, labels=FALSE)
 title("交通事故死者数", line=0.5)
 axis(2, "人", at=16000, padj=-1)
-</pre>
+</code></pre>
 
 <div><img src="img/101020b.png" alt="交通事故死者数"></div>
 

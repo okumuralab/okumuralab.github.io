@@ -22,54 +22,54 @@
 <p>まずアクセスログを用意する。ここではたった4行の <a href="access_log">access_log</a> を使う（ありえないIPアドレスを使っているので注意）。まずログを読むにはHadley Wickham作の readr パッケージが便利である。</p>
 
 <pre>
-install.packages("readr")  # 必要に応じて
+<code>install.packages("readr")  # 必要に応じて
 library(readr)
 x = read_log("access_log")
-</pre>
+</code></pre>
 
 <p>不要な列2・3・7・9を削除する。このようなデータの操作にはやはりHadley Wickham作の dplyr が便利である。</p>
 
 <pre>
-install.packages("dplyr")  # 必要に応じて
+<code>install.packages("dplyr")  # 必要に応じて
 library(dplyr)
 x = select(x, -X2, -X3, -X7, -X9)
-</pre>
+</code></pre>
 
 <p>残った列を意味のある名前に変える。やはり dplyr の <code>rename()</code> を使う。</p>
 
 <pre>
-x = rename(x, ip_address=X1, date_time=X4, to_url=X5, http_status=X6, from_url=X8)
-</pre>
+<code>x = rename(x, ip_address=X1, date_time=X4, to_url=X5, http_status=X6, from_url=X8)
+</code></pre>
 
 <p>次はIPアドレスから国名を求める。ここでは rgeolocate パッケージの <code>ip_api()</code> 関数と dplyr の <code>mutate()</code> 関数を使う。<code>ip_api()</code> は <a href="http://ip-api.com/">IP-API.com</a> に問い合わせを行うので，無駄な問い合わせは避けたい。たくさんの場合は休止を入れるなどの工夫が必要である。詳しくは <code>ip_api()</code> のヘルプ参照。</p>
 
 <pre>
-install.packages("rgeolocate")  # 必要に応じて
+<code>install.packages("rgeolocate")  # 必要に応じて
 library(rgeolocate)
 x = mutate(x, country=ip_api(ip_address)$country_name)
-</pre>
+</code></pre>
 
 <p>日時をRの内部表現に変換するには lubridate パッケージが便利である。今の場合，月名に Jun のような英語が出てくるので，Macの日本語環境ではロケール設定の <code>locale</code> オプションが必要であった。また，結果をUTCでなくJSTにするために <code>tz</code> オプションも使った。この部分は非常に遅いので，大量のデータの場合には，月名を数値に自前で変換して <code>fast_strptime()</code> 関数を使うのが実用的であろう。</p>
 
 <pre>
-install.packages("lubridate")  # 必要に応じて
+<code>install.packages("lubridate")  # 必要に応じて
 library(lubridate)
 x = mutate(x, date_time = dmy_hms(date_time, tz="Asia/Tokyo", locale="en_US.UTF-8"))
-</pre>
+</code></pre>
 
 <p>ここまでで次のようになる。</p>
 
 <pre>
 <code class="prom">x</code>
-Source: local data frame [4 x 6]
+<code>Source: local data frame [4 x 6]</code>
 
-    ip_address           date_time                                       to_url
-         (chr)              (time)                                        (chr)
-1 133.67.999.999 2016-06-02 10:32:12                      GET /~okumura/ HTTP/1.1
-2 133.67.999.999 2016-06-02 10:32:13             GET /~okumura/style.css HTTP/1.1
-3 133.67.999.999 2016-06-02 10:32:13 GET /~okumura/img/okumura130506.jpg HTTP/1.1
-4 133.67.999.999 2016-06-02 10:32:13         GET /~okumura/img/88x31.png HTTP/1.1
-Variables not shown: http_status (int), from_url (chr), country (chr)
+<code>    ip_address           date_time                                       to_url</code>
+<code>         (chr)              (time)                                        (chr)</code>
+<code>1 133.67.999.999 2016-06-02 10:32:12                      GET /~okumura/ HTTP/1.1</code>
+<code>2 133.67.999.999 2016-06-02 10:32:13             GET /~okumura/style.css HTTP/1.1</code>
+<code>3 133.67.999.999 2016-06-02 10:32:13 GET /~okumura/img/okumura130506.jpg HTTP/1.1</code>
+<code>4 133.67.999.999 2016-06-02 10:32:13         GET /~okumura/img/88x31.png HTTP/1.1</code>
+<code>Variables not shown: http_status (int), from_url (chr), country (chr)</code>
 </pre>
 
 <p>続きはそのうち書くかも。</p>

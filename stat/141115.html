@@ -45,15 +45,15 @@ MathJax = {
 <p>$x = 1,2,\ldots,20$ について，上の式で与えられる値を平均値とするポアソン分布 $\displaystyle p_y = \frac{\mu^y e^{-\mu}}{y!}$ の乱数 $y$ を発生します：</p>
 
 <pre>
-f = function(x) { 50*dnorm(x,10,3) + 10*exp(-x/10) }
+<code>f = function(x) { 50*dnorm(x,10,3) + 10*exp(-x/10) }
 y = sapply(1:20, function(x){rpois(1,f(x))})
-</pre>
+</code></pre>
 
 <p>以下では次のような乱数ができたとします：</p>
 
 <pre>
-y = c(11,4,13,10,4,8,6,16,7,12,10,13,6,5,1,4,2,0,0,1)
-</pre>
+<code>y = c(11,4,13,10,4,8,6,16,7,12,10,13,6,5,1,4,2,0,0,1)
+</code></pre>
 
 <figure><img src="img/141115fit2.png" alt=""></figure>
 
@@ -62,29 +62,29 @@ y = c(11,4,13,10,4,8,6,16,7,12,10,13,6,5,1,4,2,0,0,1)
 <p>データと95%信頼区間をグラフにしてみましょう：</p>
 
 <pre>
-ci = sapply(1:20, function(i){poisson.test(y[i])$conf.int})
+<code>ci = sapply(1:20, function(i){poisson.test(y[i])$conf.int})
 plot(1:20, y, type="p", pch=16, xlab="", ylab="", ylim=range(ci))
 arrows(1:20, ci[1,], 1:20, ci[2,], length=0.03, angle=90, code=3)
-</pre>
+</code></pre>
 
 <figure><img src="img/141115fit3.png" alt=""></figure>
 
 <p>よく片対数グラフにすることがあります。ただ，対数だとカウント0が表示できません。</p>
 
 <pre>
-plot(1:20, y, type="p", pch=16, xlab="", ylab="", ylim=range(c(1,ci[2,])), log="y")
+<code>plot(1:20, y, type="p", pch=16, xlab="", ylab="", ylim=range(c(1,ci[2,])), log="y")
 arrows(1:20, ci[1,], 1:20, ci[2,], length=0.03, angle=90, code=3)
-</pre>
+</code></pre>
 
 <figure><img src="img/141115fit4.png" alt=""></figure>
 
 <p>折衷案として，ポアソン分布の性質を使って縦軸を平方根にしたルートグラム（rootogram）はどうでしょうか。</p>
 
 <pre>
-plot(1:20, sqrt(y), type="p", pch=16, xlab="", ylab="", yaxt="n", ylim=sqrt(range(ci)))
+<code>plot(1:20, sqrt(y), type="p", pch=16, xlab="", ylab="", yaxt="n", ylim=sqrt(range(ci)))
 arrows(1:20, sqrt(ci[1,]), 1:20, sqrt(ci[2,]), length=0.03, angle=90, code=3)
 axis(2, sqrt(c(0,5,10,15,20)), c(0,5,10,15,20))
-</pre>
+</code></pre>
 
 <figure><img src="img/141115fit5.png" alt=""></figure>
 
@@ -127,7 +127,7 @@ axis(2, sqrt(c(0,5,10,15,20)), c(0,5,10,15,20))
 <p>実際に上記の $\log L$ が最大になる点を求めてみましょう。ここではRの関数 <code>optim()</code> を使って $-\log L$ を最小化します。</p>
 
 <pre>
-x = 1:20
+<code>x = 1:20
 y = c(11,4,13,10,4,8,6,16,7,12,10,13,6,5,1,4,2,0,0,1)
 d = dnorm(x, 10, 3)
 e = exp(-x/10)
@@ -138,18 +138,18 @@ f = function(arg) {
   -sum(y * log(mu) - mu)
 }
 optim(c(50,10), f)   # 初期値 (50,10) から出発（このあたりは適当）
-</pre>
+</code></pre>
 
 <p>点 $(a,b) = (57.14, 9.23)$ あたりで最小値 $-\log L = -144.5676$ をとることがわかります。</p>
 
 <p>ところで，ここでは $a$ が信号（ピーク）で $b$ はバックグラウンドです。そこで，与えられた $a$ について，$b$ だけを調節して尤度を最大にした値を，$L(a)$ と書くことにします。$\log L(a)$ をプロットしてみましょう。ここでは $b$ についての1次元の最大化を <code>optimize()</code> という関数で行っています。第2引数 <code>c(0,100)</code> は $0 \leq b \leq 100$ の範囲で最大化することを意味します。</p>
 
 <pre>
-logL = function(a) {
+<code>logL = function(a) {
   optimize(function(b){sum(y*log(a*d+b*e)-(a*d+b*e))}, c(0,100), maximum=TRUE)$objective
 }
 plot(30:90, sapply(30:90,logL), type="l", xlab="a", ylab="log L(a)")
-</pre>
+</code></pre>
 
 <figure><img src="img/150719a.png" alt=""></figure>
 
@@ -158,9 +158,9 @@ plot(30:90, sapply(30:90,logL), type="l", xlab="a", ylab="log L(a)")
 <p>あとで説明するように，$\log L$ が最大値から0.5だけ下がった点，つまり $\log L(a) = 144.5676 - 0.5$ の解 $a$ が，$\pm \sigma$（ほぼ68%信頼区間）に相当します。図から読み取るか，あるいは</p>
 
 <pre>
-uniroot(function(a){logL1(a)-(144.5676-0.5)}, c(40,60))
+<code>uniroot(function(a){logL1(a)-(144.5676-0.5)}, c(40,60))
 uniroot(function(a){logL1(a)-(144.5676-0.5)}, c(60,80))
-</pre>
+</code></pre>
 
 <p>で計算すれば，$[45.5, 69.3]$ が $a$ のほぼ68%信頼区間であることがわかります。同様に，最大値から $n^2/2$ だけ下がった点が $\pm n\sigma$ に相当する信頼区間になります。</p>
 
@@ -173,32 +173,32 @@ uniroot(function(a){logL1(a)-(144.5676-0.5)}, c(60,80))
 <p>より簡単にRでポアソン分布による最尤法を計算するには，</p>
 
 <pre>
-x = 1:20
+<code>x = 1:20
 y = c(11,4,13,10,4,8,6,16,7,12,10,13,6,5,1,4,2,0,0,1)
-</pre>
+</code></pre>
 
 <p>のようにデータを設定して，</p>
 
 <pre>
-r = glm(y ~ dnorm(x,10,3) + exp(-x/10) - 1, family=poisson(link="identity"))
-</pre>
+<code>r = glm(y ~ dnorm(x,10,3) + exp(-x/10) - 1, family=poisson(link="identity"))
+</code></pre>
 
 <p>と打ち込むだけです。関数 <code>glm()</code> の名前は generalized linear model から来ています。ここでは結果を <code>r</code> というオブジェクトに代入していますので，<code>r</code> と打ち込めば結果が表示されます。もっと詳しい結果を表示するには <code>summary(r)</code> と打ち込みます。主な結果は次のようになります：</p>
 
 <pre>
-Coefficients:
+<code>Coefficients:
                 Estimate Std. Error z value Pr(>|z|)    
 dnorm(x, 10, 3)   57.139     12.131   4.710 2.48e-06 ***
 exp(-x/10)         9.234      1.566   5.897 3.70e-09 ***
-</pre>
+</code></pre>
 
 <p>これは，$a = 57.139 \pm 12.131$，$b = 9.234 \pm 1.566$ を意味します（$\pm$ のあとは標準誤差です）。誤差の共分散行列は，<code>vcov(r)</code> と打ち込めば表示されます：</p>
 
 <pre>
-                dnorm(x, 10, 3) exp(-x/10)
+<code>                dnorm(x, 10, 3) exp(-x/10)
 dnorm(x, 10, 3)       147.16953 -10.933472
 exp(-x/10)            -10.93347   2.451703
-</pre>
+</code></pre>
 
 <p>つまり，次の式でフィットできることがわかりました：</p>
 
@@ -213,15 +213,15 @@ exp(-x/10)            -10.93347   2.451703
 <p>例えば，さきほどの度数分布のデータ</p>
 
 <pre>
-x = 1:20
+<code>x = 1:20
 y = c(11,4,13,10,4,8,6,16,7,12,10,13,6,5,1,4,2,0,0,1)
-</pre>
+</code></pre>
 
 <p>は <code>x</code> が <code>y</code> 回ずつ繰り返されるので，</p>
 
 <pre>
-z = rep(x, y)
-</pre>
+<code>z = rep(x, y)
+</code></pre>
 
 <p>のように展開すれば，<code>z</code> は</p>
 
@@ -260,11 +260,11 @@ z = rep(x, y)
 <p>を最大にします。</p>
 
 <pre>
-g = function(x) { exp(-x/10) / 8.221519 }
+<code>g = function(x) { exp(-x/10) / 8.221519 }
 h = function(x) { dnorm(x,10,3) / 0.9990481 }
 f = function(t) { sum(log(t * g(z) + (1-t) * h(z))) }
 optimize(f, c(0,1), maximum=TRUE)
-</pre>
+</code></pre>
 
 <p>最大値は $f(0.5707911) = -372.8489$ であることがわかります。最大値付近のグラフは次のようになります。横線は最大値から 0.5 を引いたところです。</p>
 
@@ -273,9 +273,9 @@ optimize(f, c(0,1), maximum=TRUE)
 <p>さきほど説明した理由により，対数尤度関数の最大値から 0.5 を引いたところの横軸 $0.57 \pm 0.08$ がほぼ $\pm \sigma$ 相当の誤差（およそ68%信頼区間）になります。交点を正確に求めるには次のコマンドが使えます。</p>
 
 <pre>
-uniroot(function(t){f(t)-(-372.8489-0.5)}, c(0,0.57))
+<code>uniroot(function(t){f(t)-(-372.8489-0.5)}, c(0,0.57))
 uniroot(function(t){f(t)-(-372.8489-0.5)}, c(0.57,1))
-</pre>
+</code></pre>
 
 <p>ちなみに，全体の個数が133個の場合，<code>0.5707911 * 133</code> を計算すると 75.92 になり，度数分布を使った方法と一致します。</p>
 
@@ -293,13 +293,13 @@ uniroot(function(t){f(t)-(-372.8489-0.5)}, c(0.57,1))
 <p>これを $\nu_1$，$\nu_2$ について最大化します（ただし以下では $-\log L$ を最小化しています）。</p>
 
 <pre>
-f = function(arg) {
+<code>f = function(arg) {
   n1 = arg[1]
   n2 = arg[2]
   return(n1 + n2 - sum(log(n1 * g(z) + n2 * h(z))))
 }
 optim(c(50,50), f)
-</pre>
+</code></pre>
 
 <p>結果は，$(\nu_1,\nu_2) = (75.9, 57.1)$ で最大値 $144.5676$ になり，数値計算の誤差内で同じ結果が得られます。</p>
 
@@ -308,17 +308,17 @@ optim(c(50,50), f)
 <figure><img src="img/141129c.png" alt=""></figure>
 
 <pre>
-m = matrix(sapply(40:90, function(y){sapply(40:90, function(x){f(c(x,y))})}), nrow=51)
+<code>m = matrix(sapply(40:90, function(y){sapply(40:90, function(x){f(c(x,y))})}), nrow=51)
 contour(40:90, 40:90, -m, levels=seq(144.5676,by=-0.5,length.out=10),
 asp=1, xlab="n1", ylab="n2")
 points(75.9, 57.1, pch="x")
-</pre>
+</code></pre>
 
 <p>別のやりかたとして，ヘッセ行列（Hessian）を推定して，その逆行列で分散・共分散行列を求めることもできます：</p>
 
 <pre>
-solve(optim(c(50,50), f, hessian=TRUE)$hessian)
-</pre>
+<code>solve(optim(c(50,50), f, hessian=TRUE)$hessian)
+</code></pre>
 
 <p>この対角成分の平方根が各パラメータの標準誤差です。この方法による正規分布側の個数の標準誤差は 11.85 です。</p>
 

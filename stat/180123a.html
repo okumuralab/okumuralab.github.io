@@ -45,7 +45,7 @@ MathJax = {
 <p>事前分布としては一様乱数を使ってみる。</p>
 
 <pre>
-nx = 20
+<code>nx = 20
 ny = 2*nx+1
 prior = runif(nx)  # 事前分布
 lik = matrix(0, nrow=nx, ncol=ny)  # 尤度
@@ -63,7 +63,7 @@ f = function() {  # シミュレーション
 }
 r = replicate(100000, f())  # 10万回
 rowMeans(r)  # それぞれの方法の成績 mean(r[1,]), mean(r[2,])
-</pre>
+</code></pre>
 
 <p>実際にやってみるとわかるが，第1の方法は確かに少なくとも2/3の勝率である。しかし第2の方法はさらに勝率が良い。</p>
 

@@ -33,33 +33,33 @@
 <p>の順で指定し，「検索」をクリック。結果の1ページが表示されるので，一番下の「この結果をCSV形式で保存する」をクリック。これを次のようにしてRで読み込む（「ファイル名」の部分は自分のダウンロードしたファイル名に変える）。</p>
 
 <pre>
-cs = read.csv("ファイル名", fileEncoding="CP932", as.is=TRUE, na.strings="検出されず")
-</pre>
+<code>cs = read.csv("ファイル名", fileEncoding="CP932", as.is=TRUE, na.strings="検出されず")
+</code></pre>
 
 <p>データは2008年までしかない。<code>table(cs$放射能濃度単位)</code> の結果は</p>
 
 <pre>
- Bq/g-生 Bq/kg-生  Bq/人日 
+<code> Bq/g-生 Bq/kg-生  Bq/人日 
        1       24     8283 
-</pre>
+</code></pre>
 
 <p>であるので，<code>Bq/人日</code> 単位の数値だけに限って解析する。</p>
 
 <pre>
-cs1 = subset(cs, cs$放射能濃度単位 == "Bq/人日")
+<code>cs1 = subset(cs, cs$放射能濃度単位 == "Bq/人日")
 t = as.POSIXct(cs1$試料採取開始日)  # 年月日
 yr = cs1$試料採取年度        # 年度
 x = cs1$放射能濃度           #「検出されず」はNA
 x1 = ifelse(is.na(x), 0, x)  # NAを0にする
-</pre>
+</code></pre>
 
 <p>いろいろプロットしてみる：</p>
 
 <pre>
-par(mgp=c(2,0.8,0))
+<code>par(mgp=c(2,0.8,0))
 plot(t, x1, xlab="年", ylab="Bq/人日")
 plot(t, x, log="y", xlab="年", ylab="Bq/人日")
-</pre>
+</code></pre>
 
 <figure><img src="img/140923a.png" alt="日本人の日常食中のCs-137の量の推移"></figure>
 
@@ -68,9 +68,9 @@ plot(t, x, log="y", xlab="年", ylab="Bq/人日")
 <p>年度ごとの中央値をプロット：</p>
 
 <pre>
-plot(1963:2008, sapply(1963:2008, function(i){median(x1[yr == i])}),
+<code>plot(1963:2008, sapply(1963:2008, function(i){median(x1[yr == i])}),
      type="o", log="y", pch=16, xlab="年", ylab="Bq/人日")
-</pre>
+</code></pre>
 
 <figure><img src="img/140923b.png" alt="日本人の日常食中のCs-137の量の推移"></figure>
 
@@ -79,9 +79,9 @@ plot(1963:2008, sapply(1963:2008, function(i){median(x1[yr == i])}),
 <p>箱ひげ図のほうがいいかな。</p>
 
 <pre>
-boxplot(sapply(1963:2008, function(i){x1[yr == i]}), ylim=c(0.01,5),
+<code>boxplot(sapply(1963:2008, function(i){x1[yr == i]}), ylim=c(0.01,5),
         log="y", names=1963:2008, xlab="年", ylab="Bq/人日")
-</pre>
+</code></pre>
 
 <figure><img src="img/140923d.png" alt="日本人の日常食中のCs-137の量の推移"></figure>
 

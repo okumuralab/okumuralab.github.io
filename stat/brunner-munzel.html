@@ -122,16 +122,16 @@ MathJax = {
 <p>Rには lawstat パッケージに <code>brunner.munzel.test()</code> があります。<a href="ttest.html">t検定</a>で使った Lumley (1996) のデータで試してみましょう。</p>
 
 <pre>
-library(lawstat)
+<code>library(lawstat)
 x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
 y = c(3,3,4,3,1,2,3,1,1,5,4)
 brunner.munzel.test(x, y)
-</pre>
+</code></pre>
 
 <p>結果は次のようになりました：</p>
 
 <pre>
-Brunner-Munzel Test
+<code>Brunner-Munzel Test
 
 data:  x and y
 Brunner-Munzel Test Statistic = 3.1375, df = 17.683,
@@ -141,22 +141,22 @@ p-value = 0.005786
 sample estimates:
 P(X&lt;Y)+.5*P(X=Y)
         0.788961
-</pre>
+</code></pre>
 
 <p>新しい<a href="https://CRAN.R-project.org/package=brunnermunzel">brunnermunzel</a>パッケージでは次のようになります：</p>
 
 <pre>
-install.packages("brunnermunzel")
+<code>install.packages("brunnermunzel")
 library(brunnermunzel)
 x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
 y = c(3,3,4,3,1,2,3,1,1,5,4)
 brunnermunzel.test(x, y)
-</pre>
+</code></pre>
 
 <p>結果：</p>
 
 <pre>
-	Brunner-Munzel Test
+<code>	Brunner-Munzel Test
 
 data:  x and y
 Brunner-Munzel Test Statistic = 3.1375, df = 17.683, p-value = 0.005786
@@ -165,7 +165,7 @@ Brunner-Munzel Test Statistic = 3.1375, df = 17.683, p-value = 0.005786
 sample estimates:
 P(X&lt;Y)+.5*P(X=Y) 
         0.788961 
-</pre>
+</code></pre>
 
 <h2>並べ替えBrunner-Munzel検定</h2>
 
@@ -181,7 +181,7 @@ P(X&lt;Y)+.5*P(X=Y)
 <p>さきほどと同じデータでやってみましょう。全部の並べ替えでやってみたところ，Pentium 4 3.20GHzのLinuxマシンで6000秒あまりかかりました。</p>
 
 <pre>
-bm = brunner.munzel.test(x, y)$statistic
+<code>bm = brunner.munzel.test(x, y)$statistic
 n1 = length(x)
 n2 = length(y)
 N = n1 + n2
@@ -191,7 +191,7 @@ foo = function(X) {
 }
 z = combn(1:N, n1, foo)
 mean(abs(z) &gt;= abs(bm))
-</pre>
+</code></pre>
 
 <p>結果は <code>0.008037645</code> となりました。</p>
 
@@ -200,10 +200,10 @@ mean(abs(z) &gt;= abs(bm))
 <pre>
 <code class="prom">brunnermunzel.permutation.test(x, y)</code>
 
-	permuted Brunner-Munzel Test
+<code>	permuted Brunner-Munzel Test</code>
 
-data:  x and y
-p-value = 0.008038
+<code>data:  x and y</code>
+<code>p-value = 0.008038</code>
 </pre>
 
 <h2>t検定との関係</h2>
@@ -215,7 +215,7 @@ p-value = 0.008038
 <p>この図は次のRのプログラムで描きました：</p>
 
 <pre>
-ni = 1000
+<code>ni = 1000
 pt = pbm = numeric(ni)
 for (i in 1:ni) {
   a = sample(20)
@@ -228,7 +228,7 @@ for (i in 1:ni) {
 par(mgp=c(1.5,0.6,0)) # 数字とラベルをもっと軸に近づける
 plot(pt, pbm, xlim=c(0,0.1), ylim=c(0,0.1))
 abline(0, 1)
-</pre>
+</code></pre>
 
 <hr>
 

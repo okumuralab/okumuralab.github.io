@@ -129,21 +129,21 @@ $\theta^r (1 - \theta)^{n-r}$
 ほどになります。これはRで binom パッケージを使っても求められます：</p>
 
 <pre>
-&gt; library(binom)
+<code>&gt; library(binom)
 &gt; binom.bayes(3,12,prior.shape1=1,prior.shape2=1,type="central")
   method x  n shape1 shape2      mean     lower     upper  sig
 1  bayes 3 12      4     10 0.2857143 0.0909204 0.5381315 0.05
-</pre>
+</code></pre>
 
 <p><code>binom.bayes()</code>
 のデフォルト（Jeffreyの事前確率，両端で発散する）では事後確率の平均値は 0.269，
 95%信用区間は [0.076, 0.529] になります：</p>
 
 <pre>
-&gt; binom.bayes(3,12,type="central")
+<code>&gt; binom.bayes(3,12,type="central")
   method x  n shape1 shape2      mean      lower     upper  sig
 1  bayes 3 12    3.5    9.5 0.2692308 0.07594233 0.5291911 0.05
-</pre>
+</code></pre>
 
 <div class="note">
 <p>両端から2.5%ずつ外した部分ではなく，事後確率が大きい95%の領域を使うこともよくあります。</p>

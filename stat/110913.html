@@ -41,8 +41,8 @@
 <p>本当でしょうか。全部で162人で，そのうち4/14が最初の4週に入るという帰無仮説を立てます。実際に最初の4週に入ったのは37人ですから，Rに</p>
 
 <pre>
-binom.test(37, 162, 4/14)
-</pre>
+<code>binom.test(37, 162, 4/14)
+</code></pre>
 
 <p>と打ち込むと，<i>p</i>=0.1174 です。有意とは言えませんね。ここからして嘘です。</p>
 
@@ -61,7 +61,7 @@ binom.test(37, 162, 4/14)
 <p>2011年9月13日11時ごろ私が取得したデータをCSVの形で挙げておきます。</p>
 
 <pre>
-Week,ending,Berkeley,Seattle,Santa Cruz,San Jose,San Francisco,Sacramento,Portland,Boise,Total
+<code>Week,ending,Berkeley,Seattle,Santa Cruz,San Jose,San Francisco,Sacramento,Portland,Boise,Total
 1,2011/1/8,0,0,1,2,5,3,4,1,16
 2,2011/1/15,2,2,0,6,3,1,4,1,19
 3,2011/1/22,0,2,0,3,0,3,0,1,9
@@ -97,7 +97,7 @@ Week,ending,Berkeley,Seattle,Santa Cruz,San Jose,San Francisco,Sacramento,Portla
 33,2011/8/20,0,4,0,2,0,3,1,0,10
 34,2011/8/27,1,4,0,3,3,3,1,1,16
 35,2011/9/3,0,4,0,6,0,2,1,1,14
-</pre>
+</code></pre>
 
 <p>グラフにすると次のようになります。</p>
 
@@ -108,22 +108,22 @@ Week,ending,Berkeley,Seattle,Santa Cruz,San Jose,San Francisco,Sacramento,Portla
 <p>上の図を描くためのRのコマンド</p>
 
 <pre>
-# quartz()                      # Mac
+<code># quartz()                      # Mac
 # par(family="HiraKakuProN-W3") # Mac
 par(mgp=c(1.6,0.6,0))           # 微調整
 cols = c(rep("black",7), rep("blue",4), rep("red",10), rep("black",14))
 plot(data$Week, data$Total, type="o", pch=16, col=cols,
      xlab="Week", ylab="Total", ylim=range(data$Total)+c(-1,1))
-</pre>
+</code></pre>
 
 <p>ちなみにこのグラフからすると<a href="poisson.html">ポアソン分布</a>と考えてよさそうです。平均 <code>mean(data$Total)</code> = 11.91429 のポアソン分布とすると</p>
 
 <pre>
-&gt; qpois(0.025, mean(data$Total))
+<code>&gt; qpois(0.025, mean(data$Total))
 [1] 6
 &gt; qpois(0.975, mean(data$Total))
 [1] 19
-</pre>
+</code></pre>
 
 <p>で95%は6から19くらいに入ります。</p>
 
@@ -144,24 +144,24 @@ plot(data$Week, data$Total, type="o", pch=16, col=cols,
 <p>Rでこのグラフを描くには次のようにします：</p>
 
 <pre>
-data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/CDC-deaths.csv",
+<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/CDC-deaths.csv",
                 comment.char="#", as.is=TRUE)
 deaths = numeric(2011)  # 面倒なので2011要素の配列を作ってしまう
 for (i in 2000:2011)
   deaths[i] = sum(data$all[data$year == i & data$week >= 12 & data$week <= 25])
 plot(2000:2011, deaths[2000:2011], type="o", pch=16, xlab="Year", ylab="Deaths")
-</pre>
+</code></pre>
 
 <p>ちなみにこの死亡数データはポアソン分布と著しく異なります。</p>
 
 <pre>
-&gt; chisq.test(deaths[2000:2011])
+<code>&gt; chisq.test(deaths[2000:2011])
 
 	Chi-squared test for given probabilities
 
 data:  deaths[2000:2011] 
 X-squared = 1487.047, df = 11, p-value &lt; 2.2e-16
-</pre>
+</code></pre>
 
 <p>参考：Scientific Americanの批判
 <a href="http://blogs.scientificamerican.com/observations/2011/12/20/researchers-trumpet-another-flawed-fukushima-death-study/">Researchers Trumpet Another Flawed Fukushima Death Study | Observations, Scientific American Blog Network</a>

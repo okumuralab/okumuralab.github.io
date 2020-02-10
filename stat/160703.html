@@ -21,7 +21,7 @@
 <p>Cauchy分布の乱数を100個生成し，その中心の値をどうすれば正確に求められるかを試してみる。</p>
 
 <pre>
-sim = function() {
+<code>sim = function() {
     r = rcauchy(100)
     m1 = mean(r)                  # 平均
     m2 = median(r)                # 中央値
@@ -33,23 +33,23 @@ sim = function() {
 }
 
 r = replicate(100000, sim())
-</pre>
+</code></pre>
 
 <p>それぞれの誤差を求めてみる：</p>
 
 <pre>
 <code class="prom">sqrt(mean(r[1,]^2))</code>
-[1] 451.953
+<code>[1] 451.953</code>
 <code class="prom">sqrt(mean(r[2,]^2))</code>
-[1] 0.158399
+<code>[1] 0.158399</code>
 <code class="prom">sqrt(mean(r[3,]^2))</code>
-[1] 0.1432506
+<code>[1] 0.1432506</code>
 <code class="prom">max(abs(r[1,]))</code>
-[1] 131453.7
+<code>[1] 131453.7</code>
 <code class="prom">max(abs(r[2,]))</code>
-[1] 0.7711901
+<code>[1] 0.7711901</code>
 <code class="prom">max(abs(r[3,]))</code>
-[1] 0.677196
+<code>[1] 0.677196</code>
 </pre>
 
 <p>最後の方法が一番正確だが，中央値とは僅差である。</p>

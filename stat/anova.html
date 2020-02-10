@@ -40,21 +40,21 @@ $x = (1,3,5,8,5,4,2)$
 を示したものです。Rの書き方では</p>
 
 <pre>
-x = c(1,3,5,8,5,4,2)          # データ
+<code>x = c(1,3,5,8,5,4,2)          # データ
 g = factor(c(1,1,2,2,2,3,3))  # グループの分かれ方
-</pre>
+</code></pre>
 
 <p>ということになります。図の横棒は各グループの平均（それぞれ 2，6，3）です。</p>
 
 <div class="note">
 <p>この図はRで次のようにして描きました：</p>
 <pre>
-plot(1:7, x, pch=16, xlab="", ylab="", axes=FALSE)
+<code>plot(1:7, x, pch=16, xlab="", ylab="", axes=FALSE)
 text((1:7)+0.2, x, x)
 lines(c(1,2), c(2,2))
 lines(c(3,5), c(6,6))
 lines(c(6,7), c(3,3))
-</pre>
+</code></pre>
 </div>
 
 <p>元のデータ $x$ は7個の値から成りますので，自由度が7個です（<span lang="en">$x$
@@ -65,7 +65,7 @@ has seven degrees of freedom</span>）。</p>
 <pre>
 <code class="prom">y = ave(x, g)</code>
 <code class="prom">y</code>
-[1] 2 2 6 6 6 3 3
+<code>[1] 2 2 6 6 6 3 3</code>
 </pre>
 
 <div class="note">
@@ -73,10 +73,10 @@ has seven degrees of freedom</span>）。</p>
 という関数もあります。</p>
 <pre>
 <code class="prom">aggregate(x, by=list(g), FUN=mean)</code>
-  Group.1 x
-1       1 2
-2       2 6
-3       3 3
+<code>  Group.1 x</code>
+<code>1       1 2</code>
+<code>2       2 6</code>
+<code>3       3 3</code>
 </pre>
 <p>単に <code>x</code> を <code>g</code> で分類するなら <code>table(x, g)</code> でできます。</p>
 </div>
@@ -86,14 +86,14 @@ has seven degrees of freedom</span>）。</p>
 <pre>
 <code class="prom">z = ave(x)</code>
 <code class="prom">z</code>
-[1] 4 4 4 4 4 4 4
+<code>[1] 4 4 4 4 4 4 4</code>
 </pre>
 
 <p>$y$ から $z$ を引いたもの</p>
 
 <pre>
 <code class="prom">y - z</code>
-[1] -2 -2  2  2  2 -1 -1
+<code>[1] -2 -2  2  2  2 -1 -1</code>
 </pre>
 
 <p>は，自由度 $3 - 1 = 2$ です。異なった値が3個なので自由度3のように見えますが，全部の合計が 0
@@ -101,7 +101,7 @@ has seven degrees of freedom</span>）。</p>
 
 <pre>
 <code class="prom">sum((y - z)^2)</code>
-[1] 22
+<code>[1] 22</code>
 </pre>
 
 <p>この値は，グループ内での変動を消してグループ間の変動だけにしたものの2乗和ですので，群間平方和（級間平方和）<span lang="en">sum of squares between groups</span> の意で $SS_\text{between}$ と書くことにします。</p>
@@ -112,7 +112,7 @@ has seven degrees of freedom</span>）。</p>
 
 <pre>
 <code class="prom">x - y</code>
-[1] -1  1 -1  2 -1  1 -1
+<code>[1] -1  1 -1  2 -1  1 -1</code>
 </pre>
 
 <p>は，自由度 $7 - 3 = 4$ です。7個の値がありますが，最初の2個の和は
@@ -121,7 +121,7 @@ has seven degrees of freedom</span>）。</p>
 
 <pre>
 <code class="prom">sum((x - y)^2)</code>
-[1] 10
+<code>[1] 10</code>
 </pre>
 
 <p>この値は，さきほどとは逆に，グループ内での変動だけを取り出したものの2乗和ですので，群内平方和（級内平方和）<span lang="en">sum of squares within groups</span> の意で $SS_\text{within}$ と書くことにします。</p>
@@ -132,7 +132,7 @@ has seven degrees of freedom</span>）。</p>
 
 <pre>
 <code class="prom">sum((x - z)^2)</code>
-[1] 32
+<code>[1] 32</code>
 </pre>
 
 <p>これを $SS_\text{total}$ と書くことにします。つまり，</p>
@@ -143,7 +143,7 @@ has seven degrees of freedom</span>）。</p>
 
 <pre>
 <code class="prom">(sum((y-z)^2) / 2) / (sum((x-y)^2) / 4)</code>
-[1] 4.4
+<code>[1] 4.4</code>
 </pre>
 
 <p>を考えます。分子 <code>(sum((y-z)^2) / 2)</code>
@@ -152,7 +152,7 @@ has seven degrees of freedom</span>）。</p>
 
 <pre>
 <code class="prom">1 - pf(4.4, 2, 4)</code>
-[1] 0.09765625
+<code>[1] 0.09765625</code>
 </pre>
 
 <p><img src="img/090102a.png" alt="" class="right">で上側確率が出ます。つまり，比
@@ -162,12 +162,12 @@ has seven degrees of freedom</span>）。</p>
 <div class="note">
 <p>右の図はRで次のようにして描きました：</p>
 <pre>
-# par(mgp=c(1.8,0.6,0))
+<code># par(mgp=c(1.8,0.6,0))
 plot(NULL, xlim=c(0,10), ylim=c(0,1), xlab="", ylab="")
 s = seq(4.4, 10, 0.1)
 polygon(c(s,10,4.4), c(df(s,2,4),0,0), col="yellow")
 curve(df(x,2,4), lwd=2, add=T)
-</pre>
+</code></pre>
 </div>
 
 <div class="note">
@@ -178,13 +178,13 @@ curve(df(x,2,4), lwd=2, add=T)
 と，あてはめたモデルの分散分析を行う関数 <code>anova()</code> です。</p>
 
 <pre>
-anova(lm(x ~ g))
-</pre>
+<code>anova(lm(x ~ g))
+</code></pre>
 
 <p>結果は伝統的な分散分析表です：</p>
 
 <pre>
-Analysis of Variance Table
+<code>Analysis of Variance Table
 
 Response: x
           Df Sum Sq Mean Sq F value  Pr(&gt;F)  
@@ -192,7 +192,7 @@ g          2   22.0    11.0     4.4 0.09766 .
 Residuals  4   10.0     2.5                  
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
-</pre>
+</code></pre>
 
 <p>同じ表は <code>summary(aov(x ~ g))</code>
 でも出力できます。</p>
@@ -206,8 +206,8 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 <p>もっと簡潔な出力が次のコマンドで得られます：</p>
 
 <pre>
-oneway.test(x ~ g, var.equal=TRUE)
-</pre>
+<code>oneway.test(x ~ g, var.equal=TRUE)
+</code></pre>
 
 <p>この <code>var.equal=TRUE</code> は分散が等しいことを仮定するという意味です。実は
 <code>oneway.test()</code> のデフォルトは，<a href="ttest.html">t検定</a>
@@ -216,10 +216,10 @@ oneway.test(x ~ g, var.equal=TRUE)
 <pre>
 <code class="prom">oneway.test(x ~ g)</code>
 
-        One-way analysis of means (not assuming equal variances)
+<code>        One-way analysis of means (not assuming equal variances)</code>
 
-data:  x and g 
-F = 3.3913, num df = 2.0, denom df = 2.4, p-value = 0.1998
+<code>data:  x and g </code>
+<code>F = 3.3913, num df = 2.0, denom df = 2.4, p-value = 0.1998</code>
 </pre>
 
 <p>なお，2群の比較の場合，分散分析と $t$ 検定は同じことです。</p>
@@ -232,7 +232,7 @@ F = 3.3913, num df = 2.0, denom df = 2.4, p-value = 0.1998
 に相当するもの（グループ間の変動の2乗和）が実際の値以上になる確率を求めてみましょう（このプログラムはもっと単純にできるかもしれません）：</p>
 
 <pre>
-x = c(1,3,5,8,5,4,2)          # データ
+<code>x = c(1,3,5,8,5,4,2)          # データ
 g = factor(c(1,1,2,2,2,3,3))  # グループの分かれ方
 ssq0 = sum((ave(x,g) - ave(x))^2) # 群間2乗和
 c1 = combn(7, 3)
@@ -251,7 +251,7 @@ for (i in 1:n1) {
   }
 }
 mean(ssq &gt;= ssq0)
-</pre>
+</code></pre>
 
 <p>結果は 0.06666667 で，正規分布を仮定した値 0.09766
 より若干小さくなりました。</p>
@@ -279,10 +279,10 @@ $\chi^2_n = X_1^2 + X_2^2 + \cdots + X_n^2$
 <pre>
 <code class="prom">kruskal.test(x ~ g)</code>
 
-	Kruskal-Wallis rank sum test
+<code>	Kruskal-Wallis rank sum test</code>
 
-data:  x by g
-Kruskal-Wallis chi-squared = 4.8, df = 2, p-value = 0.09072
+<code>data:  x by g</code>
+<code>Kruskal-Wallis chi-squared = 4.8, df = 2, p-value = 0.09072</code>
 </pre>
 </article>
 

@@ -35,17 +35,17 @@ MathJax = {
 <p>$[0, 1000)$ の実数の一様乱数を10万個生成し，1000個の区間 $[n, n+1)$ に分類すると，各区間に入る個数はポアソン分布する。ここまでは当然。</p>
 
 <pre>
-x = runif(100000) * 1000
+<code>x = runif(100000) * 1000
 h = hist(x, breaks=0:1000, plot=FALSE)$counts
 hist(h, col="gray")
-</pre>
+</code></pre>
 
 <figure><img src="img/141019a.png" alt=""></figure>
 
 <p>さて，これら1000個の区間から2個をランダムに選び，一方の区間からもう一方の区間に一つだけ点を移す。これを延々と繰り返す。そうすると，各区間に入る個数はポアソン分布のままか，それとも正規分布に近づくか，それともまったく別の分布になるか？</p>
 
 <pre>
-for (i in 1:100000000) {
+<code>for (i in 1:100000000) {
   t = sample(1000, 2)
   if (h[t[2]] &gt; 0) {
     h[t[1]] = h[t[1]] + 1
@@ -53,7 +53,7 @@ for (i in 1:100000000) {
   }
 }
 hist(h, breaks=(0:20)*50, col="gray")
-</pre>
+</code></pre>
 
 <figure><img src="img/141019b.png" alt=""></figure>
 

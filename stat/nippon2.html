@@ -22,7 +22,7 @@
 を置いておく。これをもとに，日本地図に色付けしてみよう（同じことをすでに<a href="https://twitter.com/shanghai_ii/status/647339119266271232">上海IIさん</a>がされている）。</p>
 
 <pre>
-# install.packages("NipponMap")
+<code># install.packages("NipponMap")
 library(NipponMap)
 data = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/census2015net.csv",
                 fileEncoding="UTF-8", comment.char="#")
@@ -30,7 +30,7 @@ x = data[,3]/data[,2] - 19175769/51950504 # 回答率から全国平均を引く
 x = (x / max(abs(x)) + 1) / 2  # [0,1]の範囲にスケール
 cols = colorRamp(c("#0080ff","white","#ff8000"))
 JapanPrefMap(col=rgb(cols(x)/255))
-</pre>
+</code></pre>
 
 <p>全国平均より高い県はオレンジ，低い県は青で，色が濃いほど全国平均から離れている。</p>
 
@@ -41,10 +41,10 @@ JapanPrefMap(col=rgb(cols(x)/255))
 <p>ついでに都道府県別スマホ率（スマホ回答数÷ネット回答数）も調べてみた。</p>
 
 <pre>
-x = data[,4]/data[,3] - 6630039/19175769
+<code>x = data[,4]/data[,3] - 6630039/19175769
 x = (x / max(abs(x)) + 1) / 2  # [0,1]の範囲にスケール
 JapanPrefMap(col=rgb(cols(x)/255))
-</pre>
+</code></pre>
 
 <figure><img src="img/150926b.png" alt="2015国勢調査のネット回答スマホ率"></figure>
 
@@ -53,11 +53,11 @@ JapanPrefMap(col=rgb(cols(x)/255))
 <p>ほかに，<a href="http://www.stat.go.jp/info/kenkyu/kokusei/houdou2.htm">2005年国勢調査</a>の「所定期間内に調査票が提出されなかった世帯の割合（%）」のデータもおもしろい：</p>
 
 <pre>
-census2005denial = c(1.5, 2.0, 1.4, 6.8, 1.7, 1.6, 3.6, 1.5, 3.9,
+<code>census2005denial = c(1.5, 2.0, 1.4, 6.8, 1.7, 1.6, 3.6, 1.5, 3.9,
   1.0, 4.3, 4.0, 13.3, 4.1, 1.8, 2.1, 3.6, 2.5, 1.4, 1.3, 1.2, 2.5, 5.0,
   2.4, 3.5, 6.1, 5.4, 3.5, 1.8, 1.4, 2.9, 1.0, 2.1, 4.0, 2.4, 2.2, 2.8,
   4.2, 2.1, 6.1, 1.3, 1.4, 2.1, 2.5, 2.7, 2.3, 6.6)
-</pre>
+</code></pre>
 
 <hr>
 

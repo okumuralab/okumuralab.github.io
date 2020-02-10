@@ -20,7 +20,7 @@
 <p>統計とは関係ないが，<a href="../javascript/gameoflife.html">JavaScriptで書いたライフゲーム</a>をRに移植してみた。9行で書けた。</p>
 
 <pre>
-a = b = matrix(0, nrow=50, ncol=50)
+<code>a = b = matrix(0, nrow=50, ncol=50)
 a[24:26,25] = a[25,24] = a[26,26] = 1
 for (g in 1:300) {
     b[2:49,2:49] = a[1:48,1:48] + a[1:48,2:49] + a[1:48,3:50] +
@@ -29,7 +29,7 @@ for (g in 1:300) {
     a = ifelse(b != 2, b == 3, a)
     heatmap(a, Rowv=NA, Colv=NA, scale="none", col=0:1, main=g)
 }
-</pre>
+</code></pre>
 </article>
 
 <hr>

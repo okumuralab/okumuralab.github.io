@@ -24,7 +24,7 @@
 <code class="prom">library(readxl)</code>
 <code class="prom">cities = read_excel("cities.xlsx", skip=1)</code>
 <code class="prom">dim(cities)</code>
-[1] 1718    4
+<code>[1] 1718    4</code>
 </pre>
 
 <p>1718自治体がリストされている。</p>
@@ -35,7 +35,7 @@
 <code class="prom">JIGYOSYO = read.csv("JIGYOSYO.CSV", header=FALSE, fileEncoding="CP932", as.is=TRUE)</code>
 <code class="prom">x = JIGYOSYO[grep("(市役所|町役場|村役場)$", JIGYOSYO$V3), 3:8]</code>
 <code class="prom">dim(x)</code>
-[1] 1371    6
+<code>[1] 1371    6</code>
 </pre>
 
 <p>1371自治体しか個別郵便番号を持っていない。ということで，少し考え直す。</p>
@@ -47,55 +47,55 @@
 <code class="prom">u = unique(c)</code>
 <code class="prom">n = sapply(u, function(x) sum(c == x))</code>
 <code class="prom">table(n)</code>
-n
-   1    2    3    4 
-1659   20    5    1 
+<code>n</code>
+<code>   1    2    3    4 </code>
+<code>1659   20    5    1 </code>
 <code class="prom">c[n == 4]</code>
-[1] "池田町"
+<code>[1] "池田町"</code>
 <code class="prom">subset(cities, 名称=="池田町")</code>
-         法人番号   名称                                   所在地 備考
-163 1000020016446 池田町       北海道中川郡池田町字西１条７－１１   NA
-774 2000020183822 池田町           福井県今立郡池田町稲荷３５－４   NA
-871 9000020204811 池田町 長野県北安曇郡池田町大字池田３２０３－６   NA
-916 8000020214043 池田町     岐阜県揖斐郡池田町六之井１４６８－１   NA
+<code>         法人番号   名称                                   所在地 備考</code>
+<code>163 1000020016446 池田町       北海道中川郡池田町字西１条７－１１   NA</code>
+<code>774 2000020183822 池田町           福井県今立郡池田町稲荷３５－４   NA</code>
+<code>871 9000020204811 池田町 長野県北安曇郡池田町大字池田３２０３－６   NA</code>
+<code>916 8000020214043 池田町     岐阜県揖斐郡池田町六之井１４６８－１   NA</code>
 </pre>
 
 <p>都道府県名を取得するところでリストのバグに気づいた。木更津市と日置市だけ県名がない。</p>
 
 <pre>
-pref = substr(cities[,3], 1, regexpr("..(都|道|府|県|市)", cities[,3], perl=TRUE)+2)
+<code>pref = substr(cities[,3], 1, regexpr("..(都|道|府|県|市)", cities[,3], perl=TRUE)+2)
 pref[pref == "木更津市"] = "千葉県"
 pref[pref == "日置市"] = "鹿児島県"
-</pre>
+</code></pre>
 
 <p>都道府県名を合わせれば自治体名はユニークになる：</p>
 
 <pre>
 <code class="prom">cp = paste0(cities[,2], " ", pref)</code>
 <code class="prom">length(cp)</code>
-[1] 1718
+<code>[1] 1718</code>
 <code class="prom">length(unique(cp))</code>
-[1] 1718
+<code>[1] 1718</code>
 </pre>
 
 <p>郵便番号表からはユニークなものが1354役場ある。これも都道府県を付けてユニークにする。</p>
 
 <pre>
 <code class="prom">length(unique(x$V3))</code>
-[1] 1354
+<code>[1] 1354</code>
 <code class="prom">xp = paste0(x$V3, " ", x$V4)</code>
 <code class="prom">length(xp)</code>
-[1] 1371
+<code>[1] 1371</code>
 <code class="prom">length(unique(xp))</code>
-[1] 1369
+<code>[1] 1369</code>
 <code class="prom">uxp = unique(xp)</code>
 <code class="prom">nuxp = sapply(uxp, function(x) sum(xp == x))</code>
 <code class="prom">table(nuxp)</code>
-nuxp
-   1    2 
-1367    2 
+<code>nuxp</code>
+<code>   1    2 </code>
+<code>1367    2 </code>
 <code class="prom">uxp[nuxp == 2]</code>
-[1] "八幡平市役所 岩手県" "青梅市役所 東京都"  
+<code>[1] "八幡平市役所 岩手県" "青梅市役所 東京都"  </code>
 </pre>
 
 <p>青梅市役所は単なるダブりみたい。八幡平市役所は本当に2箇所あるのか？</p>
@@ -106,22 +106,22 @@ nuxp
 <code class="prom">cc = ifelse(grepl("市$", c), paste0(c, "役所"), paste0(c, "役場"))</code>
 <code class="prom">ccp = paste0(cc, " ", pref)</code>
 <code class="prom">length(ccp)</code>
-[1] 1718
+<code>[1] 1718</code>
 <code class="prom">length(unique(ccp))</code>
-[1] 1718
+<code>[1] 1718</code>
 <code class="prom">setdiff(uxp, ccp)</code>
- [1] "鯵ケ沢町役場 青森県"           "七ヶ宿町役場 宮城県"          
- [3] "茨城県　鉾田市役所 茨城県"     "牧村役場 新潟県"              
- [5] "岐阜県加茂郡富加町役場 岐阜県" "一色町役場 愛知県"            
- [7] "吉良町役場 愛知県"             "幡豆町役場 愛知県"            
- [9] "愛知県大府市役所 愛知県"       "愛知県　高浜市役所 愛知県"    
-[11] "海部郡大治町役場 愛知県"       "愛知県知多郡東浦町役場 愛知県"
-[13] "滋賀県　守山市役所 滋賀県"     "大阪府　大東市役所 大阪府"    
-[15] "大阪府泉南市役所 大阪府"       "鳥取県　境港市役所 鳥取県"    
-[17] "東出雲町役場 島根県"           "広島県安芸郡坂町役場 広島県"  
-[19] "香川県　善通寺市役所 香川県"   "須惠町役場 福岡県"            
+<code> [1] "鯵ケ沢町役場 青森県"           "七ヶ宿町役場 宮城県"          </code>
+<code> [3] "茨城県　鉾田市役所 茨城県"     "牧村役場 新潟県"              </code>
+<code> [5] "岐阜県加茂郡富加町役場 岐阜県" "一色町役場 愛知県"            </code>
+<code> [7] "吉良町役場 愛知県"             "幡豆町役場 愛知県"            </code>
+<code> [9] "愛知県大府市役所 愛知県"       "愛知県　高浜市役所 愛知県"    </code>
+<code>[11] "海部郡大治町役場 愛知県"       "愛知県知多郡東浦町役場 愛知県"</code>
+<code>[13] "滋賀県　守山市役所 滋賀県"     "大阪府　大東市役所 大阪府"    </code>
+<code>[15] "大阪府泉南市役所 大阪府"       "鳥取県　境港市役所 鳥取県"    </code>
+<code>[17] "東出雲町役場 島根県"           "広島県安芸郡坂町役場 広島県"  </code>
+<code>[19] "香川県　善通寺市役所 香川県"   "須惠町役場 福岡県"            </code>
 <code class="prom">length(setdiff(ccp, uxp))</code>
-[1] 369
+<code>[1] 369</code>
 </pre>
 
 <p>これでだいたい構造がわかったので，国税庁データについて郵便番号（zip）を求める：</p>
@@ -129,9 +129,9 @@ nuxp
 <pre>
 <code class="prom">zip = sapply(1:1718, function(i) x[grep(ccp[i], xp)[1], 6])</code>
 <code class="prom">length(zip)</code>
-[1] 1718
+<code>[1] 1718</code>
 <code class="prom">sum(!is.na(zip))</code>
-[1] 1364
+<code>[1] 1364</code>
 </pre>
 
 <p>これで1718件中1364件は郵便番号が求められた。残り354件はおそらく個別郵便番号がないのであろう。</p>
@@ -147,7 +147,7 @@ nuxp
 <p><a href="kopipe.html">コピペのチェック</a>でも書いた編集距離を使ってみる。</p>
 
 <pre>
-library(stringdist)
+<code>library(stringdist)
 addr = paste0(yuubin[,7], yuubin[,8], yuubin[,9])
 dist = rep(NA, 1718)
 for (i in 1:1718) {
@@ -158,7 +158,7 @@ for (i in 1:1718) {
     dist[i] = m
   }
 }
-</pre>
+</code></pre>
 
 <p>これでとりあえず埋めることができた。</p>
 

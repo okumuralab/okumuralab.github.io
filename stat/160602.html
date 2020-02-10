@@ -35,10 +35,10 @@
 <p>これを手抜きプロットしたものが次の図である：</p>
 
 <pre>
-TV = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/TV.csv", fileEncoding="SJIS")
+<code>TV = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/TV.csv", fileEncoding="SJIS")
 matplot(TV[,1], TV[,3:6], xlab="", ylab="保有数量（100世帯あたり）", pch=c("白","カ","ブ","薄"))
 matplot(TV[,1], TV[,7:12], xlab="", ylab="普及率（%）", pch=c("白","カ","大","小","ブ","薄"))
-</pre>
+</code></pre>
 
 <figure><img src="img/160604e.png" alt="テレビ台数の推移"></figure>
 
@@ -51,20 +51,20 @@ matplot(TV[,1], TV[,7:12], xlab="", ylab="普及率（%）", pch=c("白","カ","
 <p>これも手抜きプロットしておく：</p>
 
 <pre>
-life = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/life2014.csv", fileEncoding="SJIS")
+<code>life = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/life2014.csv", fileEncoding="SJIS")
 matplot(life[,1], life[,c(2,8)], xlab="", ylab="平均寿命", pch=c("男","女"))
-</pre>
+</code></pre>
 
 <figure><img src="img/160604b.png" alt="平均寿命の推移"></figure>
 
 <p>さて，テレビと平均寿命の関係である。まずテレビのデータと平均余命のデータをマージする（共通の列「年」で揃える）。欠測値は0とする。テレビ普及率はカラーテレビ普及率と白黒テレビ普及率の和（ただし100を超えれば100にする）とした。</p>
 
 <pre>
-a = merge(TV, life)
+<code>a = merge(TV, life)
 f = function(x) ifelse(is.na(x), 0, x)  # 欠測値を0で置き換える関数
 plot(f(a$カラーテレビ)+f(a$白黒テレビ), (a$男0+a$女0)/2, xlab="保有数量（100世帯あたり）", ylab="平均寿命")
 plot(pmin(100,f(a$普及率カラーテレビ)+f(a$普及率白黒テレビ)), (a$男0+a$女0)/2, xlab="テレビ普及率", ylab="平均寿命")
-</pre>
+</code></pre>
 
 <figure><img src="img/160604f.png" alt="テレビ保有数量と平均寿命"></figure>
 
@@ -73,9 +73,9 @@ plot(pmin(100,f(a$普及率カラーテレビ)+f(a$普及率白黒テレビ)), (
 <p>カラーテレビだけでやってみる：</p>
 
 <pre>
-plot(f(a$カラーテレビ), (a$男0+a$女0)/2, xlab="カラーテレビ保有数量（100世帯あたり）", ylab="平均寿命")
+<code>plot(f(a$カラーテレビ), (a$男0+a$女0)/2, xlab="カラーテレビ保有数量（100世帯あたり）", ylab="平均寿命")
 plot(f(a$普及率カラーテレビ), (a$男0+a$女0)/2, xlab="カラーテレビ普及率", ylab="平均寿命")
-</pre>
+</code></pre>
 
 <figure><img src="img/160604g.png" alt="カラーテレビ保有数量と平均寿命"></figure>
 

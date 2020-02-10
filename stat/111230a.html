@@ -26,7 +26,7 @@
 をフィットしてみます。まずはRでデータを読み込み，図を描きます。チャンネル番号の1.4872倍がエネルギー（keV）であることがわかっているので，グラフの上にエネルギー目盛を描きました。</p>
 
 <pre>
-# quartz()                      # MacでX11を使わない場合
+<code># quartz()                      # MacでX11を使わない場合
 # par(family="HiraKakuProN-W3") # Mac：フォント（好み）
 # par(mgp=c(2,0.8,0))           # 好み
 data = read.csv("http://dl.dropbox.com/u/52911779/spviewer/ts100_nikkoushiitake.csv",
@@ -37,7 +37,7 @@ plot(ch, sp, type="l", xlab="Channel", ylab="Count", col="#f39800", xlim=c(300,7
 t = pretty(1.4872*c(300,700))
 axis(3, t/1.4872, t)
 mtext("Energy (keV)", 3, 2)
-</pre>
+</code></pre>
 
 <div>
 <img src="img/111230a.png" alt="">
@@ -47,7 +47,7 @@ mtext("Energy (keV)", 3, 2)
 <sup>137</sup>Cs の662keV（85.1%）と考えられます。ここではバックグラウンドを無理に一つの関数で表さず，左半分と右半分で別々の2次関数でフィットすることにします。上に凸な放物線になりますので，直線を使うよりピークカウントは少なめになるはずです。</p>
 
 <pre>
-library(nlme)
+<code>library(nlme)
 rng1 = 330:490
 fit1 = gnls(sp ~ c + d*(ch-400) + b*(ch-400)^2
            + e1*dnorm((ch-m1)/s1)
@@ -74,12 +74,12 @@ points(ch[rng1], a1['e1']*dnorm((ch[rng1]-a1['m1'])/a1['s1']), type="l")
 points(ch[rng1], a1['e2']*dnorm((ch[rng1]-a1['m2'])/a1['s2']), type="l")
 points(ch[rng2], a2['c']+a2['d']*(ch[rng2]-550)+a2['b']*(ch[rng2]-550)^2, type="l")
 points(ch[rng2], a2['e3']*dnorm((ch[rng2]-a2['m3'])/a2['s3']), type="l")
-</pre>
+</code></pre>
 
 <p>バックグラウンドを除いた正規分布曲線の下の面積とその誤差の推定値は次のようにして求められます。</p>
 
 <pre>
-# 各山のカウント
+<code># 各山のカウント
 &gt; sum(a1['e1']*dnorm((ch-a1['m1'])/a1['s1']))
 [1] 1754.059
 &gt; sum(a1['e2']*dnorm((ch-a1['m2'])/a1['s2']))
@@ -98,7 +98,7 @@ points(ch[rng2], a2['e3']*dnorm((ch[rng2]-a2['m3'])/a2['s3']), type="l")
 &gt; sqrt(v2['e3','e3']/a2['e3']^2 + v2['s3','s3']/a2['s3']^2 + 2*v2['e3','s3']/(a2['e3']*a2['s3']))
         e3 
 0.09845207 
-</pre>
+</code></pre>
 
 <hr>
 

@@ -41,7 +41,7 @@
 
 <pre>
 <code class="prom">as.POSIXct(1126259446-17, origin="1980-01-06 00:00:00", tz="GMT")</code>
-[1] "2015-09-14 09:50:29 GMT"
+<code>[1] "2015-09-14 09:50:29 GMT"</code>
 </pre>
 
 <p>つまり 2015-09-14 09:50:29 UTC である。</p>
@@ -57,28 +57,28 @@
 
 <pre>
 <code class="prom">h5ls("H-H1_LOSC_4_V1-1126259446-32.hdf5")</code>
-                 group            name       otype  dclass    dim
-0                    /            meta   H5I_GROUP               
-1                /meta     Description H5I_DATASET  STRING  ( 0 )
-2                /meta  DescriptionURL H5I_DATASET  STRING  ( 0 )
-3                /meta        Detector H5I_DATASET  STRING  ( 0 )
-4                /meta        Duration H5I_DATASET INTEGER  ( 0 )
-5                /meta        GPSstart H5I_DATASET INTEGER  ( 0 )
-6                /meta     Observatory H5I_DATASET  STRING  ( 0 )
-7                /meta            Type H5I_DATASET  STRING  ( 0 )
-8                /meta        UTCstart H5I_DATASET  STRING  ( 0 )
-9                    /         quality   H5I_GROUP               
-10            /quality          detail   H5I_GROUP               
-11            /quality      injections   H5I_GROUP               
-12 /quality/injections InjDescriptions H5I_DATASET  STRING      5
-13 /quality/injections   InjShortnames H5I_DATASET  STRING      5
-14 /quality/injections         Injmask H5I_DATASET INTEGER     32
-15            /quality          simple   H5I_GROUP               
-16     /quality/simple  DQDescriptions H5I_DATASET  STRING      7
-17     /quality/simple    DQShortnames H5I_DATASET  STRING      7
-18     /quality/simple          DQmask H5I_DATASET INTEGER     32
-19                   /          strain   H5I_GROUP               
-20             /strain          Strain H5I_DATASET   FLOAT 131072
+<code>                 group            name       otype  dclass    dim</code>
+<code>0                    /            meta   H5I_GROUP               </code>
+<code>1                /meta     Description H5I_DATASET  STRING  ( 0 )</code>
+<code>2                /meta  DescriptionURL H5I_DATASET  STRING  ( 0 )</code>
+<code>3                /meta        Detector H5I_DATASET  STRING  ( 0 )</code>
+<code>4                /meta        Duration H5I_DATASET INTEGER  ( 0 )</code>
+<code>5                /meta        GPSstart H5I_DATASET INTEGER  ( 0 )</code>
+<code>6                /meta     Observatory H5I_DATASET  STRING  ( 0 )</code>
+<code>7                /meta            Type H5I_DATASET  STRING  ( 0 )</code>
+<code>8                /meta        UTCstart H5I_DATASET  STRING  ( 0 )</code>
+<code>9                    /         quality   H5I_GROUP               </code>
+<code>10            /quality          detail   H5I_GROUP               </code>
+<code>11            /quality      injections   H5I_GROUP               </code>
+<code>12 /quality/injections InjDescriptions H5I_DATASET  STRING      5</code>
+<code>13 /quality/injections   InjShortnames H5I_DATASET  STRING      5</code>
+<code>14 /quality/injections         Injmask H5I_DATASET INTEGER     32</code>
+<code>15            /quality          simple   H5I_GROUP               </code>
+<code>16     /quality/simple  DQDescriptions H5I_DATASET  STRING      7</code>
+<code>17     /quality/simple    DQShortnames H5I_DATASET  STRING      7</code>
+<code>18     /quality/simple          DQmask H5I_DATASET INTEGER     32</code>
+<code>19                   /          strain   H5I_GROUP               </code>
+<code>20             /strain          Strain H5I_DATASET   FLOAT 131072</code>
 </pre>
 
 <p>最後の <code>strain/Strain</code> という位置にある131072個の浮動小数点数が目的のstrainデータである。次のようにしてこの部分だけ取り込む：</p>
@@ -87,8 +87,8 @@
 <code class="prom">h1 = h5read("H-H1_LOSC_4_V1-1126259446-32.hdf5", "strain/Strain")</code>
 <code class="prom">H5close()</code>
 <code class="prom">head(h1)</code>
-[1] 2.263866e-19 2.450625e-19 2.607349e-19 2.395652e-19 2.358858e-19
-[6] 2.275551e-19
+<code>[1] 2.263866e-19 2.450625e-19 2.607349e-19 2.395652e-19 2.358858e-19</code>
+<code>[6] 2.275551e-19</code>
 <code class="prom">plot(h1, type="l")</code>
 </pre>
 
@@ -98,38 +98,38 @@
 <code class="prom">h1 = h5read("H-H1_LOSC_4_V1-1126259446-32.hdf5", "/")</code>
 <code class="prom">H5close()</code>
 <code class="prom">str(h1)</code>
-List of 3
- $ meta   :List of 8
-  ..$ Description   : chr "Strain data time series from LIGO"
-  ..$ DescriptionURL: chr "http://losc.ligo.org/"
-  ..$ Detector      : chr "H1"
-  ..$ Duration      : int 32
-  ..$ GPSstart      : int 1126259446
-  ..$ Observatory   : chr "H"
-  ..$ Type          : chr "StrainTimeSeries"
-  ..$ UTCstart      : chr "2015-09-14T09:50:30"
- $ quality:List of 3
-  ..$ detail    : NULL
-  ..$ injections:List of 3
-  .. ..$ InjDescriptions: chr [1:5(1d)] "no cbc injections" "no burst inejctions" "no detchar injections" "no continuous wave injections" ...
-  .. ..$ InjShortnames  : chr [1:5(1d)] "NO_CBC_HW_INJ" "NO_BURST_HW_INJ" "NO_DETCHAR_HW_INJ" "NO_CW_HW_INJ" ...
-  .. ..$ Injmask        : int [1:32(1d)] 31 31 31 31 31 31 31 31 31 31 ...
-  ..$ simple    :List of 3
-  .. ..$ DQDescriptions: chr [1:7(1d)] "data present" "passes cbc CAT1 test" "passes cbc CAT2 test" "passes cbc CAT3 test" ...
-  .. ..$ DQShortnames  : chr [1:7(1d)] "DATA" "CBC_CAT1" "CBC_CAT2" "CBC_CAT3" ...
-  .. ..$ DQmask        : int [1:32(1d)] 127 127 127 127 127 127 127 127 127 127 ...
- $ strain :List of 1
-  ..$ Strain: num [1:131072(1d)] 2.26e-19 2.45e-19 2.61e-19 2.40e-19 2.36e-19 ...
+<code>List of 3</code>
+<code> $ meta   :List of 8</code>
+<code>  ..$ Description   : chr "Strain data time series from LIGO"</code>
+<code>  ..$ DescriptionURL: chr "http://losc.ligo.org/"</code>
+<code>  ..$ Detector      : chr "H1"</code>
+<code>  ..$ Duration      : int 32</code>
+<code>  ..$ GPSstart      : int 1126259446</code>
+<code>  ..$ Observatory   : chr "H"</code>
+<code>  ..$ Type          : chr "StrainTimeSeries"</code>
+<code>  ..$ UTCstart      : chr "2015-09-14T09:50:30"</code>
+<code> $ quality:List of 3</code>
+<code>  ..$ detail    : NULL</code>
+<code>  ..$ injections:List of 3</code>
+<code>  .. ..$ InjDescriptions: chr [1:5(1d)] "no cbc injections" "no burst inejctions" "no detchar injections" "no continuous wave injections" ...</code>
+<code>  .. ..$ InjShortnames  : chr [1:5(1d)] "NO_CBC_HW_INJ" "NO_BURST_HW_INJ" "NO_DETCHAR_HW_INJ" "NO_CW_HW_INJ" ...</code>
+<code>  .. ..$ Injmask        : int [1:32(1d)] 31 31 31 31 31 31 31 31 31 31 ...</code>
+<code>  ..$ simple    :List of 3</code>
+<code>  .. ..$ DQDescriptions: chr [1:7(1d)] "data present" "passes cbc CAT1 test" "passes cbc CAT2 test" "passes cbc CAT3 test" ...</code>
+<code>  .. ..$ DQShortnames  : chr [1:7(1d)] "DATA" "CBC_CAT1" "CBC_CAT2" "CBC_CAT3" ...</code>
+<code>  .. ..$ DQmask        : int [1:32(1d)] 127 127 127 127 127 127 127 127 127 127 ...</code>
+<code> $ strain :List of 1</code>
+<code>  ..$ Strain: num [1:131072(1d)] 2.26e-19 2.45e-19 2.61e-19 2.40e-19 2.36e-19 ...</code>
 <code class="prom">head(h1$strain$Strain)</code>
-[1] 2.263866e-19 2.450625e-19 2.607349e-19 2.395652e-19 2.358858e-19
-[6] 2.275551e-19
+<code>[1] 2.263866e-19 2.450625e-19 2.607349e-19 2.395652e-19 2.358858e-19</code>
+<code>[6] 2.275551e-19</code>
 </pre>
 </div>
 
 <p>あとはL1側のデータも同様に取得し，プロットする。</p>
 
 <pre>
-t = (0:(length(h1)-1)) / 4096
+<code>t = (0:(length(h1)-1)) / 4096
 H1 = h1 * 1e18
 L1 = l1 * 1e18
 plot(t, H1, type="l", ylim=range(c(H1,L1)), col="#f39800",
@@ -137,7 +137,7 @@ plot(t, H1, type="l", ylim=range(c(H1,L1)), col="#f39800",
 points(t, L1, type="l", col="#0068b7")
 text(0, 0.7, "H1")
 text(0, -1.1, "L1")
-</pre>
+</code></pre>
 
 <figure><img src="img/160213b.png" alt=""></figure>
 
@@ -148,21 +148,21 @@ text(0, -1.1, "L1")
 という新しいパッケージを使ってみる。</p>
 
 <pre>
-install.packages("psd")
+<code>install.packages("psd")
 library(psd)
 h1p = pspectrum(h1, x.frqsamp=4096, Nyquist.normalize=FALSE)
 l1p = pspectrum(l1, x.frqsamp=4096, Nyquist.normalize=FALSE)
 plot(h1p, col="#f39800")
 plot(l1p, col="#0068b7", add=TRUE)
-</pre>
+</code></pre>
 
 <p>これでも十分だが，LIGOのチュートリアルに合わせて，横軸も対数目盛にしてみる：</p>
 
 <pre>
-plot(h1p$freq, h1p$spec, type="l", col="#f39800", log="xy",
+<code>plot(h1p$freq, h1p$spec, type="l", col="#f39800", log="xy",
      xlim=c(10,2048), xlab="frequency", ylab="spectrum")
 points(l1p$freq, l1p$spec, type="l", col="#0068b7")
-</pre>
+</code></pre>
 
 <figure><img src="img/160213c.png" alt=""></figure>
 

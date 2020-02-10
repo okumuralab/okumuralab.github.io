@@ -19,7 +19,7 @@
 <p>内閣府の<a href="http://www.esri.cao.go.jp/jp/stat/shouhi/shouhi.html">消費動向調査</a>でもいろいろなものの世帯普及率が調査されている。平成21年（2009年）の「普及率（3月調査）」をグラフ化してみる。</p>
 
 <pre>
-# par(family="HiraKakuPro-W3")  # Mac
+<code># par(family="HiraKakuPro-W3")  # Mac
 par(las=1)              # 縦軸の文字を横向きにしない
 par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 
@@ -39,7 +39,7 @@ axis(1, t, paste(t,"年",sep=""))
 title("パソコン普及率", family="HiraKakuPro-W6", line=0.5)
 t = パソコン普及率[年==2009]
 text(2009, t, paste(t,"%",sep=""), pos=1)
-</pre>
+</code></pre>
 
 <p><img src="img/090510.png" alt="PC世帯普及率"></p>
 

@@ -39,10 +39,10 @@ MathJax = {
 <p>をRでプロットするだけである：</p>
 
 <pre>
-curve(gamma(x+1), xlim=c(0,10), log="y", col="#0068b7", xlab="", ylab="")
+<code>curve(gamma(x+1), xlim=c(0,10), log="y", col="#0068b7", xlab="", ylab="")
 curve(sqrt(2*pi*x) * x^x * exp(-x), add=TRUE, col="#f39800")
 curve(sqrt(2*pi*x) * x^x * exp(-x) * (1 + 1/(12*x)), add=TRUE, col="#f39800")
-</pre>
+</code></pre>
 
 <p>青が $\Gamma(x+1)$，橙がStirlingの近似である。</p>
 

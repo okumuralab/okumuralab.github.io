@@ -30,42 +30,42 @@
 <p>ここでは，中日新聞三重県版2018年7月21日の<a href="http://www.chunichi.co.jp/article/mie/20180721/CK2018072102000009.html">酷暑対策で地域差　県内小中の冷房率、全国平均以下</a>という記事にある「小中学校普通教室の冷房設置率（％、市町別）」（※県まとめ、17年4月時点）という表のデータを地図に描いてみる。並び順は地町村コード順で，<code>jpn_pref(24)$city</code> と打ち込んで調べられる。</p>
 
 <pre>
-x = c(11,3,100,6,34,25,1,4,40,91,0,100,0,84,100,100,71,58,29,18,38,100,100,100,83,100,10,0,0)
-</pre>
+<code>x = c(11,3,100,6,34,25,1,4,40,91,0,100,0,84,100,100,71,58,29,18,38,100,100,100,83,100,10,0,0)
+</code></pre>
 
 <p>念のため，市町村名とペアにして設置率順に並べ替え，新聞の表と照合する：</p>
 
 <pre>
-df = data.frame(c=jpn_pref(24)$city, x=x)
+<code>df = data.frame(c=jpn_pref(24)$city, x=x)
 df[order(-df$x),]
-</pre>
+</code></pre>
 
 <p>これを設置率0（赤）から設置率100%（青）までの色のグラデーションで表す：</p>
 
 <pre>
-cols = colorRamp(c("#ff2800","white","#0041ff"))
+<code>cols = colorRamp(c("#ff2800","white","#0041ff"))
 par(mar=c(0,0,0,0))
 plot(jpn_pref(24)$geometry, col=rgb(cols(x/100)/255))
-</pre>
+</code></pre>
 
 <div class="note">
 <p>瓜生さんによれば，最後の行は次のようにしてもよいとのことである：</p>
 <pre>
-plot(sf::st_geometry(jpn_pref(24)), col=rgb(cols(x/100)/255))
-</pre>
+<code>plot(sf::st_geometry(jpn_pref(24)), col=rgb(cols(x/100)/255))
+</code></pre>
 </div>
 
 <p>最後に，グラデーションのキャプションを描き込む。描き込むだいたいの位置は <code>locator()</code> と打ち込んで2点ほど図の上をクリックし，最後に右クリックすると表示される。</p>
 
 <pre>
-lx = c(136.7, 137.2)
+<code>lx = c(136.7, 137.2)
 ly = c(33.8, 33.9)
 rect(lx[1]+(lx[2]-lx[1])*(0:99)/100, ly[1],
      lx[1]+(lx[2]-lx[1])*(1:100)/100, ly[2],
      col=rgb(cols(0:99/99)/255), border=NA)
 rect(lx[1], ly[1], lx[2], ly[2])
 text(lx[1]+(lx[2]-lx[1])*(0:2)/2, ly[1], c("0%","50%","100%"), pos=1)
-</pre>
+</code></pre>
 
 <figure><img src="img/180722a.png" alt="三重県のエアコン設置率"></figure>
 

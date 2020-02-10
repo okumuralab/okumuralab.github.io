@@ -47,12 +47,12 @@ dt { float: left ; clear: left; margin-left:0.8em }
 <p>地図は<a href="shape.html">シェープファイルを読む</a>で説明した方法で描く。具体的には，<a href="http://nlftp.mlit.go.jp/ksj/">国土数値情報</a>サイトの「行政区域」から福島県を選ぶ。簡単な質問に答えるとダウンロードできる。ファイル名 N03-180101_07_GML.zip である。これを展開すると N03-180101_07_GML というフォルダの中にいくつかのファイルができる。これをRで読んで，まずは白地図を描いてみよう：</p>
 
 <pre>
-library(sf)  # あらかじめsfパッケージをインストールしておく
+<code>library(sf)  # あらかじめsfパッケージをインストールしておく
 options(stringsAsFactors=FALSE) # 文字列っぽいものは「ファクター」ではなく「文字列」として扱う
 fukushima = st_read("N03-180101_07_GML/", options="ENCODING=CP932")   # シェープファイルを読む
 par(mar=c(0,0,0,0))           # 地図を描く場合は余白をゼロにする
 plot(st_geometry(fukushima))  # 福島県の白地図が描かれる
-</pre>
+</code></pre>
 
 <p>放射線のデータは，<a href="https://emdb.jaea.go.jp/emdb/">放射性物質モニタリングデータの情報公開サイト</a>から取得する。具体的には，空間線量率→<a href="https://emdb.jaea.go.jp/emdb/selects/b10103/">航空機モニタリング</a>→<a href="https://emdb.jaea.go.jp/emdb/portals/b1010301/">放射性物質の分布状況等調査による航空機モニタリング</a>→データダウンロード→H29.11.16→CSV（UTF-8）→福島県のメッシュデータをダウンロードし，解凍してCSVファイルを取り出す。項目は</p>
 
@@ -79,19 +79,19 @@ plot(st_geometry(fukushima))  # 福島県の白地図が描かれる
 <p>となっている。これをまずRで読む：</p>
 
 <pre>
-mesh = read.csv("1010301015_07.csv", fileEncoding="UTF-8")
-</pre>
+<code>mesh = read.csv("1010301015_07.csv", fileEncoding="UTF-8")
+</code></pre>
 
 <p>空間線量率は，<code>table(mesh[,8])</code> と打ち込んでみればわかるように，<code>&lt;1.0E-01</code>，<code>1.0E-01</code> のような文字列として読み込まれる。ここでは <code>&lt;</code> を含むものは 0 とみなして数値化することにする：</p>
 
 <pre>
-mesh[,8] = as.numeric(ifelse(grepl("<",mesh[,8]), "0", mesh[,8]))
-</pre>
+<code>mesh[,8] = as.numeric(ifelse(grepl("<",mesh[,8]), "0", mesh[,8]))
+</code></pre>
 
 <p>冒頭の図は次のようにして描いた：</p>
 
 <pre>
-plot(st_geometry(fukushima), border="gray")
+<code>plot(st_geometry(fukushima), border="gray")
 rect(mesh[,15], mesh[,14], mesh[,11], mesh[,10], border=NA,
        col=ifelse(mesh[,8] <= 0.23, "#b4ebfa",
                   ifelse(mesh[,8] <= 1, "#edc58f", "#ff9900")))
@@ -100,12 +100,12 @@ par(family="Helvetica")
 legend("bottomleft",
        legend=c("> 1μSv/h","≤ 1μSv/h","≤ 0.23μSv/h"),
        fill=c("#ff9900","#edc58f", "#b4ebfa"))
-</pre>
+</code></pre>
 
 <p>例えば伊達市周辺に限るなら，次のようにする：</p>
 
 <pre>
-date = subset(fukushima, N03_004=="伊達市")
+<code>date = subset(fukushima, N03_004=="伊達市")
 plot(st_geometry(date))
 rect(mesh[,15], mesh[,14], mesh[,11], mesh[,10], border=NA,
        col=ifelse(mesh[,8] <= 0.23, "#b4ebfa",
@@ -115,27 +115,27 @@ par(family="Helvetica")
 legend("bottomleft",
        legend=c("> 1μSv/h","≤ 1μSv/h","≤ 0.23μSv/h"),
        fill=c("#ff9900","#edc58f", "#b4ebfa"), bg="white")
-</pre>
+</code></pre>
 
 <p>色のグラデーションを使うには，例えば次のようにする：</p>
 
 <pre>
-cols = colorRamp(c("white","#ff2800"))
+<code>cols = colorRamp(c("white","#ff2800"))
 plot(st_geometry(date))
 rect(mesh[,15], mesh[,14], mesh[,11], mesh[,10], border=NA,
      col=rgb(cols(pmin(pmax(mesh[,8]-0.09,0),1))/255))
 plot(st_geometry(fukushima), add=TRUE)
-</pre>
+</code></pre>
 
 <p>周辺を消して伊達市だけにするには次のようにする：</p>
 
 <pre>
-datemesh = subset(mesh, 市町村=="伊達市")
+<code>datemesh = subset(mesh, 市町村=="伊達市")
 plot(st_geometry(date))
 rect(datemesh[,15], datemesh[,14], datemesh[,11], datemesh[,10], border=NA,
      col=rgb(cols(pmin(pmax(datemesh[,8]-0.09,0),1))/255))
 plot(st_geometry(date), add=TRUE)
-</pre>
+</code></pre>
 
 <hr>
 
@@ -144,7 +144,7 @@ plot(st_geometry(date), add=TRUE)
 <p>地上1mの線量率は<a href="https://emdb.jaea.go.jp/emdb/">放射性物質モニタリングデータ</a>→空間線量率→<a href="https://emdb.jaea.go.jp/emdb/selects/b10104/">モニタリングポスト・リアルタイム線量計</a>→<a href="https://emdb.jaea.go.jp/emdb/portals/b1010403/">全国及び福島県の空間線量測定結果（日次平均値）</a>のデータダウンロードで，期間が重なる「全国及び福島県の空間線量測定結果（リアルタイム配信）日次平均値 ( H29.4～H30.3 )」の「福島県」をダウンロードし，解凍する。たくさんのCSVファイルが出てくる。それらを <code>1010403007_07</code> というフォルダに入れる。また，リアルタイム線量測定システムとモニタリングポストを区別するために，jsdfq43wtrさんの <a href="http://www.jsdfq43wtr.net/monitoring-post/status/mp-maker-memo.csv">mp-maker-memo.csv</a> に掲載されているものと位置情報が同じならモニタリングポストと判断する。</p>
 
 <pre>
-mplist = read.csv("mp-maker-memo.csv", header=FALSE, fileEncoding="UTF-8")
+<code>mplist = read.csv("mp-maker-memo.csv", header=FALSE, fileEncoding="UTF-8")
 files = dir(path="1010403007_07", pattern="*.csv", full.names=TRUE, recursive=TRUE)
 n = length(files)
 lat = lon = rad = avi = mp = rep(NA, n)
@@ -167,7 +167,7 @@ points(avi[mp], rad[mp], pch=4, col="#ff2800")  # モニタリングポスト
 abline(0, 1)
 curve(0.7*x, col="gray", add=TRUE)
 curve(0.5*x, col="gray", add=TRUE)
-</pre>
+</code></pre>
 
 <figure><img src="img/190121a.png" alt="航空機モニタリングと地上1mの線量率の比較"></figure>
 
@@ -178,12 +178,12 @@ curve(0.5*x, col="gray", add=TRUE)
 <p>あまり意味があるか疑問であるが，地上 / 航空機 の比の累積分布を描いてみよう：</p>
 
 <pre>
-avi = ifelse(avi==0, NA, avi)  # 0の値はNAに変える
+<code>avi = ifelse(avi==0, NA, avi)  # 0の値はNAに変える
 plot(ecdf(rad/avi), log="x", xlim=range(rad/avi, na.rm=TRUE), xlab="地上/航空機", ylab="累積割合", main="")
 m = median(rad/avi, na.rm=TRUE)  # 中央値0.5714286
 segments(m, -0.1, m, 0.5)
 segments(0.01, 0.5, m, 0.5)
-</pre>
+</code></pre>
 
 <figure><img src="img/190122a.png" alt="地上/航空機の比の累積分布"></figure>
 
@@ -192,7 +192,7 @@ segments(0.01, 0.5, m, 0.5)
 <p>この図の縦軸を正規分布の分布関数の逆で変換した図（対数正規分布なら直線になる）：</p>
 
 <pre>
-x = na.omit(rad/avi)
+<code>x = na.omit(rad/avi)
 p = c(0.001,0.01,0.1,0.5,0.9,0.99,0.999)
 q = c(0.1,0.2,0.5,1,2)
 n = length(x)
@@ -203,31 +203,31 @@ axis(2, qnorm(p), p)
 axis(1, q, q)
 m = median(x)  # 0.5714286
 segments(m, -4, m, 0, col="lightgray")
-</pre>
+</code></pre>
 
 <figure><img src="img/190122b.png" alt="地上/航空機の比の累積分布"></figure>
 
 <p>ちなみに，この期間に地上1mで線量率を測定しているリアルタイム線量測定システム（黒○）およびモニタリングポスト（赤×）の分布は次の通りである：</p>
 
 <pre>
-plot(st_geometry(fukushima), border="gray")
+<code>plot(st_geometry(fukushima), border="gray")
 points(lon[!mp], lat[!mp])
 points(lon[mp], lat[mp], pch=4, col="#ff2800")
-</pre>
+</code></pre>
 
 <figure><img src="img/190121b.png" alt="リアルタイム線量測定システムおよびモニタリングポストの分布"></figure>
 
 <p>あまり見やすくないが，地上/航空の比で色分けすれば次のようになる（航空 &lt; 0.1 は除いてある）：</p>
 
 <pre>
-plot(st_geometry(fukushima), border="gray")
+<code>plot(st_geometry(fukushima), border="gray")
 points(lon, lat, pch=ifelse(mp, 4, 1),
        col=ifelse(rad/avi &gt;= 1, "#ff280080", ifelse(rad/avi &gt;= 0.5, "#35a16b80", "#0041ff80")))
 par(family="Helvetica")
 legend("bottomleft",
        legend=c("gnd/air ≥ 1","gnd/air ≥ 0.5","gnd/air &lt; 0.5"),
        fill=c("#ff280080","#35a16b80","#0041ff80"), bg="white")
-</pre>
+</code></pre>
 
 <figure><img src="img/190125a.png" alt="リアルタイム線量測定システムおよびモニタリングポストの分布，地上/航空の比で色分け"></figure>
 
@@ -238,7 +238,7 @@ legend("bottomleft",
 <p>ちょうどこれを書いているときに 2019-01-20 の読売新聞朝刊に Naito ほか (2017) [4] の詳しい紹介が掲載された。そこで，Naito ほか [4] の Figure 1 に合わせて，第10次航空機モニタリング（2015年9月12日〜2015年11月4日）のデータで同じことをしてみる。データは<a href="https://emdb.jaea.go.jp/emdb/portals/b1010301/">放射性物質の分布状況等調査による航空機モニタリング</a>の「福島県及びその近隣県における地表面から1m高さの空間線量率の測定結果(平成27年11月4日時点(事故から56か月後)) ( H27.11.4換算 )」のCSV(UTF-8)の「福島県」，および<a href="https://emdb.jaea.go.jp/emdb/portals/b1010403/">全国及び福島県の空間線量測定結果（日次平均値）</a>の「全国及び福島県の空間線量測定結果（リアルタイム配信）日次平均値 ( H27.4～H28.3 )」のCSV(UTF-8)の「福島県」である。まずは飯舘村の線量分布を Naito ほか の Figure 1 とほぼ同じ色で描いてみよう：</p>
 
 <pre>
-mesh = read.csv("1010301013_07.csv", fileEncoding="UTF-8")
+<code>mesh = read.csv("1010301013_07.csv", fileEncoding="UTF-8")
 mesh[,8] = as.numeric(ifelse(grepl("<",mesh[,8]), "0", mesh[,8]))
 iitate = subset(fukushima, N03_004=="飯舘村")
 plot(st_geometry(iitate))
@@ -252,14 +252,14 @@ par(family="Helvetica")
 legend("bottomleft", bg="white",
        legend=c("0.0μSv/h -","0.2μSv/h -","0.5μSv/h -","1.0μSv/h -","1.9μSv/h -","3.8μSv/h -"),
        fill=c("#c7b2de","#b4ebfa","#87e7b0","#cbf266","#ffff99","#edc58f"))
-</pre>
+</code></pre>
 
 <figure><img src="img/190120a.png" alt="第10次航空機モニタリング，飯舘村"></figure>
 
 <p>地上のデータとの比較：</p>
 
 <pre>
-files = dir(path="1010403005_07", pattern="*.csv", full.names=TRUE, recursive=TRUE)
+<code>files = dir(path="1010403005_07", pattern="*.csv", full.names=TRUE, recursive=TRUE)
 n = length(files)
 lat = lon = rad = avi = mp = rep(NA, n)
 for (i in 1:n) {
@@ -281,7 +281,7 @@ points(avi[mp], rad[mp], pch=4, col="#ff2800")  # モニタリングポスト
 abline(0, 1)
 curve(0.7*x, col="gray", add=TRUE)
 curve(0.5*x, col="gray", add=TRUE)
-</pre>
+</code></pre>
 
 <figure><img src="img/190120c.png" alt="航空機モニタリングと地上1mの線量率の比較"></figure>
 
@@ -292,7 +292,7 @@ curve(0.5*x, col="gray", add=TRUE)
 <p>では，地上・航空機の両者が揃っている一番古いデータではどうか。<a href="https://emdb.jaea.go.jp/emdb/portals/b1010301/">放射性物質の分布状況等調査による航空機モニタリング</a>の「第4次航空機モニタリングの空間線量率の測定結果 ( H23.11.5換算 )」の福島県と，<a href="https://emdb.jaea.go.jp/emdb/portals/b1010403/">全国及び福島県の空間線量測定結果（日次平均値）</a>の最古の「全国及び福島県の空間線量測定結果（リアルタイム配信）日次平均値 ( H23.9～H24.3 )」を取得して，プロットしてみる。</p>
 
 <pre>
-options(stringsAsFactors=FALSE)
+<code>options(stringsAsFactors=FALSE)
 mplist = read.csv("mp-maker-memo.csv", header=FALSE, fileEncoding="UTF-8")
 mesh = read.csv("1010301004_07.csv")
 mesh[,8] = as.numeric(ifelse(grepl("<",mesh[,8]), "0", mesh[,8]))
@@ -316,14 +316,14 @@ for (i in 1:n) {
 plot(avi, rad, log="xy", xlim=c(0.067,20), ylim=c(0.067,20), asp=1,
      xlab="航空機モニタリング", ylab="地上1m", pch=ifelse(mp, 4, 1))
 abline(0, 1)
-</pre>
+</code></pre>
 
 <figure><img src="img/190128a.png" alt="航空機モニタリングと地上1mの線量率の比較"></figure>
 
 <p>該当するデータが20点しかないが，地上/航空比はすべて1以下で，中央値は0.60（0.6031915）である。一番下の外れ値（地上/航空比 0.09305556）は，南会津郡南会津町「びわのかげ運動公園」（37.199049, 139.759041）<a href="https://www.google.co.jp/maps?q=37.199049,139.759041">［Googleマップで表示］</a>である。ここは 2011-09-09 からデータが残っている：</p>
 
 <pre>
-x = read.csv("1010403001_07/1010403001_07_037199049_139759041.csv")
+<code>x = read.csv("1010403001_07/1010403001_07_037199049_139759041.csv")
 plot(as.Date(x[,1]), x[,8], type="o", pch=16, las=1, xaxt="n", xlab="", ylab="")
 axis.Date(1, as.Date(x[,1]), format="%Y-%m-%d")
 </pre> 
@@ -333,8 +333,8 @@ axis.Date(1, as.Date(x[,1]), format="%Y-%m-%d")
 <p>2011年12月27日に線量が急に減っている（除染？積雪？）。こういうグラフで具体的な日付を調べるには</p>
 
 <pre>
-identify(as.Date(x[,1]), x[,8], labels=as.Date(x[,1]))
-</pre>
+<code>identify(as.Date(x[,1]), x[,8], labels=as.Date(x[,1]))
+</code></pre>
 
 <p>と打ち込んでマウスで激減前後の点をクリックする。終了は右クリック（MacならCtrl+クリック）。終了時にコンソール出力されるのは連番である。</p>
 
@@ -343,7 +343,7 @@ identify(as.Date(x[,1]), x[,8], labels=as.Date(x[,1]))
 <p>さらに，Miyazaki and Hayano [1] に合わせて，「第6次航空機モニタリング及び福島第一原子力発電所から80km圏外の航空機モニタリングの空間線量率の測定結果 ( H24.12.28換算 )」（<a href="https://emdb.jaea.go.jp/emdb/portals/b1010301/">放射性物質の分布状況等調査による航空機モニタリング</a>）と「全国及び福島県の空間線量測定結果（リアルタイム配信）日次平均値 ( H24.4～H25.3 )」（<a href="https://emdb.jaea.go.jp/emdb/portals/b1010403/">全国及び福島県の空間線量測定結果（日次平均値）</a>）を伊達市に限定して調べてみよう：</p>
 
 <pre>
-mesh = read.csv("1010301008_07.csv", fileEncoding="UTF-8")
+<code>mesh = read.csv("1010301008_07.csv", fileEncoding="UTF-8")
 mesh[,8] = as.numeric(ifelse(grepl("&lt;",mesh[,8]), "0", mesh[,8]))
 mplist = read.csv("mp-maker-memo.csv", header=FALSE, fileEncoding="UTF-8")
 files = dir(path="1010403002_07", pattern="*.csv", full.names=TRUE, recursive=TRUE)
@@ -366,7 +366,7 @@ for (i in 1:n) {
 plot(avi, rad, log="xy", xlim=c(0.11,1.5), ylim=c(0.11,1.5), asp=1,
      xlab="航空機モニタリング", ylab="地上1m", pch=ifelse(mp, 4, 1))
 abline(0, 1)
-</pre>
+</code></pre>
 
 <figure><img src="img/190209a.png" alt="航空機モニタリングと地上1mの線量率の比較"></figure>
 
@@ -375,10 +375,10 @@ abline(0, 1)
 <p>中央値の統計誤差を<a href="bootstrap.html">ブートストラップ</a>で求めてみよう：</p>
 
 <pre>
-ratio = (rad/avi)[!is.na(rad/avi)]  # または ratio = na.omit(rad/avi)
+<code>ratio = (rad/avi)[!is.na(rad/avi)]  # または ratio = na.omit(rad/avi)
 r = replicate(100000, median(sample(ratio, replace=TRUE)))
 sd(r)   # だいたい 0.054 くらい
-</pre>
+</code></pre>
 
 <p>つまり，この中央値とその統計誤差（標準誤差）は 0.61 ± 0.05 と書ける。</p>
 

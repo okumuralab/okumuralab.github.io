@@ -27,33 +27,33 @@
 <p>まず <i>p</i> 値は本来は帰無仮説のもとに一様分布になるべきである。例：</p>
 
 <pre>
-p = replicate(100000, {
+<code>p = replicate(100000, {
   x = rnorm(100)
   y = rnorm(100)
   cor.test(x, y)$p.value
 })
 hist(p, freq=FALSE, breaks=20, col="gray", main="")
-</pre>
+</code></pre>
 
 <figure><img src="img/140917d.png" alt=""></figure>
 
 <p>しかし「時系列」ではそうならないことがある。例として，まったく独立に生成されたはずの二つのランダムウォークする系列の相関係数を求めると，こんな具合になる：</p>
 
 <pre>
-p = replicate(100000, {
+<code>p = replicate(100000, {
   x = cumsum(rnorm(100))
   y = cumsum(rnorm(100))
   cor.test(x, y)$p.value
 })
 hist(p, freq=FALSE, breaks=20, col="gray", main="")
-</pre>
+</code></pre>
 
 <figure><img src="img/140917e.png" alt=""></figure>
 
 <p>こういう場合には，「時間」<code>t = 1:100</code> の影響を引いた偏相関係数を使えばよい（？）。偏相関係数とその <i>p</i> 値を求める関数は，裏RjpWikiのコードを借用して作った：</p>
 
 <pre>
-pcor = function(x, y, t) {
+<code>pcor = function(x, y, t) {
   r_xy = cor(x, y) # 単相関係数
   r_tx = cor(t, x) # 時間との単相関係数
   r_ty = cor(t, y) # 時間との単相関係数
@@ -70,7 +70,7 @@ p = replicate(100000, {
   pcor(x, y, t)[2]
 })
 hist(p, freq=FALSE, breaks=20, col="gray", main="")
-</pre>
+</code></pre>
 
 <figure><img src="img/140917f.png" alt=""></figure>
 
@@ -81,20 +81,20 @@ hist(p, freq=FALSE, breaks=20, col="gray", main="")
 にあるサンプルデータ <code>d</code> でやってみると</p>
 
 <pre>
-&gt; pcor(d$x, d$y, d$t)
+<code>&gt; pcor(d$x, d$y, d$t)
 [1] -0.1263188  0.4435144
-</pre>
+</code></pre>
 
 <p>で一致するので <code>pcor()</code> のバグではないと思う。</p>
 
 <p>ちなみに，偏相関係数を求めるには ppcor というパッケージの <code>pcor()</code>，<code>pcor.test()</code> があるようなので，使ってみる：</p>
 
 <pre>
-&gt; library(ppcor)
+<code>&gt; library(ppcor)
 &gt; pcor.test(d$x, d$y, d$t)
     estimate   p.value  statistic  n gp  Method
 1 -0.1263188 0.4385926 -0.7745721 40  1 pearson
-</pre>
+</code></pre>
 
 <p>偏相関係数そのものは一致するが <i>p</i> 値は少し違う。どうやらこれは <code>pt()</code> でなく <code>pnorm()</code> を使って <i>p</i> 値を求めているようだ。念のためこちらの <i>p</i> 値を使っても同様な結果が得られた。</p>
 
@@ -107,7 +107,7 @@ hist(p, freq=FALSE, breaks=20, col="gray", main="")
 <p>[2014-09-24] 相関係数の <i>p</i> 値と偏相関係数の <i>p</i> 値の関係も調べてみた。</p>
 
 <pre>
-p = replicate(1000, {
+<code>p = replicate(1000, {
   x = cumsum(rnorm(100))
   y = cumsum(rnorm(100))
   t = 1:100
@@ -115,19 +115,19 @@ p = replicate(1000, {
 })
 plot(p[1,], p[2,], asp=1, xlab="相関係数のp値", ylab="偏相関係数のp値",
      xlim=c(0,1), ylim=c(0,1))
-</pre>
+</code></pre>
 
 <figure><img src="img/140924a.png" alt=""></figure>
 
 <pre>
-p = replicate(100000, {
+<code>p = replicate(100000, {
   x = cumsum(rnorm(100))
   y = cumsum(rnorm(100))
   t = 1:100
   c(cor.test(x, y)$p.value, pcor(x, y, t)[2])
 })
 cor(p[1,], p[2,])
-</pre>
+</code></pre>
 
 <p>両 <i>p</i> 値の相関係数は 0.09 程度で，弱い相関しかない。有意な相関係数があっても，偏相関係数にすることによって有意でなくすことができるかもしれないが，その逆もありうる。</p>
 

@@ -31,23 +31,23 @@
 <p>インストールとライブラリの読み込みは想定通りです：</p>
 
 <pre>
-install.packages("data.table")
+<code>install.packages("data.table")
 library(data.table)
-</pre>
+</code></pre>
 
 <h2>データの読み込み</h2>
 
 <p><code>data.frame</code> の読み込みは <code>read.csv()</code> などのいくつかの関数で行いましたが，<code>data.table</code> の読み込みは <code>fread()</code> だけです。</p>
 
 <pre>
-data = fread("ファイル名またはURL")
-</pre>
+<code>data = fread("ファイル名またはURL")
+</code></pre>
 
 <p>CSVかTSVか，ヘッダがあるかないかは，たいてい自動判断してくれます。もしうまくいかなかったら，オプションで指定します。</p>
 
 <pre>
-data = fread("ファイル名またはURLまたはデータ", sep=",", header=TRUE, na.strings=c("NA",""))
-</pre>
+<code>data = fread("ファイル名またはURLまたはデータ", sep=",", header=TRUE, na.strings=c("NA",""))
+</code></pre>
 
 <p>ただし，文字コードだけは設定できないようです。Mac上ではUTF-8しか扱ってくれませんでした。また，<code>na.strings=c("","欠測値")</code> のようなUTF-8文字列を与えても無視されるようです。</p>
 
@@ -61,38 +61,38 @@ data = fread("ファイル名またはURLまたはデータ", sep=",", header=TR
 <p>おもしろい使い方として，<code>data = fread("</code> まで打ってから，データをRコンソールにコピペし，<code>")</code> を打ち込むという方法も使えます。例えば</p>
 
 <pre>
-data = fread("魔,方,陣
+<code>data = fread("魔,方,陣
 2,9,4
 7,5,3
 6,1,8")
-</pre>
+</code></pre>
 
 <p>または</p>
 
 <pre>
-data = fread("
+<code>data = fread("
 魔,方,陣
 2,9,4
 7,5,3
 6,1,8
 ")
-</pre>
+</code></pre>
 
 <p>のような感じです。これで <code>data</code> と打ち込むと</p>
 
 <pre>
-   魔 方 陣
+<code>   魔 方 陣
 1:  2  9  4
 2:  7  5  3
 3:  6  1  8
-</pre>
+</code></pre>
 
 <p>と表示されます。</p>
 
 <p>現実的な例でやってみましょう。<a href="rgooglemaps.html">RgoogleMapsを使った放射線地図</a>で使った福島県の放射線データ <a href="data/fukushima.csv">fukushima.csv</a> は，422656地点の緯度（lat），経度（lon），放射線（radiation，μSv/h単位），日時（datetime）を収めたものです。これをローカルにダウンロードして，読み込んで，それぞれの欄の平均値を表示し，時間を計測してみましょう（使っているマシンが多少速くなったので，結果を改訂しました）：</p>
 
 <pre>
-&gt; # 従来のdata.frame版
+<code>&gt; # 従来のdata.frame版
 &gt; system.time({df = read.csv("~/public_html/stat/data/fukushima.csv", as.is=TRUE)})
    ユーザ   システム       経過  
      0.928      0.027      0.963 
@@ -125,20 +125,20 @@ data = fread("
 [1] "2011-07-18 01:52:49 JST"
    ユーザ   システム       経過  
      7.890      3.093     11.059 
-</pre>
+</code></pre>
 
 <p>読み込みは劇的に早くなりました。他の計算はあまり変わりません。ただ，この場合は，日時を表す文字列を内部形式に変換する <code>as.POSIXct()</code> が遅すぎてどうにもなりません。</p>
 
 <p>これを改善するには <a href="https://CRAN.R-project.org/package=fasttime">fasttime</a> パッケージを使います。</p>
 
 <pre>
-install.packages("fasttime")
-</pre>
+<code>install.packages("fasttime")
+</code></pre>
 
 <p>試してみましょう。</p>
 
 <pre>
-&gt; library(fasttime)
+<code>&gt; library(fasttime)
 &gt; 
 &gt; system.time(print(mean(fastPOSIXct(df$datetime))))
 [1] "2011-07-18 10:52:49 JST"
@@ -148,14 +148,14 @@ install.packages("fasttime")
 [1] "2011-07-18 10:52:49 JST"
    ユーザ   システム       経過  
      0.019      0.000      0.020 
-</pre>
+</code></pre>
 
 <p>今のマシンでも2桁以上，昔のマシンでは3桁高速化できました！ すごいですね！ でも答えが違ってますね。実は fasttime は変換元の文字列はGMTにしか対応していないので，JSTなら <code>9*3600</code> を引く必要があります。</p>
 
 <pre>
-&gt; mean(fastPOSIXct(dt$datetime)) - 9*3600
+<code>&gt; mean(fastPOSIXct(dt$datetime)) - 9*3600
 [1] "2011-07-18 01:52:49 JST"
-</pre>
+</code></pre>
 
 <p>data.table の <code>fread()</code> と fasttime の <code>fastPOSIXct()</code>
 で劇的に高速化できることがおわかりいただけたでしょうか。</p>

@@ -65,8 +65,8 @@ MathJax = {
 <p>Rに <code>x = scan()</code> と打ち込んで，<code>1:</code> のようなプロンプトが出たら，上の表の数値10個をそこにコピペし，最後にEnterを1〜2回打ち込んでください。あるいは</p>
 
 <pre>
-x = c(1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4)
-</pre>
+<code>x = c(1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4)
+</code></pre>
 
 <p>というコマンドをRにコピペしても同じです。</p>
 
@@ -81,13 +81,13 @@ x = c(1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4)
 <p>データのイメージがつかめたら，$t$ 検定してみましょう。</p>
 
 <pre>
-t.test(x)
-</pre>
+<code>t.test(x)
+</code></pre>
 
 <p>結果は次のように表示されます：</p>
 
 <pre>
-	One Sample t-test
+<code>	One Sample t-test
 
 data:  x 
 t = 3.6799, df = 9, p-value = 0.005076
@@ -97,7 +97,7 @@ alternative hypothesis: true mean is not equal to 0
 sample estimates:
 mean of x 
      2.33 
-</pre>
+</code></pre>
 
 <p>下から読んでいくと，このデータの平均値は 2.33 で，その95%信頼区間は $[0.90, 3.76]$ だということがわかります（54分〜3時間46分）。信頼区間は 0 を含んでいませんので，これだけで「平均値が 0」という帰無仮説は棄却されることがわかりますが，念のため $p$ 値を見てみると，0.005 という小さい値です。どうやら，データは帰無仮説を支持していないようです。つまり，睡眠薬の効果はあったといえます。</p>
 
@@ -176,22 +176,22 @@ mean of x
 </table>
   
 <pre>
-x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
+<code>x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
 y = c(3,3,4,3,1,2,3,1,1,5,4)
-</pre>
+</code></pre>
 
 <p>まずは図を描いてみましょう。箱ひげ図なら <code>boxplot(x, y)</code> です。<code>x</code> のほうは 1 がほとんどで，例外的に 2 と 4 があります。<code>y</code> のほうは中央値が 3 で，1 から 5 まで分布しています。</p>
 
 <p>これらの平均値の差を $t$ 検定してみます：</p>
 
 <pre>
-t.test(x, y)
-</pre>
+<code>t.test(x, y)
+</code></pre>
 
 <p>結果は次のように表示されます：</p>
 
 <pre>
-	Welch Two Sample t-test
+<code>	Welch Two Sample t-test
 
 data:  x and y 
 t = -2.9486, df = 15.916, p-value = 0.009479
@@ -201,20 +201,20 @@ alternative hypothesis: true difference in means is not equal to 0
 sample estimates:
 mean of x mean of y 
  1.357143  2.727273 
-</pre>
+</code></pre>
 
 <p><code>t.test()</code> のデフォルトはWelchの方法（分散が等しいことを仮定しない $t$ 検定）です。上の出力から <code>x</code> の平均と <code>y</code> の平均がそれぞれ 1.36 と 2.73 で，これらの差の95%信頼区間が $[-2.36, -0.38]$ であることがわかります。信頼区間が 0 を含まないことから，両群の平均値の差は統計的に有意だといえます（$p = 0.009$）。</p>
 
 <p>なお，分散が等しいと仮定する場合は，Rでは次のようにして計算します：</p>
 
 <pre>
-t.test(x, y, var.equal=TRUE)
-</pre>
+<code>t.test(x, y, var.equal=TRUE)
+</code></pre>
 
 <p>結果は次のようになりました：</p>
 
 <pre>
-	Two Sample t-test
+<code>	Two Sample t-test
 
 data:  x and y 
 t = -3.1158, df = 23, p-value = 0.004862
@@ -224,7 +224,7 @@ alternative hypothesis: true difference in means is not equal to 0
 sample estimates:
 mean of x mean of y 
  1.357143  2.727273 
-</pre>
+</code></pre>
 
 <div class="note">
 <p>対応するノンパラメトリックな検定として<a href="wmw.html">Wilcoxon-Mann-Whitney検定</a>（分布が同じ場合）や<a href="brunner-munzel.html">Brunner-Munzel検定</a>（分布が異なる場合）があります。</p>
@@ -237,14 +237,14 @@ mean of x mean of y
 <div class="note">
 <p>各群の95%信頼区間を比較する簡単なグラフを付けておきます。</p>
 <pre>
-cix = t.test(x)$conf.int
+<code>cix = t.test(x)$conf.int
 ciy = t.test(y)$conf.int
 dotchart(c(mean(x),mean(y)), pch=16, xlim=range(cix,ciy),
          xlab="睡眠時間の伸び（時間）")
 arrows(cix[1], 1, cix[2], 1, length=0.05, angle=90, code=3)
 arrows(ciy[1], 2, ciy[2], 2, length=0.05, angle=90, code=3)
 mtext(c("対照群","実験群"), side=2, at=1:2, line=0.5, las=1)
-</pre>
+</code></pre>
 </div>
 
 <h2>平均と標準偏差が与えられた場合の検定</h2>
@@ -252,7 +252,7 @@ mtext(c("対照群","実験群"), side=2, at=1:2, line=0.5, las=1)
 <p>Rの <code>t.test()</code> はデータそのものを与えますが，個数1，平均1，標準偏差1，個数2，平均2，標準偏差2を与えて等分散・非等分散の $t$ 検定をする関数は次のように書くことができます。標準偏差は $n - 1$ で割る方式であることに注意してください。</p>
 
 <pre>
-ttest = function(n1, x1, s1, n2, x2, s2) {
+<code>ttest = function(n1, x1, s1, n2, x2, s2) {
   n = n1 + n2 - 2
   u = ((n1 - 1) * s1^2 + (n2 - 1) * s2^2) / n
   t = (x1 - x2) / sqrt(u / n1 + u / n2)
@@ -263,7 +263,7 @@ ttest = function(n1, x1, s1, n2, x2, s2) {
   r = cat(r, "Unequal variance:\n\t", sep="")
   cat(r, "t = ", t, ", df = ", n, ", p = ", 2 * pt(-abs(t), n), "\n", sep="")
 }
-</pre>
+</code></pre>
 
 <p>1標本の場合，つまり片方の値が確定している場合は，確定しているほうの標準偏差を 0，個数を 2 以上の適当な数にしてください。</p>
 
@@ -280,22 +280,22 @@ ttest = function(n1, x1, s1, n2, x2, s2) {
 <p>「母平均が等しい」という帰無仮説を満たすデータ2組を作ります。ここでは $N(0, 1.5^2)$ に従う10個の $x$ と，$N(0,1)$ に従う30個の $y$ を使いましょう。これらの平均値の差を $t$ 検定するには</p>
 
 <pre>
-x = rnorm(10, mean=0, sd=1.5)
+<code>x = rnorm(10, mean=0, sd=1.5)
 y = rnorm(30, mean=0, sd=1.0)
 t.test(x, y)
-</pre>
+</code></pre>
 
 <p>とすればいいのですが，これを100万回行って，$p$ 値のヒストグラムを描いてみます：</p>
 
 <pre>
-p = replicate(1000000, {
+<code>p = replicate(1000000, {
   x = rnorm(10, mean=0, sd=1.5)
   y = rnorm(30, mean=0, sd=1.0)
   t.test(x, y)$p.value
 })
 
 hist(p, freq=FALSE, col="gray")
-</pre>
+</code></pre>
 
 <figure>
   <img src="img/140906a.png" alt="">
@@ -306,7 +306,7 @@ hist(p, freq=FALSE, col="gray")
 <p>今度は，$x$ と $y$ の分散が等しいかどうかの検定 <code>var.test(x, y)</code> をまず行って，その $p$ 値が 0.05 より大きいときだけ，分散が等しい場合の $t$ 検定をすることにしてみましょう。</p>
 
 <pre>
-p2 = replicate(1000000, {
+<code>p2 = replicate(1000000, {
   x = rnorm(10, mean=0, sd=1.5)
   y = rnorm(30, mean=0, sd=1.0)
   vp = var.test(x, y)$p.value
@@ -314,7 +314,7 @@ p2 = replicate(1000000, {
 })
 
 hist(p2, freq=FALSE, col="gray")
-</pre>
+</code></pre>
 
 <figure>
   <img src="img/140906b.png" alt="">
@@ -325,7 +325,7 @@ hist(p2, freq=FALSE, col="gray")
 <p>念のため，SPSSの薦めるLevene（ルビーン，レビーン）検定による方法もやってみましょう。これはRでは <code>car</code>（Companion to Applied Regression）というパッケージに <code>leveneTest()</code> という名前で入っています。</p>
 
 <pre>
-install.packages("car")
+<code>install.packages("car")
 library(car)
 
 g = rep(factor(c(1,2)), c(10,30))
@@ -337,7 +337,7 @@ p3 = replicate(1000000, {
 })
 
 hist(p3, freq=FALSE, col="gray")
-</pre>
+</code></pre>
 
 <figure>
   <img src="img/140906c.png" alt="">
@@ -366,7 +366,7 @@ hist(p3, freq=FALSE, col="gray")
 <p>以下は古い部分です：</p>
 
 <pre>
-ni = 1000000                     # 100万回のシミュレーション
+<code>ni = 1000000                     # 100万回のシミュレーション
 p = numeric(ni)                  # p[1]..p[ni] というni個の変数を作る
 for (i in 1:ni) {                # iが1からniまでループ
   x = rnorm(10, mean=0, sd=1.5)  # 平均0，標準偏差1.5の正規乱数を10個作る
@@ -375,7 +375,7 @@ for (i in 1:ni) {                # iが1からniまでループ
 }
 mean(p &lt;= 0.05)                  # p≦0.05となる割合を出力
 mean(p &lt;= 0.01)                  # p≦0.01となる割合を出力
-</pre>
+</code></pre>
 
 <p>上を実行すると，論理的に辻褄が合っていれば，$p \leqq 0.05$ となる割合は 0.05
 と出力されるはずです。同様に，<code>t.test(x, y)</code>
@@ -386,9 +386,9 @@ mean(p &lt;= 0.01)                  # p≦0.01となる割合を出力
 の行を次の2行にします。</p>
 
 <pre>
-  vp = var.test(x, y)$p.value
+<code>  vp = var.test(x, y)$p.value
   p[i] = t.test(x, y, var.equal=(vp &gt; 0.05))$p.value
-</pre>
+</code></pre>
 
 <p>論理的に辻褄が合っていれば出力される値と実際に出力された値は次のようになりました。2段階の方法については，等分散かどうかの判断は水準0.05で行う場合と0.2で行う場合について調べました（それ以外については下に書きます）。</p>
 
@@ -414,7 +414,7 @@ WMW検定も等分散でない場合に甘くなります。Brunner-Munzel検定
 <p>最後の並べ替えBrunner-Munzel検定については，あまりたくさん試せませんでしたが，下のようなプログラムでやってみました。</p>
 
 <pre>
-library(lawstat)
+<code>library(lawstat)
 ni = 1000
 nj = 10000
 p = numeric(ni)
@@ -433,7 +433,7 @@ for (i in 1:ni) {
 }
 mean(p &lt;= 0.05)
 mean(p &lt;= 0.01)
-</pre>
+</code></pre>
 -->
 
 <h2>対応がある場合の検定</h2>
@@ -447,7 +447,7 @@ $d_i = X_i - Y_i$
 <p>シミュレーションで確かめてみましょう。$x$ は $N(0,1)$ からの50個の乱数，$y$ はそれにさらに $N(0.2, 0.5^2)$ を加えたものです。100万回のシミュレーションで，$p \leqq 0.05$ になる確率（検出力，検定力）を調べます。</p>
 
 <pre>
-p = replicate(1000000, {
+<code>p = replicate(1000000, {
   x = rnorm(50)
   y = x + rnorm(50, mean=0.2, sd=0.5)
   c(t.test(x,y)$p.value, t.test(x-y)$p.value)
@@ -455,7 +455,7 @@ p = replicate(1000000, {
 
 mean(p[1,] <= 0.05)
 mean(p[2,] <= 0.05)
-</pre>
+</code></pre>
 
 <p><code>t.test(x, y)</code> で優位な結果が得られる確率は0.3%ほどしかないのに，<code>t.test(x - y)</code> なら79%の確率で有意になります。</p>
 
@@ -477,7 +477,7 @@ B. L. Welch (1951), On the comparison of several mean values: an alternative app
 <p>1000人の被験者をリクルートして，ある薬が効くかどうかテストしようとしています。もし薬の効果がないなら，5%水準の $t$ 検定をすれば，間違って有意な効果があるという結果が出てしまう確率は5%のはずです。確かめてみましょう。</p>
 
 <pre>
-foo = function() {
+<code>foo = function() {
     x = rnorm(1000)
     if (t.test(x)$p.value &lt; 0.05)
         return(1)
@@ -485,12 +485,12 @@ foo = function() {
 }
 a = replicate(1000, foo())
 mean(a)
-</pre>
+</code></pre>
 
 <p>でも，1000人もの被験者をリクルートするのはたいへんです。最初は少人数の被験者で始めて，有意な結果が出なければ少しずつ人数を増やしていくという案を思いつきました。この場合，間違って有意な結果が出てしまう確率はどれくらいあるのでしょうか。</p>
 
 <pre>
-foo = function() {
+<code>foo = function() {
     x = rnorm(1000)
     for (i in 2:1000) {
         if (t.test(x[1:i])$p.value &lt; 0.05)
@@ -500,7 +500,7 @@ foo = function() {
 }
 a = replicate(1000, foo())
 mean(a)
-</pre>
+</code></pre>
 
 <p>おやおや？！</p>
 

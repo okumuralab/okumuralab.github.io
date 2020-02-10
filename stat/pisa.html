@@ -65,7 +65,7 @@ Student questionnaire data file
 で紹介されている。ここではこれをRubyに書き直した次のものを使う：</p>
 
 <pre>
-#! /usr/bin/ruby -w
+<code>#! /usr/bin/ruby -w
 # -*- coding: utf-8 -*-
  
 x = []
@@ -91,13 +91,13 @@ while line = gets
   end
   puts z.join(',')
 end
-</pre>
+</code></pre>
 
 <p>次のように打ち込む：</p>
 
 <pre>
-./spss.rb INT_STU12_DEC03.txt &gt; 2012all.csv
-</pre>
+<code>./spss.rb INT_STU12_DEC03.txt &gt; 2012all.csv
+</code></pre>
 
 <p>すると，約1.2Gバイトの 2012all.csv ができる（行末LFの場合1259448400バイト。CRLFなら485491バイト増）。</p>
 
@@ -108,11 +108,11 @@ end
 <p>ここでは，標準の <code>read.csv()</code> より速いはずの readr の <code>read_csv()</code> を使ってみる：</p>
 
 <pre>
-library(readr)
+<code>library(readr)
 ALL = read_csv("2012all.csv") # 40秒ほど
 dim(ALL) # 485490 634
 object.size(ALL) # 1621663888 bytes
-</pre>
+</code></pre>
 
 <p>1.6Gバイトのメモリを食うが，どうってことはない。</p>
 
@@ -128,11 +128,11 @@ Codebook for student questionnaire data file (M_stu_codebook.pdf)
 <p>例えばIC09 "How often do you use a computer for the following activities <u>outside of school</u>?" の6番目の "Doing homework on the computer" という問いについての日本の子どもたちの回答分布は</p>
 
 <pre>
-&gt; table(ALL$IC09Q06[ALL$CNT=="JPN"])
+<code>&gt; table(ALL$IC09Q06[ALL$CNT=="JPN"])
 
    1    2    3    4    5    7    9 
 5524  307  133   38   21   94  234 
-</pre>
+</code></pre>
 
 <p>である。ここで回答は次の意味を持つ：</p>
 
@@ -150,9 +150,9 @@ Codebook for student questionnaire data file (M_stu_codebook.pdf)
 <p>これと国名を掛け合わせたクロス集計をし，回答1（学校外でコンピュータで宿題なんかしないよ）の割合を国別に見てみよう。ただしOECD国に限ることにする。</p>
 
 <pre>
-x = table(ALL$CNT[ALL$OECD==1], ALL$IC09Q06[ALL$OECD==1])
+<code>x = table(ALL$CNT[ALL$OECD==1], ALL$IC09Q06[ALL$OECD==1])
 barplot(sort(x[,1] / rowSums(x[,1:5])), horiz=TRUE, las=1)
-</pre>
+</code></pre>
 
 <figure><img src="img/IC09Q06.png" alt="学校外でコンピュータで宿題をしない"></figure>
 
@@ -161,9 +161,9 @@ barplot(sort(x[,1] / rowSums(x[,1:5])), horiz=TRUE, las=1)
 <p>日本の家庭にはコンピュータがないのか。</p>
 
 <pre>
-x = table(ALL$CNT[ALL$OECD==1], ALL$ST26Q04[ALL$OECD==1])
+<code>x = table(ALL$CNT[ALL$OECD==1], ALL$ST26Q04[ALL$OECD==1])
 barplot(sort(x[,1] / rowSums(x[,1:2])), horiz=TRUE, las=1)
-</pre>
+</code></pre>
 
 <figure><img src="img/ST26Q04.png" alt="勉強に使えるコンピュータ"></figure>
 
@@ -172,16 +172,16 @@ barplot(sort(x[,1] / rowSums(x[,1:2])), horiz=TRUE, las=1)
 <div class="note">
 <p>日本だけ色を変えるには例えば次のようにする：</p>
 <pre>
-x = table(ALL$CNT[ALL$OECD==1], ALL$ST26Q04[ALL$OECD==1])
+<code>x = table(ALL$CNT[ALL$OECD==1], ALL$ST26Q04[ALL$OECD==1])
 s = sort(x[,1] / rowSums(x[,1:2]))
 barplot(s, horiz=TRUE, las=1, col=ifelse(names(s)=="JPN",gray(0.4),gray(0.8)))
-</pre>
+</code></pre>
 </div>
 
 <div class="note">
 <p>さらに3文字国名を日本語にするにはウィキペディアの<a href="https://ja.wikipedia.org/wiki/ISO_3166-1">ISO 3166-1</a>から作った表 <a href="data/countries.csv">countries.csv</a>（UTF-8）を使う。ただし，最後の6件（上海，台北，ペルミ，米国のいくつかの州）は国名ではなくPISAで便宜的に使っている地域名である。また，韓国・北朝鮮・台湾は略称を使った。</p>
 <pre>
-cnt = read.csv("countries.csv")
+<code>cnt = read.csv("countries.csv")
 tcnt = cnt$国名
 names(tcnt) = cnt$三字
 x = table(ALL$CNT, ALL$ST26Q04)
@@ -190,40 +190,40 @@ par(mar=c(1,10,1,2)+0.1) # マージン（デフォルト: c(5,4,4,2)+0.1）
 barplot(s, horiz=TRUE, las=1, col=ifelse(names(s)=="JPN",gray(0.4),gray(0.8)),
         names.arg=tcnt[names(s)], xlim=c(0,1), axes=FALSE)
 axis(3, at=0:5/5, labels=paste(0:5*20, "%", sep=""), line=-1.5)
-</pre>
+</code></pre>
 <p>結果は<a href="img/ST26Q04.pdf">このPDF</a>のようになる。</p>
 <p>もう一つのほう（IC09Q06）は次のようにして<a href="img/IC09Q06.pdf">このPDF</a>のようになる。</p>
 <pre>
-x = table(ALL$CNT, ALL$IC09Q06)
+<code>x = table(ALL$CNT, ALL$IC09Q06)
 s = sort(x[,1] / rowSums(x[,1:5]))
 par(mar=c(1,10,1,2)+0.1) # マージン（デフォルト: c(5,4,4,2)+0.1）
 barplot(s, horiz=TRUE, las=1, col=ifelse(names(s)=="JPN",gray(0.4),gray(0.8)),
         names.arg=tcnt[names(s)], xlim=c(0,1), axes=FALSE)
 axis(3, at=0:5/5, labels=paste(0:5*20, "%", sep=""), line=-1)
-</pre>
+</code></pre>
 <p>ついでに，OECD国に限った図は<a href="img/ST26Q04OECD.pdf">これ</a>と<a href="img/IC09Q06OECD.pdf">これ</a>である。</p>
 </div>
 
 <p>今度は散布図を描いてみよう。IC01の質問 Are any of these devices available for you to use <u>at home</u>? に対して (a) Desktop computer (b) Portable laptop, or notebook (g) &lt;Cell phone&gt; (with Internet access) などについて (1) Yes, and I use it (2) Yes, but I don't use it (3) No の選択肢がある。(g) のケータイ（ネット接続可）を使う割合については簡単である：</p>
 
 <pre>
-x = table(ALL$CNT, ALL$IC01Q07)
+<code>x = table(ALL$CNT, ALL$IC01Q07)
 ph = x[,1] / rowSums(x[,1:3])
-</pre>
+</code></pre>
 
 <p>デスクトップPCとノートPCについては，少なくともどちらか一つ使う割合を求めたい。これは両方使わない割合を1から引けばよい：</p>
 
 <pre>
-x = table(ALL$CNT, ALL$IC01Q01, ALL$IC01Q02)
+<code>x = table(ALL$CNT, ALL$IC01Q01, ALL$IC01Q02)
 pc = 1 - rowSums(x[,2:3,2:3]) / rowSums(x[,1:3,1:3])
-</pre>
+</code></pre>
 
 <p>この二つを散布図にする：</p>
 
 <pre>
-plot(100*pc, 100*ph, pch=NA, xlab="PC（%）", ylab="携帯（%）", xlim=c(59,104))
+<code>plot(100*pc, 100*ph, pch=NA, xlab="PC（%）", ylab="携帯（%）", xlim=c(59,104))
 text(100*pc, 100*ph, tcnt[names(ph)])
-</pre>
+</code></pre>
 
 <figure><img src="img/150525b.png" alt="PCと携帯の利用率"></figure>
 
@@ -244,14 +244,14 @@ text(100*pc, 100*ph, tcnt[names(ph)])
 <figure><img src="img/150924a.png" alt="PISA数学2009と2012の散布図"></figure>
 
 <pre>
-p2009 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/pisa2009summary.csv")
+<code>p2009 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/pisa2009summary.csv")
 p2012 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/pisa2012summary.csv")
 cnt = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/countries.csv")
 p = merge(p2009, p2012)
 p = merge(p, cnt, by.x="CNT", by.y="三字")
 with(p, plot(math, math_mean, type="n", xlab="PISA 2009", ylab="PISA 2012", asp=1))
 with(p, text(math, math_mean, labels=国名, col=ifelse(CNT=="JPN","red","black")))
-</pre>
+</code></pre>
 
 <hr>
 

@@ -52,8 +52,8 @@ td, th { padding: 0.2em 0.7em }
 <p>プリテスト合格者は7人でしたが，ポストテスト合格者は14人に増えたので，成績は向上したように見えます。でも，フィッシャーの検定</p>
 
 <pre>
-fisher.test(matrix(c(7,14,13,6), nrow=2))
-</pre>
+<code>fisher.test(matrix(c(7,14,13,6), nrow=2))
+</code></pre>
 
 <p>をしてみると，$p = 0.05616$ ですので，5%水準で有意ではありません。</p>
 
@@ -74,7 +74,7 @@ fisher.test(matrix(c(7,14,13,6), nrow=2))
 <p>元々のMcNemar検定（Rの <code>mcnemar.test()</code>）は $\chi^2$ 検定を使うのですが，よく考えてみると，8人と1人の違いの検定は，「硬貨を9回投げて表が8回，裏が1回出たが，硬貨は大丈夫か」という2項検定のほうが厳密に計算できそうです：</p>
 
 <pre>
-&gt; binom.test(1, 9)  # binom.test(8, 9) でも同じ
+<code>&gt; binom.test(1, 9)  # binom.test(8, 9) でも同じ
 
 	Exact binomial test
 
@@ -86,20 +86,20 @@ alternative hypothesis: true probability of success is not equal to 0.5
 sample estimates:
 probability of success 
              0.1111111 
-</pre>
+</code></pre>
 
 <p>$p = 0.03906$ で，5%水準で有意になりました。</p>
 
 <div class="note">
 <p>元々のMcNemar検定は次のようになります：</p>
 <pre>
-&gt; mcnemar.test(matrix(c(6,8,1,5), nrow=2))
+<code>&gt; mcnemar.test(matrix(c(6,8,1,5), nrow=2))
 
 	McNemar's Chi-squared test with continuity correction
 
 data:  matrix(c(6, 8, 1, 5), nrow = 2)
 McNemar's chi-squared = 4, df = 1, p-value = 0.0455
-</pre>
+</code></pre>
 <p>デフォルトは連続性の補正をします。補正をしないなら <code>correct=FALSE</code> オプションを与えます。連続性の補正をする・しないの区別はややこしいので，余計なことを考える必要のない厳密な2項検定による方法がお薦めです。</p>
 </div>
 
@@ -107,8 +107,8 @@ McNemar's chi-squared = 4, df = 1, p-value = 0.0455
 <p>要するに，McNemar検定は，「不合格」を0，「合格」を1として，ポストテストとプリテストの差を<a href="signtest.html">符号検定</a>していることにあたります。</p>
 <p>符号検定の代わりに<a href="ttest.html">t検定</a>を使うことも可能です。そうすれば，「変化なし」の情報も捨てる必要はありません：</p>
 <pre>
-t.test(c(rep(0,11),rep(1,8),rep(-1,1)))  # 変化なし11個，1増8個，1減1個
-</pre>
+<code>t.test(c(rep(0,11),rep(1,8),rep(-1,1)))  # 変化なし11個，1増8個，1減1個
+</code></pre>
 <p>$p = 0.01527$ となります。</p>
 </pre>
 </div>
@@ -122,14 +122,14 @@ t.test(c(rep(0,11),rep(1,8),rep(-1,1)))  # 変化なし11個，1増8個，1減1�
 <p>本質的には以上で説明したことで尽きていますが，オッズ比とその信頼区間も求める方法として，ここではexact2x2パッケージの <code>mcnemar.exact()</code> を使う方法を説明します。まずは（まだインストールしていないなら）exact2x2パッケージをインストールし，ライブラリとして読み込みます：</p>
 
 <pre>
-install.packages("exact2x2")
+<code>install.packages("exact2x2")
 library(exact2x2)
-</pre>
+</code></pre>
 
 <p>使い方は，次のように分割表を行列の形で与えます：</p>
 
 <pre>
-&gt; mcnemar.exact(matrix(c(6,8,1,5), nrow=2))
+<code>&gt; mcnemar.exact(matrix(c(6,8,1,5), nrow=2))
 
 	Exact McNemar test (with central confidence intervals)
 
@@ -141,7 +141,7 @@ alternative hypothesis: true odds ratio is not equal to 1
 sample estimates:
 odds ratio 
      0.125 
-</pre>
+</code></pre>
 
 <p>2項検定のときと同じ $p$ 値 0.03906 が得られました。また，オッズは 1:8 ですので 0.125 ですが，効果がない場合のオッズ 1:1 と比較して，オッズ比も 0.125 になり，その95%信頼区間が $[0.003, 0.932]$ であることもわかります。</p>
 

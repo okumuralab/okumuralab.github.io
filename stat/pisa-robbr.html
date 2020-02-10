@@ -33,7 +33,7 @@
 <p>盗難事件が1998年に起きる確率も1999年に起きる確率も等しいという帰無仮説を立てて，Rで検定してみましょう：</p>
 
 <pre>
-&gt; 508+516
+<code>&gt; 508+516
 [1] 1024
 &gt; binom.test(508,1024,0.5)
 
@@ -48,7 +48,7 @@ alternative hypothesis: true probability of success is not equal to 0.5
 sample estimates:
 probability of success 
              0.4960938 
-</pre>
+</code></pre>
 
 <p>というわけで，<i>p</i> = 0.8269 では，違いがあるとはとてもいえません。</p>
 
@@ -58,22 +58,22 @@ probability of success
 です。1024の半分の512からの外れ 4 は，0.25σ しかありません。計算するまでもないのですが，</p>
 
 <pre>
-&gt; pnorm(-0.25)*2
+<code>&gt; pnorm(-0.25)*2
 [1] 0.8025873
-</pre>
+</code></pre>
 
 <p>で，さきほどとほぼ同じ結果になりました。</p>
 
 <p>ちなみに，2項分布を正規分布で近似するのと同じことですが，χ<sup>2</sup> 分布を使って検定することもできます：</p>
 
 <pre>
-&gt; chisq.test(c(508,516),correct=FALSE)
+<code>&gt; chisq.test(c(508,516),correct=FALSE)
 
 	Chi-squared test for given probabilities
 
 data:  c(508, 516) 
 X-squared = 0.0625, df = 1, p-value = 0.8026
-</pre>
+</code></pre>
 
 <p>このほうが，データベクトル <code>c(508,516)</code>
 をそのまま与えればいいだけですし，項目が増えても同じやりかたでできます。</p>
@@ -100,37 +100,37 @@ X-squared = 0.0625, df = 1, p-value = 0.8026
 <p>平成9〜14年の実際のデータは次の通りです：</p>
 
 <pre>
-&gt; x = c(762,792,795,794,849,834)
-</pre>
+<code>&gt; x = c(762,792,795,794,849,834)
+</code></pre>
 
 <p>ざっと見て平均800です。ポアソン分布だとすると，標準偏差は約28で，95％信頼区間はその約2倍の幅です。データはすべてこの区間内に入っているので，単なるポアソン分布のように見えます。もうちょっとまじめに計算すると，</p>
 
 <pre>
-&gt; mean(x)
+<code>&gt; mean(x)
 [1] 804.3333
 &gt; var(x)
 [1] 1002.667
-</pre>
+</code></pre>
 
 <p>平均と分散がほぼ等しいので，ポアソン分布っぽく見えます。</p>
 
 <p>より簡単でわかりやすいのが χ<sup>2</sup> 検定です：</p>
 
 <pre>
-&gt; chisq.test(x)
+<code>&gt; chisq.test(x)
 
 	Chi-squared test for given probabilities
 
 data:  x 
 X-squared = 6.2329, df = 5, p-value = 0.2842
-</pre>
+</code></pre>
 
 <p>ご覧のように，<i>p</i> 値は 0.2842 で，毎年の件数の差は有意ではありません。</p>
 
 <p>では「増加傾向にある」は間違っているのでしょうか。回帰分析をしてみればいいのですが，同じことですので，整数 1〜6 との相関係数を求めてみます：</p>
 
 <pre>
-&gt; cor.test(1:6, x)
+<code>&gt; cor.test(1:6, x)
 
 	Pearson's product-moment correlation
 
@@ -142,7 +142,7 @@ alternative hypothesis: true correlation is not equal to 0
 sample estimates:
       cor 
 0.8946714 
-</pre>
+</code></pre>
 
 <p>相関係数は <i>r</i> = 0.89 で，<i>p</i> 値は 0.016 と，かなり有意です。さきほどの χ<sup>2</sup>
 検定の結果とどう折り合いをつければいいのでしょうか。</p>

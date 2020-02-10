@@ -27,7 +27,7 @@
 <p>この調査は毎年6月の所定内給与額を調べたものです。諸手当や賞与は含まれていませんので，実際の年収はこの12倍より多いはずです。<a href="http://diamond.jp/articles/-/7842">年収300万円なら十分“勝ち組”に？</a>という記事は数字を1桁間違えて月収と年収を間違えているようです（<a href="http://blog.livedoor.jp/shimanekoblog/archives/1407276.html">平均年収が300万を切ったって？　それ間違いですから</a>）。</p>
 
 <pre>
-# quartz(width=5.911417, height=9.191929) # Mac
+<code># quartz(width=5.911417, height=9.191929) # Mac
 # par(family="HiraKakuPro-W3")            # Mac
 par(xpd=TRUE)  # プロットエリア外に text() を描く
 par(mar=c(1,4,1,4)+0.1) # マージン c(5,4,4,2)+0.1
@@ -42,7 +42,7 @@ barplot(割合/幅, 幅, horiz=TRUE, space=0, axes=FALSE)
 t = c(0,100,200,300,360,400,450,500,600,700,800,900,1000,1200)
 axis(2, labels=paste(t/10,"万",sep=""), at=t, lwd=0, lwd.tick=1)
 text(割合/幅, 賃金+幅/2, paste(" ",割合,"%",sep=""), cex=0.6, adj=0)
-</pre>
+</code></pre>
 
 <p>平均値333.7千円，中位数（中央値）298.1千円です。</p>
 

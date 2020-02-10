@@ -71,7 +71,7 @@ MathJax = {
 <p>一般に，0でない数が <code>n</code> 個あって，そのうち <code>m</code> 個が正（または負）であるなら，<code>binom.test(m, n)</code> で符号検定できます。例えば上の例の場合は</p>
 
 <pre>
-&gt; binom.test(1, 10)
+<code>&gt; binom.test(1, 10)
 
 	Exact binomial test
 
@@ -83,7 +83,7 @@ alternative hypothesis: true probability of success is not equal to 0.5
 sample estimates:
 probability of success 
                    0.1 
-</pre>
+</code></pre>
 
 <p>で，$p = 0.02148$ となります。</p>
 
@@ -123,7 +123,7 @@ probability of success
 <p>Rの標準の関数でWilcoxonの符号つき順位検定をするには次のようにします。</p>
 
 <pre>
-x = c(1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4)
+<code>x = c(1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4)
 &gt; wilcox.test(x)
 
 	Wilcoxon signed rank test with continuity correction
@@ -135,7 +135,7 @@ alternative hypothesis: true location is not equal to 0
 Warning message:
 In wilcox.test.default(x) :
    タイがあるため、正確な p 値を計算することができません 
-</pre>
+</code></pre>
 
 <p>このように，残念ながら同じ値 1.5 が複数ありますので，近似計算になります。データの個数が十分多ければこれで問題ないのですが，この場合には，正確な値 $p = 0.005859$ とやや外れてしまいます。</p>
 
@@ -143,7 +143,7 @@ In wilcox.test.default(x) :
 を使うものです：</p>
 
 <pre>
-&gt; library(exactRankTests)
+<code>&gt; library(exactRankTests)
  Package ‘exactRankTests’ is no longer under development.
  Please consider using package ‘coin’ instead.
 
@@ -154,7 +154,7 @@ In wilcox.test.default(x) :
 data:  x 
 V = 53.5, p-value = 0.005859
 alternative hypothesis: true mu is not equal to 0 
-</pre>
+</code></pre>
 
 <p>しかし，上のメッセージにあるように，exactRankTests
 パッケージは開発が止まっています（このメッセージは2006年に出るようになりましたが，その後も小さな修正はなされているようです）。代替としては <a href="http://cran.r-project.org/package=coin">coin</a>（conditional inference）パッケージの <code>wilcoxsign_test()</code>
@@ -162,7 +162,7 @@ alternative hypothesis: true mu is not equal to 0
 と比較します。比較は <code>~</code> という演算子で行います：</p>
 
 <pre>
-&gt; library(coin)
+<code>&gt; library(coin)
 &gt; wilcoxsign_test(x ~ rep(0,10), distribution="exact")
 
         Exact Wilcoxon-Signed-Rank Test
@@ -172,7 +172,7 @@ data:  y by
          stratified by block
 Z = 2.6519, p-value = 0.005859
 alternative hypothesis: true mu is not equal to 0
-</pre>
+</code></pre>
 
 <p>要素ごとに対応するベクトル <code>x</code> と <code>y</code>
 を比較するなら，<code>wilcoxsign_test(x ~ y, distribution="exact")</code>

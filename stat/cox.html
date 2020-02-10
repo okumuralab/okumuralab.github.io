@@ -32,8 +32,8 @@ MathJax = {
 <p>Rで生存時間解析をするためのパッケージ <a href="http://cran.r-project.org/web/packages/survival/index.html"><code>survival</code></a> をあらかじめ読み込んでおきます：</p>
 
 <pre>
-library(survival)
-</pre>
+<code>library(survival)
+</code></pre>
 
 <p>このとき <code>survival</code> 中で必要なパッケージ <code>splines</code> も読み込まれます。</p>
 
@@ -67,28 +67,28 @@ library(survival)
 <p>このような <code>time</code> と <code>status</code> を合わせたものをここではsurvivalオブジェクトと呼びます。Survivalオブジェクトを作るには <code>Surv()</code> 関数を使います。例として</p>
 
 <pre>
-Surv(test1$time, test1$status)
-</pre>
+<code>Surv(test1$time, test1$status)
+</code></pre>
 
 <p>と打ち込んでみてください。画面に次のように現れるはずです：</p>
 
 <pre>
-[1] 4  3  1  1+ 2  2  3+
-</pre>
+<code>[1] 4  3  1  1+ 2  2  3+
+</code></pre>
 
 <p>この 3+ というのは少なくとも3時間生きていたことを表します。</p>
 
 <p>さて，これを使ってCox回帰をしてみましょう：</p>
 
 <pre>
-result1 = coxph(Surv(time,status) ~ x + sex, data=test1)
+<code>result1 = coxph(Surv(time,status) ~ x + sex, data=test1)
 summary(result1)
-</pre>
+</code></pre>
 
 <p>画面に次のように出ます：</p>
 
 <pre>
-Call:
+<code>Call:
 coxph(formula = Surv(time, status) ~ x + sex, data = test1)
 
   n= 7, number of events= 5 
@@ -106,7 +106,7 @@ Rsquare= 0.15   (max possible= 0.822 )
 Likelihood ratio test= 1.13  on 2 df,   p=0.567
 Wald test            = 0.96  on 2 df,   p=0.619
 Score (logrank) test = 1.05  on 2 df,   p=0.5927
-</pre>
+</code></pre>
 
 <p>上では基準ハザード関数は性別によらないと考えて計算しましたが，基準ハザード関数が性別によると仮定して，変数としては使わないのであれば，<code>sex</code> の代わりに <code>strata(sex)</code> とします。</p>
 

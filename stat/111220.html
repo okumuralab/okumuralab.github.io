@@ -24,26 +24,26 @@
 をフィットしてみます。まずはRでデータを読み込み，図を描きます。</p>
 
 <pre>
-# quartz()                      # MacでX11を使わない場合
+<code># quartz()                      # MacでX11を使わない場合
 # par(family="HiraKakuProN-W3") # Mac：フォント（好み）
 # par(mgp=c(2,0.8,0))           # 好み
 data = read.csv("http://www.mikage.to/radiation/spviewer/ts100_cs137.csv", skip=9)
 plot(data$CH, data$COUNT, type="l", xlab="Channel", ylab="Count")
-</pre>
+</code></pre>
 
 <p>もっと細かいところを見てみます。</p>
 
 <pre>
-plot(data$CH, data$COUNT, type="l", xlim=c(350,530),
+<code>plot(data$CH, data$COUNT, type="l", xlim=c(350,530),
      xlab="Channel", ylab="Count")
-</pre>
+</code></pre>
 
 <p>さらに下のほうを拡大します。</p>
 
 <pre>
-plot(data$CH, data$COUNT, type="l", xlim=c(350,530), ylim=c(0,30),
+<code>plot(data$CH, data$COUNT, type="l", xlim=c(350,530), ylim=c(0,30),
      xlab="Channel", ylab="Count")
-</pre>
+</code></pre>
 
 <div>
 <img src="img/111220a.png" alt="">
@@ -53,33 +53,33 @@ plot(data$CH, data$COUNT, type="l", xlim=c(350,530), ylim=c(0,30),
 <p>図を見ると，この範囲ではバックグラウンドは2次関数でフィットできそうなので，次のようにしました。</p>
 
 <pre>
-library(nlme)
+<code>library(nlme)
 res = gnls(COUNT ~ c + d*(CH-440) + b*(CH-440)^2 + e*dnorm((CH-m)/s),
            data=data, subset=350:530,
            start=list(c=5,d=-0.1,b=0.01,e=2000,m=440,s=20),
            weights=varPower(fixed=0.5),
            control=list(nlsTol=1e-4))
-</pre>
+</code></pre>
 
 <p>フィットを図に重ね書きしてみます。</p>
 
 <pre>
-points(data$CH[350:530], fitted(res), type="l", col="#f39800")
+<code>points(data$CH[350:530], fitted(res), type="l", col="#f39800")
 points(data$CH, a['c']+a['d']*(data$CH-440)+a['b']*(data$CH-440)^2,
        type="l", col="#f39800")
-</pre>
+</code></pre>
 
 <p>バックグラウンドを除いた正規分布曲線の下の面積とその誤差の推定値は次のようにして求められます。</p>
 
 <pre>
-&gt; a = coef(res)
+<code>&gt; a = coef(res)
 &gt; sum(a['e']*dnorm((data$CH-a['m'])/a['s']))
 [1] 14416.28
 &gt; v = vcov(res)
 &gt; sqrt(v['e','e']/a['e']^2 + v['s','s']/a['s']^2 + 2*v['e','s']/(a['e']*a['s']))
           e 
 0.009411989 # 1σ相当の相対誤差
-</pre>
+</code></pre>
 
 <p>つまり
 14416(1±0.009) = 14416±136
@@ -90,7 +90,7 @@ points(data$CH, a['c']+a['d']*(data$CH-440)+a['b']*(data$CH-440)^2,
 <p>念のため詳しいサマリーも付けておきます：</p>
 
 <pre>
-&gt; summary(res)
+<code>&gt; summary(res)
 Generalized nonlinear least squares fit
   Model: COUNT ~ c + d * (CH - 440) + b * (CH - 440)^2 + e * dnorm((CH - m)/s) 
   Data: data 
@@ -128,7 +128,7 @@ Standardized residuals:
 
 Residual standard error: 1.108315 
 Degrees of freedom: 181 total; 175 residual
-</pre>
+</code></pre>
 
 <hr>
 

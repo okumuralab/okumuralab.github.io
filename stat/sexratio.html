@@ -44,9 +44,9 @@
 <p>例えば平成19年（2007年）の 559847/529971 = 1.056 の95%信頼区間は，</p>
 
 <pre>
-x = binom.test(559847, 559847+529971)$conf.int
+<code>x = binom.test(559847, 559847+529971)$conf.int
 x / (1-x)
-</pre>
+</code></pre>
 
 <p>で [1.052, 1.060] となる。1.056 ± 0.004 である。最後の桁は信用できない。</p>
 
@@ -55,7 +55,7 @@ x / (1-x)
 <p>e-Statの<a href="http://www.e-stat.go.jp/SG1/estat/List.do?lid=000001112798">ここ</a>や<a href="http://www.e-stat.go.jp/SG1/estat/GL08020103.do?_toGL08020103_&listID=000001114074&requestSender=dsearch">ここ</a>からのデータは以下の通りである。</p>
 
 <pre>
-  年  出生数 出生率 合計特殊出生率 出生性比 死産数 男死産数 女死産数
+<code>  年  出生数 出生率 合計特殊出生率 出生性比 死産数 男死産数 女死産数
 1899 1386981   32.0             NA    105.9 135727    70759    64493
 1900 1420534   32.4             NA    105.1 137987    72257    65288
 1901 1501591   33.9             NA    105.1 155489    81500    73573
@@ -170,7 +170,7 @@ x / (1-x)
 2010 1071304    8.5           1.39    105.8  26560    11796     5216
 2011 1050806    8.3           1.39    105.0  25751    11420     5061
 2012 1037231    8.2           1.41    105.2  24800    11015     4995
-</pre>
+</code></pre>
 
 <p>上の表をコピーして
 <code>X = read.table("clipboard")</code>（Windows）または
@@ -178,14 +178,14 @@ x / (1-x)
 して次のようにグラフを描く（次のコードと図は2009年までの時点での計算である）。</p>
 
 <pre>
-par(mgp=c(2,0.8,0)) # マージンの調節（デフォルト: c(3,1,0)）
+<code>par(mgp=c(2,0.8,0)) # マージンの調節（デフォルト: c(3,1,0)）
 par(las=1)          # y軸の数字を縦に
 # plot(range(年), range(出生性比,na.rm=T), type="n", xlab="", ylab="")
 plot(range(年), c(102,109), type="n", xlab="", ylab="")
 abline(h=105, col=gray(0.8))
 abline(h=106, col=gray(0.8))
 points(年, 出生性比, type="o", pch=16)
-</pre>
+</code></pre>
 
 <h2>性比の変動の原因</h2>
 
@@ -217,7 +217,7 @@ points(年, 出生性比, type="o", pch=16)
 <p>念のため，上の図を描いたコード：</p>
 
 <pre>
-library(data.table)
+<code>library(data.table)
 data = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/iitate_birth.csv")
 data[,d:=as.Date(paste(年月,"/15",sep=""))]
 data[,m:=cumsum(飯舘男)]
@@ -227,7 +227,7 @@ plot(data$d, data$f, type="n", xlab="", ylab="累積出生数")
 points(data$d, data$m, type="o", pch=16)
 points(data$d, data$m+20, type="o", pch=16, col="gray")
 points(data$d, data$f, type="o")
-</pre>
+</code></pre>
 
 <h2>「ひのえうま」と死産</h2>
 

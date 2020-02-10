@@ -21,14 +21,14 @@
 <p>眠れない夜は，ひつじを数えてみましょう。</p>
 
 <pre>
-for (i in 1:10) cat("ひつじが", i, "ひき\n")
-</pre>
+<code>for (i in 1:10) cat("ひつじが", i, "ひき\n")
+</code></pre>
 
 <p>眠れない夜が続くときは，ひつじを数える関数を作りましょう。</p>
 
 <pre>
-hitsuji = function() { for (i in 1:10) cat("ひつじが", i, "ひき\n") }
-</pre>
+<code>hitsuji = function() { for (i in 1:10) cat("ひつじが", i, "ひき\n") }
+</code></pre>
 
 <p>これで <code>hitsuji()</code> と打てば，ひつじが数えられます。単に <code>hitsuji</code>
 と打つと関数の定義を見ることができます。</p>
@@ -36,8 +36,8 @@ hitsuji = function() { for (i in 1:10) cat("ひつじが", i, "ひき\n") }
 <p>ひつじの数を変えられるようにしてみましょう。</p>
 
 <pre>
-hitsuji = function(n) { for (i in 1:n) cat("ひつじが", i, "ひき\n") }
-</pre>
+<code>hitsuji = function(n) { for (i in 1:n) cat("ひつじが", i, "ひき\n") }
+</code></pre>
 
 <p>これで <code>hitsuji(100)</code> と打てば，ひつじが100ひき数えられます。</p>
 

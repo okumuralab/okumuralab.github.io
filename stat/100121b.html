@@ -25,38 +25,38 @@
 を使う。これをコンパイルして，例えば</p>
 
 <pre>
-./dumpwave "/Applications/Microsoft Office 2008/Office/EntourageCore.framework/Versions/12/Resources/welcome.wav" &gt; welcome.txt
-</pre>
+<code>./dumpwave "/Applications/Microsoft Office 2008/Office/EntourageCore.framework/Versions/12/Resources/welcome.wav" &gt; welcome.txt
+</code></pre>
 
 <p>としてテキストファイルに変換する。これをRで読み込む：</p>
 
 <pre>
-welcome = read.table("welcome.txt")
-</pre>
+<code>welcome = read.table("welcome.txt")
+</code></pre>
 
 <p>ここで <code>summary(welcome)</code> と打ち込むと，チャンネル <code>V1</code>，<code>V2</code> が読み取れたことがわかる。試しに <code>V1</code>（左チャンネル）の一部をプロットしてみる。</p>
 
 <pre>
-par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
+<code>par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 plot(welcome$V1, xlim=c(20000,21000), type="l", xlab="", ylab="", lwd=2)
-</pre>
+</code></pre>
 
 <p><img src="img/100121b.png" alt="音の波形"></p>
 
 <p>別の方法として，</p>
 
 <pre>
-plot(welcome$V1[20000:21000], type="l", xlab="", ylab="", lwd=2)
-</pre>
+<code>plot(welcome$V1[20000:21000], type="l", xlab="", ylab="", lwd=2)
+</code></pre>
 
 <p>ともできる。両者は最大値・最小値の計算や目盛りが異なる。</p>
 
 <p>非常に長いWAVEファイルについては，Rに全部読み込むのはたいへんなので，あらかじめ標準的なテキストフィルタで切り出すとよい。例えば20000行目から21000行目を取り出すには，次のような方法が考えられる。</p>
 
 <pre>
-sed -n 20000,21000p welcome.txt
+<code>sed -n 20000,21000p welcome.txt
 head -21000 welcome.txt | tail -1001
-</pre>
+</code></pre>
 
 <h2>tuneRを使う</h2>
 
@@ -64,38 +64,38 @@ head -21000 welcome.txt | tail -1001
 <a href="http://cran.r-project.org/web/packages/tuneR/">tuneR</a>（チューナー）というパッケージがある。これを使ってみよう。あらかじめパッケージインストーラまたはコマンドでtuneRをインストールしておく。コマンドの場合は次のように打ち込めばインストールできる：</p>
 
 <pre>
-install.packages("tuneR")
-</pre>
+<code>install.packages("tuneR")
+</code></pre>
 
 <p>インストールされたパッケージを読み込む：</p>
 
 <pre>
-library(tuneR)
-</pre>
+<code>library(tuneR)
+</code></pre>
 
 <p>自分のパソコンにある適当なWAVEファイルを読み込む：</p>
 
 <pre>
-welcome = readWave("/Applications/Microsoft Office 2008/Office/EntourageCore.framework/Versions/12/Resources/welcome.wav")
-</pre>
+<code>welcome = readWave("/Applications/Microsoft Office 2008/Office/EntourageCore.framework/Versions/12/Resources/welcome.wav")
+</code></pre>
 
 <p>ここで <code>show(welcome)</code> あるいは単に <code>welcome</code>
 と打ち込むとWAVEファイルのメタ情報が表示される。プロットの例をいくつか挙げる。</p>
 
 <pre>
-plot(welcome)
+<code>plot(welcome)
 plot(extractWave(welcome, 20000, 21000))
 plot(channel(extractWave(welcome, 20000, 21000), "left")
-</pre>
+</code></pre>
 
 <p><img src="img/100121c.png" alt="音の波形"></p>
 
 <p>tuneRを使えば音を作ることもできる。</p>
 
 <pre>
-x = sine(440, bit=16)
+<code>x = sine(440, bit=16)
 writeWave(x, "hoge.wav")
-</pre>
+</code></pre>
 
 <hr>
 

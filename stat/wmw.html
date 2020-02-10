@@ -71,7 +71,7 @@ MathJax = {
 をRでWMW検定してみます。</p>
 
 <pre>
-&gt; x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
+<code>&gt; x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
 &gt; y = c(3,3,4,3,1,2,3,1,1,5,4)
 &gt; wilcox.test(x,y)
 
@@ -84,7 +84,7 @@ alternative hypothesis: true location shift is not equal to 0
  警告メッセージ: 
  wilcox.test.default(x, y) で: 
    タイがあるため、正確な p 値を計算することができません 
-</pre>
+</code></pre>
 
 <p>ここで W と出ているのは $x_i > y_j$ となる $(i, j)$
 の数に $x_i = y_j$ となる $(i, j)$
@@ -93,7 +93,7 @@ alternative hypothesis: true location shift is not equal to 0
 <p>さきほどWMW検定は漸化式により正確な $p$ 値が求められると書きましたが，この場合はタイ（等しい値）があるので，漸化式は使えず，正規分布による近似値になってしまったようです。タイがなくても，両群の個数の和が50以上になると，正規分布近似に切り替わるので，50個以上の場合に正確な値を求めたいなら <code>wilcox.test(x,y,exact=TRUE)</code> とすればいいのですが，タイが一つでもあれば，このオプションを付けても無駄です。正確な値を求めたければ，exactRankTests というパッケージを使うのが一つの方法です。</p>
 
 <pre>
-&gt; library(exactRankTests)
+<code>&gt; library(exactRankTests)
  Package ‘exactRankTests’ is no longer under development.
  Please consider using package ‘coin’ instead.
 
@@ -104,7 +104,7 @@ alternative hypothesis: true location shift is not equal to 0
 data:  x and y
 W = 32.5, p-value = 0.00669
 alternative hypothesis: true mu is not equal to 0
-</pre>
+</code></pre>
 
 <p>メッセージにも出ていますが，exactRankTests
 パッケージは開発が継続されていないようです。代わりに
@@ -112,10 +112,10 @@ alternative hypothesis: true mu is not equal to 0
 パッケージを使えということですので，やってみましょう。使い方がちょっと違います。</p>
 
 <pre>
-library(coin)
+<code>library(coin)
 wilcox_test(c(x,y) ~ factor(c(rep("x",length(x)),rep("y",length(y)))),
             distribution="exact")
-</pre>
+</code></pre>
 
 <p>結果は <code>wilcox.exact(x,y)</code> と同じになります。</p>
 
@@ -132,7 +132,7 @@ wilcox_test(c(x,y) ~ factor(c(rep("x",length(x)),rep("y",length(y)))),
 <p>この図は次のRのプログラムで描きました：</p>
 
 <pre>
-r = replicate(100, {
+<code>r = replicate(100, {
   a = sample(20)
   b = sample(5:10, 1)
   x = a[1:b]
@@ -141,33 +141,33 @@ r = replicate(100, {
 })
 plot(r[1,], r[2,], xlab="pt", ylab="pw", asp=1)
 abline(0, 1)
-</pre>
+</code></pre>
 
 <h2>分散が異なる場合の挙動</h2>
 
 <p>すでに述べたように，この検定は2群の分布が等しいときに意味があります。例えば分散が異なると，正しくない結果を与えます。<a href="ttest.html">t検定</a>のときと同様にチェックしてみましょう。</p>
 
 <pre>
-p = replicate(1000000, {
+<code>p = replicate(1000000, {
   x = rnorm(10, mean=0, sd=1.5)
   y = rnorm(30, mean=0, sd=1.0)
   wilcox.test(x, y)$p.value
 })
 hist(p, freq=FALSE, col="gray")
-</pre>
+</code></pre>
 
 <figure><img src="img/181128a.png" alt=""></figure>
 
 <p>ノンパラメトリック検定はこのように小サンプルではぎざぎざになることが多いので，各群のサンプルサイズを10倍にしてみましょう。</p>
 
 <pre>
-q = replicate(1000000, {
+<code>q = replicate(1000000, {
   x = rnorm(100, mean=0, sd=1.5)
   y = rnorm(300, mean=0, sd=1.0)
   wilcox.test(x, y)$p.value
 })
 hist(q, freq=FALSE, col="gray")
-</pre>
+</code></pre>
 
 <figure><img src="img/181128b.png" alt=""></figure>
 

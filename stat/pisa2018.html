@@ -49,25 +49,25 @@ window.onload = function() {
 
 <pre>
 <code class="prom">dim(data)</code>
-[1] 612004   1118
+<code>[1] 612004   1118</code>
 </pre>
 
 <p>612004行1118列のデータだとわかる。確かに大きい。項目名（列名）を一覧してみよう：</p>
 
 <pre>
 <code class="prom">names(data)</code>
-   [1] "CNTRYID"      "CNT"          "CNTSCHID"     "CNTSTUID"    
-   [5] "CYC"          "NatCen"       "STRATUM"      "SUBNATIO"    
-   [9] "OECD"         "ADMINMODE"    "LANGTEST_QQQ" "LANGTEST_COG"
-  [13] "LANGTEST_PAQ" "BOOKID"       "ST001D01T"    "ST003D02T"   
-  [17] "ST003D03T"    "ST004D01T"    "ST005Q01TA"   "ST006Q01TA"  
-  [21] "ST006Q02TA"   "ST006Q03TA"   "ST006Q04TA"   "ST007Q01TA"  
-  [25] "ST008Q01TA"   "ST008Q02TA"   "ST008Q03TA"   "ST008Q04TA"  
-  [29] "ST011Q01TA"   "ST011Q02TA"   "ST011Q03TA"   "ST011Q04TA"  
-  [33] "ST011Q05TA"   "ST011Q06TA"   "ST011Q07TA"   "ST011Q08TA"  
-  [37] "ST011Q09TA"   "ST011Q10TA"   "ST011Q11TA"   "ST011Q12TA"  
-  [41] "ST011Q16NA"   "ST011D17TA"   "ST011D18TA"   "ST011D19TA"  
-....(後略)....
+<code>   [1] "CNTRYID"      "CNT"          "CNTSCHID"     "CNTSTUID"    </code>
+<code>   [5] "CYC"          "NatCen"       "STRATUM"      "SUBNATIO"    </code>
+<code>   [9] "OECD"         "ADMINMODE"    "LANGTEST_QQQ" "LANGTEST_COG"</code>
+<code>  [13] "LANGTEST_PAQ" "BOOKID"       "ST001D01T"    "ST003D02T"   </code>
+<code>  [17] "ST003D03T"    "ST004D01T"    "ST005Q01TA"   "ST006Q01TA"  </code>
+<code>  [21] "ST006Q02TA"   "ST006Q03TA"   "ST006Q04TA"   "ST007Q01TA"  </code>
+<code>  [25] "ST008Q01TA"   "ST008Q02TA"   "ST008Q03TA"   "ST008Q04TA"  </code>
+<code>  [29] "ST011Q01TA"   "ST011Q02TA"   "ST011Q03TA"   "ST011Q04TA"  </code>
+<code>  [33] "ST011Q05TA"   "ST011Q06TA"   "ST011Q07TA"   "ST011Q08TA"  </code>
+<code>  [37] "ST011Q09TA"   "ST011Q10TA"   "ST011Q11TA"   "ST011Q12TA"  </code>
+<code>  [41] "ST011Q16NA"   "ST011D17TA"   "ST011D18TA"   "ST011D19TA"  </code>
+<code>....(後略)....</code>
 </pre>
 
 <p><a href="https://www.oecd.org/pisa/data/2018database/PISA2018_CODEBOOK.XLSX">コードブック</a>に書かれているが，先頭のいくつかの項目は次の通りである：</p>
@@ -85,8 +85,8 @@ window.onload = function() {
 <pre>
 <code class="prom">table(data$IC001Q01TA)</code>
 
-     1      2      3 
-207182  50529  97676 
+<code>     1      2      3 </code>
+<code>207182  50529  97676 </code>
 </pre>
 
 <p>日本の生徒についての内訳を見るには</p>
@@ -94,8 +94,8 @@ window.onload = function() {
 <pre>
 <code class="prom">table(data$IC001Q01TA[data$CNT=="JPN"])</code>
 
-   1    2    3 
-2200 1790 2029 
+<code>   1    2    3 </code>
+<code>2200 1790 2029 </code>
 </pre>
 
 <p>とする。国とのクロス集計をしてみよう：</p>
@@ -103,14 +103,14 @@ window.onload = function() {
 <pre>
 <code class="prom">x = table(data$CNT, data$IC001Q01TA)</code>
 <code class="prom">head(x)</code>
-     
-         1    2    3
-  ALB 3940  558 1589
-  ARE    0    0    0
-  ARG    0    0    0
-  AUS 6858 2406 2738
-  AUT 4797  626  972
-  BEL 5098  925 1585
+<code>     </code>
+<code>         1    2    3</code>
+<code>  ALB 3940  558 1589</code>
+<code>  ARE    0    0    0</code>
+<code>  ARG    0    0    0</code>
+<code>  AUS 6858 2406 2738</code>
+<code>  AUT 4797  626  972</code>
+<code>  BEL 5098  925 1585</code>
 </pre>
 
 <p>手抜き棒グラフにしてみよう：</p>
@@ -126,14 +126,14 @@ window.onload = function() {
 <p>3文字国名の表 <a href="data/countries.csv">countries.csv</a>（UTF-8）を使って日本語にしてみよう：</p>
 
 <pre>
-cnt = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/countries.csv",
+<code>cnt = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/countries.csv",
                fileEncoding="UTF-8")
 tcnt = cnt$国名
 names(tcnt) = cnt$三字
 s = sort(x[,1] / rowSums(x[,1:3]))
 par(mar=c(5,15,1,2)) # 下左上右マージン（要調整）
 barplot(s, horiz=TRUE, las=1, names.arg=tcnt[names(s)])
-</pre>
+</code></pre>
 
 <p>（未完）</p>
 

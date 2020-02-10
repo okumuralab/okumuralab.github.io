@@ -80,10 +80,10 @@
 <p>データはExcelで入力しておくのが便利です。Rに読み込むには，右上ペインの「Import Dataset」から「From Excel...」を選びます（初回に使う際にライブラリreadxlとRcppがインストールされていなければインストールが行われます）。右上の「Browse...」からExcelファイルを選びます。例えばhoge.xlsxを選べば，次のRコマンドが自動で実行されます：</p>
 
 <pre>
-library(readxl)
+<code>library(readxl)
 hoge = read_excel("~/hoge.xlsx")
 View(hoge)
-</pre>
+</code></pre>
 
 <p>左上ペインにデータが表示されます。</p>
 

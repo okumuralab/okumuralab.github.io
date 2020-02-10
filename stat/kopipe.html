@@ -35,8 +35,8 @@ MathJax = {
 <p>以下のチェックをする前に，Wordのdocxファイルは docx2txt を使ってテキストに直しておく：</p>
 
 <pre>
-for x in *.docx; do docx2txt.pl $x; done
-</pre>
+<code>for x in *.docx; do docx2txt.pl $x; done
+</code></pre>
 
 <p>それ以外のものも UTF-8 テキストに変換しておく。</p>
 
@@ -45,7 +45,7 @@ for x in *.docx; do docx2txt.pl $x; done
 <p>コピペのチェックが流行りなので，やってみた。ただし，ネット検索するのでなく，相互剽窃のチェックだけである。Rのstringdistパッケージを使う。</p>
 
 <pre>
-# レポート（テキストファイル）のファイル名（tmp/*.txt の場合）
+<code># レポート（テキストファイル）のファイル名（tmp/*.txt の場合）
 names = dir("tmp", "*.txt", full.names=TRUE)
 
 library(stringdist)
@@ -65,7 +65,7 @@ for (i in 1:(n-1)) {
     }
   }
 }
-</pre>
+</code></pre>
 
 <p>上ではLevenshtein距離から文字数の差の絶対値を引いたものを使っている。どのような指標が良いかは考え中。</p>
 
@@ -80,7 +80,7 @@ for (i in 1:(n-1)) {
 <p>が成り立つ。中辺 $K(x+y)$ が左辺に近いほど $x$，$y$ は似ている。これを使ってレポートの類似性を調べることができる（かもしれない）。$K(x)$ の代わりに <code>gzip</code>（オプション <code>-9</code>）で圧縮後のファイルサイズを使う：</p>
 
 <pre>
-K = numeric(n)
+<code>K = numeric(n)
 for (i in 1:n) {
   K[i] = as.numeric(system(paste("cat", names[i], "| gzip -9 -c | wc -c"), intern=T))
 }
@@ -90,7 +90,7 @@ for (i in 1:(n-1)) {
     # Kij が max(K[i],K[j]) と K[i]+K[j] のどちらに近いか調べて報告
   }
 }
-</pre>
+</code></pre>
 
 <p>この種のものは2002年に <a href="http://arxiv.org/abs/cond-mat/0108530">Language Trees and Zipping</a> というペーパーが（よりによって）Physical Review Letters に掲載されてからちょっとだけ流行した。</p>
 

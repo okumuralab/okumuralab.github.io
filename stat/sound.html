@@ -25,14 +25,14 @@
 <p>以下では<a href="/~okumura/wavefmt.html">WAV</a>などのオーディオファイルを扱う。MacではWAVファイルなどはおそらくiTunes.appに関連付けられているが，FinderでQuickTime Player.appまたは<a href="http://www.videolan.org/vlc/">VLC.app</a>に関連付けを変更しておくと便利である。ターミナルで例えばQuickTime Player.appでWAVファイルを開くには</p>
 
 <pre>
-open -a 'QuickTime Player' *.wav
-</pre>
+<code>open -a 'QuickTime Player' *.wav
+</code></pre>
 
 <p>と打ち込めばよい。GUIが不要ならば</p>
 
 <pre>
-afplay *.wav
-</pre>
+<code>afplay *.wav
+</code></pre>
 
 <p>のほうが便利である。Ctrl-C で止まる。ほかに名前がaf（audio file）で始まるコマンドとして <code>afinfo</code>，<code>afconvert</code>，<code>afhash</code>，<code>afida</code> がある。いずれも <code>--help</code>（または <code>-h</code>）オプションで簡単な説明が出る。</p>
 
@@ -56,12 +56,12 @@ afplay *.wav
 <div class="note">
 <p>MacでHomebrewを使っているなら <code>brew install flac</code> と打ち込むだけでインストールできる。ソースからインストールするには次のようにする：</p>
 <pre>
-tar xvzf flac-*.tar.xz
+<code>tar xvzf flac-*.tar.xz
 cd flac-*
 ./configure
 make
 make install
-</pre>
+</code></pre>
 </div>
 
 <h2 id="Musopen">Musopen Collection as FLAC</h2>
@@ -71,8 +71,8 @@ make install
 <p>これをまずFLACでWAVに変換する：</p>
 
 <pre>
-flac -d Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.flac
-</pre>
+<code>flac -d Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.flac
+</code></pre>
 
 <p>77376140バイトのWAVファイルができる。</p>
 
@@ -82,15 +82,15 @@ flac -d Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988
 <code class="prom">library(tuneR)</code>
 <code class="prom">bach = readWave("Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.wav")</code>
 <code class="prom">object.size(bach)</code>
-206337672 bytes
+<code>206337672 bytes</code>
 <code class="prom">str(bach)</code>
-Formal class 'Wave' [package "tuneR"] with 6 slots
-  ..@ left     : num [1:12896016] 0 0 0 0 0 0 0 0 0 0 ...
-  ..@ right    : num [1:12896016] 0 0 0 0 0 0 0 0 0 0 ...
-  ..@ stereo   : logi TRUE
-  ..@ samp.rate: int 44100
-  ..@ bit      : int 24
-  ..@ pcm      : logi TRUE
+<code>Formal class 'Wave' [package "tuneR"] with 6 slots</code>
+<code>  ..@ left     : num [1:12896016] 0 0 0 0 0 0 0 0 0 0 ...</code>
+<code>  ..@ right    : num [1:12896016] 0 0 0 0 0 0 0 0 0 0 ...</code>
+<code>  ..@ stereo   : logi TRUE</code>
+<code>  ..@ samp.rate: int 44100</code>
+<code>  ..@ bit      : int 24</code>
+<code>  ..@ pcm      : logi TRUE</code>
 </pre>
 
 <p><code>readWave()</code> で読み出したオブジェクトは「Wave」というS4クラスであり，各スロットにアクセスするには <code>$</code> ではなく <code>@</code> を使う。例えば左チャンネルは <code>bach@left</code> または <code>slot(bach, "left")</code> のようにしてアクセスする。</p>
@@ -102,28 +102,28 @@ Formal class 'Wave' [package "tuneR"] with 6 slots
 <pre>
 <code class="prom">table(bach@left[1:100000])</code>
 
--2304 -2048 -1792 -1536 -1280 -1024  -768  -512  -256     0   256   512   768 
-    5   167   353   468   830  1101  1446 13575  4101 72289  1133  1124  1117 
- 1024  1280  1536  1792  2048  2304  2560  2816 
-  696   447   424   321   236   130    33     4 
+<code>-2304 -2048 -1792 -1536 -1280 -1024  -768  -512  -256     0   256   512   768 </code>
+<code>    5   167   353   468   830  1101  1446 13575  4101 72289  1133  1124  1117 </code>
+<code> 1024  1280  1536  1792  2048  2304  2560  2816 </code>
+<code>  696   447   424   321   236   130    33     4 </code>
 </pre>
 
 <p>あれあれ，すべて256の倍数だ。せっかく24ビット音だと思ったら，16ビットだ。全体を256で割ってしまおう。</p>
 
 <pre>
-bachl = as.integer(bach@left / 256)
+<code>bachl = as.integer(bach@left / 256)
 bachr = as.integer(bach@right / 256)
 rm(bach) # メモリが逼迫したら，もとのデータは消す
-</pre>
+</code></pre>
 
 <p>適当なところをプロットしてみる：</p>
 
 <pre>
-s = 44100*4    # 4秒後から
+<code>s = 44100*4    # 4秒後から
 t = 44100*10   # 10秒後まで
 plot  ((s:t)/44100, bachl[s:t], type="l", col="#0068b780", xlab="", ylab="")
 points((s:t)/44100, bachr[s:t], type="l", col="#f3980080")
-</pre>
+</code></pre>
 
 <figure><img src="img/150221a.png" alt=""></figure>
 
@@ -134,9 +134,9 @@ points((s:t)/44100, bachr[s:t], type="l", col="#f3980080")
 <pre>
 <code class="prom">a = append(bachl, bachr)</code>
 <code class="prom">length(a)</code>
-[1] 25792032
+<code>[1] 25792032</code>
 <code class="prom">range(a)</code>
-[1] -9322  8909
+<code>[1] -9322  8909</code>
 <code class="prom">hist(a, main="", xlab="", ylab="", col="gray")</code>
 </pre>
 
@@ -151,16 +151,16 @@ points((s:t)/44100, bachr[s:t], type="l", col="#f3980080")
 <pre>
 <code class="prom">h = hist(a, breaks=20000, plot=FALSE)</code>
 <code class="prom">str(h)</code>  # hの構造を確認
-List of 6
- $ breaks  : num [1:18232] -9322 -9321 -9320 -9319 -9318 ...
- $ counts  : int [1:18231] 2 0 0 0 0 0 0 0 0 0 ...
- $ density : num [1:18231] 7.75e-08 0.00 0.00 0.00 0.00 ...
- $ mids    : num [1:18231] -9322 -9320 -9320 -9318 -9318 ...
- $ xname   : chr "a"
- $ equidist: logi TRUE
- - attr(*, "class")= chr "histogram"
+<code>List of 6</code>
+<code> $ breaks  : num [1:18232] -9322 -9321 -9320 -9319 -9318 ...</code>
+<code> $ counts  : int [1:18231] 2 0 0 0 0 0 0 0 0 0 ...</code>
+<code> $ density : num [1:18231] 7.75e-08 0.00 0.00 0.00 0.00 ...</code>
+<code> $ mids    : num [1:18231] -9322 -9320 -9320 -9318 -9318 ...</code>
+<code> $ xname   : chr "a"</code>
+<code> $ equidist: logi TRUE</code>
+<code> - attr(*, "class")= chr "histogram"</code>
 <code class="prom">sum(h$density)</code>
-[1] 1
+<code>[1] 1</code>
 </pre>
 
 <div class="note">
@@ -172,7 +172,7 @@ List of 6
 
 <pre>
 <code class="prom">-sum(h$density * log2(h$density), na.rm=TRUE)</code>
-[1] 11.94497
+<code>[1] 11.94497</code>
 </pre>
 
 <p>約12ビット/サンプルである。</p>
@@ -184,7 +184,7 @@ List of 6
 <code class="prom">t = table(a)</code>
 <code class="prom">p = t / sum(t)</code>
 <code class="prom">-sum(p * log2(p))</code>
-[1] 11.94497
+<code>[1] 11.94497</code>
 </pre>
 
 <p>ところで，<code>a</code> の代わりに，その差分 <code>diff(a)</code>
@@ -201,7 +201,7 @@ List of 6
 <div class="note">
 <p>別の方法として，WAVファイルを拙作<a href="/~okumura/dumpwave.c">dumpwave.c</a>でテキストに落としてから読み込む方法を紹介しておく。この方法なら，各サンプル値を4バイトのinteger型で読み込むことができる。</p>
 <pre>
-$ gcc dumpwave.c -o dumpwave
+<code>$ gcc dumpwave.c -o dumpwave
 $ ./dumpwave Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.wav &gt;x.txt
 [RIFF] (77376132 bytes)
 [WAVEfmt ] (16 bytes)
@@ -213,39 +213,39 @@ $ ./dumpwave Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBw
   Bits / sample = 24
 
 [data] (77376096 bytes)
-</pre>
+</code></pre>
 <p>できたテキストファイルは179573070バイト（約180MB）ある。これをRで読み込むには <code>read.table()</code> でもよいが，非常に遅いので，<a href="datatable.html">data.table</a>を使うとよい：</p>
 <pre>
 <code class="prom">library("data.table")</code>
 <code class="prom">x = fread("x.txt")</code>
 <code class="prom">dim(x)</code>
-[1] 12896016        2
+<code>[1] 12896016        2</code>
 <code class="prom">head(x)</code>
-   V1 V2
-1:  0  0
-2:  0  0
-3:  0  0
-4:  0  0
-5:  0  0
-6:  0  0
+<code>   V1 V2</code>
+<code>1:  0  0</code>
+<code>2:  0  0</code>
+<code>3:  0  0</code>
+<code>4:  0  0</code>
+<code>5:  0  0</code>
+<code>6:  0  0</code>
 <code class="prom">object.size(x)</code>
-103169360 bytes
-# または
+<code>103169360 bytes</code>
+<code># または</code>
 <code class="prom">library(pryr)</code>
 <code class="prom">object_size(x)</code>
-103 MB
+<code>103 MB</code>
 <code class="prom">str(x)</code>
-Classes ‘data.table’ and 'data.frame':	12896016 obs. of  2 variables:
- $ V1: int  0 0 0 0 0 0 0 0 0 0 ...
- $ V2: int  0 0 0 0 0 0 0 0 0 0 ...
- - attr(*, ".internal.selfref")=&lt;externalptr&gt;
+<code>Classes ‘data.table’ and 'data.frame':	12896016 obs. of  2 variables:</code>
+<code> $ V1: int  0 0 0 0 0 0 0 0 0 0 ...</code>
+<code> $ V2: int  0 0 0 0 0 0 0 0 0 0 ...</code>
+<code> - attr(*, ".internal.selfref")=&lt;externalptr&gt;</code>
 </pre>
 <p>変数名が <code>V1</code>，<code>V2</code> ではわかりにくいので，<code>L</code>，<code>R</code> に直しておく：</p>
 <pre>
-setnames(x, c("L","R"))
+<code>setnames(x, c("L","R"))
 # names(x) = c("L", "R") ではx全体をコピーする無駄が生じる
 # data.tableではsetnames()を使うべき
-</pre>
+</code></pre>
 </div>
 
 <h2 id="SONY">SONYサンプル音源</h2>
@@ -273,17 +273,17 @@ setnames(x, c("L","R"))
 <code class="prom">library(tuneR)</code>
 <code class="prom">bee = readWave("Sample_BeeMoved_96kHz24bit.wav")</code>
 <code class="prom">str(bee)</code>
-Formal class 'Wave' [package "tuneR"] with 6 slots
-  ..@ left     : num [1:3828096] -2 1 2 -8 11 -13 9 -6 7 3 ...
-  ..@ right    : num [1:3828096] 0 3 -5 8 -11 16 -10 -2 -1 7 ...
-  ..@ stereo   : logi TRUE
-  ..@ samp.rate: int 96000
-  ..@ bit      : int 24
-  ..@ pcm      : logi TRUE
+<code>Formal class 'Wave' [package "tuneR"] with 6 slots</code>
+<code>  ..@ left     : num [1:3828096] -2 1 2 -8 11 -13 9 -6 7 3 ...</code>
+<code>  ..@ right    : num [1:3828096] 0 3 -5 8 -11 16 -10 -2 -1 7 ...</code>
+<code>  ..@ stereo   : logi TRUE</code>
+<code>  ..@ samp.rate: int 96000</code>
+<code>  ..@ bit      : int 24</code>
+<code>  ..@ pcm      : logi TRUE</code>
 <code class="prom">range(bee@left)</code>
-[1] -8292596  8292598
+<code>[1] -8292596  8292598</code>
 <code class="prom">range(bee@right)</code>
-[1] -8292595  8292598
+<code>[1] -8292595  8292598</code>
 </pre>
 
 <p>24ビット（±8388607）ほぼフルに使っているところがすごい。</p>
@@ -292,7 +292,7 @@ Formal class 'Wave' [package "tuneR"] with 6 slots
 <code class="prom">t = table(a)</code>
 <code class="prom">p = t / sum(t)</code>
 <code class="prom">-sum(p * log2(p))</code>
-[1] 22.04475
+<code>[1] 22.04475</code>
 </pre>
 
 <p>これを48000サンプル/秒，16ビットに丸めてみる：</p>
@@ -313,30 +313,30 @@ Formal class 'Wave' [package "tuneR"] with 6 slots
 <code class="prom">left = resample(bee@left, 1, 2, 16)</code>
 <code class="prom">right = resample(bee@right, 1, 2, 16)</code>
 <code class="prom">range(left)</code>
-[1] -8515382  8356196
+<code>[1] -8515382  8356196</code>
 <code class="prom">range(right)</code>
-[1] -8352250  8552039
+<code>[1] -8352250  8552039</code>
 </pre>
 
 <p>あれあれ，24ビットの範囲を超えてしまった。プロットしてみる：</p>
 
 <pre>
-t = 1257596
+<code>t = 1257596
 r = (t-20):(t+20)
 r2 = (2*t-40):(2*t+40)
 plot(r2, bee@right[r2], type="o", pch=16, xlab="", ylab="")
 points(r*2, right[r+8], type="o", pch=1)
-</pre>
+</code></pre>
 
 <figure><img src="img/150223a.png" alt=""></figure>
 
 <p>16ビット化するときには256より少し大きい値で割る必要がある：</p>
 
 <pre>
-bee3 = Wave(floor((left + 130.5) / 261), floor((right + 130.5) / 261),
+<code>bee3 = Wave(floor((left + 130.5) / 261), floor((right + 130.5) / 261),
             samp.rate=48000, bit=16)
 writeWave(bee3, "bee3.wav")  # または play(bee3)
-</pre>
+</code></pre>
 
 <p>あるいは全体の音量を変えたくないなら <code>pmax(pmin(x, 32767), -32768)</code> のような関数を通して16ビットの範囲に制限するだけでもいいかもしれない。</p>
 
@@ -355,8 +355,8 @@ writeWave(bee3, "bee3.wav")  # または play(bee3)
 <p>のようにしてファイルに出力してから再生するか，あるいは設定さえ正しければ</p>
 
 <pre>
-play(sine(freq=10000, duration=44100*5, samp.rate=44100, bit=16, pcm=TRUE, stereo=TRUE))
-</pre>
+<code>play(sine(freq=10000, duration=44100*5, samp.rate=44100, bit=16, pcm=TRUE, stereo=TRUE))
+</code></pre>
 
 <p>でも音が出る。私の環境では，高い音は標本化周波数によって聞こえたり聞こえなかったりする。折り返し雑音みたいな音が聞こえることもある。再生装置と私の耳のどちらが効いているかわからないが，44100Hz標本化で試すと，14200〜14500Hzあたりに上限があるようだ。ちなみに，アナログテレビの時代には，雨の日は15750Hzの水平同期信号がよく聞こえた。若者だけに聞こえる17kHzあたりの「モスキート音」を使った「若者よけ」装置についてもしばしば話題になる（例：<a href="http://globe.asahi.com/feature/100719/04_2.html">「若者よけ」のモスキート音、課題は利用ルール</a>）</p>
 
@@ -367,27 +367,27 @@ play(sine(freq=10000, duration=44100*5, samp.rate=44100, bit=16, pcm=TRUE, stere
 <p>このページの最初のほうで使った例（バッハ）の周波数成分を調べる：</p>
 
 <pre>
-library(tuneR)
+<code>library(tuneR)
 bach = readWave("Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.wav")
 p = periodogram(Wave(bach@left / 256))
 plot(p)
-</pre>
+</code></pre>
 
 <figure><img src="img/150301c.png" alt=""></figure>
 
 <p>1000Hz以下に集中しているように見える。</p>
 
 <pre>
-plot(p, xlim=c(0,1000))
-</pre>
+<code>plot(p, xlim=c(0,1000))
+</code></pre>
 
 <figure><img src="img/150301e.png" alt=""></figure>
 
 <p>周波数の高い成分はほぼ0なので，対数グラフにしないとよく見えない。</p>
 
 <pre>
-plot(p, log="y", ylim=c(1e-13,1e-3))
-</pre>
+<code>plot(p, log="y", ylim=c(1e-13,1e-3))
+</code></pre>
 
 <figure><img src="img/150301f.png" alt=""></figure>
 
@@ -405,11 +405,11 @@ plot(p, log="y", ylim=c(1e-13,1e-3))
 <p>上ではFLACを中心に扱ったが，<a href="https://macosforge.github.io/alac/">Apple Lossless Audio Codec</a>（ALAC）もオープンソースになっていた。</p>
 
 <pre>
-git clone https://github.com/macosforge/alac.git
+<code>git clone https://github.com/macosforge/alac.git
 cd alac/convert-utility
 make
 mv alacconvert /usr/local/bin
-</pre>
+</code></pre>
 
 <p>で作れる。使い方は，エンコード <code>alacconvert in.wav out.caf</code>，デコード <code>alacconvert in.caf out.wav</code> である。</p>
 

@@ -22,13 +22,13 @@
 <p>要は，時系列データは <code>rnorm(n)</code> のようなホワイトノイズではなく，<code>cumsum(rnorm(n))</code> のようなランダムウォークに近いので，大きな相関係数が出やすくなる。</p>
 
 <pre>
-sim1 = function(n=40) { x = rnorm(n); y = rnorm(n); cor(x, y) }
+<code>sim1 = function(n=40) { x = rnorm(n); y = rnorm(n); cor(x, y) }
 sim2 = function(n=40) { x = cumsum(rnorm(n)); y = cumsum(rnorm(n)); cor(x, y) }
 r1 = replicate(1000000, sim1())
 r2 = replicate(1000000, sim2())
 hist(r1, col="#0068b780", freq=FALSE, xlim=c(-1,1), xlab="", ylab="", main="")
 hist(r2, col="#f3980080", freq=FALSE, add=TRUE, breaks=40, xlab="", ylab="", main="")
-</pre>
+</code></pre>
 
 <figure><img src="img/150209b.png" alt=""></figure>
 

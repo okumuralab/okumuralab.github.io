@@ -33,7 +33,7 @@ TIMSS2007_InternationalMathematicsReport.pdf
 <p>まず，このPDFのp.457にTIMSS 2007数学（8th grade）の国ごとの平均がある（素点ではなく，平均500，標準偏差100にスケールされた一種の偏差値である）。</p>
 
 <pre>
-"Country","Mean"
+<code>"Country","Mean"
 "Algeria",387
 "Armenia",499
 "Australia",496
@@ -83,14 +83,14 @@ TIMSS2007_InternationalMathematicsReport.pdf
 "Turkey",432
 "Ukraine",462
 "United States",508
-</pre>
+</code></pre>
 
 <p>また，p.176に
 Positive Affect Toward Mathematics (PATM)
 の一覧がある。ここでは High PATM の割合を使うことにする。</p>
 
 <pre>
-"Country","HighPATM"
+<code>"Country","HighPATM"
 "Algeria",83
 "Egypt",78
 "Botswana",78
@@ -139,27 +139,27 @@ Positive Affect Toward Mathematics (PATM)
 "Japan",30
 "Hungary",30
 "Slovenia",25
-</pre>
+</code></pre>
 
 <p>これらをそれぞれクリップボードにコピーし，Rで</p>
 
 <pre>
-X = read.csv(pipe("pbpaste")) # Mac
+<code>X = read.csv(pipe("pbpaste")) # Mac
 X = read.csv("clipboard")     # Windows
 Y = read.csv(pipe("pbpaste")) # Mac
 Y = read.csv("clipboard")     # Windows
-</pre>
+</code></pre>
 
 <p>とすれば読み込める。これらをマージして一つの表にする：</p>
 
 <pre>
-Z = merge(X, Y)
-</pre>
+<code>Z = merge(X, Y)
+</code></pre>
 
 <p>あとは散布図を描くだけ：</p>
 
 <pre>
-# quartz(width=5, height=5) # Mac
+<code># quartz(width=5, height=5) # Mac
 # par(family="Helvetica")   # Mac（特に不要）
 # par(mgp=c(2,0.8,0))       # マージンの微調整（好み）
 with(Z,
@@ -167,7 +167,7 @@ with(Z,
           pch=16, las=1, xlab="High PATM (%)", ylab="",
           col=ifelse(Country=="Japan","red","black")))
 mtext("Score", side=2, las=1, at=600, padj=-1)
-</pre>
+</code></pre>
 
 <p>最後の縦軸「600」の目盛りに対する「Score」の位置は <code>padj</code>
 と <code>adj</code> で微調整できる。</p>
@@ -177,8 +177,8 @@ mtext("Score", side=2, las=1, at=600, padj=-1)
 <p>これではどの点がどの国かわからない。全部書き加えると読みにくくなるので，マウスでクリックした点について国名を表示する：</p>
 
 <pre>
-with(Z, identify(HighPATM, Mean, labels=Country, xpd=TRUE))
-</pre>
+<code>with(Z, identify(HighPATM, Mean, labels=Country, xpd=TRUE))
+</code></pre>
 
 <p>この状態で点をクリックすればよい。いくつか調べて飽きたら右クリック（またはctrl +
 クリック）で対話を終了する。<code>xpd=TRUE</code> は，通常は不要だが，長い国名の枠の外にはみ出した部分が消えるのを防ぐためのオプションである。</p>

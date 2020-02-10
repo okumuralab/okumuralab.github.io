@@ -22,44 +22,44 @@
 <p>第1の教科書（文書）<code>d[[1]]</code> には hoge と fuga という用語（単語）が含まれる，等々を次のようにベクトルで表す：</p>
 
 <pre>
-d = list()
+<code>d = list()
 d[[1]] = c("hoge", "fuga")
 d[[2]] = c("hoge", "geho")
 d[[3]] = c("geho", "fuga")
 d[[4]] = c("foo", "bar", "hoge")
-</pre>
+</code></pre>
 
 <p>これをデータフレームに変換する：</p>
 
 <pre>
-options(stringsAsFactors=FALSE)
+<code>options(stringsAsFactors=FALSE)
 m = list()
 for (i in 1:4) {
     m[[i]] = data.frame(t=d[[i]], x=rep(1,length(d[[i]])))
     names(m[[i]]) = c("t", paste0("d",i))
 }
-</pre>
+</code></pre>
 
 <p>これらのデータフレームを単にフルジョインすれば，目的の行列が得られる：</p>
 
 <pre>
-tdm = merge(m[[1]], m[[2]], all=TRUE)
+<code>tdm = merge(m[[1]], m[[2]], all=TRUE)
 for (i in 3:4) {
     tdm = merge(tdm, m[[i]], all=TRUE)
 }
 tdm[is.na(tdm)] = 0
-</pre>
+</code></pre>
 
 <p>結果は次のようになる：</p>
 
 <pre>
 <code class="prom">tdm</code>
-     t d1 d2 d3 d4
-1  bar  0  0  0  1
-2  foo  0  0  0  1
-3 fuga  1  0  1  0
-4 geho  0  1  1  0
-5 hoge  1  1  0  1
+<code>     t d1 d2 d3 d4</code>
+<code>1  bar  0  0  0  1</code>
+<code>2  foo  0  0  0  1</code>
+<code>3 fuga  1  0  1  0</code>
+<code>4 geho  0  1  1  0</code>
+<code>5 hoge  1  1  0  1</code>
 </pre>
 
 <hr>

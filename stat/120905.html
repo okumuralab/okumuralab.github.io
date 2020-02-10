@@ -41,20 +41,20 @@
 <p>上記を読み出すRコード：</p>
 
 <pre>
-data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/nukadoko.csv")
-</pre>
+<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/nukadoko.csv")
+</code></pre>
 
 <p>読めたか確認のため <code>head(data, 15)</code> として最初の15行程度を表示してみる（最初の10行は検体のスペクトルカウント <code>sp</code>，バックグラウンドカウント <code>bg</code> とも0）。</p>
 
 <p><code>sp</code> は3600秒，<code>bg</code> は43200秒のカウントである。合わせるために <code>bg</code> を3600/43200倍して重ねてプロット：</p>
 
 <pre>
-par(mgp=c(2,0.8,0))  # 余白の微調整
+<code>par(mgp=c(2,0.8,0))  # 余白の微調整
 plot(data$ch, data$sp, type="l",
      xlab="Channel", ylab="Counts", col="#f39800")
 points(data$ch, data$bg*(3600/43200), type="l",
        xlab="Channel", ylab="Counts", col="#0068b7")
-</pre>
+</code></pre>
 
 <div><img src="img/120905a.png" alt="EMF211 糠どこ"></div>
 
@@ -64,7 +64,7 @@ points(data$ch, data$bg*(3600/43200), type="l",
 パッケージの <code>gnls()</code> を使う），チャンネルの範囲を200〜500（ほぼ400keV〜1MeV）に限ること，バックグラウンドは2次式で近似すること，ピークはCs-137（662keV），Cs-134（563・569・605・796・802keV），電子（511keV）を含めること（詳しいエネルギーと分岐比は<a href="radionuclides.html">おもな放射性核種</a>参照），ピークの形状は正規分布（Gaussian）で，ピーク幅はピークの位置の平方根に比例し，NaIの効率曲線はエネルギーのベキ関数とした。ピーク位置は近いものはまとめた。
 
 <pre>
-library(nlme)
+<code>library(nlme)
 r = 200:500
 fit = gnls(sp ~ (c + d*(ch-350) + b*(ch-350)^2 +
                  (e1*(0.08338/0.9226)*dnorm((ch-0.9314*m1)/(0.9226*s)) +
@@ -90,14 +90,14 @@ a = coef(fit)
 points(data$ch[r], type="l",
        (a['c']+a['d']*(data$ch[r]-350)+a['b']*(data$ch[r]-350)^2)
        * (data$ch[r]/350)^a['u'])
-</pre>
+</code></pre>
 
 <div><img src="img/120905b.png" alt="フィッティングの結果"></div>
 
 <p><code>summary(fit)</code> の結果の一部を抜き書きする：</p>
 
 <pre>
-Coefficients:
+<code>Coefficients:
       Value Std.Error  t-value p-value
 c    46.043   1.51420  30.4075   0.000
 d    -0.061   0.03726  -1.6310   0.104
@@ -111,7 +111,7 @@ e4  253.608  56.15714   4.5160   0.000
 m4  260.532   2.22883 116.8920   0.000
 s     9.845   0.27185  36.2133   0.000
 u    -1.154   0.20240  -5.6994   0.000
-</pre>
+</code></pre>
 
 <p>つまり，<code>e1</code> つまりCs-134の係数は誤差の28倍で，<code>e2</code>
 つまりCs-137の係数は誤差の27倍である。</p>
@@ -119,8 +119,8 @@ u    -1.154   0.20240  -5.6994   0.000
 <p>Cs-137の具体的な値を得るには，</p>
 
 <pre>
-sum(a['e2']*0.851*dnorm((data$ch[r]-a['m2'])/a['s'])/a['s']*(data$ch[r]/350)^a['u'])
-</pre>
+<code>sum(a['e2']*0.851*dnorm((data$ch[r]-a['m2'])/a['s'])/a['s']*(data$ch[r]/350)^a['u'])
+</code></pre>
 
 <p>と打ち込めば 3120.564 が出るが，これを3600秒で割ってcps値に直し，EMF211出力のテキストファイルにある「Cs-137換算係数=68.1」を掛けて，「質量=573.5」で割れば，102.9Bq/kg になる。誤差σは <code>e2</code> の <i>t</i>-value で割って 3.86Bq/kg である。このページの一番上の図にある 44.32±3.668 Bq/kg とかなり違う。</p>
 

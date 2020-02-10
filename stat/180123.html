@@ -41,11 +41,11 @@ MathJax = {
 <div class="note">
 <p>上の図はRで次のように描いた：</p>
 <pre>
-plot(NULL, xlim=c(1,20), ylim=c(1,20), xlab="パラメータ x", ylab="データ y")
+<code>plot(NULL, xlim=c(1,20), ylim=c(1,20), xlab="パラメータ x", ylab="データ y")
 for (x in 1:20) {
     points(rep(x,20), 1:20, pch=ifelse(1:20 %in% c(max(floor(x/2), 1), 2*x, 2*x+1), 16, 1))
 }
-</pre>
+</code></pre>
 </div>
 
 <p>モデルのパラメータ $x$ は直接は調べることができないが，データ $y$ から推測することができる。これが統計学の仕事である。この場合，データ $y$ が一つ与えられたならば，パラメータ $x$ には3通りの可能性 $x_1 = \mathrm{max}(\lfloor y/2 \rfloor, 1)$, $x_2 = 2y$, $x_3 = 2y+1$ がある。</p>

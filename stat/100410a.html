@@ -32,9 +32,9 @@
 <p>これをRに打ち込むにはいろいろな方法がありますが，ここでは簡単にベクトルとしてみます。</p>
 
 <pre>
-地域 = c("北海道","本州","四国","九州","沖縄")
+<code>地域 = c("北海道","本州","四国","九州","沖縄")
 面積 = c(83457,231113,18792,42191,2276) / 10000
-</pre>
+</code></pre>
 
 <p>面積は km<sup>2</sup> 単位では値が大きすぎるので，万km<sup>2</sup> 単位にするために10000で全体を割っています。</p>
 
@@ -44,22 +44,22 @@
 <p>地域ごとの面積を棒グラフにする際の基本は</p>
 
 <pre>
-barplot(面積, names.arg=地域)
-</pre>
+<code>barplot(面積, names.arg=地域)
+</code></pre>
 
 <p>です。さらに縦軸にラベルを付けるには</p>
 
 <pre>
-barplot(面積, names.arg=地域, ylab="面積（万km^2）")
-</pre>
+<code>barplot(面積, names.arg=地域, ylab="面積（万km^2）")
+</code></pre>
 
 <p>とします。もう少し凝ると，次のようになります。</p>
 
 <pre>
-par(las=1)              # 縦軸の文字を横向きにしない（las: label style）
+<code>par(las=1)              # 縦軸の文字を横向きにしない（las: label style）
 par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 barplot(面積, names.arg=地域, ylab="面積（万km^2）")
-</pre>
+</code></pre>
 
 <p>km^2ではなくkm<sup>2</sup>のように上付きにするには，
 <code>expression(paste("面積（万", km^2, "）"))</code>
@@ -68,10 +68,10 @@ barplot(面積, names.arg=地域, ylab="面積（万km^2）")
 <p>最後に，さらに凝ってみます：</p>
 
 <pre>
-barplot(面積, names.arg=地域)
+<code>barplot(面積, names.arg=地域)
 axis(2, labels=expression(paste("面積（万", km^2, "）")),
      at=20, hadj=0.3, padj=-1, tick=FALSE)
-</pre>
+</code></pre>
 
 <p><img src="img/100410a.png" alt=""></p>
 

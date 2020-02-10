@@ -27,7 +27,7 @@
 <p>棒グラフ：</p>
 
 <pre>
-# quartz(width=4.882874, height=3.507874)
+<code># quartz(width=4.882874, height=3.507874)
 par(mar=c(1,6,3,4)+0.1) # マージン c(5,4,4,2)+0.1
 par(xpd=TRUE)  # プロットエリア外に text() を描く
 
@@ -38,14 +38,14 @@ barplot(値[6:1], horiz=TRUE, axes=FALSE, space=0)
 text(0, (5:0)+0.45, 選択肢,  pos=2, family="HiraKakuPro-W3")
 text(値, (5:0)+0.45, paste(値,"%",sep=""), pos=4)
 mtext("兆は百万の何倍？", cex=1.2, family="HiraKakuPro-W6")
-</pre>
+</code></pre>
 
 <p>円グラフ：</p>
 
 <pre>
-pie(値, labels=選択肢, clockwise=TRUE, family="HiraKakuPro-W3")
+<code>pie(値, labels=選択肢, clockwise=TRUE, family="HiraKakuPro-W3")
 mtext("兆は百万の何倍？", cex=1.2, family="HiraKakuPro-W6")
-</pre>
+</code></pre>
 
 <p>円グラフは割合の違いが読み取りにくいことがわかると思います。</p>
 

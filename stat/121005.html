@@ -29,43 +29,43 @@
 <p>なお，認証書によれば2012年6月1日の値であるから，今日（10月5日）は126日を経ており，正確には次のようになり，<sup>134</sup>Cs : <sup>137</sup>Cs 比は0.603ほどである。</p>
 
 <pre>
-210 * 0.5^(126/(365.2422*30.08))
+<code>210 * 0.5^(126/(365.2422*30.08))
 # [1] 208.3372
 141 * 0.5^(126/(365.2422*2.0652))
 # [1] 125.584
 125.584 / 208.3372
 # [1] 0.602792
-</pre>
+</code></pre>
 
 <p>まずRでデータを読み込む：</p>
 
 <pre>
-sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/121005rice.txt",
+<code>sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/121005rice.txt",
           skip=41, nlines=1024, comment.char=";")
-</pre>
+</code></pre>
 
 <p>測定時間は10755秒なので，10755を掛けて四捨五入してカウント値に直す：</p>
 
 <pre>
-sp = floor(10755 * sp + 0.5)
-</pre>
+<code>sp = floor(10755 * sp + 0.5)
+</code></pre>
 
 <p>これをオレンジでプロットする：</p>
 
 <pre>
-ch = 0:1023          # チャンネル番号
+<code>ch = 0:1023          # チャンネル番号
 par(mgp=c(2,0.8,0))  # Rのグラフィックオプションを好みでいじる
 plot(ch, sp, type="l", xlab="Channel", ylab="Counts", xlim=c(0,400), col="#f39800")
-</pre>
+</code></pre>
 
 <p>ついでにバックグラウンドも読み込み，青で重ね書きする：</p>
 
 <pre>
-bg = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/121005BaseData.txt",
+<code>bg = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/121005BaseData.txt",
           skip=36, nlines=1024, comment.char=";")
 bg = floor(bg * 10801 + 0.5)
 points(ch, bg*(10755/10801), type="l", col="#0068b7")
-</pre>
+</code></pre>
 
 <div><img src="img/121005a.png" alt="玄米認証標準物質のスペクトル"></div>
 
@@ -74,7 +74,7 @@ points(ch, bg*(10755/10801), type="l", col="#0068b7")
 <p>これをRでフィットする：</p>
 
 <pre>
-library(nlme)
+<code>library(nlme)
 data = data.frame(ch=ch, sp=sp)
 r = 260:450
 fit = gnls(sp ~ (c + d*(ch-350) + b*(ch-350)^2
@@ -102,26 +102,26 @@ a
 #  9.583886e+01 -3.852270e-01  3.052728e-03  9.399035e+03  1.631090e+04 
 #            m1            m2            m3             s             u 
 #  3.161353e+02  3.442363e+02  4.100476e+02  8.995466e+00 -1.357540e+00 
-</pre>
+</code></pre>
 
 <div><img src="img/121005b.png" alt="玄米認証標準物質のスペクトルのフィット"></div>
 
 <p>肝心のcalibration factorは，</p>
 
 <pre>
-(210 * 0.377) / (sum(a['e2']*0.851*dnorm((ch[r]-a['m2'])/a['s'])/a['s']*(ch[r]/350)^a['u']) / 10755)
+<code>(210 * 0.377) / (sum(a['e2']*0.851*dnorm((ch[r]-a['m2'])/a['s'])/a['s']*(ch[r]/350)^a['u']) / 10755)
 # [1] 59.90988
-</pre>
+</code></pre>
 
 <p>つまり 59.9 Bq/cps である。<a href="120615.html">LB2045</a> のページで書いたように，35 Bq/cps あるいは 47 Bq/cps という値を想定していたが，それよりかなり大きめの値になった。</p>
 
 <p>なお，<sup>134</sup>Cs : <sup>137</sup>Cs 比は</p>
 
 <pre>
-a['e1']/a['e2']
+<code>a['e1']/a['e2']
 #        e1 
 # 0.5762427 
-</pre>
+</code></pre>
 
 <p>となり，最初に計算した値 0.603 より若干小さくなった。</p>
 

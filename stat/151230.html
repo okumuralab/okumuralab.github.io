@@ -21,14 +21,14 @@
 というファイルがいくつか入っている。この <code>……</code> の部分がISBNである。まずそれを抽出する：</p>
 
 <pre>
-names = dir("~/ebooks", "^bok.*\\.pdf$")
+<code>names = dir("~/ebooks", "^bok.*\\.pdf$")
 isbns = sub("^bok%3A(.*)\\.pdf", "\\1", names)
-</pre>
+</code></pre>
 
 <p>次に，ISBNを一つ与えて，SpringerLinkから書名と著者名を取ってくる関数を書く：</p>
 
 <pre>
-library(xml2)
+<code>library(xml2)
 
 foo = function(isbn) {
     url = paste0("http://link.springer.com/book/10.1007/", isbn)
@@ -37,18 +37,18 @@ foo = function(isbn) {
     authors = unique(xml_text(xml_find_all(x, "//*[@itemprop='author']/*[@itemprop='name']")))
     paste(isbn, title, paste(authors, collapse=", "), sep="\t")
 }
-</pre>
+</code></pre>
 
 <p>ただし，いくつかのISBNで「HTTP error 404」が生じる。つまり，ファイル名のISBNとURLのISBNがうまく対応していない場合があるようである。とりあえず以下では <code>try()</code> を使ってエラーで止まらないようにした。</p>
 
 <p>上の関数を各ISBNに対して実行する。ただし1回ごとに1秒休憩を入れる：</p>
 
 <pre>
-for (i in isbns) {
+<code>for (i in isbns) {
     try(cat(foo(i), "\n", sep=""))
     Sys.sleep(1)
 }
-</pre>
+</code></pre>
 
 <p>エラーを起こした場合は個別に対応する（ここは改良の余地がある）。</p>
 
@@ -63,7 +63,7 @@ for (i in isbns) {
 <p>[追記] さらにいえば，PDFファイルの中にメタデータとして著者名・書名などを埋め込んでくれたほうがありがたい。O'Reillyのある本をMacの <code>mdls</code> コマンドで調べた結果は次の通り：</p>
 
 <pre>
-$ mdls Anonymizing_Health_Data.pdf
+<code>$ mdls Anonymizing_Health_Data.pdf
 ……
 kMDItemAuthors                 = (
     "Khaled El Emam and Luk Arbuckle"
@@ -71,7 +71,7 @@ kMDItemAuthors                 = (
 ……
 kMDItemTitle                   = "Anonymizing Health Data"
 ……
-</pre>
+</code></pre>
 
 <hr>
 

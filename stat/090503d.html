@@ -24,7 +24,7 @@
 <figure><img src="img/181224b.png" alt="国立大学運営費交付金"></figure>
 
 <pre>
-par(mgp=c(2,0.8,0))     # プロットマージン: 元 c(3,1,0)
+<code>par(mgp=c(2,0.8,0))     # プロットマージン: 元 c(3,1,0)
 
 年 = 2004:2019
 運営費交付金 = c(12415, 12317, 12214, 12043, 11813, 11695, 11585, 11528, 11366, 10792, 11123, 10945, 10945, 10971, 10971, 10971)
@@ -33,18 +33,18 @@ t = barplot(運営費交付金, names.arg=年, las=1)
 text(t, 運営費交付金, 運営費交付金, pos=3, cex=0.8, xpd=TRUE)
 axis(2, labels="億円", at=12000, padj=-1, las=1)
 mtext("国立大学法人運営費交付金", cex=1.4, line=1.5, family="HiraKakuProN-W6")
-</pre>
+</code></pre>
 
 <p>念のため，折れ線グラフです：</p>
 
 <figure><img src="img/181224c.png" alt="国立大学運営費交付金"></figure>
 
 <pre>
-plot(年, 運営費交付金, type="o", pch=16, xlab="", ylab="", las=1)
+<code>plot(年, 運営費交付金, type="o", pch=16, xlab="", ylab="", las=1)
 axis(4, labels=FALSE)
 axis(2, labels="億円", at=12000, padj=-1, las=1, tick=FALSE)
 mtext("国立大学法人運営費交付金", cex=1.4, line=0.5, family="HiraKakuProN-W6")
-</pre>
+</code></pre>
 
 <p>折れ線グラフのほうが2013年の異常さが見やすくなります。この年と，減少が止まった20167年以降を省いて，単純に最小2乗法で直線をあてはめると（上図の橙色の直線），傾きは -133.6 で，法人化元年の2004年の 12415 の1%を超えています：</p>
 
@@ -54,12 +54,12 @@ mtext("国立大学法人運営費交付金", cex=1.4, line=0.5, family="HiraKak
 <code class="prom">r = lm(y ~ x)</code>
 <code class="prom">r</code>
 
-Call:
-lm(formula = y ~ x)
+<code>Call:</code>
+<code>lm(formula = y ~ x)</code>
 
-Coefficients:
-(Intercept)            x  
-   280206.4       -133.6  
+<code>Coefficients:</code>
+<code>(Intercept)            x  </code>
+<code>   280206.4       -133.6  </code>
 
 <code class="prom">abline(r, col="#ff9900", lwd=2)</code>
 </pre>

@@ -20,7 +20,7 @@
 <p>文科省<a href="http://www.mext.go.jp/b_menu/houdou/29/06/1386475.htm">公立学校施設の空調（冷房）設備設置状況の結果について</a>から2017年4月1日現在の小中学校普通教室のエアコン設置率をグラフにした。</p>
 
 <pre>
-# install.packages("NipponMap")
+<code># install.packages("NipponMap")
 library(NipponMap)
 x = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/aircon_shochu.csv", fileEncoding="UTF-8")
 c = x[,4] / 100   # 範囲 [0,1]
@@ -29,7 +29,7 @@ JapanPrefMap(col=rgb(cols(c)/255))
 rect(142+(0:99)/20, 32, 142+(1:100)/20, 33, col=rgb(cols(0:99/99)/255), border=NA)
 rect(142, 32, 147, 33)
 text(142+(0:2)*2.5, 32, c("0%","50%","100%"), pos=1)
-</pre>
+</code></pre>
 
 <figure><img src="img/180721a.png" alt="小中学校普通教室エアコン設置率"></figure>
 

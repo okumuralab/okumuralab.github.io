@@ -22,7 +22,7 @@
 <p>データ（スペース区切りテキスト）です：</p>
 
 <pre>
-普通科・総合学科 専門学科
+<code>普通科・総合学科 専門学科
 数学 36.1 8.9
 商業 23.9 31.5
 理科 23.4 8.0
@@ -33,43 +33,43 @@
 外国語 1.7 0.6
 その他 2.2 0.6
 情報のみ 7.2 1.8
-</pre>
+</code></pre>
 
 <p>Rでこのデータのグラフを描くための初期設定です：</p>
 
 <pre>
-par(family="HiraKakuPro-W3") # Macのフォント指定
+<code>par(family="HiraKakuPro-W3") # Macのフォント指定
 par(las=1)                   # 縦軸の字も横向きに
 par(mgp=c(2,0.8,0))          # 目盛り位置調整
 par(xaxs="i")                # xの範囲をぴったり
 options(encoding="SJIS")     # Macでコピペ時の文字コードをSJISに
-</pre>
+</code></pre>
 
 <p>このページの最初のデータをクリップボードにコピーして，次のどちらかを打ち込みます：</p>
 
 <pre>
-X = read.table(pipe("pbpaste")) # Mac（非X Window）
+<code>X = read.table(pipe("pbpaste")) # Mac（非X Window）
 X = read.table("clipboard")     # 上記以外
-</pre>
+</code></pre>
 
 <p>ドットプロットを描きます：</p>
 
 <pre>
-dotchart(rev(X[,1]), labels=rev(rownames(X)), pch=16, xlim=c(0,60))
+<code>dotchart(rev(X[,1]), labels=rev(rownames(X)), pch=16, xlim=c(0,60))
 points(rev(X[,2]),1:10)
-</pre>
+</code></pre>
 
 <p>もうちょっと凝ったところ：</p>
 
 <pre>
-dotchart(rev(X[,1]), pch=16, xlim=c(0,60))
+<code>dotchart(rev(X[,1]), pch=16, xlim=c(0,60))
 points(rev(X[,2]), 1:10, pch=4)
 mtext(rev(rownames(X)), side=2, at=1:10, line=0.5)
 mtext("%", side=1, at=63, line=0.8)
 axis(3, labels=FALSE)
 legend(35, 3, c("普通科・総合学科","専門学科"),
        pch=c(16,4), bg="white")
-</pre>
+</code></pre>
 
 <p>次のようになりました：</p>
 

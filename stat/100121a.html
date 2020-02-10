@@ -25,74 +25,74 @@
 <p>こういったグラフをRで描くには，凝らなければ，次のようにすればよい。</p>
 
 <pre>
-curve(x^2-4*x+1, xlim=c(-1,5))
-</pre>
+<code>curve(x^2-4*x+1, xlim=c(-1,5))
+</code></pre>
 
 <p>ここで <code>xlim=c(-1,5)</code> は <i>x</i> が -1 から 5 までの範囲で描くという意味である。<code>xlim=...</code> を省略すれば適当に見繕ってくれるが，この場合はあまりうまくいかない。</p>
 
 <p>とりあえずx軸とy軸を書き加えてみよう。</p>
 
 <pre>
-abline(h=0)
+<code>abline(h=0)
 abline(v=0)
-</pre>
+</code></pre>
 
 <p><code>h</code>，<code>v</code> はそれぞれhorizontal（水平），vertical（垂直）の意味である。まとめて <code>abline(h=0, v=0)</code> としてもよい。</p>
 
 <p>もっと高校数学っぽくするために，最初から書き直してみよう。軸（<code>axes</code>）を消して，<i>x</i>軸のラベル（<code>xlab</code>）も<i>y</i>軸のラベル（<code>ylab</code>）も空にして，線の幅（<code>lwd</code>）を通常の2倍くらいにしてみる。</p>
 
 <pre>
-curve(x^2-4*x+1, xlim=c(-1,5), axes=FALSE, xlab="", ylab="", lwd=2)
-</pre>
+<code>curve(x^2-4*x+1, xlim=c(-1,5), axes=FALSE, xlab="", ylab="", lwd=2)
+</code></pre>
 
 <p>座標軸は矢印で描く。</p>
 
 <pre>
-arrows(-1.2, 0, 5.2, 0, length=0.1, angle=15)
+<code>arrows(-1.2, 0, 5.2, 0, length=0.1, angle=15)
 arrows(0, -3.2, 0, 6.2, length=0.1, angle=15)
-</pre>
+</code></pre>
 
 <p>あらかじめフォントをTimes系に指定しておく：</p>
 
 <pre>
-par(family="serif")
-</pre>
+<code>par(family="serif")
+</code></pre>
 
 <p>デフォルトでは <code>serif</code> はMacでは <code>Times-Roman</code>，Windowsでは <code>TT Times New Roman</code> の別名である。詳しくは <code>quartsFonts()</code> または <code>windowsFonts()</code> と打ち込んでみればわかる。</p>
 
 <p><i>x</i>，<i>y</i> はイタリック体で，原点 O（ゼロではなく大文字のオー）は立体（ローマン体）で描くのが日本の高校数学の流儀である。いずれも <i>x</i> 座標と <i>y</i> 座標を指定して，文字サイズ（<code>cex</code>）は通常の2倍にしてみた。</p>
 
 <pre>
-text(5, -0.4, expression(italic(x)), cex=2)
+<code>text(5, -0.4, expression(italic(x)), cex=2)
 text(0.3, 6, expression(italic(y)), cex=2)
 text(-0.2, -0.4, "O", cex=2)
-</pre>
+</code></pre>
 
 <p>なお，フォントファミリは次のように個々の場合に指定してもよい：</p>
 
 <pre>
-text(5, -0.4, expression(italic(x)), family="serif", cex=2)
-</pre>
+<code>text(5, -0.4, expression(italic(x)), family="serif", cex=2)
+</code></pre>
 
 <p>ついでに <i>y</i> 切片も。</p>
 
 <pre>
-text(0.2, 1, 1, cex=1.5)
-</pre>
+<code>text(0.2, 1, 1, cex=1.5)
+</code></pre>
 
 <p>最小値をとる点に黒丸を付けて，座標も書き込む。グラフ描画範囲から外れた部分がクリッピングされないようにオプション <code>xpd=NA</code> を付けた。</p>
 
 <pre>
-points(2, -3, pch=16)
+<code>points(2, -3, pch=16)
 text(2, -3.4, "(3, -2)", cex=1.5, xpd=NA)
-</pre>
+</code></pre>
 
 <p>ただし <code>"(3, -2)"</code> ではマイナスの符号が短いハイフンになってしまう。これを防ぐ一つの方法は，マイナスの符号を表すUnicode番号 <code>\u2212</code>
 を使って <code>"(3, \u22122)"</code> とすることである。あるいは，</p>
 
 <pre>
-text(2, -3.4, expression((list(3,-2))), cex=1.5, xpd=NA)
-</pre>
+<code>text(2, -3.4, expression((list(3,-2))), cex=1.5, xpd=NA)
+</code></pre>
 
 <p>のような式（<code>expression</code>）にする。式の中にコンマが入るとエラーになるので，中身をコンマ付きで出力する命令 <code>list</code> を使った。</p>
 

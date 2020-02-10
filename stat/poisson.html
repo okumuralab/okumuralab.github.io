@@ -39,7 +39,7 @@ MathJax = {
 </figure>
 
 <pre>
-par(mgp=c(2,0.8,0))
+<code>par(mgp=c(2,0.8,0))
 plot(c(0,1200), c(0,3), type="n", axes=FALSE, xlab="", ylab="")
 axis(1)
 x1 = c(55,81.5,178.1,194.4,214.3,254.3,517.8,548.7,
@@ -50,7 +50,7 @@ x2 = c(43.9,54.8,85,94.3,115.2,224.5,228.5,246.1,310.2,
        788.1,812.9,815.7,831.7,834.1,883.5,923,986.4,1082.3,1105.5,1112.2)
 segments(x1, 0.5, x1, 1.5)
 segments(x2, 2, x2, 3)
-</pre>
+</code></pre>
 
 <p>次の図は0以上1200以下の一様乱数です。下は17個，上は38個発生させました。</p>
 
@@ -59,13 +59,13 @@ segments(x2, 2, x2, 3)
 </figure>
 
 <pre>
-plot(c(0,1200), c(0,3), type="n", axes=FALSE, xlab="", ylab="")
+<code>plot(c(0,1200), c(0,3), type="n", axes=FALSE, xlab="", ylab="")
 axis(1)
 r1 = runif(17) * 1200
 r2 = runif(38) * 1200
 segments(r1, 0.5, r1, 1.5)
 segments(r2, 2, r2, 3)
-</pre>
+</code></pre>
 
 <p>このように，ランダムに事象が発生するということは，決して一定の時間間隔で起きるのではなく，すぐ続いて起きたり，しばらく起きなかったりします。</p>
 
@@ -86,9 +86,9 @@ segments(r2, 2, r2, 3)
 </figure>
 
 <pre>
-stripchart(sample(1:50, 500, replace=TRUE),
+<code>stripchart(sample(1:50, 500, replace=TRUE),
            pch=16, method="stack", axes=FALSE, at=0)
-</pre>
+</code></pre>
 
 <p>このように，毎分平均10回でも，20回近く起こることもあれば，3回しか起こらないこともあります。これが以下で説明するポアソン分布です。</p>
 
@@ -138,9 +138,9 @@ stripchart(sample(1:50, 500, replace=TRUE),
 <div class="note">
 <p>このグラフを描くためのRのコード：</p>
 <pre>
-par(mgp=c(2,0.8,0))
+<code>par(mgp=c(2,0.8,0))
 barplot(dpois(0:30,10), names.arg=0:30)
-</pre>
+</code></pre>
 </div>
 
 <p>ご覧のように，平均10回起こる事象がぴったり10回起こる確率は約0.125に過ぎません。ぴったり9回起こる確率も約0.125です。ぴったり11回起こる確率は約0.114，というふうに，かなり広がりがあります。</p>
@@ -154,14 +154,14 @@ barplot(dpois(0:30,10), names.arg=0:30)
 <p>平均 $\lambda$ のポアソン分布は，分散も $\lambda$ になります。つまり標準偏差は $\sqrt{\lambda}$ になります。上のグラフのポアソン分布の場合，$\lambda = 10$ ですから，標準偏差は10の平方根の3.16ほどです。正規分布で近似すると，±標準偏差の範囲に収まる確率はほぼ68%ですから，68%の確率で10±3つまり7から13の範囲に入るといえます。実際にポアソン分布の確率を足し算してみると</p>
 
 <pre>
-sum(10^(7:13) * exp(-10) / factorial(7:13))
-</pre>
+<code>sum(10^(7:13) * exp(-10) / factorial(7:13))
+</code></pre>
 
 <p>で約73%になります。同じ計算は</p>
 
 <pre>
-ppois(13,10) - ppois(6,10)
-</pre>
+<code>ppois(13,10) - ppois(6,10)
+</code></pre>
 
 <p>でもできます。</p>
 
@@ -182,8 +182,8 @@ ppois(13,10) - ppois(6,10)
 <div class="note">
 <p>正規分布で $\pm \sigma$ の範囲内に入る確率は</p>
 <pre>
-1 - 2 * pnorm(-1)
-</pre>
+<code>1 - 2 * pnorm(-1)
+</code></pre>
 <p>で計算でき，0.6826895 になります。以下では 0.6826895 のことを「68%」と書いています。</p>
 </div>
 
@@ -194,13 +194,13 @@ ppois(13,10) - ppois(6,10)
 <p>一定時間にある事象が10回観測されたとしましょう。詳しい説明は後にして，Rに</p>
 
 <pre>
-poisson.test(10)
-</pre>
+<code>poisson.test(10)
+</code></pre>
 
 <p>と打ち込んでみましょう。次のように出力されるはずです：</p>
 
 <pre>
-	Exact Poisson test
+<code>	Exact Poisson test
 
 data:  10 time base: 1 
 number of events = 10, time base = 1, p-value = 1.114e-07
@@ -210,19 +210,19 @@ alternative hypothesis: true event rate is not equal to 1
 sample estimates:
 event rate 
         10 
-</pre>
+</code></pre>
 
 <p>この「95 percent confidence interval」というところに注目してください。これは，ポアソン分布を仮定したとき，$\lambda$ の95%信頼区間が約 4.8 以上 18.4 以下であることを示しています（報告する際にはよく $[4.8, 18.4]$ のように書きます）。</p>
 </pre>
 
 <p>95%信頼区間の意味は，仮に分布が $\lambda = 18.4$ のポアソン分布であれば，10回またはそれより少ない回数しか起こらない確率は2.5%だということと，仮に分布が $\lambda = 4.8$ のポアソン分布であれば，10回またはそれより多い回数起こる確率が2.5%だということを意味します。つまり，</p>
 <pre>
-ppois(10, 18.390356)
-</pre>
+<code>ppois(10, 18.390356)
+</code></pre>
 <p>と打てば0.025と返り，</p>
 <pre>
-ppois(9, 4.795389)
-</pre>
+<code>ppois(9, 4.795389)
+</code></pre>
 <p>と打てば0.975と返ります。<code>ppois(</code>$q$<code>,</code>$\lambda$<code>)</code> は平均 $\lambda$ のポアソン分布で $q$ 回またはそれより少ない回数しか起こらない確率を出力する関数です。</p>
 
 <div class="note">
@@ -233,26 +233,26 @@ ppois(9, 4.795389)
 6.9 から 14.3
 の範囲です。これは</p>
 <pre>
-poisson.test(10, conf.level=0.6826895)
-</pre>
+<code>poisson.test(10, conf.level=0.6826895)
+</code></pre>
 <p>と打ち込むと出力されます。この意味は，仮に $\lambda$ が 14.3 であれば10回またはそれより少ない回数しか起こらない確率は16% (=(100%-68%)/2)で，仮に $\lambda$ が 6.9 であれば10回またはそれより多い回数起こる確率が16%だということです。実際，</p>
 <pre>
-ppois(10, 14.266950)
-</pre>
+<code>ppois(10, 14.266950)
+</code></pre>
 <p>と打てば0.1586552と返り，</p>
 <pre>
-ppois(9, 6.891306)
-</pre>
+<code>ppois(9, 6.891306)
+</code></pre>
 <p>と打てば 0.8413447 (= 1 - 0.1586553) と返ります。</p>
 
 <p>実際に起きた回数 $n$ が大きければ，$\lambda$ の68%信頼区間は $n \pm \sqrt{n}$ で近似できますが，$n$ が小さい場合はそうなりません。例えば0回しか起きなかった場合，68%信頼区間は $\pm 0$ ではなく，</p>
 <pre>
-poisson.test(0, conf.level=0.6826895)
-</pre>
+<code>poisson.test(0, conf.level=0.6826895)
+</code></pre>
 <p>と打てばわかるように 0 から 1.841022 までとなります。実際，</p>
 <pre>
-ppois(0, 1.841022)
-</pre>
+<code>ppois(0, 1.841022)
+</code></pre>
 <p>と打てば 0.1586552 が返ります。</p>
 
 <div class="note">
@@ -272,18 +272,18 @@ ppois(0, 1.841022)
 <div class="note">
 <p>このページの最初のRコードの <code>x1</code> や <code>x2</code> のような列がポアソン過程かどうか調べるには，差分をとって <code>qqplot()</code> で指数分布かどうか調べるのがよいでしょう。</p>
 <pre>
-dx2 = diff(x2)
+<code>dx2 = diff(x2)
 qqplot(qexp(ppoints(length(dx2))), dx2)
 qqline(dx2, distribution=function(p){qexp(p)})
-</pre>
+</code></pre>
 <p>やや外れているように見えますが，乱数 <code>r2 = runif(38) * 1200</code> でもこれくらいの外れはよく起きますので，ポアソン過程と見なしてよいでしょう。</p>
 </div>
 
 <div class="note">
 <p>これが $\lambda = 38/1200$ の指数分布（密度関数 $\lambda e^{-\lambda t}$）であるといえるかをコルモゴロフ・スミルノフ検定（Kolmogorov-Smirnov test）で調べるには次のようにします：</p>
 <pre>
-ks.test(dx2, "pexp", 38/1200, exact=TRUE)
-</pre>
+<code>ks.test(dx2, "pexp", 38/1200, exact=TRUE)
+</code></pre>
 <p>$p = 0.6$ 程度で，指数分布でないとはいえません。</p>
 </div>
 
@@ -308,8 +308,8 @@ ks.test(dx2, "pexp", 38/1200, exact=TRUE)
 <p>別の例を考えましょう。バックグラウンドのカウントが 100 ありました。試料のカウントがどれだけあれば検出したと見なすべきでしょうか。</p>
 
 <pre>
-binom.test(100, 249, 0.5)
-</pre>
+<code>binom.test(100, 249, 0.5)
+</code></pre>
 
 <p>と打てば $p$ 値が 0.002285 で，0.27% より小さくなりますので，全部で249カウント，つまり試料が149カウントすればいいことになります。</p>
 

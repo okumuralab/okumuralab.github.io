@@ -29,23 +29,23 @@
 <p>Rで次のように打ち込んでデータを <code>data</code> というオブジェクトに読み込みます。</p>
 
 <pre>
-data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/1310688_1.csv",
+<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/1310688_1.csv",
                 as.is=TRUE, fileEncoding="SJIS", na.strings="-")
-</pre>
+</code></pre>
 
 <p>ここで <code>as.is=TRUE</code> は文字列をそのまま文字列として扱う指定です（Rのデフォルトではカテゴリーデータとして扱われます）。<code>na.strings="-"</code> はハイフンを欠測値（NA = Not Available）として扱うという指定です。欠測値として扱うべき文字列が複数ある場合は <code>na.strings=c("","-","--")</code> といった具合に指定します。CSVでは空文字列を欠測値とすることが多いようですが，PDFからデータを抜き出す際には何か入っていないと列がうまく認識できません（ちなみにセルの結合とセル内改行もPDFからデータを抜き出す際の大敵です）。Rは標準では欠測値を <code>NA</code> という文字列で表しますが，ハイフンのほうが一般にわかりやすいでしょう。</p>
 
 <pre>
-summary(data)
-</pre>
+<code>summary(data)
+</code></pre>
 
 <p>と打てばデータの要約が表示されます。この場合は13変数2180ケースの多変量データです。ここで数値なのに文字列として扱われた列がないか確かめます。</p>
 
 <div class="note">
 <p>実は最初，欠測値があることに気づかず <code>na.strings="-"</code> を指定しなかったので，空間線量率が文字列になってしまいました。正規表現を使えば数字と小数点以外のデータを列挙できます：</p>
 <pre>
-data$空間線量率μSv_h[grep("[^0-9.]", data$空間線量率μSv_h)]
-</pre>
+<code>data$空間線量率μSv_h[grep("[^0-9.]", data$空間線量率μSv_h)]
+</code></pre>
 </div>
 
 <h2>セシウム137とセシウム134の比</h2>
@@ -53,29 +53,29 @@ data$空間線量率μSv_h[grep("[^0-9.]", data$空間線量率μSv_h)]
 <p>Cs137とCs134の放射能の面密度（Bq/m<sup>2</sup>）を比べてみましょう。Macでしか必要のないものは頭に <code>#</code> を付けてコメントアウトしてあります。</p>
 
 <pre>
-# quartz()  # MacでX11とQuartzを選べる環境の場合はQuartzのほうが高品位
+<code># quartz()  # MacでX11とQuartzを選べる環境の場合はQuartzのほうが高品位
 # par(family="HiraKakuProN-W3") # Macでのフォント指定
 par(mgp=c(2,0.8,0)) # 特に不要だがマージンの微調整
 plot(data$Cs137_Bq_m2, data$Cs134_Bq_m2,
      xlab="Cs137（Bq/m2）", ylab="Cs134（Bq/m2）")
-</pre>
+</code></pre>
 
 <p>ここで m2 をちゃんと m<sup>2</sup> にしたければ少し工夫を要します：</p>
 
 <pre>
-plot(data$Cs137_Bq_m2, data$Cs134_Bq_m2,
+<code>plot(data$Cs137_Bq_m2, data$Cs134_Bq_m2,
      xlab=expression(paste("Cs137（", Bq/m^2, "）")),
      ylab=expression(paste("Cs134（", Bq/m^2, "）")))
-</pre>
+</code></pre>
 
 <p>さらにx軸もy軸も対数にします：</p>
 
 <pre>
-plot(data$Cs137_Bq_m2, data$Cs134_Bq_m2,
+<code>plot(data$Cs137_Bq_m2, data$Cs134_Bq_m2,
      xlab=expression(paste("Cs137（", Bq/m^2, "）")),
      ylab=expression(paste("Cs134（", Bq/m^2, "）")),
      log="xy")
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/110903c.png" alt="Cs137 vs Cs134">
@@ -84,11 +84,11 @@ plot(data$Cs137_Bq_m2, data$Cs134_Bq_m2,
 <p>もっと比をわかりやすくするためには次のようにするとよいでしょう。</p>
 
 <pre>
-plot(data$Cs137_Bq_m2+data$Cs134_Bq_m2,
+<code>plot(data$Cs137_Bq_m2+data$Cs134_Bq_m2,
      data$Cs134_Bq_m2/data$Cs137_Bq_m2,
      xlab=expression(paste("Cs134+Cs137（", Bq/m^2, "）")),
      ylab="Cs134/Cs137", log="x")
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/110903d.png" alt="Cs134/Cs137 vs Cs134+Cs137">
@@ -97,23 +97,23 @@ plot(data$Cs137_Bq_m2+data$Cs134_Bq_m2,
 <p>値が小さいほどばらつきが大きそうです。ちなみに，この図にはCs134/Cs137のメディアンの線が入れてあります。メディアンは</p>
 
 <pre>
-median(data$Cs134_Bq_m2/data$Cs137_Bq_m2)
-</pre>
+<code>median(data$Cs134_Bq_m2/data$Cs137_Bq_m2)
+</code></pre>
 
 <p>で計算できます（0.91ほどです）。メディアンに合わせた横線を引くには次のようにします。</p>
 
 <pre>
-abline(h=median(data$Cs134_Bq_m2/data$Cs137_Bq_m2))
-</pre>
+<code>abline(h=median(data$Cs134_Bq_m2/data$Cs137_Bq_m2))
+</code></pre>
 
 <p>ついでにヒストグラムも描いてみます。<code>breaks</code>
 はおよその階級数です。階級の右端を含まない方式にするために <code>right=FALSE</code>
 というオプションを入れています（デフォルトでは逆）。</p>
 
 <pre>
-hist(data$Cs134_Bq_m2/data$Cs137_Bq_m2, breaks=100, right=FALSE,
+<code>hist(data$Cs134_Bq_m2/data$Cs137_Bq_m2, breaks=100, right=FALSE,
      col="gray", xlab="Cs134/Cs137", ylab="度数", main="")
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/110905a.png" alt="Histogram of Cs134/Cs137">
@@ -124,37 +124,37 @@ hist(data$Cs134_Bq_m2/data$Cs137_Bq_m2, breaks=100, right=FALSE,
 <p>福島第一原発の位置は経度141.032339，緯度37.422778です。これをベクトルで表しておきます：</p>
 
 <pre>
-fuku1 = c(141.032339, 37.422778)
-</pre>
+<code>fuku1 = c(141.032339, 37.422778)
+</code></pre>
 
 <p>各点の経度・緯度を2180行2列の行列で表します：</p>
 
 <pre>
-p = cbind(data$経度_10進, data$緯度_10進)
-</pre>
+<code>p = cbind(data$経度_10進, data$緯度_10進)
+</code></pre>
 
 <p>このとき，各点と福島第一原発との距離は，空間データ（spatial data）を扱うためのspというパッケージで定義されている <code>spDistsN1()</code> という関数で求めます。spがインストールされていない場合は例えば次のようにしてインストールしておきます：</p>
 
 <pre>
-options(repos="http://cran.ism.ac.jp") # ダウンロード先（例：統数研）
+<code>options(repos="http://cran.ism.ac.jp") # ダウンロード先（例：統数研）
 install.packages("sp")
-</pre>
+</code></pre>
 
 <p>こうしてから次のようにして距離を求めます（単位：km）：</p>
 
 <pre>
-library(sp)
+<code>library(sp)
 fuku1dist = spDistsN1(p, fuku1, longlat=TRUE)
-</pre>
+</code></pre>
 
 <p>この距離を横軸，Cs134/Cs137の比の値を縦軸にとって，プロットします：</p>
 
 <pre>
-plot(fuku1dist,
+<code>plot(fuku1dist,
      data$Cs134_Bq_m2/data$Cs137_Bq_m2,
      xlab="福島第一原発との距離（km）",
      ylab="Cs134/Cs137")
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/110903e.png" alt="Cs134/Cs137 vs distance from Fukushima Daiichi">
@@ -167,26 +167,26 @@ plot(fuku1dist,
 <p>Cs134/Cs137比が何によるのかをもっと詳しく調べるため，地図に描いてみることにします。使うのは<a href="rgooglemaps.html">RgoogleMaps</a>というRのパッケージです。ついでにRColorBrewerも入れておきます。</p>
 
 <pre>
-options(repos="http://cran.ism.ac.jp") # ダウンロード先（例：統数研）
+<code>options(repos="http://cran.ism.ac.jp") # ダウンロード先（例：統数研）
 install.packages("png")
 install.packages("RgoogleMaps")
 install.packages("RColorBrewer")
-</pre>
+</code></pre>
 
 <p>これらパッケージと福島の地図を読み込みます：</p>
 
 <pre>
-library(RgoogleMaps)
+<code>library(RgoogleMaps)
 library(RColorBrewer)
 source("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/GetMap.R") # バグフィックス
 FukushimaMap = GetMap(c(37.38,140.2), destfile="fukushima.png",
                       zoom=9, sensor="false", hl="ja")
-</pre>
+</code></pre>
 
 <p>中心位置とズーム値は適当です。次に色を適当に定義して地図上にプロットします。</p>
 
 <pre>
-cols = brewer.pal(11, "RdBu")[11:1]
+<code>cols = brewer.pal(11, "RdBu")[11:1]
 cols = c(cols, cols[11])
 tmp = PlotOnStaticMap(FukushimaMap,
         lat=data$緯度_10進, lon=data$経度_10進, pch=16,
@@ -197,7 +197,7 @@ tmp = PlotOnStaticMap(FukushimaMap,
 legend(-300, -290, xjust=0, yjust=0,
        legend=paste("〜",(14:4)/10,sep=""),
        fill=cols[11:1], bg="white")
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/110903f.png" alt="Cs134/Cs137 map">
@@ -207,12 +207,12 @@ legend(-300, -290, xjust=0, yjust=0,
 で連続的に色を変えたものです。白が Cs134/Cs137 = 1 です。</p>
 
 <pre>
-cols = colorRamp(c("#004080","#0080ff","white","#ff8000","#804000"))
+<code>cols = colorRamp(c("#004080","#0080ff","white","#ff8000","#804000"))
 colfunc = function(x) { rgb(cols(pmin(pmax(x, 0), 1))/255) }
 tmp = PlotOnStaticMap(FukushimaMap,
         lat=data$緯度_10進, lon=data$経度_10進, pch=16,
         col=colfunc(data$Cs134_Bq_m2/data$Cs137_Bq_m2 - 0.5))
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/110906a.png" alt="Cs134/Cs137 map">
@@ -225,10 +225,10 @@ tmp = PlotOnStaticMap(FukushimaMap,
 <p>横軸にセシウムの総量，縦軸に空間線量率をとってプロットしてみます。</p>
 
 <pre>
-plot(data$Cs134_Bq_m2+data$Cs137_Bq_m2, data$空間線量率μSv_h,
+<code>plot(data$Cs134_Bq_m2+data$Cs137_Bq_m2, data$空間線量率μSv_h,
      xlab=expression(paste("Cs134+Cs137（", Bq/m^2, "）")),
      ylab="空間線量率（μSv/h）")
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/110904a.png" alt="Dose Rate vs Cs134+Cs137">
@@ -239,46 +239,46 @@ plot(data$Cs134_Bq_m2+data$Cs137_Bq_m2, data$空間線量率μSv_h,
 <p>空間線量率はセシウムの量の1次式で近似できるでしょうか。Rの <code>lm()</code> という関数で調べてみます。</p>
 
 <pre>
-lm(data$空間線量率μSv_h ~ data$Cs134_Bq_m2 + data$Cs137_Bq_m2)
-</pre>
+<code>lm(data$空間線量率μSv_h ~ data$Cs134_Bq_m2 + data$Cs137_Bq_m2)
+</code></pre>
 
 <p>結果は
 7.794×10<sup>-6</sup>Cs134 - 1.888×10<sup>-6</sup>Cs137 + 4.643×10<sup>-1</sup>
 という変な式で，Cs137が増えると線量率は減ることになってしまいます。これは重回帰分析の常識で，説明変数間の相関が強い場合，つまり多重共線性（multicollinearity，「マルチコ」）のある場合には，重回帰分析の結果は不安定になります。実際，</p>
 
 <pre>
-model1 = lm(data$空間線量率μSv_h ~ data$Cs134_Bq_m2 + data$Cs137_Bq_m2)
+<code>model1 = lm(data$空間線量率μSv_h ~ data$Cs134_Bq_m2 + data$Cs137_Bq_m2)
 summary(model1)
-</pre>
+</code></pre>
 
 <p>のようにして少し詳しい結果を出力してみれば，Cs137の係数は誤差が大きすぎて意味を持たないことがわかります。この場合，Cs134とCs137の単純和を使って，</p>
 
 <pre>
-cesium = data$Cs134_Bq_m2 + data$Cs137_Bq_m2
+<code>cesium = data$Cs134_Bq_m2 + data$Cs137_Bq_m2
 lm(data$空間線量率μSv_h ~ cesium)
-</pre>
+</code></pre>
 
 <p>あるいは定数項のないモデルを使って</p>
 
 <pre>
-lm(data$空間線量率μSv_h ~ cesium - 1)
-</pre>
+<code>lm(data$空間線量率μSv_h ~ cesium - 1)
+</code></pre>
 
 <p>とすれば，空間線量率は 2.792×10<sup>-6</sup>(Cs134+Cs137) で予測できることがわかります。この直線をグラフに書き込むには</p>
 
 <pre>
-abline(0, 2.792e-6)
-</pre>
+<code>abline(0, 2.792e-6)
+</code></pre>
 
 <p>と打ち込みます。これが上の図でした。</p>
 
 <p>ところで，本当はこういうグラフは両対数にするべきですね。</p>
 
 <pre>
-plot(cesium, data$空間線量率μSv_h,
+<code>plot(cesium, data$空間線量率μSv_h,
      xlab=expression(paste("Cs134+Cs137（", Bq/m^2, "）")),
      ylab="空間線量率（μSv/h）", log="xy")
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/110904b.png" alt="Dose Rate vs Cs134+Cs137">
@@ -287,20 +287,20 @@ plot(cesium, data$空間線量率μSv_h,
 <p>ここで2本の線を引きました。より急峻なものは先ほどの1次回帰で求めた線ですが，対数プロットでは必ずしも直線にならないので <code>curve()</code> という関数で描きます。</p>
 
 <pre>
-curve(2.792e-6 * x, add=TRUE)
-</pre>
+<code>curve(2.792e-6 * x, add=TRUE)
+</code></pre>
 
 <p>水平に近いほうの線は</p>
 
 <pre>
-lm(log(data$空間線量率μSv_h) ~ log(cesium))
-</pre>
+<code>lm(log(data$空間線量率μSv_h) ~ log(cesium))
+</code></pre>
 
 <p>というモデルで求めたもので，</p>
 
 <pre>
-curve(exp(0.7353 * log(x) - 9.0598), add=TRUE)
-</pre>
+<code>curve(exp(0.7353 * log(x) - 9.0598), add=TRUE)
+</code></pre>
 
 <p>で描きました。考察はお任せします。</p>
 
@@ -309,30 +309,30 @@ curve(exp(0.7353 * log(x) - 9.0598), add=TRUE)
 <p>以上は2011年9月3日に書いたことですが，炉が停止した 2011/3/11 時点でのCs134/Cs137比がTwitterで話題になり，遠藤知弘先生がいろいろ調べてくださいました。ここでも少し追記しておきます。上で考察したデータは 2011/6/14 時点に揃えたものですので，95日巻き戻せばいいわけです：</p>
 
 <pre>
-&gt; t0 = as.POSIXct("2011/3/11")
+<code>&gt; t0 = as.POSIXct("2011/3/11")
 &gt; t1 = as.POSIXct("2011/6/14")
 &gt; t1-t0
 Time difference of 95 days
-</pre>
+</code></pre>
 
 <p>まずCs134とCs137の半減期ですが，ここではBNLの
 <a href="http://www.nndc.bnl.gov/chart/">Interactive Chart of Nuclides</a>
 にあった値 2.0652，30.08 を使います：</p>
 
 <pre>
-yr = 95 / 365.2422
+<code>yr = 95 / 365.2422
 CsRatio = (data$Cs134_Bq_m2 * 2^(yr/2.0652)) / (data$Cs137_Bq_m2 * 2^(yr/30.08))
 summary(CsRatio)
 sd(CsRatio)
-</pre>
+</code></pre>
 
 <p>平均 0.9960，メディアン 0.9878，標準偏差 0.0734 であることがわかります。ついでに度数分布：</p>
 
 <pre>
-hist(CsRatio, breaks=100, right=FALSE, col="gray",
+<code>hist(CsRatio, breaks=100, right=FALSE, col="gray",
      xlab="Cs134/Cs137 as of 2011/3/11", ylab="度数", main="")
 abline(v=1, col="red")
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/111102a.png" alt="Cs134/Cs137 ratio as of 2011/3/11">
@@ -369,25 +369,25 @@ abline(v=1, col="red")
 </table>
 
 <pre>
-library(boot)
+<code>library(boot)
 yr = 95 / 365.2422
 data311 = data.frame(Cs134=data$Cs134_Bq_m2 * 2^(yr/2.0652),
                      Cs137=data$Cs137_Bq_m2 * 2^(yr/30.08))
 boot(data311, function(d,i) sum(d$Cs134[i])/sum(d$Cs137[i]), R=100000)
 boot(data311, function(d,i) mean(d$Cs134[i]/d$Cs137[i]), R=100000)
 boot(data311, function(d,i) median(d$Cs134[i]/d$Cs137[i]), R=100000)
-</pre>
+</code></pre>
 
 <p>ちなみに，mean(y/x) はあまり計算したくない量です。例えば</p>
 
 <pre>
-x = rnorm(1000000)+5
+<code>x = rnorm(1000000)+5
 y = rnorm(1000000)+5
 mean(y)/mean(x)
 mean(y/x)
 median(y/x)
 exp(mean(log(y/x)))
-</pre>
+</code></pre>
 
 <p>などとしてみればわかるように，<code>mean(y)/mean(x)</code> や <code>median(y/x)</code>
 や相乗平均 <code>exp(mean(log(y/x)))</code>

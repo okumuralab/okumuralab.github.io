@@ -26,16 +26,16 @@
 <p>次は従来型とICT利用型の授業を受けた感想を尋ねた架空のデータである。</p>
 
 <pre>
-         最悪 悪い 普通 良い 最高
+<code>         最悪 悪い 普通 良い 最高
 従来型      4    5    6    3    2
 ICT利用型   1    4    3    6    6
-</pre>
+</code></pre>
 
 <p>これがテキストファイル <code>result.txt</code> に入っているとして，次のようにしてRで読むことができる（保存の場所によってはパス指定が必要。クリップボード経由でも可）。</p>
 
 <pre>
-&gt; data = read.table("result.txt")
-</pre>
+<code>&gt; data = read.table("result.txt")
+</code></pre>
 
 <p><code>data</code> とだけ打ち込んでEnterを押して，正しく読めているか確認する。</p>
 
@@ -44,7 +44,7 @@ ICT利用型   1    4    3    6    6
 <p>普通の積み重ね棒グラフ（(stacked|divided) bar (plot|chart)）を描いてみよう。</p>
 
 <pre>
-&gt; rowSums(data)  # 行ごとに和を求める
+<code>&gt; rowSums(data)  # 行ごとに和を求める
    従来型 ICT利用型 
        20        20 
 &gt; ratio = data / rowSums(data)  # 行ごとに和で割る
@@ -61,7 +61,7 @@ ICT利用型 0.05 0.20 0.15 0.30  0.3
 &gt; # ラベルを描くのはちょっと難しい
 &gt; t = as.numeric(ratio[2,])
 &gt; mtext(names(data), at=cumsum(t)-t/2)
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/120811a.png" alt="リッカート型データの棒グラフの例">
@@ -73,24 +73,24 @@ ICT利用型 0.05 0.20 0.15 0.30  0.3
 <p>色が寂しい場合は，例えば次のように色を設定する。</p>
 
 <pre>
-cols = c("#CA0020", "#F4A582", "gray90", "#92C5DE", "#0571B0")
+<code>cols = c("#CA0020", "#F4A582", "gray90", "#92C5DE", "#0571B0")
 barplot(t(ratio), horiz=TRUE, col=cols)
-</pre>
+</code></pre>
 
 <p>これらの色は次のようにして計算した。</p>
 
 <pre>
-library(RColorBrewer)
+<code>library(RColorBrewer)
 cols = brewer.pal(5, "RdBu")
 cols[3] = "gray90"
-</pre>
+</code></pre>
 
 <p><del>これが次のHHパッケージのデフォルト色である。</del></p>
 
 <p>これに次のHHパッケージの技も含めてまとめると次のようになる：</p>
 
 <pre>
-data = data[2:1,]        # 逆順に
+<code>data = data[2:1,]        # 逆順に
 par(las=1)               # 字を横書きに
 par(mgp=c(2.4,0.8,0.4))  # 目盛り位置調整
 par(mar=c(5,6,4,4)+0.1)  # マージン調整（元は c(5,4,4,2)+0.1）
@@ -99,7 +99,7 @@ cols = c("#CA0020", "#F4A582", "gray90", "#92C5DE", "#0571B0")
 barplot(t(data), horiz=TRUE, offset=off, col=cols, xlab="人数")
 t = as.numeric(data[2,])
 mtext(names(data), at=cumsum(t)-t/2 + off[2])
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/150209a.png" alt="リッカート型データの棒グラフの例">
@@ -114,20 +114,20 @@ mtext(names(data), at=cumsum(t)-t/2 + off[2])
 <p><a href="http://cran.r-project.org/web/packages/HH/index.html">HH</a>パッケージがインストールされていない場合はあらかじめ：</p>
 
 <pre>
-install.packages("HH")
-</pre>
+<code>install.packages("HH")
+</code></pre>
 
 <p>HHパッケージを読み込む：</p>
 
 <pre>
-library("HH")
-</pre>
+<code>library("HH")
+</code></pre>
 
 <p>あとは簡単。</p>
 
 <pre>
-plot.likert(data, main="アンケート結果", xlab="人数")
-</pre>
+<code>plot.likert(data, main="アンケート結果", xlab="人数")
+</code></pre>
 
 <figure>
 <!-- <img src="img/120811b.png" alt="HHパッケージのplot.likertの例"> -->

@@ -44,14 +44,14 @@
 パッケージをインストールしておいてください。</p>
 
 <pre>
-data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/111107kamagaya.csv")
+<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/111107kamagaya.csv")
 library(RgoogleMaps)
 source("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/GetMap.R")
 KamagayaMap = GetMap(c(35.77279,139.9979), destfile="kamagaya.png",
                      zoom=14, sensor="false", hl="ja", maptype="roadmap")
 tmp = PlotOnStaticMap(KamagayaMap, lat=data[,1], lon=data[,2],
                       col="red", FUN=text, labels=data[,3]*100, cex=0.7)
-</pre>
+</code></pre>
 
 <p>なお，測定はクリアパルスの<a href="http://www.clearpulse.co.jp/jpn/news/2011/0316/index.html">A2700</a>というCsI(Tl)シンチレータで30秒ずつ行ったそうです。カタログによれば感度は0.01μSv/hに対して10カウント/分以上とのことですので，仮にぴったり10cpm/0.01μSv/hだとすると，今回の測定値のメディアン0.13μSv/hでは30秒で65カウントで，その95%信頼区間は0.10〜0.16μSv/h（統計誤差だけ）ということになります。</p>
 

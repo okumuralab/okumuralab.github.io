@@ -20,26 +20,26 @@
 <p>Rubyのような言語では，例えば次のようなスクリプトでテキストファイルを処理することが多い：</p>
 
 <pre>
-#! /usr/bin/env ruby -w
+<code>#! /usr/bin/env ruby -w
 # -*- coding: utf-8 -*-
 
 while line = gets
     puts(line)  # 標準出力に書き出す
 end
-</pre>
+</code></pre>
 
 <p>Rでも同様なことができることを示すために，<a href="160629.html">名古屋市のデータのCSV化</a>では強いてRを使った。必要な技を以下にまとめておく。</p>
 
 <p>まずは基本として，標準入力から読み込んだ各行について処理（たとえば標準出力に書き出す）をする：</p>
 
 <pre>
-#! /usr/bin/env Rscript
+<code>#! /usr/bin/env Rscript
 
 lines = readLines("stdin")
 for (line in lines) {
     cat(line, "\n")  # 標準出力に書き出す
 }
-</pre>
+</code></pre>
 
 <p>入力ファイル（ここでは標準入力）の最後の行に行末がなければ「不完全な最終行が見つかりました」という警告が出る（無視してよい）。</p>
 
@@ -48,28 +48,28 @@ for (line in lines) {
 <p>Rらしくないが，1行ずつ読んで処理するには，次のようにする：</p>
 
 <pre>
-#! /usr/bin/env Rscript
+<code>#! /usr/bin/env Rscript
 
 f = file("stdin", "r")
 while ({line = readLines(f, 1); length(line) != 0}) {
     cat(line, "\n")
 }
-</pre>
+</code></pre>
 
 <p>あるいは <code>while (length(line &lt;- readLines(f, 1)) != 0)</code> でもよいが，こういうわかりにくい方向に行くのではなく，むしろ次のようにするほうがよいであろう：</p>
 
 <pre>
-while (TRUE) {
+<code>while (TRUE) {
     line = readLines(f, 1)
     if (length(line) == 0) break
     cat(line, "\n")
 }
-</pre>
+</code></pre>
 
 <p>コマンドラインからファイル名を与える場合は次のようになる：</p>
 
 <pre>
-#! /usr/bin/env Rscript
+<code>#! /usr/bin/env Rscript
 
 args = commandArgs(trailingOnly=TRUE)
 for (arg in args) {
@@ -78,12 +78,12 @@ for (arg in args) {
         cat(line, "\n")
     }
 }
-</pre>
+</code></pre>
 
 <p>または</p>
 
 <pre>
-#! /usr/bin/env Rscript
+<code>#! /usr/bin/env Rscript
 
 args = commandArgs(trailingOnly=TRUE)
 for (arg in args) {
@@ -93,19 +93,19 @@ for (arg in args) {
     }
     # close(f) # たぶん不要
 }
-</pre>
+</code></pre>
 
 <p>デフォルトでは <code>cat()</code> は標準出力に出力する。ファイルに出力するには次のようにする。</p>
 
 <pre>
-#! /usr/bin/env Rscript
+<code>#! /usr/bin/env Rscript
 
 lines = readLines("stdin")
 f = file("out.txt", "w")
 for (line in lines) {
     cat(line, "\n", sep="", file=f)  # ファイルに書き出す
 }
-</pre>
+</code></pre>
 
 </article>
 

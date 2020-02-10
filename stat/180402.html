@@ -27,44 +27,44 @@
 <p>このExcelファイルのシート「表5-1」に平均寿命の推移（男），「表5-2」に平均寿命の推移（女）が載っている（年が元号だけで書かれている！）。「表5-1」では，平成27年（2015年）の都道府県・平均寿命はセル範囲 T7:U54 に書き込まれている（途中に空行があるが，これは平成7年（1995年）の兵庫県に括弧書きの数値を付けたためである。これもまずいやり方だ）。これをRで読み出そう：</p>
 
 <pre>
-library(readxl)
+<code>library(readxl)
 m2015 = read_excel("tdfk15-09.xls", "表5-1", "T7:U54", col_names=FALSE)
-</pre>
+</code></pre>
 
 <p>不完全な行（空行など）を削除する：</p>
 
 <pre>
-m2015 = na.omit(m2015)
-</pre>
+<code>m2015 = na.omit(m2015)
+</code></pre>
 
 <p>都道府県はJIS順（北海道〜沖縄）ではなく，年ごとに平均寿命の長い順に並べてある。しかも，都道府県名をよく見ると，「滋　賀」や「長　野」のように，途中に全角空白が入ったものが多い。「均等割り」のつもりだろうが，このような空白は外す必要がある：</p>
 
 <pre>
-m2015[[1]] = sub("　", "", m2015[[1]])
-</pre>
+<code>m2015[[1]] = sub("　", "", m2015[[1]])
+</code></pre>
 
 <p>これでデータクレンジング完了である。「表5-2」の2015年女も同様に行う。こちらにも空行はあるが，たまたま最下行なので，気にしなくてよい：</p>
 
 <pre>
-f2015 = read_excel("tdfk15-09.xls", "表5-2", "T7:U53", col_names=FALSE)
+<code>f2015 = read_excel("tdfk15-09.xls", "表5-2", "T7:U53", col_names=FALSE)
 f2015[[1]] = sub("　", "", f2015[[1]])
-</pre>
+</code></pre>
 
 <p>まず，これらをマージして，男を横軸，女を縦軸にとって，プロットしてみる：</p>
 
 <pre>
-a = merge(m2015, f2015, by.x=1, by.y=1)
+<code>a = merge(m2015, f2015, by.x=1, by.y=1)
 par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 plot(a[[2]], a[[3]], type="n", xlab="男", ylab="女", asp=1)
 text(a[[2]], a[[3]], a[[1]])
-</pre>
+</code></pre>
 
 <figure><img src="img/180402a.png" alt="都道府県別平均寿命（2015年）"></figure>
 
 <p>日経の記事では1990年と比較しているが，厚労省のデータにないので，平成7年（1995年）を使うことにする：</p>
 
 <pre>
-m1995 = read_excel("tdfk15-09.xls", "表5-1", "K7:L54", col_names=FALSE)
+<code>m1995 = read_excel("tdfk15-09.xls", "表5-1", "K7:L54", col_names=FALSE)
 m1995 = na.omit(m1995)
 m1995[[1]] = sub("　", "", m1995[[1]])
 
@@ -72,15 +72,15 @@ f1995 = read_excel("tdfk15-09.xls", "表5-2", "K7:L53", col_names=FALSE)
 f1995[[1]] = sub("　", "", f1995[[1]])
 
 b = merge(m1995, f1995, by.x=1, by.y=1)
-</pre>
+</code></pre>
 
 <p>さきほどと同様に1995年だけプロットしてもいいのだが，1995年と2015年を同時にプロットするほうがおもしろい。
 
 <pre>
-plot(c(a[[2]],b[[2]]), c(a[[3]],b[[3]]), type="n", xlab="男", ylab="女", asp=1)
+<code>plot(c(a[[2]],b[[2]]), c(a[[3]],b[[3]]), type="n", xlab="男", ylab="女", asp=1)
 text(b[[2]], b[[3]], b[[1]], col="blue")
 text(a[[2]], a[[3]], a[[1]])
-</pre>
+</code></pre>
 
 <figure><img src="img/180402b.png" alt="都道府県別平均寿命（1995年，2015年）"></figure>
 
@@ -89,14 +89,14 @@ text(a[[2]], a[[3]], a[[1]])
 <p>日経のグラフに近いものは，次のようにして描ける。ただし，ここでは男女の人数比を考えず単純平均した：</p>
 
 <pre>
-a[[4]] = (a[[2]] + a[[3]]) / 2
+<code>a[[4]] = (a[[2]] + a[[3]]) / 2
 b[[4]] = (b[[2]] + b[[3]]) / 2
 c = merge(a, b, by.x=1, by.y=1)
 plot(c[[7]], c[[4]], type="n", xlab="1995年", ylab="2015年", asp=1)
 text(c[[7]], c[[4]], c[[1]])
 abline(v=(76.70+83.22)/2)
 abline(h=(80.77+87.01)/2)
-</pre>
+</code></pre>
 
 <figure><img src="img/180402c.png" alt="都道府県別平均寿命（1995年，2015年）"></figure>
 
@@ -109,13 +109,13 @@ abline(h=(80.77+87.01)/2)
 <p>PDFからデータを取り出すには，いろいろな方法があるだろうが，ここでは pdftotext コマンドを使ってテキスト化してRubyスクリプトで整形する方法を使う。</p>
 
 <pre>
-pdftotext -raw mmc1.pdf
-</pre>
+<code>pdftotext -raw mmc1.pdf
+</code></pre>
 
 <p>とすると，mmc1.txt というテキストファイルが生成される。その中の「Web Table 2」あたりの下の「Japan」という行から「B (Men)」の直前までを切り出して，次の「やっつけ」RubyスクリプトでCSV化する：</p>
 
 <pre>
-#! /usr/bin/env ruby -w
+<code>#! /usr/bin/env ruby -w
 # coding: utf-8
 
 print "Pref,M1990,M2015,Mchange,L1990,L2015,Lchange,H1990,H2015,Hchange"
@@ -132,7 +132,7 @@ while line = gets
   end
 end
 puts
-</pre>
+</code></pre>
 
 <p>同様なものが3組あり，それぞれ「A (Both sexes combined)」「B (Men)」「C (Women)」となっている。念のため，生成したCSVファイルを
 <a href="data/mmc1WT2A.csv">mmc1WT2A.csv</a>,
@@ -141,7 +141,7 @@ puts
 として置いておく。これを使ってプロットしてみる：</p>
 
 <pre>
-x = read.csv("mmc1WT2A.csv", as.is=TRUE)
+<code>x = read.csv("mmc1WT2A.csv", as.is=TRUE)
 kenmei = c("北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
   "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山",
   "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重",
@@ -153,7 +153,7 @@ plot(y$L1990, y$L2015, type="n", xlab="1990年", ylab="2015年", asp=1)
 text(y$L1990, y$L2015, y$kenmei)
 abline(v=x$L1990[1])
 abline(h=x$L2015[1])
-</pre>
+</code></pre>
 
 <figure><img src="img/180403a.png" alt="都道府県別平均寿命（1990年，2015年）"></figure>
 

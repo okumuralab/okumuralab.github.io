@@ -40,7 +40,7 @@
 <div class="note">
 <p>念のためここにも書いておきます（2009-10-24各紙報道，単位：万円）：</p>
 <pre>
-名,本人,家族含む
+<code>名,本人,家族含む
 鳩山由紀夫首相,144269,144269
 菅直人副総理兼国家戦略担当相,905,2232
 原口一博総務相,914,1220
@@ -59,44 +59,44 @@
 亀井静香金融・郵政担当相,9427,18745
 福島瑞穂消費者・少子化担当相,12734,25000
 仙谷由人行政刷新担当相,1968,3987
-</pre>
+</code></pre>
 </div>
 
 <p>これを <code>shisan.csv</code> というファイルに保存して読み込みます：</p>
 
 <pre>
-X = read.csv("shisan.csv")
-</pre>
+<code>X = read.csv("shisan.csv")
+</code></pre>
 
 <p>本人の資産のサマリーを調べます：</p>
 
 <pre>
-&gt; summary(X$本人)
+<code>&gt; summary(X$本人)
     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
      0.0    984.2   2681.0  11620.0   4654.0 144300.0 
-</pre>
+</code></pre>
 
 <p>平均値1億1620万円，中央値2681万円です。これらの標本誤差を求めるために，1000個のブートストラップ標本を生成して，その平均値・中央値の分布を調べましょう。中央値なら</p>
 
 <pre>
-md = replicate(1000, median(sample(X$本人, 18, replace=TRUE)))
-</pre>
+<code>md = replicate(1000, median(sample(X$本人, 18, replace=TRUE)))
+</code></pre>
 
 <p>でできます。これは次のループと同じことです：</p>
 
 <pre>
-md = numeric(1000)
+<code>md = numeric(1000)
 for (i in 1:1000) {
   md[i] = median(sample(X$本人, 18, replace=TRUE))
 }
-</pre>
+</code></pre>
 
 <p>同様に平均値も <code>mn</code> に求めて比較してみます：</p>
 
 <pre>
-boxplot(mn, md, col="#b4ebfa", names=c("平均", "中央値"),
+<code>boxplot(mn, md, col="#b4ebfa", names=c("平均", "中央値"),
         horizontal=TRUE, las=TRUE, xlab="資産（万円）")
-</pre>
+</code></pre>
 
 <figure>
   <img src="img/140831a.png" alt="">
@@ -113,7 +113,7 @@ boxplot(mn, md, col="#b4ebfa", names=c("平均", "中央値"),
 に基づいた <code>boot</code> があります。後者がより一般的です。</p>
 
 <pre>
-&gt; library(boot)
+<code>&gt; library(boot)
 &gt; b = boot(X, function(d,k) median(d$本人[k]), R=100000)
 &gt; b
 
@@ -128,16 +128,16 @@ boot(data = X, statistic = function(d, k) median(d$本人[k]),
 Bootstrap Statistics :
     original    bias    std. error
 t1*     2681 -32.10432    1005.341
-</pre>
+</code></pre>
 
 <p>この2行目 <code>b = ...</code> は，次のように分けて書くほうがわかりやすいかもしれません：</p>
 
 <pre>
-foo = function(d, k) {
+<code>foo = function(d, k) {
   median(d$本人[k])
 }
 b = boot(X, foo, R=100000)
-</pre>
+</code></pre>
 
 <p><code>boot()</code> の第1引数は全データを含むベクトルまたは行列またはデータフレームで，第2引数で与える関数の第1引数に引き継がれます。第2引数で与える関数は統計量を求めるためのもので，その第2引数はデータの行インデックスです（ライブラリを使わない例で <code>sample(18,replace=TRUE)</code>
 を入れたものです）。引数 <code>R=...</code> がブートストラップ・サンプルの数です。<code>boot()</code> の第2引数で与えた関数はR回呼び出されます。Rは通常1000回あれば十分です。</p>
@@ -151,9 +151,9 @@ b = boot(X, foo, R=100000)
 <p>結果を変数（ここでは <code>b</code>）に入れておくと，後でより詳しい結果を出力することができます。例えば <code>plot(b)</code> とすればブートストラップされた統計量の分布がプロットされます。</p>
 
 <pre>
-par(mgp=c(2,0.8,0))
+<code>par(mgp=c(2,0.8,0))
 plot(b)
-</pre>
+</code></pre>
 
 <div>
 <img src="img/111112a.png" alt="ブートストラップのプロット">

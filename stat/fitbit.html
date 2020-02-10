@@ -36,7 +36,7 @@
 <p>出力の形式はときどき変わるようなので，確認が必要。</p>
 
 <pre>
-install.packages("fitbitScraper")
+<code>install.packages("fitbitScraper")
 library(fitbitScraper)
 
 cookie = login(email="メールアドレス", password="パスワード")
@@ -46,17 +46,17 @@ floors = get_intraday_data(cookie, what="floors", date="2015-12-05")
 active_minutes = get_intraday_data(cookie, what="active-minutes", date="2015-12-05")
 calories_burned = get_intraday_data(cookie, what="calories-burned", date="2015-12-05")
 heart_rate = get_intraday_data(cookie, what="heart-rate", date="2015-12-05")
-</pre>
+</code></pre>
 
 <p>これで1日分のデータが取得できる。次は心拍数のプロットである。</p>
 
 <pre>
-t = heart_rate$time
+<code>t = heart_rate$time
 h = ifelse(heart_rate$bpm == 0, NA, heart_rate$bpm)
 plot(t, h, type="l", col="#f39800", lwd=2, xlab="", ylab="",
      xlim=as.POSIXct(c("2015-12-05 06:00","2015-12-05 22:00")),
      las=1, panel.first=grid(NA,NULL))
-</pre>
+</code></pre>
 
 <figure><img src="img/151206a.png" alt="心拍数"></figure>
 
@@ -78,7 +78,7 @@ plot(t, h, type="l", col="#f39800", lwd=2, xlab="", ylab="",
 <p>次のようなスクリプトを作っておく。</p>
 
 <pre>
-#! /usr/local/bin/Rscript
+<code>#! /usr/local/bin/Rscript
 
 if (!require(fitbitScraper)) {
     install.packages("fitbitScraper")
@@ -107,13 +107,13 @@ axis(1, at=tt, labels=6:23)
 axis(4, at=s, labels=paste0(r,"%"))
 
 dev.off()
-</pre>
+</code></pre>
 
 <p>crontabに次のように登録する：</p>
 
 <pre>
-0 7-23 * * * /.../.../.../fitbit.R &gt;/dev/null 2&gt;&amp;1
-</pre>
+<code>0 7-23 * * * /.../.../.../fitbit.R &gt;/dev/null 2&gt;&amp;1
+</code></pre>
 
 <p>例として上と同じデータを使うと次のようになる（cairoではなくquartzデバイスに出力）：</p>
 
@@ -124,10 +124,10 @@ dev.off()
 <p>1日の心拍数の変化もおもしろいが，毎日の安静時心拍数をプロットすると，風邪をひいたなどの体調の悪い日が歴然と現れる（図は省略する）。</p>
 
 <pre>
-rhr = get_daily_data(cookie, what="getRestingHeartRateData",
+<code>rhr = get_daily_data(cookie, what="getRestingHeartRateData",
                      start_date="2016-01-01", end_date="2016-08-10")
 plot(as.POSIXct(rhr$time), rhr$restingHeartRate, pch=16, type="o")
-</pre>
+</code></pre>
 
 <p>上の <code>plot()</code> のオプションは適当である。特に時間軸をわかりやすくする方法は<a href="timeseries.html">時系列データ</a>を参照されたい。</p>
 
@@ -143,8 +143,8 @@ plot(as.POSIXct(rhr$time), rhr$restingHeartRate, pch=16, type="o")
 
 <pre>
 <code class="prom">sleep$df$date</code>
-[1] "2016-07-18" "2016-07-29" "2016-08-01" "2016-08-02" "2016-08-03"
-[6] "2016-08-04" "2016-08-10"
+<code>[1] "2016-07-18" "2016-07-29" "2016-08-01" "2016-08-02" "2016-08-03"</code>
+<code>[6] "2016-08-04" "2016-08-10"</code>
 </pre>
 
 <p>この4番目の日（2016-08-02）は，出張でホテルの環境が悪く，最悪の睡眠状態であった。スマホのツールで見ると次のような感じである：</p>
@@ -153,34 +153,34 @@ plot(as.POSIXct(rhr$time), rhr$restingHeartRate, pch=16, type="o")
 
 <pre>
 <code class="prom">sleep$df[4,]$date</code>
-[1] "2016-08-02"
+<code>[1] "2016-08-02"</code>
 <code class="prom">sleep$df[4,]$startDateTime</code>
-[1] "2016-8-01 23:11:00"
+<code>[1] "2016-8-01 23:11:00"</code>
 <code class="prom">sleep$df[4,]$endDateTime</code>
-[1] "2016-8-02 06:40:00"
+<code>[1] "2016-8-02 06:40:00"</code>
 <code class="prom">sleep$df[4,]$sleepDuration</code>
-[1] 449
+<code>[1] 449</code>
 <code class="prom">sleep$df[4,]$breaks</code>
-[[1]]
-   startTime magnitude duration            startDateTime
-1      23:23         2        3 2016, 8, 1, 23, 23, 0, 0
-2      23:27         2        1 2016, 8, 1, 23, 27, 0, 0
-3      23:28         3        6 2016, 8, 1, 23, 28, 0, 0
-4      23:34         2        3 2016, 8, 1, 23, 34, 0, 0
-5      23:39         2        1 2016, 8, 1, 23, 39, 0, 0
-6       0:33         2        1  2016, 8, 2, 0, 33, 0, 0
-7       0:40         2        1  2016, 8, 2, 0, 40, 0, 0
-8       0:42         2        6  2016, 8, 2, 0, 42, 0, 0
-9       2:12         2        1  2016, 8, 2, 2, 12, 0, 0
-10      2:52         2        1  2016, 8, 2, 2, 52, 0, 0
-11      3:34         2        1  2016, 8, 2, 3, 34, 0, 0
-12      3:57         2        1  2016, 8, 2, 3, 57, 0, 0
-13      4:53         2        5  2016, 8, 2, 4, 53, 0, 0
+<code>[[1]]</code>
+<code>   startTime magnitude duration            startDateTime</code>
+<code>1      23:23         2        3 2016, 8, 1, 23, 23, 0, 0</code>
+<code>2      23:27         2        1 2016, 8, 1, 23, 27, 0, 0</code>
+<code>3      23:28         3        6 2016, 8, 1, 23, 28, 0, 0</code>
+<code>4      23:34         2        3 2016, 8, 1, 23, 34, 0, 0</code>
+<code>5      23:39         2        1 2016, 8, 1, 23, 39, 0, 0</code>
+<code>6       0:33         2        1  2016, 8, 2, 0, 33, 0, 0</code>
+<code>7       0:40         2        1  2016, 8, 2, 0, 40, 0, 0</code>
+<code>8       0:42         2        6  2016, 8, 2, 0, 42, 0, 0</code>
+<code>9       2:12         2        1  2016, 8, 2, 2, 12, 0, 0</code>
+<code>10      2:52         2        1  2016, 8, 2, 2, 52, 0, 0</code>
+<code>11      3:34         2        1  2016, 8, 2, 3, 34, 0, 0</code>
+<code>12      3:57         2        1  2016, 8, 2, 3, 57, 0, 0</code>
+<code>13      4:53         2        5  2016, 8, 2, 4, 53, 0, 0</code>
 <code class="prom">sleep$df[4,]$breaks[[1]]$startTime</code>
- [1] "23:23" "23:27" "23:28" "23:34" "23:39" "0:33"  "0:40"  "0:42"  "2:12" 
-[10] "2:52"  "3:34"  "3:57"  "4:53" 
+<code> [1] "23:23" "23:27" "23:28" "23:34" "23:39" "0:33"  "0:40"  "0:42"  "2:12" </code>
+<code>[10] "2:52"  "3:34"  "3:57"  "4:53" </code>
 <code class="prom">sleep$df[4,]$breaks[[1]]$startDateTime[[13]]</code>
-[1] 2016    8    2    4   53    0    0
+<code>[1] 2016    8    2    4   53    0    0</code>
 </pre>
 
 <p>図と見比べれば，<code>magnitude</code> の <code>2</code> は「寝返りを繰返す状態」，<code>3</code> は「目覚めた状態」であることがわかる。<code>duration</code> は分単位のようだ。</p>

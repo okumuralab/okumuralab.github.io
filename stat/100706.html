@@ -23,7 +23,7 @@
 <p>次の表はそれぞれ，男が「男に」と答えた割合，男が「女に」と答えた割合，女が「男に」と答えた割合，女が「女に」と答えた割合を，％単位で示した。</p>
 
 <pre>
-年      男男    男女    女男    女女
+<code>年      男男    男女    女男    女女
 1958    90      5       64      27
 1963    88      7       55      36
 1968    89      5       43      48
@@ -35,25 +35,25 @@
 1998    88      5       28      67
 2003    87      5       25      69
 2008    87      6       23      71
-</pre>
+</code></pre>
 
 <p>上の表をコピーして，Windowsなら</p>
 
 <pre>
-生まれかわり = read.table("clipboard", header=TRUE)
-</pre>
+<code>生まれかわり = read.table("clipboard", header=TRUE)
+</code></pre>
 
 <p>Macなら</p>
 
 <pre>
-生まれかわり = read.table(pipe("pbpaste"), header=TRUE)
-</pre>
+<code>生まれかわり = read.table(pipe("pbpaste"), header=TRUE)
+</code></pre>
 
 <p>と打ち込む。正しく入力できたか調べるために</p>
 
 <pre>
-生まれかわり
-</pre>
+<code>生まれかわり
+</code></pre>
 
 <p>とだけ打ち込んでみよう。</p>
 
@@ -63,24 +63,24 @@
 を略して <code>男男</code> といった名前だけでアクセスするには</p>
 
 <pre>
-attach(生まれかわり)
-</pre>
+<code>attach(生まれかわり)
+</code></pre>
 
 <p>と打ち込む。</p>
 
 <p>グラフを描くには，単純には</p>
 
 <pre>
-plot(年, 男男, type="o", ylim=c(0,100))
+<code>plot(年, 男男, type="o", ylim=c(0,100))
 points(年, 男女, type="o")
-</pre>
+</code></pre>
 
 <p>などのようにすればいい。Macではあらかじめ
 <code>par(family="HiraKakuPro-W3")</code>
 のように打ち込んでおかないと日本語部分が化ける。もっとかっこよくするには次のようにする。</p>
 
 <pre>
-# par(family="HiraKakuPro-W3")            # Mac
+<code># par(family="HiraKakuPro-W3")            # Mac
 
 par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 par(las=1)              # 縦軸の文字を横向きにしない
@@ -101,7 +101,7 @@ text(1983, 男男[年==1983], "男：男に", pos=3)
 text(1983, 男女[年==1983], "男：女に", pos=3)
 text(1983, 女男[年==1983], "女：男に", pos=3)
 text(1983, 女女[年==1983], "女：女に", pos=3)
-</pre>
+</code></pre>
 
 <div><img src="img/100706.png" alt="生まれかわるとしたら…"></div>
 

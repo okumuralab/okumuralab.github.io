@@ -30,8 +30,8 @@
 として置いておく（文字コードはUTF-8）。Rでの読み込みは次のようにしてできる。</p>
 
 <pre>
-osaka = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/osaka2015.csv")
-</pre>
+<code>osaka = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/osaka2015.csv")
+</code></pre>
 
 <p>これだけでもいろいろグラフが描けるが，やはり区ごとの年齢構成が重要である。</p>
 
@@ -49,13 +49,13 @@ osaka = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/osaka2015.csv")
 <p>これをダウンロードして，読み込む：</p>
 
 <pre>
-age = read.csv("osaka_age_composition.csv")
-</pre>
+<code>age = read.csv("osaka_age_composition.csv")
+</code></pre>
 
 <p>各区の20歳以上の平均年齢を求め，賛成率とともにプロットする：</p>
 
 <pre>
-ku = sub('区$', '', osaka$区名)
+<code>ku = sub('区$', '', osaka$区名)
 avg = function(i) {
     a = subset(age, district == ku[i] &amp; age &gt;= 20)
     sum(a$total * a$age) / sum(a$total)
@@ -67,7 +67,7 @@ par(xpd=TRUE)        # グラフ領域を超えて文字を書く
 
 with(osaka, plot(avgage, 100*賛成/(賛成+反対), xlab="平均年齢", ylab="賛成率（%）", pch=NA))
 with(osaka, text(avgage, 100*賛成/(賛成+反対), 区名))
-</pre>
+</code></pre>
 
 <p>グラフは次のようになる。こういう図は，通常は原因と想定するものを横軸，結果と想定するものを縦軸にとる。ただし，当然ながら，たとえ相関関係があっても，因果関係が示されるわけではない。</p>
 
@@ -76,16 +76,16 @@ with(osaka, text(avgage, 100*賛成/(賛成+反対), 区名))
 <p>最小2乗法で直線をあてはめて図に書き込みたいなら</p>
 
 <pre>
-r = with(osaka, lm(100*賛成/(賛成+反対) ~ avgage))
+<code>r = with(osaka, lm(100*賛成/(賛成+反対) ~ avgage))
 par(xpd=FALSE)
 abline(r)
-</pre>
+</code></pre>
 
 <p>とすることが考えられる。ただし小さい区も大きい区も同じ重みでフィットするのではなく，投票数で重み付けするほうがよいだろう。</p>
 
 <pre>
-r = with(osaka, lm(100*賛成/(賛成+反対) ~ avgage, weights=賛成+反対))
-</pre>
+<code>r = with(osaka, lm(100*賛成/(賛成+反対) ~ avgage, weights=賛成+反対))
+</code></pre>
 
 <p>さらに言えば，これはそもそも最小2乗法でフィットすべきデータではなく，2項分布を仮定して一般化線形モデル（ロジスティック回帰など）を使うべきかもしれない。いや，その場合も横軸の値は正確にわかっているべきで，平均年齢しかわかっていない場合には……。</p>
 
@@ -94,8 +94,8 @@ r = with(osaka, lm(100*賛成/(賛成+反対) ~ avgage, weights=賛成+反対))
 <p>同様の理由で，このような区ごとの平均値の相関係数</p>
 
 <pre>
-with(osaka, cor(賛成/(賛成+反対), avgage))  # -0.7921376
-</pre>
+<code>with(osaka, cor(賛成/(賛成+反対), avgage))  # -0.7921376
+</code></pre>
 
 <p>も，個人ごとの年齢・賛否の相関係数とはまったく異なるものであることに注意すべきである。</p>
 
@@ -110,17 +110,17 @@ with(osaka, cor(賛成/(賛成+反対), avgage))  # -0.7921376
 <p>ちなみに，平均でなく中央値を使いたいなら，上の <code>avg</code> を次のものに置き換える：</p>
 
 <pre>
-med = function(i) {
+<code>med = function(i) {
     a = subset(age, district == ku[i] &amp; age &gt;= 20)
     median(rep(a$age,a$total))
 }
-</pre>
+</code></pre>
 
 <p><em>[追記]</em> 次のように文字の大きさを投票者数の平方根に比例させるほうがよかったかもしれない。</p>
 
 <pre>
-with(osaka, text(avgage, 100*賛成/(賛成+反対), 区名, cex=sqrt((賛成+反対)/50000)))
-</pre>
+<code>with(osaka, text(avgage, 100*賛成/(賛成+反対), 区名, cex=sqrt((賛成+反対)/50000)))
+</code></pre>
 
 <figure><img src="img/150524a.png" alt="大阪市各区の20歳以上の平均年齢と都構想賛成率（改良版）"></figure>
 

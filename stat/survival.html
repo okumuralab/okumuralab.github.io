@@ -42,8 +42,8 @@ td, th { padding: 0.2em 0.7em }
 <p>本当かな。</p>
 
 <pre>
-fisher.test(matrix(c(19,28,40,31), nrow=2))
-</pre>
+<code>fisher.test(matrix(c(19,28,40,31), nrow=2))
+</code></pre>
 
 <p>としても，$p=0.1321$ にしかならないぞ。</p>
 
@@ -66,17 +66,17 @@ fisher.test(matrix(c(19,28,40,31), nrow=2))
 <p>Rで生存時間解析を行うパッケージとして，以下では survival を使う。</p>
 
 <pre>
-install.packages("survival")
+<code>install.packages("survival")
 library(survival)
-</pre>
+</code></pre>
 
 <p>上述の入門書では，例としてWorcester Heart Attack Studyの100人分のデータ（WHAS100）を使っている。このデータはRの survMisc パッケージにも収められている。</p>
 
 <pre>
-install.packages("survMisc")
+<code>install.packages("survMisc")
 library(survMisc)
 data(whas100)
-</pre>
+</code></pre>
 
 <p>データ <code>whas100</code> の各項目の意味：</p>
 
@@ -102,7 +102,7 @@ data(whas100)
 <p>追跡総期間の順に最初と最後を表示してみる：</p>
 
 <pre>
-&gt; o = order(whas100$lenfol)
+<code>&gt; o = order(whas100$lenfol)
 &gt; head(whas100[o,])
    id  admitdate    foldate los lenfol fstat age gender      bmi
 1   1  3/13/1995  3/19/1995   4      6     1  65      0 31.38134
@@ -119,16 +119,16 @@ data(whas100)
 16 16  10/8/1995 12/31/2002   5   2641     0  39      0 30.10881
 33 33  7/22/1995 12/22/2002   8   2710     1  81      1 28.64898
 10 10  7/22/1995 12/31/2002   9   2719     0  40      0 21.78971
-</pre>
+</code></pre>
 
 <p>最初の人（<code>id</code> = 1）は，1995年3月13日に入院したときから観察を開始し，6日後（<code>lenfol</code> = 6）に死亡（<code>fstat</code> = 1）した。一方，最後の人（<code>id</code> = 10）は，1995年7月22日に入院したときから観察を開始し，2719日後（<code>lenfol</code> = 2719）の2002年12月31日に観察を終了した時点では生存（<code>fstat</code> = 0）している。</p>
 
 <p>このように，入院日（観察開始日）は人それぞれであるが，これを0日目として，男女別に，生存割合をプロットしてみると，次のようになる：</p>
 
 <pre>
-s = survfit(Surv(lenfol, fstat) ~ gender, data=whas100)
+<code>s = survfit(Surv(lenfol, fstat) ~ gender, data=whas100)
 plot(s, col=c("#0041ff","#ff9900"))
-</pre>
+</code></pre>
 
 <figure><img src="img/141019c.png" alt=""></figure>
 
@@ -139,7 +139,7 @@ plot(s, col=c("#0041ff","#ff9900"))
 <div class="note">
 <p>上で <code>Surv(lenfol, fstat)</code> は survival オブジェクトというものを作るための関数である。試しに <code>Surv(whas100$lenfol, whas100$fstat)</code> または同じことであるが <code>with(whas100, Surv(lenfol, fstat))</code> と打ち込んでみれば，次のように出力される：</p>
 <pre>
-  [1]    6   374  2421    98  1205  2065  1002  2201   189  2719+ 2638+  492 
+<code>  [1]    6   374  2421    98  1205  2065  1002  2201   189  2719+ 2638+  492 
  [13]  302  2574+ 2610+ 2641+ 1669  2624  2578+ 2595+  123  2613+  774  2012 
  [25] 2573+ 1874  2631+ 1907   538   104     6  1401  2710   841   148  2137+
  [37] 2190+ 2173+  461  2114+ 2157+ 2054+ 2124+ 2137+ 2031  2003+ 2074+  274 
@@ -148,7 +148,7 @@ plot(s, col=c("#0041ff","#ff9900"))
  [73] 2052+ 1846+ 2061+ 1912+ 1836+  114  1557  1278  1836+ 1916+ 1934+ 1923+
  [85]   44  1922+  274  1860+ 1806  2145+  182  2013+ 2174+ 1624   187  1883+
  [97] 1577    62  1969+ 1054 
-</pre>
+</code></pre>
 <p>この <code>2719+</code> は少なくとも2719日生存したということを表す。</p>
 </div>
 
@@ -159,7 +159,7 @@ plot(s, col=c("#0041ff","#ff9900"))
 <p>この男女差を統計的に検定するには，<code>survdiff()</code> 関数を使う：</p>
 
 <pre>
-&gt; survdiff(Surv(lenfol, fstat) ~ gender, data=whas100)
+<code>&gt; survdiff(Surv(lenfol, fstat) ~ gender, data=whas100)
 Call:
 survdiff(formula = Surv(lenfol, fstat) ~ gender, data = whas100)
 
@@ -168,15 +168,15 @@ gender=0 65       28     34.6      1.27      3.97
 gender=1 35       23     16.4      2.68      3.97
 
  Chisq= 4  on 1 degrees of freedom, p= 0.0463 
-</pre>
+</code></pre>
 
 <p>デフォルトではログランク検定（log-rank test）が行われる。$p = 0.0463$ である。</p>
 
 <div class="note">
 <p><code>survdiff()</code> は $p$ 値を表示するが，ほかで使うために $p$ 値だけ取り出すには，次のようにすればよい：</p>
 <pre>
-pchisq(survdiff(Surv(lenfol, fstat) ~ gender, data=whas100)$chisq, 1, lower.tail=FALSE)
-</pre>
+<code>pchisq(survdiff(Surv(lenfol, fstat) ~ gender, data=whas100)$chisq, 1, lower.tail=FALSE)
+</code></pre>
 </div>
 
 <div class="note">
@@ -219,7 +219,7 @@ pchisq(survdiff(Surv(lenfol, fstat) ~ gender, data=whas100)$chisq, 1, lower.tail
 
 <p>ところで，上の話は59人×2のグループで47人が発症し，その2×2表は <code>fisher.test()</code> では有意にならず生存時間解析のログランク検定で有意になった。これらの関係はどうなっているのだろう？</p>
 <pre>
-foo = function() {
+<code>foo = function() {
     x = matrix(59, 59, 2)
     y = matrix(0, 59, 2)
     z = matrix(0:1, 59, 2, byrow=TRUE)
@@ -235,10 +235,10 @@ foo = function() {
 }
 a = replicate(1000, foo())
 plot(a[1,], a[2,], xlab="log-rank test", ylab="Fisher test", asp=1)
-</pre>
+</code></pre>
 <p>おっと，発症数47固定では <code>fisher.test()</code> の特徴的な離散構造が出過ぎてしまい，$p$ 値が不正確になってしまう。発症数を固定せず，どれも47/118の確率で発症するとしてみよう。</p>
 <pre>
-foo = function() {
+<code>foo = function() {
     x = matrix(1, 59, 2)
     y = matrix(0, 59, 2)
     z = matrix(0:1, 59, 2, byrow=TRUE)
@@ -255,15 +255,15 @@ foo = function() {
 }
 a = replicate(1000, foo())
 plot(a[1,], a[2,], xlab="log-rank test", ylab="Fisher test", asp=1)
-</pre>
+</code></pre>
 <figure><img src="img/150929a.png" alt=""></figure>
 <p>離散構造はまだ見えるが，こちらのほうがよい。</p>
 <p>ログランク検定のほうが有意になりやすいということはないのか。試してみよう：</p>
 <pre>
-a = replicate(100000, foo())
+<code>a = replicate(100000, foo())
 mean(a[1,] < 0.05) # ログランク検定が5%有意になる確率→ほぼ0.05
 mean(a[2,] < 0.05) # fisher.test()が5%有意になる確率→ほぼ0.03
-</pre>
+</code></pre>
 <p><code>fisher.test()</code> はやや保守的になり，有意になりにくい。ログランク検定はほぼ想定通りだ。</p>
 
 <hr>

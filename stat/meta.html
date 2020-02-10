@@ -79,47 +79,47 @@ MathJax = {
 <p>まずインストール：</p>
 
 <pre>
-install.packages("metafor")
-</pre>
+<code>install.packages("metafor")
+</code></pre>
 
 <p>ライブラリを読み込みます：</p>
 
 <pre>
-library(metafor)
-</pre>
+<code>library(metafor)
+</code></pre>
 
 <p>例題データ Studies on the Effectiveness of the BCG Vaccine Against Tuberculosis を読み込みます：</p>
 
 <pre>
-data(dat.bcg)
-</pre>
+<code>data(dat.bcg)
+</code></pre>
 
 <p>効果量（ES：effect size）を計算します。ここでは <code>RR</code> (log relative risk) を効果量とします：</p>
 
 <pre>
-dat = escalc(measure="RR", ai=tpos, bi=tneg, ci=cpos, di=cneg, data=dat.bcg)
-</pre>
+<code>dat = escalc(measure="RR", ai=tpos, bi=tneg, ci=cpos, di=cneg, data=dat.bcg)
+</code></pre>
 
 <p>これをもとにメタアナリシスを実行します。デフォルトはランダム効果モデルのREML（restricted maximum-likelihood estimator）です。たいていの教科書に最初に載っている DerSimonian-Laird にするには <code>method="DL"</code> を指定します。</p>
 
 <pre>
-res = rma(yi, vi, data=dat)
-</pre>
+<code>res = rma(yi, vi, data=dat)
+</code></pre>
 
 <p>とりあえずフォレストプロットを描きます：</p>
 
 <pre>
-forest(res)
+<code>forest(res)
 # 必要に応じてフォント名や軸とラベルの距離を指定：
 # forest(res, family="Helvetica", mgp=c(2,0.6,0))
-</pre>
+</code></pre>
 
 <div><img src="img/140713a.png" alt="メタアナリシス結果"></div>
 
 <p>いろいろいじった結果（metafor論文より）：</p>
 
 <pre>
-forest(res, slab=paste(dat$author,dat$year,sep=", "),
+<code>forest(res, slab=paste(dat$author,dat$year,sep=", "),
        xlim=c(-16,6), at=log(c(0.05,0.25,1,4)), atransf=exp,
        ilab=cbind(dat$tpos,dat$tneg,dat$cpos,dat$cneg),
        ilab.xpos=c(-9.5,-8,-6,-4.5)+0.7, ilab.pos=c(2,2,2,2),
@@ -130,7 +130,7 @@ text(c(-8.75,-5.25), 16, c("Vaccinated","Control"))
 text(-16, 15, "Author(s) and Year", pos=4)
 text(6, 15, "Relative Risk [95% CI]", pos=2)
 par(op)
-</pre>
+</code></pre>
 
 <div><img src="img/140713b.png" alt="メタアナリシス結果"></div>
 

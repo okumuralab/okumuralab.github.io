@@ -21,7 +21,7 @@
 <p>次のPC世帯普及率データは報道発表資料の<a href="http://www.johotsusintokei.soumu.go.jp/statistics/data/090407_1.pdf">平成20年度調査</a>（PDF）による。世帯編<a href="http://www.johotsusintokei.soumu.go.jp/statistics/pdf/HR200700_001.pdf">平成19年度調査</a>（PDF）や<a href="http://www.johotsusintokei.soumu.go.jp/statistics/pdf/HR200600_001.pdf">平成18年度調査</a>（PDF）によれば2006年度の普及率は80.8%ではなく74.1%になっている。なぜ訂正されたのか不明。グラフをよく見れば，74.1%では異様に凹んでいることがわかる［追記：<a href="http://www.soumu.go.jp/johotsusintokei/statistics/seigo.html">統計調査データ：正誤情報</a> の「H21.6.25掲載」にて訂正］。</p>
 
 <pre>
-年 回答数 総数 PC世帯普及率
+<code>年 回答数 総数 PC世帯普及率
 2008 4515 6256 85.9
 2007 3640 6256 85.0
 2006 4999 7488 74.1 # → 80.8
@@ -32,14 +32,14 @@
 2001 3845 6400 58.0
 2000 4278 6400 50.5
 1999 3657 6400 37.7
-</pre>
+</code></pre>
 
 <p>2006年の普及率は，上の表は訂正前の74.1%で，訂正後は80.8%である。</p>
 
 <p>上の表をクリップボードにコピーして，以下のコードを実行する（Mac/Windowsのうち不要なほうは削除する）。</p>
 
 <pre>
-options(encoding="SJIS")                      # Mac
+<code>options(encoding="SJIS")                      # Mac
 X = read.table("clipboard", header=TRUE)      # Windows
 X = read.table(pipe("pbpaste"), header=TRUE)  # Mac
 par(family="HiraKakuPro-W3")                  # Mac
@@ -57,7 +57,7 @@ points(2006, 80.8, pch=16)
 points(X$年, X$回答数/X$総数*100, type="b")
 text(2003, 82, "PC世帯普及率")
 text(2003, 48, "質問紙回収率")
-</pre>
+</code></pre>
 
 <p><img src="img/090502.png" alt="PC世帯普及率"></p>
 
@@ -69,9 +69,9 @@ text(2003, 48, "質問紙回収率")
 にあるようにグラフ領域が長方形の枠で囲まれる。また，最後の2行の代わりに</p>
 
 <pre>
-legend(2001, 98, pch=c(16,1), legend=c("PC世帯普及率　","質問紙回収率"),
+<code>legend(2001, 98, pch=c(16,1), legend=c("PC世帯普及率　","質問紙回収率"),
        bty="n", horiz=TRUE, xpd=TRUE)
-</pre>
+</code></pre>
 
 <p>とすれば，凡例が上マージンに出る。</p>
 

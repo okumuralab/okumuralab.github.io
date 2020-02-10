@@ -24,75 +24,75 @@
 <p>ggplot2を使うには，まずパッケージをインストールする（初回のみ）：</p>
 
 <pre>
-install.packages("ggplot2")
-</pre>
+<code>install.packages("ggplot2")
+</code></pre>
 
 <p>ライブラリをロードする（Rを起動するごとに）：</p>
 
 <pre>
-library(ggplot2)
-</pre>
+<code>library(ggplot2)
+</code></pre>
 
 <p>ggplot2付属のdiamondsというデータを使い，横軸にcarat（重さ：カラット数），縦軸にprice（値段：USドル）をプロットしてみる：</p>
 
 <pre>
-qplot(carat, price, data=diamonds)
-</pre>
+<code>qplot(carat, price, data=diamonds)
+</code></pre>
 
 <p>メインタイトル，xラベル，yラベルを付けてみる：</p>
 
 <pre>
-qplot(carat, price, data=diamonds,
+<code>qplot(carat, price, data=diamonds,
       main="ダイヤモンドの価格", xlab="カラット", ylab="価格（USドル）")
-</pre>
+</code></pre>
 
 <div><img src="img/ggplot2-1.png" alt="ダイヤモンドの価格"></div>
 
 <p>日本語を使うとMacで文字化けする。通常のプロットであれば <code>par(family="HiraKakuProN-W3")</code> などのように日本語のフォントファミリを指定すればよいが，ggplotは「テーマ」（theme）というものを使っているので，変更法がやや異なる。通常は次のように打ち込むだけでよい。</p>
 
 <pre>
-old = theme_set(theme_gray(base_family="HiraKakuProN-W3"))
-</pre>
+<code>old = theme_set(theme_gray(base_family="HiraKakuProN-W3"))
+</code></pre>
 
 <p>別のテーマを使う場合も同様である。例えば背景のないシンプルなテーマなら次のようにする：</p>
 
 <pre>
-old = theme_set(theme_bw(base_family="HiraKakuProN-W3"))
-</pre>
+<code>old = theme_set(theme_bw(base_family="HiraKakuProN-W3"))
+</code></pre>
 
 <p>元に戻すには</p>
 
 <pre>
-theme_set(old)
-</pre>
+<code>theme_set(old)
+</code></pre>
 
 <p>または</p>
 
 <pre>
-theme_set(theme_gray(base_family=""))
-</pre>
+<code>theme_set(theme_gray(base_family=""))
+</code></pre>
 
 <p>とする。</p>
 
 <p>PDF作成のときは，フォントが埋め込まれなくてもよいなら，例えば</p>
 
 <pre>
-pdf("hoge.pdf")
+<code>pdf("hoge.pdf")
 old = theme_set(theme_gray(base_family="Japan1GothicBBB"))
 qplot(carat, price, data=diamonds,
       main="ダイヤモンドの価格", xlab="カラット", ylab="価格（USドル）")
 dev.off()
-</pre>
+</code></pre>
 
 <p>のようにすればよい。フォントを埋め込む場合は，Macなら例えば</p>
 
 <pre>
-quartz(type="pdf", file="hoge.pdf")
+<code>quartz(type="pdf", file="hoge.pdf")
 theme_set(theme_gray(base_family="HiraKakuProN-W3"))
 qplot(carat, price, data=diamonds,
 	     main="ダイヤモンドの価格", xlab="カラット", ylab="価格（USドル）")
 dev.off()
-</pre>
+</code></pre>
 
 <p>とすればよい。詳しくは<a href="first.html">Rの初歩</a>を参照されたい。</p>
 

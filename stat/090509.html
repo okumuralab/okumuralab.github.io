@@ -25,14 +25,14 @@
 <p>棒グラフは必ず0から始まらなければなりません。折れ線グラフにはこの制約はありませんが，名義尺度では使えません。都道府県のような名義尺度の場合には，（Clevelandの）ドットプロット（dot plot）が便利です。これは，基本的には</p>
 
 <pre>
-# par(family="HiraKakuPro-W3")
+<code># par(family="HiraKakuPro-W3")
 dotchart(population, labels=kenmei)
-</pre>
+</code></pre>
 
 <p>で描けますが，少しだけ凝ってみます：</p>
 
 <pre>
-# quartz(width=4.568898, height=9.960630) # Mac
+<code># quartz(width=4.568898, height=9.960630) # Mac
 # par(family="HiraKakuPro-W3")            # Mac
 par(mar=c(5,5,2,2)+0.1) # マージン（デフォルト: c(5,4,4,2)+0.1）
 par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
@@ -43,7 +43,7 @@ dotchart(population[o]/1000, pch=16, xlim=c(0,14), xlab="人口（100万人）")
 par(xpd=TRUE)           # プロットエリア外に描く
 text(0, seq_along(o), kenmei[o], pos=2)
 axis(3, labels=FALSE)
-</pre>
+</code></pre>
 
 <p><img src="img/090509.png" alt=""></p>
 
@@ -51,18 +51,18 @@ axis(3, labels=FALSE)
 パッケージにはやや高機能のものが入っています。これは基本的には</p>
 
 <pre>
-library(lattice)
+<code>library(lattice)
 dotplot(kenmei ~ population)
-</pre>
+</code></pre>
 
 <p>でいいのですが，少しだけ凝ってみます：</p>
 
 <pre>
-library(lattice)
+<code>library(lattice)
 x = reorder(kenmei, population)
 dotplot(x ~ population/1000, scales=list(fontfamily="HiraKakuPro-W3"), xlab="")
 mtext("人口（百万人）", 1, padj=4.5)
-</pre>
+</code></pre>
 
 <p><code>HiraKakuPro-W3</code>
 はMacのフォントですので，適宜変更してください。</p>

@@ -29,7 +29,7 @@
 <p><a href="180804.html">全国学力テストの都道府県別正答率（2018年版）</a>で説明した方法を使う。<a href="http://www.nier.go.jp/18chousakekkahoukoku/factsheet/18prefecture-City/">このページ</a>からリンクされている都道府県ごとの「回答結果集計［生徒質問紙］」というExcelファイルをすべてダウンロードし，その上位ディレクトリで次のようにする：</p>
 
 <pre>
-names = dir(pattern="^\\d\\dm_18a.xlsx$", full.names=TRUE, recursive=TRUE)
+<code>names = dir(pattern="^\\d\\dm_18a.xlsx$", full.names=TRUE, recursive=TRUE)
 library(readxl)
 f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="C81:N81"))
 x = sapply(names, f)  # x[1,1:47]をざっと見て項目のズレがないことを確認
@@ -40,19 +40,19 @@ cor(y, a$中国B)  #  0.02718476
 cor(y, a$中数A)  # -0.1501752
 cor(y, a$中数B)  # -0.1497885
 cor(y, a$中理)   #  0.0729672
-</pre>
+</code></pre>
 
 <p>数学は負の相関だが，国語はほぼ無相関，理科は少し正の相関がある。もっとも，サンプルサイズが47であることを考えれば，これらはどれも統計的に有意でない。</p>
 
 <p>念のため，もっと強い相関がある項目も調べてみる。29「数学の授業の内容はよく分かりますか」は明らかに数学の正答率と相関がある（数学A: 0.438，数学B: 0.400）。都道府県レベルでは</p>
 
 <pre>
-f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="C96:N96"))
+<code>f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="C96:N96"))
 x = sapply(names, f)  # x[1,1:47]をざっと見て項目のズレがないことを確認
 y = sapply(1:47, function(i) sum(as.numeric(x[9:12,i])*(4:1))/sum(as.numeric(x[9:12,i])))
 cor(y, a$中数A)  # 0.4382923
 cor(y, a$中数B)  # 0.4480176
-</pre>
+</code></pre>
 
 <p>これらは都道府県レベルでも統計的に有意である（p = 0.002 程度）。</p>
 

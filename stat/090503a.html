@@ -27,45 +27,45 @@
 <p>棒グラフの基本は</p>
 
 <pre>
-barplot(population)
-</pre>
+<code>barplot(population)
+</code></pre>
 
 <p>または</p>
 
 <pre>
-barplot(population, names.arg=kenmei)
-</pre>
+<code>barplot(population, names.arg=kenmei)
+</code></pre>
 
 <p>ですが，この場合は横にするほうが文字が入りやすいので，次のようにします。</p>
 
 <pre>
-par(las=1)              # 縦軸の文字を横向きにしない（las: label style）
+<code>par(las=1)              # 縦軸の文字を横向きにしない（las: label style）
 par(mar=c(5,5,4,2)+0.1) # マージン（デフォルト: c(5,4,4,2)+0.1）
 par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 barplot(population, names.arg=kenmei, horiz=TRUE)
-</pre>
+</code></pre>
 
 <p>字が縦に詰まるので，グラフウィンドウをマウスで少し縦に長くします（あるいはオプション
 <code>cex.names=0.6</code>
 を与えると軸の文字サイズが0.6倍になります）。しかしよく見たら順序が逆なので，次のようにすると正しくなります。単位は千人ではなく百万人にしました。</p>
 
 <pre>
-barplot(population[47:1]/1000, names.arg=kenmei[47:1], horiz=TRUE)
-</pre>
+<code>barplot(population[47:1]/1000, names.arg=kenmei[47:1], horiz=TRUE)
+</code></pre>
 
 <p>横軸の説明を付けたいですね。テキストをグラフの任意の位置に書くのは <code>text()</code>
 で，マージンの任意の位置に書くのは <code>mtext()</code>
 です。</p>
 
 <pre>
-mtext("人口（百万人）",1,padj=1.5)
-</pre>
+<code>mtext("人口（百万人）",1,padj=1.5)
+</code></pre>
 
 <p>目盛りを上にも付けたいなら，次のようにします。</p>
 
 <pre>
-axis(3)
-</pre>
+<code>axis(3)
+</code></pre>
 
 <p>1，2，3，4は下，左，上，右を意味します。目盛りだけで数値が不要なら
 <code>axis(3, labels=FALSE)</code> のようにします。</p>
@@ -73,16 +73,16 @@ axis(3)
 <p>しかし，北から南に並べるより，人口の多い順に並べたほうがわかりやすいので，次のようにしてみました。</p>
 
 <pre>
-o = order(population)
+<code>o = order(population)
 barplot(population[o]/1000, names.arg=kenmei[o], horiz=TRUE)
-</pre>
+</code></pre>
 
 <p>このグラフで仮に三重県がどの位置にあるかを言いたいのなら，</p>
 
 <pre>
-barplot(population[o]/1000, names.arg=kenmei[o], horiz=TRUE,
+<code>barplot(population[o]/1000, names.arg=kenmei[o], horiz=TRUE,
         col=ifelse(kenmei[o]=="三重県",gray(0.5),gray(0.9)))
-</pre>
+</code></pre>
 
 <p>のように三重県だけ別の色（ここでは濃い灰色）にすれば意図がよく伝わるでしょう。</p>
 
@@ -91,7 +91,7 @@ barplot(population[o]/1000, names.arg=kenmei[o], horiz=TRUE,
 <p><img src="img/090503a.png" alt="都道府県別人口"></p>
 
 <pre>
-par(mgp=c(2,0.5,0))     # 軸マージン（デフォルト: c(3,1,0)）
+<code>par(mgp=c(2,0.5,0))     # 軸マージン（デフォルト: c(3,1,0)）
 s = sum(population) / 1000
 barplot(population[o]/1000, names.arg=kenmei[o], horiz=TRUE,
         space=0, xlim=c(0,s/10), axes=FALSE)
@@ -100,7 +100,7 @@ t = seq(0,10,2)
 axis(3, s * t / 100, paste(t, "%", sep=""), line=-1)
 mtext("人口（百万人）", 1, padj=0.8)
 mtext("人口の割合", 3, padj=-0.8)
-</pre>
+</code></pre>
 
 <hr>
 

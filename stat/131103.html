@@ -16,7 +16,7 @@
 <p><a href="http://www.newtonpress.co.jp/newton.html">Newton</a> 2013年12月号「統計の威力」特集にあった図です。データは <a href="http://www.liquidasset.com/">http://www.liquidasset.com/</a> の左の「6. Articles and Data」をクリックして「Article 3」の「Click <a href="http://www.liquidasset.com/winedata.html">here</a> to see the data and the basic regression results」のリンク先にあります。念のためデータを引用しておきます：</p>
 
 <pre>
-OBS    VINT     LPRICE2    WRAIN    DEGREES    HRAIN    TIME_SV
+<code>OBS    VINT     LPRICE2    WRAIN    DEGREES    HRAIN    TIME_SV
   
   1    1952    -0.99868     600     17.1167     160        31  
   2    1953    -0.45440     690     16.7333      80        30  
@@ -56,38 +56,38 @@ OBS    VINT     LPRICE2    WRAIN    DEGREES    HRAIN    TIME_SV
  36    1987      .          452     16.9833     115        -4  
  37    1988      .          808     17.1000      59        -5  
  38    1989      .          443       .          82        -6  
-</pre>
+</code></pre>
 
 <p>このデータをRで読むには，クリップボードにコピーして，次のどちらかを打ち込みます：</p>
 
 <pre>
-data = read.table("clipboard", na.strings=".", header=TRUE) # Windows
+<code>data = read.table("clipboard", na.strings=".", header=TRUE) # Windows
 data = read.table(pipe("pbpaste"), na.strings=".", header=TRUE) # Mac
-</pre>
+</code></pre>
 
 <p>プロットしてみます：</p>
 
 <pre>
-par(mgp=c(2,0.8,0))
+<code>par(mgp=c(2,0.8,0))
 plot(data$WRAIN, data$LPRICE2, pch=16,
      xlab="収穫前年の10月〜3月の雨量",
      ylab="ワインの価格")
-</pre>
+</code></pre>
 
 <img src="img/131103b.png">
 
 <p>相関係数とその <i>p</i> 値を求めてみましょう。</p>
 
 <pre>
-cor.test(data$WRAIN, data$LPRICE2)
-</pre>
+<code>cor.test(data$WRAIN, data$LPRICE2)
+</code></pre>
 
 <p>右上の点を外したらどうなるでしょうか。</p>
 
 <pre>
-data1 = subset(data, LPRICE2 < 0)
+<code>data1 = subset(data, LPRICE2 < 0)
 cor.test(data1$WRAIN, data1$LPRICE2)
-</pre>
+</code></pre>
 
 <hr>
 

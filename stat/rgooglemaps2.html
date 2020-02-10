@@ -20,11 +20,11 @@
 はGoogleマップをRから使うためのパッケージです。新しいバージョンではGoogleマップの代わりにOpenStreetMapが使えるようになりましたので，ライセンスを気にせずに使うことができます。</p>
 
 <pre>
-options(repos="http://cran.ism.ac.jp") # 適当にCRANミラーを指定
+<code>options(repos="http://cran.ism.ac.jp") # 適当にCRANミラーを指定
 update.packages()                      # 念のため
 install.packages("RgoogleMaps")        # RgoogleMapsをインストール
 install.packages("RColorBrewer")       # RColorBrewerをインストール
-</pre>
+</code></pre>
 
 <p>@nnistar さんのまとめられた<a href="http://www.nnistar.com/gmap/fukushima.html">福島県のデータ</a>を全部取得して放射線地図を描いてみましょう。CSVで取得したら一つにつなげて
 <a href="data/clean.rb">clean.rb</a>
@@ -34,7 +34,7 @@ install.packages("RColorBrewer")       # RColorBrewerをインストール
 
 <!-- http://tile.openstreetmap.org/cgi-bin/export?bbox=139.2,36.8,141.1,38&scale=1000000&format=png -->
 <pre>
-library(RgoogleMaps)
+<code>library(RgoogleMaps)
 library(RColorBrewer)
 fukushima = read.csv("fukushima.csv", as.is=TRUE)
 t = as.POSIXct(fukushima$datetime)
@@ -52,7 +52,7 @@ tmp = PlotOnStaticMap(FukushimaMap, lat=37.422778,
 legend(-300, -290, xjust=0, yjust=0,
        legend=paste("≧",format((10:0)/2,digits=2,nsmall=1),"μSv/h",sep=""),
        fill=cols[11:1], bg="white")
-</pre>
+</code></pre>
 
 <div><img src="img/fukushima.png" alt="福島県の放射線地図"></div>
 
@@ -73,30 +73,30 @@ legend(-300, -290, xjust=0, yjust=0,
 <p>上のコードで</p>
 
 <pre>
-fukushima = read.csv("fukushima.csv", as.is=TRUE)
+<code>fukushima = read.csv("fukushima.csv", as.is=TRUE)
 t = as.POSIXct(fukushima$datetime)
-</pre>
+</code></pre>
 
 <p>のところが非常に時間がかかっています。<a href="datatable.html">data.table</a>
 のところにも書きましたが，次のようにするとずっと速くなります。</p>
 
 <pre>
-library(data.table)
+<code>library(data.table)
 library(fasttime)
 
 fukushima = fread("fukushima.csv")
 t = fastPOSIXct(fukushima$datetime) - 9*3600
-</pre>
+</code></pre>
 
 <p>ちなみに，元データの日付が YYYY/MM/DD だったり YYYY/M/D だったりするので，文字列のソートでは正しい順番に並びません。</p>
 
 <p>どうせ data.table を使うなら，もうちょっとそれらしくしてみましょう。</p>
 
 <pre>
-fukushima = fread("fukushima.csv")
+<code>fukushima = fread("fukushima.csv")
 fukushima$datetime = fastPOSIXct(fukushima$datetime) - 9*3600
 setkey(fukushima, datetime)
-</pre>
+</code></pre>
 
 <p>これで fukushima という data.table は datetime 欄をキーに設定しました。こうすると，並び順が datetime の昇順になりますので，<code>o = order(t)</code> を求める必要がなく，その後の部分でも <code>[o]</code> がすべて不要になります。</p>
 

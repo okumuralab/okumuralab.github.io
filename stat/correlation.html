@@ -39,20 +39,20 @@ td, th { padding: 0.2em 0.7em }
 <p>40個の正規分布の乱数を2組作って，それぞれを横軸，縦軸にとってプロットしてみましょう：</p>
 
 <pre>
-x = rnorm(40); y = rnorm(40); plot(x, y)
-</pre>
+<code>x = rnorm(40); y = rnorm(40); plot(x, y)
+</code></pre>
 
 <p>デフォルトの白丸では見にくいので，黒丸（<code>pch=16</code>）にしましょう：</p>
 
 <pre>
-x = rnorm(40); y = rnorm(40); plot(x, y, pch=16)
-</pre>
+<code>x = rnorm(40); y = rnorm(40); plot(x, y, pch=16)
+</code></pre>
 
 <p>これから勉強する「相関係数」を上に書き加えてみましょう：</p>
 
 <pre>
-x = rnorm(40); y = rnorm(40); plot(x, y, pch=16, main=cor(x,y))
-</pre>
+<code>x = rnorm(40); y = rnorm(40); plot(x, y, pch=16, main=cor(x,y))
+</code></pre>
 
 <p>何度もやって，感覚をつかみましょう。</p>
 
@@ -90,17 +90,17 @@ x = rnorm(40); y = rnorm(40); plot(x, y, pch=16, main=cor(x,y))
 <p>このデータの散布図（相関図）を描いてください。Rなら次のコマンドで描けます。</p>
 
 <pre>
-組織率 = c(50,40,50,50,90,70,60,30,1,10,60,10,40)
+<code>組織率 = c(50,40,50,50,90,70,60,30,1,10,60,10,40)
 正答率合計 = c(237.9,238.8,270.2,270.1,276.3,259.2,256.6,231.4,259.0,220.7,242.9,251.6,209.4)
 plot(組織率, 正答率合計)
-</pre>
+</code></pre>
 
 <div class="note">
 <p>実際には次のように多少オプションを付けて描きました：</p>
 <pre>
-par(mgp=c(2,0.8,0))
+<code>par(mgp=c(2,0.8,0))
 plot(組織率, 正答率合計, pch=16, xlab="組織率（%）")
-</pre>
+</code></pre>
 </div>
 
 <p>実際に描いてみると，なんとなく右肩上がりに見えるかもしれません。この傾向の度合，つまりこの場合は組織率と正答率合計の関連の度合を数字にしたものが，相関係数（correlation coefficient，長い名前はピアソンの積率相関係数 Pearson's product-moment correlation coefficient）です。相関係数は -1 から 1 までの値をとり，正負の関連が強いほど ±1 に近づき，関連が低ければ 0 に近づきます（詳しくは後で述べます）。</p>
@@ -113,7 +113,7 @@ plot(組織率, 正答率合計, pch=16, xlab="組織率（%）")
 
 <pre>
 <code class="prom">cor(組織率, 正答率合計)</code>
-[1] 0.4251695
+<code>[1] 0.4251695</code>
 </pre>
 
 <p>$p$ 値や信頼区間まで求める関数は <code>cor.test()</code> です：</p>
@@ -121,16 +121,16 @@ plot(組織率, 正答率合計, pch=16, xlab="組織率（%）")
 <pre>
 <code class="prom">cor.test(組織率, 正答率合計)</code>
 
-	Pearson's product-moment correlation
+<code>	Pearson's product-moment correlation</code>
 
-data:  組織率 and 正答率合計 
-t = 1.558, df = 11, p-value = 0.1475
-alternative hypothesis: true correlation is not equal to 0 
-95 percent confidence interval:
- -0.1643066  0.7908813 
-sample estimates:
-      cor 
-0.4251695 
+<code>data:  組織率 and 正答率合計 </code>
+<code>t = 1.558, df = 11, p-value = 0.1475</code>
+<code>alternative hypothesis: true correlation is not equal to 0 </code>
+<code>95 percent confidence interval:</code>
+<code> -0.1643066  0.7908813 </code>
+<code>sample estimates:</code>
+<code>      cor </code>
+<code>0.4251695 </code>
 </pre>
 
 <p>つまり，（ピアソンの）相関係数は 0.425 で，組合の組織率が高いほど成績が良いという傾向が見られますが，95%信頼区間は $[-0.16, 0.79]$ と広く（$p$ 値は 0.15 ほど），統計的に有意ではありません。したがって，このデータから何かを結論づけるのは早計です。</p>
@@ -154,23 +154,23 @@ sample estimates:
 <code class="prom">abline(r)</code>   # 上で描いたプロットに直線を重ね書きする
 <code class="prom">summary(r)</code>
 
-Call:
-lm(formula = 正答率合計 ~ 組織率)
+<code>Call:</code>
+<code>lm(formula = 正答率合計 ~ 組織率)</code>
 
-Residuals:
-    Min      1Q  Median      3Q     Max 
--37.551 -12.200   2.197  14.701  25.116 
+<code>Residuals:</code>
+<code>    Min      1Q  Median      3Q     Max </code>
+<code>-37.551 -12.200   2.197  14.701  25.116 </code>
 
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) 233.5486    10.6703  21.888 2.03e-10 ***
-組織率        0.3351     0.2151   1.558    0.148    
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+<code>Coefficients:</code>
+<code>            Estimate Std. Error t value Pr(&gt;|t|)    </code>
+<code>(Intercept) 233.5486    10.6703  21.888 2.03e-10 ***</code>
+<code>組織率        0.3351     0.2151   1.558    0.148    </code>
+<code>---</code>
+<code>Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</code>
 
-Residual standard error: 18.98 on 11 degrees of freedom
-Multiple R-squared:  0.1808,	Adjusted R-squared:  0.1063 
-F-statistic: 2.427 on 1 and 11 DF,  p-value: 0.1475
+<code>Residual standard error: 18.98 on 11 degrees of freedom</code>
+<code>Multiple R-squared:  0.1808,	Adjusted R-squared:  0.1063 </code>
+<code>F-statistic: 2.427 on 1 and 11 DF,  p-value: 0.1475</code>
 </pre>
 
 <p>これは，正答率合計 = 0.3351 × 組織率 + 233.5486 という式で予測できることを示しています。ただし，$p$ 値はさきほどと同じ 0.1475 です。相関係数が 0 であるという帰無仮説と，回帰分析したとき傾きが 0 であるという帰無仮説とは，同じことだからです。</p>
@@ -179,15 +179,15 @@ F-statistic: 2.427 on 1 and 11 DF,  p-value: 0.1475
 <p>後で使うために係数だけ取り出したい場合は <code>coef()</code> 関数を使います（<code>r$coefficients</code> でも同じです）：</p>
 <pre>
 <code class="prom">coef(r)</code>
-(Intercept)      組織率 
-  233.54856     0.33506 
+<code>(Intercept)      組織率 </code>
+<code>  233.54856     0.33506 </code>
 </pre>
 <p>係数の信頼区間は <code>confint()</code> 関数で取り出せます：</p>
 <pre>
 <code class="prom">confint(r)</code>
-                  2.5 %      97.5 %
-(Intercept) 210.0633470 257.0337801
-組織率       -0.1382923   0.8084123
+<code>                  2.5 %      97.5 %</code>
+<code>(Intercept) 210.0633470 257.0337801</code>
+<code>組織率       -0.1382923   0.8084123</code>
 </pre>
 <p>ほかに <code>predict()</code> 関数や <code>residuals()</code> 関数，<code>rstudent()</code> 関数も便利です。<code>plot()</code> は4通りの診断プロットを出力します。4通りを1枚にまとめるには <code>par(mfrow=c(2,2)); plot(r)</code> とします。</p>
 </div>
@@ -197,8 +197,8 @@ F-statistic: 2.427 on 1 and 11 DF,  p-value: 0.1475
 <p>「準備体操」のプロットに直線をあてはめてみましょう：</p>
 
 <pre>
-x = rnorm(40); y = rnorm(40); plot(x, y, pch=16, main=cor(x,y)); abline(lm(y ~ x))
-</pre>
+<code>x = rnorm(40); y = rnorm(40); plot(x, y, pch=16, main=cor(x,y)); abline(lm(y ~ x))
+</code></pre>
 
 <p>何度もやって感覚をつかみましょう。</p>
 
@@ -214,9 +214,9 @@ x = rnorm(40); y = rnorm(40); plot(x, y, pch=16, main=cor(x,y)); abline(lm(y ~ x
 
 <pre>
 <code class="prom">cor(組織率, 正答率合計, method="kendall")</code>
-[1] 0.3736324
+<code>[1] 0.3736324</code>
 <code class="prom">cor(組織率, 正答率合計, method="spearman")</code>
-[1] 0.5076522
+<code>[1] 0.5076522</code>
 </pre>
 
 <p>$p$ 値や信頼区間まで求める関数はやはり <code>cor.test()</code> です：</p>
@@ -224,32 +224,32 @@ x = rnorm(40); y = rnorm(40); plot(x, y, pch=16, main=cor(x,y)); abline(lm(y ~ x
 <pre>
 <code class="prom">cor.test(組織率, 正答率合計, method="kendall")</code>
 
-	Kendall's rank correlation tau
+<code>	Kendall's rank correlation tau</code>
 
-data:  組織率 and 正答率合計 
-z = 1.7298, p-value = 0.08366
-alternative hypothesis: true tau is not equal to 0 
-sample estimates:
-      tau 
-0.3736324 
+<code>data:  組織率 and 正答率合計 </code>
+<code>z = 1.7298, p-value = 0.08366</code>
+<code>alternative hypothesis: true tau is not equal to 0 </code>
+<code>sample estimates:</code>
+<code>      tau </code>
+<code>0.3736324 </code>
 
-Warning message:
-In cor.test.default(組織率, 正答率合計, method = "kendall") :
-   タイのため正確な p 値を計算することができません 
+<code>Warning message:</code>
+<code>In cor.test.default(組織率, 正答率合計, method = "kendall") :</code>
+<code>   タイのため正確な p 値を計算することができません </code>
 <code class="prom">cor.test(組織率, 正答率合計, method="spearman")</code>
 
-	Spearman's rank correlation rho
+<code>	Spearman's rank correlation rho</code>
 
-data:  組織率 and 正答率合計 
-S = 179.2146, p-value = 0.07656
-alternative hypothesis: true rho is not equal to 0 
-sample estimates:
-      rho 
-0.5076522 
+<code>data:  組織率 and 正答率合計 </code>
+<code>S = 179.2146, p-value = 0.07656</code>
+<code>alternative hypothesis: true rho is not equal to 0 </code>
+<code>sample estimates:</code>
+<code>      rho </code>
+<code>0.5076522 </code>
 
-Warning message:
-In cor.test.default(組織率, 正答率合計, method = "spearman") :
-   タイのため正確な p 値を計算することができません 
+<code>Warning message:</code>
+<code>In cor.test.default(組織率, 正答率合計, method = "spearman") :</code>
+<code>   タイのため正確な p 値を計算することができません </code>
 </pre>
 
 <p>このどれもが $p \leq 0.05$ を満たしていません（有意な結果が得られるようにいろいろな計算法を試すのはいけないことですが）。</p>
@@ -345,14 +345,14 @@ $Y_3 = 2$
 <pre>
 <code class="prom">cor.test(x, y)</code>
 
-	Pearson's product-moment correlation
+<code>	Pearson's product-moment correlation</code>
 
-data:  x and y 
-t = 0.5774, df = 1, p-value = 0.6667
-alternative hypothesis: true correlation is not equal to 0 
-sample estimates:
-cor 
-0.5 
+<code>data:  x and y </code>
+<code>t = 0.5774, df = 1, p-value = 0.6667</code>
+<code>alternative hypothesis: true correlation is not equal to 0 </code>
+<code>sample estimates:</code>
+<code>cor </code>
+<code>0.5 </code>
 </pre>
 
 <div class="note">
@@ -439,25 +439,25 @@ cor
 <div class="note">
 <p>タイのある場合も含めて正確な $p$ 値を求めるには，並べ替え検定の考え方を使います。例えば1万回のシミュレーションでは</p>
 <pre>
-t = cor(X, Y, method="kendall")
+<code>t = cor(X, Y, method="kendall")
 a = replicate(10000, cor(X,sample(Y),method="kendall"))
 mean(abs(a) >= abs(t)) # 両側確率
-</pre>
+</code></pre>
 <p>このページの最初に挙げた例では $p = 0.08366$ でしたが，100万回のシミュレーションでは $p = 0.095$ ほどです。ただし，気をつけなければならないのは，ケンドールの $\tau$ が飛び飛びの値をとることです。このため，値をコピー＆ペーストして使っても四捨五入のために正しくない結果を生じることがあります：</p>
 <pre>
 <code class="prom">t</code>
-[1] 0.3736324
+<code>[1] 0.3736324</code>
 <code class="prom">mean(abs(a) &gt;= t)</code>
-[1] 0.095084
+<code>[1] 0.095084</code>
 <code class="prom">mean(abs(a) &gt;= 0.3736324)</code>
-[1] 0.07212
+<code>[1] 0.07212</code>
 <code class="prom">mean(abs(a) &gt;= 0.3736323)</code>
-[1] 0.095084
+<code>[1] 0.095084</code>
 </pre>
 <p>この場合は $p = 0.095$ のほうが正しいのですが，少しずらすと $p = 0.072$ になります。正規分布による近似 $p = 0.08366$ はこのほぼ真ん中の値になっています。ちなみに，100万個の中にユニークな値は67個しかありません：</p>
 <pre>
 <code class="prom">length(unique(a))</code>
-[1] 67
+<code>[1] 67</code>
 </pre>
 </div>
 

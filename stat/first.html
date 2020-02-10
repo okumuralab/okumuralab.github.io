@@ -57,15 +57,15 @@
 の右側に出るのが答えです。</p>
 
 <pre>
-&gt; 123+456
+<code>&gt; 123+456
 [1] 579
-</pre>
+</code></pre>
 
 <p>掛け算は <code>*</code>，割り算は <code>/</code>
 です。計算の順序は，通常の数式と同様，掛け算・割り算が先，足し算・引き算が後になります。</p>
 
 <pre>
-&gt; 23-4*5
+<code>&gt; 23-4*5
 [1] 3
 &gt; (23-4)*5
 [1] 95
@@ -75,7 +75,7 @@
 [1] 1
 &gt; 0.3333333*3
 [1] 0.9999999
-</pre>
+</code></pre>
 
 <div class="note">
 <p>C言語などでは整数の割り算は整数に切り捨てますが，Rでは <code>/</code> は実数（浮動小数点数）の範囲で計算します。Rでは整数の除算は <code>%/%</code> を使います。除算の余りは <code>%%</code> です。例えば <code>7 %/% 3</code> は 2 になり，<code>7 %% 3</code> は 1 になります。</p>
@@ -84,10 +84,10 @@
 <p>値は <code>x</code> や <code>hoge</code> のような変数に代入することができます。</p>
 
 <pre>
-&gt; x = 1/3
+<code>&gt; x = 1/3
 &gt; x*3
 [1] 1
-</pre>
+</code></pre>
 
 <div class="note">
 <p>代入は <code>x = 1/3</code> のような書き方のほかに <code>x &lt;- 1/3</code> や <code>1/3 -&gt; x</code> のような書き方もできます。</p>
@@ -100,22 +100,22 @@
 <p>この <code>x</code> のようなものを一般に「変数」と呼びますが，Rでは「オブジェクト」と呼びます。オブジェクト名は，大文字と小文字を区別します。</p>
 
 <pre>
-&gt; x
+<code>&gt; x
 [1] 0.3333333
 &gt; X           # 大文字を打ち込むと
  エラー：  オブジェクト 'X' がありません
-</pre>
+</code></pre>
 
 <p>いげた印 <code>#</code> より右側はコメント（説明のための注釈）です。以下では説明のためにコメントをいろいろ書いていますが，実際に打ち込むときはコメントは必要ありません。</p>
 
 <pre>
-&gt; pi          # これは円周率
+<code>&gt; pi          # これは円周率
 [1] 3.141593
 &gt; print(pi)   # これでもいいかな
 [1] 3.141593
 &gt; print(pi, digits=16) # 出力する桁数を増やしたい
 [1] 3.141592653589793
-</pre>
+</code></pre>
 
 <div class="note">
 <p>デフォルトの表示桁数を例えば16桁にしたければ <code>options(digits=16)</code>
@@ -125,25 +125,25 @@
 <div class="note">
 <p>標準のRでは，浮動小数点数の精度は53ビット（ほぼ十進16桁）程度です。<a href="https://CRAN.R-project.org/package=Rmpfr">Rmpfr</a> パッケージを使えば任意精度の数値が扱えます。例えば <code>PI</code> に1000ビット精度の円周率を代入し，それでいろいろ計算してみます：</p>
 <pre>
-install.packages("Rmpfr")   # Rmpfrのインストール
+<code>install.packages("Rmpfr")   # Rmpfrのインストール
 library("Rmpfr")            # このセッションでRmpfrを使う
 PI = Const("pi", prec=1000) # 1000ビット精度の円周率
 PI
 sin(PI / 2)
-</pre>
+</code></pre>
 <p>任意精度の整数なら <a href="https://CRAN.R-project.org/package=openssl">openssl</a> パッケージの <code>bignum()</code> が便利です。</p>
 </div>
 
 <p>Rのコンソールへの入力は，ヒストリー（履歴）機能が使えます。［↑］キー，［↓］キーで履歴を前後できます（Emacsの中では <code>M-p</code>，<code>M-n</code>）。</p>
 
 <pre>
-&gt; pi = 3      # いたずらをしてやろう
+<code>&gt; pi = 3      # いたずらをしてやろう
 &gt; pi          # どっちのpiがアクセスできるのだろう
 [1] 3
 &gt; rm(pi)      # piをrm（remove，削除）すると
 &gt; pi          # 自分の作ったpiだけ消える
 [1] 3.141593
-</pre>
+</code></pre>
 
 <p><code>pi</code> のような既存の名前と衝突するオブジェクトを作ることは，なるべく避けたほうがいいので，新しいオブジェクトを使いたいときには，Rコンソールに打ち込んでみて「オブジェクト …… がありません」というメッセージが現れるかどうか調べるといいでしょう。</p>
 
@@ -154,23 +154,23 @@ sin(PI / 2)
 <p><code>pi</code>（円周率 π = 3.14159...）は定義済みですが，<code>e</code>（自然対数の底 e = 2.718...）は定義されていません。</p>
 
 <pre>
-&gt; e
+<code>&gt; e
  エラー:  オブジェクト 'e' がありません
-</pre>
+</code></pre>
 
 <p>e = e<sup>1</sup> = exp(1) ですから，指数関数 <code>exp()</code> を使えば e が求められます。</p>
 
 <pre>
-&gt; exp(1)      # 指数関数なら
+<code>&gt; exp(1)      # 指数関数なら
 [1] 2.718282
-</pre>
+</code></pre>
 
 <p>関数の括弧を閉じないとどうなるでしょうか。</p>
 
 <pre>
-&gt; sin(pi/2    # おっと，括弧を閉じるのを忘れてEnterを押してしまった……
+<code>&gt; sin(pi/2    # おっと，括弧を閉じるのを忘れてEnterを押してしまった……
 +
-</pre>
+</code></pre>
 
 <p>このように，続きの入力を促すプロンプト <code>+</code> が出ます。その右側に，入れ忘れた <code>)</code> を入力してEnterを押します。あるいは，わけがわからなくなったなら「Esc」（エスケープ）キーを押せば通常のプロンプト <code>&gt;</code> に戻ります。場合によっては Control+C で止まります（Emacs中では Control-C を2回）。</p>
 
@@ -190,13 +190,13 @@ sin(PI / 2)
 実は，Rでは値（基本データ型）は一般にベクトル（1次元の配列）で，その要素番号（添字）が <code>[1]</code> から始まるのです。つまり，この数字は各行の最初の要素番号です。</p>
 
 <pre>
-&gt; x = 5:70  # xに長いベクトル (5,6,7,8,...,70) を代入
+<code>&gt; x = 5:70  # xに長いベクトル (5,6,7,8,...,70) を代入
 &gt; x         # 表示させてみる
  [1]  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21
 [18] 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38
 [35] 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55
 [52] 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70
-</pre>
+</code></pre>
 
 <p>
 <code>x[1]</code> = 5,
@@ -209,19 +209,19 @@ sin(PI / 2)
 はcombineまたはconcatenate（結合する）の頭文字です。</p>
 
 <pre>
-&gt; x = c(3.14, 2.718, 0.577)
+<code>&gt; x = c(3.14, 2.718, 0.577)
 &gt; x
 [1] 3.140 2.718 0.577
 &gt; x + 10     # 演算は個々の要素に作用する
 [1] 13.140 12.718 10.577
 &gt; x * 10     # * は掛け算の記号
 [1] 31.40 27.18  5.77
-</pre>
+</code></pre>
 
 <p><code>x</code> の平方根は <code>sqrt(x)</code> です。<code>sq</code> まで打って「Tab」（タブ）キーを叩くと，補完してくれます。RStudioでは簡単なヘルプも見られます。</p>
 
 <pre>
-&gt; sqrt(x)    # 関数も個々の要素に作用する
+<code>&gt; sqrt(x)    # 関数も個々の要素に作用する
 [1] 1.7720045 1.6486358 0.7596052
 &gt; length(x)  # ベクトルの長さ
 [1] 3
@@ -235,7 +235,7 @@ sin(PI / 2)
 [1] 3.14
 &gt; x[2:3]     # 配列の第2〜3要素
 [1] 2.718 0.577
-</pre>
+</code></pre>
 
 <div class="note">
 <p>例えば <code>c(3,4,5,6)</code> は <code>3:6</code>
@@ -246,7 +246,7 @@ sin(PI / 2)
 <div class="note">
 <p><code>c(1,1,1,1,1)</code> は <code>rep(1,5)</code> と書けます。同様に，5段階のアンケート結果のように，1が2個，2が3個，…といったデータを入れるには，次のようにできます：</p>
 <pre>
-&gt; x = rep(1:5, c(2,3,4,3,2))  # 1,2,3,4,5がそれぞれ2,3,4,3,2個
+<code>&gt; x = rep(1:5, c(2,3,4,3,2))  # 1,2,3,4,5がそれぞれ2,3,4,3,2個
 &gt; x
  [1] 1 1 2 2 2 3 3 3 3 4 4 4 5 5
 &gt; y = rep(1:5, c(0,2,4,5,3))
@@ -257,7 +257,7 @@ x
 1 2 3 4 5 
 2 3 4 3 2 
 &gt; t.test(x,y)  # t検定をする
-</pre>
+</code></pre>
 </div>
 
 <h2>ヘルプを読む</h2>
@@ -279,29 +279,29 @@ x
 <p>終了するには，［閉じる］ボタンをクリックします。または，Rのコンソールに</p>
 
 <pre>
-&gt; q()
-</pre>
+<code>&gt; q()
+</code></pre>
 
 <p>と打ち込むのが伝統的な方法です。<code>q</code>
 はquit（終わる）の頭文字です。すると，標準的な設定では，</p>
 
 <pre>
-作業スペースを保存しますか？
-</pre>
+<code>作業スペースを保存しますか？
+</code></pre>
 
 <p>または</p>
 
 <pre>
-Save workspace image? [y/n/c]:
-</pre>
+<code>Save workspace image? [y/n/c]:
+</code></pre>
 
 <p>と聞いてきますので，作業スペース（現在の状態）を保存して終了するなら <code>y</code>（はい），保存しないで終了するなら <code>n</code>（いいえ），終了をキャンセルする（終了しない）なら <code>c</code>（キャンセル）と答えます。通常は <code>n</code>（いいえ）と答えます。<code>y</code>（はい）と答えた場合，作業スペースの内容がRの作業ディレクトリ（working directory）の <code>.RData</code> というファイルに保存され，次回の起動時に自動的に読み込まれます。大量のデータを扱った場合，<code>.RData</code> は非常に大きくなります。<code>y</code> でも <code>n</code> でも，打ち込んだコマンドの履歴が作業ディレクトリの <code>.Rhistory</code> というファイルに入るはずです（入らない設定になっていることもありますので確認してください）。この <code>.Rhistory</code> を残しておくほうが <code>.RData</code> より便利です。非常に時間のかかる計算の途中でRを終了させる必要があるときは作業スペースも保存しておくほうがいいでしょう。作業ディレクトリは，メニューからも変更できますが，コマンド <code>getwd()</code> で調べ，<code>setwd("...")</code> で変更することができます。</p>
 
 <div class="note">
 <p>もし履歴が自動保存されないなら，ホームディレクトリの <code>.Rprofile</code> というファイルに次のように書き込んでみてください：</p>
 <pre>
-.Last = function() { if (interactive()) try(savehistory()) }
-</pre>
+<code>.Last = function() { if (interactive()) try(savehistory()) }
+</code></pre>
 </div>
 
 <h2>息抜き</h2>
@@ -349,30 +349,30 @@ Save workspace image? [y/n/c]:
 <p>まず，薬Xについての10個のデータをRに読み込んで，それを <code>x</code> という変数に代入することにしましょう。Rのコンソールに，次のように打ち込んでください。</p>
 
 <pre>
-x = scan()
-</pre>
+<code>x = scan()
+</code></pre>
 
 <p>すると，</p>
 
 <pre>
-1:
-</pre>
+<code>1:
+</code></pre>
 
 <p>というプロンプトが出ます。ここで，上の表の「X」の横の10個の数値をマウスで範囲選択し，右クリックして「コピー」します（あるいは Ctrl+C）。次に，Rコンソールを右クリックして「Paste（貼り付け）」します（あるいは Ctrl+V）。最後にEnterキーの空打ちをすると，入力が終了し，「Read 10 items」のような表示が出ます（10個の値を読み込んだ場合）。念のためRに「<code>x</code>」と打ち込んでEnterし，正しい値が読み込まれているか確認しましょう。</p>
 
 <pre>
-&gt; x
+<code>&gt; x
  [1]  0.7 -1.6 -0.2 -1.2 -0.1  3.4  3.7  0.8  0.0  2.0
-</pre>
+</code></pre>
 
 <p>これでデータがRに読み込まれたことが確認できました。同じようにして，薬Yについても，<code>y</code> という変数に読み込んでください。</p>
 
 <div class="note">
 <p>次のような命令をRコンソールにコピペしても同じことです：</p>
 <pre>
-x = c(0.7, -1.6, -0.2, -1.2, -0.1, 3.4, 3.7, 0.8, 0.0, 2.0)
+<code>x = c(0.7, -1.6, -0.2, -1.2, -0.1, 3.4, 3.7, 0.8, 0.0, 2.0)
 y = c(1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4)
-</pre>
+</code></pre>
 </div>
 
 <div class="note">
@@ -386,9 +386,9 @@ y = c(1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4)
 <div class="note">
 <p>実はこのデータはデータ例としてRに含まれています。<code>sleep</code> とすると表示されます。解説は <code>?sleep</code> で読めます。ただ，ちょっとわかりづらい並びになっているので，次のようなコマンドで <code>x</code> と <code>y</code> に分離できます：</p>
 <pre>
-x = with(sleep, extra[group==1])
+<code>x = with(sleep, extra[group==1])
 y = with(sleep, extra[group==2])
-</pre>
+</code></pre>
 </div>
 
 <figure style="float:right; margin:0 0 1em 2em">
@@ -398,25 +398,25 @@ y = with(sleep, extra[group==2])
 <p>読み込んだデータを簡単なボックスプロット（箱ひげ図）で描いてみましょう：</p>
 
 <pre>
-boxplot(x, y)
-</pre>
+<code>boxplot(x, y)
+</code></pre>
 
 <p>そっけないグラフですね。オプションを与えれば色をつけたり項目名を入れたりできますが，とりあえずこれでいいでしょう。縦横比の調節は，［Zoom］ボタンで別窓にしてからマウスで調節します。</p>
 
 <p>図ではなく，数値で最小値，25%点，中央値，平均値，75%点，最大値を求めたい場合は，次のようにします：</p>
 
 <pre>
-&gt; summary(x)
+<code>&gt; summary(x)
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
  -1.600  -0.175   0.350   0.750   1.700   3.700 
-</pre>
+</code></pre>
 
 <p>標準偏差は <code>summary(x)</code> で出ませんが，これは <code>sd(x)</code> で求められます。これは <i>N</i>-1 で割る方式の標準偏差です（<a href="basics.html">統計の基礎</a>参照）。</p>
 
 <p>すでに統計学を勉強した人は，<a href="ttest.html">t検定</a>をしてみましょう。<code>x</code> と <code>y</code> が独立な10個ずつの数だとした場合：</p>
 
 <pre>
-&gt; t.test(x, y)
+<code>&gt; t.test(x, y)
 
 	Welch Two Sample t-test
 
@@ -428,12 +428,12 @@ alternative hypothesis: true difference in means is not equal to 0
 sample estimates:
 mean of x mean of y 
      2.33      0.75 
-</pre>
+</code></pre>
 
 <p>そうではなく <code>x</code> と <code>y</code> が対応のある10個ずつの数だとした場合：</p>
 
 <pre>
-&gt; t.test(y, x, paired=TRUE)
+<code>&gt; t.test(y, x, paired=TRUE)
 
 	Paired t-test
 
@@ -445,27 +445,27 @@ alternative hypothesis: true difference in means is not equal to 0
 sample estimates:
 mean of the differences 
                    1.58 
-</pre>
+</code></pre>
 
 <p>慣れれば次のような各群の95%信頼区間を比較する図も簡単に描けます：</p>
 
 <figure><img src="img/140918a.png" alt=""></figure>
 
 <pre>
-cix = t.test(x)$conf.int
+<code>cix = t.test(x)$conf.int
 ciy = t.test(y)$conf.int
 dotchart(c(mean(x),mean(y)), pch=16, xlim=range(c(cix,ciy)), xlab="睡眠時間の伸び（時間）")
 arrows(cix[1], 1, cix[2], 1, length=0.05, angle=90, code=3)
 arrows(ciy[1], 2, ciy[2], 2, length=0.05, angle=90, code=3)
 mtext(c("対照群","実験群"), side=2, at=1:2, line=0.5, las=1)
-</pre>
+</code></pre>
 
 <div class="note">
 <p><code>scan()</code> を使った標準入力経由の方法は，EmacsのESS上のRでは（1行からなるデータ以外は）うまくいかないようです。その他の環境でも，<code>scan()</code> 以外の入力関数ではうまくいきません。このときは，クリップボード（clipboard）経由の入力を使います。何かをマウスで選択して「コピー」すると，その何かはコンピュータのメモリの「クリップボード」というところに入ります。次に別のところをクリックして「ペースト」（貼り付け）すると，クリップボードの中身がそこに入力されます。この一連の流れがコピー＆ペースト（コピペ）です。</p>
 <p>まずRのコンソールに</p>
 <pre>
-x = scan("clipboard")
-</pre>
+<code>x = scan("clipboard")
+</code></pre>
 <p>と打ち込み，Enterキーは押さない状態で止めておきます（Macなら
 <code>x = scan(pipe("pbpaste"))</code>
 です）。その状態で，さきほどと同様にデータをコピーして，その状態で <code>x = scan("clipboard")</code> の最後のEnterを打ちます。すると「Read 10 items」のような表示が出て，データが読み込まれます。</p>
@@ -491,17 +491,17 @@ x = scan("clipboard")
 <div class="note">
 <p>同じ作業をRのコマンドで行うには，次のようにします：</p>
 <pre>
-library(readxl)
+<code>library(readxl)
 atest2018 = read_excel("atest2018.xlsx")
-</pre>
+</code></pre>
 </div>
 
 <div class="note">
 <p>実は，ダウンロードもRから行うことができます：</p>
 <pre>
-download.file("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/atest2018.xlsx", "atest2018.xlsx")
+<code>download.file("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/atest2018.xlsx", "atest2018.xlsx")
 atest2018 = read_excel("atest2018.xlsx")
-</pre>
+</code></pre>
 <p>これが一番簡単です。</p>
 </div>
 
@@ -516,8 +516,8 @@ atest2018 = read_excel("atest2018.xlsx")
 <p>全体の相関図をプロットするには，Rコンソール（左下ペイン）に次のように打ち込みます：</p>
 
 <pre>
-plot(atest2018[,3:12])
-</pre>
+<code>plot(atest2018[,3:12])
+</code></pre>
 
 <p><code>[,3:12]</code> は3〜10列目という意味です。このような指定が面倒であれば，ダウンロードしたatest2018.xlsxをExcelで編集して1列目・2列目を削除したものをRStudioで再び読み込めば，単に <code>plot(atest2018)</code> だけで相関図がプロットできます。</p>
 
@@ -544,27 +544,27 @@ plot(atest2018[,3:12])
 <p>Excelのシートを開き，入力されている部分を範囲選択して，右クリック→コピーし，さきほど入力したRStudioの左上ペインの命令の行にカーソルがある状態で「Run」ボタンを押します。これで変数 <code>x</code> にデータが読み込まれました。確認のため，Rコンソールに変数名を打ち込んでみましょう：</p>
 
 <pre>
-&gt; x
+<code>&gt; x
    都道府県 国語A 国語B 数学A 数学B
 1    北海道  79.4  49.9  66.0  59.4
 2    青森県  81.0  52.0  69.3  60.7
 3    岩手県  80.5  51.8  64.1  57.5
 …………(中略)…………
 47   沖縄県  74.4  45.6  58.2  50.3
-</pre>
+</code></pre>
 
 <p>これは47行5列の「行列」のようなものです。Rでは，このようなものを「データフレーム」といいます。<code>x</code> というデータフレームの <code>i</code> 行 <code>j</code> 列の要素にアクセスするには <code>x[i,j]</code> と打ち込みます。例えば北海道の国語Aの正答率は <code>x[1,2]</code> です。国語A全体なら <code>x[,2]</code> です。国語A〜数学Bの4列なら <code>x[,2:5]</code> と書きます。この部分の相関行列を求めてみましょう：</p>
 
 <pre>
-cor(x[,2:5])
-</pre>
+<code>cor(x[,2:5])
+</code></pre>
 
 <p>主成分分析をして，結果をバイプロット表示してみましょう：</p>
 
 <pre>
-r = prcomp(x[,2:5])
+<code>r = prcomp(x[,2:5])
 biplot(r)    # または biplot(r, xlabs=x[,1])
-</pre>
+</code></pre>
 
 <h3>ファイルから読む方法</h3>
 
@@ -580,54 +580,54 @@ biplot(r)    # または biplot(r, xlabs=x[,1])
 <p>次のようなデータがあったとしましょう。</p>
 
 <pre>
-&gt; 名前 = c("太郎", "次郎", "花子")
+<code>&gt; 名前 = c("太郎", "次郎", "花子")
 &gt; 身長 = c(168.5, 172.8, 159.0)
 &gt; 体重 = c(69.5, 75.0, 56.5)
-</pre>
+</code></pre>
 
 <p>いわゆる肥満度（BMI，body mass index）を計算してみましょう。<code>/</code>
 は割り算，<code>^2</code> は2乗を意味します。</p>
 
 <pre>
-&gt; 体重 / (身長 / 100)^2
+<code>&gt; 体重 / (身長 / 100)^2
 [1] 24.47851 25.11735 22.34880
-</pre>
+</code></pre>
 
 <p>小数点以下が長すぎるなら，<code>round()</code> で丸めます。</p>
 
 <pre>
-&gt; round(体重 / (身長 / 100)^2)
+<code>&gt; round(体重 / (身長 / 100)^2)
 [1] 24 25 22
 &gt; round(体重 / (身長 / 100)^2, 1)
 [1] 24.5 25.1 22.3
-</pre>
+</code></pre>
 
 <p>身長・体重を一つのデータフレームにまとめると便利です。</p>
 
 <pre>
-&gt; X = data.frame(名前, 身長, 体重)
+<code>&gt; X = data.frame(名前, 身長, 体重)
 &gt; X
   名前  身長 体重
 1 太郎 168.5 69.5
 2 次郎 172.8 75.0
 3 花子 159.0 56.5
-</pre>
+</code></pre>
 
 <div class="note">
 <p>行には <code>1</code>，<code>2</code>，... という名前（行番号）が自動的に付きます。この部分に別の情報を入れることも可能です：</p>
 <pre>
-&gt; X = data.frame(身長, 体重)
+<code>&gt; X = data.frame(身長, 体重)
 &gt; row.names(X) = c("太郎", "次郎", "花子")
 &gt; X
       身長 体重
 太郎 168.5 69.5
 次郎 172.8 75.0
 花子 159.0 56.5
-</pre>
+</code></pre>
 <p>最初の二つの命令は，次のようにまとめることもできます：</p>
 <pre>
-&gt; X = data.frame(身長, 体重, row.names=名前)
-</pre>
+<code>&gt; X = data.frame(身長, 体重, row.names=名前)
+</code></pre>
 <p>ただし，同じ名前の人がいると，エラーになります。データ作法として，<code>row.names()</code> に名前を入れることはお勧めできません。</p>
 </div>
 
@@ -635,16 +635,16 @@ biplot(r)    # または biplot(r, xlabs=x[,1])
 <p>こうしてデータフレーム <code>X</code>
 を作れば，元の名前・身長・体重は消してもかまいません：</p>
 <pre>
-&gt; rm(名前, 身長, 体重)
-</pre>
+<code>&gt; rm(名前, 身長, 体重)
+</code></pre>
 </div>
 
 <p>データフレーム <code>X</code> の中の <code>身長</code> を参照するには <code>X$身長</code> のように書きます。</p>
 
 <pre>
-&gt; X$身長
+<code>&gt; X$身長
 [1] 168.5 172.8 159.0
-</pre>
+</code></pre>
 
 <div class="note">
 <p>この <code>X$</code> の部分を省略したい場合は，<code>attach(X)</code> と打ち込みます。逆は <code>detach(X)</code> です。ただし，あまりお勧めできません。</p>
@@ -653,51 +653,51 @@ biplot(r)    # または biplot(r, xlabs=x[,1])
 <p>このデータフレームに性別を追加しましょう：</p>
 
 <pre>
-&gt; X$性別 = c("M", "M", "F")
+<code>&gt; X$性別 = c("M", "M", "F")
 &gt; X
   名前  身長 体重 性別
 1 太郎 168.5 69.5    M
 2 次郎 172.8 75.0    M
 3 花子 159.0 56.5    F
-</pre>
+</code></pre>
 
 <p>さらにBMIを付け加えてみましょう：</p>
 
 <pre>
-&gt; X$BMI = round(体重 / (身長 / 100)^2)
+<code>&gt; X$BMI = round(体重 / (身長 / 100)^2)
 &gt; X
   名前  身長 体重 性別 BMI
 1 太郎 168.5 69.5    M  24
 2 次郎 172.8 75.0    M  25
 3 花子 159.0 56.5    F  22
-</pre>
+</code></pre>
 
 <div class="note">
 <p>このようなデータフレームをExcelのような画面で閲覧・編集する <code>fix()</code>
 という関数があります：</p>
 <pre>
-fix(X)
-</pre>
+<code>fix(X)
+</code></pre>
 <p>打ち込んでもデータ編集用の窓が現れないときは，RStudioの窓に隠れているかもしれません。Macでは，RStudioやESS上のRで <code>fix()</code> を使うにはX11（XQuartz）が必要です。</p>
 </div>
 
 <div class="note">
 <p>上のデータフレーム <code>X</code> は，基本的には <code>X$名前</code>，<code>X$身長</code> などのベクトルの集まりです。ベクトルの要素はすべて同じ型を持つので，<code>X$名前</code> は文字列，<code>X$身長</code> は数値になりそうですが，実際にはデータフレーム化したときに <code>X$名前</code> は「因子」（factor，カテゴリカルデータ）として格納されます。文字列を文字列のままデータフレームに格納するには，あらかじめ</p>
 <pre>
-options(stringsAsFactors=FALSE)
-</pre>
+<code>options(stringsAsFactors=FALSE)
+</code></pre>
 <p>と打ち込んでおきます。</p>
 </div>
 
 <div class="note">
 <p>名前は文字列のほうがいいのですが，性別は名義尺度のカテゴリカルデータですので，最初からファクターとして扱うほうがいいでしょう：</p>
 <pre>
-性別 = factor(c("M","M","F"))
-</pre>
+<code>性別 = factor(c("M","M","F"))
+</code></pre>
 <p>こうすると，内部ではアルファベット順に <code>F</code> が1，<code>M</code> が2として扱われ，表示の際にそれぞれ <code>F</code>，<code>M</code> になります。後でもし数値に変換した際に男が1，女が2にしたい場合は，明示的にレベルの順序を指定します：</p>
 <pre>
-性別 = factor(c("M","M","F"), levels=c("M","F"))
-</pre>
+<code>性別 = factor(c("M","M","F"), levels=c("M","F"))
+</code></pre>
 </div>
 
 <h2>データフレームの読み込み</h2>
@@ -722,11 +722,11 @@ options(stringsAsFactors=FALSE)
 <p>あるいは，わざわざExcelを立ち上げなくても，下の4行をテキストエディタ（Windowsの「メモ帳」など）にコピペして <code>data1.csv</code> というファイル名で保存するのでも同じことです。</p>
 
 <pre>
-名前,身長,体重,性別
+<code>名前,身長,体重,性別
 太郎,168.5,69.5,M
 二郎,172.8,75,M
 花子,159,56.5,F
-</pre>
+</code></pre>
 
 <p>このようにして作った <code>data1.csv</code> をRStudioで読み込むには，右上ペインで「Import Dataset」→「From Text File...」でファイルを選びます。</p>
 
@@ -739,14 +739,14 @@ options(stringsAsFactors=FALSE)
 <p>Rを（RStudioを介さず）使っているなら，</p>
 
 <pre>
-data1 = read.csv("data1.csv")
-</pre>
+<code>data1 = read.csv("data1.csv")
+</code></pre>
 
 <p>のようにファイル名を指定すればいいのですが，<code>data1.csv</code> が作業ディレクトリにない状態で上のコマンドを打つとエラーになります。次のように打ち込めば，ファイルを選ぶダイアログボックスが現れるので，楽です。</p>
 
 <pre>
-data1 = read.csv(file.choose())
-</pre>
+<code>data1 = read.csv(file.choose())
+</code></pre>
 
 <div class="note">
 <p>もちろん <code>data1 = read.csv("D:/work/data1.csv")</code> のようにフルパスまたは相対パスで指定すれば確実です。Windowsではパスの区切りは <code>/</code> または <code>\\</code> とします。</p>
@@ -760,10 +760,10 @@ data1 = read.csv(file.choose())
 <div class="note">
 <p>ファイル名のかわりにURLを指定することもできます：</p>
 <pre>
-data1 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/life_expectancy_Japan.csv",
+<code>data1 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/life_expectancy_Japan.csv",
                  comment.char="#",
                  fileEncoding="UTF-8")
-</pre>
+</code></pre>
 <p>ここでは，<code>#</code> で始まる行はコメントとして読み飛ばすというオプションを与えています。オンラインで提供するCSVファイルには <code>#</code> で始まるコメントを入れておくことがあります。</p>
 </div>
 
@@ -791,14 +791,14 @@ data1 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/life_expectancy_
 <p>データ <code>data1</code> をCSV形式のファイルに書き出すには，次のようにします（オプション <code>row.names=FALSE</code> で行番号の出力をしないようにしています）：</p>
 
 <pre>
-write.csv(data1, "data1.csv", row.names=FALSE)
-</pre>
+<code>write.csv(data1, "data1.csv", row.names=FALSE)
+</code></pre>
 
 <p>さらに，文字コードや行末を指定するには，次のようにします：</p>
 
 <pre>
-write.csv(data1, "data1.csv", row.names=FALSE, fileEncoding="CP932", eol="\r\n")
-</pre>
+<code>write.csv(data1, "data1.csv", row.names=FALSE, fileEncoding="CP932", eol="\r\n")
+</code></pre>
 
 <div class="note">
 <p>上のようにオプション <code>fileEncoding="CP932"</code> と <code>eol="\r\n"</code> を与え，ファイル名の拡張子を <code>csv</code> にしておけば，ダブルクリックするだけでExcelで開くことができます。一方，国際的に通用するオープンデータとするには，<code>fileEncoding="UTF-8"</code> のほうがいいでしょう。</p>
@@ -819,82 +819,82 @@ write.csv(data1, "data1.csv", row.names=FALSE, fileEncoding="CP932", eol="\r\n")
 <p><i>y</i> = <i>x</i><sup>2</sup> のグラフを描いてみましょう。曲線を描く関数 <code>curve()</code> を使います。</p>
 
 <pre>
-curve(x^2)
-</pre>
+<code>curve(x^2)
+</code></pre>
 
 <p><i>x</i> の範囲が微妙ですね。<i>x</i> の範囲を -2 ≦ <i>x</i> ≦ 2 と指定して描き直しましょう。</p>
 
 <pre>
-curve(x^2, -2, 2)
-</pre>
+<code>curve(x^2, -2, 2)
+</code></pre>
 
 <p>今度は <i>y</i> = sin(<i>x</i>) です。範囲は -π ≦ <i>x</i> ≦ π とします。</p>
 
 <pre>
-curve(sin(x), -pi, pi)
-</pre>
+<code>curve(sin(x), -pi, pi)
+</code></pre>
 
 <p>これにコサインのグラフを重ね書き（<code>add=TRUE</code>）しましょう。区別するため，色は青（<code>col="blue"</code>）にします。</p>
 
 <pre>
-curve(cos(x), col="blue", add=TRUE)
-</pre>
+<code>curve(cos(x), col="blue", add=TRUE)
+</code></pre>
 
 <p><i>x</i> 軸，<i>y</i> 軸を加えます。</p>
 
 <pre>
-abline(h=0)   # h は horizontal (水平)
+<code>abline(h=0)   # h は horizontal (水平)
 abline(v=0)   # v は vertical (垂直)
-</pre>
+</code></pre>
 
 <p>タンジェントのグラフはちょっと難しいですね。明示的に <i>x</i> の範囲（<code>xlim</code>）や <i>y</i> の範囲（<code>ylim</code>）を指定するといいでしょう。</p>
 
 <pre>
-curve(tan(x), -pi/2+0.01, pi/2-0.01, xlim=c(-pi,pi), ylim=c(-2,2))
+<code>curve(tan(x), -pi/2+0.01, pi/2-0.01, xlim=c(-pi,pi), ylim=c(-2,2))
 curve(tan(x), -3*pi/2+0.01, -pi/2-0.01, add=TRUE)
 curve(tan(x), pi/2+0.01, 3*pi/2-0.01, add=TRUE)
 abline(h=0, v=0)
 abline(v=c(-pi/2,pi/2), lty=2)  # lty=2 は破線
-</pre>
+</code></pre>
 
 <p>もっと数学の教科書っぽくする方法は<a href="100121a.html">こちら</a>をご覧ください。</p>
 
 <p>正規分布を習った人は，正規分布の密度関数 <code>dnorm(x)</code> のグラフを描いてみましょう。</p>
 
 <pre>
-curve(dnorm(x), -3, 3)
-</pre>
+<code>curve(dnorm(x), -3, 3)
+</code></pre>
 
 <p>少しずつ見栄えも調整してみましょう。Rのデフォルトのグラフは，私にはちょっと軸まわりが離れ過ぎのように見えます（<a href="ggplot2.html">ggplot2</a> の出力と比較してください）。<code>mgp</code> というパラメータを微調整してから描き直してみましょう：</p>
 
 <pre>
-par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
+<code>par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 curve(dnorm(x), -3, 3)
-</pre>
+</code></pre>
 
 <p>日本語でメインタイトル（<code>main</code>）を書き加えてみましょう。</p>
 
 <pre>
-curve(dnorm(x), -3, 3, main="正規分布")
-</pre>
+<code>curve(dnorm(x), -3, 3, main="正規分布")
+</code></pre>
 
 <p>日本語部分がトーフ（□□□□）にならないことを確認してください。</p>
 
 <div class="note">
 <p>Macで，もし日本語部分がトーフになったら，</p>
 <pre>
-par(family="HiraKakuProN-W3")  # ヒラギノ角ゴシックProN W3
+<code>par(family="HiraKakuProN-W3")  # ヒラギノ角ゴシックProN W3
 curve(dnorm(x), -3, 3, main="正規分布")
-</pre>
+</code></pre>
 <p>のように，フォント名を指定してください。フォント名としては <code>Osaka</code>，<code>HiraMinProN-W3</code>，<code>HiraMinProN-W6</code>，<code>HiraKakuProN-W3</code>，<code>HiraKakuProN-W6</code>，<code>HiraMaruProN-W4</code> などが使えます。<code>Hira</code> が付くのはヒラギノフォントで，<code>Min</code> は明朝，<code>Kaku</code> は角ゴシック，<code>Maru</code> は丸ゴシック，<code>W</code> の後の数字は大きいほど線が太くなります。古い OS X では <code>ProN</code> がないので <code>Pro</code> にします。<code>ProN</code> はJIS X 0213の2004年改正に準拠した字形になっています。こういった設定は，Rの初期化ファイル <a href="Rprofile.html">~/.Rprofile</a> に書いておくと便利です。</p>
 </div>
 
 <div class="note">
 <p>上のようにすると，すべてのフォントがヒラギノ角ゴシックになってしまいます。タイトル以外を例えばHelveticaにするには，次のようにすればよいでしょう。</p>
 <pre>
-curve(dnorm(x), -3, 3, family="Helvetica")
+<code>curve(dnorm(x), -3, 3, family="Helvetica")
 title(main="正規分布", family="HiraKakuProN-W3", font.main=1)
-</pre>
+</code></pre>
 <p><code>title()</code> の <code>font.main=</code> や，<code>text()</code> の <code>font=</code> は，1が標準，2がボールド，3がイタリック，4がボールドイタリックを表します。日本語フォントの場合は1を選ぶのが無難です（<code>Meiryo</code> はボールドバージョンを持っているのでデフォルトの <code>font.main=2</code> のままでもかまいません）。</p>
 </div>
 
@@ -905,15 +905,15 @@ title(main="正規分布", family="HiraKakuProN-W3", font.main=1)
 <p>線の太さ <code>lwd</code> をデフォルトの1から2に変更してみます：</p>
 
 <pre>
-curve(dnorm(x), -3, 3, main="正規分布", lwd=2)
-</pre>
+<code>curve(dnorm(x), -3, 3, main="正規分布", lwd=2)
+</code></pre>
 
 <p>同じ座標軸にさらに曲線を書き加えるときは <code>add=TRUE</code>
 を指定します。たとえば自由度1の <i>t</i> 分布の密度関数を書き加えてみます：</p>
 
 <pre>
-curve(dt(x,1), lwd=2, lty=2, col="orange", add=TRUE)
-</pre>
+<code>curve(dt(x,1), lwd=2, lty=2, col="orange", add=TRUE)
+</code></pre>
 
 <p>上では線の太さ <code>lwd</code>
 以外に線のタイプ <code>lty</code>
@@ -952,8 +952,8 @@ curve(dt(x,1), lwd=2, lty=2, col="orange", add=TRUE)
 <p>ところが，WindowsのR・RStudioのメニューでPDF出力すると，日本語の部分がトーフになります。また，MacのRStudioでは，日本語を含んだ図をPDFで保存しようとすると，しばらく固まってしまい，エラーになります。これを防ぐには，あらかじめ</p>
 
 <pre>
-par(family="Japan1GothicBBB")   # またはJapan1またはJapan1Ryumin
-</pre>
+<code>par(family="Japan1GothicBBB")   # またはJapan1またはJapan1Ryumin
+</code></pre>
 
 <p>と打ち込んでから描画してください（警告が出ますが無視します）。フォントは埋め込まれず，<code>"Japan1GothicBBB"</code> ならGothicBBB-Medium，<code>"Japan1Ryumin"</code> ならRyumin-Light，<code>"Japan1"</code> ならKozMinPro-Regular-Acroの，いずれも名前参照だけになり，WindowsのAdobe Readerでは小塚，Macではヒラギノで表示されます。このようなフォントを埋め込まないPDFは，昔はファイルサイズが小さくなるのでよく使われましたが，日本語フォントがないと表示されず，今は受け取りを拒否されるのが普通になりました。</p>
 
@@ -967,9 +967,9 @@ par(family="Japan1GothicBBB")   # またはJapan1またはJapan1Ryumin
 <div class="note">
 <p>MacのRStudioでないRでもフォントを埋め込まないPDFを作りたいなら，とりあえず画面に表示してから，</p>
 <pre>
-dev.copy2pdf(file="hoge.pdf")   # PDFに出力したい場合
+<code>dev.copy2pdf(file="hoge.pdf")   # PDFに出力したい場合
 dev.copy2eps(file="hoge.eps")   # EPSに出力したい場合
-</pre>
+</code></pre>
 <p>のように打ち込むという手があります。日本語の場合は <code>family</code>
 を <code>Japan1GothicBBB</code>
 などにしておかないとうまく出力できません。詳しくは <code>dev.copy2pdf()</code>，<code>dev.copy2eps()</code> のヘルプを見てください。</p>
@@ -983,21 +983,21 @@ dev.copy2eps(file="hoge.eps")   # EPSに出力したい場合
 <p>現時点で，Windows，Mac，Linux等で互換性があり，しかもフォントを埋め込んだPDFを生成する方法としては，おそらく <code>cairo_pdf()</code> が推奨できると思います。フォント名はここではWindowsで視認性の高いメイリオ（<code>"Meiryo"</code>）にしましたが，<code>"MS Gothic"</code> なども使えます。</p>
 
 <pre>
-cairo_pdf("hoge.pdf", width=7, height=5, family="Meiryo")  # 幅・高さをインチ単位で指定
+<code>cairo_pdf("hoge.pdf", width=7, height=5, family="Meiryo")  # 幅・高さをインチ単位で指定
 par(mgp=c(2,0.8,0))
 curve(dnorm(x), -3, 3, main="正規分布", lwd=2)
 dev.off() # ファイルを閉じる
-</pre>
+</code></pre>
 
 <p>MacではOSの機能（Quartz）を使ってコマンドでPDF出力することもできます。Macではこちらが推奨です。</p>
 
 <pre>
-quartz(type="pdf", width=7, height=5, file="hoge.pdf")
+<code>quartz(type="pdf", width=7, height=5, file="hoge.pdf")
 par(mgp=c(2,0.8,0))
 curve(dnorm(x), -3, 3, lwd=2, family="Helvetica")
 title(main="正規分布", family="HiraKakuProN-W3", font.main=1)
 dev.off()
-</pre>
+</code></pre>
 
 <h3>コマンドだけでEPSを出力する</h3>
 
@@ -1006,42 +1006,42 @@ dev.off()
 コマンドでファイル名（とフォント）を指定し，図を出力します。フォントは埋め込まれません。長い間EPSはLaTeXの推奨画像形式とされてきましたが，現在のLaTeXは最終産物がPDFの場合がほとんどですので，EPSは非推奨です。EPSを使うとLaTeXからGhostscriptを呼び出してPDFに変換するという余分な作業が入り，遅くなるだけでなく，トラブルも発生しやすくなります。</p>
 
 <pre>
-setEPS()
+<code>setEPS()
 postscript("hoge.eps", family="Japan1GothicBBB")
 curve(...)                     # 図を描く
 dev.off()                      # ファイルを閉じる
-</pre>
+</code></pre>
 
 <p>印刷目的の場合は，あらかじめ <code>ps.options()</code>
 コマンドで <code>colormodel</code>（色モデル）を <code>gray</code>（グレースケール）または <code>cmyk</code>（CMYKプロセスカラー）にしておくほうが安全です：</p>
 
 <pre>
-ps.options(colormodel="gray")   # or "cmyk" or "rgb"
-</pre>
+<code>ps.options(colormodel="gray")   # or "cmyk" or "rgb"
+</code></pre>
 
 <h3>コマンドだけでPNGやJPEGを出力する</h3>
 
 <p>関数 <code>png()</code> や <code>jpeg()</code> が用意されています。Webで自動処理でグラフを提供するにはPNGがお薦めです。X11やcairo-develがインストールされたLinuxマシンで<a href="/~okumura/linux/?R">Rをビルド</a>した場合，<code>cairo</code> デバイスを使うのがいいでしょう（Macなら <code>quartz</code> デバイスも使えます）。</p>
 
 <pre>
-png("hoge.png", width=640, height=480, type="cairo")
+<code>png("hoge.png", width=640, height=480, type="cairo")
 ...
 dev.off()
-</pre>
+</code></pre>
 
 <h3>PDFをLaTeXに挿入する</h3>
 
 <p>LaTeX文書に挿入する図には，昔はEPSが使われましたが，今はPDF（フォントを埋め込んだもの）が推奨です。</p>
 
 <pre>
-\documentclass{jsarticle}
+<code>\documentclass{jsarticle}
 \usepackage[dvipdfmx]{graphicx}
 \begin{document}
 ...
 \includegraphics[width=10cm]{hoge.pdf}
 ...
 \end{document}
-</pre>
+</code></pre>
 
 <p>これで <code>platex</code> で処理し，<code>dvipdfmx</code> でPDF化します。</p>
 
@@ -1049,15 +1049,15 @@ dev.off()
 で <code>mar</code> パラメータを適当に設定します。下・左・上・右の順に並べます。</p>
 
 <pre>
-par(mar=c(4.2,4.1,0.4,0.5))
-</pre>
+<code>par(mar=c(4.2,4.1,0.4,0.5))
+</code></pre>
 
 <p>あるいはLaTeX側で <code>trim</code>
 を使ってトリミングすることも可能です。こちらは左・下・右・上の順に1/72インチ単位で指定します。</p>
 
 <pre>
-\includegraphics[width=10cm,trim=125 130 150 150]{hoge.pdf}
-</pre>
+<code>\includegraphics[width=10cm,trim=125 130 150 150]{hoge.pdf}
+</code></pre>
 
 <p>Rの<a href="https://CRAN.R-project.org/package=tikzDevice">tikzDevice</a>を使えばTikZ形式で出力することも可能です。これをLaTeX文書に挿入すれば，本文と同じフォントで統一できますし，図にTeXの数式を含めることもできます。</p>
 
@@ -1066,15 +1066,15 @@ par(mar=c(4.2,4.1,0.4,0.5))
 <p>Rのコマンドは行末で区切られますが，<code>;</code>（セミコロン）で区切ることもできます。</p>
 
 <pre>
-a = 5 + 3; b = 5 - 3
-</pre>
+<code>a = 5 + 3; b = 5 - 3
+</code></pre>
 
 <p>は</p>
 
 <pre>
-a = 5 + 3
+<code>a = 5 + 3
 b = 5 - 3
-</pre>
+</code></pre>
 
 <p>と同じ意味です。</p>
 
@@ -1084,7 +1084,7 @@ b = 5 - 3
 は複素数 3 + 0<i>i</i> になります。値の型は <code>typeof()</code> 関数で調べられます：</p>
 
 <pre>
-&gt; typeof(3)
+<code>&gt; typeof(3)
 [1] "double"
 &gt; typeof(3.0)
 [1] "double"
@@ -1092,36 +1092,36 @@ b = 5 - 3
 [1] "integer"
 &gt; typeof(3+0i)
 [1] "complex"
-</pre>
+</code></pre>
 
 <p>Rでは「3.14」のような一つの値も長さ1のベクトルです。ベクトルの型はどの要素も同じです。</p>
 
 <pre>
-&gt; typeof(c(1,2,3))
+<code>&gt; typeof(c(1,2,3))
 [1] "double"
 &gt; typeof(c(1,2,"a"))
 [1] "character"
 &gt; c(1,2,"a")
 [1] "1" "2" "a"
-</pre>
+</code></pre>
 
 <p>演算はベクトルの要素ごとに行われます。長さが違う場合は，長い方に合わせて，短い方を何度も使います：</p>
 
 <pre>
-&gt; 1:6 + c(10,100)
+<code>&gt; 1:6 + c(10,100)
 [1]  11 102  13 104  15 106
-</pre>
+</code></pre>
 
 <p>代入（付値）は，昔は <code>x &lt;- 5</code>
 のような書き方が専ら使われてきましたが，今では <code>x = 5</code>
 という書き方も使えます。このサイトでは代入に <code>=</code> を使っています。</p>
 
 <pre>
-&gt; x = 1    # xに1を代入
+<code>&gt; x = 1    # xに1を代入
 &gt; x &lt;- 1   # xに1を代入
 &gt; x&lt;-1     # xに1を代入
 &gt; x &lt; -1   # xが-1より小さいか
-</pre>
+</code></pre>
 
 <div class="note">
 <p>Rで <code>&lt;-</code> の代わりに <code>=</code> が使えるようになったのは<a href="http://developer.r-project.org/equalAssign.html">2001年から</a>のようです。Rの前身の<a href="http://cm.bell-labs.com/stat/S">S</a>については，1998年のVersion 4からで，John M. Chambers, <a href="http://books.google.co.jp/books?id=Km1IBFZCRPUC&amp;printsec=frontcover&amp;hl=ja&amp;source=gbs_ge_summary_r&amp;cad=0#v=onepage&amp;q&amp;f=false"><i>Programming with Data: A Guide to the S Language</i></a> (1998) では主に <code>=</code> が使われ，p.15で <code>&lt;-</code> も使えることが言及されています。<a href="http://google-styleguide.googlecode.com/svn/trunk/Rguide.xml#assignment">Google's R Style Guide</a> では <code>=</code> でなく <code>&lt;-</code> を使えと書いてあります。最終的には好みの問題でしょう（<a href="http://blog.revolutionanalytics.com/2008/12/use-equals-or-arrow-for-assignment.html">参考</a>）。</p>
@@ -1130,24 +1130,24 @@ b = 5 - 3
 <div class="note">
 <p>条件判断で</p>
 <pre>
-if (a &lt; -1) n = 1 else y = 2
-</pre>
+<code>if (a &lt; -1) n = 1 else y = 2
+</code></pre>
 <p>を</p>
 <pre>
-if (a &lt;-1) n = 1 else y = 2
-</pre>
+<code>if (a &lt;-1) n = 1 else y = 2
+</code></pre>
 <p>と書くと <code>a</code> に1を代入してしまいます。なお，これと同じことを</p>
 <pre>
-ifelse(a &lt; -1, n &lt;- 1, y &lt;- 2)
-</pre>
+<code>ifelse(a &lt; -1, n &lt;- 1, y &lt;- 2)
+</code></pre>
 <p>または</p>
 <pre>
-ifelse(a &lt; -1, {n = 1}, {y = 2})
-</pre>
+<code>ifelse(a &lt; -1, {n = 1}, {y = 2})
+</code></pre>
 <p>と書くことができますが，</p>
 <pre>
-ifelse(a &lt; -1, n = 1, y = 2)
-</pre>
+<code>ifelse(a &lt; -1, n = 1, y = 2)
+</code></pre>
 <p>と書くと，関数 <code>ifelse(test, yes, no)</code>
 の仮引数 <code>no</code> に 1 を代入し，<code>yes</code>
 に 2 を代入するという意味になってしまいます。関数の引数リストの中で仮引数以外の変数に代入する際には注意が必要です。</p>
@@ -1173,17 +1173,17 @@ ifelse(a &lt; -1, n = 1, y = 2)
 <p>現在読み込まれているパッケージは <code>search()</code> でリストされます。</p>
 
 <pre>
-&gt; search()
+<code>&gt; search()
 [1] ".GlobalEnv"        "package:stats"     "package:graphics" 
 [4] "package:grDevices" "package:utils"     "package:datasets" 
 [7] "package:methods"   "Autoloads"         "package:base"     
-</pre>
+</code></pre>
 
 <p>この中に <code>MASS</code> はありませんので，読み込んでみましょう。それには</p>
 
 <pre>
-library("MASS")
-</pre>
+<code>library("MASS")
+</code></pre>
 
 <p>と打ち込みます（このダブルクォートは省略できます）。念のため <code>search()</code>
 と打ち込むと "package:MASS" が一覧に加わります。</p>
@@ -1192,24 +1192,24 @@ library("MASS")
 でリストされるのはR標準のものだけです。これ以外に無数のパッケージがCRANサイトで公開されています。パッケージをインストールする前に，すでにインストールされているパッケージを念のため最新の状態に更新しておきましょう。次のコマンドは，統計数理研究所のCRANミラーを使ってパッケージを更新・インストールします（パッケージ名にはダブルクォートを付けます）。</p>
 
 <pre>
-options(repos="http://cran.ism.ac.jp")
+<code>options(repos="http://cran.ism.ac.jp")
 update.packages()
 install.packages("パッケージ名")
-</pre>
+</code></pre>
 
 <p>こうしてから</p>
 
 <pre>
-library("パッケージ名")
-</pre>
+<code>library("パッケージ名")
+</code></pre>
 
 <p>と打ち込みます（このダブルクォートは省略できます）。</p>
 
 <p>パッケージにはたくさんのサンプルデータが含まれているものがあります。</p>
 
 <pre>
-data()
-</pre>
+<code>data()
+</code></pre>
 
 <p>と打ち込むと，現在読み込まれているデータ一覧が表示されます。</p>
 
@@ -1233,9 +1233,9 @@ data()
 <p>Rソース中でデータファイルを読み込む必要があるところでは，ユーザが指定できるように，</p>
 
 <pre>
-filename = file.choose()
+<code>filename = file.choose()
 data = read.csv(filename)
-</pre>
+</code></pre>
 
 <p>のようにすると便利です。WindowsやMacのGUIではファイルを選択するダイアログボックスが現れます。テキスト端末では「Enter file name:」と聞いてくるだけです。</p>
 
@@ -1250,8 +1250,8 @@ data = read.csv(filename)
 が使われます。起動してから作業ディレクトリなどの設定ができますし，ターミナルから</p>
 
 <pre>
-open -a R .
-</pre>
+<code>open -a R .
+</code></pre>
 
 <p>と打ち込めば，カレントディレクトリがRの作業ディレクトリになります。UNIX版のようにターミナル上で使うには，/Library/Frameworks/&#8203;R.framework/&#8203;Resources/R
 のシンボリックリンクをパスの通ったところに作成しておけば，<code>R</code>
@@ -1273,7 +1273,7 @@ open -a R .
 コマンドを使います（rm は remove の意味です）。</p>
 
 <pre>
-&gt; ls()
+<code>&gt; ls()
 character(0)       # 「何もない」という意味
 &gt; x = 3; y = 5; z = 7
 &gt; ls()
@@ -1284,27 +1284,27 @@ character(0)       # 「何もない」という意味
 &gt; rm(list=ls())  # すべてを消す（注意！）
 &gt; ls()
 character(0)       # すべて消えた
-</pre>
+</code></pre>
 
 <p>消す前にオブジェクトをファイルに保存したいときは <code>save()</code> を使います。</p>
 
 <pre>
-&gt; save(X, Y, file="xy.RData")
-</pre>
+<code>&gt; save(X, Y, file="xy.RData")
+</code></pre>
 
 <p>すべてのオブジェクトを保存するのは，終了のときに作業スペースを保存すると答えればいいのですが，終了せずに保存だけするには <code>save.image()</code>
 と打ち込みます。デフォルトでは作業ディレクトリの <code>.RData</code>
 というファイルに入りますが，ファイル名を指定することもできます：</p>
 
 <pre>
-&gt; save.image(file="2008-12-23.RData")
-</pre>
+<code>&gt; save.image(file="2008-12-23.RData")
+</code></pre>
 
 <p>Rをバッチ動作させることができます。長時間を要する計算をサーバ機のバックグラウンドで実行するのに便利です。環境変数 <code>LANG=ja_JP.UTF8</code> がセットされていないと日本語がうまく扱えないかもしれません。</p>
 
 <pre>
-nohup R CMD BATCH hoge.R &amp;
-</pre>
+<code>nohup R CMD BATCH hoge.R &amp;
+</code></pre>
 
 <p>出力は <code>hoge.Rout</code> にされます。あるいは，そのままターミナルに出力されたほうがいいなら，<code>Rscript hoge.R</code> と打ち込んでも同じです（あるいは1行目に <code>#! /usr/bin/env Rscript</code> などと書き込んで実行許可を付けてもかまいません）。</p>
 

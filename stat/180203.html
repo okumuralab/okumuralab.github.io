@@ -20,7 +20,7 @@
 <p>うまくいかないので放置。</p>
 
 <pre>
-library(animation)
+<code>library(animation)
 x = runif(1000, 0, 8)  # 0〜8の一様乱数1000個
 y = runif(1000, 0, 1)  # 0〜1の一様乱数1000個
 ani.options(ani.width=700, ani.height=100, interval=0.1)
@@ -32,7 +32,7 @@ saveGIF({
              xlim=c(0.5,7.5), ylim=c(0,1), xlab="", ylab="", xaxt="n", yaxt="n", xaxs="i", yaxs="i")
     }
 })
-</pre>
+</code></pre>
 
 <p>カレントディレクトリに animation.gif というファイル名で生成されます。</p>
 

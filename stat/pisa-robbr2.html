@@ -26,15 +26,15 @@
 検定とは，右図が示すように，別のものを見ている。したがって，相関係数の検定</p>
 
 <pre>
-&gt; cor.test(1:6, x)
-</pre>
+<code>&gt; cor.test(1:6, x)
+</code></pre>
 
 <p>で求めた <i>p</i> = 0.016 で何ら問題ない。</p>
 
 <p>なお，右図は次のようにして描いた。</p>
 
 <pre>
-ni = 1000
+<code>ni = 1000
 p = numeric(ni)
 q = numeric(ni)
 for (i in 1:ni) {
@@ -55,7 +55,7 @@ for (i in 1:ni) {
 &gt; par(las=1)
 &gt; par(mgp=c(2,0.8,0))
 &gt; plot(p,q,asp=1,xlab="",ylab="")
-</pre>
+</code></pre>
 
 <h2>B君の答え</h2>
 
@@ -64,7 +64,7 @@ for (i in 1:ni) {
 になり，有意になりすぎる：</p>
 
 <pre>
-&gt; cor.test(1:3,1:3)
+<code>&gt; cor.test(1:3,1:3)
 
 	Pearson's product-moment correlation
 
@@ -74,35 +74,35 @@ alternative hypothesis: true correlation is not equal to 0
 sample estimates:
 cor 
   1 
-</pre>
+</code></pre>
 
 <p>順位相関係数ならこういうことは起きない。Pearsonの相関係数を使いたい場合は，並べ替え検定でより正確な <i>p</i> 値を求めることができる：</p>
 
 <pre>
-x = c(762,792,795,794,849,834)
-</pre>
+<code>x = c(762,792,795,794,849,834)
+</code></pre>
 
 <p>としておいて</p>
 
 <pre>
-y = replicate(10000, cor(1:6, x[sample(6)]))  # 数はできるだけ多く
-</pre>
+<code>y = replicate(10000, cor(1:6, x[sample(6)]))  # 数はできるだけ多く
+</code></pre>
 
 <p>またはより正確には</p>
 
 <pre>
-library(gtools)
+<code>library(gtools)
 n = factorial(6)
 y = numeric(n)
 p = permutations(6,6)
 for (i in 1:n) y[i] = cor(1:6, x[p[i,]])
-</pre>
+</code></pre>
 
 <p>そして最後に</p>
 
 <pre>
-mean(abs(y) &gt;= abs(cor(1:6,x)))
-</pre>
+<code>mean(abs(y) &gt;= abs(cor(1:6,x)))
+</code></pre>
 
 <p>とすると，<i>p</i> = 0.022 となり，A君の主張より大きくなる。</p>
 
@@ -111,14 +111,14 @@ mean(abs(y) &gt;= abs(cor(1:6,x)))
 <p>相関係数の検定では，ほとんど増加のない場合でも，一定の割合で増加すれば，非常に有意になってしまう。通常の回帰分析ではなく，Poisson分布を帰無仮説として年ごとの増加率を検定しなければならない。</p>
 
 <pre>
-&gt; x = c(762,792,795,794,849,834)
+<code>&gt; x = c(762,792,795,794,849,834)
 &gt; lm(x ~ seq(6))
-</pre>
+</code></pre>
 
 <p>とすれば，増加率が 15.14 件/年 であることがわかる。Poisson分布の乱数で同じことをしてみて，増加率の絶対値が偶然に 15.14 以上になる確率を求めて検定するのが正しい。</p>
 
 <pre>
-x = c(762,792,795,794,849,834)
+<code>x = c(762,792,795,794,849,834)
 m = mean(x)
 ni = 1000000  # もっと小さくてよい
 r = numeric(ni)
@@ -127,7 +127,7 @@ for (i in 1:ni) {
 }
 r1 = lm(x ~ seq(6))$coefficients[2]
 mean(abs(r) &gt;= abs(r1))
-</pre>
+</code></pre>
 
 <p>結果は <i>p</i> = 0.025 ほどになり，B君の結果よりさらに大きくなる。</p>
 
@@ -138,18 +138,18 @@ mean(abs(r) &gt;= abs(r1))
 <p>線形の場合：</p>
 
 <pre>
-r = glm(x ~ seq(6), family=poisson(link="identity"))
+<code>r = glm(x ~ seq(6), family=poisson(link="identity"))
 summary(r)
-</pre>
+</code></pre>
 
 <p><i>p</i> = 0.0253</p>
 
 <p>リンクが対数の場合：</p>
 
 <pre>
-r = glm(x ~ seq(6), family=poisson(link="log"))
+<code>r = glm(x ~ seq(6), family=poisson(link="log"))
 summary(r)
-</pre>
+</code></pre>
 
 <p><i>p</i> = 0.0255</p>
 

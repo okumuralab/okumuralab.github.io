@@ -21,13 +21,13 @@
 <p>ダウンロードしたzipファイルには全ツイートがCSVやJSON形式で収められている（画像は含まれない）。Rで処理するにはCSVファイルが便利である。例えば月ごとのツイート数の推移をグラフにしてみよう：</p>
 
 <pre>
-data = read.csv("tweets.csv", as.is=TRUE)
+<code>data = read.csv("tweets.csv", as.is=TRUE)
 t = as.POSIXct(data$timestamp) + 9*60*60  # convert to JST
 hist(t, breaks="month", col="gray", freq=TRUE, xaxt="n", xlab="", ylab="tweets/month", main="")
 a = 2009:2018
 b = paste0(a, "-01-01")
 axis(1, at=as.POSIXct(b), labels=a)
-</pre>
+</code></pre>
 
 <figure>
 <img src="img/170730a.png" alt="">

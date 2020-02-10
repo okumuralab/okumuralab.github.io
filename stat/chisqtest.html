@@ -56,19 +56,19 @@ $n_1$, $n_2$, $n_3$, $\ldots$, $n_N$
 <p>例えば<a href="pisa-robbr.html">PISA「盗難事件」問題ほか</a>で挙げた6年間の事故発生件数</p>
 
 <pre>
-&gt; x = c(762,792,795,794,849,834)
-</pre>
+<code>&gt; x = c(762,792,795,794,849,834)
+</code></pre>
 
 <p>が独立なポアソン分布に従うという帰無仮説についてカイ2乗検定をしてみましょう。Rでは次のようにして簡単に計算できます。</p>
 
 <pre>
-&gt; chisq.test(x)
+<code>&gt; chisq.test(x)
 
 	Chi-squared test for given probabilities
 
 data:  x 
 X-squared = 6.2329, df = 5, p-value = 0.2842
-</pre>
+</code></pre>
 
 <p>$p$ 値は 0.2842 ですので，帰無仮説と矛盾しません。</p>
 
@@ -103,15 +103,15 @@ X-squared = 6.2329, df = 5, p-value = 0.2842
 <p>Rで $\chi^2$ 検定をする関数は <code>chisq.test()</code> です。単に</p>
 
 <pre>
-&gt; chisq.test(matrix(c(228,863,284,851),nrow=2))
-</pre>
+<code>&gt; chisq.test(matrix(c(228,863,284,851),nrow=2))
+</code></pre>
 
 <p>などとすれば，$2 \times 2$ 分割表の場合に連続性の補正を行います。結果は $p = 0.02377$
 です。連続性の補正を行いたくないなら，</p>
 
 <pre>
-&gt; chisq.test(matrix(c(228,863,284,851),nrow=2), correct=FALSE)
-</pre>
+<code>&gt; chisq.test(matrix(c(228,863,284,851),nrow=2), correct=FALSE)
+</code></pre>
 
 <p>のようにします。結果は $p = 0.02082$ となります。ちなみに
 <a href="fishertest.html">Fisherの正確検定</a>
@@ -146,7 +146,7 @@ X-squared = 6.2329, df = 5, p-value = 0.2842
 <p>少なくともこの場合にはG検定の $p$ 値は小さすぎることがわかります。</p>
 <p>このシミュレーションに使ったプログラムは次の通りです：</p>
 <pre>
-prob = c(0.12,0.18,0.28,0.42)
+<code>prob = c(0.12,0.18,0.28,0.42)
 ni = 1000
 pfis = pchi = pg = numeric(ni)
 for (i in 1:ni) {
@@ -168,7 +168,7 @@ for (i in 1:ni) {
     lines(c(pfis[i],pfis[i]), c(pchi[i],pg[i]))
   }
 }
-</pre>
+</code></pre>
 </div>
 
 <div class="note">

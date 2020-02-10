@@ -99,13 +99,34 @@ for arg in sys.argv[1:]:
             f.write(text)
 </code></pre>
 
+<p>さらに別の例として，<code>&lt;pre&gt;...&lt;/pre&gt;</code> の中の <code>&lt;code&gt;</code> を <code>&lt;code class="prom"&gt;</code> に直す：</p>
+
+<pre><code>
+def foo(x):
+    t = x.group(0)
+    while True:
+        u = re.sub('&lt;code&gt;', '&lt;code class="prom"&gt;', t)
+        if u == t:
+            return u
+        t = u
+
+for arg in sys.argv[1:]:
+    with open(arg) as f:
+        orig = f.read()
+    text = orig
+    text = re.sub(r'^&lt;pre&gt;$.*?^&lt;/pre&gt;$', foo, text, flags=re.MULTILINE|re.DOTALL)
+    if text != orig:
+        with open('new/' + arg, 'w') as f:
+            f.write(text)
+</code></pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-10 12:56:23</time>
+Last modified: <time>2020-02-10 14:44:25</time>
 <!-- hhmts end -->
 </p>
 </body>

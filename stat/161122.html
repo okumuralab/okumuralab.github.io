@@ -21,7 +21,7 @@
 <p>まず全ファイルをダウンロードする（あらかじめスクレーピング等により全ファイルのURLを調べる）。ダウンロードには <code>wget</code> コマンドを使った（<code>curl -O</code> でもかまわない）：</p>
 
 <pre>
-wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/01_hokkaido/01p_16r.xlsx
+<code>wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/01_hokkaido/01p_16r.xlsx
 wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/02_aomori/02p_16r.xlsx
 wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/03_iwate/03p_16r.xlsx
 wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/04_miyagi/04p_16r.xlsx
@@ -113,12 +113,12 @@ wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/44_ohita/
 wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/45_miyazaki/45m_16r.xlsx
 wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/46_kagoshima/46m_16r.xlsx
 wget http://www.nier.go.jp/16chousakekkahoukoku/factsheet/16prefecture/47_okinawa/47m_16r.xlsx
-</pre>
+</code></pre>
 
 <p>このようにして集めたExcelファイルを読んで，必要な部分を書き出す。ここでは<a href="exceldata.html">RでExcelのデータを読む方法</a>で紹介したreadxlパッケージを使う。シートを <code>x</code> に読んで例えば2行目Cのセルに格納されているものを取り出すには <code>x[2,3]</code> とする（仮にA，Bがセル結合されていてもCは3列目と数える）。小数第1位に丸める操作は不要と思ったが，やってみると小学校ファイルに丸めが必要な値がけっこう含まれていたので，追加した。</p>
 
 <pre>
-library(readxl)
+<code>library(readxl)
 
 r = function(x) round(as.numeric(x), 1) # 小数第1位に丸める
 
@@ -145,14 +145,14 @@ for (i in 1:47) {
         cat("\n", file="m.csv", append=TRUE)
     }
 }
-</pre>
+</code></pre>
 
 <p>ほぼ同じことをして作ったファイル <a href="data/atest2016p.csv">atest2016p.csv</a>，<a href="data/atest2016m.csv">atest2016m.csv</a> を置いておく。文字コードはSJISである。</p>
 
 <p>なお，<code>dir()</code> はディレクトリリストを返す関数である。例えば上の中学校の部分は次のようにもできる。こちらのほうが素直かもしれない。</p>
 
 <pre>
-d = dir(".", "^..m.*\\.xlsx$")  # 正規表現（"^\\d\\dm" などでもよい）
+<code>d = dir(".", "^..m.*\\.xlsx$")  # 正規表現（"^\\d\\dm" などでもよい）
 for (f in d) {
     i = as.numeric(substr(f, 1, 2))
     x = read_excel(f, 1, col_names=FALSE)
@@ -160,7 +160,7 @@ for (f in d) {
     cat(i, x[8,2], r(x[8,9]), r(x[55,9]), r(y[8,9]), r(y[55,9]), sep=",", file="m.csv", append=TRUE)
     cat("\n", file="m.csv", append=TRUE)
 }
-</pre>
+</code></pre>
 
 <p><code>dir()</code> の最初の引数（ディレクトリ）が <code>"."</code>（現在のディレクトリ）でない場合は <code>full.names=TRUE</code> オプションを付ければディレクトリ名が付いた形が返る。</p>
 

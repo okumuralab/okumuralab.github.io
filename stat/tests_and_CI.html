@@ -51,58 +51,58 @@ $n$ choose $r$
 と打てば求められます。</p>
 
 <pre>
-&gt; choose(10, 3)
+<code>&gt; choose(10, 3)
 [1] 120
-</pre>
+</code></pre>
 
 <p>投げると確率 0.4 で表が出る硬貨を10回投げて表が3回出る確率
 $_{10}C_3 \cdot 0.4^3 \cdot 0.6^7$
 は <code>dbinom(3, 10, 0.4)</code> で求められます。</p>
 
 <pre>
-&gt; dbinom(3, 10, 0.4)
+<code>&gt; dbinom(3, 10, 0.4)
 [1] 0.2149908
 &gt; choose(10,3) * 0.4^3 * 0.6^7
 [1] 0.2149908
-</pre>
+</code></pre>
 
 <p>投げると確率 0.5 で表が出る硬貨を10回投げて表が0〜10枚出る確率を全部出力するには次のようにします。</p>
 
 <pre>
-&gt; dbinom(0:10, 10, 0.5)
+<code>&gt; dbinom(0:10, 10, 0.5)
  [1] 0.0009765625 0.0097656250 0.0439453125 0.1171875000
  [5] 0.2050781250 0.2460937500 0.2050781250 0.1171875000
  [9] 0.0439453125 0.0097656250 0.0009765625
-</pre>
+</code></pre>
 
 <p>これをグラフにするには次のように打ち込みます。</p>
 
 <pre>
-barplot(dbinom(0:10,10,0.5), names.arg=0:10)
-</pre>
+<code>barplot(dbinom(0:10,10,0.5), names.arg=0:10)
+</code></pre>
 
 <figure><img src="img/081211a.png" alt=""></figure>
 
 <div class="note">
 <p>ただし，デフォルトではy軸の文字が横向きになります。上の図のようにするには，あらかじめ</p>
 <pre>
-par(las=1)
-</pre>
+<code>par(las=1)
+</code></pre>
 <p>と打ち込んでおきます。<code>par()</code> は図を描く際のオプション（parameter）を指定するコマンドです。<code>las</code> は label style の意味です。詳しい説明はRに</p>
 <pre>
-?par
-</pre>
+<code>?par
+</code></pre>
 <p>と打ち込んで出るヘルプを見てください。</p>
 </div>
 
 <p>これを順に加えていった累積確率は次のようにして求められます。</p>
 
 <pre>
-&gt; pbinom(0:10, 10, 0.5)
+<code>&gt; pbinom(0:10, 10, 0.5)
  [1] 0.0009765625 0.0107421875 0.0546875000 0.1718750000
  [5] 0.3769531250 0.6230468750 0.8281250000 0.9453125000
  [9] 0.9892578125 0.9990234375 1.0000000000
-</pre>
+</code></pre>
 
 <h2>統計的検定の考え方</h2>
 
@@ -119,37 +119,37 @@ par(las=1)
 <p>さて，硬貨を投げて表の出る枚数の分布は2項分布と考えられますので，表も裏も 1/2 の確率で出るとすれば，表が $r$ 枚出る確率は $_{10}C_r (1/2)^{10}$ です。表裏が 0:10，1:9，2:8，8:2，9:1，10:0 である確率はそれぞれ</p>
 
 <pre>
-&gt; dbinom(c(0,1,2,8,9,10), 10, 0.5)
+<code>&gt; dbinom(c(0,1,2,8,9,10), 10, 0.5)
 [1] 0.0009765625 0.0097656250 0.0439453125 0.0439453125
 [5] 0.0097656250 0.0009765625
-</pre>
+</code></pre>
 
 <p>で，この合計，すなわち $p$ 値は</p>
 
 <pre>
-&gt; sum(dbinom(c(0,1,2,8,9,10), 10, 0.5))
+<code>&gt; sum(dbinom(c(0,1,2,8,9,10), 10, 0.5))
 [1] 0.109375
-</pre>
+</code></pre>
 
 <p>になります。同じことが</p>
 
 <pre>
-&gt; pbinom(2, 10, 0.5) * 2
+<code>&gt; pbinom(2, 10, 0.5) * 2
 [1] 0.109375
-</pre>
+</code></pre>
 
 <p>でも求められます。また，後で詳しく述べますが，<code>binom.test()</code>
 という関数でも2項検定ができます。</p>
 
 <pre>
-&gt; binom.test(2, 10, 0.5)
+<code>&gt; binom.test(2, 10, 0.5)
 
         Exact binomial test
 
 data:  2 and 10 
 number of successes = 2, number of trials = 10, p-value = 0.1094
 ...
-</pre>
+</code></pre>
 
 <p>したがって，有意水準を 0.05 とすれば，表裏の差は統計的に有意ではありませんし，アンケートであればこんなに少人数の結果から「賛成が少ない」という結論を導いてはいけないということになります。</p>
 
@@ -194,31 +194,31 @@ $N(-0.1,1)$，$N(0.1,1)$
 <p>なお，平均値の小さな違いでも，極端な値の割合に大きな違いが出ることがあります。さきほどの二つの正規分布で $x \geqq 3$ の確率を求めると，</p>
 
 <pre>
-&gt; pnorm(-3.1)
+<code>&gt; pnorm(-3.1)
 [1] 0.0009676032
 &gt; pnorm(-2.9)
 [1] 0.001865813
-</pre>
+</code></pre>
 
 <p>のように，千個に1個の割合が，千個に2個の割合に増えます。この違いが実質的な意味を持つことは十分考えられます（これらの数値は分布が正確な正規分布であることに強く依存するので，単なる例としての意味しかありません）。</p>
 
 <div class="note">
 <p>右上の図は次のようにして描きました：</p>
 <pre>
-curve(dnorm(x-0.1), xlim=c(-4,4), frame.plot=FALSE, xlab="", ylab="")
+<code>curve(dnorm(x-0.1), xlim=c(-4,4), frame.plot=FALSE, xlab="", ylab="")
 curve(dnorm(x+0.1), add=TRUE)
-</pre>
+</code></pre>
 </div>
 
 <div class="note">
 <p>各群からランダムに1個ずつ取り出したとき，左の群のものが右の群のものより大きくなる確率が44%以上もあることは，次のような数値積分で調べられます：</p>
 <pre>
-integrate(function(x){dnorm(x+0.1)*pnorm(x-0.1)}, -Inf, +Inf)
-</pre>
+<code>integrate(function(x){dnorm(x+0.1)*pnorm(x-0.1)}, -Inf, +Inf)
+</code></pre>
 <p>あるいはシミュレーションで次のようにして調べられます：</p>
 <pre>
-mean(rnorm(1000000,mean=0.1) &lt; rnorm(1000000,mean=-0.1))
-</pre>
+<code>mean(rnorm(1000000,mean=0.1) &lt; rnorm(1000000,mean=-0.1))
+</code></pre>
 </div>
 
 <h2>多重比較と data dredging</h2>
@@ -261,10 +261,10 @@ $_7C_2 = 21$
 <div class="note">
 <p>右図は次のようにして描きました（色はPhotoshopで付けました）：</p>
 <pre>
-par(las=1)
+<code>par(las=1)
 curve(qbinom(0.025,10,x)/10, xlim=c(0,1), n=1001, asp=1)
 curve(qbinom(0.975,10,x)/10, n=1001, add=TRUE)
-</pre>
+</code></pre>
 </div>
 
 <p>ここで，逆にデータ $r/n$（縦軸）が与えられたときに図を横に見ていけば，そのデータと両立する $\theta$ の範囲がわかります。この範囲のことを，$\theta$ の「95%信頼区間」（confidence interval，CI）と呼びます。つまり，</p>
@@ -295,13 +295,13 @@ curve(qbinom(0.975,10,x)/10, n=1001, add=TRUE)
 <div class="note">
 <p>上に示した97.85%という値は次のようなさまざまな方法で求められます。</p>
 <pre>
-&gt; pbinom(8,10,0.5) - pbinom(1,10,0.5)
+<code>&gt; pbinom(8,10,0.5) - pbinom(1,10,0.5)
 [1] 0.9785156
 &gt; 1 - 2 * pbinom(1, 10, 0.5)
 [1] 0.9785156
 &gt; sum(dbinom(2:8, 10, 0.5))
 [1] 0.9785156
-</pre>
+</code></pre>
 </div>
 
 <p>以上が（2項分布のような離散的な場合も含めた）古典的な信頼区間の考え方です。より詳しくは次の文献をご覧下さい。</p>
@@ -330,7 +330,7 @@ curve(qbinom(0.975,10,x)/10, n=1001, add=TRUE)
 があります。例えば実際に得られた割合が10個のうち2個だったとすると，</p>
 
 <pre>
-&gt; binom.test(2, 10, 0.5)
+<code>&gt; binom.test(2, 10, 0.5)
 
 	Exact binomial test
 
@@ -342,7 +342,7 @@ alternative hypothesis: true probability of success is not equal to 0.5
 sample estimates:
 probability of success 
                    0.2 
-</pre>
+</code></pre>
 
 <p>ということで，$\theta = 0.5$ という帰無仮説についての $p$ 値は 0.1094 で，$\theta$ の95%信頼区間は $0.025 \leqq \theta \leqq 0.556$ であることがわかります（このことを「$\theta$ の95%信頼区間は $[0.025, 0.556]$ である」というふうに書きます）。</p>
 
@@ -353,7 +353,7 @@ probability of success
 <p>例えば1000人のうち200人が現内閣を支持すると答えたとすると，</p>
 
 <pre>
-&gt; binom.test(200, 1000)  # 第3引数を省略するとθ=0.5についてのp値を求める
+<code>&gt; binom.test(200, 1000)  # 第3引数を省略するとθ=0.5についてのp値を求める
 
 	Exact binomial test
 
@@ -365,7 +365,7 @@ alternative hypothesis: true probability of success is not equal to 0.5
 sample estimates:
 probability of success 
                    0.2 
-</pre>
+</code></pre>
 
 <p>というわけで，$\theta = 0.5$ という帰無仮説についての $p$ 値が $2.2 \times 10^{-16}$ より小さいということはあまり役に立ちませんが，95%信頼区間が $[0.176, 0.226]$ であることがわかります。つまり，「20%」と言っても，実際は18%かも22%かもしれないので，小数点以下まで表示する意味はありません。</p>
 
@@ -378,8 +378,8 @@ probability of success
 <p>Rの <code>binom.test()</code> で $\theta = 0.5$ 以外の場合，$p$ 値が 0.05 より小さくなっても，帰無仮説の $\theta$ が95%信頼区間に含まれるということがよくあります。例えば</p>
 
 <pre>
-binom.test(2, 15, 0.4)
-</pre>
+<code>binom.test(2, 15, 0.4)
+</code></pre>
 
 <p>をしてみると，$p = 0.036$ ですから $\theta = 0.4$ は5%水準で棄却されるはずなのに，95%信頼区間は $[0.0166, 0.4046]$ で，これは $\theta = 0.4$ を含みます。どちらが正しいのでしょうか。</p>
 

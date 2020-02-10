@@ -52,11 +52,11 @@
 は <code>black</code>, <code>red</code>, <code>green3</code>, <code>blue</code>, <code>cyan</code>, <code>magenta</code>, <code>yellow</code>, <code>gray</code> の8色です：</p>
 
 <pre>
-# png("rgbcolors.png", 400, 200)
+<code># png("rgbcolors.png", 400, 200)
 # par(mar=c(0,0,0,0))
 barplot(rep(1,8), col=palette(), axes=FALSE)
 # dev.off()
-</pre>
+</code></pre>
 
 <p>上のような原色は，目が痛くなるので，なるべく使わないようにしましょう。</p>
 
@@ -65,7 +65,7 @@ barplot(rep(1,8), col=palette(), axes=FALSE)
 <figure><img src="img/colors.png" class="right" alt="色見本"></figure>
 
 <pre>
-library(colorspace)
+<code>library(colorspace)
 # png("colors.png", 400, 200)
 # par(mar=c(0,0,0,0))
 plot(NULL, xlim=c(0,7), ylim=c(0,2),
@@ -73,7 +73,7 @@ plot(NULL, xlim=c(0,7), ylim=c(0,2),
 rect(0:6, 1.1, 1:7, 2, col=rainbow(7))
 rect(0:6, 0, 1:7, 0.9, col=rainbow_hcl(7, c=100))
 # dev.off()
-</pre>
+</code></pre>
 
 <p>この <code>rainbow_hcl()</code>
 はHCL色空間で一定のC（chroma，彩度），L（luminance，明度）を保ちながらH（hue，色相）だけを変えて色を作ります。デフォルトでは彩度 c = 50，明度 l = 70 ですが，上の例では彩度を少し上げています。</p>
@@ -98,7 +98,7 @@ rect(0:6, 0, 1:7, 0.9, col=rainbow_hcl(7, c=100))
 <p>上の表でPhotoshopのRGB値はPhotoshop CS5でJapan Color 2001 CoatedからsRGBに変換したものです。一方，RではRGB→CMYKを便宜上次のような簡単なアルゴリズムで変換しています：</p>
 
 <pre>
-c = 1.0 - r
+<code>c = 1.0 - r
 m = 1.0 - g
 y = 1.0 - b
 k = min(c, m, y)
@@ -109,15 +109,15 @@ if (k == 1.0) {
   m = (m-k)/(1-k)
   y = (y-k)/(1-k)
 }
-</pre>
+</code></pre>
 
 <p>CMYKのPDFを出力するには，</p>
 
 <pre>
-pdf("hoge.pdf", width=7, height=4, colormodel="cmyk")  # グレースケールなら "gray"
+<code>pdf("hoge.pdf", width=7, height=4, colormodel="cmyk")  # グレースケールなら "gray"
 ...
 dev.off()
-</pre>
+</code></pre>
 
 <p>のようにします。<code>"cyan"</code>，<code>"magenta"</code>，<code>"yellow"</code>，<code>"black"</code> のようにしてCMYKを指定します。あるいは，上のアルゴリズムを逆に計算したRGB値を使って色を指定します。例えばオレンジ (c,m,y,k) = (0,0.5,1,0) を使いたいなら <code>rgb(1,0.5,0)</code>，紺 (c,m,y,k) = (1,0.5,0,0) を使いたいなら <code>rgb(0,0.5,1)</code> を指定します。</p>
 
@@ -138,22 +138,22 @@ dev.off()
 <p>より現代的な色の選択を提案するサイトとして，<a href="http://colorbrewer2.org/">Colorbrewer: Color Advice for Maps</a> があります。RのパッケージRColorBrewerも開発されています。右図はRColorBrewerパッケージのサンプル</p>
 
 <pre>
-display.brewer.all()
-</pre>
+<code>display.brewer.all()
+</code></pre>
 
 <p>の出力です。3段に分かれています。上のグループは順次的（sequential）と呼ばれるもので，小さい量から大きい量までの段階を表すのに使われます。真ん中のグループは定性的（qualitative）と呼ばれるもので，大小関係のないカテゴリー（名義尺度）を表すのに使われます。下のグループは発散的（diverging）と呼ばれるもので，正負の両側に延びる量を表すのに使われます。</p>
 
 <p>例えばこの中のDark2というものに興味があれば，</p>
 
 <pre>
-display.brewer.pal(8, "Dark2")
-</pre>
+<code>display.brewer.pal(8, "Dark2")
+</code></pre>
 
 <p>でこの8色だけサンプル出力します。実際の色を取り出すには，例えば</p>
 
 <pre>
-cols = brewer.pal(8, "Dark2")
-</pre>
+<code>cols = brewer.pal(8, "Dark2")
+</code></pre>
 
 <p>とすれば <code>cols[1]</code> から <code>cols[8]</code> までに色が入ります。</p>
 
@@ -161,14 +161,14 @@ cols = brewer.pal(8, "Dark2")
 関数を使います。</p>
 
 <pre>
-# png("110905d.png", 450, 80)
+<code># png("110905d.png", 450, 80)
 # par(mar=c(0,0,0,0))
 cols = colorRampPalette(c("#0068b7","white","#f39800"))
 plot(NULL, xlim=c(0,10), ylim=c(0,1),
      axes=FALSE, xlab="", ylab="")
 rect(0:9, 0, 1:10, 1, col=cols(10))
 # dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/110905d.png" alt="colorRampPalette() の例"></figure>
 
@@ -177,37 +177,37 @@ rect(0:9, 0, 1:10, 1, col=cols(10))
 <p>0から1までの実数に色を対応させる関数を作るには，例えば次のようにします。</p>
 
 <pre>
-cols = colorRamp(c("#0080ff","white","#ff8000"))
-</pre>
+<code>cols = colorRamp(c("#0080ff","white","#ff8000"))
+</code></pre>
 
 <p>これで <code>cols(0)</code> が <code>#0080ff</code>，<code>cols(1)</code>
 が <code>#ff8000</code> に対応するような0〜255の三つ組を返す関数 <code>cols()</code>
 が生成されます。これを使って何か描いてみましょう。</p>
 
 <pre>
-# png("110905b.png", 450, 80)
+<code># png("110905b.png", 450, 80)
 # par(mar=c(0,0,0,0))
 plot(NULL, xlim=c(0,100), ylim=c(0,1), axes=FALSE, xlab="", ylab="")
 rect(0:99, 0, 1:100, 1, col=rgb(cols(0:99/99)/255), border=NA)
 # dev.off()
-</pre>
+</code></pre>
 
 <figure><img src="img/110905b.png" alt="連続色の例1"></figure>
 
 <p><code>colorRamp()</code> にいろいろな色を与えてやってみてください。例：</p>
 
 <pre>
-cols = colorRamp(c("#004080","#0080ff","white","#ff8000","#804000"))
-</pre>
+<code>cols = colorRamp(c("#004080","#0080ff","white","#ff8000","#804000"))
+</code></pre>
 
 <figure><img src="img/110905c.png" alt="連続色の例2"></figure>
 
 <p>（追記）corrplot パッケージのデフォルト色がオレンジ（負）〜紺（正）であることに気づきました：</p>
 
 <pre>
-colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
+<code>colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
                    "#FFFFFF", "#D1E5F0", "#92C5DE", "#4393C3", "#2166AC", "#053061"))
-</pre>
+</code></pre>
 
 <figure><img src="img/140419.png" alt="corrplotのデフォルト色"></figure>
 
@@ -216,9 +216,9 @@ colorRampPalette(c("#67001F", "#B2182B", "#D6604D", "#F4A582", "#FDDBC7",
 <p><a href="http://scales.r-lib.org">scales</a> パッケージにも色を作る関数がいろいろあります。<code>help(package="scales")</code> で出てくる <code>何々_pal</code> という関数がそれです。例：</p>
 
 <pre>
-cols = dichromat_pal("BluetoOrange.10")(10)
+<code>cols = dichromat_pal("BluetoOrange.10")(10)
 show_col(gradient_n_pal(cols)(seq(0, 1, length.out = 30)))
-</pre>
+</code></pre>
 
 <figure><img src="img/180811a.png" alt="scalesパッケージの例"></figure>
 
@@ -251,7 +251,7 @@ show_col(gradient_n_pal(cols)(seq(0, 1, length.out = 30)))
 <figure><img src="img/dichromat.png" alt="dichromatパッケージの例"></figure>
 
 <pre>
-library(dichromat)
+<code>library(dichromat)
 # png("dichromat.png", 400, 200)
 # par(mar=c(0,0,0,0))
 plot(NULL, xlim=c(0,12), ylim=c(0,2),
@@ -259,7 +259,7 @@ plot(NULL, xlim=c(0,12), ylim=c(0,2),
 rect(0:11, 1.1, 1:12, 2, col=colorschemes$Categorical.12)
 rect(0:11, 0, 1:12, 0.9, col=dichromat(colorschemes$Categorical.12))
 # dev.off()
-</pre>
+</code></pre>
 
 <p><code>colorschemes$Categorical.12</code> は12色のカテゴリカル用の色です。このパッケージに含まれる色に限らず，どんな色でも <code>dichromat()</code> 関数を通せば色覚を変化させることができます（オプション <code>type="deutan"</code>，<code>type="protan"</code> が指定できます。デフォルトは前者）。</p>
 
@@ -268,7 +268,7 @@ rect(0:11, 0, 1:12, 0.9, col=dichromat(colorschemes$Categorical.12))
 <figure><img src="img/110922c.png" alt="RColorBrewerのYlOrBrの8色とD型色覚"></figure>
 
 <pre>
-# library(RColorBrewer)
+<code># library(RColorBrewer)
 # library(dichromat)
 # png("110922c.png", 400, 200)
 # par(mar=c(0,0,0,0))
@@ -278,7 +278,7 @@ plot(NULL, xlim=c(0,8), ylim=c(0,2),
 rect(0:7, 1.1, 1:8, 2, col=cols)
 rect(0:7, 0, 1:8, 0.9, col=dichromat(cols))
 # dev.off()
-</pre>
+</code></pre>
 
 <p>もっとも，これはグレースケールだけで判別できるので，調べるまでもなかったのですが。</p>
 
@@ -286,7 +286,7 @@ rect(0:7, 0, 1:8, 0.9, col=dichromat(cols))
 です。これとdichromatパッケージを使ってD型・P型・グレイスケールへの変換結果を表示するには次のようにすればいいでしょう。</p>
 
 <pre>
-library(dichromat)
+<code>library(dichromat)
 
 rgb2gray = function(col) {
   m = matrix(c(rep(0.3,3),rep(0.59,3),rep(0.11,3)), nrow=3)
@@ -303,7 +303,7 @@ rects = function(col) {
   rect(0:(n-1), 0.0, 1:n, 1.0, col=rgb2gray(col))
   par(oldpar)
 }
-</pre>
+</code></pre>
 
 <p>最後に，<a href="http://jfly.iam.u-tokyo.ac.jp/colorset/">カラーユニバーサルデザイン推奨配色セット</a> ver. 4 にあるアクセントカラー・ベースカラー・無彩色の <code>#rrggbb</code> 値を載せておきます（例えば <code>as.hexmode(c(255,75,0))</code> などとして16進変換できます）。</p>
 
@@ -375,18 +375,18 @@ rects = function(col) {
 <p>印刷用途にスクリーンショットなどを使う際には，もちろんJPEGでなくPNGを使うことになりますが，RGBのPNGをグレイスケールに変換する必要が生じます。この話は<a href="http://okumuralab.org/bibun7/">［改訂第7版］LaTeX2e 美文書作成入門</a>のpp.138--139にも書きましたが，ImageMagickのconvert（最近のバージョンではmagick）コマンドを使って</p>
 
 <pre>
-for x in *.png
+<code>for x in *.png
 do
   convert $x -colorspace Gray ${x%.png}-gray.png
 done
-</pre>
+</code></pre>
 
 <p>のようにして一括変換できます。</p>
 
 <p>Rで生成したPDFをインクルードして印刷に回す際にも，<code>pdf()</code> 関数なら，上に書いたように <code>colormodel="cmyk"</code> または <code>colormodel="gray"</code> のオプションが使えますが，Macで任意のシステムフォントを埋め込むために <code>quartz(type="pdf")</code> を使う場合には，どうしてもRGBになってしまいますので，後でグレイスケールに変換する必要が生じます。これは，Ghostscriptを使って</p>
 
 <pre>
-gs \
+<code>gs \
    -sDEVICE=pdfwrite \
    -sProcessColorModel=DeviceGray \
    -sColorConversionStrategy=Gray \
@@ -394,7 +394,7 @@ gs \
    -dAutoRotatePages=/None \
    -o hoge-gray.pdf \
    hoge.pdf
-</pre>
+</code></pre>
 
 <p>のようにできます。<code>Gray</code> の部分は必要に応じて <code>CMYK</code> にします。Ghostscript 8 では <code>-dUseCIEColor</code> のようなオプションが必要かもしれません。逆に Ghostscript 9 では <code>-dOverrideICC</code> が必要かもしれません。うまく変換されたか Acrobat の印刷工程の出力プレビューでチェックしましょう。R で <code>col=gray(0.9)</code> と指定したら K 10% になるのが正しいのですが，RGB経由の変換では例えば K 13% のようになるかもしれません。</p>
 

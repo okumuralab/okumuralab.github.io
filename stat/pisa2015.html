@@ -68,22 +68,22 @@ window.onload = function() {
 <p>2.4GHz Core 2 Duo メモリ8GBのMacでR 3.4.1で読んでみた：</p>
 
 <pre>
-data = read.csv("CY6_MS_CMB_STU_QQQ.csv", as.is=TRUE)  # 遅いので諦めた
+<code>data = read.csv("CY6_MS_CMB_STU_QQQ.csv", as.is=TRUE)  # 遅いので諦めた
 library(readr)
 data = read_csv("CY6_MS_CMB_STU_QQQ.csv")  # 4分50秒
 library(data.table)
 data = fread("CY6_MS_CMB_STU_QQQ.csv")     # 1分40秒
-</pre>
+</code></pre>
 
 <div class="note">
 <p>[2019-05-07追記] 新しい Mac mini 3.6GHz Core i3 で Python でもやってみた：</p>
 <pre>
-df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv")
-</pre>
+<code>df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv")
+</code></pre>
 <p>1回目68.6秒，2回目50.9秒であった。警告 "DtypeWarning: Columns (52,53,54) have mixed types. Specify dtype option on import or set low_memory=False." が出たが，これは</p>
 <pre>
-df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'object'})
-</pre>
+<code>df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'object'})
+</code></pre>
 <p>として文字列として読み込むのが正解らしい。オプション <code>low_memory=False</code> を付けた場合は1回目124.7秒，2回目94.3秒であった。</p>
 <p>ちなみに，同じマシンで R の readr でやってみたところ，1回目1分21秒，2回目1分17秒。data.table でやってみたところ，1回目21秒，2回目14秒だった。</p>
 <p>読み込んだオブジェクトのサイズは，pandas が 4089336830，readr が 5068092632，data.table が 3760255424 であった（Python は <code>import sys; sys.getsizeof()</code>，R は <code>object.size()</code> で調べた）。</p>
@@ -96,12 +96,12 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 <div class="note">
 <p>[2019-08-16追記] Python の <a href="https://pypi.org/project/datatable/">datatable</a> でやってみた（<a href="https://towardsdatascience.com/an-overview-of-pythons-datatable-package-5d3a97394ee9">参考</a>）。</p>
 <pre>
-%time df = dt.fread("CY6_MS_CMB_STU_QQQ.csv")
-</pre>
+<code>%time df = dt.fread("CY6_MS_CMB_STU_QQQ.csv")
+</code></pre>
 <p>1回目1分9秒，2回目15.4秒だった。<code>sys.getsizeof(df)</code> の結果は3757730280。このままでもいいが，pandasのDataFrameに変換してみる：</p>
 <pre>
-%time df = df2.to_pandas()
-</pre>
+<code>%time df = df2.to_pandas()
+</code></pre>
 <p>15.9秒かかった。</p>
 </div>
 
@@ -111,25 +111,25 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 
 <pre>
 <code class="prom">dim(data)</code>
-[1] 519334    921
+<code>[1] 519334    921</code>
 </pre>
 
 <p>519334行921列のデータだとわかる。確かに大きい。項目名（列名）を一覧してみよう：</p>
 
 <pre>
 <code class="prom">names(data)</code>
-  [1] "CNTRYID"       "CNT"           "CNTSCHID"      "CNTSTUID"     
-  [5] "CYC"           "NatCen"        "Region"        "STRATUM"      
-  [9] "SUBNATIO"      "OECD"          "ADMINMODE"     "Option_CPS"   
- [13] "Option_FL"     "Option_ICTQ"   "Option_ECQ"    "Option_PQ"    
- [17] "Option_TQ"     "Option_UH"     "Option_Read"   "Option_Math"  
- [21] "LANGTEST_QQQ"  "LANGTEST_COG"  "LANGTEST_PAQ"  "CBASCI"       
- [25] "BOOKID"        "ST001D01T"     "ST003D02T"     "ST003D03T"    
- [29] "ST004D01T"     "ST005Q01TA"    "ST006Q01TA"    "ST006Q02TA"   
- [33] "ST006Q03TA"    "ST006Q04TA"    "ST007Q01TA"    "ST008Q01TA"   
- [37] "ST008Q02TA"    "ST008Q03TA"    "ST008Q04TA"    "ST011Q01TA"   
- [41] "ST011Q02TA"    "ST011Q03TA"    "ST011Q04TA"    "ST011Q05TA"   
-....(後略)....
+<code>  [1] "CNTRYID"       "CNT"           "CNTSCHID"      "CNTSTUID"     </code>
+<code>  [5] "CYC"           "NatCen"        "Region"        "STRATUM"      </code>
+<code>  [9] "SUBNATIO"      "OECD"          "ADMINMODE"     "Option_CPS"   </code>
+<code> [13] "Option_FL"     "Option_ICTQ"   "Option_ECQ"    "Option_PQ"    </code>
+<code> [17] "Option_TQ"     "Option_UH"     "Option_Read"   "Option_Math"  </code>
+<code> [21] "LANGTEST_QQQ"  "LANGTEST_COG"  "LANGTEST_PAQ"  "CBASCI"       </code>
+<code> [25] "BOOKID"        "ST001D01T"     "ST003D02T"     "ST003D03T"    </code>
+<code> [29] "ST004D01T"     "ST005Q01TA"    "ST006Q01TA"    "ST006Q02TA"   </code>
+<code> [33] "ST006Q03TA"    "ST006Q04TA"    "ST007Q01TA"    "ST008Q01TA"   </code>
+<code> [37] "ST008Q02TA"    "ST008Q03TA"    "ST008Q04TA"    "ST011Q01TA"   </code>
+<code> [41] "ST011Q02TA"    "ST011Q03TA"    "ST011Q04TA"    "ST011Q05TA"   </code>
+<code>....(後略)....</code>
 </pre>
 
 <p>コードブック <a href="https://www.oecd.org/pisa/data/2015database/Codebook_CMB.xlsx">Codebooks for the main files</a> に書かれているが，先頭のいくつかの項目は次の通りである：</p>
@@ -147,8 +147,8 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 <pre>
 <code class="prom">table(data$ST011Q04TA)</code>
 
-     1      2 
-426698  71943 
+<code>     1      2 </code>
+<code>426698  71943 </code>
 </pre>
 
 <p>全体で519334件あるはずだが，合わせて498641しか回答がない。無回答の生徒もいるのだろう。</p>
@@ -158,8 +158,8 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 <pre>
 <code class="prom">table(data$ST011Q04TA[data$CNT=="JPN"])</code>
 
-   1    2 
-4095 2477 
+<code>   1    2 </code>
+<code>4095 2477 </code>
 </pre>
 
 <p>とする。国とのクロス集計をしてみよう：</p>
@@ -167,14 +167,14 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 <pre>
 <code class="prom">x = table(data$CNT, data$ST011Q04TA)</code>
 <code class="prom">head(x)</code>
-     
-          1     2
-  ALB     0     0
-  ARE 12386  1303
-  AUS 13019   978
-  AUT  6734   222
-  BEL  9084   418
-  BGR  5473   219
+<code>     </code>
+<code>          1     2</code>
+<code>  ALB     0     0</code>
+<code>  ARE 12386  1303</code>
+<code>  AUS 13019   978</code>
+<code>  AUT  6734   222</code>
+<code>  BEL  9084   418</code>
+<code>  BGR  5473   219</code>
 </pre>
 
 <p>手抜き棒グラフにしてみよう：</p>
@@ -190,25 +190,25 @@ df = pd.read_csv("CY6_MS_CMB_STU_QQQ.csv", dtype={52:'object', 53:'object', 54:'
 <p>3文字国名の表 <a href="data/countries.csv">countries.csv</a>（UTF-8）を使って日本語にしてみよう：</p>
 
 <pre>
-cnt = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/countries.csv",
+<code>cnt = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/countries.csv",
                fileEncoding="UTF-8")
 tcnt = cnt$国名
 names(tcnt) = cnt$三字
 s = sort(x[,1] / rowSums(x[,1:2]))
 par(mar=c(5,15,1,2)) # 下左上右マージン（要調整）
 barplot(s, horiz=TRUE, las=1, names.arg=tcnt[names(s)])
-</pre>
+</code></pre>
 
 <p>今度は散布図を描いてみよう。ST012の質問 <u>How many</u> of these are there at your home? に対して ST012Q05NA: &lt;Cell phones&gt; with Internet access (e.g. smartphones)，ST012Q06NA: Computers (desktop computer, portable laptop, or notebook) について，1: None, 2: One, 3: Two, 4: Three or more の選択肢がある。ここでは，保有割合（全回答数のうち 2〜4 に答えた割合）を使うことにする：</p>
 
 <pre>
-x = table(data$CNT, data$ST012Q05NA)
+<code>x = table(data$CNT, data$ST012Q05NA)
 ph = rowSums(x[,2:4]) / rowSums(x[,1:4])
 y = table(data$CNT, data$ST012Q06NA)
 pc = rowSums(y[,2:4]) / rowSums(y[,1:4])
 plot(100*pc, 100*ph, pch=NA, xlab="PC（%）", ylab="スマホ（%）")
 text(100*pc, 100*ph, tcnt[names(ph)], xpd=TRUE)
-</pre>
+</code></pre>
 
 <figure><img src="img/190729a.png" alt="PCとスマホの保有率"></figure>
 

@@ -21,14 +21,14 @@
 <p>日本学術振興会の<a href="https://www.jsps.go.jp/j-grantsinaid/index.html">科学研究費助成事業</a>のメニューの「科研費データ」をクリックする。「予算額の推移」というPDFファイルがあるので，テキスト化してデータを抽出する。結果を <a href="data/kaken.csv">kaken.csv</a> として置いておく。</p>
 
 <pre>
-kaken = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/kaken.csv", fileEncoding="UTF-8")
+<code>kaken = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/kaken.csv", fileEncoding="UTF-8")
 par(mgp=c(2,0.8,0))
 t = barplot(kaken[[2]], names.arg=kaken[[1]], las=1)
 text(t+0.2, kaken[[2]], kaken[[2]], pos=3, padj=-1, offset=1, srt=90, cex=0.8, xpd=TRUE)
 axis(2, labels="億円", at=2500, padj=-1, las=1, tick=FALSE)
 axis(1, labels="間接経費の導入", at=t[kaken[[1]]==2001], line=2)
 axis(1, labels="基金化の導入", at=t[kaken[[1]]==2011], line=2)
-</pre>
+</code></pre>
 
 <figure><img src="img/180423a.png" alt="科研費予算額の推移"></figure>
 

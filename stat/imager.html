@@ -22,7 +22,7 @@
 <p>ここではimagerというパッケージによる画像処理を扱う。</p>
 
 <pre>
-install.packages("imager")
+<code>install.packages("imager")
 library(imager)
 vignette(gettingstarted)     # 解説をブラウザで表示
 
@@ -36,7 +36,7 @@ hist(B(pic), breaks=(0:255)/255, col="blue")  # 青だけ
 r = range(pic)  # 最小値・最大値を求める
 pic2 = (pic - r[1]) / (r[2] - r[1]) # 0〜1に調節
 save.image(pic2, "hoge.jpg") # 保存
-</pre>
+</code></pre>
 
 <p>画像はcimgクラスのオブジェクトで表される。これは各ピクセル・各色ごとに，深度が8ビットなら255で割り，16ビットなら65535で割って，0以上1以下のdouble型にしたもの。各色は関数 R()，G()，B() で取り出せる。</p>
 
@@ -45,12 +45,12 @@ save.image(pic2, "hoge.jpg") # 保存
 <p>各色に分解してから操作し，再合成する方法：</p>
 
 <pre>
-r = R(pic)
+<code>r = R(pic)
 g = G(pic)
 b = B(pic)
 # 何らかの操作をする
 pic2 = as.cimg(c(r,g,b), dim=dim(pic))  # 再合成
-</pre>
+</code></pre>
 
 </article>
 

@@ -103,7 +103,7 @@ td, th { padding: 0.2em 0.7em }
 <p>条件なしの場合：</p>
 
 <pre>
-prob = c(0.12,0.18,0.28,0.42)
+<code>prob = c(0.12,0.18,0.28,0.42)
 ni = 100000
 pfis = pchi = pchic = numeric(ni)
 for (i in 1:ni) {
@@ -121,13 +121,13 @@ for (i in 1:ni) {
 plot(ecdf(pfis), asp=1, xlab="", ylab="", xlim=c(0,1), ylim=c(0,1),
      verticals=TRUE, main="ECDF for fisher.test()")
 abline(0,1)
-</pre>
+</code></pre>
 
 <p>条件付きの場合は上の <code>k = ...</code> を次のようにします：</p>
 
 <pre>
-  k = sample(c(rep(1,15),rep(3,35))) + sample(c(rep(0,20),rep(1,30)))
-</pre>
+<code>  k = sample(c(rep(1,15),rep(3,35))) + sample(c(rep(0,20),rep(1,30)))
+</code></pre>
 
 <h2>追記：Barnardの正確検定</h2>
 
@@ -135,15 +135,15 @@ abline(0,1)
 </a> も参照）。これらは，行・列のマージンを固定するFisherの正確検定と違って，行マージンだけ固定するモデル（<code>"Binomial"</code>，デフォルト）および全カウントのみ固定するモデル（<code>"Multinomial"</code>）が可能である。</p>
 
 <pre>
-library(Exact)
-</pre>
+<code>library(Exact)
+</code></pre>
 
 <p>行の比率を 20:30 に固定して，列だけ 0.3, 0.7 の2項分布にする：</p>
 
 <pre>
-  k = sample(c(1,3), 50, replace=TRUE, prob=c(0.3,0.7)) +
+<code>  k = sample(c(1,3), 50, replace=TRUE, prob=c(0.3,0.7)) +
       sample(c(rep(0,20),rep(1,30))) # row binom
-</pre>
+</code></pre>
 
 <p>これで <code>fisher.test(a)</code>，<code>chisq.test(a, correct=FALSE)</code>，<code>chisq.test(a, correct=TRUE)</code>，<code>exact.test(a, to.plot=FALSE)</code>，<code>exact.test(a, cond.row=FALSE, to.plot=FALSE)</code> をそれぞれ試してみる。ただし <code>exact.test()</code> は遅いので <code>ni = 10000</code> とした：</p>
 

@@ -101,15 +101,15 @@ MathJax = {
 
 <pre>
 <code class="prom">fivenum(c(23, 24, 25, 26, 26, 29, 30, 34, 39))</code>
-[1] 23 25 26 30 39
+<code>[1] 23 25 26 30 39</code>
 </pre>
 
 <p>また，一般の分位数を求める <code>quantile(x, probs=seq(0,1,0.25), na.rm=FALSE, names=TRUE, type=7, ...)</code> もある。デフォルトでは四分位数を返す：</p>
 
 <pre>
 <code class="prom">quantile(c(23, 24, 25, 26, 26, 29, 30, 34, 39))</code>
-  0%  25%  50%  75% 100% 
-  23   25   26   30   39 
+<code>  0%  25%  50%  75% 100% </code>
+<code>  23   25   26   30   39 </code>
 </pre>
 
 <p>これはExcelの quartile.inc と同じである。ただし，これは <code>quantile()</code> の引数 <code>type</code> がデフォルトの 7 の場合で，<code>type</code> には 1 から 9 までの整数が与えられる（つまり9通りのタイプがある）。詳しくはRのコンソールで <code>?quantile</code> と打ち込んで出るヘルプを参照されたい。このどれも文科省の定義と異なる。</p>

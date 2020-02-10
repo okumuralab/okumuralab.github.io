@@ -35,7 +35,7 @@
 <p>以下は男だけである。女の分布は各自試みられたい。</p>
 
 <pre>
-# quartz(width=6, height=9)      # Mac
+<code># quartz(width=6, height=9)      # Mac
 # par(family="HiraKakuProN-W3")  # Mac
 par(xpd=TRUE)  # プロットエリア外に text() を描く
 par(mar=c(1,4,1,4)+0.1) # マージン c(5,4,4,2)+0.1
@@ -50,7 +50,7 @@ barplot(割合/幅, 幅, horiz=TRUE, space=0, axes=FALSE)
 t = c(0,100,200,300,360,400,450,500,600,700,800,900,1000,1200)
 axis(2, labels=paste0(t/10,"万"), at=t, lwd=0, lwd.tick=1)
 text(割合/幅, 賃金+幅/2, paste0(" ",割合,"%"), cex=0.6, adj=0)
-</pre>
+</code></pre>
 
 <figure><img src="img/160612a.png" alt="賃金の分布（男）"></figure>
 
@@ -63,14 +63,14 @@ text(割合/幅, 賃金+幅/2, paste0(" ",割合,"%"), cex=0.6, adj=0)
 <p>厚生労働省の<a href="http://www.mhlw.go.jp/toukei/list/20-21.html">国民生活基礎調査</a>→<a href="http://www.mhlw.go.jp/toukei/list/20-21kekka.html">結果の概要</a>→<a href="http://www.mhlw.go.jp/toukei/saikin/hw/k-tyosa/k-tyosa16/index.html">平成28年　国民生活基礎調査の概況</a>→<a href="http://www.mhlw.go.jp/toukei/saikin/hw/k-tyosa/k-tyosa16/xls/13.xls">統計表を、xls形式でダウンロードできます</a>の「第８表　各種世帯別にみた所得金額階級別世帯数の分布及び中央値」では，「50万円未満」「50万円以上100万円未満」…「1000万円以上」という階級で割合を表にしている。ここでいう所得とは，前年（2015年）の世帯ごとの年間所得で，税金や社会保険料を含む。平均所得は545万8千円，中央値は428万円である。サンプル調査である。</p>
 
 <pre>
-所得 = c(seq(0,500,50), seq(600,1000,100))
+<code>所得 = c(seq(0,500,50), seq(600,1000,100))
 割合 = c(1.0, 5.2, 6.5, 6.9, 7.3, 6.4, 7.0, 6.2, 5.6, 4.8, 8.8, 7.7, 6.3, 4.9, 3.7, 11.7)
 幅 = c(所得[-1], 1500) - 所得  # 最大階級の最大値は任意に1500とする
 par(las=1, xpd=TRUE)
 barplot(割合/幅, 幅, 0, horiz=TRUE, axes=FALSE)
 text(0, 所得, paste0(所得,"万"), adj=1.1)
 text(割合/幅, 所得+幅/2, paste0(割合,"%"), cex=0.6, adj=-0.1)
-</pre>
+</code></pre>
 
 <figure><img src="img/180421c.png" alt="世帯別所得分布"></figure>
 
@@ -85,7 +85,7 @@ text(割合/幅, 所得+幅/2, paste0(割合,"%"), cex=0.6, adj=-0.1)
 <p>階級は「100万円以下」，「100万円超200万円以下」，…，「2500万円超」となっている。</p>
 
 <pre>
-給与 = c(seq(100,1000,100), 1500, 2000, 2500, 3000) # 上限は任意に3000万とする
+<code>給与 = c(seq(100,1000,100), 1500, 2000, 2500, 3000) # 上限は任意に3000万とする
 度数 = c(4177606, 7214336, 8028818, 8240812, 6632790, 4501863,
          2804385, 1895962, 1249799, 821431, 1483416, 305993, 94661, 110800)
 幅 = 給与 - c(0,給与[-length(給与)])
@@ -94,7 +94,7 @@ barplot(割合/幅, 幅, horiz=TRUE, space=0, axes=FALSE)
 t = seq(0, 2500, 500)
 axis(2, labels=paste0(t,"万"), at=t, lwd=0, lwd.tick=1)
 text(割合/幅, 給与-幅/2, paste0(" ",format(割合*100,digits=1),"%"), cex=0.6, adj=0)
-</pre>
+</code></pre>
 
 <figure><img src="img/160612b.png" alt="給与の分布"></figure>
 

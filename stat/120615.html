@@ -30,20 +30,20 @@
 <p>662keVのピークがきれいに見える。この半分のエネルギーを対称の中心として二つ見える崖はCompton edge（コンプトン端（たん））と後方散乱ピークである。正確なピーク位置は<a href="radionuclides.html">おもな放射性核種</a>参照。次の計算で「511」と書いた値は電子質量（keV単位）である（<a href="http://pdg.lbl.gov/">Particle Data Group</a>の最新の値は 0.510998928 ± 0.000000011 MeV）。</p>
 
 <pre>
-1/(2/511+1/661.657)         # 184.3233 後方散乱
+<code>1/(2/511+1/661.657)         # 184.3233 後方散乱
 661.657-1/(2/511+1/661.657) # 477.3337 Compton
-</pre>
+</code></pre>
 
 <p>上のグラフを描くには次のようにする：</p>
 
 <pre>
-sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120615155505.TXT",
+<code>sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120615155505.TXT",
           skip=39, nlines=1024, comment.char=";") # スペクトルを読む
 sp = floor(sp * 601 + 0.5) # cpsからカウント（整数）に変換。601は秒数
 ch = 0:1023  # チャンネル番号
 par(mgp=c(2,0.8,0))  # Rのグラフィックオプションを好みでいじる
 plot(ch, sp, type="l", xlab="Channel", ylab="Counts", xlim=c(0,400), col="#f39800")
-</pre>
+</code></pre>
 
 <p>横軸はチャンネル番号（0〜1023）のままにした。400以上は特にフィーチャーがないので省略した。</p>
 
@@ -51,16 +51,16 @@ plot(ch, sp, type="l", xlab="Channel", ylab="Counts", xlim=c(0,400), col="#f3980
 で始まる行）で示す。</p>
 
 <pre>
-sum(sp[301:379]) - 79 * mean(sp[c(280:300, 380:400)])
+<code>sum(sp[301:379]) - 79 * mean(sp[c(280:300, 380:400)])
 # [1] 244608
 sum(sp[311:369]) - 59 * mean(sp[c(280:310, 370:400)])
 # [1] 244520.4
-</pre>
+</code></pre>
 
 <p>1次式＋正規分布でフィットしてみる。</p>
 
 <pre>
-# nlmeパッケージをインストールしていない場合：
+<code># nlmeパッケージをインストールしていない場合：
 # options(repos="http://cran.ism.ac.jp") # 例えば
 # update.packages()
 # install.packages("nlme")
@@ -79,7 +79,7 @@ a
 #   129.183659    -3.278402 28038.778015   341.573936     8.731706 
 sum(a['e']*dnorm((ch-a['m'])/a['s']))
 # [1] 244826.4
-</pre>
+</code></pre>
 
 <p>どの方法で計算しても，ピーク面積は244500〜244800カウント程度である。最後のピークフィットの値を使うと，ピークの中心チャンネル <code>a['m']</code> は 341.57 で，cps（counts per second）値は 244826.4 / 601 = 407.365 である。</p>
 
@@ -91,25 +91,25 @@ sum(a['e']*dnorm((ch-a['m'])/a['s']))
 <p>本機の場合，calibration factor が 83.0 であり，重量として（わざと変な値）4kg を設定したので，本体の 504.8cps を使って計算すると，</p>
 
 <pre>
-&gt; 504.8 * 83 * 0.42 / 4
+<code>&gt; 504.8 * 83 * 0.42 / 4
 [1] 4399.332
-</pre>
+</code></pre>
 
 <p>となるべきであるが，本体表示値は 4397Bq/kg である。ほぼ一致していると見てよかろう（微妙な違いが出る理由は不明）。一方，上のフィット値を使えば</p>
 
 <pre>
-&gt; 407.365 * 83 * 0.42 / 4
+<code>&gt; 407.365 * 83 * 0.42 / 4
 [1] 3550.186
-</pre>
+</code></pre>
 
 <p>となり，やや小さい。</p>
 
 <p>この時点で，LB2045の <sup>137</sup>Cs の662keVでの効率は0.025程度であるという裏情報を得た。<sup>137</sup>Cs の1Bqは1秒間に0.851個の662keVガンマ線を放出するので，これは 1 / 0.851 / 0.025 = 47 (Bq/cps) に相当する。この値を使えば，</p>
 
 <pre>
-&gt; 407.365 * 47 / 4
+<code>&gt; 407.365 * 47 / 4
 [1] 4786.539
-</pre>
+</code></pre>
 
 <p>となり，今度は少し大きめに出る。</p>
 
@@ -122,16 +122,16 @@ sum(a['e']*dnorm((ch-a['m'])/a['s']))
 <p>データは <a href="data/120615162546.TXT">120615162546.TXT</a> である。</p>
 
 <pre>
-sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120615162546.TXT",
+<code>sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120615162546.TXT",
           skip=39, nlines=1024, comment.char=";")
 sp = floor(sp * 600 + 0.5)
 data = data.frame(ch=ch, sp=sp)
-</pre>
+</code></pre>
 
 <p>単純に2次式＋三山でフィット。</p>
 
 <pre>
-fit = gnls(sp ~ c + d*(ch-350) + b*(ch-350)^2
+<code>fit = gnls(sp ~ c + d*(ch-350) + b*(ch-350)^2
            + e1*dnorm((ch-m1)/s1)
            + e2*dnorm((ch-m2)/s2)
            + e3*dnorm((ch-m3)/s3),
@@ -158,7 +158,7 @@ sum(a['e2']*dnorm((data$ch-a['m2'])/a['s2']))
 # [1] 78870.94
 sum(a['e3']*dnorm((data$ch-a['m3'])/a['s3']))
 # [1] 61710.29
-</pre>
+</code></pre>
 
 <div><img src="img/120616b.png" alt="飯舘村の砂のスペクトル1"></div>
 
@@ -169,13 +169,13 @@ sum(a['e3']*dnorm((data$ch-a['m3'])/a['s3']))
 <p>データは <a href="data/120615162546.TXT">120615162546.TXT</a> である。</p>
 
 <pre>
-sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120615162546.TXT",
+<code>sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120615162546.TXT",
           skip=39, nlines=1024, comment.char=";")
 sp = floor(sp * 600 + 0.5)
 ch = 0:1023
 par(mgp=c(2,0.8,0))
 plot(ch, sp, type="l", xlab="Channel", ylab="Counts", xlim=c(0,500), col="#f39800")
-</pre>
+</code></pre>
 
 <p>マイナーなピークも入れる（より正確な値は<a href="radionuclides.html">おもな放射性核種</a>参照）。</p>
 
@@ -190,7 +190,7 @@ plot(ch, sp, type="l", xlab="Channel", ylab="Counts", xlim=c(0,500), col="#f3980
 <p>ただし，パラメータが多くなりすぎないように，適宜まとめる。ピーク幅はエネルギーの平方根に比例すると仮定，効率曲線はベキ乗則に従うとした。また，<a href="http://twitter.com/mw_mw_mw/status/218745853328883713">和田先生のご指摘</a>により，ピークの係数を <code>s</code> で割った形にした。</p>
 
 <pre>
-r = 260:450
+<code>r = 260:450
 data = data.frame(ch=ch, sp=sp)
 fit = gnls(sp ~ (c + d*(ch-350) + b*(ch-350)^2
                    + (e1*(0.08338/0.9226)*dnorm((ch-0.9314*m1)/(0.9226*s)) +
@@ -217,7 +217,7 @@ a
 #  1.726192e+02 -3.278716e+00  2.336625e-02  7.757909e+04  1.103418e+05 
 #            m1            m2            m3             s             u 
 #  3.134416e+02  3.415751e+02  4.069815e+02  9.027592e+00 -1.188280e+00 
-</pre>
+</code></pre>
 
 <div><img src="img/120707b.png" alt="飯舘村の砂のスペクトル2"></div>
 
@@ -226,30 +226,30 @@ a
 <p>効率曲線はエネルギーの -1.2 乗くらいということになる。<sup>137</sup>Cs の量は，カウントを600秒で割ってcpsに直して calibration factor を掛けて</p>
 
 <pre>
-sum(a['e2']*0.851*dnorm((ch[r]-a['m2'])/a['s'])/a['s']*(ch[r]/350)^a['u']) / 600 * 83 * 0.42
+<code>sum(a['e2']*0.851*dnorm((ch[r]-a['m2'])/a['s'])/a['s']*(ch[r]/350)^a['u']) / 600 * 83 * 0.42
 # [1] 5621.019
 sum(a['e2']*0.851*dnorm((ch[r]-a['m2'])/a['s'])/a['s']*(ch[r]/350)^a['u']) / 600 * (1/0.851/0.025)
 # [1] 7579.108
-</pre>
+</code></pre>
 
 <p>つまり 5621Bq ないし 7579Bq である。<sup>134</sup>Cs と <sup>137</sup>Cs の比は</p>
 
 <pre>
-a['e1']/a['e2']
-</pre>
+<code>a['e1']/a['e2']
+</code></pre>
 
 <p>で 0.7030798 となり，<a href="http://oku.edu.mie-u.ac.jp/rad/correction.html">Cs-137校正のベクレルメータの補正</a>でも計算できるように，2012-06-15（大量放出から1.25年）の値として妥当である。</p>
 
 <p>フィッティングの詳細は</p>
 
 <pre>
-summary(fit)
-</pre>
+<code>summary(fit)
+</code></pre>
 
 <p>で調べる。関係のある出力を書き出しておく：</p>
 
 <pre>
-Coefficients:
+<code>Coefficients:
        Value Std.Error  t-value p-value
 c     172.62    5.4547   31.646       0
 d      -3.28    0.0669  -48.996       0
@@ -273,16 +273,16 @@ m2 -0.184  0.105  0.086  0.205 -0.156  0.399
 m3  0.234  0.042 -0.270 -0.083 -0.110  0.031 -0.020              
 s  -0.540 -0.085  0.346  0.306  0.321 -0.216 -0.024 -0.099       
 u   0.042 -0.748  0.402  0.028  0.206 -0.240 -0.252 -0.088  0.121
-</pre>
+</code></pre>
 
 <p>各パラメータの相対誤差は <i>t</i>-value の逆数（Std.Error / Value）である。<code>u</code>
 を固定値と考えれば，<sup>134</sup>Cs と <sup>137</sup>Cs の誤差はほぼ
 <code>e1</code> と <code>e2</code> の誤差と考えてよい。両者の和の誤差は，</p>
 
 <pre>
-v = vcov(fit)
+<code>v = vcov(fit)
 sqrt(v['e1','e1'] + 2*v['e1','e2'] + v['e2','e2'])
-</pre>
+</code></pre>
 
 <p>で 793.7626 となる（<code>e1</code> と <code>e2</code> の誤差の和 1024.302 より小さいのは両者に正の相関があるからである）。</p>
 
@@ -291,7 +291,7 @@ sqrt(v['e1','e1'] + 2*v['e1','e2'] + v['e2','e2'])
 <p>データは <a href="data/120704151211.TXT">120704151211.TXT</a> である。これは上の例に比べて汚染も少ないので効率曲線はエネルギーの -1.2 乗に固定して計算した。</p>
 
 <pre>
-sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120704151211.TXT",
+<code>sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120704151211.TXT",
           skip=38, nlines=1024, comment.char=";")
 sp = floor(sp * 601 + 0.5)
 data = data.frame(ch=ch, sp=sp)
@@ -336,7 +336,7 @@ a['e1']/a['e2']
 v = vcov(fit)
 sqrt(v['e1','e1'] + 2*v['e1','e2'] + v['e2','e2'])
 # [1] 80.55856
-</pre>
+</code></pre>
 
 <div><img src="img/120707c.png" alt="別の土のスペクトル"></div>
 
@@ -353,7 +353,7 @@ sqrt(v['e1','e1'] + 2*v['e1','e2'] + v['e2','e2'])
 <p>上と同じようにできるが，511の山を回避するため，下限を少し上にした。</p>
 
 <pre>
-sp = scan("http://www.mikage.to/radiation/spviewer/lb2045_120122220029.txt",
+<code>sp = scan("http://www.mikage.to/radiation/spviewer/lb2045_120122220029.txt",
           skip=35, nlines=1024, comment.char=";")
 sp = floor(43201 * sp + 0.5)
 data = data.frame(ch=ch, sp=sp)
@@ -398,7 +398,7 @@ a['e1']/a['e2']
 v = vcov(fit)
 sqrt(v['e1','e1'] + 2*v['e1','e2'] + v['e2','e2'])
 # [1] 303.4506
-</pre>
+</code></pre>
 
 <p>つまり <sup>137</sup>Cs は 1.15Bq ないし 1.56Bq，重量 0.3123kg で割れば 3.7Bq/kg ないし 5.0Bq/kg，その1σ相対誤差は <code>e2</code> の <i>t</i>-value の逆数で約12%，つまり 0.45Bq/kg ないし 0.61Bq/kg である。<sup>134</sup>Cs / <sup>137</sup>Cs 比は 0.89419，したがってCs合計は <sup>137</sup>Cs の 1.89419 倍で，その1σ相対誤差は 303.4506 / (1421.5306 + 1589.7410) で約10%，つまり 0.71Bq/kg ないし 0.95Bq/kg である。</p>
 
