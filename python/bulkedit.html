@@ -45,7 +45,7 @@ MathJax = {
 };
 &lt;/script&gt;
 &lt;script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"&gt;
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
 &lt;/script&gt;
 </code></pre>
 
@@ -76,7 +76,7 @@ MathJax = {
 &lt;/script&gt;''', text, count=1, flags=re.MULTILINE|re.DOTALL)
     text = re.sub(r'&lt;script async .*?&lt;/script&gt;',
                   '''&lt;script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"&gt;
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
 &lt;/script&gt;''', text, count=1)
     if text != orig:
         with open('new/' + arg, 'w') as f:
@@ -126,7 +126,7 @@ for arg in sys.argv[1:]:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-10 14:44:25</time>
+Last modified: <time>2020-02-11 15:45:56</time>
 <!-- hhmts end -->
 </p>
 </body>
