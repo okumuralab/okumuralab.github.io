@@ -142,15 +142,15 @@ export PATH
 
 <p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンドが入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
-<p><code>/usr/local/bin</code> のシンボリックリンクは python.org のものをインストールしたら上書きされてしまいますので，Homebrew のものを主に使う場合は <code>brew link --overwrite python</code> と打ち込みます。さらにわけがわからなくなったら <code>brew reinstall python3</code> で再インストールできます。</p>
+<p><code>/usr/local/bin</code> のシンボリックリンクは python.org のものをインストールしたら上書きされてしまいますので，Homebrew のものを主に使う場合は <code>brew link --overwrite python3</code> と打ち込みます。さらにわけがわからなくなったら <code>brew reinstall python3</code> で再インストールできます。</p>
 
-<p>パッケージのインストールや更新は <code>pip3</code> コマンドで行います。<code>pip</code> 自身の更新は</p>
+<p>この時点での pip は <code>/usr/local/bin/pip3</code> です。まず pip 自身の更新をします：</p>
 
 <pre>
 <code>pip3 install --upgrade pip
 </code></pre>
 
-<p>とします。つまりパッケージ名は <code>pip</code>，コマンド名は <code>pip3</code> なのがややこしいところです（<a href="https://docs.brew.sh/Homebrew-and-Python">ここ</a>参照）。ただ，Homebrew の Python 3 だけをインストールした場合，<code>pip</code> コマンドと <code>pip3</code> コマンドは同じものになるようです。</p>
+<p>これで <code>/usr/local/bin</code> にまったく同じ <code>pip</code>，<code>pip3</code>，<code>pip3.7</code> が入るはずですので，以降は <code>pip</code> でも <code>pip3</code> でもかまいません（確認してください）。</p>
 
 <p>これで <code>python</code> と打ち込むと macOS 側の Python 2 が，<code>python3</code> と打ち込むと Homebrew 側の Python 3 が動くことになります。<code>ipython</code> は macOS 側にないので <code>3</code> を付ける必要はありません（付けてもかまいません）。<code>python</code> と打ち込んで Python 3 が動くようにしたければ，<code>/usr/local/opt/python/libexec/bin</code> のパスを <code>/usr/bin</code> より先に設定します。</p>
 
@@ -321,7 +321,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-09 19:45:19</time>
+Last modified: <time>2020-02-12 10:18:04</time>
 <!-- hhmts end -->
 </p>
 </footer>
