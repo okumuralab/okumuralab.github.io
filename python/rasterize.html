@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>図のラスタライズ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>図のラスタライズ</h1>
+
+<p>散布図をPDFやSVGで保存するとき，点が多いと，ファイルサイズが大きくなり，開くのに時間がかかる。軸や文字はベクトルのままで，プロットだけラスタライズ（ビットマップ画像化）したい。</p>
+
+<p><a href="https://matplotlib.org/gallery/misc/rasterization_demo.html">Rasterization Demo</a> を参考に，いろいろやってみた。</p>
+
+<pre>
+<code>import matplotlib.pyplot as plt
+import numpy as np
+
+plt.rcParams['svg.fonttype'] = 'none' # SVGの文字をパスにしない
+
+x = np.random.multivariate_normal([68,68], [[6,4],[4,6]], 1000)
+
+plt.plot(x[:,0], x[:,1], 'o')
+plt.title('散布図')
+plt.xlabel(r'$x$')
+plt.ylabel(r'$y$')
+plt.savefig('200211a.svg')
+</code></pre>
+
+<figure><img src="img/200211a.svg" alt="重いSVG"></figure>
+
+<pre>
+<code>plt.clf()
+plt.plot(x[:,0], x[:,1], 'o', zorder=-10)
+plt.title('散布図')
+plt.xlabel(r'$x$')
+plt.ylabel(r'$y$')
+# plt.gca().set_rasterized(True) で全部ラスタライズする
+plt.gca().set_rasterization_zorder(0) # zorder &lt; 0 だけラスタライズする
+plt.savefig('200211b.svg')
+</code></pre>
+
+<figure><img src="img/200211b.svg" alt="軽いSVG"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-02-11 21:05:26</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

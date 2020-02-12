@@ -86,7 +86,7 @@ plt.savefig('filename.svg', bbox_inches="tight")
 <pre>
 <code>rsvg-convert --format=pdf --output=filename.pdf filename.svg
 </code></pre>
-<p>で変換できます。文字はアウトライン化され，文字情報はなくなります。別の方法として，後述の PGF 経由で出力する方法があります。そちらの方法なら文字情報が保たれます。</p>
+<p>で変換できます。この場合，文字はアウトライン化され，文字情報はなくなります。<code>plt.rcParams['svg.fonttype'] = 'none'</code> としておけば，SVG，PDF とも文字情報が保たれます（デフォルトは <code>'path'</code>）。文字情報を保って PDF にする別の方法として，後述の PGF 経由で出力する方法があります。</p>
 </div>
 
 <p>簡単なプロットで試してみましょう。ターミナルで IPython を使うなら <code>ipython --matplotlib</code> として起動します（<code>--matplotlib</code> はデフォルトでオンになっている環境もあります）。Jupyter Notebook の環境なら</p>
@@ -291,6 +291,7 @@ plt.yscale('log')
 
 <pre>
 <code>plt.grid()
+plt.gca().set_axisbelow(True) # グリッドを背面に
 </code></pre>
 
 <p>どちらかの軸の範囲を拡大して両軸の目盛を等しくする：</p>
@@ -339,7 +340,7 @@ plt.axhline(0.5, linewidth=1, color="black")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-21 13:47:18</time>
+Last modified: <time>2020-02-11 20:10:48</time>
 <!-- hhmts end -->
 </p>
 </body>
