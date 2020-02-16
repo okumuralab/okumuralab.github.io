@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>COVID-19</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>COVID-19</h1>
+
+<p>WHO の <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/">Coronavirus disease (COVID-2019) situation reports</a> に基づいて集計したデータ <a href="data/COVID-19.csv">COVID-19.csv</a> を Python でグラフにする。</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pandas as pd
+
+df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-19.csv",
+                 index_col='Date', parse_dates=['Date'])
+
+plt.clf()
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+ax = plt.gca()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.bar(df.index, df['Global Confirmed'])
+ax.bar(df.index, df['Global Deaths'])
+plt.legend(['Laboratory-Confirmed', 'Deaths'])
+
+plt.savefig('COVID-19.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/COVID-19.svg" alt="COVID-19"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-02-16 21:22:03</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
