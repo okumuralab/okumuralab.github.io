@@ -40,13 +40,24 @@ plt.savefig('COVID-19.svg', bbox_inches="tight")
 
 <figure><img src="img/COVID-19.svg" alt="COVID-19"></figure>
 
+<p>対数グラフにするには <code>ax.bar()</code> 以下を次のように変える：</p>
+
+<pre><code>ax.plot(df.index, df['Global Confirmed'], "o-")
+ax.plot(df.index, df['Global Deaths'], "o-")
+plt.yscale('log')
+
+plt.savefig('COVID-19-log.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/COVID-19-log.svg" alt="COVID-19"></figure>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-16 21:22:03</time>
+Last modified: <time>2020-02-16 22:13:25</time>
 <!-- hhmts end -->
 </p>
 </body>
