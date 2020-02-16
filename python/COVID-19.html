@@ -25,14 +25,15 @@ import pandas as pd
 df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-19.csv",
                  index_col='Date', parse_dates=['Date'])
 
-plt.clf()
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 ax = plt.gca()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
+
 ax.bar(df.index, df['Global Confirmed'])
 ax.bar(df.index, df['Global Deaths'])
+
 plt.legend(['Laboratory-Confirmed', 'Deaths'])
 
 plt.savefig('COVID-19.svg', bbox_inches="tight")
@@ -40,13 +41,11 @@ plt.savefig('COVID-19.svg', bbox_inches="tight")
 
 <figure><img src="img/COVID-19.svg" alt="COVID-19"></figure>
 
-<p>対数グラフにするには <code>ax.bar()</code> 以下を次のように変える：</p>
+<p>対数グラフにするには <code>ax.bar()</code> の2行を次のように変える：</p>
 
 <pre><code>ax.plot(df.index, df['Global Confirmed'], "o-")
-ax.plot(df.index, df['Global Deaths'], "o-")
+ax.plot(df.index, df['Global Deaths'], "s-")
 plt.yscale('log')
-
-plt.savefig('COVID-19-log.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/COVID-19-log.svg" alt="COVID-19"></figure>
@@ -57,7 +56,7 @@ plt.savefig('COVID-19-log.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-16 22:13:25</time>
+Last modified: <time>2020-02-17 08:32:12</time>
 <!-- hhmts end -->
 </p>
 </body>
