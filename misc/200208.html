@@ -43,7 +43,7 @@ blockquote > p { margin-block-start: 1em; margin-block-end: 1em; }
 
 <h3>厚労省の自動翻訳</h3>
 
-<p>ご覧のように，「手洗い」が「トイレ」になるなど，ほとんど意味不明の英語である：</p>
+<p>ご覧のように，「手洗い」が「トイレ」（<span lang="en" class="notranslate">restroom</span>）になるなど，ほとんど意味不明の英語である：</p>
 
 <blockquote lang="en">
 <p>About new-style coronavirus infectious disease.<br>
@@ -97,7 +97,7 @@ Message to the people of Japan</p>
 
 <h3>Bing翻訳</h3>
 
-<p>Microsoftの<a href="https://www.bing.com/translator">Bing翻訳</a>：</p>
+<p>Microsoftの<a href="https://www.bing.com/translator">Bing翻訳</a>は，Windowsの新しいブラウザEdgeで右クリックしてできる翻訳でも使われている：</p>
 
 <blockquote lang="en">
 <p>New Coronavirus Infection<br>
@@ -125,7 +125,7 @@ National message to everybody</p>
 <p>After doing and contacting a health center beforehand such as the symptom by which it's for a cough and fever was put by the person who returns home from Kohoku Ministry and enters the country or the person who had contact with these people, and put on a mask in some cases, please cooperate to see a doctor. Please offer me beforehand that there is stay reki of Kohoku Ministry in a check-up of a medical agency or that it touched the way where Kohoku Ministry has stay reki.</p>
 </blockquote>
 
-<p>細かな違いを除いて，ほぼ同じである。</p>
+<p>細かな違いを除いて，ほぼ厚労省の自動翻訳と同じである。</p>
 
 <h3>追記：GOOGLETRANSLATE関数</h3>
 
@@ -148,24 +148,31 @@ Message to the people of everybody</p>
 
 <p>私の住む<a href="https://www.info.city.tsu.mie.jp">津市</a>は高電社J-SERVERを組み込んでいるので意味不明の英語になるが，近場では例えば<a href="http://www.city.kuwana.lg.jp/">桑名市</a>はGoogle Translate機能を埋め込んでいるのでまともな英語になる。しかし，<a href="https://www.weblab.co.jp/staff/marketing/8004.html">Google ウェブサイト翻訳ツールがサービス終了！代替案を解説</a>に解説されているように，この機能を新たに組み込むことはできないようだ。</p>
 
-<p>そもそも今はGoogle Chromeなら右クリックで簡単にページを翻訳できる（他ブラウザでも追加機能を入れればできる）ので，わざわざサイト側が翻訳機能を用意する必要はなくなったのであろう。同じことは音声読み上げ機能や文字拡大機能についてもいえる。</p>
+<p>そもそも今はGoogle ChromeやEdgeなら右クリックで簡単にページを翻訳できる（他ブラウザでも追加機能を入れればできる）ので，わざわざサイト側が翻訳機能を用意する必要はなくなったのであろう。同じことは音声読み上げ機能や文字拡大機能についてもいえる。</p>
 
-<p>そして，サイト側が注意すべきことは，翻訳friendlyな（そして読み上げfriendlyな）サイト作りを心がけることであろう。例えば文字を画像にするのはやめる。時間があれば英語だけでもうまく翻訳できているかチェックする（英語に翻訳できれば少なくともGoogle翻訳の中間表現への翻訳ができていることになるし，そもそもマイナーな言語は英語を介して訳されるので，品質の上限が見極められる）。</p>
+<p>そして，サイト側が注意すべきことは，翻訳friendlyな（そして読み上げfriendlyな）サイト作りを心がけることであろう。例えば文字を画像にするのはやめる。時間があれば英語だけでもうまく翻訳できているかチェックする（英語に翻訳できれば少なくともGoogle翻訳なら中間表現への翻訳ができていることになるし，そもそもマイナーな言語は英語を介して訳されるので，品質の上限が見極められる）。</p>
 
 <p>パソコンのGoogle Chromeを右クリックすると，最初は「日本語に翻訳」しか出ないが，翻訳時に出るポップアップ（もし消えてしまったらアドレスバーの右側の「このページを翻訳」アイコンをクリック）の「オプション」から「言語を変更…」を選び，翻訳言語を「英語」にする。</p>
 
-<p>スマホやiPadのGoogle Chromeは，右下（iPadなら右上）の「…」をクリックすると「翻訳」がある。グレイアウトされていて押せない場合は，別言語のページで試す。最下部に翻訳ツールバーが出る。最初は日本語への翻訳になるが，⚙→「その他の言語…」→「英語」を選ぶと英語に翻訳できる。翻訳ツールバーで「日本語」「英語」が切り替えられる。厚労省の新型コロナウイルスのページを訳すと右のようになる。</p>
+<p>スマホやiPadのGoogle Chromeは，右下（iPadなら右上）の「…」をタップすると「翻訳」がある。グレイアウトされていて押せない場合は，別言語のページで試したり，「設定」→「言語」の設定をいじる。最下部に翻訳ツールバーが出る。最初は日本語への翻訳になるが，⚙→「その他の言語…」→「英語」を選ぶと英語に翻訳できる。翻訳ツールバーで「日本語」「英語」が切り替えられる。厚労省の新型コロナウイルスのページを訳すと右のようになる。</p>
 
 <p>これでページの問題点がいろいろ明らかになる：</p>
 
 <ul>
-  <li>インラインSVGも含め，画像の文字列は訳せない。</li>
-  <li>例えば「令和2年度」は reiwa 2 year になる。場合によっては Ryowa になることも。西暦に統一するか，少なくとも西暦を必ず付ける。</li>
+  <li>当然ながら，画像化された文字列は訳されない。インラインSVGの文字列も訳せない。</li>
+  <li>主語を略すとうまく訳せないことがある。</li>
+  <li>例えば「令和2年度」は <span lang="en">reiwa 2 year</span> になる。場合によっては <span lang="en">Ryowa</span> になることも。「2020年」または「令和2年（2020年）」のように書く。ページ更新日時などは YYYY-MM-DD HH:MM:SS の形式で書けば誤解が少ないだろう。</li>
   <li><code>&lt;code&gt;...&lt;/code&gt;</code> の中は訳されず，そのまま表示される。<code>&lt;pre&gt;...&lt;/pre&gt;</code> だけでは訳される可能性がある。複数行にわたって訳されないコードを書くには <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> のようにネストする（ただし最初の <code>&lt;code&gt;</code> の直後に改行があると余計な行ができてしまう）。</li>
-  <li>本文中に <code>&lt;code&gt;...&lt;/code&gt;</code> があると，Google翻訳はその前後を別々に訳すので，語順がおかしくなる（バグ？）。</li>
+  <li>本文中に <code>&lt;code&gt;...&lt;/code&gt;</code> があると，Google翻訳はその前後を別々に訳すので，語順がおかしくなる。</li>
+  <li><ruby>振<rp>（</rp><rt>ふ</rt><rp>）</rp></ruby>り<ruby>仮名<rp>（</rp><rt>がな</rt><rp>）</rp></ruby>も翻訳の邪魔になる。</li>
+  <li>HTMLの<a href="https://html.spec.whatwg.org/multipage/dom.html#the-lang-and-xml:lang-attributes">lang属性</a>，<a href="https://html.spec.whatwg.org/multipage/dom.html#the-translate-attribute">translate属性</a>を使えば，言語や翻訳の可否が指定できるはずである。例えば <code>&lt;span lang="en"&gt;coronavirus&lt;/span&gt;</code> と書けば，その部分は英語として扱われる。また，<code>&lt;span translate="no"&gt;コロナウイルス&lt;/span&gt;</code> と書けば，その部分は翻訳されないはずである。しかし，Googleはこれらの属性をあまり利用していないように見える。代わりに <code>&lt;span class="notranslate"&gt;コロナウイルス&lt;/span&gt;</code> のような書き方が使えるようである。この指定が効く場合は，その前後が別々に訳され，語順がおかしくなる。</li>
 </ul>
 
-<p>[追記の追記] WindowsのEdge（新）も右クリックで翻訳できる。Bing翻訳を使っている。</p>
+<h3>参考になりそうなページ</h3>
+
+<ul>
+  <li><a href="https://qiita.com/hmaruy1/items/bcae2015c9fed9b7341e">本１冊を機械翻訳で訳してみた</a></li>
+</ul>
 
 <hr>
 
@@ -174,7 +181,7 @@ Message to the people of everybody</p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-10 21:23:47</time>
+Last modified: <time>2020-02-16 08:40:00</time>
 <!-- hhmts end -->
 </p>
 </footer>
