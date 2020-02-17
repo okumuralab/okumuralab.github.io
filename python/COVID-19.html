@@ -19,11 +19,15 @@
 <p>WHO の <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/">Coronavirus disease (COVID-2019) situation reports</a> に基づいて集計したデータ <a href="data/COVID-19.csv">COVID-19.csv</a> を Python でグラフにする。</p>
 
 <pre><code>import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 import pandas as pd
 
 df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-19.csv",
                  index_col='Date', parse_dates=['Date'])
+</code></pre>
+
+<p>これで <code>df.plot()</code> とすれば全部のコラムがプロットできるが，見にくいので，もうちょっとがんばってみる：</p>
+
+<pre><code>import matplotlib.dates as mdates
 
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
@@ -50,13 +54,56 @@ plt.yscale('log')
 
 <figure><img src="img/COVID-19-log.svg" alt="COVID-19"></figure>
 
+<p>日本については，<a href="https://www.mhlw.go.jp">厚労省</a>が発表しているが，とてもわかりくいので，とりあえず上記 WHO の日報から拾ったものを <a href="data/COVID-jp.csv">COVID-jp.csv</a> として置いておく。なお，2022-02-05 の数は 33 となっていたがこれは明らかに 23 の誤記だと思われるので訂正しておいた。</p>
+
+<figure><img src="img/COVID-jp.svg" alt="COVID-19 (Japan)"></figure>
+
+<p>横浜港に停泊したクルーズ船ダイヤモンド・プリンセス号については，<a href="https://www.mhlw.go.jp/stf/new-info/">厚労省の新着情報</a>から「クルーズ船」で検索して集計した延べ人数は <a href="data/COVID-DP.csv">COVID-DP.csv</a> のようになる。発表日ベースで集計した。検体採取の日は不明。どういう人を選んで検査したかによって陽性率は大きく変わるであろうから，要注意。<a href="https://www3.nhk.or.jp/news/html/20200215/k10012287201000.html">NHKの2020-02-15 22:48のニュース</a>によれば，「７日以前にウイルスに感染し、　７日に発症した乗客が最も多かった。その後の新たな発症者は、特に今月10日以降は急激に少なくなっていて、検疫の効果が出ていると考えている」（厚生労働省の担当者）とのことだが，これはよくわからない。</p>
+
+<pre><code>
+df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-DP.csv",
+                 index_col='Date', parse_dates=['Date'])
+
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+ax = plt.gca()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.bar(df.index, df['Examined'])
+ax.bar(df.index, df['Positive'])
+plt.legend(['Negative', 'Positive'])
+</code></pre>
+
+<figure><img src="img/COVID-DP.svg" alt="COVID-19 on the Diamond Princess"></figure>
+
+<p>陽性率とその95%信頼区間：</p>
+
+<pre><code>import numpy as np
+from statsmodels.stats.proportion import proportion_confint
+
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+ax = plt.gca()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+p = [x['Positive'] / x['Examined'] for i, x in df.iterrows()]
+ci0, ci1 = np.array([proportion_confint(x['Positive'], x['Examined'], method='beta')
+                     for i, x in df.iterrows()]).T
+ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
+</code></pre>
+
+<figure><img src="img/COVID-DP-rate.svg" alt="COVID-19 on the Diamond Princess"></figure>
+
+<p>[追記] <a href="https://jagjapan.maps.arcgis.com/apps/opsdashboard/index.html#/641eba7fef234a47880e1e1dc4de85ce">都道府県別新型コロナウイルス感染症患者数マップ</a>というすばらしいページを教えていただいた。こちらは厚労省のほか自治体からの情報も加えておられるとのことで，WHO の日報より多くなっている。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-17 08:32:12</time>
+Last modified: <time>2020-02-17 15:54:21</time>
 <!-- hhmts end -->
 </p>
 </body>
