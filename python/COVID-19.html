@@ -43,6 +43,8 @@ plt.legend(['Laboratory-Confirmed', 'Deaths'])
 plt.savefig('COVID-19.svg', bbox_inches="tight")
 </code></pre>
 
+<p><em>[2020-02-18]</em> 2020-02-17から湖北省については laboratory-confirmed だけでなく clinically diagnosed も含めたので急増している。</em></p>
+
 <figure><img src="img/COVID-19.svg" alt="COVID-19"></figure>
 
 <p>対数グラフにするには <code>ax.bar()</code> の2行を次のように変える：</p>
@@ -105,7 +107,7 @@ ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-17 22:37:34</time>
+Last modified: <time>2020-02-18 08:03:22</time>
 <!-- hhmts end -->
 </p>
 </body>
