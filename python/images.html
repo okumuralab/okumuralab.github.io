@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>画像テストページ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>画像テストページ</h1>
+
+<pre><code>import matplotlib.pyplot as plt
+
+plt.plot([-1,1])
+plt.title('日本語タイトル')
+
+plt.savefig('filename.png', bbox_inches="tight")
+plt.savefig('filename.jpg', bbox_inches="tight")
+plt.savefig('filename.pdf', bbox_inches="tight")
+plt.savefig('filename.svg', bbox_inches="tight")
+plt.savefig('filename.svgz', bbox_inches="tight")
+</code></pre>
+
+<p>filename.png (21929バイト)</p>
+
+<figure><img src="img/filename.png" alt="png"></figure>
+
+<p>filename.jpg (28254バイト)</p>
+
+<figure><img src="img/filename.jpg" alt="jpg"></figure>
+
+<p>filename.pdf (8838バイト)</p>
+
+<figure><img src="img/filename.pdf" alt="pdf"></figure>
+
+<p>filename.svg (20227バイト)</p>
+
+<figure><img src="img/filename.svg" alt="svg"></figure>
+
+<p>filename.svgz (4168バイト)</p>
+
+<figure><img src="img/filename.svgz" alt="svgz"></figure>
+
+<p>拡張子 svgz のファイルをちゃんと表示させるには，Webサーバの同じディレクトリに .htaccess というファイルを作って次のように書き込む必要があるかもしれない：</p>
+
+<pre><code>AddEncoding gzip svgz</code></pre>
+
+<p>PDFについては，MacではSafari以外ダメ，iPhoneではSafari，Chrome大丈夫，Windowsではすべてダメのようである。PDF以外はすべてOK。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-02-18 16:45:34</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
