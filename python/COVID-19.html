@@ -60,7 +60,7 @@ plt.yscale('log')
 
 <figure><img src="img/COVID-jp.svg" alt="COVID-19 (Japan)"></figure>
 
-<p>横浜港に停泊したクルーズ船ダイヤモンド・プリンセス号については，<a href="https://www.mhlw.go.jp/stf/new-info/">厚労省の新着情報</a>から「クルーズ船」で検索して集計した延べ人数は <a href="data/COVID-DP.csv">COVID-DP.csv</a> のようになる。発表日ベースで集計した。検体採取の日は不明。どういう人を選んで検査したかによって陽性率は大きく変わるであろうから，要注意。<a href="https://www3.nhk.or.jp/news/html/20200215/k10012287201000.html">NHKの2020-02-15 22:48のニュース</a>によれば，「７日以前にウイルスに感染し、　７日に発症した乗客が最も多かった。その後の新たな発症者は、特に今月10日以降は急激に少なくなっていて、検疫の効果が出ていると考えている」（厚生労働省の担当者）とのことだが，これはよくわからない。</p>
+<p>横浜港に停泊したクルーズ船ダイヤモンド・プリンセス号については，<a href="https://www.mhlw.go.jp/stf/new-info/">厚労省の新着情報</a>から「クルーズ船」で検索して集計した延べ人数は <a href="data/COVID-DP.csv">COVID-DP.csv</a> のようになる。発表日ベースで集計した。検体採取の日は不明。どういう人を選んで検査したかによって陽性率は大きく変わるであろうから，要注意。<a href="https://www3.nhk.or.jp/news/html/20200215/k10012287201000.html">NHKの2020-02-15 22:48のニュース</a>によれば，「７日以前にウイルスに感染し、　７日に発症した乗客が最も多かった。その後の新たな発症者は、特に今月10日以降は急激に少なくなっていて、検疫の効果が出ていると考えている」（厚生労働省の担当者）とのことだが，これはよくわからない。2020-02-18 19:00のNHKニュースによれば検体採取から結果判明まで3日とのこと。</p>
 
 <pre><code>
 df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-DP.csv",
@@ -97,9 +97,13 @@ ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
 
 <figure><img src="img/COVID-DP-rate.svg" alt="COVID-19 on the Diamond Princess"></figure>
 
-<p>[追記] <a href="https://jagjapan.maps.arcgis.com/apps/opsdashboard/index.html#/641eba7fef234a47880e1e1dc4de85ce">都道府県別新型コロナウイルス感染症患者数マップ</a>というすばらしいページを教えていただいた。こちらは厚労省のほか自治体からの情報も加えておられるとのことで，WHO の日報より多くなっている。</p>
+<p>同様なサイトへのリンク：</p>
 
-<p>[追記] <a href="https://covid19japan.com">Coronavirus Disease (COVID-19) Japan Tracker</a> というサイトもあった。</p>
+<ul>
+  <li><a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> / <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a></li>
+  <li><a href="https://jagjapan.maps.arcgis.com/apps/opsdashboard/index.html#/641eba7fef234a47880e1e1dc4de85ce">都道府県別新型コロナウイルス感染症患者数マップ</a> (厚労省のほか自治体からの情報も加えておられるとのことで，WHO の日報より多くなっている)</li>
+  <li><a href="https://covid19japan.com">Coronavirus Disease (COVID-19) Japan Tracker</a></li>
+</ul>
 
 <hr>
 
@@ -107,7 +111,7 @@ ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-18 13:27:41</time>
+Last modified: <time>2020-02-19 07:28:07</time>
 <!-- hhmts end -->
 </p>
 </body>
