@@ -56,9 +56,13 @@ plt.yscale('log')
 
 <figure><img src="img/COVID-19-log.svg" alt="COVID-19"></figure>
 
-<p>日本については，<a href="https://www.mhlw.go.jp">厚労省</a>が発表しているが，とてもわかりくいので，とりあえず上記 WHO の日報から拾ったものを <a href="data/COVID-jp.csv">COVID-jp.csv</a> として置いておく。なお，2022-02-05 の数は 33 となっていたがこれは明らかに 23 の誤記だと思われるので訂正しておいた。厚労省<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000164708_00001.html">新型コロナウイルス感染症について</a>の中ほどの「発生状況」からリンクされている日報（ただし毎日ではない）の最近のものには，見やすい表がある。</p>
+<p>日本については，上記 WHO の日報から拾ったものを <a href="data/COVID-jp.csv">COVID-jp.csv</a> として置いておく。なお，2022-02-05 の数は 33 となっていたがこれは明らかに 23 の誤記だと思われるので訂正しておいた。</p>
 
 <figure><img src="img/COVID-jp.svg" alt="COVID-19 (Japan)"></figure>
+
+<p><a href="https://www.mhlw.go.jp">厚労省</a>の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000164708_00001.html">新型コロナウイルス感染症について</a>の中ほどの「発生状況」からリンクされている日報（ただし毎日ではない）の最近のものには，やや見やすい表がある。これから拾ったデータ <a href="data/COVID-mhlw.csv">COVID-mhlw.csv</a> によるその時点までのPCR検査数（累計）のうち陽性の割合と95%信頼区間のグラフ：</p>
+
+<figure><img src="img/COVID-mhlw.svg" alt="COVID-19 proportion of positives (Japan)"></figure>
 
 <p>横浜港に停泊したクルーズ船ダイヤモンド・プリンセス号については，<a href="https://www.mhlw.go.jp/stf/new-info/">厚労省の新着情報</a>から「クルーズ船」で検索して集計した延べ人数は <a href="data/COVID-DP.csv">COVID-DP.csv</a> のようになる。発表日ベースで集計した。検体採取の日は不明（<a href="https://www3.nhk.or.jp/news/html/20200218/k10012290571000.html">NHKの2月18日のニュース</a>によれば「結果が出るまでにおよそ３日かかる」）。どういう人を選んで検査したかによって陽性率は大きく変わるであろうから，要注意。<a href="https://www3.nhk.or.jp/news/html/20200215/k10012287201000.html">NHKの2020-02-15 22:48のニュース</a>によれば，「７日以前にウイルスに感染し、　７日に発症した乗客が最も多かった。その後の新たな発症者は、特に今月10日以降は急激に少なくなっていて、検疫の効果が出ていると考えている」（厚生労働省の担当者）とのことだが，これはよくわからない。</p>
 
@@ -111,7 +115,7 @@ ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-19 09:08:03</time>
+Last modified: <time>2020-02-19 14:22:32</time>
 <!-- hhmts end -->
 </p>
 </body>
