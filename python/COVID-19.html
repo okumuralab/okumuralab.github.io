@@ -64,7 +64,7 @@ plt.yscale('log')
 
 <figure><img src="img/COVID-mhlw.svg" alt="COVID-19 proportion of positives (Japan)"></figure>
 
-<p>横浜港に停泊したクルーズ船ダイヤモンド・プリンセス号については，<a href="https://www.mhlw.go.jp/stf/new-info/">厚労省の新着情報</a>から「クルーズ船」で検索して集計した延べ人数は <a href="data/COVID-DP.csv">COVID-DP.csv</a> のようになる。発表日ベースで集計した。検体採取の日は不明（<a href="https://www3.nhk.or.jp/news/html/20200218/k10012290571000.html">NHKの2月18日のニュース</a>によれば「結果が出るまでにおよそ３日かかる」）。どういう人を選んで検査したかによって陽性率は大きく変わるであろうから，要注意。<a href="https://www3.nhk.or.jp/news/html/20200215/k10012287201000.html">NHKの2020-02-15 22:48のニュース</a>によれば，「７日以前にウイルスに感染し、　７日に発症した乗客が最も多かった。その後の新たな発症者は、特に今月10日以降は急激に少なくなっていて、検疫の効果が出ていると考えている」（厚生労働省の担当者）とのことだが，これはよくわからない。</p>
+<p>横浜港に停泊したクルーズ船ダイヤモンド・プリンセス号については，<a href="https://www.mhlw.go.jp/stf/new-info/">厚労省の新着情報</a>から「クルーズ船」で検索して集計した延べ人数は <a href="data/COVID-DP.csv">COVID-DP.csv</a> のようになる。発表日ベースで集計した。検体採取の日は不明（<a href="https://www3.nhk.or.jp/news/html/20200218/k10012290571000.html">NHKの2月18日のニュース</a>によれば「結果が出るまでにおよそ３日かかる」）。どういう人を選んで検査したかによって陽性率は大きく変わるであろうから，要注意。<a href="https://www3.nhk.or.jp/news/html/20200215/k10012287201000.html">NHKの2020-02-15 22:48のニュース</a>によれば，「７日以前にウイルスに感染し、　７日に発症した乗客が最も多かった。その後の新たな発症者は、特に今月10日以降は急激に少なくなっていて、検疫の効果が出ていると考えている」（厚生労働省の担当者）とのことだが，これはよくわからない（<a href="https://www.niid.go.jp/niid/en/2019-ncov-e/9407-covid-dp-fe-01.html">このページ</a>の上のグラフが根拠のようである）。</p>
 
 <pre><code>
 df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-DP.csv",
@@ -115,7 +115,7 @@ ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-19 19:16:26</time>
+Last modified: <time>2020-02-19 19:38:43</time>
 <!-- hhmts end -->
 </p>
 </body>
