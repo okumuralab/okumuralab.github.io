@@ -48,9 +48,19 @@ plt.savefig('filename.svgz', bbox_inches="tight")
 
 <figure><img src="img/filename.svgz" alt="svgz"></figure>
 
-<p>拡張子 svgz のファイルをちゃんと表示させるには，Webサーバの同じディレクトリに .htaccess というファイルを作って次のように書き込む必要があるかもしれない：</p>
+<p>拡張子 svgz のファイルは，単に svg を gzip で圧縮しただけのものである。これをファイルとして開いて表示できるブラウザは残念ながらなさそうである。ただ，不思議なことにネット越しなら，svg を表示できるブラウザは svgz も表示できる。ただし，そのためにはまず，Webサーバの /etc/mime.types に</p>
+
+<pre><code>image/svg+xml svg svgz</code></pre>
+
+<p>という行が必要である。なければ httpd.conf (/etc/httpd/conf あたりに入っている) に</p>
+
+<pre><code>AddType image/svg+xml svg svgz</code></pre>
+
+<p>と書き込んでおけばよい。これに加えて，httpd.conf には</p>
 
 <pre><code>AddEncoding gzip svgz</code></pre>
+
+<p>という行も必要である。httpd.conf の編集が難しい場合は，画像と同じディレクトリ（または親ディレクトリ）に .htaccess というファイルを作って，httpd.conf に書き込むべきことを書き込んでおく。</p>
 
 <p>PDFについては，MacではSafari以外ダメ，iPhoneではSafari，Chrome大丈夫，Windowsではすべてダメのようである。PDF以外はすべてOK。</p>
 
@@ -60,7 +70,7 @@ plt.savefig('filename.svgz', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-18 16:45:34</time>
+Last modified: <time>2020-02-19 17:51:17</time>
 <!-- hhmts end -->
 </p>
 </body>
