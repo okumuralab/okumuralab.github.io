@@ -10,6 +10,18 @@ df = pd.read_csv("../data/COVID-mhlw.csv", index_col='Date', parse_dates=['Date'
 
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
+ax = plt.gca()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.bar(df.index, df['Examined'])
+ax.bar(df.index, df['Confirmed'])
+plt.legend(['Negative', 'Positive'])
+
+plt.savefig('../img/COVID-mhlw2.svg', bbox_inches="tight")
+
+plt.clf()
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
 ax = plt.gca()  # または ax = plt.subplot(1,1,1)
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
