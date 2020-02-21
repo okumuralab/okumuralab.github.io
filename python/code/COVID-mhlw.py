@@ -30,5 +30,6 @@ p = [x['Confirmed'] / x['Examined'] for i, x in df.iterrows()]
 ci0, ci1 = np.array([proportion_confint(x['Confirmed'], x['Examined'], method='beta')
                      for i, x in df.iterrows()]).T
 ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
+ax.grid(axis='y')
 
 plt.savefig('../img/COVID-mhlw.svg', bbox_inches="tight")

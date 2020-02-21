@@ -101,6 +101,7 @@ p = [x['Positive'] / x['Examined'] for i, x in df.iterrows()]
 ci0, ci1 = np.array([proportion_confint(x['Positive'], x['Examined'], method='beta')
                      for i, x in df.iterrows()]).T
 ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
+ax.grid(axis='y')
 </code></pre>
 
 <figure><img src="img/COVID-DP-rate.svg" alt="COVID-19 on the Diamond Princess"></figure>
@@ -119,7 +120,7 @@ ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-20 22:20:48</time>
+Last modified: <time>2020-02-21 08:27:18</time>
 <!-- hhmts end -->
 </p>
 </body>
