@@ -84,6 +84,17 @@ ax.grid(axis='y')
 
 <figure><img src="img/COVID-mhlw.svg" alt="COVID-19 proportion of positives (Japan)"></figure>
 
+<p>こちらも差分なら次のようになる：</p>
+
+<pre><code>p = df['Confirmed'].diff() / df['Examined'].diff()
+ci0, ci1 = np.array([proportion_confint(x['Confirmed'], x['Examined'], method='beta')
+                     for i, x in df.diff().iterrows()]).T
+ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
+ax.grid(axis='y')
+</code></pre>
+
+<figure><img src="img/COVID-mhlw4.svg" alt="COVID-19 (Japan)"></figure>
+
 <p>横浜港に停泊したクルーズ船ダイヤモンド・プリンセス号については，<a href="https://www.mhlw.go.jp/stf/new-info/">厚労省の新着情報</a>から「クルーズ船」で検索して集計した延べ人数は <a href="data/COVID-DP.csv">COVID-DP.csv</a> のようになる。発表日ベースで集計した。検体採取の日は不明（<a href="https://www3.nhk.or.jp/news/html/20200218/k10012290571000.html">NHKの2月18日のニュース</a>によれば「結果が出るまでにおよそ３日かかる」）。どういう人を選んで検査したかによって陽性率は大きく変わるであろうから，要注意。<a href="https://www3.nhk.or.jp/news/html/20200215/k10012287201000.html">NHKの2020-02-15 22:48のニュース</a>によれば，「７日以前にウイルスに感染し、　７日に発症した乗客が最も多かった。その後の新たな発症者は、特に今月10日以降は急激に少なくなっていて、検疫の効果が出ていると考えている」（厚生労働省の担当者）とのことだが，これはよくわからない（国立感染症研究所の<a href="https://www.niid.go.jp/niid/ja/diseases/ka/corona-virus/2019-ncov/2484-idsc/9410-covid-dp-01.html">現場からの概況：ダイアモンドプリンセス号におけるCOVID-19症例</a>（<a href="https://www.niid.go.jp/niid/en/2019-ncov-e/9407-covid-dp-fe-01.html">英語版</a>）の上のグラフが根拠のようである）。</p>
 
 <pre><code>
@@ -137,7 +148,7 @@ ax.grid(axis='y')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-22 21:03:22</time>
+Last modified: <time>2020-02-22 22:43:50</time>
 <!-- hhmts end -->
 </p>
 </body>
