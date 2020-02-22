@@ -229,7 +229,9 @@ conda install ipython numpy scipy matplotlib pandas scikit-learn
 
 <h3>CentOS でのインストール</h3>
 
-<p>CentOS 7 なら <code>yum install python3</code> で少し古い /usr/bin/python3 や /usr/bin/pip3 が入ります。</p>
+<p>CentOS 7 の標準の python コマンドは 2.7.x ですが，<code>yum install python3</code> で /usr/bin/python3 や /usr/bin/pip3 が入ります（3.6.x）。</p>
+
+<p>CentOS 8 では /usr/bin/python3，/usr/bin/pip3 のほうが標準です。もし入っていなければ <code>dnf install python36</code> で入ります（3.6.x）。</p>
 
 <h3>ソースからのインストール</h3>
 
@@ -321,7 +323,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-12 10:18:04</time>
+Last modified: <time>2020-02-21 12:46:01</time>
 <!-- hhmts end -->
 </p>
 </footer>

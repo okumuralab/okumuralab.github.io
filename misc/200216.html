@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>CentOS 8のインストール</title>
+<title>CentOS 8 のインストール</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -14,15 +14,15 @@
 <a href="./">雑記</a> &gt;
 </nav>
 
-<h1>CentOS 8のインストール</h1>
+<h1>CentOS 8 のインストール</h1>
 
-<p><a href="https://www.centos.org">CentOS</a> サイトの Get CetnOS Now をクリック。CentOS Linux DVD ISO というボタンがあるが，これは 7G バイトもあり，2層 DVD が必要である。そこで，alternative downloads → <a href="http://isoredirect.centos.org/centos/8/isos/x86_64/">mirrors</a> とたどり，近場のミラーから CentOS-8.x.xxxx-x86_64-boot.iso をダウンロードする。Mac に Apple USB SuperDrive を接続し，生 CD-R または DVD-R の類を挿入し，ダイアログボックスが出たら「無視」を選ぶ。ターミナルに次のように打ち込む：</p>
+<p><a href="https://www.centos.org">CentOS</a> サイトの Get CentOS Now をクリック。CentOS Linux DVD ISO というボタンがあるが，これは 7G バイトもあり，2層 DVD が必要である（USB メモリに入れてそこから起動するという手もあるが）。そこで，alternative downloads → <a href="http://isoredirect.centos.org/centos/8/isos/x86_64/">mirrors</a> とたどり，近場のミラーから CentOS-8.x.xxxx-x86_64-boot.iso をダウンロードする。こちらなら CD-R にも焼けるサイズである。Mac に Apple USB SuperDrive を接続し，生 CD-R または DVD-R の類を挿入し，ダイアログボックスが出たら「無視」を選ぶ。GUI でも焼けるはずだが，ターミナルに次のように打ち込むのが手っ取り早い：</p>
 
 <pre><code>hdiutil burn CentOS-8.*-x86_64-boot.iso</code></pre>
 
-<p>マシンを立ち上げ，BIOS設定で，通電時（AC Power Recovery）の動作をOnにしておく。また，DVDからの起動を優先にしておく。上で作成したDVDを挿入して再起動（Ctrl-Alt-Del）する。あとは指示に従ってインストールするだけである（慣れが必要）。</p>
+<p>さて，インストールするマシンを立ち上げる。BIOS 設定で，通電時（AC Power Recovery）の動作を On にしておくと，停電などで止まった後で勝手に立ち上がる。また，DVD からの起動を優先にしておく。上で作成した DVD を挿入して再起動（Ctrl-Alt-Del）する。あとは指示に従ってインストールするだけである（慣れが必要）。</p>
 
-<p>インストールできたら，いったんシャットダウンし，古い（壊れた）サーバから取り出したHDDを接続し，マウントして，必要なものを取り出す（このあたりは臨機応変）。以下のコードはすべて root で行う。</p>
+<p>インストールできたら，今回は古い（壊れて立ち上がらない）サーバからのデータ移行があるので，いったんシャットダウンし，古いサーバから取り出した HDD を接続し，マウントして，必要なものを取り出す（このあたりは臨機応変）。以下のコードはすべて root で行う。</p>
 
 <pre><code>pvs
 vgscan --mknodes
@@ -35,7 +35,7 @@ umount /mnt
 
 <p>必要なものを吸い出したら，シャットダウンして古いHDDを外し，本稼働する。</p>
 
-<p>時間合わせは ntpd ではなく chronyd で行う：</p>
+<p>CentOS 8 では，時間合わせは ntpd ではなく chronyd で行う：</p>
 
 <pre><code>systemctl enable chronyd
 systemctl start chronyd
@@ -55,7 +55,7 @@ firewall-cmd --add-service=https --zone=public --permanent
 firewall-cmd --reload
 </code></pre>
 
-<p><a href="https://letsencrypt.org">Let's Encrypt</a> で https にするには<a href="https://certbot.eff.org/lets-encrypt/centosrhel8-apache">この指示</a>に従ってCertbotをインストールする。</p>
+<p><a href="https://letsencrypt.org">Let's Encrypt</a> で https にするには <a href="https://certbot.eff.org/lets-encrypt/centosrhel8-apache">この指示</a> に従って Certbot をインストールする。</p>
 
 <pre><code>dnf install wget
 wget https://dl.eff.org/certbot-auto
@@ -81,7 +81,7 @@ ServerName oku1.edu.mie-u.ac.jp
 /usr/local/bin/certbot-auto --apache
 </code></pre>
 
-<p>次の行を crontab に登録：</p>
+<p>次の行を crontab に登録（このあたりは Certbot のバージョンによるので実際の指示に従う）：</p>
 
 <pre><code>0 0,12 * * * root python3 -c 'import random; import time; time.sleep(random.random() * 3600)' &amp;&amp; /usr/local/bin/certbot-auto renew
 </code></pre>
@@ -107,7 +107,7 @@ systemctl restart httpd
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-20 15:33:14</time>
+Last modified: <time>2020-02-22 15:24:58</time>
 <!-- hhmts end -->
 </p>
 </footer>
