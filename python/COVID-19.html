@@ -64,7 +64,7 @@ plt.yscale('log')
 
 <figure><img src="img/COVID-mhlw2.svg" alt="COVID-19 (Japan)"></figure>
 
-<p>データの差分をとって，高さは1日あたりの数に直したもの：</p>
+<p>データの差分をとって，高さを1日あたりの数に直したものも描いてみる。発表されている累計の差なので正確でないかもしれない。例えば2月19・20日は均して見るほうがいいかもしれない。1日100検査に満たないことがわかる。</p>
 
 <pre><code>dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
 ax.bar(df.index, df['Examined'].diff() / dt, width=-dt, align='edge', edgecolor="black")
@@ -113,6 +113,8 @@ plt.legend(['Negative', 'Positive'])
 
 <figure><img src="img/COVID-DP.svg" alt="COVID-19 on the Diamond Princess"></figure>
 
+<p><a href="https://www.mhlw.go.jp/stf/newpage_09708.html">2月23日公表分</a>は差分だけなので累計は不正確かもしれない。</p>
+
 <p>陽性率とその95%信頼区間：</p>
 
 <pre><code>import numpy as np
@@ -140,6 +142,7 @@ ax.grid(axis='y')
   <li><a href="https://jagjapan.maps.arcgis.com/apps/opsdashboard/index.html#/641eba7fef234a47880e1e1dc4de85ce">都道府県別新型コロナウイルス感染症患者数マップ</a> (厚労省のほか自治体からの情報も加えておられるとのことで，WHO の日報より多くなっている)</li>
   <li><a href="https://covid19japan.com">Coronavirus Disease (COVID-19) Japan Tracker</a></li>
   <li><a href="https://vdata.nikkei.com/newsgraphics/coronavirus-world-map/">コロナウイルス感染 世界マップ</a> / <a href="https://vdata.nikkei.com/newsgraphics/coronavirus-china-map/">コロナウイルス感染 中国マップ</a></li>
+  <li><a href="https://coromap.web.app">新型コロナウイルスの事例マップ</a></li>
 </ul>
 
 <hr>
@@ -148,7 +151,7 @@ ax.grid(axis='y')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-22 22:43:50</time>
+Last modified: <time>2020-02-23 20:42:27</time>
 <!-- hhmts end -->
 </p>
 </body>
