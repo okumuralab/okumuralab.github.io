@@ -43,7 +43,7 @@ plt.legend(['Laboratory-Confirmed', 'Deaths'])
 plt.savefig('COVID-19.svg', bbox_inches="tight")
 </code></pre>
 
-<p><em>[2020-02-18]</em> 2020-02-17から湖北省については laboratory-confirmed だけでなく clinically diagnosed も含めたので急増している。</em></p>
+<p>2020-02-17から湖北省については laboratory-confirmed だけでなく clinically diagnosed も含めたので急増している。</p>
 
 <figure><img src="img/COVID-19.svg" alt="COVID-19"></figure>
 
@@ -55,6 +55,20 @@ plt.yscale('log')
 </code></pre>
 
 <figure><img src="img/COVID-19-log.svg" alt="COVID-19"></figure>
+
+<p>以上は累計値である。1日あたりの値は次の通り。Confirmed の定義が変わった 2020-02-17 の差分は表示していない。この前後での比較は要注意。</p>
+
+<pre><code>dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
+c = df['Global Confirmed'].diff()
+c[df.index == '2020-02-17'] = np.nan
+ax.bar(df.index, c / dt, width=-dt, align='edge', edgecolor="black")
+ax.bar(df.index, df['Global Deaths'].diff() / dt, width=-dt, align='edge', edgecolor="black")
+plt.legend(['Confirmed', 'Deaths'])
+</code></pre>
+
+<figure><img src="img/COVID-19-dif.svg" alt="COVID-19"></figure>
+
+<p>中国でのピークは2月上旬で過ぎていることがわかる。なお，こういう図をエピカーブ（epidemic curve, epi curve）という。エピカーブの横軸は発病日が一般的だが，ここでは報告日である。</p>
 
 <p>日本については，上記 WHO の日報から拾ったものを <a href="data/COVID-jp.csv">COVID-jp.csv</a> として置いておく。なお，2022-02-05 の数は 33 となっていたがこれは明らかに 23 の誤記だと思われるので訂正しておいた。</p>
 
@@ -143,6 +157,7 @@ ax.grid(axis='y')
   <li><a href="https://covid19japan.com">Coronavirus Disease (COVID-19) Japan Tracker</a></li>
   <li><a href="https://vdata.nikkei.com/newsgraphics/coronavirus-world-map/">コロナウイルス感染 世界マップ</a> / <a href="https://vdata.nikkei.com/newsgraphics/coronavirus-china-map/">コロナウイルス感染 中国マップ</a></li>
   <li><a href="https://coromap.web.app">新型コロナウイルスの事例マップ</a></li>
+  <li><a href="https://note.com/azalush/n/n790867d82054">新型コロナウィルス感染症（COVID-19） 統計情報 リアルタイム更新サイト一覧</a></li>
 </ul>
 
 <hr>
@@ -151,7 +166,7 @@ ax.grid(axis='y')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-23 20:42:27</time>
+Last modified: <time>2020-02-24 22:30:47</time>
 <!-- hhmts end -->
 </p>
 </body>
