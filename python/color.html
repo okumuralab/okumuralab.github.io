@@ -78,6 +78,12 @@ Out[ ]: cycler('color', ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', ...])
 
 <p>この中の色は <code>color="C0"</code> から <code>color="C9"</code> までで指定できます。</p>
 
+<p>これらの色はどれも濃い色です。薄い色も使いたいなら，<a href="https://matplotlib.org/tutorials/colors/colormaps">Choosing Colormaps in Matplotlib</a> の tab10 のすぐ下にある tab20 というカラーマップを使います。</p>
+
+<pre><code>cmap = plt.get_cmap("tab20")</code></pre>
+
+<p>でこのカラーマップを取得し，濃い青は <code>color=cmap(0)</code>，薄い青は <code>color=cmap(1)</code>，濃いオレンジは <code>color=cmap(2)</code> などと指定します。</p>
+
 <p>もし色をいつも黒にしたいなら，</p>
 
 <pre>
@@ -110,7 +116,7 @@ plt.rcParams['axes.prop_cycle'] = cycler(color=["black"])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-25 15:47:35</time>
+Last modified: <time>2020-02-29 11:37:18</time>
 <!-- hhmts end -->
 </p>
 </body>

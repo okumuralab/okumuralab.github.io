@@ -32,7 +32,7 @@ ax.xaxis.set_major_formatter(formatter)
 p = [x['Positive'] / x['Examined'] for i, x in df.iterrows()]
 ci0, ci1 = np.array([proportion_confint(x['Positive'], x['Examined'], method='beta')
                      for i, x in df.iterrows()]).T
-ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
+ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
 ax.grid(axis='y')
 
 plt.savefig('../img/COVID-DP-rate.svg', bbox_inches="tight")

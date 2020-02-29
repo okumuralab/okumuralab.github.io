@@ -29,16 +29,18 @@ df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-19.csv"
 
 <pre><code>import matplotlib.dates as mdates
 
+cmap = plt.get_cmap("tab20")
+
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 ax = plt.gca()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
-ax.bar(df.index, df['Global Confirmed'])
-ax.bar(df.index, df['Global Deaths'])
+ax.bar(df.index, df['Global Confirmed'], color=cmap(3))
+ax.bar(df.index, df['Global Deaths'], color=cmap(6))
 
-plt.legend(['Laboratory-Confirmed', 'Deaths'])
+plt.legend(['Confirmed', 'Deaths'])
 
 plt.savefig('COVID-19.svg', bbox_inches="tight")
 </code></pre>
@@ -49,8 +51,8 @@ plt.savefig('COVID-19.svg', bbox_inches="tight")
 
 <p>対数グラフにするには <code>ax.bar()</code> の2行を次のように変える：</p>
 
-<pre><code>ax.plot(df.index, df['Global Confirmed'], "o-")
-ax.plot(df.index, df['Global Deaths'], "s-")
+<pre><code>ax.plot(df.index, df['Global Confirmed'], "o-", color="C1")
+ax.plot(df.index, df['Global Deaths'], "s-", color="C3")
 plt.yscale('log')
 </code></pre>
 
@@ -58,11 +60,13 @@ plt.yscale('log')
 
 <p>以上は累計値である。1日あたりの値は次の通り。Confirmed の定義が変わった 2020-02-17 の差分は表示していない。この前後での比較は要注意。</p>
 
-<pre><code>dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
+<pre><code>import numpy as np
+
+dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
 c = df['Global Confirmed'].diff()
 c[df.index == '2020-02-17'] = np.nan
-ax.bar(df.index, c / dt, width=-dt, align='edge', edgecolor="black")
-ax.bar(df.index, df['Global Deaths'].diff() / dt, width=-dt, align='edge', edgecolor="black")
+ax.bar(df.index, c / dt, width=-dt, align='edge', color=cmap(3), edgecolor="white")
+ax.bar(df.index, df['Global Deaths'].diff() / dt, width=-dt, align='edge', color=cmap(6), edgecolor="white")
 plt.legend(['Confirmed', 'Deaths'])
 </code></pre>
 
@@ -81,18 +85,20 @@ plt.legend(['Confirmed', 'Deaths'])
 <p>データの差分をとって，高さを1日あたりの数に直したものも描いてみる。発表されている累計の差なので正確でないかもしれない。例えば2月19・20日は均して見るほうがいいかもしれない。1日100検査に満たないことがわかる。</p>
 
 <pre><code>dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
-ax.bar(df.index, df['Examined'].diff() / dt, width=-dt, align='edge', edgecolor="black")
-ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt, align='edge', edgecolor="black")
+ax.bar(df.index, df['Examined'].diff() / dt, width=-dt, align='edge', edgecolor="white")
+ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt, align='edge', edgecolor="white")
 </code></pre>
 
 <figure><img src="img/COVID-mhlw3.svg" alt="COVID-19 (Japan)"></figure>
 
 <p>陽性の割合（累計）と95%信頼区間のグラフ：</p>
 
-<pre><code>p = [x['Confirmed'] / x['Examined'] for i, x in df.iterrows()]
+<pre><code>from statsmodels.stats.proportion import proportion_confint
+
+p = [x['Confirmed'] / x['Examined'] for i, x in df.iterrows()]
 ci0, ci1 = np.array([proportion_confint(x['Confirmed'], x['Examined'], method='beta')
                      for i, x in df.iterrows()]).T
-ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
+ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
 ax.grid(axis='y')
 </code></pre>
 
@@ -103,7 +109,7 @@ ax.grid(axis='y')
 <pre><code>p = df['Confirmed'].diff() / df['Examined'].diff()
 ci0, ci1 = np.array([proportion_confint(x['Confirmed'], x['Examined'], method='beta')
                      for i, x in df.diff().iterrows()]).T
-ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
+ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
 ax.grid(axis='y')
 </code></pre>
 
@@ -131,19 +137,10 @@ plt.legend(['Negative', 'Positive'])
 
 <p>陽性率とその95%信頼区間：</p>
 
-<pre><code>import numpy as np
-from statsmodels.stats.proportion import proportion_confint
-
-locator = mdates.AutoDateLocator()
-formatter = mdates.ConciseDateFormatter(locator)
-ax = plt.gca()
-ax.xaxis.set_major_locator(locator)
-ax.xaxis.set_major_formatter(formatter)
-
-p = [x['Positive'] / x['Examined'] for i, x in df.iterrows()]
+<pre><code>p = [x['Positive'] / x['Examined'] for i, x in df.iterrows()]
 ci0, ci1 = np.array([proportion_confint(x['Positive'], x['Examined'], method='beta')
                      for i, x in df.iterrows()]).T
-ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5)
+ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
 ax.grid(axis='y')
 </code></pre>
 
@@ -159,6 +156,7 @@ ax.grid(axis='y')
   <li><a href="https://coromap.web.app">新型コロナウイルスの事例マップ</a></li>
   <li><a href="https://covid19-jp.com">新型コロナウィルス感染マップ</a></li>
   <li>Yahoo! JAPAN <a href="https://hazard.yahoo.co.jp/article/20200207">新型コロナウイルス感染症まとめ</a></li>
+  <li>東洋経済 <a href="https://toyokeizai.net/sp/visual/tko/covid19/">新型コロナウイルス国内感染の状況</a> / <a href="https://github.com/kaz-ogiwara/covid19/">GitHub repository</a></li>
 </ul>
 
 <p><a href="https://note.com/azalush/n/n790867d82054">新型コロナウィルス感染症（COVID-19） 統計情報 リアルタイム更新サイト一覧</a>も参考になります。</p>
@@ -169,7 +167,7 @@ ax.grid(axis='y')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-25 10:41:12</time>
+Last modified: <time>2020-02-29 14:09:34</time>
 <!-- hhmts end -->
 </p>
 </body>
