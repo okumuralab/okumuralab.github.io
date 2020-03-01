@@ -58,7 +58,7 @@ plt.yscale('log')
 
 <figure><img src="img/COVID-19-log.svg" alt="COVID-19"></figure>
 
-<p>以上は累計値である。1日あたりの値は次の通り。Confirmed の定義が変わった 2020-02-17 の差分は表示していない。この前後での比較は要注意。</p>
+<p>以上は累計値である。差分（1日あたりの値）は次の通り。Confirmed の定義が変わった 2020-02-17 の差分は表示していない。この前後での比較は要注意。</p>
 
 <pre><code>import numpy as np
 
@@ -76,13 +76,19 @@ plt.legend(['Confirmed', 'Deaths'])
 
 <p>日本については，上記 WHO の日報から拾ったものを <a href="data/COVID-jp.csv">COVID-jp.csv</a> として置いておく。なお，2022-02-05 の数は 33 となっていたがこれは明らかに 23 の誤記だと思われるので訂正しておいた。</p>
 
+<p>累積</p>
+
 <figure><img src="img/COVID-jp.svg" alt="COVID-19 (Japan)"></figure>
+
+<p>差分</p>
+
+<figure><img src="img/COVID-jp-dif.svg" alt="COVID-19 (Japan)"></figure>
 
 <p><a href="https://www.mhlw.go.jp">厚労省</a>の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html">報道発表一覧（新型コロナウイルス）</a>からリンクされている日報（ただし毎日ではない）の最近のものには，やや見やすい表がある。これから拾ったデータ <a href="data/COVID-mhlw.csv">COVID-mhlw.csv</a> によるその時点までのPCR検査結果（累計）は以下の通り。データには時刻（これまでのところ 12:00 つまり正午）が入っているが，x軸目盛は日の 0:00 に付いていることに注意。</p>
 
 <figure><img src="img/COVID-mhlw2.svg" alt="COVID-19 (Japan)"></figure>
 
-<p>データの差分をとって，高さを1日あたりの数に直したものも描いてみる。発表されている累計の差なので正確でないかもしれない。例えば2月19・20日は均して見るほうがいいかもしれない。1日100検査に満たないことがわかる。</p>
+<p>データの差分をとって，高さを1日あたりの数に直したものも描いてみる。検査人数と陽性数の同期がとれていないようなので，正確でないかもしれない。例えば2月19・20日は均して見るほうがいいかもしれない。</p>
 
 <pre><code>dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
 ax.bar(df.index, df['Examined'].diff() / dt, width=-dt, align='edge', edgecolor="white")
@@ -169,7 +175,7 @@ ax.grid(axis='y')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-29 21:50:38</time>
+Last modified: <time>2020-03-01 09:06:37</time>
 <!-- hhmts end -->
 </p>
 </body>
