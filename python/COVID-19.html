@@ -16,6 +16,8 @@
 
 <h1>COVID-19</h1>
 
+<h3>WHOの日報</h3>
+
 <p>WHO の <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/">Coronavirus disease (COVID-2019) situation reports</a> に基づいて集計したデータ <a href="data/COVID-19.csv">COVID-19.csv</a> を Python でグラフにする。</p>
 
 <pre><code>import matplotlib.pyplot as plt
@@ -88,6 +90,8 @@ plt.legend(['Confirmed', 'Deaths'])
 
 <figure><img src="img/COVID-jp-dif.svg" alt="COVID-19 (Japan)"></figure>
 
+<h3>厚労省の（ほぼ）日報</h3>
+
 <p><a href="https://www.mhlw.go.jp">厚労省</a>の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html">報道発表一覧（新型コロナウイルス）</a>からリンクされている日報（ただし毎日ではない）の最近のものには，やや見やすい表がある。これから拾ったデータ <a href="data/COVID-mhlw.csv">COVID-mhlw.csv</a> によるその時点までのPCR検査結果（累計）は以下の通り（より古いデータ <a href="data/COVID-mhlw-old.csv">COVID-mhlw-old.csv</a> はチャーター機帰国者を含まない）。データには時刻（これまでのところ 12:00 つまり正午）が入っているが，x軸目盛は日の 0:00 に付いていることに注意。</p>
 
 <figure><img src="img/COVID-mhlw2.svg" alt="COVID-19 (Japan)"></figure>
@@ -125,6 +129,8 @@ ax.grid(axis='y')
 
 <figure><img src="img/COVID-mhlw4.svg" alt="COVID-19 (Japan)"></figure>
 
+<h3>クルーズ船ダイヤモンド・プリンセス号</h3>
+
 <p>横浜港に停泊したクルーズ船ダイヤモンド・プリンセス号については，<a href="https://www.mhlw.go.jp/stf/new-info/">厚労省の新着情報</a>から「クルーズ船」で検索して集計した延べ人数は <a href="data/COVID-DP.csv">COVID-DP.csv</a> のようになる。発表日ベースで集計した。検体採取の日は不明（<a href="https://www3.nhk.or.jp/news/html/20200218/k10012290571000.html">NHKの2月18日のニュース</a>によれば「結果が出るまでにおよそ３日かかる」）。どういう人を選んで検査したかによって陽性率は大きく変わるであろうから，要注意。<a href="https://www3.nhk.or.jp/news/html/20200215/k10012287201000.html">NHKの2020-02-15 22:48のニュース</a>によれば，「７日以前にウイルスに感染し、　７日に発症した乗客が最も多かった。その後の新たな発症者は、特に今月10日以降は急激に少なくなっていて、検疫の効果が出ていると考えている」（厚生労働省の担当者）とのことだが，これはよくわからない（国立感染症研究所の<a href="https://www.niid.go.jp/niid/ja/diseases/ka/corona-virus/2019-ncov/2484-idsc/9410-covid-dp-01.html">現場からの概況：ダイアモンドプリンセス号におけるCOVID-19症例</a>（<a href="https://www.niid.go.jp/niid/en/2019-ncov-e/9407-covid-dp-fe-01.html">英語版</a>）の上のグラフが根拠のようである）。</p>
 
 <pre><code>
@@ -156,7 +162,35 @@ ax.grid(axis='y')
 
 <figure><img src="img/COVID-DP-rate.svg" alt="COVID-19 on the Diamond Princess"></figure>
 
-<p>同様なサイトへのリンク：</p>
+<p>ダイヤモンド・プリンセス号については国立感染症研究所の<a href="https://www.niid.go.jp/niid/ja/diseases/ka/corona-virus/2019-ncov/2484-idsc/9422-covid-dp-2.html">現場からの概況：ダイアモンドプリンセス号におけるCOVID-19症例【更新】</a>（2020年2月26日掲載）に詳細がまとめられている。表1「COVID-19確定例の検体採取時の年齢群および症状別割合」（2月20日現在）の冗長でない部分を <a href="data/COVID-DP-hist.csv">COVID-DP-hist.csv</a> に書き写した。これをグラフにしてみる：</p>
+
+<pre><code>df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-DP-hist.csv")
+s = df['Symptomatic confirmed cases'].values
+a = df['Asymptomatic confirmed cases'].values
+t = df['Persons aboard on 5 February'].values
+c = t.cumsum()
+cmap = plt.get_cmap("tab20")
+plt.bar(c, 1, width=-t, align='edge', color=cmap(15), edgecolor="white")
+plt.bar(c, (s + a) / t, width=-t, align='edge', color=cmap(3), edgecolor="white")
+plt.bar(c, s / t, width=-t, align='edge', color=cmap(2), edgecolor="white")
+plt.ylim(0, 1)
+plt.xlim(0, c[-1])
+plt.xticks(c[1:], [20,30,40,50,60,70,80,90])
+plt.legend(['Negative', 'Asymptomatic confirmed', 'Symptomatic confirmed'])
+plt.savefig('COVID-DP-hist.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/COVID-DP-hist.svg" alt="クルーズ船COVID-19確定例の検体採取時の年齢群および症状別割合"></figure>
+
+<p>同様のグラフが日本疫学会の<a href="https://jeaweb.jp/covid/glossary/index.html">新型コロナウイルス関連情報：感染症疫学の用語解説</a>の図2にあるが，少し雰囲気が違う。</p>
+
+<h3>各地の状況（未完）</h3>
+
+<p>和歌山県は済生会有田病院の院内感染が疑われ，和歌山県だけでは無理なので近隣自治体も巻き込んで，可能性の大きい人から順に検査した。現在は落ち着いている。データは<a href="https://www.pref.wakayama.lg.jp/prefg/041200/d00203387.html">和歌山県における新型コロナウイルス感染症発生状況</a>にあるが，まとめたものを <a href="data/COVID-wakayama.csv">COVID-wakayama.csv</a> として置いておく。</p>
+
+<figure><img src="img/COVID-wakayama-dif.svg" alt="和歌山県"></figure>
+
+<h3>同様なサイトへのリンク</h3>
 
 <ul>
   <li><a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> / <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a></li>
@@ -179,7 +213,7 @@ ax.grid(axis='y')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-03 11:12:52</time>
+Last modified: <time>2020-03-03 22:49:04</time>
 <!-- hhmts end -->
 </p>
 </body>

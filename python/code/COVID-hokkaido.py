@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
 
+# http://www.pref.hokkaido.lg.jp/hf/kth/kak/singatakoronahaien.htm 対策本部会議
+
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
