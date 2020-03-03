@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 
 df = pd.read_csv("../data/COVID-19.csv", index_col='Date', parse_dates=['Date'])
+dfjp = pd.read_csv("../data/COVID-jp.csv", index_col='Date', parse_dates=['Date'])
 
 cmap = plt.get_cmap("tab20")
 
@@ -28,8 +29,11 @@ ax.plot(df.index, df['Global Confirmed'], "s-", color=cmap(3))
 ax.plot(df.index, df['China Confirmed'], "o-", color=cmap(2))
 ax.plot(df.index, df['Global Deaths'], "s-", color=cmap(7))
 ax.plot(df.index, df['China Deaths'], "o-", color=cmap(6))
+ax.plot(dfjp.index, dfjp['Confirmed'], "x-", color=cmap(2))
+ax.plot(dfjp.index, dfjp['Deaths'], "x-", color=cmap(6))
 plt.yscale('log')
-plt.legend(['Global Confirmed', 'China Confirmed', 'Global Deaths', 'China Deaths'])
+plt.grid()
+plt.legend(['Global Confirmed', 'China Confirmed', 'Global Deaths', 'China Deaths', 'Japan Confirmed', 'Japan Deaths'])
 plt.savefig('../img/COVID-19-log.svg', bbox_inches="tight")
 
 plt.clf()

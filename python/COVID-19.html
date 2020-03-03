@@ -51,10 +51,14 @@ plt.savefig('COVID-19.svg', bbox_inches="tight")
 
 <p>対数グラフにするには <code>ax.bar()</code> の2行を次のように変える：</p>
 
-<pre><code>ax.plot(df.index, df['Global Confirmed'], "o-", color="C1")
-ax.plot(df.index, df['Global Deaths'], "s-", color="C3")
+<pre><code>ax.plot(df.index, df['Global Confirmed'], "s-", color=cmap(3))
+ax.plot(df.index, df['China Confirmed'], "o-", color=cmap(2))
+ax.plot(df.index, df['Global Deaths'], "s-", color=cmap(7))
+ax.plot(df.index, df['China Deaths'], "o-", color=cmap(6))
 plt.yscale('log')
 </code></pre>
+
+<p>日本のデータもグラフに含めてみた。</p>
 
 <figure><img src="img/COVID-19-log.svg" alt="COVID-19"></figure>
 
@@ -175,7 +179,7 @@ ax.grid(axis='y')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-01 11:25:04</time>
+Last modified: <time>2020-03-03 11:12:52</time>
 <!-- hhmts end -->
 </p>
 </body>
