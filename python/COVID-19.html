@@ -16,7 +16,13 @@
 
 <h1>COVID-19</h1>
 
-<h3>WHOの日報</h3>
+<h2>はじめに</h2>
+
+<p>日本では「新型コロナウイルス感染症」と呼ばれている COVID-19（コービッド・ナインティーン）についての最新のデータを収集し，Python でグラフにする。COVID-19 は病名で，ウイルス名は当初 2019-nCoV と呼ばれたが現在は SARS-CoV-2（サーズ・シーオーブイ・ツー）が公式名である。</p>
+
+<p>Python コードの繰返し現れる部分は省略してあるところがある。<a href="code/">完全なコード</a>と<a href="data/">データ</a>も置いてある（頭に COVID が付いているファイル）。</p>
+
+<h2>WHOの日報</h2>
 
 <p>WHO の <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/">Coronavirus disease (COVID-2019) situation reports</a> に基づいて集計したデータ <a href="data/COVID-19.csv">COVID-19.csv</a> を Python でグラフにする。</p>
 
@@ -90,7 +96,7 @@ plt.legend(['Confirmed', 'Deaths'])
 
 <figure><img src="img/COVID-jp-dif.svg" alt="COVID-19 (Japan)"></figure>
 
-<h3>厚労省の（ほぼ）日報</h3>
+<h2>厚労省の（ほぼ）日報</h2>
 
 <p><a href="https://www.mhlw.go.jp">厚労省</a>の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html">報道発表一覧（新型コロナウイルス）</a>からリンクされている日報（ただし毎日ではない）の最近のものには，やや見やすい表がある。これから拾ったデータ <a href="data/COVID-mhlw.csv">COVID-mhlw.csv</a> によるその時点までのPCR検査結果（累計）は以下の通り（より古いデータ <a href="data/COVID-mhlw-old.csv">COVID-mhlw-old.csv</a> はチャーター機帰国者を含まない）。データには時刻（これまでのところ 12:00 つまり正午）が入っているが，x軸目盛は日の 0:00 に付いていることに注意。</p>
 
@@ -129,7 +135,7 @@ ax.grid(axis='y')
 
 <figure><img src="img/COVID-mhlw4.svg" alt="COVID-19 (Japan)"></figure>
 
-<h3>クルーズ船ダイヤモンド・プリンセス号</h3>
+<h2>クルーズ船ダイヤモンド・プリンセス号</h2>
 
 <p>横浜港に停泊したクルーズ船ダイヤモンド・プリンセス号については，<a href="https://www.mhlw.go.jp/stf/new-info/">厚労省の新着情報</a>から「クルーズ船」で検索して集計した延べ人数は <a href="data/COVID-DP.csv">COVID-DP.csv</a> のようになる。発表日ベースで集計した。検体採取の日は不明（<a href="https://www3.nhk.or.jp/news/html/20200218/k10012290571000.html">NHKの2月18日のニュース</a>によれば「結果が出るまでにおよそ３日かかる」）。どういう人を選んで検査したかによって陽性率は大きく変わるであろうから，要注意。<a href="https://www3.nhk.or.jp/news/html/20200215/k10012287201000.html">NHKの2020-02-15 22:48のニュース</a>によれば，「７日以前にウイルスに感染し、　７日に発症した乗客が最も多かった。その後の新たな発症者は、特に今月10日以降は急激に少なくなっていて、検疫の効果が出ていると考えている」（厚生労働省の担当者）とのことだが，これはよくわからない（国立感染症研究所の<a href="https://www.niid.go.jp/niid/ja/diseases/ka/corona-virus/2019-ncov/2484-idsc/9410-covid-dp-01.html">現場からの概況：ダイアモンドプリンセス号におけるCOVID-19症例</a>（<a href="https://www.niid.go.jp/niid/en/2019-ncov-e/9407-covid-dp-fe-01.html">英語版</a>）の上のグラフが根拠のようである）。</p>
 
@@ -182,17 +188,49 @@ plt.savefig('COVID-DP-hist.svg', bbox_inches="tight")
 
 <figure><img src="img/COVID-DP-hist.svg" alt="クルーズ船COVID-19確定例の検体採取時の年齢群および症状別割合"></figure>
 
-<p>同様のグラフが日本疫学会の<a href="https://jeaweb.jp/covid/glossary/index.html">新型コロナウイルス関連情報：感染症疫学の用語解説</a>の図2にあるが，少し雰囲気が違う。</p>
+<p>同様のグラフが日本疫学会の<a href="https://jeaweb.jp/covid/glossary/index.html">新型コロナウイルス関連情報：感染症疫学の用語解説</a>の図2にあるが，そちらは例えば「症状あり」は30代が一番少ない（私のグラフでは40代のほうが少ない）などの齟齬があり，よくわからない。</p>
 
-<h3>各地の状況（未完）</h3>
+<h2>各地の状況（ほんの一部）</h2>
+
+<p>都道府県ごとにPCR検査件数（または検査人数）・陽性数が報告されているが，おのおの報告の基準が違うため，比較するのは困難である。推移を見るだけに留めたい。</p>
+
+<h3>北海道</h3>
+
+<p>日本で一番多いのが北海道である。<a href="http://www.pref.hokkaido.lg.jp/hf/kth/kak/singatakoronahaien.htm">新型コロナウイルス感染症について</a>の下のほうの「北海道感染症危機管理対策本部会議」というところからリンクされている会議資料に記載がある。最初の感染者の確定日が 2020-01-28 なので，<a href="data/COVID-hokkaido.csv">COVID-hokkaido.csv</a> ではその日の 00:00 をカウント数 0 として，差分を描くことにする。</p>
+
+<pre><code>df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-hokkaido.csv",
+                 index_col='Date', parse_dates=['Date'])
+
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+ax = plt.gca()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
+ax.bar(df.index, df['Examined'].diff() / dt, width=-dt, align='edge', edgecolor="white")
+ax.bar(df.index, df['Positive'].diff() / dt, width=-dt, align='edge', edgecolor="white")
+plt.legend(['Negative', 'Positive'])
+plt.savefig('../img/COVID-hokkaido-dif.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/COVID-hokkaido-dif.svg" alt="北海道"></figure>
+
+<h3>東京都</h3>
+
+<p><a href="https://www.bousai.metro.tokyo.lg.jp">東京都防災ホームページ</a>の「東京都新型コロナウイルス感染症対策本部会議・東京都危機管理対策会議資料」にある。「第10回」資料06には「検査数（件）」としか書かれていないがこれはおそらく人数で，「第11回」資料04には検体数，検査実施人数と分けて書かれており，資料05には毎日の検査実施数（検体数らしい）が書かれている。<a href="data/COVID-tokyo.csv">COVID-tokyo.csv</a> は人数（と思われるもの）で統一した。</p>
+
+<figure><img src="img/COVID-tokyo-dif.svg" alt="東京都"></figure>
+
+<h3>和歌山県</h3>
 
 <p>和歌山県は済生会有田病院の院内感染が疑われ，和歌山県だけでは無理なので近隣自治体も巻き込んで，可能性の大きい人から順に検査した。現在は落ち着いている。データは<a href="https://www.pref.wakayama.lg.jp/prefg/041200/d00203387.html">和歌山県における新型コロナウイルス感染症発生状況</a>にあるが，まとめたものを <a href="data/COVID-wakayama.csv">COVID-wakayama.csv</a> として置いておく。</p>
 
 <figure><img src="img/COVID-wakayama-dif.svg" alt="和歌山県"></figure>
 
-<h3>同様なサイトへのリンク</h3>
+<h2>関連サイトへのリンク</h2>
 
 <ul>
+  <li><a href="https://note.com/azalush/n/n790867d82054">新型コロナウィルス感染症（COVID-19） 統計情報 リアルタイム更新サイト一覧</a></li>
   <li><a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> / <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a></li>
   <li><a href="https://jagjapan.maps.arcgis.com/apps/opsdashboard/index.html#/641eba7fef234a47880e1e1dc4de85ce">都道府県別新型コロナウイルス感染症患者数マップ</a> (厚労省のほか自治体からの情報も加えておられるとのことで，WHO の日報より多くなっている)</li>
   <li><a href="https://covid19japan.com">Coronavirus Disease (COVID-19) Japan Tracker</a></li>
@@ -203,9 +241,8 @@ plt.savefig('COVID-DP-hist.svg', bbox_inches="tight")
   <li>東洋経済 <a href="https://toyokeizai.net/sp/visual/tko/covid19/">新型コロナウイルス国内感染の状況</a> / <a href="https://github.com/kaz-ogiwara/covid19/">GitHub repository</a></li>
   <li>NewsDigest <a href="https://newsdigest.jp/pages/coronavirus/">新型コロナウイルス 日本国内の最新感染状況マップ</a></li>
   <li>NHK <a href="https://www3.nhk.or.jp/news/special/coronavirus/">特設サイト 新型コロナウイルス</a></li>
+  <li><a href="https://hackmd.io/@covid19-kenmo/SARS-Cov-2/">新型コロナ（COVID-19）嫌儲対策本部</a> -- <a href="https://hackmd.io/@covid19-kenmo/dataset/">新型コロナウイルスデータセット</a></li>
 </ul>
-
-<p><a href="https://note.com/azalush/n/n790867d82054">新型コロナウィルス感染症（COVID-19） 統計情報 リアルタイム更新サイト一覧</a>も参考になります。</p>
 
 <hr>
 
@@ -213,7 +250,7 @@ plt.savefig('COVID-DP-hist.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-03 22:49:04</time>
+Last modified: <time>2020-03-04 14:18:39</time>
 <!-- hhmts end -->
 </p>
 </body>
