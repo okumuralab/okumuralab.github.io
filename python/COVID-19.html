@@ -105,11 +105,15 @@ plt.legend(['Confirmed', 'Deaths'])
 <p>データの差分をとって，高さを1日あたりの数に直したものも描いてみる。検査人数と陽性数の同期がとれていないようなので，正確でないかもしれない。例えば2月19・20日は均して見るほうがいいかもしれない。</p>
 
 <pre><code>dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
-ax.bar(df.index, df['Examined'].diff() / dt, width=-dt, align='edge', edgecolor="white")
-ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt, align='edge', edgecolor="white")
+ax.bar(df.index, df['Examined'].diff() / dt, width=-dt+0.1, align='edge')
+ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
 </code></pre>
 
 <figure><img src="img/COVID-mhlw3.svg" alt="COVID-19 (Japan)"></figure>
+
+<p>検査数が急増してたいへんなことになってしまったので，とりあえず下の方だけ拡大図：</p>
+
+<figure><img src="img/COVID-mhlw3a.svg" alt="COVID-19 (Japan)"></figure>
 
 <p>陽性の割合（累計）と95%信頼区間のグラフ：</p>
 
@@ -252,7 +256,7 @@ plt.savefig('../img/COVID-hokkaido-dif.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-04 21:35:59</time>
+Last modified: <time>2020-03-05 07:51:24</time>
 <!-- hhmts end -->
 </p>
 </body>
