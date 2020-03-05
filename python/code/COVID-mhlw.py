@@ -19,6 +19,18 @@ plt.legend(['Negative', 'Positive'])
 
 plt.savefig('../img/COVID-mhlw2.svg', bbox_inches="tight")
 
+# plt.clf()
+# locator = mdates.AutoDateLocator()
+# formatter = mdates.ConciseDateFormatter(locator)
+# ax = plt.gca()
+# ax.xaxis.set_major_locator(locator)
+# ax.xaxis.set_major_formatter(formatter)
+# dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
+# ax.bar(df.index, df['Examined'].diff() / dt, width=-dt+0.1, align='edge')
+# ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
+# plt.legend(['Negative', 'Positive'])
+# plt.savefig('../img/COVID-mhlw3.svg', bbox_inches="tight")
+
 plt.clf()
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
@@ -26,8 +38,19 @@ ax = plt.gca()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
-ax.bar(df.index, df['Examined'].diff() / dt, width=-dt+0.1, align='edge')
+ex = df['Examined'].diff() / dt
+ex1 = ex.copy()
+ex1['2020-03-04 12:00:00'] = 0
+plt.ylim(0, max(ex1.max(), 300))
+ax.bar(df.index, ex, width=-dt+0.1, align='edge')
 ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
+# t = df.index[-2] - np.timedelta64(12, 'h')
+t = np.datetime64('2020-03-04 00:00:00', 'ns')
+plt.text(t, 300, '☁', # U+2601 (CLOUD)
+         fontsize=60, color="lightgray",
+         horizontalalignment='center', verticalalignment='center')
+plt.text(t, 300, int(ex['2020-03-04 12:00:00']),
+         horizontalalignment='center', verticalalignment='center')
 plt.legend(['Negative', 'Positive'])
 plt.savefig('../img/COVID-mhlw3.svg', bbox_inches="tight")
 

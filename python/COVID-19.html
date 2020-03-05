@@ -98,7 +98,7 @@ plt.legend(['Confirmed', 'Deaths'])
 
 <h2>厚労省の（ほぼ）日報</h2>
 
-<p><a href="https://www.mhlw.go.jp">厚労省</a>の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html">報道発表一覧（新型コロナウイルス）</a>からリンクされている日報（ただし毎日ではない）の最近のものには，やや見やすい表がある。これから拾ったデータ <a href="data/COVID-mhlw.csv">COVID-mhlw.csv</a> によるその時点までのPCR検査結果（累計）は以下の通り（より古いデータ <a href="data/COVID-mhlw-old.csv">COVID-mhlw-old.csv</a> はチャーター機帰国者を含まない）。データには時刻（これまでのところ 12:00 つまり正午）が入っているが，x軸目盛は日の 0:00 に付いていることに注意。</p>
+<p><a href="https://www.mhlw.go.jp">厚労省</a>の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html">報道発表一覧（新型コロナウイルス）</a>からリンクされている日報（ただし毎日ではない）の最近のものには，やや見やすい表がある。これから拾ったデータ <a href="data/COVID-mhlw.csv">COVID-mhlw.csv</a> によるその時点までのPCR検査結果（累計）は以下の通り（より古いデータ <a href="data/COVID-mhlw-old.csv">COVID-mhlw-old.csv</a> はチャーター機帰国者を含まない）。データには時刻（これまでのところ 12:00 つまり正午）が入っているが，x軸目盛は日の 0:00 に付いていることに注意。3月4日に急増しているが，「「令和２年３月４日版」以後は、陽性となった者の濃厚接触者に対する検査も含めた検査実施人数を都道府県に照会し、回答を得たものを公表している」とのこと。</p>
 
 <figure><img src="img/COVID-mhlw2.svg" alt="COVID-19 (Japan)"></figure>
 
@@ -110,10 +110,6 @@ ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
 </code></pre>
 
 <figure><img src="img/COVID-mhlw3.svg" alt="COVID-19 (Japan)"></figure>
-
-<p>検査数が急増してたいへんなことになってしまったので，とりあえず下の方だけ拡大図：</p>
-
-<figure><img src="img/COVID-mhlw3a.svg" alt="COVID-19 (Japan)"></figure>
 
 <p>陽性の割合（累計）と95%信頼区間のグラフ：</p>
 
@@ -248,6 +244,7 @@ plt.savefig('../img/COVID-hokkaido-dif.svg', bbox_inches="tight")
   <li><a href="https://hackmd.io/@covid19-kenmo/SARS-Cov-2/">新型コロナ（COVID-19）嫌儲対策本部</a> -- <a href="https://hackmd.io/@covid19-kenmo/dataset/">新型コロナウイルスデータセット</a></li>
   <li><a href="https://stopcovid19.metro.tokyo.lg.jp">都内の最新感染動向</a> == <a href="https://covid19-tokyo.netlify.com">都内の最新感染動向</a> ソース: <a href="https://github.com/tokyo-metropolitan-gov/covid19">https://github.com/tokyo-metropolitan-gov/covid19</a></li>
   <li><a href="https://twitter.com/kenmo_economics/">けんもねずみ</a>さんの都道府県別データ <a href="https://ux.getuploader.com/COVID19_area_data/">COVID-19_area_data</a></li>
+  <li><a href="https://www.worldometers.info/coronavirus/">COVID-19 CORONAVIRUS OUTBREAK</a> -- <a href="https://www.worldometers.info/coronavirus/covid-19-testing/">Coronavirus Testing: Criteria and Numbers by Country</a></li>
 </ul>
 
 <hr>
@@ -256,7 +253,7 @@ plt.savefig('../img/COVID-hokkaido-dif.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-05 07:51:24</time>
+Last modified: <time>2020-03-05 22:14:39</time>
 <!-- hhmts end -->
 </p>
 </body>
