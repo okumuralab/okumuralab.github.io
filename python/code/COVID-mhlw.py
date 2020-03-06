@@ -31,6 +31,29 @@ plt.savefig('../img/COVID-mhlw2.svg', bbox_inches="tight")
 # plt.legend(['Negative', 'Positive'])
 # plt.savefig('../img/COVID-mhlw3.svg', bbox_inches="tight")
 
+# plt.clf()
+# locator = mdates.AutoDateLocator()
+# formatter = mdates.ConciseDateFormatter(locator)
+# ax = plt.gca()
+# ax.xaxis.set_major_locator(locator)
+# ax.xaxis.set_major_formatter(formatter)
+# dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
+# ex = df['Examined'].diff() / dt
+# ex1 = ex.copy()
+# ex1['2020-03-04 12:00:00'] = 0
+# m = max(ex1.max()*1.1, 300)
+# plt.ylim(0, m)
+# ax.bar(df.index, ex, width=-dt+0.1, align='edge')
+# ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
+# t = np.datetime64('2020-03-04 00:00:00', 'ns')
+# plt.text(t, m, '☁', # U+2601 (CLOUD)
+#          fontsize=60, color="lightgray",
+#          horizontalalignment='center', verticalalignment='center')
+# plt.text(t, m, int(ex['2020-03-04 12:00:00']),
+#          horizontalalignment='center', verticalalignment='center')
+# plt.legend(['Negative', 'Positive'])
+# plt.savefig('../img/COVID-mhlw3.svg', bbox_inches="tight")
+
 plt.clf()
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
@@ -40,18 +63,16 @@ ax.xaxis.set_major_formatter(formatter)
 dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
 ex = df['Examined'].diff() / dt
 ex1 = ex.copy()
-ex1['2020-03-04 12:00:00'] = 0
-plt.ylim(0, max(ex1.max(), 300))
+ex1['2020-03-04 12:00'] = 0
+m = max(ex1.max()*1.1, 300)
+plt.ylim(0, m)
 ax.bar(df.index, ex, width=-dt+0.1, align='edge')
 ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
-# t = df.index[-2] - np.timedelta64(12, 'h')
-t = np.datetime64('2020-03-04 00:00:00', 'ns')
-plt.text(t, 300, '☁', # U+2601 (CLOUD)
-         fontsize=60, color="lightgray",
-         horizontalalignment='center', verticalalignment='center')
-plt.text(t, 300, int(ex['2020-03-04 12:00:00']),
-         horizontalalignment='center', verticalalignment='center')
+t = pd.Timestamp('2020-03-04 00:00')
+plt.text(t, m, int(ex['2020-03-04 12:00']), horizontalalignment='center')
 plt.legend(['Negative', 'Positive'])
+plt.plot([pd.Timestamp('2020-03-03 12:00'), pd.Timestamp('2020-03-04 12:00')],
+         [m*0.95, m*0.98], '-w', linewidth=2)
 plt.savefig('../img/COVID-mhlw3.svg', bbox_inches="tight")
 
 plt.clf()
