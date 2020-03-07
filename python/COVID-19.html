@@ -196,7 +196,7 @@ plt.savefig('COVID-DP-hist.svg', bbox_inches="tight")
 
 <h3>北海道</h3>
 
-<p>日本で一番多いのが北海道である。<a href="http://www.pref.hokkaido.lg.jp/hf/kth/kak/singatakoronahaien.htm">新型コロナウイルス感染症について</a>の下のほうの「北海道感染症危機管理対策本部会議」というところからリンクされている会議資料に記載がある。最初の感染者の確定日が 2020-01-28 なので，<a href="data/COVID-hokkaido.csv">COVID-hokkaido.csv</a> ではその日の 00:00 をカウント数 0 として，差分を描くことにする。</p>
+<p>日本で一番多いのが北海道である。<a href="http://www.pref.hokkaido.lg.jp/hf/kth/kak/singatakoronahaien.htm">新型コロナウイルス感染症について</a>の下のほうの「北海道感染症危機管理対策本部会議」というところからリンクされている会議資料に記載がある。3月7日以降はその上の「記者会見等」のところに記載あり。最初の感染者の確定日が 2020-01-28 なので，<a href="data/COVID-hokkaido.csv">COVID-hokkaido.csv</a> ではその日の 00:00 をカウント数 0 として，差分を描くことにする。</p>
 
 <pre><code>df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-hokkaido.csv",
                  index_col='Date', parse_dates=['Date'])
@@ -253,7 +253,7 @@ plt.savefig('../img/COVID-hokkaido-dif.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-05 22:14:39</time>
+Last modified: <time>2020-03-07 21:13:18</time>
 <!-- hhmts end -->
 </p>
 </body>
