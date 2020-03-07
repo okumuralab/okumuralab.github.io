@@ -33,7 +33,9 @@ ax.plot(dfjp.index, dfjp['Confirmed'], "x-", color=cmap(2))
 ax.plot(dfjp.index, dfjp['Deaths'], "x-", color=cmap(6))
 plt.yscale('log')
 plt.grid()
-plt.legend(['Global Confirmed', 'China Confirmed', 'Global Deaths', 'China Deaths', 'Japan Confirmed', 'Japan Deaths'])
+plt.legend(['Global Confirmed', 'China Confirmed', 'Global Deaths',
+            'China Deaths', 'Japan Confirmed', 'Japan Deaths'],
+           loc='upper left')
 plt.savefig('../img/COVID-19-log.svg', bbox_inches="tight")
 
 plt.clf()

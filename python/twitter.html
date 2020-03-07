@@ -129,6 +129,20 @@ with open(time.strftime("%Y%m%d"), "a", newline="\n") as f:
 
 <p>grepしやすいように1ツイート1行にするために，ツイート中の改行は <code>"\r"</code> に変換している。</p>
 
+<p>稀に <code>h = api.GetHomeTimeline(...)</code> が失敗することがある。ゆっくり何度かやれば成功するみたいなので，この行を次で置き換えてみた：</p>
+
+<pre>
+<code>    cnt = 0
+    while cnt < 5:
+        time.sleep(30)
+        try:
+            h = api.GetHomeTimeline(count=200, since_id=sid, max_id=mid)
+            cnt = 10
+        except:
+            h = []
+            cnt += 1
+</code></pre>
+
 <hr>
 
 <p>検索は python-twitter の<a href="https://python-twitter.readthedocs.io/en/latest/searching.html">ドキュメント</a>や，Twitter API の <a href="https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets">Search Tweets</a>，<a href="https://developer.twitter.com/en/docs/tweets/search/guides">Search Tweet Guides</a> 参照。例：</p>
@@ -206,7 +220,7 @@ plt.savefig('hist.png', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-27 22:23:11</time>
+Last modified: <time>2020-03-07 20:53:39</time>
 <!-- hhmts end -->
 </p>
 </body>
