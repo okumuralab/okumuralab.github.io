@@ -52,5 +52,6 @@ cc = df['China Confirmed'].diff()
 cc[df.index == '2020-02-17'] = np.nan
 ax.bar(df.index, cc / dt, width=-dt, align='edge', color=cmap(2), edgecolor="white")
 ax.bar(df.index, df['Global Deaths'].diff() / dt, width=-dt, align='edge', color=cmap(6), edgecolor="white")
-plt.legend(['Global Confirmed', 'China Confirmed', 'Global Deaths'])
+plt.legend(['Global Confirmed', 'China Confirmed', 'Global Deaths'],
+           loc='upper left', bbox_to_anchor=(0.5, 1))
 plt.savefig('../img/COVID-19-dif.svg', bbox_inches="tight")
