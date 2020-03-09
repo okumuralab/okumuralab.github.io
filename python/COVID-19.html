@@ -170,14 +170,15 @@ a = df['Asymptomatic confirmed cases'].values
 t = df['Persons aboard on 5 February'].values
 c = t.cumsum()
 cmap = plt.get_cmap("tab20")
-plt.bar(c, 1, width=-t, align='edge', color=cmap(15), edgecolor="white")
-plt.bar(c, (s + a) / t, width=-t, align='edge', color=cmap(3), edgecolor="white")
-plt.bar(c, s / t, width=-t, align='edge', color=cmap(2), edgecolor="white")
-plt.ylim(0, 1)
-plt.xlim(0, c[-1])
-plt.xticks(c[1:], [20,30,40,50,60,70,80,90])
-plt.legend(['Negative', 'Asymptomatic confirmed', 'Symptomatic confirmed'])
-plt.savefig('COVID-DP-hist.svg', bbox_inches="tight")
+fig, ax = plt.subplots()
+ax.bar(c, 1, width=-t, align='edge', color=cmap(15), edgecolor="white")
+ax.bar(c, (s + a) / t, width=-t, align='edge', color=cmap(3), edgecolor="white")
+ax.bar(c, s / t, width=-t, align='edge', color=cmap(2), edgecolor="white")
+ax.set_ylim(0, 1)
+ax.set_xlim(0, c[-1])
+ax.set_xticks(c[1:], [20,30,40,50,60,70,80,90])
+ax.legend(['Negative', 'Asymptomatic confirmed', 'Symptomatic confirmed'])
+fig.savefig('COVID-DP-hist.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/COVID-DP-hist.svg" alt="クルーズ船COVID-19確定例の検体採取時の年齢群および症状別割合"></figure>
@@ -244,7 +245,7 @@ ax.legend(['Negative', 'Positive'])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-09 10:38:01</time>
+Last modified: <time>2020-03-09 11:00:37</time>
 <!-- hhmts end -->
 </p>
 </body>
