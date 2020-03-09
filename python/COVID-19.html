@@ -38,19 +38,17 @@ df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-19.csv"
 <pre><code>import matplotlib.dates as mdates
 
 cmap = plt.get_cmap("tab20")
-
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
-ax = plt.gca()
+fig, ax = plt.subplots()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
 ax.bar(df.index, df['Global Confirmed'], color=cmap(3))
+ax.bar(df.index, df['China Confirmed'], color=cmap(2))
 ax.bar(df.index, df['Global Deaths'], color=cmap(6))
-
-plt.legend(['Confirmed', 'Deaths'])
-
-plt.savefig('COVID-19.svg', bbox_inches="tight")
+ax.legend(['Global Confirmed', 'China Confirmed', 'Global Deaths'])
+fig.savefig('COVID-19.svg', bbox_inches="tight")
 </code></pre>
 
 <p>2020-02-17から湖北省については laboratory-confirmed だけでなく clinically diagnosed も含めたので急増している。</p>
@@ -63,7 +61,7 @@ plt.savefig('COVID-19.svg', bbox_inches="tight")
 ax.plot(df.index, df['China Confirmed'], "o-", color=cmap(2))
 ax.plot(df.index, df['Global Deaths'], "s-", color=cmap(7))
 ax.plot(df.index, df['China Deaths'], "o-", color=cmap(6))
-plt.yscale('log')
+ax.set_yscale('log')
 </code></pre>
 
 <p>日本のデータもグラフに含めてみた。</p>
@@ -78,8 +76,9 @@ dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
 c = df['Global Confirmed'].diff()
 c[df.index == '2020-02-17'] = np.nan
 ax.bar(df.index, c / dt, width=-dt, align='edge', color=cmap(3), edgecolor="white")
-ax.bar(df.index, df['Global Deaths'].diff() / dt, width=-dt, align='edge', color=cmap(6), edgecolor="white")
-plt.legend(['Confirmed', 'Deaths'])
+ax.bar(df.index, df['Global Deaths'].diff() / dt, width=-dt,
+       align='edge', color=cmap(6), edgecolor="white")
+ax.legend(['Confirmed', 'Deaths'])
 </code></pre>
 
 <figure><img src="img/COVID-19-dif.svg" alt="COVID-19"></figure>
@@ -143,14 +142,9 @@ ax.grid(axis='y')
 df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-DP.csv",
                  index_col='Date', parse_dates=['Date'])
 
-locator = mdates.AutoDateLocator()
-formatter = mdates.ConciseDateFormatter(locator)
-ax = plt.gca()
-ax.xaxis.set_major_locator(locator)
-ax.xaxis.set_major_formatter(formatter)
 ax.bar(df.index, df['Examined'])
 ax.bar(df.index, df['Positive'])
-plt.legend(['Negative', 'Positive'])
+ax.legend(['Negative', 'Positive'])
 </code></pre>
 
 <figure><img src="img/COVID-DP.svg" alt="COVID-19 on the Diamond Princess"></figure>
@@ -194,6 +188,8 @@ plt.savefig('COVID-DP-hist.svg', bbox_inches="tight")
 
 <p>都道府県ごとにPCR検査件数（または検査人数）・陽性数が報告されているが，おのおの報告の基準が違うため，比較するのは困難である。推移を見るだけに留めたい。</p>
 
+<p>けんもねずみ (kenmo_economics) さんの<a href="https://datastudio.google.com/reporting/3a3bbd66-3674-4274-853c-5ab8e30aa7d0">こちら</a>のサイトでは公表されている全都道府県のグラフが見られる（不明日は線形補間してあることに注意）。</p>
+
 <h3>北海道</h3>
 
 <p>日本で一番多いのが北海道である。<a href="http://www.pref.hokkaido.lg.jp/hf/kth/kak/singatakoronahaien.htm">新型コロナウイルス感染症について</a>の下のほうの「北海道感染症危機管理対策本部会議」というところからリンクされている会議資料に記載がある。3月7日以降はその上の「記者会見等」のところに記載あり。最初の感染者の確定日が 2020-01-28 なので，<a href="data/COVID-hokkaido.csv">COVID-hokkaido.csv</a> ではその日の 00:00 をカウント数 0 として，差分を描くことにする。</p>
@@ -201,16 +197,10 @@ plt.savefig('COVID-DP-hist.svg', bbox_inches="tight")
 <pre><code>df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-hokkaido.csv",
                  index_col='Date', parse_dates=['Date'])
 
-locator = mdates.AutoDateLocator()
-formatter = mdates.ConciseDateFormatter(locator)
-ax = plt.gca()
-ax.xaxis.set_major_locator(locator)
-ax.xaxis.set_major_formatter(formatter)
 dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
 ax.bar(df.index, df['Examined'].diff() / dt, width=-dt, align='edge', edgecolor="white")
 ax.bar(df.index, df['Positive'].diff() / dt, width=-dt, align='edge', edgecolor="white")
-plt.legend(['Negative', 'Positive'])
-plt.savefig('../img/COVID-hokkaido-dif.svg', bbox_inches="tight")
+ax.legend(['Negative', 'Positive'])
 </code></pre>
 
 <figure><img src="img/COVID-hokkaido-dif.svg" alt="北海道"></figure>
@@ -245,6 +235,7 @@ plt.savefig('../img/COVID-hokkaido-dif.svg', bbox_inches="tight")
   <li><a href="https://stopcovid19.metro.tokyo.lg.jp">都内の最新感染動向</a> == <a href="https://covid19-tokyo.netlify.com">都内の最新感染動向</a> ソース: <a href="https://github.com/tokyo-metropolitan-gov/covid19">https://github.com/tokyo-metropolitan-gov/covid19</a></li>
   <li><a href="https://twitter.com/kenmo_economics/">けんもねずみ</a>さんの都道府県別データ <a href="https://ux.getuploader.com/COVID19_area_data/">COVID-19_area_data</a></li>
   <li><a href="https://www.worldometers.info/coronavirus/">COVID-19 CORONAVIRUS OUTBREAK</a> -- <a href="https://www.worldometers.info/coronavirus/covid-19-testing/">Coronavirus Testing: Criteria and Numbers by Country</a></li>
+  <li><a href="https://covid-2019.live">新型コロナウイルス感染速報</a></li>
 </ul>
 
 <hr>
@@ -253,7 +244,7 @@ plt.savefig('../img/COVID-hokkaido-dif.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-07 21:13:18</time>
+Last modified: <time>2020-03-09 10:38:01</time>
 <!-- hhmts end -->
 </p>
 </body>

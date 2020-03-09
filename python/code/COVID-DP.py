@@ -8,24 +8,21 @@ df = pd.read_csv("../data/COVID-DP.csv", index_col='Date', parse_dates=['Date'])
 
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
-ax = plt.gca()  # または ax = plt.subplot(1,1,1)
+fig, ax = plt.subplots()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
+
 ax.bar(df.index, df['Examined'])
 ax.bar(df.index, df['Positive'])
-plt.legend(['Negative', 'Positive'])
-plt.savefig('../img/COVID-DP.svg', bbox_inches="tight")
+ax.legend(['Negative', 'Positive'])
+fig.savefig('../img/COVID-DP.svg', bbox_inches="tight")
 
 #-----
 
 import numpy as np
 from statsmodels.stats.proportion import proportion_confint
 
-plt.clf()
-
-locator = mdates.AutoDateLocator()
-formatter = mdates.ConciseDateFormatter(locator)
-ax = plt.gca()  # または ax = plt.subplot(1,1,1)
+ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
@@ -35,4 +32,4 @@ ci0, ci1 = np.array([proportion_confint(x['Positive'], x['Examined'], method='be
 ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
 ax.grid(axis='y')
 
-plt.savefig('../img/COVID-DP-rate.svg', bbox_inches="tight")
+fig.savefig('../img/COVID-DP-rate.svg', bbox_inches="tight")
