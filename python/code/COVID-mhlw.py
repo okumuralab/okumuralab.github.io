@@ -35,10 +35,11 @@ t = pd.Timestamp('2020-03-04 00:00')
 # ax.text(t, m, '☁', # U+2601 (CLOUD)
 #         fontsize=60, color="lightgray",
 #         horizontalalignment='center', verticalalignment='center')
-ax.text(t, m, int(ex['2020-03-04 12:00']), horizontalalignment='center')
+ax.text(t, m, int(ex['2020-03-04 12:00']),
+        horizontalalignment='center', bbox=dict(facecolor='white'))
 ax.legend(['Negative', 'Positive'])
-ax.plot([pd.Timestamp('2020-03-03 12:00'), pd.Timestamp('2020-03-04 12:00')],
-        [m*0.95, m*0.98], '-w', linewidth=2)
+# ax.plot([pd.Timestamp('2020-03-03 12:00'), pd.Timestamp('2020-03-04 12:00')],
+#         [m*0.95, m*0.98], '-w', linewidth=2)
 fig.savefig('../img/COVID-mhlw3.svg', bbox_inches="tight")
 
 ax.clear()
