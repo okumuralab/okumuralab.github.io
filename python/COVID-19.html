@@ -37,17 +37,18 @@ df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-19.csv"
 
 <pre><code>import matplotlib.dates as mdates
 
-cmap = plt.get_cmap("tab20")
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 fig, ax = plt.subplots()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
+cmap = plt.get_cmap("tab20")
 ax.bar(df.index, df['Global Confirmed'], color=cmap(3))
 ax.bar(df.index, df['China Confirmed'], color=cmap(2))
 ax.bar(df.index, df['Global Deaths'], color=cmap(6))
 ax.legend(['Global Confirmed', 'China Confirmed', 'Global Deaths'])
+
 fig.savefig('COVID-19.svg', bbox_inches="tight")
 </code></pre>
 
@@ -227,6 +228,7 @@ ax.legend(['Negative', 'Positive'])
 <ul>
   <li><a href="https://note.com/azalush/n/n790867d82054">新型コロナウィルス感染症（COVID-19） 統計情報 リアルタイム更新サイト一覧</a></li>
   <li>Our World in Data: <a href="https://ourworldindata.org/coronavirus">Coronavirus Disease (COVID-19)</a></li>
+  <li><a href="https://togetter.com/li/1478050">新型コロナウイルス国内感染者状況をグラフまたは地図で見られるサイトまとめ</a></li>
   <li><a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> / <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a></li>
   <li><a href="https://jagjapan.maps.arcgis.com/apps/opsdashboard/index.html#/641eba7fef234a47880e1e1dc4de85ce">都道府県別新型コロナウイルス感染症患者数マップ</a> (厚労省のほか自治体からの情報も加えておられるとのことで，WHO の日報より多くなっている)</li>
   <li><a href="https://covid19japan.com">Coronavirus Disease (COVID-19) Japan Tracker</a></li>
@@ -243,7 +245,9 @@ ax.legend(['Negative', 'Positive'])
   <li><a href="https://twitter.com/kenmo_economics/">けんもねずみ</a>さんの都道府県別データ <a href="https://ux.getuploader.com/COVID19_area_data/">COVID-19_area_data</a></li>
   <li><a href="https://www.worldometers.info/coronavirus/">COVID-19 CORONAVIRUS OUTBREAK</a> -- <a href="https://www.worldometers.info/coronavirus/covid-19-testing/">Coronavirus Testing: Criteria and Numbers by Country</a></li>
   <li><a href="https://covid-2019.live">新型コロナウイルス感染速報</a></li>
-  <li><a href="https://gis.jag-japan.com/covid19jp/">都道府県別新型コロナウイルス感染者数マップ</a> by <a href="https://jag-japan.com">ジャッグジャパン株式会社</a>（<a href="https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv">CSVファイル</a>）</li>
+  <li><a href="https://gis.jag-japan.com/covid19jp/">都道府県別新型コロナウイルス感染者数マップ</a> by <a href="https://jag-japan.com">ジャッグジャパン株式会社</a>（<a href="https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv">CSVファイル</a>，社長の大濱崎さんの<a href="https://jag-japan.com/blog/2020/02/covid-2019-blog1/">都道府県別新型コロナウイルス感染症患者数マップを作ってみて感じたこと</a>）</li>
+  <li><a href="https://public.tableau.com/profile/allan.walker#!/vizhome/COVID-19_15829368133980/COVID-19">COVID-19</a></li>
+  <li>厚労省: <a href="https://mhlw-gis.maps.arcgis.com/apps/opsdashboard/index.html#/c2ac63d9dd05406dab7407b5053d108e">新型コロナウイルス感染症患者の発生状況（マップ）</a></li>
 </ul>
 
 <hr>
@@ -252,7 +256,7 @@ ax.legend(['Negative', 'Positive'])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-09 16:25:14</time>
+Last modified: <time>2020-03-09 22:21:57</time>
 <!-- hhmts end -->
 </p>
 </body>
