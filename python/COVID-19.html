@@ -223,6 +223,40 @@ ax.legend(['Negative', 'Positive'])
 
 <figure><img src="img/COVID-wakayama-dif.svg" alt="和歌山県"></figure>
 
+<h3>三重県</h3>
+
+<p>わが県は<a href="http://www.pref.mie.lg.jp/YAKUMUS/HP/m0068000071_00005.htm">新型コロナウイルス感染症検査実施件数</a>にまとめられているが，全角なので少々面倒（もっと簡単な方法があったらお教えください）：</p>
+
+<pre><code>import re
+
+Z2H = str.maketrans("　０１２３４５６７８９", " 0123456789")
+
+tables = pd.read_html('http://www.pref.mie.lg.jp/YAKUMUS/HP/m0068000071_00005.htm')
+t = tables[0][1:-1].copy()
+for i, x in t.iterrows():
+    for j in range(4):
+        x[j] = x[j].translate(Z2H)
+    m = re.search(r'(\d+)月 *(\d+)日', x[0])
+    if m:
+        x[0] = pd.Timestamp(f'2020-{m[1]}-{m[2]}')
+    for j in range(1, 4):
+        x[j] = int(re.sub("件", "", x[j]))
+
+fig, ax = plt.subplots()
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.bar(t[0], t[1])
+ax.bar(t[0], t[2])
+ax.legend(['Negative', 'Positive'])
+ax.set_yticks([0, 5, 10, 15])
+
+fig.savefig('COVID-mie.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/COVID-mie.svg" alt="三重県"></figure>
+
 <h2>関連サイトへのリンク</h2>
 
 <ul>
@@ -256,7 +290,7 @@ ax.legend(['Negative', 'Positive'])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-09 22:21:57</time>
+Last modified: <time>2020-03-10 15:41:35</time>
 <!-- hhmts end -->
 </p>
 </body>
