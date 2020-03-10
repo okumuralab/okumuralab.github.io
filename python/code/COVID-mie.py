@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
