@@ -329,12 +329,45 @@ plt.axhline(0.5, linewidth=1, color="black")
 <code>plt.close("all")
 </code></pre>
 
+<h2>別の流儀</h2>
+
+<p>より高度なことをするには，まず次のように図と軸を別に作ります：</p>
+
+<pre><code>fig, ax = plt.subplots()</code></pre>
+
+<p>あるいは次のようにサイズを指定することもできます：</p>
+
+<pre><code>fig, ax = plt.subplots(figsize=[6.4, 4.8])</code></pre>
+
+<p>この流儀のほうがいろいろ細かいことができます。例えば Matplotlib 3.1 で追加された ConciseDateFormatter を使った時系列の簡潔な軸ラベル：</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+fig, ax = plt.subplots()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+ax.plot(dates, y) # いろいろプロットする
+ax.set_ylim(0.1, 10)
+ax.set_yscale('log')
+ax.grid()
+ax.legend(...)
+
+fig.savefig('filename.svg', bbox_inches="tight")
+
+ax.clear() # 図をクリアして次の図を描く
+</code></pre>
+
 <h2>参考</h2>
 
 <ul>
   <li><a href="https://matplotlib.org/api/colors_api.html">色</a></li>
   <li><a href="https://matplotlib.org/api/markers_api.html">マーカー一覧</a></li>
   <li>JAMSTEC山下陽介さんの<a href="http://ebcrpa.jamstec.go.jp/~yyousuke/matplotlib/index.html">気象データ解析のためのmatplotlibの使い⽅</a></li>
+  <li><a href="https://qiita.com/skotaro/items/08dc0b8c5704c94eafb9">早く知っておきたかったmatplotlibの基礎知識、あるいは見た目の調整が捗るArtistの話</a></li>
 </ul>
 
 <hr>
@@ -343,7 +376,7 @@ plt.axhline(0.5, linewidth=1, color="black")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-18 16:30:38</time>
+Last modified: <time>2020-03-11 15:56:04</time>
 <!-- hhmts end -->
 </p>
 </body>
