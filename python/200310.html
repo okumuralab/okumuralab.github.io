@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>COVID-19 番外編</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>COVID-19 番外編</h1>
+
+<p>WHO の日報 <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/">Coronavirus disease (COVID-2019) situation reports</a> から最新のもの（ここでは 20200309-sitrep-49-covid-19.pdf）をいただいてきて，まずテキスト化する（これはシェルのコマンド）：</p>
+
+<pre><code>pdftotext -raw 20200309-sitrep-49-covid-19.pdf</code></pre>
+
+<p>できた 20200309-sitrep-49-covid-19.txt を読んで，横軸が Confirmed（確定数），縦軸が Deaths（死者数）の両対数グラフを描く。試行錯誤しながらなので，きれいなコードではない：</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import pandas as pd
+import re
+import sys
+import numpy as np
+
+dic = {
+    'Republic of)': 'Iran',
+    'Emirates': 'Arab',
+    'territory': 'Palestine',
+    'America': 'US',
+    'Republic of Korea': 'Korea',
+    'The United Kingdom': 'UK'
+}
+
+countries = []
+confirmed = []
+death = []
+
+prev = ''
+with open("20200309-sitrep-49-covid-19.txt") as f:
+    for line in f:
+        line = line.strip()
+        m = re.search(r'^Total (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)$', line)
+        if m:
+            countries.append('China')
+            confirmed.append(int(m[5]))
+            death.append(int(m[6]))
+        m = re.search(r'^([^\d]+)?(\d+) (\d+) (\d+) (\d+) (Local transmission|Imported cases only|Under investigation) (\d+)$', line)
+        if m:
+            if m[1]:
+                country = m[1].strip()
+            else:
+                country = prev
+            if country in dic:
+                country = dic[country]
+            countries.append(country)
+            confirmed.append(int(m[2]))
+            death.append(int(m[4]))
+        prev = line
+
+countries = np.array(countries)
+confirmed = np.array(confirmed)
+death = np.array(death)
+
+# plt.clf()
+plt.plot(confirmed[death > 1], death[death > 1], 'o')
+plt.xscale('log')
+plt.yscale('log')
+
+for x in zip(confirmed[death > 1], death[death > 1], countries[death > 1]):
+    if len(x[2]) == 2 or len(x[2]) == 5:
+        plt.text(x[0], x[1], x[2], horizontalalignment='right', verticalalignment='top')
+    else:
+        plt.text(x[0], x[1], x[2], horizontalalignment='left', verticalalignment='bottom')
+
+plt.xlabel('Confirmed')
+plt.ylabel('Deaths')
+
+x = np.array([50, 10**5])
+y = x * death[0] / confirmed[0]
+
+plt.plot(x, y, color='lightgray')
+
+plt.savefig('200310a.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/200310a.svg" alt="COVID-19"></figure>
+
+<p>中国と日本の履歴を書き込む：</p>
+
+<pre><code>df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-19.csv",
+                 index_col='Date', parse_dates=['Date'])
+plt.plot(df['China Confirmed'], df['China Deaths'], 'x-')
+
+dfjp = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-jp.csv",
+                   index_col='Date', parse_dates=['Date'])
+plt.plot(dfjp['Confirmed'], dfjp['Deaths'], 'x-')
+plt.xlim(35, 1.5*10**5)
+
+plt.savefig('200310b.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/200310b.svg" alt="COVID-19"></figure>
+
+<p>全部の国の推移を見たいのだが，いちいち上のようにして WHO のサイトの PDF から抜き出すのはたいへんなので，<a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> という有名なサイトのデータレポじとり <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a> から時系列データ csse_covid_19_time_series/time_series_19-covid-Confirmed.csv をいただいてきて，そのまま描く：</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pandas as pd
+import numpy as np
+from dateutil.parser import parse
+
+df = pd.read_csv('time_series_19-covid-Confirmed.csv')
+
+t = [parse(i) for i in df.columns[4:]]
+x = [df.groupby('Country/Region')[i].sum() for i in df.columns[4:]]
+
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+fig, ax = plt.subplots()
+
+# ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.plot(t, x)
+ax.set_yscale('log')
+
+for i in x[47].index:
+    ax.text(t[47], x[47][i], i)
+
+# ax.legend(x[47].index)
+
+fig.savefig('200310c.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/200310c.svg" alt="COVID-19"></figure>
+
+<p>これは見にくい！</p>
+
+<p>[追記] 翌日（2020-03-11）のデータを使って確定数100人以上の国だけをプロットしたものも挙げておく：</p>
+
+<figure><img src="img/200311a.svg" alt="COVID-19"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-03-11 13:40:38</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
