@@ -16,6 +16,8 @@
 
 <h1>COVID-19</h1>
 
+<p>[ご注意] ブラウザによっては更新（再読み込み）しても古い画像が表示されることがあるようです。いわゆる「スーパーリロード」（[Shift] + [更新] または [Control] + [更新]）をお試しください。</p>
+
 <h2>はじめに</h2>
 
 <p>日本では「新型コロナウイルス感染症」と呼ばれている COVID-19（コービッド・ナインティーン）についての最新のデータを収集し，Python でグラフにする。COVID-19 は病名で，ウイルス名は当初 2019-nCoV と呼ばれたが現在は SARS-CoV-2（サーズ・シーオーブイ・ツー）が公式名である。</p>
@@ -186,14 +188,19 @@ fig.savefig('COVID-DP-hist.svg', bbox_inches="tight")
 
 <p>同様のグラフが日本疫学会の<a href="https://jeaweb.jp/covid/glossary/index.html">新型コロナウイルス関連情報：感染症疫学の用語解説</a>の図2にあるが，そちらは例えば「症状あり」は30代が一番少ない（私のグラフでは40代のほうが少ない）などの齟齬があり，よくわからない。</p>
 
-<h2>各地の状況（ほんの一部）</h2>
+<h2>各地の状況</h2>
 
 <p>都道府県ごとにPCR検査件数（または検査人数）・陽性数が報告されているが，おのおの報告の基準が違うため，比較するのは困難である。推移を見るだけに留めたい。</p>
 
 <p>けんもねずみ (kenmo_economics) さんの<a href="https://datastudio.google.com/reporting/3a3bbd66-3674-4274-853c-5ab8e30aa7d0">こちら</a>のサイトでは公表されている全都道府県のグラフが見られる（不明日は線形補間してあることに注意）。データは<a href="https://ux.getuploader.com/COVID19_area_data/">都道府県別の検査数の公表状況（根拠URL付）</a>からダウンロードできる。</p>
 
-<p>[2020-03-10] 厚労省も都道府県別のデータをPDFで公表するようになった。<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000164708_00001.html">新型コロナウイルス感染症について</a>のページから「PCR検査実施人数（都道府県別）」「ＰＣＲ検査総実施件数（都道府県別）」のような形でリンクされている。</p>
+<p>厚労省も都道府県別のデータをPDFで公表するようになった。<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000164708_00001.html">新型コロナウイルス感染症について</a>のページから「PCR検査実施人数（都道府県別）」「ＰＣＲ検査総実施件数（都道府県別）」のような形でリンクされている。</p>
 
+<p>東京都は<a href="https://stopcovid19.metro.tokyo.lg.jp">都内の最新感染動向</a>（<a href="https://covid19-tokyo.netlify.com">covid19-tokyo.netlify.com</a> のCNAME）で情報提供を始めた。ソースはGitHubでオープンソースとして開発されている（<a href="https://github.com/tokyo-metropolitan-gov/covid19">https://github.com/tokyo-metropolitan-gov/covid19</a>）。データは<a href="https://catalog.data.metro.tokyo.lg.jp/dataset/t000010d0000000068">東京都オープンデータカタログサイト</a>で公開されている。</p>
+
+<p>上の東京都のソースを使った最新感染動向サイトが各地にできている（<a href="https://stopcovid19.hokkaido.dev">北海道</a>，<a href="https://www.pref.kanagawa.jp/osirase/1369/">神奈川県</a>，<a href="https://stopcovid19.code4.nagoya/">愛知県</a>，<a href="https://stopcovid19.e-toda.jp/">埼玉県</a>）。</li>
+
+<!--
 <h3>北海道</h3>
 
 <p>日本で一番多いのが北海道である。<a href="http://www.pref.hokkaido.lg.jp/hf/kth/kak/singatakoronahaien.htm">新型コロナウイルス感染症について</a>の下のほうの「北海道感染症危機管理対策本部会議」というところからリンクされている会議資料に記載がある。3月7日以降はその上の「記者会見等」のところに記載あり。最初の感染者の確定日が 2020-01-28 なので，<a href="data/COVID-hokkaido.csv">COVID-hokkaido.csv</a> ではその日の 00:00 をカウント数 0 として，差分を描くことにする。</p>
@@ -224,6 +231,7 @@ ax.legend(['Negative', 'Positive'])
 <p>和歌山県は済生会有田病院の院内感染が疑われ，和歌山県だけでは無理なので近隣自治体も巻き込んで，可能性の大きい人から順に検査した。現在は落ち着いている。データは<a href="https://www.pref.wakayama.lg.jp/prefg/041200/d00203387.html">和歌山県における新型コロナウイルス感染症発生状況</a>にあるが，まとめたものを <a href="data/COVID-wakayama.csv">COVID-wakayama.csv</a> として置いておく。</p>
 
 <figure><img src="img/COVID-wakayama-dif.svg" alt="和歌山県"></figure>
+-->
 
 <h3>三重県</h3>
 
@@ -276,8 +284,6 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
   <li>NewsDigest <a href="https://newsdigest.jp/pages/coronavirus/">新型コロナウイルス 日本国内の最新感染状況マップ</a></li>
   <li>NHK <a href="https://www3.nhk.or.jp/news/special/coronavirus/">特設サイト 新型コロナウイルス</a></li>
   <li><a href="https://hackmd.io/@covid19-kenmo/SARS-Cov-2/">新型コロナ（COVID-19）嫌儲対策本部</a> -- <a href="https://hackmd.io/@covid19-kenmo/dataset/">新型コロナウイルスデータセット</a></li>
-  <li><a href="https://stopcovid19.metro.tokyo.lg.jp">都内の最新感染動向</a> == <a href="https://covid19-tokyo.netlify.com">都内の最新感染動向</a> ソース: <a href="https://github.com/tokyo-metropolitan-gov/covid19">https://github.com/tokyo-metropolitan-gov/covid19</a> データ: <a href="https://catalog.data.metro.tokyo.lg.jp/dataset/t000010d0000000068">東京都オープンデータカタログサイト</a></li>
-  <li>↑のソースを使った<a href="https://stopcovid19.hokkaido.dev">道内の最新感染動向</a></li>
   <li><a href="https://twitter.com/kenmo_economics/">けんもねずみ</a>さんの都道府県別データ <a href="https://ux.getuploader.com/COVID19_area_data/">COVID-19_area_data</a></li>
   <li><a href="https://www.worldometers.info/coronavirus/">COVID-19 CORONAVIRUS OUTBREAK</a> -- <a href="https://www.worldometers.info/coronavirus/covid-19-testing/">Coronavirus Testing: Criteria and Numbers by Country</a></li>
   <li><a href="https://covid-2019.live">新型コロナウイルス感染速報</a></li>
@@ -292,7 +298,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-10 22:35:00</time>
+Last modified: <time>2020-03-12 10:28:14</time>
 <!-- hhmts end -->
 </p>
 </body>
