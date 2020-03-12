@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>COVID-19 番外編2</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>COVID-19 番外編2</h1>
+
+<p><a href="https://gis.jag-japan.com/covid19jp/">都道府県別新型コロナウイルス感染者数マップ</a>というすばらしいサイトがある。作っておられるのは<a href="https://jag-japan.com">ジャッグジャパン株式会社</a>さん（→社長の大濱崎さんの<a href="https://jag-japan.com/blog/2020/02/covid-2019-blog1/">都道府県別新型コロナウイルス感染症患者数マップを作ってみて感じたこと</a>）。データも<a href="https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv">CSVファイル</a>で提供されている。これを使っていろいろプロットしてみる。</p>
+
+<p>まず，発症日と確定日のヒストグラムを半透明の棒グラフで：</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pandas as pd
+import numpy as np
+from dateutil.parser import parse
+import datetime
+
+df = pd.read_csv("https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv")
+
+t1 = [parse(str(x)) for x in df['発症日'] if str(x) != 'nan']
+t2 = [parse(str(x)) for x in df['確定日'] if str(x) != 'nan']
+
+b = np.arange(min(t1), max(t2) + datetime.timedelta(days=2),
+              datetime.timedelta(days=1))
+
+fig, ax = plt.subplots()
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+ax.hist(t1, bins=b, edgecolor="black", alpha=0.5)
+ax.hist(t2, bins=b, edgecolor="black", alpha=0.5)
+ax.legend(['発症日', '確定日'])
+
+fig.savefig('200312a.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/200312a.svg" alt="COVID-19 発症日，確定日"></figure>
+
+<p>同じものを折れ線グラフで：</p>
+
+<pre><code>ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+h1, h2 = np.histogram(t1, bins=b)
+ax.plot(h2[:-1], h1, 'o-')
+h1, h2 = np.histogram(t2, bins=b)
+ax.plot(h2[:-1], h1, 'o-')
+ax.legend(['発症日', '確定日'])
+
+fig.savefig('200312b.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/200312b.svg" alt="COVID-19 発症日，確定日"></figure>
+
+<p>発症日と確定日はどれくらい隔たっているのだろうか：</p>
+
+<pre><code>dt = [(parse(x['確定日']) - parse(x['発症日'])).days
+      for i, x in df.iterrows() if str(x['発症日']) != 'nan']
+
+ax.clear()
+ax.hist(dt, bins=range(min(dt), max(dt)+2), color="lightgray", edgecolor="black")
+ax.legend(['確定日 - 発症日'])
+
+fig.savefig('200312c.svg', bbox_inches="tight")
+
+</code></pre>
+
+<figure><img src="img/200312c.svg" alt="COVID-19 発症日と確定日の差"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-03-12 11:07:24</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
