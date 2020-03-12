@@ -26,6 +26,6 @@ ax.xaxis.set_major_formatter(formatter)
 ax.bar(t[0], t[1])
 ax.bar(t[0], t[2])
 ax.legend(['Negative', 'Positive'])
-ax.set_yticks([0, 5, 10, 15])
+ax.set_yticks([0, 5, 10, 15, 20, 25])
 
 fig.savefig('../img/COVID-mie.svg', bbox_inches="tight")
