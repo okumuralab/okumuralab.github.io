@@ -98,6 +98,10 @@ ax.legend(['Confirmed', 'Deaths'])
 
 <figure><img src="img/COVID-jp-dif.svg" alt="COVID-19 (Japan)"></figure>
 
+<p>最後に，同じ WHO の最新の日報から，<a href="200310.html">番外編1</a>で解説した方法で，国ごとの確定数，死亡数（2人以上）をプロットしたものを挙げておく。灰色の対角線は中国と同じ死亡数/確定数のラインである。</p>
+
+<figure><img src="img/COVID-world.svg" alt="COVID-19"></figure>
+
 <h2>厚労省の（ほぼ）日報</h2>
 
 <p><a href="https://www.mhlw.go.jp">厚労省</a>の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html">報道発表一覧（新型コロナウイルス）</a>からリンクされている日報（ただし毎日ではない）の最近のものには，やや見やすい表がある。これから拾ったデータ <a href="data/COVID-mhlw.csv">COVID-mhlw.csv</a> によるその時点までのPCR検査結果（累計）は以下の通り（より古いデータ <a href="data/COVID-mhlw-old.csv">COVID-mhlw-old.csv</a> はチャーター機帰国者を含まない）。データには時刻（これまでのところ 12:00 つまり正午）が入っているが，x軸目盛は日の 0:00 に付いていることに注意。3月4日に急増しているが，「「令和２年３月４日版」以後は、陽性となった者の濃厚接触者に対する検査も含めた検査実施人数を都道府県に照会し、回答を得たものを公表している」とのこと。</p>
@@ -198,7 +202,7 @@ fig.savefig('COVID-DP-hist.svg', bbox_inches="tight")
 
 <p>東京都は<a href="https://stopcovid19.metro.tokyo.lg.jp">都内の最新感染動向</a>（<a href="https://covid19-tokyo.netlify.com">covid19-tokyo.netlify.com</a> のCNAME）で情報提供を始めた。ソースはGitHubでオープンソースとして開発されている（<a href="https://github.com/tokyo-metropolitan-gov/covid19">https://github.com/tokyo-metropolitan-gov/covid19</a>）。データは<a href="https://catalog.data.metro.tokyo.lg.jp/dataset/t000010d0000000068">東京都オープンデータカタログサイト</a>で公開されている。</p>
 
-<p>上の東京都のソースを使った最新感染動向サイトが各地にできている（<a href="https://stopcovid19.hokkaido.dev">北海道</a>，<a href="https://www.pref.kanagawa.jp/osirase/1369/">神奈川県</a>，<a href="https://stopcovid19.code4.nagoya/">愛知県</a>，<a href="https://stopcovid19.e-toda.jp/">埼玉県</a>）。</li>
+<p>上の東京都のソースを使った最新感染動向サイトが各地にできている（<a href="https://stopcovid19.hokkaido.dev">北海道</a>，<a href="https://www.pref.kanagawa.jp/osirase/1369/">神奈川県</a>，<a href="https://stopcovid19.code4.nagoya/">愛知県</a>，<a href="https://stopcovid19.e-toda.jp/">埼玉県</a>，<a href="https://covid19-mie.netlify.com">三重県</a>）。</li>
 
 <!--
 <h3>北海道</h3>
@@ -298,7 +302,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-12 10:28:14</time>
+Last modified: <time>2020-03-13 20:39:31</time>
 <!-- hhmts end -->
 </p>
 </body>
