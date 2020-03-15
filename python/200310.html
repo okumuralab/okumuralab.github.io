@@ -87,11 +87,7 @@ x = np.array([min(confirmed[death > 1]), max(confirmed[death > 1])])
 y = x * death[0] / confirmed[0]
 
 plt.plot(x, y, color='lightgray')
-
-plt.savefig('200310a.svg', bbox_inches="tight")
 </code></pre>
-
-<figure><img src="img/200310a.svg" alt="COVID-19"></figure>
 
 <p>pdftotext コマンドを直接使わずすべて Python で行うには，まず pip で <a href="https://pypi.org/project/pdftotext/">pdftotext</a> ライブラリをインストールする。Mac なら</p>
 
@@ -109,20 +105,22 @@ pip install pdftotext
 
 <p>中国と日本の履歴を書き込む：</p>
 
-<pre><code>df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-19.csv",
+<pre><code>plt.autoscale(False)
+
+df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-19.csv",
                  index_col='Date', parse_dates=['Date'])
-plt.plot(df['China Confirmed'], df['China Deaths'], 'x-', scalex=False, scaley=False)
+plt.plot(df['China Confirmed'], df['China Deaths'], 'x-')
 
 df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-jp.csv",
                  index_col='Date', parse_dates=['Date'])
-plt.plot(df['Confirmed'], df['Deaths'], 'x-', scalex=False, scaley=False)
+plt.plot(df['Confirmed'], df['Deaths'], 'x-')
 
-plt.savefig('200310b.svg', bbox_inches="tight")
+plt.savefig('COVID-world.svg', bbox_inches="tight")
 </code></pre>
 
-<figure><img src="img/200310b.svg" alt="COVID-19"></figure>
+<figure><img src="img/COVID-world.svg" alt="COVID-19"></figure>
 
-<p>（↑以上3月11日のデータに更新）</p>
+<p>（↑最新のデータに更新）</p>
 
 <hr>
 
@@ -131,7 +129,6 @@ plt.savefig('200310b.svg', bbox_inches="tight")
 <pre><code>import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
-import numpy as np
 from dateutil.parser import parse
 
 df = pd.read_csv('time_series_19-covid-Confirmed.csv')
@@ -141,39 +138,32 @@ x = [df.groupby('Country/Region')[i].sum() for i in df.columns[4:]]
 
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
-fig, ax = plt.subplots()
 
-# ax.clear()
+fig, ax = plt.subplots()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.plot(t, x)
 ax.set_yscale('log')
 
-for i in x[47].index:
-    ax.text(t[47], x[47][i], i)
+for i in x[-1].index:
+    if x[-1][i] > 0:
+        ax.text(t[-1], x[-1][i], i)
 
-# ax.legend(x[47].index)
+japan = [x[i]['Japan'] for i in range(len(x))]
+ax.plot(t, japan, 'o-k')
 
-fig.savefig('200310c.svg', bbox_inches="tight")
+fig.savefig('COVID-csse.svg', bbox_inches="tight")
 </code></pre>
 
-<figure><img src="img/200310c.svg" alt="COVID-19"></figure>
+<p>黒で黒丸マーカーを付けたものが日本である。データは WHO のものと微妙に異なり，日本については累積確認数の減少が2箇所ある。</p>
 
-<p>これは見にくい！</p>
-
-<hr>
-
-<p>[追記] 翌日（2020-03-11）のデータを使って確定数100人以上の国だけをプロットしたものも挙げておく：</p>
-
-<figure><img src="img/200311a.svg" alt="COVID-19"></figure>
-
-<hr>
+<figure><img src="img/COVID-csse.svg" alt="COVID-19"></figure>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-12 14:37:52</time>
+Last modified: <time>2020-03-15 17:18:36</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -18,6 +18,8 @@
 
 <p>[ご注意] ブラウザによっては更新（再読み込み）しても古い画像が表示されることがあるようです。いわゆる「スーパーリロード」（[Shift] + [更新] または [Control] + [更新]）をお試しください。</p>
 
+<p><a href="200310.html">番外編1</a>，<a href="200312.html">番外編2</a>も参考になるかもしれません。</p>
+
 <h2>はじめに</h2>
 
 <p>日本では「新型コロナウイルス感染症」と呼ばれている COVID-19（コービッド・ナインティーン）についての最新のデータを収集し，Python でグラフにする。COVID-19 は病名で，ウイルス名は当初 2019-nCoV と呼ばれたが現在は SARS-CoV-2（サーズ・シーオーブイ・ツー）が公式名である。</p>
@@ -98,9 +100,15 @@ ax.legend(['Confirmed', 'Deaths'])
 
 <figure><img src="img/COVID-jp-dif.svg" alt="COVID-19 (Japan)"></figure>
 
-<p>最後に，同じ WHO の最新の日報から，<a href="200310.html">番外編1</a>で解説した方法で，国ごとの確定数，死亡数（2人以上）をプロットしたものを挙げておく。灰色の対角線は中国と同じ死亡数/確定数のラインである。</p>
+<p>同じ WHO の最新の日報から，<a href="200310.html">番外編1</a>で解説した方法で，国ごとの確定数，死亡数（2人以上）をプロットしたものも挙げておく。灰色の対角線は中国と同じ死亡数/確定数のラインである。オレンジと緑の線は中国と日本の履歴である。中国の履歴が突然右に飛んでいるのは 2020-02-17 に Confirmed の基準が変わったためである（上述）。</p>
 
 <figure><img src="img/COVID-world.svg" alt="COVID-19"></figure>
+
+<h2>CSSEのデータ</h2>
+
+<p>Johns Hopkins 大学の Center for Systems Science and Engineering (CSSE) は <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> という COVID-19 可視化サイトを早くから立ち上げている。データについては GitHub の <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a> で公開している。そのデータのプロット例を<a href="200310.html">番外編1</a>の後半で示した。最新の図をこちらにも載せておく。黒で黒丸マーカーを付けたものが日本である。データは WHO のものと微妙に異なり，日本については累積確認数の減少が2箇所ある。</p>
+
+<figure><img src="img/COVID-csse.svg" alt="COVID-19"></figure>
 
 <h2>厚労省の（ほぼ）日報</h2>
 
@@ -302,7 +310,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-13 20:39:31</time>
+Last modified: <time>2020-03-15 17:29:01</time>
 <!-- hhmts end -->
 </p>
 </body>

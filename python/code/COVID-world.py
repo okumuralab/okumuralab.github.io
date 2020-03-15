@@ -102,12 +102,14 @@ y = x * death[0] / confirmed[0]
 
 plt.plot(x, y, color='lightgray')
 
-# df = pd.read_csv("../data/COVID-19.csv",
-#                  index_col='Date', parse_dates=['Date'])
-# plt.plot(df['China Confirmed'], df['China Deaths'], 'x-', scalex=False, scaley=False)
-# 
-# df = pd.read_csv("../data/COVID-jp.csv",
-#                  index_col='Date', parse_dates=['Date'])
-# plt.plot(df['Confirmed'], df['Deaths'], 'x-', scalex=False, scaley=False)
+plt.autoscale(False)
+
+df = pd.read_csv("../data/COVID-19.csv",
+                 index_col='Date', parse_dates=['Date'])
+plt.plot(df['China Confirmed'], df['China Deaths'], 'x-')
+
+df = pd.read_csv("../data/COVID-jp.csv",
+                 index_col='Date', parse_dates=['Date'])
+plt.plot(df['Confirmed'], df['Deaths'], 'x-')
 
 plt.savefig('../img/COVID-world.svg', bbox_inches="tight")
