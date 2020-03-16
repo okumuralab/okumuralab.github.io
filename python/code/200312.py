@@ -47,6 +47,9 @@ dt = [(parse(x['確定日']) - parse(x['発症日'])).days
 
 ax.clear()
 ax.hist(dt, bins=range(min(dt), max(dt)+2), color="lightgray", edgecolor="black")
-ax.legend(['確定日 - 発症日'])
+ax.legend(['確定日-発症日'])
+ax.text(0.98, 0.87, 'median: ' + str(np.median(dt)),
+        horizontalalignment='right', transform=ax.transAxes)
+
 fig.savefig('../img/200312c.svg', bbox_inches="tight")
 
