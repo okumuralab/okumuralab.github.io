@@ -23,6 +23,7 @@ dic = {
     'of)': 'Iran',
     'Iran (Islamic': 'Iran',
     'Iran (Islamic Republic of)': 'Iran',
+    'Iran (Islamic Republic': 'Iran',
     'Emirates': 'Arab',
     'United Arab': 'Arab',
     'United Arab Emirates': 'Arab',
@@ -56,12 +57,12 @@ prev = ''
 with urllib.request.urlopen(url) as f:
     for line in "".join(pdftotext.PDF(f)).split("\n"):
         line = line.strip()
-        m = re.search(r'^Total +(\d+) +(\d+) +(\d+) +(\d+) +(\d+) +(\d+)$', line)
-        if m:
-            countries.append('China')
-            confirmed.append(int(m[5]))
-            death.append(int(m[6]))
-        m = re.search(r'^([^\d]+)?(\d+) +(\d+) +(\d+) +(\d+) +(Local transmission|Imported cases only|Under investigation) +(\d+)$', line)
+        # m = re.search(r'^Total +(\d+) +(\d+) +(\d+) +(\d+) +(\d+) +(\d+)$', line)
+        # if m:
+        #     countries.append('China')
+        #     confirmed.append(int(m[5]))
+        #     death.append(int(m[6]))
+        m = re.search(r'^([^\d]+)?(\d+) +(\d+) +(\d+) +(\d+) +(Local [Tt]ransmission|Imported cases only|Under investigation) +(\d+)$', line)
         if m:
             if m[1]:
                 country = m[1].strip()
