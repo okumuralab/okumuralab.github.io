@@ -29,7 +29,8 @@ ex = df['Examined'].diff() / dt
 # ex1['2020-03-04 12:00'] = 0
 # m = max(ex1.max()*1.1, 300)
 # plt.ylim(0, m)
-ax.set_ylim(0, 1500)
+m = 1500
+ax.set_ylim(0, m)
 ax.bar(df.index, ex, width=-dt+0.1, align='edge')
 ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
 # t = pd.Timestamp('2020-03-04 00:00')
@@ -37,8 +38,8 @@ ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
 #         fontsize=60, color="lightgray",
 #         horizontalalignment='center', verticalalignment='center')
 for t in df.index:
-    if ex[t] > 1500:
-        ax.text(t, 1500, int(ex[t]),
+    if ex[t] > m:
+        ax.text(t, m, int(ex[t]),
                 horizontalalignment='center', bbox=dict(facecolor='white'))
 ax.legend(['Negative', 'Positive'])
 # ax.plot([pd.Timestamp('2020-03-03 12:00'), pd.Timestamp('2020-03-04 12:00')],

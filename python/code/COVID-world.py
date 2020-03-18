@@ -101,7 +101,7 @@ plt.ylabel('Deaths')
 x = np.array([min(confirmed[death >= bottom]), max(confirmed[death >= bottom])])
 y = x * death[0] / confirmed[0]
 
-plt.plot(x, y, color='lightgray')
+plt.plot(x, y, color='lightgray', label=f'Deaths / Confirmed = {death[0] / confirmed[0]:.4f}')
 
 plt.autoscale(False)
 
@@ -112,5 +112,6 @@ plt.plot(df['China Confirmed'], df['China Deaths'], 'x-')
 df = pd.read_csv("../data/COVID-jp.csv",
                  index_col='Date', parse_dates=['Date'])
 plt.plot(df['Confirmed'], df['Deaths'], 'x-')
+plt.legend()
 
 plt.savefig('../img/COVID-world.svg', bbox_inches="tight")

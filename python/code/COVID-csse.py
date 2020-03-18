@@ -30,7 +30,8 @@ for i in x[-1].index:
 # ax.legend(x[-1].index)
 
 japan = [x[i]['Japan'] for i in range(len(x))]
-ax.plot(t, japan, 'o-k')
+ax.plot(t, japan, 'o-k', label='Japan')
+ax.legend()
 
 fig.savefig('../img/COVID-csse.svg', bbox_inches="tight")
 
