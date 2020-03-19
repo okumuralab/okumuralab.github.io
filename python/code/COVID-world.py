@@ -112,6 +112,6 @@ plt.plot(df['China Confirmed'], df['China Deaths'], 'x-')
 df = pd.read_csv("../data/COVID-jp.csv",
                  index_col='Date', parse_dates=['Date'])
 plt.plot(df['Confirmed'], df['Deaths'], 'x-')
-plt.legend()
+plt.legend(loc='upper left')
 
 plt.savefig('../img/COVID-world.svg', bbox_inches="tight")
