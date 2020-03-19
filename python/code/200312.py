@@ -24,7 +24,7 @@ ax.xaxis.set_major_formatter(formatter)
 
 ax.hist(t1, bins=b, edgecolor="black", alpha=0.5) # color=cmap(1), 
 ax.hist(t2, bins=b, edgecolor="black", alpha=0.5) # color=cmap(3), 
-ax.legend(['発症日', '確定日'])
+ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
 
 fig.savefig('../img/200312a.svg', bbox_inches="tight")
 
@@ -36,7 +36,7 @@ h1, h2 = np.histogram(t1, bins=b)
 ax.plot(h2[:-1], h1, 'o-')
 h1, h2 = np.histogram(t2, bins=b)
 ax.plot(h2[:-1], h1, 'o-')
-ax.legend(['発症日', '確定日'])
+ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
 
 fig.savefig('../img/200312b.svg', bbox_inches="tight")
 
@@ -47,7 +47,7 @@ dt = [(parse(x['確定日']) - parse(x['発症日'])).days
 
 ax.clear()
 ax.hist(dt, bins=range(min(dt), max(dt)+2), color="lightgray", edgecolor="black")
-ax.legend(['確定日-発症日'])
+ax.legend(['確定日-発症日 (confirmed - onset)'])
 ax.text(0.98, 0.87, 'median: ' + str(np.median(dt)),
         horizontalalignment='right', transform=ax.transAxes)
 

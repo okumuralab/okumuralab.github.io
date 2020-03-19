@@ -58,6 +58,8 @@ fig.savefig('COVID-19.svg', bbox_inches="tight")
 
 <p>2020-02-17から湖北省については laboratory-confirmed だけでなく clinically diagnosed も含めたので急増している。</p>
 
+<p>2020-03-18からその日の00:00 CET（08:00 JST）時点での報告に基づくようになったので，日本・中国・韓国などは2020-03-17と2020-03-18とで同じ数値になっている。</p>
+
 <figure><img src="img/COVID-19.svg" alt="COVID-19"></figure>
 
 <p>対数グラフにするには <code>ax.bar()</code> の2行を次のように変える：</p>
@@ -112,7 +114,7 @@ ax.legend(['Confirmed', 'Deaths'])
 
 <h2>厚労省の（ほぼ）日報</h2>
 
-<p><a href="https://www.mhlw.go.jp">厚労省</a>の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html">報道発表一覧（新型コロナウイルス）</a>からリンクされている日報（ただし毎日ではない）の最近のものには，やや見やすい表がある。これから拾ったデータ <a href="data/COVID-mhlw.csv">COVID-mhlw.csv</a> によるその時点までのPCR検査結果（累計）は以下の通り（より古いデータ <a href="data/COVID-mhlw-old.csv">COVID-mhlw-old.csv</a> はチャーター機帰国者を含まない）。データには時刻（これまでのところ 12:00 つまり正午）が入っているが，x軸目盛は日の 0:00 に付いていることに注意。3月4日に検査人数が急増しているが，「「令和２年３月４日版」以後は、陽性となった者の濃厚接触者に対する検査も含めた検査実施人数を都道府県に照会し、回答を得たものを公表している」とのこと。陽性数が当日12時のものであるのに対し，検査人数は前日18時のもの。</p>
+<p><a href="https://www.mhlw.go.jp">厚労省</a>の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html">報道発表一覧（新型コロナウイルス）</a>からリンクされている日報（ただし毎日ではない）の最近のものには，やや見やすい表がある。これから拾ったデータ <a href="data/COVID-mhlw.csv">COVID-mhlw.csv</a> によるその時点までのPCR検査結果（累計）は以下の通り（より古いデータ <a href="data/COVID-mhlw-old.csv">COVID-mhlw-old.csv</a> はチャーター機帰国者を含まない）。データには時刻（これまでのところ 12:00 つまり正午）が入っているが，x軸目盛は日の 0:00 に付いていることに注意。3月4日に検査人数が急増しているが，「「令和２年３月４日版」以後は、陽性となった者の濃厚接触者に対する検査も含めた検査実施人数を都道府県に照会し、回答を得たものを公表している」とのこと。陽性数が当日12時のものであるのに対し，検査人数は前日18時のもの。2020-03-19に累積の検査人数が減っているが，「千葉県が人数でなく件数でカウントしていたことが判明したため、千葉県の件数を引いたことによる」。</p>
 
 <figure><img src="img/COVID-mhlw2.svg" alt="COVID-19 (Japan)"></figure>
 
@@ -310,7 +312,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-19 10:59:55</time>
+Last modified: <time>2020-03-19 18:29:20</time>
 <!-- hhmts end -->
 </p>
 </body>
