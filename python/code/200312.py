@@ -53,3 +53,7 @@ ax.text(0.98, 0.87, 'median: ' + str(np.median(dt)),
 
 fig.savefig('../img/200312c.svg', bbox_inches="tight")
 
+ax.clear()
+w2 = [pd.Timestamp(t).dayofweek for t in t2]
+h1, h2 = np.histogram(w2, range(0,8))
+ax.bar(['月','火','水','木','金','土','日'], h1, color="lightgray", edgecolor="black")

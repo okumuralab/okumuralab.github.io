@@ -39,7 +39,7 @@ ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
 #         horizontalalignment='center', verticalalignment='center')
 for t in df.index:
     if ex[t] > m:
-        ax.text(t, m, int(ex[t]),
+        ax.text(t, m, int(ex[t]), fontsize=8,
                 horizontalalignment='center', bbox=dict(facecolor='white'))
 ax.legend(['Negative', 'Positive'])
 # ax.plot([pd.Timestamp('2020-03-03 12:00'), pd.Timestamp('2020-03-04 12:00')],
