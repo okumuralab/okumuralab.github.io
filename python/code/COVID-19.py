@@ -15,15 +15,22 @@ fig, ax = plt.subplots()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
-ax.bar(df.index, df['Global Confirmed'], color=cmap(3))
-ax.bar(df.index, df['China Confirmed'], color=cmap(2))
-ax.bar(df.index, df['Global Deaths'], color=cmap(6))
-ax.legend(['Global Confirmed', 'China Confirmed', 'Global Deaths'])
+for x, c in zip(['Global Confirmed', 'China Confirmed', 'Global Deaths'], [3, 2, 6]):
+    ax.bar(df.index, df[x], color=cmap(c), label=x)
+ax.legend()
 fig.savefig('../img/COVID-19.svg', bbox_inches="tight")
 
 ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
+
+# for x, f, c in zip(['Global Confirmed', 'China Confirmed', 'Global Deaths', 'China Deaths'],
+#                 ['s-', 'o-', 's-', 'o-'],
+#                 [3, 2, 7, 6]):
+#     ax.plot(df.index, df[x], f, color=cmap(c), label=x)
+# ax.set_yscale('log')
+# ax.legend()
+
 ax.plot(df.index, df['Global Confirmed'], "s-", color=cmap(3))
 ax.plot(df.index, df['China Confirmed'], "o-", color=cmap(2))
 ax.plot(df.index, df['Global Deaths'], "s-", color=cmap(7))

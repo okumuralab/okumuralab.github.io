@@ -58,11 +58,9 @@ fig.savefig('COVID-19.svg', bbox_inches="tight")
 
 <p>2020-02-17から湖北省については laboratory-confirmed だけでなく clinically diagnosed も含めたので急増している。</p>
 
-<p>2020-03-18からその日の00:00 CET（08:00 JST）時点での報告に基づくようになったので，日本・中国・韓国などは2020-03-17と2020-03-18とで同じ数値になっている。</p>
-
 <figure><img src="img/COVID-19.svg" alt="COVID-19"></figure>
 
-<p>対数グラフにするには <code>ax.bar()</code> の2行を次のように変える：</p>
+<p>対数グラフにするには <code>ax.bar()</code> の部分を次のように変える：</p>
 
 <pre><code>ax.plot(df.index, df['Global Confirmed'], "s-", color=cmap(3))
 ax.plot(df.index, df['China Confirmed'], "o-", color=cmap(2))
@@ -98,7 +96,7 @@ ax.legend(['Confirmed', 'Deaths'])
 
 <figure><img src="img/COVID-jp.svg" alt="COVID-19 (Japan)"></figure>
 
-<p>差分</p>
+<p>差分（2020-03-18からWHOはその日の00:00 CET（08:00 JST）時点での各国からの報告に基づくようになったので，日本・中国・韓国などは2020-03-17と2020-03-18との差分はゼロになっている）。</p>
 
 <figure><img src="img/COVID-jp-dif.svg" alt="COVID-19 (Japan)"></figure>
 
@@ -312,7 +310,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-19 18:29:20</time>
+Last modified: <time>2020-03-20 13:32:31</time>
 <!-- hhmts end -->
 </p>
 </body>
