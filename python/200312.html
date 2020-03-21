@@ -65,8 +65,6 @@ ax.plot(h2[:-1], h1, 'o-')
 h1, h2 = np.histogram(t2, bins=b)
 ax.plot(h2[:-1], h1, 'o-')
 ax.legend(['発症日', '確定日'])
-
-fig.savefig('200312b.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/200312b.svg" alt="COVID-19 発症日，確定日"></figure>
@@ -76,14 +74,22 @@ fig.savefig('200312b.svg', bbox_inches="tight")
 <pre><code>dt = [(parse(x['確定日']) - parse(x['発症日'])).days
       for i, x in df.iterrows() if str(x['発症日']) != 'nan']
 
-ax.clear()
 ax.hist(dt, bins=range(min(dt), max(dt)+2), color="lightgray", edgecolor="black")
 ax.legend(['確定日 - 発症日'])
-
-fig.savefig('200312c.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/200312c.svg" alt="COVID-19 発症日と確定日の差"></figure>
+
+<p>発症日と確定日の隔たりを，確定日ごとにプロットしたもの：</p>
+
+<pre><code>t = [parse(x['確定日']) for i, x in df.iterrows() if str(x['発症日']) != 'nan']
+
+ax.plot(t, dt, 'ko', markersize=5, alpha=0.3)
+ax.set_xlabel('確定日 (confirmed)')
+ax.set_ylabel('確定日-発症日 (confirmed - onset)')
+</code></pre>
+
+<figure><img src="img/200312f.svg" alt="COVID-19 発症日と確定日の差 vs 確定日"></figure>
 
 <p>確定日の曜日の分布：</p>
 
@@ -104,7 +110,7 @@ ax.bar(['月','火','水','木','金','土','日'], h1, color="lightgray", edgec
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-21 08:05:53</time>
+Last modified: <time>2020-03-21 19:58:03</time>
 <!-- hhmts end -->
 </p>
 </body>
