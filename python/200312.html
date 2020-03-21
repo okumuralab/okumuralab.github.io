@@ -81,10 +81,22 @@ ax.hist(dt, bins=range(min(dt), max(dt)+2), color="lightgray", edgecolor="black"
 ax.legend(['確定日 - 発症日'])
 
 fig.savefig('200312c.svg', bbox_inches="tight")
-
 </code></pre>
 
 <figure><img src="img/200312c.svg" alt="COVID-19 発症日と確定日の差"></figure>
+
+<p>確定日の曜日の分布：</p>
+
+<pre><code>w2 = [pd.Timestamp(t).dayofweek for t in t2]
+h1, h2 = np.histogram(w2, range(0,8))
+ax.bar(['月','火','水','木','金','土','日'], h1, color="lightgray", edgecolor="black")
+</code></pre>
+
+<figure><img src="img/200312d.svg" alt="COVID-19 確定日の曜日の分布"></figure>
+
+<p>発症日の曜日の分布：</p>
+
+<figure><img src="img/200312e.svg" alt="COVID-19 発症日の曜日の分布"></figure>
 
 <hr>
 
@@ -92,7 +104,7 @@ fig.savefig('200312c.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-16 13:57:41</time>
+Last modified: <time>2020-03-21 08:05:53</time>
 <!-- hhmts end -->
 </p>
 </body>
