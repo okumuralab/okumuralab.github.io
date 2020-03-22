@@ -84,7 +84,7 @@ ax.legend(['確定日 - 発症日'])
 
 <pre><code>t = [parse(x['確定日']) for i, x in df.iterrows() if str(x['発症日']) != 'nan']
 
-ax.plot(t, dt, 'ko', markersize=5, alpha=0.3)
+ax.plot(t, dt, 'ko', markersize=5, alpha=0.1)
 ax.set_xlabel('確定日 (confirmed)')
 ax.set_ylabel('確定日-発症日 (confirmed - onset)')
 </code></pre>
@@ -110,7 +110,7 @@ ax.bar(['月','火','水','木','金','土','日'], h1, color="lightgray", edgec
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-21 19:58:03</time>
+Last modified: <time>2020-03-22 13:21:54</time>
 <!-- hhmts end -->
 </p>
 </body>

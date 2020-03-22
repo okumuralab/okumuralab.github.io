@@ -60,7 +60,7 @@ fig.savefig('../img/200312c.svg', bbox_inches="tight")
 t = [parse(x['確定日']) for i, x in df.iterrows() if str(x['発症日']) != 'nan']
 
 ax.clear()
-ax.plot(t, dt, 'ko', markersize=5, alpha=0.3)
+ax.plot(t, dt, 'ko', markersize=5, alpha=0.1)
 ax.set_xlabel('確定日 (confirmed)')
 ax.set_ylabel('確定日-発症日 (confirmed - onset)')
 
