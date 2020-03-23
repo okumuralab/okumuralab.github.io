@@ -66,3 +66,17 @@ ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
 ax.grid(axis='y')
 
 fig.savefig('../img/COVID-mhlw.svg', bbox_inches="tight")
+
+#-----
+
+cmap = plt.get_cmap("tab20")
+
+ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+for x, c in zip(['Confirmed', 'Hospitalized', 'Deaths'], [3, 2, 6]):
+    ax.bar(df.index, df[x].diff() / dt, width=-dt+0.1, align='edge', color=cmap(c), label=x)
+ax.legend(loc='upper left')
+
+fig.savefig('../img/COVID-mhlw5.svg', bbox_inches="tight")

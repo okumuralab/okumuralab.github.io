@@ -129,6 +129,10 @@ ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
 
 <figure><img src="img/COVID-mhlw3.svg" alt="COVID-19 (Japan)"></figure>
 
+<p>陰性の数が増えて（しかも報告が安定せず）見にくくなってきたので，PCR検査陽性者と，うち有症状で入院治療を要する者，うち死亡者だけをグラフにした。データが正午締めで，数え方も<a href="200312.html">番外編2</a>のものと若干異なる：</p>
+
+<figure><img src="img/COVID-mhlw5.svg" alt="COVID-19 (Japan)"></figure>
+
 <p>陽性の割合（累計）と95%信頼区間のグラフ：</p>
 
 <pre><code>from statsmodels.stats.proportion import proportion_confint
@@ -315,7 +319,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-22 15:55:46</time>
+Last modified: <time>2020-03-23 14:41:41</time>
 <!-- hhmts end -->
 </p>
 </body>
