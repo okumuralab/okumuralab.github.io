@@ -16,7 +16,7 @@ for i, x in t.iterrows():
     if m:
         x[0] = pd.Timestamp(f'2020-{m[1]}-{m[2]}')
     for j in range(1, 4):
-        x[j] = int(re.sub("件", "", x[j]))
+        x[j] = int(re.sub("件.*$", "", x[j]))
 
 fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()
