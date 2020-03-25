@@ -18,7 +18,7 @@
 
 <p>[ご注意] ブラウザによっては更新（再読み込み）しても古い画像が表示されることがあるようです。いわゆる「スーパーリロード」（[Shift] + [更新] または [Control] + [更新]）をお試しください。</p>
 
-<p><a href="200310.html">番外編1</a>，<a href="200312.html">番外編2</a>も参考になるかもしれません。</p>
+<p><a href="200310.html">番外編1</a>，<a href="200312.html">番外編2</a>も参考になるかもしれません。もう変化のない<a href="diamondprincess.html">クルーズ船ダイヤモンド・プリンセス号</a>は別ページにしました。</p>
 
 <h2>はじめに</h2>
 
@@ -106,13 +106,21 @@ ax.legend(['Confirmed', 'Deaths'])
 
 <h2>CSSEのデータ</h2>
 
-<p>Johns Hopkins 大学の Center for Systems Science and Engineering (CSSE) は <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> という COVID-19 可視化サイトを早くから立ち上げている。データについては GitHub の <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a> で公開している。そのデータのプロット例を<a href="200310.html">番外編1</a>の後半で示した。最新の図をこちらにも載せておく。まずは確定数。黒丸マーカーを付けたものが日本である。データは WHO のものと微妙に異なり，日本については累積確認数の減少（つまりデータの間違い）が2箇所ある。</p>
+<p>Johns Hopkins 大学の Center for Systems Science and Engineering (CSSE) は <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> という COVID-19 可視化サイトを早くから立ち上げている。データについては GitHub の <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a> で公開している。そのデータのプロット例を<a href="200310.html">番外編1</a>の後半で示した。最新の図をこちらにも載せておく。まずは確定数。黒丸マーカーを付けたものが日本である。</p>
 
 <figure><img src="img/COVID-csse.svg" alt="COVID-19"></figure>
+
+<p>差分（つまり1日ごとの増分）：</p>
+
+<figure><img src="img/COVID-csse1.svg" alt="COVID-19"></figure>
 
 <p>死亡数：</p>
 
 <figure><img src="img/COVID-csse2.svg" alt="COVID-19"></figure>
+
+<p>差分（つまり1日ごとの増分）：</p>
+
+<figure><img src="img/COVID-csse3.svg" alt="COVID-19"></figure>
 
 <h2>厚労省の（ほぼ）日報</h2>
 
@@ -156,57 +164,6 @@ ax.grid(axis='y')
 </code></pre>
 
 <figure><img src="img/COVID-mhlw4.svg" alt="COVID-19 (Japan)"></figure>
-
-<h2>クルーズ船ダイヤモンド・プリンセス号</h2>
-
-<p>横浜港に停泊したクルーズ船ダイヤモンド・プリンセス号については，<a href="https://www.mhlw.go.jp/stf/new-info/">厚労省の新着情報</a>から「クルーズ船」で検索して集計した延べ人数は <a href="data/COVID-DP.csv">COVID-DP.csv</a> のようになる。発表日ベースで集計した。検体採取の日は不明（<a href="https://www3.nhk.or.jp/news/html/20200218/k10012290571000.html">NHKの2月18日のニュース</a>によれば「結果が出るまでにおよそ３日かかる」）。どういう人を選んで検査したかによって陽性率は大きく変わるであろうから，要注意。<a href="https://www3.nhk.or.jp/news/html/20200215/k10012287201000.html">NHKの2020-02-15 22:48のニュース</a>によれば，「７日以前にウイルスに感染し、　７日に発症した乗客が最も多かった。その後の新たな発症者は、特に今月10日以降は急激に少なくなっていて、検疫の効果が出ていると考えている」（厚生労働省の担当者）とのことだが，これはよくわからない（国立感染症研究所の<a href="https://www.niid.go.jp/niid/ja/diseases/ka/corona-virus/2019-ncov/2484-idsc/9410-covid-dp-01.html">現場からの概況：ダイアモンドプリンセス号におけるCOVID-19症例</a>（<a href="https://www.niid.go.jp/niid/en/2019-ncov-e/9407-covid-dp-fe-01.html">英語版</a>）の上のグラフが根拠のようである）。</p>
-
-<pre><code>
-df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-DP.csv",
-                 index_col='Date', parse_dates=['Date'])
-
-ax.bar(df.index, df['Examined'])
-ax.bar(df.index, df['Positive'])
-ax.legend(['Negative', 'Positive'])
-</code></pre>
-
-<figure><img src="img/COVID-DP.svg" alt="COVID-19 on the Diamond Princess"></figure>
-
-<p><a href="https://www.mhlw.go.jp/stf/newpage_09708.html">2月23日公表分</a>は差分だけなので累計は不正確かもしれない。</p>
-
-<p>陽性率とその95%信頼区間：</p>
-
-<pre><code>p = [x['Positive'] / x['Examined'] for i, x in df.iterrows()]
-ci0, ci1 = np.array([proportion_confint(x['Positive'], x['Examined'], method='beta')
-                     for i, x in df.iterrows()]).T
-ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
-ax.grid(axis='y')
-</code></pre>
-
-<figure><img src="img/COVID-DP-rate.svg" alt="COVID-19 on the Diamond Princess"></figure>
-
-<p>ダイヤモンド・プリンセス号については国立感染症研究所の<a href="https://www.niid.go.jp/niid/ja/diseases/ka/corona-virus/2019-ncov/2484-idsc/9422-covid-dp-2.html">現場からの概況：ダイアモンドプリンセス号におけるCOVID-19症例【更新】</a>（2020年2月26日掲載）に詳細がまとめられている。表1「COVID-19確定例の検体採取時の年齢群および症状別割合」（2月20日現在）の冗長でない部分を <a href="data/COVID-DP-hist.csv">COVID-DP-hist.csv</a> に書き写した。これをグラフにしてみる：</p>
-
-<pre><code>df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-DP-hist.csv")
-s = df['Symptomatic confirmed cases'].values
-a = df['Asymptomatic confirmed cases'].values
-t = df['Persons aboard on 5 February'].values
-c = t.cumsum()
-cmap = plt.get_cmap("tab20")
-fig, ax = plt.subplots()
-ax.bar(c, 1, width=-t, align='edge', color=cmap(15), edgecolor="white")
-ax.bar(c, (s + a) / t, width=-t, align='edge', color=cmap(3), edgecolor="white")
-ax.bar(c, s / t, width=-t, align='edge', color=cmap(2), edgecolor="white")
-ax.set_ylim(0, 1)
-ax.set_xlim(0, c[-1])
-ax.set_xticks(c[1:], [20,30,40,50,60,70,80,90])
-ax.legend(['Negative', 'Asymptomatic confirmed', 'Symptomatic confirmed'])
-fig.savefig('COVID-DP-hist.svg', bbox_inches="tight")
-</code></pre>
-
-<figure><img src="img/COVID-DP-hist.svg" alt="クルーズ船COVID-19確定例の検体採取時の年齢群および症状別割合"></figure>
-
-<p>同様のグラフが日本疫学会の<a href="https://jeaweb.jp/covid/glossary/index.html">新型コロナウイルス関連情報：感染症疫学の用語解説</a>の図2にあるが，そちらは例えば「症状あり」は30代が一番少ない（私のグラフでは40代のほうが少ない）などの齟齬があり，よくわからない。</p>
 
 <h2>各地の状況</h2>
 
@@ -319,7 +276,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-23 14:41:41</time>
+Last modified: <time>2020-03-25 14:39:55</time>
 <!-- hhmts end -->
 </p>
 </body>

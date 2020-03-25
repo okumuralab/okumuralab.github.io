@@ -126,14 +126,14 @@ plt.savefig('COVID-world.svg', bbox_inches="tight")
 
 <hr>
 
-<p>全部の国の推移を見たいのだが，いちいち上のようにして WHO のサイトの PDF から抜き出すのはたいへんなので，<a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> という有名なサイトのデータレポじとり <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a> から時系列データ csse_covid_19_time_series/time_series_19-covid-Confirmed.csv をいただいてきて，そのまま描く：</p>
+<p>全部の国の推移を見たいのだが，いちいち上のようにして WHO のサイトの PDF から抜き出すのはたいへんなので，<a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> という有名なサイトのデータレポじとり <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a> から時系列データ csse_covid_19_time_series/time_series_covid19_confirmed_global.csv をいただいてきて，そのまま描く：</p>
 
 <pre><code>import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 from dateutil.parser import parse
 
-df = pd.read_csv('time_series_19-covid-Confirmed.csv')
+df = pd.read_csv('time_series_covid19_confirmed_global.csv')
 
 t = [parse(i) for i in df.columns[4:]]
 x = [df.groupby('Country/Region')[i].sum() for i in df.columns[4:]]
@@ -165,7 +165,7 @@ fig.savefig('COVID-csse.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-16 13:57:32</time>
+Last modified: <time>2020-03-25 13:44:45</time>
 <!-- hhmts end -->
 </p>
 </body>
