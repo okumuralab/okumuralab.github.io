@@ -128,7 +128,7 @@ ax.legend(['Confirmed', 'Deaths'])
 
 <figure><img src="img/COVID-mhlw2.svg" alt="COVID-19 (Japan)"></figure>
 
-<p>データの差分をとって，高さを1日あたりの数に直したものも描いてみる。</p>
+<p>データの差分をとって，高さを1日あたりの数に直したものも描いてみる。最近は負になったりしてデータの信頼性がまったくない。</p>
 
 <pre><code>dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
 ax.bar(df.index, df['Examined'].diff() / dt, width=-dt+0.1, align='edge')
@@ -276,7 +276,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-25 14:39:55</time>
+Last modified: <time>2020-03-27 22:11:31</time>
 <!-- hhmts end -->
 </p>
 </body>
