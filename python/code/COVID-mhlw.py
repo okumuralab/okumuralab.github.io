@@ -76,7 +76,11 @@ ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
 for x, c in zip(['Confirmed', 'Hospitalized', 'Deaths'], [3, 2, 6]):
-    ax.bar(df.index, df[x].diff() / dt, width=-dt+0.1, align='edge', color=cmap(c), label=x)
+    d = df[x].diff()
+    if x == 'Hospitalized':
+        d['2020-03-28 12:00:00'] = 36
+        d['2020-03-29 12:00:00'] = 106
+    ax.bar(df.index, d / dt, width=-dt+0.1, align='edge', color=cmap(c), label=x)
 ax.legend(loc='upper left')
 
 fig.savefig('../img/COVID-mhlw5.svg', bbox_inches="tight")
