@@ -27,3 +27,11 @@ ax.axhline(mx/2, color='gray', linestyle='--', zorder=-1)
 ax.legend(loc='upper left')
 fig.savefig('../img/COVID-tokyo-cum.svg', bbox_inches="tight")
 
+exit()
+
+ax.clear()
+w = [[pd.Timestamp(t).dayofweek] * c for t, c in zip(df['date'], df['confirmed'])]
+w = sum(w, [])
+h1, h2 = np.histogram(w, range(0,8))
+ax.bar(['月','火','水','木','金','土','日'], h1, color="lightgray", edgecolor="black")
+ax.set_xlabel('確定日')

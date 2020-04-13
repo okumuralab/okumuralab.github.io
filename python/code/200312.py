@@ -9,8 +9,11 @@ import datetime
 
 df = pd.read_csv("https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv")
 
-t1 = [parse(str(x)) for x in df['発症日'] if str(x) != 'nan']
-t2 = [parse(str(x)) for x in df['確定日'] if str(x) != 'nan']
+# t1 = [parse(str(x)) for x in df['発症日'] if str(x) != 'nan']
+# t2 = [parse(str(x)) for x in df['確定日'] if str(x) != 'nan']
+
+t1 = [parse(x) for x in df['発症日'] if str(x) != 'nan' and parse(x) > datetime.datetime(2010, 1, 1, 0, 0)]
+t2 = [parse(x) for x in df['確定日'] if str(x) != 'nan' and parse(x) > datetime.datetime(2010, 1, 1, 0, 0)]
 
 fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()
@@ -45,7 +48,7 @@ fig.savefig('../img/200312b.svg', bbox_inches="tight")
 #-----
 
 dt = [(parse(x['確定日']) - parse(x['発症日'])).days
-      for i, x in df.iterrows() if str(x['発症日']) != 'nan']
+      for i, x in df.iterrows() if str(x['発症日']) != 'nan' and parse(x['発症日']) > datetime.datetime(2010, 1, 1, 0, 0)]
 
 ax.clear()
 ax.hist(dt, bins=range(min(dt), max(dt)+2), color="lightgray", edgecolor="black")
@@ -57,7 +60,7 @@ fig.savefig('../img/200312c.svg', bbox_inches="tight")
 
 #-----
 
-t = [parse(x['確定日']) for i, x in df.iterrows() if str(x['発症日']) != 'nan']
+t = [parse(x['確定日']) for i, x in df.iterrows() if str(x['発症日']) != 'nan' and parse(x['発症日']) > datetime.datetime(2010, 1, 1, 0, 0)]
 
 ax.clear()
 ax.plot(t, dt, 'ko', markersize=5, alpha=0.1)
