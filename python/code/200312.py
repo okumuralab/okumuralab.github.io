@@ -12,8 +12,8 @@ df = pd.read_csv("https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.c
 # t1 = [parse(str(x)) for x in df['発症日'] if str(x) != 'nan']
 # t2 = [parse(str(x)) for x in df['確定日'] if str(x) != 'nan']
 
-t1 = [parse(x) for x in df['発症日'] if str(x) != 'nan' and parse(x) > datetime.datetime(2010, 1, 1, 0, 0)]
-t2 = [parse(x) for x in df['確定日'] if str(x) != 'nan' and parse(x) > datetime.datetime(2010, 1, 1, 0, 0)]
+t1 = [parse(x) for x in df['発症日'] if str(x) != 'nan' and parse(x) > datetime.datetime(2020, 1, 1, 0, 0)]
+t2 = [parse(x) for x in df['確定日'] if str(x) != 'nan' and parse(x) > datetime.datetime(2020, 1, 1, 0, 0)]
 
 fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()
@@ -48,7 +48,7 @@ fig.savefig('../img/200312b.svg', bbox_inches="tight")
 #-----
 
 dt = [(parse(x['確定日']) - parse(x['発症日'])).days
-      for i, x in df.iterrows() if str(x['発症日']) != 'nan' and parse(x['発症日']) > datetime.datetime(2010, 1, 1, 0, 0)]
+      for i, x in df.iterrows() if str(x['発症日']) != 'nan' and parse(x['発症日']) > datetime.datetime(2020, 1, 1, 0, 0)]
 
 ax.clear()
 ax.hist(dt, bins=range(min(dt), max(dt)+2), color="lightgray", edgecolor="black")

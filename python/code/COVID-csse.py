@@ -50,8 +50,8 @@ ax.plot(t[1:], dx, 'o-')
 
 j = 0
 for i in x[-1].index:
-    if dx[-1][j] > 500:
-        ax.text(t[-1], dx[-1][j], i)
+    # if dx[-1][j] > 500:
+    ax.text(t[-1], dx[-1][j], i)
     j += 1
     
 # ax.legend(x[-1].index)
@@ -103,8 +103,8 @@ ax.plot(t[1:], dx, 'o-')
 
 j = 0
 for i in x[-1].index:
-    if dx[-1][j] > 20:
-        ax.text(t[-1], dx[-1][j], i)
+    # if dx[-1][j] > 20:
+    ax.text(t[-1], dx[-1][j], i)
     j += 1
     
 # ax.legend(x[-1].index)
