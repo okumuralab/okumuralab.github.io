@@ -81,7 +81,7 @@ death = np.array(death)
 
 plt.figure(figsize=[6.4, 6.4])
 
-bottom = 2
+bottom = 100
 
 # plt.clf()
 plt.plot(confirmed[death >= bottom], death[death >= bottom], 'o')
