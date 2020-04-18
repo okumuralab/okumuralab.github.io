@@ -63,11 +63,9 @@ with urllib.request.urlopen(url) as f:
         #     confirmed.append(int(m[5]))
         #     death.append(int(m[6]))
         m = re.search(r'^([^\d]+)?(\d+) +(\d+) +(\d+) +(\d+) +([A-Za-z ]+)(\d+)$', line)
-        if m:
-            if m[1]:
-                country = m[1].strip()
-            else:
-                country = prev
+        if m and m[1]:
+            print(line)
+            country = m[1].strip()
             if country in dic:
                 country = dic[country]
             countries.append(country)
