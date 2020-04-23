@@ -18,15 +18,17 @@
 
 <p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>します（ただし2020年4月に2.7.18が出る予定で，それが最後のようです）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うなら，Python 3 をお薦めします。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
 
-<p>[2019-12-2X] Python 3.8.1 が出ました。かなりのパッケージが 3.8 に対応してきましたので，3.7 から移行してもいいかもしれません。まだ TensorFlow は対応していないようです。以下は 3.7 を仮定して書いています。</p>
+<p>最新のものは Python 3.8.2 ですが，まだ TensorFlow など一部のツールは Python 3.8 に対応していないようです。以下は 3.7 を仮定して書いています。</p>
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
+
+<p>pip については <a href="https://github.com/pypa/pip/issues/5599">ImportError in system pip wrappers after an upgrade #5599</a> が参考になります。つまり，pip がおかしくなったら python(3) -m pip を使いましょう。</p>
 
 <h3>公式サイト Python.org からのインストール（Windows）</h3>
 
 <p>まず，初心者のかたで，今までどこかで Python をインストールしたけれどうまく設定できていないという場合は，［スタートボタン］→［⚙設定］→［アプリ］で，それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
 
-<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが，今なら Python 3.7.5 の64ビット版 Windows x86-64 executable installer でいいと思います。初心者のかたは，インストーラの最初の画面で必ず「Add Python 3.7 to PATH」にチェックを付けておきましょう。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
+<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが，ここでは Python 3.7.x の x が一番大きいものの64ビット版 Windows x86-64 executable installer を使います。初心者のかたは，インストーラの最初の画面で必ず「Add Python 3.7 to PATH」にチェックを付けておきましょう。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
 
 <p>確認として，Windows PowerShell（あるいは VS Code のターミナル，またはコマンドプロンプト）を立ち上げ，</p>
 
@@ -323,7 +325,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-21 12:46:01</time>
+Last modified: <time>2020-04-23 20:15:43</time>
 <!-- hhmts end -->
 </p>
 </footer>
