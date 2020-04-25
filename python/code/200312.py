@@ -87,3 +87,18 @@ ax.bar(['月','火','水','木','金','土','日'], h1, color="lightgray", edgec
 ax.set_xlabel('発症日')
 
 fig.savefig('../img/200312e.svg', bbox_inches="tight")
+
+#-----
+
+df1 = df[df['受診都道府県'] == '東京都']
+
+ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+ax.hist(df1['発症日'], bins=b, edgecolor="black", alpha=0.5)
+ax.hist(df1['確定日'], bins=b, edgecolor="black", alpha=0.5)
+ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
+
+fig.savefig('../img/200312g.svg', bbox_inches="tight")
+

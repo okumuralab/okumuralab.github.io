@@ -22,7 +22,7 @@
 
 <p>このページは2020-03-12に作ったが，グラフはその後も更新している。</p>
 
-<p>まず，発症日と確定日のヒストグラムを半透明の棒グラフで：</p>
+<p>まず，発症日と確定日のヒストグラム（エピカーブ）を半透明の棒グラフで：</p>
 
 <pre><code>import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -105,13 +105,21 @@ ax.set_xlabel('確定日')
 
 <figure><img src="img/200312e.svg" alt="COVID-19 発症日の曜日の分布"></figure>
 
+<p>最初に挙げたエピカーブを東京都だけで描いてみる：</p>
+
+<pre><code>df1 = df[df['受診都道府県'] == '東京都']</code></pre>
+
+<figure><img src="img/200312g.svg" alt="COVID-19 発症日，確定日（東京都）"></figure>
+
+<p>このように，東京のデータは途中で発症日が報告されなくなってしまっている。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-04-25 20:58:50</time>
+Last modified: <time>2020-04-25 21:36:27</time>
 <!-- hhmts end -->
 </p>
 </body>
