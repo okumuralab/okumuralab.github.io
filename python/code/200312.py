@@ -4,29 +4,25 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 import numpy as np
-from dateutil.parser import parse
 import datetime
 
-df = pd.read_csv("https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv")
+df = pd.read_csv("https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv",
+                 parse_dates=['確定日', '発症日'])
 
-# t1 = [parse(str(x)) for x in df['発症日'] if str(x) != 'nan']
-# t2 = [parse(str(x)) for x in df['確定日'] if str(x) != 'nan']
-
-t1 = [parse(x) for x in df['発症日'] if str(x) != 'nan' and parse(x) > datetime.datetime(2020, 1, 1, 0, 0)]
-t2 = [parse(x) for x in df['確定日'] if str(x) != 'nan' and parse(x) > datetime.datetime(2020, 1, 1, 0, 0)]
+b = np.arange(min(min(df['確定日']), min(df['発症日'])),
+              max(max(df['確定日']), max(df['発症日'])) + datetime.timedelta(days=2),
+              datetime.timedelta(days=1))
 
 fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 
-b = np.arange(min(t1), max(t2) + datetime.timedelta(days=2), datetime.timedelta(days=1))
-
 ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
-ax.hist(t1, bins=b, edgecolor="black", alpha=0.5) # color=cmap(1), 
-ax.hist(t2, bins=b, edgecolor="black", alpha=0.5) # color=cmap(3), 
+ax.hist(df['発症日'], bins=b, edgecolor="black", alpha=0.5)
+ax.hist(df['確定日'], bins=b, edgecolor="black", alpha=0.5)
 ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
 
 fig.savefig('../img/200312a.svg', bbox_inches="tight")
@@ -37,9 +33,9 @@ ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
-h1, h2 = np.histogram(t1, bins=b)
+h1, h2 = np.histogram(df['発症日'], bins=b)
 ax.plot(h2[:-1], h1, 'o-')
-h1, h2 = np.histogram(t2, bins=b)
+h1, h2 = np.histogram(df['確定日'], bins=b)
 ax.plot(h2[:-1], h1, 'o-')
 ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
 
@@ -47,23 +43,26 @@ fig.savefig('../img/200312b.svg', bbox_inches="tight")
 
 #-----
 
-dt = [(parse(x['確定日']) - parse(x['発症日'])).days
-      for i, x in df.iterrows() if str(x['発症日']) != 'nan' and parse(x['発症日']) > datetime.datetime(2020, 1, 1, 0, 0)]
+dt = (df['確定日'] - df['発症日']).dt.days
 
 ax.clear()
-ax.hist(dt, bins=range(min(dt), max(dt)+2), color="lightgray", edgecolor="black")
+ax.hist(dt, bins=np.arange(min(dt), max(dt)+2), color="lightgray", edgecolor="black")
 ax.legend(['確定日-発症日 (confirmed - onset)'])
-ax.text(0.98, 0.87, 'median: ' + str(np.median(dt)),
+ax.text(0.98, 0.87, 'median: ' + str(np.median(dt.dropna())),
         horizontalalignment='right', transform=ax.transAxes)
 
 fig.savefig('../img/200312c.svg', bbox_inches="tight")
 
 #-----
 
-t = [parse(x['確定日']) for i, x in df.iterrows() if str(x['発症日']) != 'nan' and parse(x['発症日']) > datetime.datetime(2010, 1, 1, 0, 0)]
+h = [np.nanmedian(dt[df['確定日'] == i]) for i in b]
 
 ax.clear()
-ax.plot(t, dt, 'ko', markersize=5, alpha=0.1)
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+ax.plot(df['確定日'], dt, 'ko', markersize=5, alpha=0.1)
+ax.plot(b, h, color='C1')
 ax.set_xlabel('確定日 (confirmed)')
 ax.set_ylabel('確定日-発症日 (confirmed - onset)')
 
@@ -72,7 +71,7 @@ fig.savefig('../img/200312f.svg', bbox_inches="tight")
 #-----
 
 ax.clear()
-w2 = [pd.Timestamp(t).dayofweek for t in t2]
+w2 = [t.dayofweek for t in df['確定日']]
 h1, h2 = np.histogram(w2, range(0,8))
 ax.bar(['月','火','水','木','金','土','日'], h1, color="lightgray", edgecolor="black")
 ax.set_xlabel('確定日')
@@ -82,7 +81,7 @@ fig.savefig('../img/200312d.svg', bbox_inches="tight")
 #-----
 
 ax.clear()
-w1 = [pd.Timestamp(t).dayofweek for t in t1]
+w1 = [t.dayofweek for t in df['発症日']]
 h1, h2 = np.histogram(w1, range(0,8))
 ax.bar(['月','火','水','木','金','土','日'], h1, color="lightgray", edgecolor="black")
 ax.set_xlabel('発症日')

@@ -191,6 +191,8 @@ df.head()
 
 <p>真偽値の文字列は <code>True</code>，<code>False</code> がデフォルトですが，<code>true_values=['Yes'], false_values=['No']</code> のようなオプションで指定できます。</p>
 
+<p>「Timestamp」型の欠測値（空文字列，<code>NA</code> など）は NaN でなく NaT（Not-a-Time）になります（<code>pd.NaT</code>）。</p>
+
 <h2>データの書き出し</h2>
 
 <p>データフレームのCSV形式での書き出しは <code>pandas.DataFrame.to_csv()</code> を使います。デフォルトはUTF-8ですが，Excel互換のBOM付きUTF-8（行末CRLF）でインデックスを付けずに保存するには次のようにします：</p>
@@ -256,7 +258,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-26 10:49:58</time>
+Last modified: <time>2020-04-25 17:17:22</time>
 <!-- hhmts end -->
 </p>
 </body>
