@@ -30,6 +30,15 @@ fig.savefig('../img/COVID-tokyo-cum.svg', bbox_inches="tight")
 exit()
 
 ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+# ax.plot(df['date'], df['confirmed'].cumsum(), label='Tokyo cumulative confirmed')
+c = df['confirmed'].cumsum()
+ax.plot(df['date'][c >= 100], c[c >= 100], 'o-', label='Tokyo cumulative confirmed')
+ax.set_yscale('log')
+ax.legend(loc='upper left')
+
+ax.clear()
 w = [[pd.Timestamp(t).dayofweek] * c for t, c in zip(df['date'], df['confirmed'])]
 w = sum(w, [])
 h1, h2 = np.histogram(w, range(0,8))
