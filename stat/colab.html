@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Google ColabでRを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Google ColabでRを使う</h1>
+
+<p>最も簡単な方法は <a href="https://colab.research.google.com/notebook#create=true&amp;language=r">https://colab.research.google.com/notebook#create=true&amp;language=r</a> のリンクをたどることです。</p>
+
+<p>Python と共存させたい場合には <a href="https://rpy2.github.io">rpy2</a> を使います。あらかじめ</p>
+
+<pre><code>%load_ext rpy2.ipython</code></pre>
+
+<p>としておきます。R を使いたいときには，セルを <code>%%R</code> で始めます：</p>
+
+<pre><code>%%R
+curve(sin(x), -pi, pi)
+</code></pre>
+
+<p>サインカーブが描かれたでしょうか。</p>
+
+<p>日本語が使えるように設定された Colab 環境（例えば<a href="https://qiita.com/siraasagi/items/d72f60c25b30269d89e4">Google Colabでまたまた日本語表示が豆腐不可避な方に</a>参照）では，フォント名を指定して日本語が使えます：</p>
+
+<pre><code>%%R
+curve(sin(x), -pi, pi, main="サインカーブ", family="IPAexGothic")
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-04-27 21:30:27</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
