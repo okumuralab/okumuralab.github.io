@@ -96,20 +96,20 @@ for x in zip(confirmed[death >= bottom], death[death >= bottom], countries[death
 plt.xlabel('Confirmed')
 plt.ylabel('Deaths')
 
-x = np.array([min(confirmed[death >= bottom]), max(confirmed[death >= bottom])])
-y = x * death[0] / confirmed[0]
-
-plt.plot(x, y, color='lightgray', label=f'Deaths / Confirmed = {death[0] / confirmed[0]:.4f}')
-
 plt.autoscale(False)
 
-df = pd.read_csv("../data/COVID-19.csv",
-                 index_col='Date', parse_dates=['Date'])
-plt.plot(df['China Confirmed'], df['China Deaths'], 'x-')
+df1 = pd.read_csv("../data/COVID-19.csv",
+                  index_col='Date', parse_dates=['Date'])
+plt.plot(df1['China Confirmed'], df1['China Deaths'], 'x-')
 
-df = pd.read_csv("../data/COVID-jp.csv",
-                 index_col='Date', parse_dates=['Date'])
-plt.plot(df['Confirmed'], df['Deaths'], 'x-')
+df2 = pd.read_csv("../data/COVID-jp.csv",
+                  index_col='Date', parse_dates=['Date'])
+plt.plot(df2['Confirmed'], df2['Deaths'], 'x-')
+
+x = np.array([min(confirmed[death >= bottom]), max(confirmed[death >= bottom])])
+y = x * df1['China Deaths'][-1] / df1['China Confirmed'][-1]
+plt.plot(x, y, color='lightgray', label=f"Deaths / Confirmed = {df1['China Deaths'][-1] / df1['China Confirmed'][-1]:.4f}")
+
 plt.legend(loc='upper left')
 
 plt.savefig('../img/COVID-world.svg', bbox_inches="tight")
