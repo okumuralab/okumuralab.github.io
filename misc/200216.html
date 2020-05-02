@@ -45,7 +45,6 @@ systemctl status chronyd
 <p>いろいろなもののインストールは yum ではなく dnf を使う：</p>
 
 <pre><code>dnf update
-dnf list --installed
 dnf install emacs
 dnf install httpd httpd-tools httpd-devel httpd-manual
 systemctl enable httpd
@@ -53,6 +52,12 @@ systemctl start httpd
 firewall-cmd --add-service=http --zone=public --permanent
 firewall-cmd --add-service=https --zone=public --permanent
 firewall-cmd --reload
+</code></pre>
+
+<p>dnf のいろいろな使い方：</p>
+
+<pre><code>dnf list php-*
+dnf list installed | grep php
 </code></pre>
 
 <p><a href="https://letsencrypt.org">Let's Encrypt</a> で https にするには <a href="https://certbot.eff.org/lets-encrypt/centosrhel8-apache">この指示</a> に従って Certbot をインストールする。</p>
@@ -107,7 +112,7 @@ systemctl restart httpd
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-22 15:24:58</time>
+Last modified: <time>2020-05-02 17:56:09</time>
 <!-- hhmts end -->
 </p>
 </footer>

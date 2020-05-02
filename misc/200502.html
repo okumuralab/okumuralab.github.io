@@ -27,10 +27,14 @@ passwd okumura
 <p>アップデートは yum でなく dnf を使う：</p>
 
 <pre><code>dnf update
-dnf list --installed
 dnf install langpacks-ja
 dnf install emacs
 dnf install postfix mailx
+emacs -nw /etc/postfix/main.cf  # inet_interfaces = all にする
+systemctl start postfix
+systemctl enable postfix
+emacs /etc/aliases  # root のエイリアスを設定
+newaliases
 </code></pre>
 
 <p>Apacheのインストール：</p>
@@ -55,10 +59,7 @@ systemctl restart httpd
 
 <p>mariadb（MySQL派生のデータベース）のインストール：</p>
 
-<pre><code>dnf list maria*
-dnf install mariadb mariadb-server
-dnf list installed | grep mariadb
-
+<pre><code>dnf install mariadb mariadb-server mariadb-devel
 systemctl start mariadb
 systemctl enable mariadb
 </code></pre>
@@ -87,7 +88,7 @@ chown apache:apache /var/www/moodledata
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-02 17:35:01</time>
+Last modified: <time>2020-05-02 17:52:34</time>
 <!-- hhmts end -->
 </p>
 </footer>
