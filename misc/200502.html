@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>CentOS 8 + Moodle 3.8 のインストール</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>CentOS 8 + Moodle 3.8 のインストール</h1>
+
+<p>さくらの VPS に CentOS 8 + Moodle 3.8 をインストールする手順。</p>
+
+<p>さくらの VPS に CentOS 8 を入れるのはボタン一つでできる。もともと /etc/selinux/config で SELINUX=disabled になっているし，/etc/ssh/sshd_config は PermitRootLogin yes になっているし，ファイアウォールも動いてないようだ。とりあえず一般ユーザを作っておく：</p>
+
+<pre><code>useradd okumura
+passwd okumura
+</code></pre>
+
+<p>アップデートは yum でなく dnf を使う：</p>
+
+<pre><code>dnf update
+dnf list --installed
+dnf install langpacks-ja
+dnf install emacs
+dnf install postfix mailx
+</code></pre>
+
+<p>Apacheのインストール：</p>
+
+<pre><code>dnf install httpd httpd-tools httpd-devel httpd-manual
+systemctl enable httpd
+systemctl start httpd
+</code></pre>
+
+<p>PHPのインストール：</p>
+
+<pre><code>dnf install php php-mbstring php-xml php-xmlrpc php-gd php-pdo php-mysqlnd php-json \
+    php-devel php-pecl-zip php-intl php-soap php-opcache
+</code></pre>
+
+<p>必要に応じて /etc/php.ini と /etc/php-fpm.d/www.conf を編集。</p>
+
+<pre><code>systemctl start php-fpm
+systemctl enable php-fpm
+systemctl restart httpd
+</code></pre>
+
+<p>mariadb（MySQL派生のデータベース）のインストール：</p>
+
+<pre><code>dnf list maria*
+dnf install mariadb mariadb-server
+dnf list installed | grep mariadb
+
+systemctl start mariadb
+systemctl enable mariadb
+</code></pre>
+
+<p>インストールしたら mysql_secure_installation を実行する。いろいろ聞いてくるがすべてデフォルトでよい。root のパスワードを設定せよと言ってくるが，これは mysql の root のこと。root ユーザのログインパスワードとは別のものを設定すればよい。</p>
+
+<p>Moodle 3.8 のための設定（moodleuserpassword は置き換えること）：</p>
+
+<pre><code>mysql -u root -p
+CREATE DATABASE moodle DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,CREATE TEMPORARY TABLES,DROP,INDEX,ALTER ON moodle.* TO 'moodleuser'@'localhost' IDENTIFIED BY 'moodleuserpassword';
+quit
+
+mkdir /var/www/moodledata
+chown apache:apache /var/www/moodledata
+</code></pre>
+
+<p><a href="https://moodle.org">moodle.org</a> から Moodle 3.8 ソースをいただいてきて /var/www/html で展開する。/var/www/html/moodle の中に入る。</p>
+
+<p>あとは URL にアクセスし，指示にしたがって入力すればよい。config.php が画面上に生成されるので，コピペして /var/www/html/moodle/config.php を作る。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-05-02 17:35:01</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
