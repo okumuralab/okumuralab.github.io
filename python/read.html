@@ -189,6 +189,8 @@ sys.getsizeof(df)
 df.head()
 </code></pre>
 
+<p>データ型を指定しないと自動判断しようとしますが，うまくいかないと「Columns ... have mixed types」のような警告を出します。<code>low_memory=False</code> オプションで，より丁寧に自動判断してくれます。</p>
+
 <p>真偽値の文字列は <code>True</code>，<code>False</code> がデフォルトですが，<code>true_values=['Yes'], false_values=['No']</code> のようなオプションで指定できます。</p>
 
 <p>「Timestamp」型の欠測値（空文字列，<code>NA</code> など）は NaN でなく NaT（Not-a-Time）になります（<code>pd.NaT</code>）。</p>
@@ -267,7 +269,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-04-26 22:43:31</time>
+Last modified: <time>2020-05-03 20:17:26</time>
 <!-- hhmts end -->
 </p>
 </body>

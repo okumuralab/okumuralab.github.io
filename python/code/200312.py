@@ -7,7 +7,7 @@ import numpy as np
 import datetime
 
 df = pd.read_csv("https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv",
-                 parse_dates=['確定日', '発症日'])
+                 parse_dates=['確定日', '発症日'], low_memory=False)
 
 b = np.arange(min(min(df['確定日']), min(df['発症日'])),
               max(max(df['確定日']), max(df['発症日'])) + datetime.timedelta(days=2),
