@@ -29,7 +29,7 @@ plt.plot([-1,1])
 plt.show()
 </code></pre>
 
-<p>でエラーになるなら，<code>~/.matplotlib/matplotlibrc</code> の<a href="https://matplotlib.org/faq/usage_faq.html#what-is-a-backend">バックエンド</a>の指定を見直します。Macの場合は</p>
+<p>でエラーになるなら，設定ファイル matplotlibrc（Mac と Windows では <code>~/.matplotlib/matplotlibrc</code>，Linux では <code>~/.config/matplotlib/matplotlibrc</code>）の<a href="https://matplotlib.org/faq/usage_faq.html#what-is-a-backend">バックエンド</a>の指定を見直します。Mac の場合は</p>
 
 <pre>
 <code>backend: MacOSX
@@ -43,7 +43,7 @@ plt.show()
 
 <p>とします（うまくいかなければ <code>MacOSX Qt5Agg Qt4Agg Gtk3Agg GTK3Cairo TkAgg WxAgg Agg Cairo</code> の中から選んでください）。</p>
 
-<p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら，システムにインストールされている適当な TrueType または OpenType フォント名を <code>~/.matplotlib/matplotlibrc</code> に書き加えます。Macなら例えば</p>
+<p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら，システムにインストールされている適当な TrueType または OpenType フォント名を matplotlibrc に書き加えます。Mac なら例えば</p>
 
 <pre>
 <code>font.family: AppleGothic
@@ -55,7 +55,7 @@ plt.show()
 <code>font.family: IPAexGothic
 </code></pre>
 
-<p>新しいフォントをインストールしたら，フォント名のキャッシュ <code>~/.matplotlib/font*</code> は消します（次回 matplotlib 使用の際に自動生成されます）。</p>
+<p>新しいフォントをインストールしたら，フォント名のキャッシュ（Mac と Windows では <code>~/.matplotlib/fontlist-*.json</code>，Linux では <code>~/.cache/matplotlib/fontlist-*.json</code>）は消します（次回 matplotlib 使用の際に自動生成されます）。</p>
 
 <p>matplotlib 3.1.0 以降は TrueType Collection も表示できるようになりましたので，Windows なら</p>
 
@@ -70,10 +70,14 @@ plt.show()
 <p>PDF で保存する場合，TrueType フォントは Type 3 形式でサブセット埋め込みされます。OpenType の Source Han Sans などは，日本語表示には使えますが，サブセット化できず，丸ごと埋め込まれてしまい，PDF のファイルサイズが巨大になります。また，今のところ，TrueType Collection は PDF 保存に対応していないようです。</p>
 
 <div class="note">
-<p><code>~/.matplotlib/matplotlibrc</code> を作る前の，システムの <code>matplotlibrc</code> の位置は，ターミナルに次のコマンドを打ち込めば表示されます：</p>
+<p>ユーザの matplotlibrc を作る前の，システムの matplotlibrc の位置は，ターミナルに次のコマンドを打ち込めば表示されます：</p>
 <pre>
 <code>python3 -c "import matplotlib; print(matplotlib.matplotlib_fname())"
 </code></pre>
+</div>
+
+<div class="note">
+<p>Linux では /usr/local/share/fonts の下に（適当にサブディレクトリを作って）ipaexg.ttf を入れて，フォント名キャッシュをいったん消せば，認識されます。あるいは，ディストリビューションによりますが，<code>yum install ipa-gothic-fonts</code> あるいは <code>apt-get install fonts-ipafont-gothic</code> などとしても IPA フォント（ex でないもの）がインストールできます。この場合は matplotlibrc には <code>font.family: IPAGothic</code> と書きます。</p>
 </div>
 
 <div class="note">
@@ -376,7 +380,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-03-11 15:56:04</time>
+Last modified: <time>2020-05-03 16:10:55</time>
 <!-- hhmts end -->
 </p>
 </body>
