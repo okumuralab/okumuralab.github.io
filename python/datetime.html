@@ -122,15 +122,29 @@ np.datetime64("2019-05-01 12:34:56")  # np.datetime64("2019-05-01 12:34:56", "s"
 <code>t = np.arange(np.datetime64("2019-05-01"), np.datetime64("2019-06-02"))
 </code></pre>
 
-<p>pandas は NumPy の <code>datetime64[ns]</code>（ナノ秒単位）に限定しているので，1677年から2262年くらいまでしか扱えない。<a href="read.html">データの読み書き</a>参照。</p>
+<p>pandas の Timestamp は NumPy の <code>datetime64[ns]</code>（ナノ秒単位）に限定しているので，1677年から2262年くらいまでしか扱えない（<a href="read.html">データの読み書き</a>参照）。</p>
 
+<pre>
+<code>import pandas as pd
+
+t = pd.to_datetime("2020-05-06")
+t                      #==> Timestamp('2020-05-06 00:00:00')
+t.to_numpy()           #==> numpy.datetime64('2020-05-06T00:00:00.000000000')
+t.to_pydatetime()      #==> datetime.datetime(2020, 5, 6, 0, 0)
+t.timestamp()          #==> 1588723200.0  # seconds since Epoch
+t.value                #==> 1588723200000000000  # ns since Epoch
+t.strftime("%Y-%m-%d") #==> '2020-05-06'
+t.year                 #==> 2020
+t.month                #==> 5
+t.day                  #==> 6
+t.dayofweek            #==> 2  # 水曜日
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-26 09:19:35</time>
+Last modified: <time>2020-05-05 15:16:35</time>
 <!-- hhmts end -->
 </p>
 </body>

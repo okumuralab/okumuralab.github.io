@@ -92,6 +92,7 @@ df.columns  # 各列の名前
 df.dtypes   # 各列の名前とデータ型を表示
 df.index    # 行の名前（デフォルトでは 0 から始まる行番号）
 df.describe() # 記述統計量を表示
+df.to_latex() # LaTeXのtabular形式に変換
 df1 = df.dropna() # 欠測値のある行を外す
 df2 = df.fillna(0) # 欠測値を0で置き換える
 df2 = df.fillna(method="ffill") # 欠測値を直前の行で置き換える
@@ -269,7 +270,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-03 20:17:26</time>
+Last modified: <time>2020-05-05 14:24:48</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -62,7 +62,7 @@ with urllib.request.urlopen(url) as f:
         #     countries.append('China')
         #     confirmed.append(int(m[5]))
         #     death.append(int(m[6]))
-        m = re.search(r'^([^\d]+)?(\d+) +(\d+) +(\d+) +(\d+) +([A-Za-z ]+)(\d+)$', line)
+        m = re.search(r'^([^\d]+)?(\d+) +(-?\d+) +(\d+) +(-?\d+) +([A-Za-z ]+)(\d+)$', line)
         if m and m[1] and m[1].strip() != 'Grand total':
             print(line)
             country = m[1].strip()
