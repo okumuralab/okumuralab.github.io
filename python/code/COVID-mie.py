@@ -3,9 +3,15 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
+import requests
+import re
 
-df = pd.read_csv('https://www.pref.mie.lg.jp/common/content/000888620.csv',
-                 encoding='cp932', parse_dates=['日付'])
+r = requests.get('https://www.pref.mie.lg.jp/YAKUMUS/HP/m0068000066_00002.htm')
+r.encoding = 'utf-8'
+a = re.findall(' href="(.*?\.csv)"', r.text)
+url = 'https://www.pref.mie.lg.jp' + a[1]
+
+df = pd.read_csv(url, encoding='cp932', parse_dates=['日付'])
 
 fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()

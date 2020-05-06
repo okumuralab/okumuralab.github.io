@@ -224,14 +224,19 @@ ax.legend(['Negative', 'Positive'])
 
 <h3>三重県</h3>
 
-<p>三重県はCSVでデータが提供されるようになったので簡単：</p>
+<p>三重県は<a href="https://www.pref.mie.lg.jp/YAKUMUS/HP/m0068000066_00002.htm">こちら</a>からCSVでデータが提供されるようになった：</p>
 
 <pre><code>import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
+import requests
+import re
 
-df = pd.read_csv('https://www.pref.mie.lg.jp/common/content/000888620.csv',
-                 encoding='cp932', parse_dates=['日付'])
+r = requests.get('https://www.pref.mie.lg.jp/YAKUMUS/HP/m0068000066_00002.htm')
+r.encoding = 'utf-8'
+a = re.findall(' href="(.*?\.csv)"', r.text)
+url = 'https://www.pref.mie.lg.jp' + a[1]
+df = pd.read_csv(url, encoding='cp932', parse_dates=['日付'])
 fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
@@ -277,7 +282,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-06 11:34:40</time>
+Last modified: <time>2020-05-06 22:36:16</time>
 <!-- hhmts end -->
 </p>
 </body>
