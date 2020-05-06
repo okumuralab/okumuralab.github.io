@@ -19,26 +19,31 @@ else:
     url = url + a[0]
 
 dic = {
+    'United Republic of Tanzania': 'Tanzania',
     'United States of America': 'US',
-    'Republic of Korea': 'Korea',
-    'The United Kingdom': 'UK',
+    'Dominican Republic': 'Dominica',
+    'Bolivia (Plurinational State of)': 'Bolivia',
+    'of)': 'Venezuela',
+    'Iran (Islamic Republic of)': 'Iran',
     'United Arab Emirates': 'Arab',
     'occupied Palestinian territory': 'Palestine',
-    'Bosnia and Herzegovina': 'Bosnia',
+    'The United Kingdom': 'UK',
     'Russian Federation': 'Russia',
     'Republic of Moldova': 'Moldova',
-    'Iran (Islamic Republic of)': 'Iran'
+    'Bosnia and Herzegovina': 'Bosnia',
+    'Republic of Korea': 'Korea'
 }
 
 countries = []
 confirmed = []
 death = []
 
+# with open('/usr/local/junk/2020/2020-05-06/20200505covid-19-sitrep-106.pdf', 'rb') as f:
 with urllib.request.urlopen(url) as f:
     for line in "".join(pdftotext.PDF(f)).split("\n"):
         line = line.strip()
-        m = re.search(r'^([^\d]+)?(\d+) +(-?\d+) +(\d+) +(-?\d+) +([A-Za-z ]+)(\d+)$', line)
-        if m and m[1] and m[1].strip() != 'Grand total':
+        m = re.search(r'^([^\d]+) +(\d+) +(-?\d+) +(\d+) +(-?\d+) +([A-Za-z ]+)(\d+)$', line)
+        if m and m[1].strip() != 'Grand total':
             print(line)
             country = m[1].strip()
             if country in dic:
@@ -53,7 +58,7 @@ death = np.array(death)
 
 plt.figure(figsize=[6.4, 6.4])
 
-bottom = 100
+bottom = 500
 
 plt.clf()
 plt.plot(confirmed[death >= bottom], death[death >= bottom], 'o')

@@ -128,6 +128,7 @@ np.datetime64("2019-05-01 12:34:56")  # np.datetime64("2019-05-01 12:34:56", "s"
 <code>import pandas as pd
 
 t = pd.to_datetime("2020-05-06")
+t = pd.to_datetime("2020年5月6日", format='%Y年%m月%d日')  # 上と同じ
 t                      #==> Timestamp('2020-05-06 00:00:00')
 t.to_numpy()           #==> numpy.datetime64('2020-05-06T00:00:00.000000000')
 t.to_pydatetime()      #==> datetime.datetime(2020, 5, 6, 0, 0)
@@ -138,13 +139,17 @@ t.year                 #==> 2020
 t.month                #==> 5
 t.day                  #==> 6
 t.dayofweek            #==> 2  # 水曜日
+</code></pre>
+
+<p>format の形式については <a href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes">strftime() and strptime() Format Codes</a> 参照。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-05 15:16:35</time>
+Last modified: <time>2020-05-06 14:41:44</time>
 <!-- hhmts end -->
 </p>
 </body>
