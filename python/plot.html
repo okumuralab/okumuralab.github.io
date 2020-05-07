@@ -343,7 +343,16 @@ plt.axhline(0.5, linewidth=1, color="black")
 
 <pre><code>fig, ax = plt.subplots(figsize=[6.4, 4.8])</code></pre>
 
-<p>この流儀のほうがいろいろ細かいことができます。例えば Matplotlib 3.1 で追加された ConciseDateFormatter を使った時系列の簡潔な軸ラベル：</p>
+<p>この流儀のほうがいろいろ細かいことがしやすくなります。例えば時系列の軸ラベルの設定：</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+
+fig, ax = plt.subplots()
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+</code></pre>
+
+<p>さらに Matplotlib 3.1 で追加された ConciseDateFormatter を使った時系列の簡潔な軸ラベル：</p>
 
 <pre><code>import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -380,7 +389,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-03 16:10:55</time>
+Last modified: <time>2020-05-07 14:28:47</time>
 <!-- hhmts end -->
 </p>
 </body>

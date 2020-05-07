@@ -42,15 +42,15 @@ death = []
 with urllib.request.urlopen(url) as f:
     for line in "".join(pdftotext.PDF(f)).split("\n"):
         line = line.strip()
-        m = re.search(r'^([^\d]+) +(\d+) +(-?\d+) +(\d+) +(-?\d+) +([A-Za-z ]+)(\d+)$', line)
+        m = re.search(r'^([^\d\[]+)(\[\d\])?  +([\d]+( \d\d\d)?( \d\d\d)?)  +(-?[\d]+( \d\d\d)?( \d\d\d)?)  +([\d]+( \d\d\d)?( \d\d\d)?)  +(-?[\d]+( \d\d\d)?( \d\d\d)?) +([A-Za-z ]+)([\d]+)$', line)
         if m and m[1].strip() != 'Grand total':
-            print(line)
             country = m[1].strip()
             if country in dic:
                 country = dic[country]
             countries.append(country)
-            confirmed.append(int(m[2]))
-            death.append(int(m[4]))
+            confirmed.append(int(m[3].replace(' ', '')))
+            death.append(int(m[9].replace(' ', '')))
+            print(country, int(m[3].replace(' ', '')), int(m[9].replace(' ', '')))
 
 countries = np.array(countries)
 confirmed = np.array(confirmed)
