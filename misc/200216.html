@@ -88,7 +88,7 @@ ServerName oku1.edu.mie-u.ac.jp
 
 <p>次の行を crontab に登録（このあたりは Certbot のバージョンによるので実際の指示に従う）：</p>
 
-<pre><code>0 0,12 * * * root python3 -c 'import random; import time; time.sleep(random.random() * 3600)' &amp;&amp; /usr/local/bin/certbot-auto renew
+<pre><code>0 0,12 * * * python3 -c 'import random; import time; time.sleep(random.random() * 3600)' &amp;&amp; /usr/local/bin/certbot-auto renew
 </code></pre>
 
 <p>これで大丈夫なはずであるが，なぜか証明書がおかしかったので，/etc/httpd/conf/httpd-le-ssl.conf を見て /etc/httpd/conf.d/ssl.conf の中の SSLCertificateFile と SSLCertificateKeyFile を書き直した。</p>
@@ -112,7 +112,7 @@ systemctl restart httpd
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-02 17:56:09</time>
+Last modified: <time>2020-05-09 12:18:57</time>
 <!-- hhmts end -->
 </p>
 </footer>
