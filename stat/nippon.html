@@ -70,9 +70,16 @@ legend(143, 33, c("副免許不要","副免許必要"), fill=c("blue","yellow"))
 <p>ついでに，<a href="http://nakano.ac/index.php?%B9%E2%B9%BB%A1%D6%BE%F0%CA%F3%A1%D7%B6%B5%B0%F7%BA%CE%CD%D1%BB%EE%B8%B3%BE%F5%B6%B7">中野先生のページ</a>から副免許の要・不要も書き込まれたデータをすべていただいてきて，アニメーションで表示する：</p>
 
 <pre>
-<code>year = 2001:2020
-cols = matrix(rep("white", 47*20), nrow=47)
+<code>year = 2001:2021
+cols = matrix(rep("white", 47*21), nrow=47)
 rownames(cols) = kenmei
+
+cols[c("青森","岩手","山形","栃木","千葉","東京","神奈川","山梨","新潟","石川","福井",
+       "静岡","愛知","岐阜","京都","大阪","鳥取","岡山","広島","徳島","高知","熊本",
+       "大分","宮崎","沖縄"), 21] = "blue"
+cols[c("北海道","宮城","茨城","埼玉","富山","長野","兵庫","島根","香川","山口"), 21] = "yellow"
+
+# 5/13現在，愛媛県・福岡県が未公開
 
 cols[c("青森","岩手","千葉","石川","福井","静岡","愛知","岐阜","京都","大阪","和歌山",
        "岡山","広島","徳島","高知","福岡","佐賀","熊本","大分","宮崎","沖縄"), 20] = "blue"
@@ -116,7 +123,7 @@ cols[c("茨城","群馬","埼玉","東京","富山","愛知","鳥取"), 8] = "ye
 
 library(animation)
 saveGIF({
-    for (i in 8:20) {
+    for (i in 8:21) {
         par(mar=c(0,0,2,0))
         JapanPrefMap(col=cols[,i])
         title(year[i])
@@ -125,7 +132,7 @@ saveGIF({
 })
 </code></pre>
 
-<figure><img src="img/191105b.gif" alt="高校で「情報」教員が採用された都道府県"></figure>
+<figure><img src="img/200514a.gif" alt="高校で「情報」教員が採用された都道府県"></figure>
 
 <h2>投影法の変更</h2>
 
@@ -188,7 +195,7 @@ legend(600, 3700, c("副免許不要","副免許必要"), fill=c("blue","yellow"
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-11-05 22:36:16</time>
+Last modified: <time>2020-05-14 15:00:01</time>
 <!-- hhmts end -->
 </p>
 </footer>

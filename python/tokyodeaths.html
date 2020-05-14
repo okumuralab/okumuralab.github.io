@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>COVID-19</title>
+<title>東京の超過死亡？</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -14,49 +14,41 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>東京の死者数</h1>
+<h1>東京の超過死亡？</h1>
 
-<p><a href="https://www.ft.com/content/a26fbf7e-48f8-11ea-aeb3-955839e06441">Financial Times の COVID-19 グラフ</a>でお馴染みの超過死亡（excess mortality）が日本でも見られるかが話題になっている。すでに<a href="https://www.niid.go.jp/niid/ja/flu-m/2112-idsc/jinsoku/1852-flu-jinsoku-7.html">インフルエンザ関連死亡迅速把握システム</a>に超過死亡が見えるという説もある（<a href="https://note.com/lotta_liz_di/n/n506972308fd6">日本の「超過死」についての注意事項</a>も参照）。しかし日本全体の人口動態統計速報は厚労省だから集計が遅い（<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/02.html">2020年2月分</a>は2020年4月24日に出た）。</p>
+<p><a href="https://www.ft.com/content/a26fbf7e-48f8-11ea-aeb3-955839e06441">Financial Times の COVID-19 グラフ</a>でお馴染みの超過死亡（excess mortality）が日本でも見られるかが話題になっている。すでに<a href="https://www.niid.go.jp/niid/ja/flu-m/2112-idsc/jinsoku/1852-flu-jinsoku-7.html">インフルエンザ関連死亡迅速把握システム</a>に超過死亡が見えるという説もある（ただし<a href="https://note.com/lotta_liz_di/n/n506972308fd6">日本の「超過死」についての注意事項</a>参照）。しかし日本全体の人口動態統計速報は集計に2ヶ月近くかかる（<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/02.html">2020年2月分</a>は2020年4月24日に出た）。</p>
 
-<p>そこで，日本で一番 COVID-19 の感染が深刻な東京都のデータを調べてみる。すでに何人もの人がグラフを描いているので，ここに書いたことはn番煎じである）。</p>
+<p>そこで，日本で一番 COVID-19 の感染が深刻な東京都のデータを調べてみる。すでに何人もの方が同様なグラフを描いているので，ここに書いたことはn番煎じである）。</p>
 
-<p>東京都の死者数などの統計は<a href="https://www.toukei.metro.tokyo.lg.jp/jsuikei/js-index.htm">東京都の人口（推計）</a>以下にある。2011年の大震災の年も調べたかったので，2011年以降の毎月の死者数を <a href="data/tokyodeaths.csv">tokyodeaths.csv</a> というファイルに収めた。</p>
+<p>東京都の死者数などの統計は<a href="https://www.toukei.metro.tokyo.lg.jp/jsuikei/js-index.htm">東京都の人口（推計）</a>以下にある。2011年の大震災の年も調べたかったので，2010年以降の毎月の死者数を <a href="data/tokyodeaths.csv">tokyodeaths.csv</a> というファイルに収めた。</p>
 
 <pre><code>import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/tokyodeath.csv')
 </code></pre>
 
-<p>単純に月ごとにプロットすると，大の月・小の月の影響で凸凹する。しかも，2020年のようなうるう年の2月は平年に比べて 3.6% もの「超過死亡」が見えてしまう。そこで，1日あたりの死者数に直してからプロットする。</p>
+<p>単純に月ごとにプロットすると，大の月・小の月の影響で凸凹する。しかも，2020年のようなうるう年の2月は平年に比べて 3.6% もの「超過死亡」になってしまう。そこで，1日あたりの死者数に直してからプロットする。</p>
 
 <pre><code>def days(year, month):
     m = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     return m[month - 1] + ((month == 2) and
                            ((year % 4 == 0) and (year % 100 != 0) or (year % 400 == 0)))
 
-perday = []
-for i, r in df.iterrows():
-    perday.append(r[2] / days(r[0], r[1]))
+perday = np.array([r[2] / days(r[0], r[1]) for i, r in df.iterrows()])
 
-perday = np.array(perday)
-
-plt.plot(df[df['year'] == 2010]['month'], perday[df['year'] == 2010], 'o-k', alpha=0.2)
+for y in range(2010, 2020):
+    plt.plot(df[df['year'] == y]['month'], perday[df['year'] == y], 'o-k', alpha=0.2)
 plt.plot(df[df['year'] == 2011]['month'], perday[df['year'] == 2011], 'o-', label='2011')
-plt.plot(df[df['year'] == 2012]['month'], perday[df['year'] == 2012], 'o-k', alpha=0.2)
-plt.plot(df[df['year'] == 2013]['month'], perday[df['year'] == 2013], 'o-k', alpha=0.2)
-plt.plot(df[df['year'] == 2014]['month'], perday[df['year'] == 2014], 'o-k', alpha=0.2)
-plt.plot(df[df['year'] == 2015]['month'], perday[df['year'] == 2015], 'o-k', alpha=0.2)
-plt.plot(df[df['year'] == 2016]['month'], perday[df['year'] == 2016], 'o-k', alpha=0.2)
-plt.plot(df[df['year'] == 2017]['month'], perday[df['year'] == 2017], 'o-k', alpha=0.2)
-plt.plot(df[df['year'] == 2018]['month'], perday[df['year'] == 2018], 'o-k', alpha=0.2)
-plt.plot(df[df['year'] == 2019]['month'], perday[df['year'] == 2019], 'o-k', alpha=0.2)
-plt.plot(df[df['year'] == 2020]['month'], perday[df['year'] == 2020], 'o-k', label='2020')
+plt.plot(df[df['year'] == 2020]['month'], perday[df['year'] == 2020], 'o-', label='2020')
 plt.legend()
 fig.savefig('tokyodeaths1.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/tokyodeaths1.svg" alt="Deaths in Tokyo"></figure>
+
+<p>月による変動はどの年もほぼ同じだが，次第に増える傾向があるのは，東京都の人口増加と高齢化によるものであろう。このため，次のように描くほうがよいかもしれない：</p>
 
 <pre><code>plt.clf()
 plt.plot(df[df['month'] == 1]['year'], perday[df['month'] == 1], 'o-', label='Jan')
@@ -68,13 +60,15 @@ fig.savefig('tokyodeaths2.svg', bbox_inches="tight")
 
 <figure><img src="img/tokyodeaths2.svg" alt="Deaths in Tokyo"></figure>
 
+<p>2月は2020年に顕著な減少が見られる。理由としては，2020年の冬は温暖であり，新型コロナウイルス感染対策のおかげでインフルエンザも少なかったことが考えられる。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-13 22:49:18</time>
+Last modified: <time>2020-05-14 12:33:10</time>
 <!-- hhmts end -->
 </p>
 </body>
