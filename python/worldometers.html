@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>WorldometersのCOVID-19表のスクレイピング</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>WorldometersのCOVID-19表のスクレイピング</h1>
+
+<p>Worldometersの<a href="https://www.worldometers.info/coronavirus/">COVID-19 Coronavirus Pandemic</a>のHTML表をスクレイピングしてグラフにする。</p>
+
+<p><code>pd.read_html(url)</code> ではなぜかエラーになる。おそらく User-Agent が "Python-urllib/3.7" になるためだろう。適当なブラウザに偽装してアクセス。</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import requests
+import time
+
+url = 'https://www.worldometers.info/coronavirus/'
+ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15"
+
+now = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ' JST'
+r = requests.get(url, headers={'User-Agent': ua})
+r.encoding = 'utf-8'
+tables = pd.read_html(r.text)
+
+df = tables[0][1:-1]
+
+plt.figure(figsize=[6.4, 6.4])
+
+c = 'Country,Other'
+japan = df[c] == 'Japan'
+usa = df[c] == 'USA'
+minpop = 50000000
+</code></pre>
+
+<p>横軸は人口100万人あたりの感染者数，縦軸は人口100万人あたりの検査数。</p>
+
+<pre><code>x = 'Tot Cases/1M pop'
+y = 'Tests/ 1M pop'
+
+# plt.clf()
+plt.plot(df[x], df[y], 'o', alpha=0.5)
+plt.plot(df[x][japan], df[y][japan], 'o', color='C1')
+plt.plot(df[x][usa], df[y][usa], 'o', color='C3')
+plt.xscale('log')
+plt.yscale('log')
+plt.axis('equal')
+plt.xlabel(x)
+plt.ylabel(y)
+
+for i, r in df.iterrows():
+    if r['Population'] >= minpop:
+        plt.text(r[x], r[y], r[c],
+                 horizontalalignment='left', verticalalignment='bottom')
+
+xj = np.array([min(df[x]), max(df[x])])
+k = (df[y][japan] / df[x][japan]).values[0]
+yj = k * xj
+
+plt.autoscale(False)
+plt.plot(xj, yj, color='lightgray', label=f"Tests / Cases = {k:.1f} (Japan)")
+plt.legend()
+plt.figtext(0.9, 0.9, 'generated: ' + now, horizontalalignment='right')
+plt.savefig('worldometers1.svg', bbox_inches="tight")
+</code></pre>
+
+<p>中央のオレンジが日本，右上の赤が米国（USA）。斜め45°の灰色の直線は，日本と同じ検査数/感染者数を表す。国名は人口5000万人以上の国だけ書き込んだ。</p>
+
+<figure><img src="img/worldometers1.svg" alt="COVID-19"></figure>
+
+<p>横軸を100万人あたり死者数にしたもの：</p>
+
+<pre><code>x = 'Deaths/1M pop'
+y = 'Tests/ 1M pop'
+
+plt.clf()
+</code></pre>
+
+<p>以下同じ。</p>
+
+<figure><img src="img/worldometers2.svg" alt="COVID-19"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-05-17 14:24:45</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
