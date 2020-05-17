@@ -56,11 +56,12 @@ print(t2 - t1)
 
 <pre>
 <code>time.localtime() # 現在時刻
-time.localtime(t1)  # 1970年からの秒数t1の時刻
-time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(t1)) # 'YYYY-MM-DD HH:MM:SS'
+time.localtime(t1)  # 1970年頭からの秒数t1の時刻
+time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime()) # 'YYYY-MM-DD HH:MM:SS JST'
+time.strftime('%Y-%m-%d %H:%M:%S %Z', time.gmtime())    # 'YYYY-MM-DD HH:MM:SS UTC'
 </code></pre>
 
-<p><code>datetime.datetime</code> 型は，年月日時分秒，マイクロ秒，タイムゾーン情報を持つ構造体である：</p>
+<p><code>datetime.datetime</code> 型は，年月日時分秒マイクロ秒を持つ構造体である：</p>
 
 <pre>
 <code>import datetime
@@ -149,7 +150,7 @@ t.dayofweek            #==> 2  # 水曜日
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-06 14:41:44</time>
+Last modified: <time>2020-05-17 15:39:15</time>
 <!-- hhmts end -->
 </p>
 </body>
