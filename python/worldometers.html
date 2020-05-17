@@ -29,7 +29,7 @@ import time
 url = 'https://www.worldometers.info/coronavirus/'
 ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15"
 
-now = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ' JST'
+now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 r = requests.get(url, headers={'User-Agent': ua})
 r.encoding = 'utf-8'
 tables = pd.read_html(r.text)
@@ -97,7 +97,7 @@ plt.clf()
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-17 14:24:45</time>
+Last modified: <time>2020-05-17 14:50:23</time>
 <!-- hhmts end -->
 </p>
 </body>
