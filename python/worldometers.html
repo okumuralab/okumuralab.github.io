@@ -16,6 +16,8 @@
 
 <h1>WorldometersのCOVID-19表のスクレイピング</h1>
 
+<p><em>[注意]</em> Worldometersのデータは出所不明（<a href="https://edition.cnn.com/interactive/2020/05/world/worldometer-coronavirus-mystery/">The Covid-19 pandemic has catapulted one mysterious data website to prominence, sowing confusion in international rankings</a>）。</p>
+
 <p>Worldometersの<a href="https://www.worldometers.info/coronavirus/">COVID-19 Coronavirus Pandemic</a>のHTML表をスクレイピングしてグラフにする。</p>
 
 <p><code>pd.read_html(url)</code> ではなぜかエラーになる。おそらく User-Agent が "Python-urllib/3.7" になるためだろう。適当なブラウザに偽装してアクセス。</p>
@@ -97,7 +99,7 @@ plt.clf()
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-17 14:50:23</time>
+Last modified: <time>2020-05-20 20:22:13</time>
 <!-- hhmts end -->
 </p>
 </body>
