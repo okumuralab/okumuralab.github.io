@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>大阪市の超過死亡？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>大阪市の超過死亡？</h1>
+
+<p><a href="tokyodeaths.html">東京の超過死亡？</a>に倣って<a href="https://www.city.osaka.lg.jp/toshikeikaku/page/0000014987.html">大阪市</a>を調べてみる。毎月の死者数を納めた <a href="data/osakadeaths.csv">osakadeaths.csv</a> は，急いで作ったため，どなたかチェックしていただければありがたい。</p>
+
+<pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/osakadeaths.csv')
+
+def days(year, month):
+    m = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    return m[month - 1] + ((month == 2) and
+                           ((year % 4 == 0) and (year % 100 != 0) or (year % 400 == 0)))
+
+perday = np.array([r[2] / days(r[0], r[1]) for i, r in df.iterrows()])
+
+plt.clf()
+for y in range(2015, 2021):
+    plt.plot(df[df['year'] == y]['month'], perday[df['year'] == y], 'o-', label=y)
+
+plt.legend()
+plt.savefig('osakadeaths.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/osakadeaths.svg" alt="Deaths in Osaka"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-05-21 14:22:41</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
