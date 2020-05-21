@@ -26,7 +26,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/tokyodeath.csv')
+df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/tokyodeaths.csv')
 </code></pre>
 
 <p>単純に月ごとにプロットすると，大の月・小の月の影響で凸凹する。しかも，2020年のようなうるう年の2月は平年に比べて 3.6% もの「超過死亡」になってしまう。そこで，1日あたりの死者数に直してからプロットする。</p>
@@ -43,7 +43,7 @@ for y in range(2010, 2020):
 plt.plot(df[df['year'] == 2011]['month'], perday[df['year'] == 2011], 'o-', label='2011')
 plt.plot(df[df['year'] == 2020]['month'], perday[df['year'] == 2020], 'o-', label='2020')
 plt.legend()
-fig.savefig('tokyodeaths1.svg', bbox_inches="tight")
+plt.savefig('tokyodeaths1.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/tokyodeaths1.svg" alt="Deaths in Tokyo"></figure>
@@ -55,7 +55,7 @@ plt.plot(df[df['month'] == 1]['year'], perday[df['month'] == 1], 'o-', label='Ja
 plt.plot(df[df['month'] == 2]['year'], perday[df['month'] == 2], 'o-', label='Feb')
 plt.plot(df[df['month'] == 3]['year'], perday[df['month'] == 3], 'o-', label='Mar')
 plt.legend()
-fig.savefig('tokyodeaths2.svg', bbox_inches="tight")
+plt.savefig('tokyodeaths2.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/tokyodeaths2.svg" alt="Deaths in Tokyo"></figure>
@@ -68,7 +68,7 @@ fig.savefig('tokyodeaths2.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-14 12:33:10</time>
+Last modified: <time>2020-05-21 14:23:27</time>
 <!-- hhmts end -->
 </p>
 </body>
