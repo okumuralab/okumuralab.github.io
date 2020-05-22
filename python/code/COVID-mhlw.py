@@ -5,8 +5,10 @@ import matplotlib.dates as mdates
 import pandas as pd
 import numpy as np
 from statsmodels.stats.proportion import proportion_confint
+import time
 
 df = pd.read_csv("../data/COVID-mhlw.csv", index_col='Date', parse_dates=['Date'])
+now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
@@ -17,6 +19,7 @@ ax.xaxis.set_major_formatter(formatter)
 ax.bar(df.index, df['Examined'])
 ax.bar(df.index, df['Confirmed'])
 ax.legend(['Negative', 'Positive'])
+fig.text(0.9, 0.9, 'generated: ' + now, horizontalalignment='right')
 
 fig.savefig('../img/COVID-mhlw2.svg', bbox_inches="tight")
 
@@ -44,6 +47,7 @@ ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
 ax.legend(['Negative', 'Positive (Confirmed)'], loc='upper left')
 # ax.plot([pd.Timestamp('2020-03-03 12:00'), pd.Timestamp('2020-03-04 12:00')],
 #         [m*0.95, m*0.98], '-w', linewidth=2)
+# fig.text(0.9, 0.9, 'generated: ' + now, horizontalalignment='right')
 fig.savefig('../img/COVID-mhlw3.svg', bbox_inches="tight")
 
 ax.clear()
@@ -54,6 +58,7 @@ ci0, ci1 = np.array([proportion_confint(x['Confirmed'], x['Examined'], method='b
                      for i, x in df.diff().iterrows()]).T
 ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
 ax.grid(axis='y')
+# fig.text(0.9, 0.9, 'generated: ' + now, horizontalalignment='right')
 fig.savefig('../img/COVID-mhlw4.svg', bbox_inches="tight")
 
 ax.clear()
@@ -64,6 +69,7 @@ ci0, ci1 = np.array([proportion_confint(x['Confirmed'], x['Examined'], method='b
                      for i, x in df.iterrows()]).T
 ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
 ax.grid(axis='y')
+# fig.text(0.9, 0.9, 'generated: ' + now, horizontalalignment='right')
 
 fig.savefig('../img/COVID-mhlw.svg', bbox_inches="tight")
 
@@ -81,6 +87,12 @@ for x, c in zip(['Confirmed', 'Hospitalized', 'Deaths'], [3, 2, 6]):
     #     d['2020-03-28 12:00:00'] = 36
     #     d['2020-03-29 12:00:00'] = 106
     ax.bar(df.index, d / dt, width=-dt+0.1, align='edge', color=cmap(c), label=x)
-ax.legend(loc='upper left')
+ax.set_ylim(-1000, None)
+for t in df.index:
+    if df['Hospitalized'].diff()[t] < -1000:
+        ax.text(t, -1000, int(df['Hospitalized'].diff()[t]), fontsize=8,
+                horizontalalignment='center')#, bbox=dict(facecolor='white'))
+ax.legend()
+# fig.text(0.9, 0.9, 'generated: ' + now, horizontalalignment='right')
 
 fig.savefig('../img/COVID-mhlw5.svg', bbox_inches="tight")
