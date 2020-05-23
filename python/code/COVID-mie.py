@@ -5,6 +5,7 @@ import matplotlib.dates as mdates
 import pandas as pd
 import requests
 import re
+import time
 
 r = requests.get('https://www.pref.mie.lg.jp/YAKUMUS/HP/m0068000066_00002.htm')
 r.encoding = 'utf-8'
@@ -12,10 +13,13 @@ a = re.findall(' href="(.*?\.csv)"', r.text)
 url = 'https://www.pref.mie.lg.jp' + a[1]
 
 df = pd.read_csv(url, encoding='cp932', parse_dates=['日付'])
+now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 
 fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
+fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
+
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.bar(df['日付'], df['検査件数'])

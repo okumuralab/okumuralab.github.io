@@ -15,11 +15,11 @@ formatter = mdates.ConciseDateFormatter(locator)
 fig, ax = plt.subplots()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
+fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
 
 ax.bar(df.index, df['Examined'])
 ax.bar(df.index, df['Confirmed'])
 ax.legend(['Negative', 'Positive'])
-fig.text(0.9, 0.9, 'generated: ' + now, horizontalalignment='right')
 
 fig.savefig('../img/COVID-mhlw2.svg', bbox_inches="tight")
 
@@ -47,7 +47,6 @@ ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
 ax.legend(['Negative', 'Positive (Confirmed)'], loc='upper left')
 # ax.plot([pd.Timestamp('2020-03-03 12:00'), pd.Timestamp('2020-03-04 12:00')],
 #         [m*0.95, m*0.98], '-w', linewidth=2)
-# fig.text(0.9, 0.9, 'generated: ' + now, horizontalalignment='right')
 fig.savefig('../img/COVID-mhlw3.svg', bbox_inches="tight")
 
 ax.clear()
@@ -58,7 +57,6 @@ ci0, ci1 = np.array([proportion_confint(x['Confirmed'], x['Examined'], method='b
                      for i, x in df.diff().iterrows()]).T
 ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
 ax.grid(axis='y')
-# fig.text(0.9, 0.9, 'generated: ' + now, horizontalalignment='right')
 fig.savefig('../img/COVID-mhlw4.svg', bbox_inches="tight")
 
 ax.clear()
@@ -69,7 +67,6 @@ ci0, ci1 = np.array([proportion_confint(x['Confirmed'], x['Examined'], method='b
                      for i, x in df.iterrows()]).T
 ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
 ax.grid(axis='y')
-# fig.text(0.9, 0.9, 'generated: ' + now, horizontalalignment='right')
 
 fig.savefig('../img/COVID-mhlw.svg', bbox_inches="tight")
 
@@ -93,6 +90,5 @@ for t in df.index:
         ax.text(t, -1000, int(df['Hospitalized'].diff()[t]), fontsize=8,
                 horizontalalignment='center')#, bbox=dict(facecolor='white'))
 ax.legend()
-# fig.text(0.9, 0.9, 'generated: ' + now, horizontalalignment='right')
 
 fig.savefig('../img/COVID-mhlw5.svg', bbox_inches="tight")

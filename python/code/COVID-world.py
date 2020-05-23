@@ -7,6 +7,9 @@ import numpy as np
 import pdftotext
 import requests
 import urllib
+import time
+
+now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 
 url = 'https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/'
 r = requests.get(url)
@@ -87,5 +90,6 @@ y = x * df1['China Deaths'][-1] / df1['China Confirmed'][-1]
 plt.plot(x, y, color='lightgray', label=f"Deaths / Confirmed = {df1['China Deaths'][-1] / df1['China Confirmed'][-1]:.4f}")
 
 plt.legend(loc='upper left')
+plt.figtext(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
 
 plt.savefig('../img/COVID-world.svg', bbox_inches="tight")

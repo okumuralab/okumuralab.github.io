@@ -4,14 +4,18 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 import numpy as np
+import time
 
 df = pd.read_csv("../data/COVID-19.csv", index_col='Date', parse_dates=['Date'])
 dfjp = pd.read_csv("../data/COVID-jp.csv", index_col='Date', parse_dates=['Date'])
+now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 
 cmap = plt.get_cmap("tab20")
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 fig, ax = plt.subplots()
+fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
+
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 

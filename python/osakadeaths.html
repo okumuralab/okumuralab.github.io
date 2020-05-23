@@ -16,7 +16,7 @@
 
 <h1>大阪市の超過死亡？</h1>
 
-<p><a href="tokyodeaths.html">東京の超過死亡？</a>に倣って<a href="https://www.city.osaka.lg.jp/toshikeikaku/page/0000014987.html">大阪市</a>を調べてみる。毎月の死者数を納めた <a href="data/osakadeaths.csv">osakadeaths.csv</a> は，急いで作ったため，どなたかチェックしていただければありがたい。</p>
+<p><a href="tokyodeaths.html">東京の超過死亡？</a>に倣って<a href="https://www.city.osaka.lg.jp/toshikeikaku/page/0000014987.html">大阪市</a>を調べてみる。毎月の死者数を納めた <a href="data/osakadeaths.csv">osakadeaths.csv</a> は，急いで作ったため，どなたかチェックしていただければありがたい（1箇所データの抜けがあったので修正）。</p>
 
 <pre><code>import pandas as pd
 import matplotlib.pyplot as plt
@@ -31,7 +31,7 @@ def days(year, month):
 
 perday = np.array([r[2] / days(r[0], r[1]) for i, r in df.iterrows()])
 
-plt.clf()
+# plt.clf()
 for y in range(2015, 2021):
     plt.plot(df[df['year'] == y]['month'], perday[df['year'] == y], 'o-', label=y)
 
@@ -41,13 +41,15 @@ plt.savefig('osakadeaths.svg', bbox_inches="tight")
 
 <figure><img src="img/osakadeaths.svg" alt="Deaths in Osaka"></figure>
 
+<p>[TODO] <a href="http://www.pref.osaka.lg.jp/toukei/jinkou/jinkou-xlslist.html">大阪府</a>にも大阪市の過去の死亡数が載っているが微妙に数値が異なるらしい。要チェック。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-21 14:22:41</time>
+Last modified: <time>2020-05-23 13:01:04</time>
 <!-- hhmts end -->
 </p>
 </body>

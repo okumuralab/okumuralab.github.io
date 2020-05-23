@@ -5,11 +5,13 @@ import matplotlib.dates as mdates
 import pandas as pd
 import numpy as np
 from dateutil.parser import parse
+import time
 
 url = 'https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv'
 # url = '/opt/local/GitHub/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv'
 
 df = pd.read_csv(url)
+now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 
 t = [parse(i) for i in df.columns[4:]]
 x = [df.groupby('Country/Region')[i].sum() for i in df.columns[4:]]
@@ -18,6 +20,7 @@ locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 
 fig, ax = plt.subplots(figsize=[7, 7])
+fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
 
 # ax.clear()
 ax.xaxis.set_major_locator(locator)
