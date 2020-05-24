@@ -16,9 +16,16 @@
 
 <h1>東京の超過死亡？</h1>
 
-<p><a href="https://www.ft.com/content/a26fbf7e-48f8-11ea-aeb3-955839e06441">Financial Times の COVID-19 グラフ</a>でお馴染みの超過死亡（excess mortality）が日本でも見られるかが話題になっている。すでに<a href="https://www.niid.go.jp/niid/ja/flu-m/2112-idsc/jinsoku/1852-flu-jinsoku-7.html">インフルエンザ関連死亡迅速把握システム</a>に超過死亡が見えるという説もある（ただし<a href="https://note.com/lotta_liz_di/n/n506972308fd6">日本の「超過死」についての注意事項</a>参照）。しかし日本全体の人口動態統計速報は集計に2ヶ月近くかかる（<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/02.html">2020年2月分</a>は2020年4月24日に出た）。</p>
+<p><a href="https://www.ft.com/content/a26fbf7e-48f8-11ea-aeb3-955839e06441">Financial Times の COVID-19 グラフ</a>でお馴染みの超過死亡（excess mortality）が日本でも見られるかが話題になっている。2020年5月5日の時点では<a href="https://www.niid.go.jp/niid/ja/flu-m/2112-idsc/jinsoku/1852-flu-jinsoku-7.html">インフルエンザ関連死亡迅速把握システム</a>の東京のグラフ（下の左側）に超過死亡が見えるという説があった。しかし，この統計はデータが増えるにしたがって変化する（<a href="https://note.com/lotta_liz_di/n/n506972308fd6">日本の「超過死」についての注意事項</a>参照）。実際，2020年5月24日時点では右側のようになり，山が消えている。</p>
 
-<p>そこで，日本で一番 COVID-19 の感染が深刻な東京都のデータを調べてみる。すでに何人もの方が同様なグラフを描いているので，ここに書いたことはn番煎じである）。</p>
+<figure>
+<img src="img/200505a.png" alt="Excess Mortality (?) in Tokyo as of 2020-05-05">
+<img src="img/200524a.png" alt="Excess Mortality (?) in Tokyo as of 2020-05-24">
+</figure>
+
+<p>日本全体の人口動態統計速報は集計に2ヶ月近くかかる（<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/02.html">2020年2月分</a>は2020年4月24日に出た）。</p>
+
+<p>そこで，ここでは東京都のデータを調べてみる（<a href="osakadeaths.html">大阪の超過死亡？</a>も参照）。すでに何人もの方が同様なグラフを描いておられるので，以下に書いたことはn番煎じである。</p>
 
 <p>東京都の死者数などの統計は<a href="https://www.toukei.metro.tokyo.lg.jp/jsuikei/js-index.htm">東京都の人口（推計）</a>以下にある。2011年の大震災の年も調べたかったので，2010年以降の毎月の死者数を <a href="data/tokyodeaths.csv">tokyodeaths.csv</a> というファイルに収めた。</p>
 
@@ -68,7 +75,7 @@ plt.savefig('tokyodeaths2.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-21 14:23:27</time>
+Last modified: <time>2020-05-24 20:13:41</time>
 <!-- hhmts end -->
 </p>
 </body>
