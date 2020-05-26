@@ -224,7 +224,7 @@ make install
   (setq mac-command-modifier 'meta))
 </pre>
 
-<p>EmacsからGnuPGを使う必要がある場合，brew install gpg で入るものがgpg2になり，このパスワードの入力が標準的でないので，Emacsからパスワードが入れられなくなる。brew install pinentry-mac して，<code>~/.gnupg/gpg-agent.conf</code> に <code>pinentry-program /usr/local/bin/pinentry-mac</code> という行を書き込めばよい。</p>
+<p>EmacsからGnuPGを使う必要がある場合，brew install gpg で入るものがgpg2になり，このパスワードの入力が標準的でないので，Emacsからパスワードが入れられなくなる。brew install pinentry-mac して，<code>~/.gnupg/gpg-agent.conf</code> に <code>pinentry-program /usr/local/bin/pinentry-mac</code> という行を書き込めばよい。間違えてパスワード入力をキャンセルしてしまったのがキャッシュされて開けなくなったときは <code>gpgconf --kill gpg-agent</code> と打ち込む。</p>
 
 <p>Emacs 24なら <code>(setq epg-gpg-program "gpg1")</code>
 だけでうまくいくようだが，Emacs 25はこれではダメ。<del><a href="http://unix.stackexchange.com/questions/257061/gentoo-linux-gpg-encrypts-properly-a-file-passed-through-parameter-but-throws-i">Gentoo Linux GPG encrypts properly a file passed through parameter but throws “Inappropriate ioctl for device” when reading from standard input</a> にあるように，いったんEmacsを終了し，ターミナルに</del></p>
@@ -505,7 +505,7 @@ Host *
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-04-18 19:46:21</time>
+Last modified: <time>2020-05-26 09:01:05</time>
 <!-- hhmts end -->
 </p>
 </footer>
