@@ -16,23 +16,15 @@
 
 <h1>TensorFlowによる機械学習</h1>
 
-<p><em>[追記]</em> TensorFlow 2.1.0 が出た。まだ Python 3.8 には対応していない。</p>
-
 <p><a href="https://www.tensorflow.org/">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。</p>
 
-<p>TensorFlow 2 正式版が出た。</p>
+<p>TensorFlow 2.2.0 が出た。Python 3.8 でも大丈夫。</p>
 
 <pre>
 <code>pip install tensorflow
 </code></pre>
 
-<p>で入るはずである。もし古いものが入っていたら</p>
-
-<pre>
-<code>pip install --upgrade tensorflow
-</code></pre>
-
-<p>で 2 に更新される。</p>
+<p>で入るはずである。</p>
 
 <p><code>tf.keras</code> を使う上では TensorFlow 1 系 と 2 系で見かけ上の違いはほぼない。</p>
 
@@ -61,14 +53,6 @@ tf.disable_v2_behavior()
 <p>と打ち込むようだ。</p>
 </div>
 
-<div class="note">
-<p>Windows 10 で <code>pip install tensorflow</code> すると入ったように見えるが，実行すると Failed to load the native TensorFlow runtime. というエラーになる。Python 3.5 くらいにダウングレードすればうまくいくとか，TensorFlow もダウングレードするとか，pip でなく conda で入れるとうまくいくとか，いろいろ情報があるが，確認できていない。</p>
-</div>
-
-<div class="note">
-<p>MacBook Air Late 2010 (Core 2 Duo) でインストールすると Process Python illegal instruction: 4 というエラーで死ぬ。CPU が古いため？</p>
-</div>
-
 <p>インポートする：</p>
 
 <pre>
@@ -79,10 +63,10 @@ tf.disable_v2_behavior()
 
 <pre>
 <code>In [ ]: tf.__version__
-Out[ ]: '2.1.0'
+Out[ ]: '2.2.0'
 
 In [ ]: tf.keras.__version__
-Out[ ]: '2.2.4-tf'
+Out[ ]: '2.3.0-tf'
 </code></pre>
 
 <p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="mnist.html">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
@@ -125,12 +109,12 @@ model.compile(optimizer='adam',
 <code>model.evaluate(x_test, y_test)
 </code></pre>
 
-<p>正解率 0.978 程度である。</p>
+<p>正解率 0.977 程度である。</p>
 
-<p>上記ページのサンプルには載っていないが，予測は次のようにして求められる：</p>
+<p>予測は次のようにして求められる：</p>
 
 <pre>
-<code>y_pred = model.predict_classes(x_test)
+<code>y_pred = np.argmax(model.predict(x_test), axis=-1)
 </code></pre>
 
 <p>混同行列を求める：</p>
@@ -142,25 +126,18 @@ model.compile(optimizer='adam',
 <p>結果の例：</p>
 
 <pre>
-<code>&lt;tf.Tensor: id=69328, shape=(10, 10), dtype=int32, numpy=
-array([[ 971,    0,    1,    2,    0,    0,    2,    1,    3,    0],
-       [   0, 1129,    1,    1,    0,    1,    1,    0,    2,    0],
-       [   5,    4,  999,    5,    4,    0,    2,    9,    3,    1],
-       [   0,    1,    2,  992,    0,    5,    0,    3,    0,    7],
-       [   2,    0,    1,    0,  945,    0,    4,    2,    2,   26],
-       [   2,    0,    0,    5,    1,  878,    2,    1,    1,    2],
-       [   8,    3,    1,    1,    4,   11,  926,    0,    4,    0],
-       [   2,   10,    7,    4,    0,    0,    0,  997,    1,    7],
-       [   3,    0,    1,    6,    3,    5,    0,    4,  946,    6],
-       [   3,    3,    0,    2,    4,    1,    0,    3,    0,  993]],
+<code>&lt;tf.Tensor: shape=(10, 10), dtype=int32, numpy=
+array([[ 970,    0,    2,    0,    1,    0,    4,    1,    2,    0],
+       [   0, 1127,    3,    1,    0,    0,    2,    0,    2,    0],
+       [   6,    0, 1007,    4,    4,    0,    2,    2,    7,    0],
+       [   0,    0,    7,  992,    1,    1,    0,    5,    3,    1],
+       [   1,    0,    0,    0,  965,    0,    6,    0,    1,    9],
+       [   4,    0,    0,   16,    2,  861,    4,    1,    3,    1],
+       [   4,    3,    1,    1,    3,    3,  941,    0,    2,    0],
+       [   3,    5,    8,    4,    3,    0,    0,  994,    2,    9],
+       [   2,    2,    4,   12,    5,    5,    2,    3,  937,    2],
+       [   2,    6,    0,    5,   14,    1,    0,    4,    0,  977]],
       dtype=int32)&gt;
-</code></pre>
-
-<p>表示されない場合は次のようにする：</p>
-
-<pre>
-<code>sess = tf.Session()
-tf.math.confusion_matrix(y_test, y_pred).eval(session=sess)
 </code></pre>
 
 <p>学習済みのモデルをHDF5形式で保存する：</p>
@@ -175,15 +152,13 @@ tf.math.confusion_matrix(y_test, y_pred).eval(session=sess)
 <code>model = tf.keras.models.load_model("mymodel.h5")
 </code></pre>
 
-<p>詳細は <a href="https://www.tensorflow.org/beta/guide/keras/overview">Keras: A quick overview</a> 参照。</p>
-
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-22 15:39:17</time>
+Last modified: <time>2020-05-28 20:29:09</time>
 <!-- hhmts end -->
 </p>
 </body>
