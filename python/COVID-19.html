@@ -128,7 +128,7 @@ ax.legend(['Confirmed', 'Deaths'])
 
 <figure><img src="img/COVID-mhlw2.svg" alt="COVID-19 (Japan)"></figure>
 
-<p>データの差分をとって，高さを1日あたりの数に直したものも描いてみる。最近は負になったりしてデータの信頼性がまったくない。</p>
+<p>データの差分をとって，高さを1日あたりの数に直したものも描いてみる。</p>
 
 <pre><code>dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
 ax.bar(df.index, df['Examined'].diff() / dt, width=-dt+0.1, align='edge')
@@ -137,7 +137,7 @@ ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
 
 <figure><img src="img/COVID-mhlw3.svg" alt="COVID-19 (Japan)"></figure>
 
-<p>陰性の数が増えて（しかも報告が安定せず）見にくくなってきたので，検査人数を省いたグラフにした。データが正午締めで，数え方も<a href="200312.html">番外編2</a>のものと若干異なる。'Hospitalized' は，2020-02-10から2020-03-27までは有症状で入院治療を要する者，発表のフォーマットが変わった2020-03-28以降は入院治療を要する者（無症状を含む）である：</p>
+<p>陰性の数が増えて（しかも報告が安定せず）見にくくなってきたので，検査人数を省いたグラフにした（以前は入院数も入れていたがデータが安定しないので外した）：</p>
 
 <figure><img src="img/COVID-mhlw5.svg" alt="COVID-19 (Japan)"></figure>
 
@@ -283,7 +283,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-28 10:42:17</time>
+Last modified: <time>2020-05-28 13:28:36</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -16,13 +16,13 @@
 
 <h1>Python 3 インストール</h1>
 
-<p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>します（ただし2020年4月に2.7.18が出る予定で，それが最後のようです）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うなら，Python 3 をお薦めします。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
+<p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うなら，Python 3 をお薦めします。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
 
-<p>最新のものは Python 3.8.2 ですが，まだ TensorFlow など一部のツールは Python 3.8 に対応していないようです。以下は 3.7 を仮定して書いています。</p>
+<p>最新のものは Python 3.8.3 です。すでに TensorFlow をはじめほとんどのツールが Python 3.8 に対応しましたので，そろそろ 3.7 から 3.8 に移行して大丈夫だと思います。以下で 3.7 と書いてあるところを 3.8 に読み替えてください。</p>
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
-<p>pip については <a href="https://github.com/pypa/pip/issues/5599">ImportError in system pip wrappers after an upgrade #5599</a> が参考になります。つまり，pip がおかしくなったら python(3) -m pip を使いましょう。</p>
+<p>pip については <a href="https://github.com/pypa/pip/issues/5599">ImportError in system pip wrappers after an upgrade #5599</a> が参考になります。つまり，pip がおかしくなったら python3 -m pip を使いましょう。</p>
 
 <h3>公式サイト Python.org からのインストール（Windows）</h3>
 
@@ -73,16 +73,16 @@ C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 
 <h3>公式サイト Python.org からのインストール（Mac）</h3>
 
-<p><a href="https://www.python.org/download/">Download Python</a> からインストーラをダウンロードし，インストールします。/Library/Frameworks/Python.framework/Versions/3.7/bin に <code>python3</code> などのバイナリが入ります。</p>
+<p><a href="https://www.python.org/download/">Download Python</a> からインストーラをダウンロードし，インストールします。/Library/Frameworks/Python.framework/Versions/3.8/bin に <code>python3</code> などのバイナリが入ります。</p>
 
 <p>インストールすると，Mac では <code>~/.bash_profile</code> の最後にパスが付け加えられます：</p>
 
 <pre>
-<code>PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
+<code>PATH="/Library/Frameworks/Python.framework/Versions/3.8/bin:${PATH}"
 export PATH
 </code></pre>
 
-<p><code>python3</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
+<p><code>~/.bash_profile</code> を更新したらターミナルに <code>. ~/.bash_profile</code> と打ち込みます。<code>python3</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
 
 <p>いろいろなパッケージのインストールは <code>pip3</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
 
@@ -101,8 +101,8 @@ export PATH
 <p>このように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> にさきほど追加されたものを</p>
 
 <pre>
-<code>PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
-PATH="${HOME}/Library/Python/3.7/bin:${PATH}"
+<code>PATH="/Library/Frameworks/Python.framework/Versions/3.8/bin:${PATH}"
+PATH="${HOME}/Library/Python/3.8/bin:${PATH}"
 export PATH
 </code></pre>
 
@@ -112,9 +112,9 @@ export PATH
 <code>pip3 install --user ipython numpy matplotlib pandas jupyter
 </code></pre>
 
-<p>ソースでしか提供されていないパッケージには，ビルドに gfortran が必要な場合もあります。Homebrew なら brew install gcc で入ります。</p>
+<p>ソースでしか提供されていないパッケージには，ビルドに gfortran が必要な場合もあります。Homebrew なら brew install gcc で入ります（巨大なのであまり乗り気しませんが）。</p>
 
-<p>アンインストールするには /Library/Frameworks の中の Python.framework 全体を消します。/usr/local/bin にもこの中へのシンボリックリンクがいくつかできているはずですので，それも消します。~/.bash_profile に追加した PATH も消します。</p>
+<p>アンインストールするには /Library/Frameworks の中の Python.framework 全体を消します。/usr/local/bin からこの中へのシンボリックリンクができている場合には，それも消します。~/.bash_profile に追加した PATH も消します。</p>
 
 <h3>Microsoft Store 版 Python</h3>
 
@@ -140,7 +140,7 @@ export PATH
 
 <h3>Homebrew によるインストール（Mac）</h3>
 
-<p>巨大な Xcode はたいていの場合に不要ですが，ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は，Mac を使っている開発者にとって必需品です。さらに，<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合，ターミナルに <code>brew install python3</code> と打ち込めば，簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等です（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。</p>
+<p>巨大な Xcode はたいていの場合に不要ですが，ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は，Mac を使っている開発者にとって必需品です。さらに，<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合，ターミナルに <code>brew install python3</code> と打ち込めば，簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等ですがまったく同じではありません（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。現在は Python 3.7 ですが Python 3（<code>python@3.8</code>）も入れることができます。混乱しやすいので 3.8 が Homebrew の正式になるまでは 3.7 を使い続けるほうがよさそうです。</p>
 
 <p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンドが入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
@@ -325,7 +325,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-04-23 20:15:43</time>
+Last modified: <time>2020-05-28 14:52:37</time>
 <!-- hhmts end -->
 </p>
 </footer>

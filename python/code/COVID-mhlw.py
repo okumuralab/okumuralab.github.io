@@ -72,23 +72,26 @@ fig.savefig('../img/COVID-mhlw.svg', bbox_inches="tight")
 
 #-----
 
-cmap = plt.get_cmap("tab20")
+# cmap = plt.get_cmap("tab20")
 
 ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
-for x, c in zip(['Confirmed', 'Hospitalized', 'Deaths'], [3, 2, 6]):
+# m = 0
+# for x, c in zip(['Confirmed', 'Hospitalized', 'Deaths'], [3, 2, 6]):
+#     d = df[x].diff()
+#     ax.bar(df.index, d / dt, width=-dt+0.1, align='edge', color=cmap(c), label=x)
+#     m = max(m, np.max(d / dt))
+# ax.set_ylim(-800, 1.05 * (m + 800) - 800)
+# for t in df.index:
+#     if df['Hospitalized'].diff()[t] < -800:
+#         ax.text(t, -800, int(df['Hospitalized'].diff()[t]), fontsize=8,
+#                 horizontalalignment='center')#, bbox=dict(facecolor='white'))
+
+for x, c in zip(['Confirmed', 'Deaths'], ['C1', 'C3']):
     d = df[x].diff()
-    # if x == 'Hospitalized':
-    #     d['2020-03-28 12:00:00'] = 36
-    #     d['2020-03-29 12:00:00'] = 106
-    ax.bar(df.index, d / dt, width=-dt+0.1, align='edge', color=cmap(c), label=x)
-ax.set_ylim(-1000, None)
-for t in df.index:
-    if df['Hospitalized'].diff()[t] < -1000:
-        ax.text(t, -1000, int(df['Hospitalized'].diff()[t]), fontsize=8,
-                horizontalalignment='center')#, bbox=dict(facecolor='white'))
+    ax.bar(df.index, d / dt, width=-dt+0.1, align='edge', color=c, label=x)
 ax.legend()
 
 fig.savefig('../img/COVID-mhlw5.svg', bbox_inches="tight")
