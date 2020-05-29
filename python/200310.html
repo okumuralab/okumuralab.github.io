@@ -28,6 +28,14 @@ pip install pdftotext
 
 <p>でよいはず。</p>
 
+<div class="note">
+<p>Homebrew の python3 ならできたが，Python.org の Python 3.8.3 にしたらできなくなった。次のようにしたらできた：</p>
+<pre><code>brew install little-cms2  # すでに入っていた
+ln -s /usr/local/Cellar/little-cms2/2.9 /usr/local/opt/little-cms2
+sudo /Applications/Python\ 3.8/Install\ Certificates.command
+</code></pre>
+</div>
+
 <pre><code>import matplotlib.pyplot as plt
 import pandas as pd
 import re
@@ -175,7 +183,7 @@ fig.savefig('../img/COVID-csse.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-06 12:44:16</time>
+Last modified: <time>2020-05-29 08:35:03</time>
 <!-- hhmts end -->
 </p>
 </body>

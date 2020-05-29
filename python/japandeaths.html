@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>日本の超過死亡？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>日本の超過死亡？</h1>
+
+<p>人口動態統計速報は集計に2ヶ月近くかかる（<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/02.html">2020年2月分</a>は2020年4月24日に出た。<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/03.html">3月分</a>は5月26日に出た）。また，速報でない人口動態統計は本稿執筆時点で2019年11月までしか出ていない。しかも，過去の速報と速報でないものは微妙に異なっている。</p>
+
+<p>とりあえず2014年1月〜2019年11月の人口動態統計と，2019年10月からの速報を，e-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&amp;toukei=00450011&amp;tstat=000001028897">人口動態調査</a>から集めて，<a href="data/japandeaths.csv">japandeaths.csv</a> というファイルに収めた。</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import numpy as np
+import datetime
+
+df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/japandeaths.csv')
+t = [datetime.datetime(int(x['年']), int(x['月']), 1) for i, x in df.iterrows()]
+
+plt.plot(t, df['死亡数'], 'o-')
+plt.plot(t, df['死亡数速報値'], 'o-')
+plt.savefig('japandeaths1.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/japandeaths1.svg" alt="Deaths in Japan"></figure>
+
+<pre><code>plt.clf()
+for y in range(2014, 2020):
+    df1 = df[df['年'] == y]
+    plt.plot(df1['月'], df1['死亡数'], 'o-', alpha=0.5, marker=f'${y % 10}$', label=y)
+df1 = df[df['年'] == 2019]
+plt.plot(df1['月'], df1['死亡数速報値'], 'o-', marker='$9$', label='2019速報値')
+df1 = df[df['年'] == 2020]
+plt.plot(df1['月'], df1['死亡数速報値'], 'o-k', label='2020速報値')
+plt.legend()
+plt.savefig('japandeaths2.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/japandeaths2.svg" alt="Deaths in Japan"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-05-29 17:40:24</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

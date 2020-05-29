@@ -24,6 +24,10 @@
 
 <p>pip については <a href="https://github.com/pypa/pip/issues/5599">ImportError in system pip wrappers after an upgrade #5599</a> が参考になります。つまり，pip がおかしくなったら python3 -m pip を使いましょう。</p>
 
+<p>Mac ではよく "ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to (null)" というメッセージが出ます。無害ですが，ターミナルに次のように打ち込めば消えてくれます：</p>
+
+<pre><code>defaults write org.python.python ApplePersistenceIgnoreState NO</code></pre>
+
 <h3>公式サイト Python.org からのインストール（Windows）</h3>
 
 <p>まず，初心者のかたで，今までどこかで Python をインストールしたけれどうまく設定できていないという場合は，［スタートボタン］→［⚙設定］→［アプリ］で，それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
@@ -98,7 +102,7 @@ export PATH
 <code>pip3 install --user --upgrade pip
 </code></pre>
 
-<p>このように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> にさきほど追加されたものを</p>
+<p>このように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます（次からはシステム側に書き込めないと自動的にユーザ側に書き込んでくれるようになるようです）。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> にさきほど追加されたものを</p>
 
 <pre>
 <code>PATH="/Library/Frameworks/Python.framework/Versions/3.8/bin:${PATH}"
@@ -115,6 +119,12 @@ export PATH
 <p>ソースでしか提供されていないパッケージには，ビルドに gfortran が必要な場合もあります。Homebrew なら brew install gcc で入ります（巨大なのであまり乗り気しませんが）。</p>
 
 <p>アンインストールするには /Library/Frameworks の中の Python.framework 全体を消します。/usr/local/bin からこの中へのシンボリックリンクができている場合には，それも消します。~/.bash_profile に追加した PATH も消します。</p>
+
+<p>https サイトのスクレイピングで証明書エラーになる場合は次のコマンドの管理者権限での実行が必要になるようです：</p>
+
+<pre>
+<code>sudo /Applications/Python\ 3.8/Install\ Certificates.command
+</code></pre>
 
 <h3>Microsoft Store 版 Python</h3>
 
@@ -325,7 +335,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-28 14:52:37</time>
+Last modified: <time>2020-05-29 14:22:15</time>
 <!-- hhmts end -->
 </p>
 </footer>
