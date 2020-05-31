@@ -16,23 +16,23 @@
 
 <h1>Python 3 インストール</h1>
 
-<p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うなら，Python 3 をお薦めします。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
+<p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うなら，Python 3 にしましょう。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
 
-<p>最新のものは Python 3.8.3 です。すでに TensorFlow をはじめほとんどのツールが Python 3.8 に対応しましたので，そろそろ 3.7 から 3.8 に移行して大丈夫だと思います。以下で 3.7 と書いてあるところを 3.8 に読み替えてください。</p>
+<p>最新のものは Python 3.8.3 です。すでに TensorFlow をはじめほとんどのツールが Python 3.8 に対応しましたので，そろそろ 3.7 から 3.8 に移行して大丈夫だと思います。私も遅ればせながら 3.8 にしました。もっとも，3.6 や 3.7 が動いていれば，強いて 3.8 にする意味はあまりありません。Google Colaboratory はまだ 3.6 です。</p>
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
+<div class="note">
 <p>pip については <a href="https://github.com/pypa/pip/issues/5599">ImportError in system pip wrappers after an upgrade #5599</a> が参考になります。つまり，pip がおかしくなったら python3 -m pip を使いましょう。</p>
-
 <p>Mac ではよく "ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to (null)" というメッセージが出ます。無害ですが，ターミナルに次のように打ち込めば消えてくれます：</p>
-
 <pre><code>defaults write org.python.python ApplePersistenceIgnoreState NO</code></pre>
+</div>
 
 <h3>公式サイト Python.org からのインストール（Windows）</h3>
 
 <p>まず，初心者のかたで，今までどこかで Python をインストールしたけれどうまく設定できていないという場合は，［スタートボタン］→［⚙設定］→［アプリ］で，それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
 
-<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが，ここでは Python 3.7.x の x が一番大きいものの64ビット版 Windows x86-64 executable installer を使います。初心者のかたは，インストーラの最初の画面で必ず「Add Python 3.7 to PATH」にチェックを付けておきましょう。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
+<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが，ここでは Python 3.8.x の x が一番大きいものの64ビット版 Windows x86-64 executable installer を使います。初心者のかたは，インストーラの最初の画面で必ず「Add Python 3.8 to PATH」にチェックを付けておきましょう。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
 
 <p>確認として，Windows PowerShell（あるいは VS Code のターミナル，またはコマンドプロンプト）を立ち上げ，</p>
 
@@ -43,7 +43,7 @@
 <p>と打ち込んで，正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell では <code>.exe</code> を省略できないようです）。うまくいっていれば</p>
 
 <pre>
-<code>C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37\python.exe
+<code>C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38\python.exe
 C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 </code></pre>
 
@@ -52,7 +52,7 @@ C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 <p>同様に <code>pip</code> も確認します。</p>
 
 <pre>
-<code>C:\Users\ユーザ名\AppData\Local\Programs\Python\Python37\Scripts\pip.exe
+<code>C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38\Scripts\pip.exe
 </code></pre>
 
 <p>ほかに <a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされますが，ここでは使いません。</p>
@@ -118,13 +118,13 @@ export PATH
 
 <p>ソースでしか提供されていないパッケージには，ビルドに gfortran が必要な場合もあります。Homebrew なら brew install gcc で入ります（巨大なのであまり乗り気しませんが）。</p>
 
-<p>アンインストールするには /Library/Frameworks の中の Python.framework 全体を消します。/usr/local/bin からこの中へのシンボリックリンクができている場合には，それも消します。~/.bash_profile に追加した PATH も消します。</p>
-
 <p>https サイトのスクレイピングで証明書エラーになる場合は次のコマンドの管理者権限での実行が必要になるようです：</p>
 
 <pre>
 <code>sudo /Applications/Python\ 3.8/Install\ Certificates.command
 </code></pre>
+
+<p>アンインストールするには /Library/Frameworks/Python.framework および ~/Library/Python を消します。/usr/local/bin にできたシンボリックリンクも消します。~/.bash_profile に追加した PATH も消します。</p>
 
 <h3>Microsoft Store 版 Python</h3>
 
@@ -335,7 +335,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-29 14:22:15</time>
+Last modified: <time>2020-05-31 08:31:56</time>
 <!-- hhmts end -->
 </p>
 </footer>
