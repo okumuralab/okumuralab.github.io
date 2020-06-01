@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>COVID-19 番外編3</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>COVID-19 番外編3</h1>
+
+<p><a href="COVID-19.html">COVID-19</a> の番外編。</p>
+
+<p>東京都のCOVID-19患者の年齢・性別（0=女，1=男）・発病日・確定日・死亡日を遠藤高帆さんがGoogle Spreadsheetに <a href="https://docs.google.com/spreadsheets/d/1nvDW7WtTMk8TfH6Dow8psV4BQYG9vnfUWv2KJJWmP2M/">tokyo_pref_onset_confirmed_death_date</a> としてまとめてくださっているのでグラフを描いてみた。ただし発病日がわかっているのは4人だけなのでここでは使用していない。</p>
+
+<p>まずは死亡日と確定日の差の度数分布：</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pandas as pd
+import numpy as np
+
+def myparser(x):
+    if str(x) == 'nan':
+        return pd.NaT
+    return pd.to_datetime('2020' + x)
+
+df = pd.read_csv("tokyo_pref_onset_confirmed_death_date - death_confirmed.csv",
+                 parse_dates=['onset', 'confirmed', 'death'],
+                 date_parser=myparser)
+
+dt = (df['death'] - df['confirmed']).dt.days
+
+fig, ax = plt.subplots()
+ax.hist(dt, bins=np.arange(min(dt), max(dt)+2), color="lightgray", edgecolor="black")
+ax.set_xlabel('death - confirmed (median: ' + str(np.median(dt.dropna())) + ' days)')
+fig.savefig('200531a.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/200531a.svg" alt=""></figure>
+
+<p>横軸を確定日，縦軸を死亡日と確定日の差とする散布図：</p>
+
+<pre><code>ax.clear()
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+ax.scatter(df['confirmed'], dt)
+ax.set_xlabel('confirmed')
+ax.set_ylabel('death - confirmed')
+fig.savefig('200531b.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/200531b.svg" alt=""></figure>
+
+<p>横軸を死亡日，縦軸を死亡日と確定日の差とする散布図：</p>
+
+<pre><code>ax.clear()
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+ax.scatter(df['death'], dt)
+ax.set_xlabel('death')
+ax.set_ylabel('death - confirmed')
+fig.savefig('200531c.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/200531c.svg" alt=""></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-05-31 11:45:41</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
