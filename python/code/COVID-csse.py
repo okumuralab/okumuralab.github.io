@@ -118,3 +118,37 @@ ax.set_ylabel('Deaths')
 ax.legend()
 
 fig.savefig('../img/COVID-csse3.svg', bbox_inches="tight")
+
+#-----
+
+exit()
+
+#-----
+
+fig, ax = plt.subplots()
+fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
+
+t1 = [parse(i) for i in df.columns[4:]]
+x1 = [df.groupby('Country/Region')[i].sum() for i in df.columns[4:]]
+
+t2 = [parse(i) for i in df2.columns[4:]]
+x2 = [df2.groupby('Country/Region')[i].sum() for i in df2.columns[4:]]
+
+ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+country = 'Chile'
+
+cnf = [x1[i][country] for i in range(len(x1))]
+# ax.plot(t1[1:], np.diff(cnf), 'o-', label=country + ' confirmed')
+ax.bar(t1[1:], np.diff(cnf), align='edge', color='C1',
+       width=pd.Timedelta(days=1), label=country + ' confirmed')
+
+dth = [x2[i][country] for i in range(len(x1))]
+# ax.plot(t2[1:], np.diff(dth), 'o-', label=country + ' deaths')
+ax.bar(t2[1:], np.diff(dth), align='edge', color='C3',
+       width=pd.Timedelta(days=1), label=country + ' deaths')
+
+ax.set_xlim(parse('2020-03-01'))
+ax.legend()
