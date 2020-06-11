@@ -18,7 +18,7 @@
 
 <h2>画像の読み書き表示</h2>
 
-<p><a href="https://opencv.org">OpenCV</a> は画像を扱うためのライブラリである。インストールは <code>pip install opencv-python</code> または <code>conda install opencv</code> でできる。</p>
+<p><a href="https://opencv.org">OpenCV</a> は画像を扱うためのライブラリである。インストールは <code>pip install opencv-python</code>（または <code>conda install opencv</code>）でできる。</p>
 
 <p>まずは適当な画像を読み込んでみる：</p>
 
@@ -39,7 +39,7 @@ img.shape   # (縦ピクセル数, 横ピクセル数, チャンネル数)
 <code>cv2.imshow('Image', img)  # 最初の引数（ウィンドウ名）は何でもよい
 </code></pre>
 
-<p>とすればよいが，この挙動はシステムごとに異なるようである。うまくいかなければ諦めて，次に示すように matplotlib で表示すればよい。なお，OpenCV の窓をすべて閉じるには次のようにする：</p>
+<p>とすればよい。私の環境（python.org からインストールした Mac 版）ではうまくいくが，環境によってはうまくいかないようである。うまくいかなければ諦めて，次に示すように matplotlib で表示すればよい。なお，OpenCV の窓をすべて閉じるには次のようにする：</p>
 
 <pre>
 <code>cv2.destroyAllWindows()
@@ -67,7 +67,7 @@ plt.imshow(img[..., ::-1])  # ::-1 は逆順にするハック
 </code></pre>
 
 <div class="note">
-<p>Matplotlib でも画像を読み書きできるが，チャンネルは RGB の順である。デフォルトで読めるのは PNG だけだが，<a href="http://pillow.readthedocs.io/">Pillow</a> をインストール（<code>conda install pillow</code> または <code>pip install pillow</code>）すれば他の画像形式も読める。</p>
+<p>Matplotlib でも画像を読み書きできるが，チャンネルは RGB の順である。デフォルトで読めるのは PNG だけだが，<a href="http://pillow.readthedocs.io/">Pillow</a> をインストール（<code>pip install pillow</code>）すれば他の画像形式も読める。</p>
 <pre>
 <code>import matplotlib.pyplot as plt
 img = plt.imread("画像ファイル名")
@@ -170,7 +170,7 @@ plt.imshow(img[..., ::-1])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-10-01 14:46:52</time>
+Last modified: <time>2020-06-11 20:37:51</time>
 <!-- hhmts end -->
 </p>
 </body>

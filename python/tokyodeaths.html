@@ -16,6 +16,8 @@
 
 <h1>東京の超過死亡？</h1>
 
+<p><em>[2020-06-11]</em> 2020年4月分のデータを追加した。</p>
+
 <p><a href="https://www.ft.com/content/a26fbf7e-48f8-11ea-aeb3-955839e06441">Financial Times の COVID-19 グラフ</a>でお馴染みの超過死亡（excess mortality）が日本でも見られるかが話題になっている。2020年5月5日の時点では<a href="https://www.niid.go.jp/niid/ja/flu-m/2112-idsc/jinsoku/1852-flu-jinsoku-7.html">インフルエンザ関連死亡迅速把握システム</a>の東京のグラフ（下の左側）に超過死亡が見えるという説があった。しかし，この統計はデータが増えるにしたがって変化する（<a href="https://note.com/lotta_liz_di/n/n506972308fd6">日本の「超過死」についての注意事項</a>参照）。実際，2020年5月24日時点では右側のようになり，山が消えている。</p>
 
 <figure>
@@ -63,6 +65,7 @@ plt.savefig('tokyodeaths1.svg', bbox_inches="tight")
 plt.plot(df[df['month'] == 1]['year'], perday[df['month'] == 1], 'o-', label='Jan')
 plt.plot(df[df['month'] == 2]['year'], perday[df['month'] == 2], 'o-', label='Feb')
 plt.plot(df[df['month'] == 3]['year'], perday[df['month'] == 3], 'o-', label='Mar')
+plt.plot(df[df['month'] == 4]['year'], perday[df['month'] == 4], 'o-', label='Mar')
 plt.legend()
 plt.savefig('tokyodeaths2.svg', bbox_inches="tight")
 </code></pre>
@@ -77,7 +80,7 @@ plt.savefig('tokyodeaths2.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-26 15:20:29</time>
+Last modified: <time>2020-06-11 14:26:06</time>
 <!-- hhmts end -->
 </p>
 </body>
