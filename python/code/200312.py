@@ -119,8 +119,6 @@ ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
 
 fig.savefig('../img/200312h.svg', bbox_inches="tight")
 
-exit()
-
 #-----
 
 df1 = df[df['受診都道府県'] != '東京都']
@@ -136,6 +134,25 @@ ax.set_xlim(datetime.datetime(2020,3,20), datetime.datetime(2020,5,1))
 ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
 
 fig.savefig('../img/200312i.svg', bbox_inches="tight")
+
+exit()
+
+#-----
+
+df1 = df[df['受診都道府県'] == '大阪府']
+
+ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+ax.hist(df1['発症日'], bins=b, edgecolor="black", alpha=0.5)
+ax.hist(df1['確定日'], bins=b, edgecolor="black", alpha=0.5)
+ax.set_xlim(datetime.datetime(2020,3,20), datetime.datetime(2020,5,1))
+ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
+
+fig.savefig('../img/200312j.svg', bbox_inches="tight")
+
+exit()
 
 #-----
 

@@ -18,6 +18,8 @@
 
 <p><em>[2020-06-11]</em> 2020年4月分のデータを追加した。</p>
 
+<p><em>[2020-06-13]</em> 日経新聞6月11日記事を引用した。</p>
+
 <p><a href="https://www.ft.com/content/a26fbf7e-48f8-11ea-aeb3-955839e06441">Financial Times の COVID-19 グラフ</a>でお馴染みの超過死亡（excess mortality）が日本でも見られるかが話題になっている。2020年5月5日の時点では<a href="https://www.niid.go.jp/niid/ja/flu-m/2112-idsc/jinsoku/1852-flu-jinsoku-7.html">インフルエンザ関連死亡迅速把握システム</a>の東京のグラフ（下の左側）に超過死亡が見えるという説があった。しかし，この統計はデータが増えるにしたがって変化する（<a href="https://note.com/lotta_liz_di/n/n506972308fd6">日本の「超過死」についての注意事項</a>参照）。実際，2020年5月24日時点では右側のようになり，山が消えている。</p>
 
 <figure>
@@ -26,6 +28,12 @@
 </figure>
 
 <p>このあたりの事情は5月24日に国立感染症研究所が<a href="https://www.niid.go.jp/niid/ja/from-idsc/9627-jinsoku-qa.html">インフルエンザ関連死亡迅速把握システムについてのQ＆A</a>でも説明している。これと行き違いで日経新聞が5月24日に上の左のグラフだけ見て<a href="https://www.nikkei.com/article/DGXMZO59508030U0A520C2NN1000/">コロナ感染死、把握漏れも　「超過死亡」200人以上か</a>という記事を書いてしまう。</p>
+
+<p>日経新聞は6月11日にも<a href="https://www.nikkei.com/article/DGXMZO60266010R10C20A6CR8000/">特定警戒11都府県で「超過死亡」　緊急事態発令の4月</a>という記事で下図のような超過死亡を掲載している：</p>
+
+<figure><img src="img/https---imgix-proxy.n8s.jp-DSXMZO6026599011062020CR8001-PN1-2.jpg" alt="Excess Mortality, Nikkei"></figure>
+
+<p>しかし，以下で東京について示すように，高齢化とともに死亡数は年々増加する傾向があり，16--19年の平均と2020年を比べて超過死亡ありとするのは問題がある。</p>
 
 <p>さて，日本全体の人口動態統計速報は集計に2ヶ月近くかかる（<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/02.html">2020年2月分</a>は2020年4月24日に出た。<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/03.html">3月分</a>は5月26日に出た）。</p>
 
@@ -59,7 +67,7 @@ plt.savefig('tokyodeaths1.svg', bbox_inches="tight")
 
 <figure><img src="img/tokyodeaths1.svg" alt="Deaths in Tokyo"></figure>
 
-<p>月による変動はどの年もほぼ同じだが，次第に増える傾向があるのは，東京都の人口増加と高齢化によるものであろう。このため，次のように描くほうがよいかもしれない：</p>
+<p>月による変動はどの年もほぼ同じだが，次第に増える傾向があるのは，東京都の人口増加と高齢化によるものであろう。このため，次のように描くほうがよかろう：</p>
 
 <pre><code>plt.clf()
 plt.plot(df[df['month'] == 1]['year'], perday[df['month'] == 1], 'o-', label='Jan')
@@ -72,7 +80,9 @@ plt.savefig('tokyodeaths2.svg', bbox_inches="tight")
 
 <figure><img src="img/tokyodeaths2.svg" alt="Deaths in Tokyo"></figure>
 
-<p>2月は2020年に顕著な減少が見られる。理由としては，2020年の冬は温暖であり，新型コロナウイルス感染対策のおかげでインフルエンザも少なかったことが考えられる。</p>
+<p>2月は2020年に顕著な減少が見られる。理由としては，2020年の冬は温暖であり，新型コロナウイルス感染対策のおかげでインフルエンザも少なかったことが考えられる。一方で，4月は平年よりやや寒かった。</p>
+
+<p>なお，死亡数が死亡日ベースではなく届出日（受理日）ベースであれば，休日の影響で月末の死亡が翌月に回る割合が年によって異なるというご指摘もいただいた。</p>
 
 <hr>
 
@@ -80,7 +90,7 @@ plt.savefig('tokyodeaths2.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-06-11 14:26:06</time>
+Last modified: <time>2020-06-13 12:13:40</time>
 <!-- hhmts end -->
 </p>
 </body>
