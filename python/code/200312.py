@@ -64,8 +64,9 @@ ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
-ax.plot(df['確定日'], dt, 'ko', markersize=5, alpha=0.1)
+ax.plot(df['確定日'], dt, 'ko', markersize=5, alpha=0.1, zorder=-10)
 ax.plot(b, h, color='C1')
+ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
 ax.set_xlabel('確定日 (confirmed)')
 ax.set_ylabel('確定日-発症日 (confirmed - onset)')
 

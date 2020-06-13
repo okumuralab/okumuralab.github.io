@@ -48,19 +48,20 @@ ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 dx = np.diff(np.array(x, dtype=np.float), axis=0)
 dx[21][x[-1].index == 'China'] = np.nan
-ax.plot(t[1:], dx, 'o-')
+ax.plot(t[1:], dx, 'o-', zorder=-10)
 # ax.set_yscale('log')
 
 j = 0
 for i in x[-1].index:
     # if dx[-1][j] > 500:
-    ax.text(t[-1], dx[-1][j], i)
+    ax.text(t[-1], dx[-1][j], i, zorder=-10)
     j += 1
     
 # ax.legend(x[-1].index)
 
 japan = [x[i]['Japan'] for i in range(len(x))]
-ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan')
+ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan', zorder=-10)
+ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
 ax.set_ylabel('Confirmed')
 ax.legend()
 
@@ -101,7 +102,7 @@ ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 dx = np.diff(np.array(x, dtype=np.float), axis=0)
-ax.plot(t[1:], dx, 'o-')
+ax.plot(t[1:], dx, 'o-', zorder=-10)
 # ax.set_yscale('log')
 
 j = 0
@@ -113,7 +114,8 @@ for i in x[-1].index:
 # ax.legend(x[-1].index)
 
 japan = [x[i]['Japan'] for i in range(len(x))]
-ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan')
+ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan', zorder=-10)
+ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
 ax.set_ylabel('Deaths')
 ax.legend()
 

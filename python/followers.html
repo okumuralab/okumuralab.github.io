@@ -73,11 +73,38 @@ df.plot()
 
 <hr>
 
+<p><em>[2020-06-13]</em> 別のやりかたでやってみる：</p>
+
+<pre>
+<code>import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots()
+ax.plot(t, ar_data[7])
+fig.savefig('200613a.svg', bbox_inches="tight")
+</code></pre>
+
+<p>35662バイトのSVGファイルができる。もっと軽くするため，プロット部分だけラスタライズしてみる：</p>
+
+<pre>
+<code>ax.clear()
+ax.plot(t, ar_data[7], zorder=-10)
+ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
+fig.savefig('200613a.svg', bbox_inches="tight")
+</code></pre>
+
+<p>27054バイトに減った。</p>
+
+<figure><img src="img/200613a.svg" alt="ツイッターのフォロワー数の推移"></figure>
+
+<p>2020年になって増えたのはCOVID-19のためであろう。</p>
+
+<hr>
+
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-12-29 10:23:26</time>
+Last modified: <time>2020-06-13 20:44:10</time>
 <!-- hhmts end -->
 </p>
 </body>
