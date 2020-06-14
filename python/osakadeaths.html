@@ -31,7 +31,6 @@ def days(year, month):
 
 perday = np.array([r[2] / days(r[0], r[1]) for i, r in df.iterrows()])
 
-# plt.clf()
 for y in range(2015, 2021):
     plt.plot(df[df['year'] == y]['month'], perday[df['year'] == y], 'o-', label=y)
 
@@ -41,6 +40,18 @@ plt.savefig('osakadeaths.svg', bbox_inches="tight")
 
 <figure><img src="img/osakadeaths.svg" alt="Deaths in Osaka"></figure>
 
+<pre><code>plt.clf()
+plt.plot(df[df['month'] == 1]['year'], perday[df['month'] == 1], 'o-', label='Jan')
+plt.plot(df[df['month'] == 2]['year'], perday[df['month'] == 2], 'o-', label='Feb')
+plt.plot(df[df['month'] == 3]['year'], perday[df['month'] == 3], 'o-', label='Mar')
+plt.plot(df[df['month'] == 4]['year'], perday[df['month'] == 4], 'o-', label='Apr')
+plt.xticks(range(2016, 2021))
+plt.legend()
+plt.savefig('osakadeaths1.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/osakadeaths1.svg" alt="Deaths in Osaka"></figure>
+
 <p>[TODO] <a href="http://www.pref.osaka.lg.jp/toukei/jinkou/jinkou-xlslist.html">大阪府</a>にも大阪市の過去の死亡数が載っているが微妙に数値が異なるらしい。要チェック。</p>
 
 <hr>
@@ -49,7 +60,7 @@ plt.savefig('osakadeaths.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-23 13:01:04</time>
+Last modified: <time>2020-06-14 14:47:54</time>
 <!-- hhmts end -->
 </p>
 </body>

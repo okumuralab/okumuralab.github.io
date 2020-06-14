@@ -17,3 +17,13 @@ for y in range(2015, 2021):
 
 plt.legend()
 plt.savefig('../img/osakadeaths.svg', bbox_inches="tight")
+
+plt.clf()
+plt.plot(df[df['month'] == 1]['year'], perday[df['month'] == 1], 'o-', label='Jan')
+plt.plot(df[df['month'] == 2]['year'], perday[df['month'] == 2], 'o-', label='Feb')
+plt.plot(df[df['month'] == 3]['year'], perday[df['month'] == 3], 'o-', label='Mar')
+plt.plot(df[df['month'] == 4]['year'], perday[df['month'] == 4], 'o-', label='Apr')
+plt.xticks(range(2016, 2021))
+plt.legend()
+plt.savefig('../img/osakadeaths1.svg', bbox_inches="tight")
+
