@@ -34,17 +34,17 @@
 
 <h3>郵便番号検索API</h3>
 
-<p><a href="https://www.ibsnet.co.jp">株式会社アイビス</a>が提供している<a href="https://zip-cloud.appspot.com/doc/api">郵便番号検索API</a>。</p>
+<p><a href="https://www.ibsnet.co.jp">株式会社アイビス</a>が提供している<a href="https://zipcloud.ibsnet.co.jp/doc/api">郵便番号検索API</a>。</p>
 
 <pre>
 <code>import requests
 
-url = "https://zip-cloud.appspot.com/api/search"
+url = "https://zipcloud.ibsnet.co.jp/api/search"
 param = {"zipcode": "5140007"}
 data = requests.get(url, param).json()
 
 # 上の3行は次の2行と同じことである：
-# url = "https://zip-cloud.appspot.com/api/search?zipcode=5140007"
+# url = "https://zipcloud.ibsnet.co.jp/api/search?zipcode=5140007"
 # data = requests.get(url).json()
 
 address = data["results"][0]
@@ -72,15 +72,14 @@ while True:
 
 <h3>Weather Hacks</h3>
 
-<p><a href="http://www.livedoor.com">livedoor</a>（LINE Corporation）の提供する<a href="http://weather.livedoor.com/weather_hacks/">Weather Hacks</a>は，場所を指定しすると3日分の天気予報が取得できる。詳細は<a href="http://weather.livedoor.com/weather_hacks/webservice">Webサービス仕様</a>参照。</p>
+<p><a href="http://www.livedoor.com">livedoor</a>（LINE Corporation）の提供する<a href="http://weather.livedoor.com/weather_hacks/">Weather Hacks</a>は，場所を指定すると天気予報が取得できる。詳細は<a href="http://weather.livedoor.com/weather_hacks/webservice">Webサービス仕様</a>参照。</p>
 
 <pre>
 <code>url = "http://weather.livedoor.com/forecast/webservice/json/v1"
 param = {"city": "240010"} # 三重県津市
 data = requests.get(url, param).json()
-print("今日の天気:", data["forecasts"][0]["telop"])
-print("明日の天気:", data["forecasts"][1]["telop"])
-print("明後日の天気:", data["forecasts"][2]["telop"])
+for x in data["forecasts"]:
+    print(f'{x["dateLabel"]}の天気: {x["telop"]}')
 </code></pre>
 
 <h3>openBD</h3>
@@ -144,7 +143,7 @@ for i in data["item"]:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-11 08:22:37</time>
+Last modified: <time>2020-06-14 09:32:26</time>
 <!-- hhmts end -->
 </p>
 </body>

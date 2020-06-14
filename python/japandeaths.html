@@ -21,14 +21,27 @@
 <p>とりあえず2014年1月〜2019年11月の人口動態統計と，2019年10月からの速報を，e-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&amp;toukei=00450011&amp;tstat=000001028897">人口動態調査</a>から集めて，<a href="data/japandeaths.csv">japandeaths.csv</a> というファイルに収めた。</p>
 
 <pre><code>import matplotlib.pyplot as plt
+import pandas as pd
 import numpy as np
 import datetime
+
+def days(year, month):
+    year = int(year)
+    month = int(month)
+    m = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    return m[month - 1] + ((month == 2) and
+                           ((year % 4 == 0) and (year % 100 != 0) or (year % 400 == 0)))
 
 df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/japandeaths.csv')
 t = [datetime.datetime(int(x['年']), int(x['月']), 1) for i, x in df.iterrows()]
 
-plt.plot(t, df['死亡数'], 'o-')
-plt.plot(t, df['死亡数速報値'], 'o-')
+perday1 = np.array([r[2] / days(r[0], r[1]) for i, r in df.iterrows()])
+perday2 = np.array([r[3] / days(r[0], r[1]) for i, r in df.iterrows()])
+
+plt.plot(t, perday1, 'o-')
+plt.plot(t, perday2, 'o-')
+plt.ylabel('1日あたり死亡数')
+plt.legend(['確定値', '速報値'])
 plt.savefig('japandeaths1.svg', bbox_inches="tight")
 </code></pre>
 
@@ -36,17 +49,34 @@ plt.savefig('japandeaths1.svg', bbox_inches="tight")
 
 <pre><code>plt.clf()
 for y in range(2014, 2020):
-    df1 = df[df['年'] == y]
-    plt.plot(df1['月'], df1['死亡数'], 'o-', alpha=0.5, marker=f'${y % 10}$', label=y)
-df1 = df[df['年'] == 2019]
-plt.plot(df1['月'], df1['死亡数速報値'], 'o-', marker='$9$', label='2019速報値')
-df1 = df[df['年'] == 2020]
-plt.plot(df1['月'], df1['死亡数速報値'], 'o-k', label='2020速報値')
+    plt.plot(df[df['年'] == y]['月'], perday1[df['年'] == y],
+             'o-', alpha=0.5, marker=f'${y % 10}$', label=y)
+
+plt.plot(df[df['年'] == 2019]['月'], perday2[df['年'] == 2019],
+         'o-', marker='$9$', label='2019速報値')
+plt.plot(df[df['年'] == 2020]['月'], perday2[df['年'] == 2020],
+         'o-k', label='2020速報値')
+plt.xlabel('月')
+plt.ylabel('1日あたり死亡数')
 plt.legend()
 plt.savefig('japandeaths2.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/japandeaths2.svg" alt="Deaths in Japan"></figure>
+
+<pre><code>plt.clf()
+plt.plot(df[df['月'] == 1]['年'], perday1[df['月'] == 1], 'o-', label='Jan')
+plt.plot(df[df['月'] == 2]['年'], perday1[df['月'] == 2], 'o-', label='Feb')
+plt.plot(df[df['月'] == 3]['年'], perday1[df['月'] == 3], 'o-', label='Mar')
+plt.plot(df[df['月'] == 1]['年'], perday2[df['月'] == 1], 'o-', color='C0')
+plt.plot(df[df['月'] == 2]['年'], perday2[df['月'] == 2], 'o-', color='C1')
+plt.plot(df[df['月'] == 3]['年'], perday2[df['月'] == 3], 'o-', color='C2')
+plt.ylabel('1日あたり死亡数')
+plt.legend()
+plt.savefig('japandeaths3.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/japandeaths3.svg" alt="Deaths in Japan"></figure>
 
 <hr>
 
@@ -54,7 +84,7 @@ plt.savefig('japandeaths2.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-29 17:40:24</time>
+Last modified: <time>2020-06-14 12:07:12</time>
 <!-- hhmts end -->
 </p>
 </body>

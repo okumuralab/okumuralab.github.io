@@ -16,11 +16,11 @@
 
 <h1>顔認識</h1>
 
-<p>顔検出・認識ライブラリ <a href="https://github.com/ageitgey/face_recognition">face_recognition</a> を使って簡単な顔認識を行う。あらかじめ <code>pip install face-recognition</code> でインストールしておく。<code>face_detection</code>，<code>face_recognition</code> という二つのコマンドライン版のツールもインストールされるので，わざわざ Python でプログラムを書かなくてもいろいろ遊べる。詳しくは<a href="https://github.com/ageitgey/face_recognition">こちら</a>に解説がある。</p>
+<p>顔検出・認識ライブラリ <a href="https://github.com/ageitgey/face_recognition">face_recognition</a> を使って簡単な顔認識を行う。あらかじめ <code>pip install face-recognition</code> でインストールしておく。モジュール face-recognition，face-recognition-models，<a href="http://dlib.net">dlib</a>，click がインストールされる。face_detection，face_recognition という二つのコマンドライン版のツールもインストールされるので，わざわざ Python でプログラムを書かなくてもいろいろ遊べる。詳しくは<a href="https://github.com/ageitgey/face_recognition">こちら</a>に解説がある。</p>
 
 <p>Mac でインストールするには CMake が必要（<code>brew install cmake</code>）。</p>
 
-<p>開発環境が入っていない Windows の場合は <a href="https://colab.research.google.com">Google Colaboratory</a> を使うほうが楽であろう。ただ，なぜだか不明だが <code>dlib</code> がうまく動かないので CUDA を使わないように再インストールした（かなり時間がかかる）：</p>
+<p>開発環境が入っていない Windows の場合は <a href="https://colab.research.google.com">Google Colaboratory</a> を使うほうが楽であろう。ただ，なぜだか不明だが dlib がうまく動かないので CUDA を使わないように再インストールした（かなり時間がかかる）：</p>
 
 <pre>
 <code>!pip install --upgrade -v --install-option="--no" --install-option="DLIB_USE_CUDA" dlib
@@ -35,6 +35,8 @@ import pathlib
 
 path = pathlib.Path("faces_me")
 names = [p for p in path.iterdir() if p.match("*.jp*g")] # .jpg .jpeg
+
+# あるいは import glob で name = glob.glob("faces_me/*.jp*g")
 
 def encoding(name): # 128次元のエンコーディング
     img = face_recognition.load_image_file(name)
@@ -116,7 +118,7 @@ for i in range(1, len(names)):
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-22 12:53:20</time>
+Last modified: <time>2020-06-14 10:35:24</time>
 <!-- hhmts end -->
 </p>
 </footer>
