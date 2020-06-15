@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>岩手県の超過死亡？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>岩手県の超過死亡？</h1>
+
+<p>このページを書いている時点で，日本では岩手県だけ新型コロナウイルスの感染者が確認されていない。つまり，新型コロナウイルスによる超過死亡が一番なさそうな県である。そこで，岩手県について，<a href="tokyodeaths.html">東京の超過死亡？</a>，<a href="osakadeaths.html">大阪市の超過死亡？</a>と同様のグラフを描いてみることにする。</p>
+
+<p>岩手県の死者数などの統計は<a href="http://www3.pref.iwate.jp/webdb/view/outside/s14Tokei/bnyaBtKekka.html?C=B0203&R=I002">岩手県毎月人口推計</a>にある。2016年以降の毎月の死者数を <a href="data/iwatedeaths.csv">iwatedeaths.csv</a> というファイルに収めた。</p>
+
+<pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/iwatedeaths.csv')
+</code></pre>
+
+<p>単純に月ごとにプロットすると，大の月・小の月の影響で凸凹する。しかも，2020年のようなうるう年の2月は平年に比べて 3.6% もの「超過死亡」になってしまう。そこで，1日あたりの死者数に直してからプロットする。</p>
+
+<pre><code>def days(year, month):
+    m = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    return m[month - 1] + ((month == 2) and
+                           ((year % 4 == 0) and (year % 100 != 0) or (year % 400 == 0)))
+
+perday = np.array([r[2] / days(r[0], r[1]) for i, r in df.iterrows()])
+
+for y in range(2016, 2021):
+    plt.plot(df[df['year'] == y]['month'], perday[df['year'] == y], 'o-', label=y)
+plt.xlabel('月')
+plt.ylabel('1日あたりの死亡数')
+plt.legend()
+plt.savefig('iwatedeaths1.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/iwatedeaths1.svg" alt="Deaths in Iwate"></figure>
+
+<p>次のように描くほうがよいかもしれない：</p>
+
+<pre><code>plt.clf()
+plt.plot(df[df['month'] == 1]['year'], perday[df['month'] == 1], 'o-', label='Jan')
+plt.plot(df[df['month'] == 2]['year'], perday[df['month'] == 2], 'o-', label='Feb')
+plt.plot(df[df['month'] == 3]['year'], perday[df['month'] == 3], 'o-', label='Mar')
+plt.plot(df[df['month'] == 4]['year'], perday[df['month'] == 4], 'o-', label='Mar')
+plt.xlabel('年')
+plt.ylabel('1日あたりの死亡数')
+plt.xticks(range(2016, 2021))
+plt.legend()
+plt.savefig('iwatedeaths2.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/iwatedeaths2.svg" alt="Deaths in Iwate"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-06-13 10:07:40</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
