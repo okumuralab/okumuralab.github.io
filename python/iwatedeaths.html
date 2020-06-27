@@ -16,6 +16,8 @@
 
 <h1>岩手県の超過死亡？</h1>
 
+<p><em>[2020-06-27]</em> 2020年5月分のデータを追加した。</p>
+
 <p>このページを書いている時点で，日本では岩手県だけ新型コロナウイルスの感染者が確認されていない。つまり，新型コロナウイルスによる超過死亡が一番なさそうな県である。そこで，岩手県について，<a href="tokyodeaths.html">東京の超過死亡？</a>，<a href="osakadeaths.html">大阪市の超過死亡？</a>と同様のグラフを描いてみることにする。</p>
 
 <p>岩手県の死者数などの統計は<a href="http://www3.pref.iwate.jp/webdb/view/outside/s14Tokei/bnyaBtKekka.html?C=B0203&R=I002">岩手県毎月人口推計</a>にある。2016年以降の毎月の死者数を <a href="data/iwatedeaths.csv">iwatedeaths.csv</a> というファイルに収めた。</p>
@@ -53,6 +55,7 @@ plt.plot(df[df['month'] == 1]['year'], perday[df['month'] == 1], 'o-', label='Ja
 plt.plot(df[df['month'] == 2]['year'], perday[df['month'] == 2], 'o-', label='Feb')
 plt.plot(df[df['month'] == 3]['year'], perday[df['month'] == 3], 'o-', label='Mar')
 plt.plot(df[df['month'] == 4]['year'], perday[df['month'] == 4], 'o-', label='Mar')
+plt.plot(df[df['month'] == 5]['year'], perday[df['month'] == 5], 'o-', label='May')
 plt.xlabel('年')
 plt.ylabel('1日あたりの死亡数')
 plt.xticks(range(2016, 2021))
@@ -68,7 +71,7 @@ plt.savefig('iwatedeaths2.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-06-13 10:07:40</time>
+Last modified: <time>2020-06-27 08:02:26</time>
 <!-- hhmts end -->
 </p>
 </body>

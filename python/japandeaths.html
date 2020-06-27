@@ -16,6 +16,8 @@
 
 <h1>日本の超過死亡？</h1>
 
+<p><em>[2020-06-27]</em> 2020年4月分のデータを追加した。</p>
+
 <p>人口動態統計速報は集計に2ヶ月近くかかる（<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/02.html">2020年2月分</a>は2020年4月24日に出た。<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/03.html">3月分</a>は5月26日に出た）。また，速報でない人口動態統計は本稿執筆時点で2019年11月までしか出ていない。しかも，過去の速報と速報でないものは微妙に異なっている。</p>
 
 <p>とりあえず2014年1月〜2019年11月の人口動態統計と，2019年10月からの速報を，e-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&amp;toukei=00450011&amp;tstat=000001028897">人口動態調査</a>から集めて，<a href="data/japandeaths.csv">japandeaths.csv</a> というファイルに収めた。</p>
@@ -68,9 +70,11 @@ plt.savefig('japandeaths2.svg', bbox_inches="tight")
 plt.plot(df[df['月'] == 1]['年'], perday1[df['月'] == 1], 'o-', label='Jan')
 plt.plot(df[df['月'] == 2]['年'], perday1[df['月'] == 2], 'o-', label='Feb')
 plt.plot(df[df['月'] == 3]['年'], perday1[df['月'] == 3], 'o-', label='Mar')
+plt.plot(df[df['月'] == 4]['年'], perday1[df['月'] == 4], 'o-', label='Apr')
 plt.plot(df[df['月'] == 1]['年'], perday2[df['月'] == 1], 'o-', color='C0')
 plt.plot(df[df['月'] == 2]['年'], perday2[df['月'] == 2], 'o-', color='C1')
 plt.plot(df[df['月'] == 3]['年'], perday2[df['月'] == 3], 'o-', color='C2')
+plt.plot(df[df['月'] == 4]['年'], perday2[df['月'] == 4], 'o-', color='C3')
 plt.ylabel('1日あたり死亡数')
 plt.legend()
 plt.savefig('japandeaths3.svg', bbox_inches="tight")
@@ -78,13 +82,15 @@ plt.savefig('japandeaths3.svg', bbox_inches="tight")
 
 <figure><img src="img/japandeaths3.svg" alt="Deaths in Japan"></figure>
 
+<p>2020年は，速報値で比較可能かどうかは微妙なので，線でつないでない。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-06-14 12:07:12</time>
+Last modified: <time>2020-06-27 08:29:00</time>
 <!-- hhmts end -->
 </p>
 </body>

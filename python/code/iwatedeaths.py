@@ -25,6 +25,7 @@ plt.plot(df[df['month'] == 1]['year'], perday[df['month'] == 1], 'o-', label='Ja
 plt.plot(df[df['month'] == 2]['year'], perday[df['month'] == 2], 'o-', label='Feb')
 plt.plot(df[df['month'] == 3]['year'], perday[df['month'] == 3], 'o-', label='Mar')
 plt.plot(df[df['month'] == 4]['year'], perday[df['month'] == 4], 'o-', label='Apr')
+plt.plot(df[df['month'] == 5]['year'], perday[df['month'] == 5], 'o-', label='May')
 plt.xlabel('年')
 plt.ylabel('1日あたりの死亡数')
 plt.xticks(range(2016, 2021))
