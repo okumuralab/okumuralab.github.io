@@ -41,7 +41,7 @@ perday1 = np.array([r[2] / days(r[0], r[1]) for i, r in df.iterrows()])
 perday2 = np.array([r[3] / days(r[0], r[1]) for i, r in df.iterrows()])
 
 plt.plot(t, perday1, 'o-')
-plt.plot(t, perday2, 'o-')
+plt.plot(t, perday2, 's-')
 plt.ylabel('1日あたり死亡数')
 plt.legend(['確定値', '速報値'])
 plt.savefig('japandeaths1.svg', bbox_inches="tight")
@@ -67,14 +67,9 @@ plt.savefig('japandeaths2.svg', bbox_inches="tight")
 <figure><img src="img/japandeaths2.svg" alt="Deaths in Japan"></figure>
 
 <pre><code>plt.clf()
-plt.plot(df[df['月'] == 1]['年'], perday1[df['月'] == 1], 'o-', label='Jan')
-plt.plot(df[df['月'] == 2]['年'], perday1[df['月'] == 2], 'o-', label='Feb')
-plt.plot(df[df['月'] == 3]['年'], perday1[df['月'] == 3], 'o-', label='Mar')
-plt.plot(df[df['月'] == 4]['年'], perday1[df['月'] == 4], 'o-', label='Apr')
-plt.plot(df[df['月'] == 1]['年'], perday2[df['月'] == 1], 'o-', color='C0')
-plt.plot(df[df['月'] == 2]['年'], perday2[df['月'] == 2], 'o-', color='C1')
-plt.plot(df[df['月'] == 3]['年'], perday2[df['月'] == 3], 'o-', color='C2')
-plt.plot(df[df['月'] == 4]['年'], perday2[df['月'] == 4], 'o-', color='C3')
+perday = np.array([p2 if np.isnan(p1) else p1 for p1, p2 in zip(perday1, perday2)])
+for m, n in [(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr')]:
+    plt.plot(df[df['月'] == m]['年'], perday[df['月'] == m], marker=f'${m}$', label=n)
 plt.ylabel('1日あたり死亡数')
 plt.legend()
 plt.savefig('japandeaths3.svg', bbox_inches="tight")
@@ -82,15 +77,13 @@ plt.savefig('japandeaths3.svg', bbox_inches="tight")
 
 <figure><img src="img/japandeaths3.svg" alt="Deaths in Japan"></figure>
 
-<p>2020年は，速報値で比較可能かどうかは微妙なので，線でつないでない。</p>
-
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-06-27 08:29:00</time>
+Last modified: <time>2020-06-27 17:34:35</time>
 <!-- hhmts end -->
 </p>
 </body>
