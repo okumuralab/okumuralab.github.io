@@ -34,7 +34,8 @@ dic = {
     'Russian Federation': 'Russia',
     'Republic of Moldova': 'Moldova',
     'Bosnia and Herzegovina': 'Bosnia',
-    'Republic of Korea': 'Korea'
+    'Republic of Korea': 'Korea',
+    '(Commonwealth of the)': 'Northern Mariana Islands'
 }
 
 countries = []
