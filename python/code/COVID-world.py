@@ -13,13 +13,8 @@ now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 
 url = 'https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/'
 r = requests.get(url)
-a = re.findall(' href="(.*?\.pdf)', r.text)
-if a[0][0] == '/':
-    url = 'https://www.who.int' + a[0]
-elif a[0][0:8] == 'https://':
-    url = a[0]
-else:
-    url = url + a[0]
+a = re.findall(' href="/docs/default-source/coronaviruse/situation-reports/(.*?\.pdf)', r.text)
+url = 'https://www.who.int/docs/default-source/coronaviruse/situation-reports/' + a[0]
 
 dic = {
     'United Republic of Tanzania': 'Tanzania',
