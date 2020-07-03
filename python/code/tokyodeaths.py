@@ -21,7 +21,7 @@ plt.legend()
 plt.savefig('../img/tokyodeaths1.svg', bbox_inches="tight")
 
 plt.clf()
-for m, n in [(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr')]:
+for m, n in [(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May')]:
     plt.plot(df[df['month'] == m]['year'], perday[df['month'] == m], marker=f'${m}$', label=n)
 plt.legend()
 plt.savefig('../img/tokyodeaths2.svg', bbox_inches="tight")
