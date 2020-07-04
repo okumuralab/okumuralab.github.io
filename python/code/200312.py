@@ -170,3 +170,22 @@ for k in ken:
     fig.savefig(k + '.svg', bbox_inches="tight")
 
 #-----
+# 年代分布
+
+df1 = df[(df['受診都道府県'] == '東京都') & (df['年代'] != '不明')]
+df1['年代'].value_counts(sort=False)
+df1['年代'][df1['年代'] == '0-10'] = 0
+df1['年代'] = df1['年代'].astype(int)
+
+ax.clear()
+# ax.hist(df1['年代'], bins=range(0,110,10), edgecolor="black")
+ax.hist(df1['年代'][(df1['確定日'] >= datetime.datetime(2020,4,1)) & (df1['確定日'] < datetime.datetime(2020,5,1))], bins=range(0,110,10), color='gray', edgecolor="black")
+ax.set_xlabel('年代')
+ax.set_ylabel('人数')
+plt.legend(['東京 4月'])
+
+ax.clear()
+ax.hist(df1['年代'][df1['確定日'] >= datetime.datetime(2020,6,1)], bins=range(0,110,10), color='gray', edgecolor="black")
+ax.set_xlabel('年代')
+ax.set_ylabel('人数')
+plt.legend(['東京 6月以降'])
