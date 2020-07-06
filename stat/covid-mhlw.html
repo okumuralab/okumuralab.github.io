@@ -25,7 +25,7 @@ plot(as.POSIXct(df[[1]]), df[[2]], type="h", xlab="月", ylab="感染者数", lw
 <p>さらに死亡数を重ねてみる：</p>
 
 <pre><code>df2 = read.csv("https://www.mhlw.go.jp/content/death_total.csv", fileEncoding="UTF-8-BOM")
-points(as.POSIXct(df2[[1]])[2:142], diff(df2[[2]]), type="h", lwd=3, col="red")
+points(as.POSIXct(df2[[1]])[-1:0], diff(df2[[2]]), type="h", lwd=3, col="red")
 </code></pre>
 
 <figure><img src="img/200706a.png" alt=""></figure>
@@ -36,7 +36,7 @@ points(as.POSIXct(df2[[1]])[2:142], diff(df2[[2]]), type="h", lwd=3, col="red")
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-07-06 15:22:26</time>
+Last modified: <time>2020-07-06 17:50:10</time>
 <!-- hhmts end -->
 </p>
 </footer>
