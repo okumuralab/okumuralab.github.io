@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>オープンデータとWeb API</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>オープンデータとWeb API</h1>
+
+<h3>気象庁の地球温暖化データ</h3>
+
+<p>オープンデータ（自由に使えるデータ）を使ってみましょう。例えば<a href="090503c.html">グラフの例：地球温暖化</a>でも挙げた地球温暖化のデータを取得してグラフを描いてみます：</p>
+
+<pre>
+<code>x = read.csv("http://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv",
+             fileEncoding="SJIS")
+matplot(x[1], x[2], type="o", pch=16, xlab="年", ylab="°C")
+r = lm(x[[2]] ~ x[[1]])
+summary(r) # 詳細な結果を出力
+abline(r)  # 当てはめた直線をグラフに重ね書きする
+</code></pre>
+
+<p>このようなオープンデータは，ダウンロードして使うこともできますが，上のようにWebから直接取得して利用することもできます。また，URLの最後に <code>?</code> でパラメータを指定して必要なデータを取り出す仕組みもよく使われます。このような利用形態をWeb APIといいます。APIはApplication Programming Interfaceの略です。Web APIはJSON形式でデータを返すのが最近の流行です。詳しくは<a href="../python/webapi.html">Python版</a>もご覧ください。</p>
+
+<h3>郵便番号検索API</h3>
+
+<p><a href="https://www.ibsnet.co.jp">株式会社アイビス</a>が提供している<a href="https://zipcloud.ibsnet.co.jp/doc/api">郵便番号検索API</a>を使ってみましょう。</p>
+
+<pre>
+<code>library(jsonlite)
+
+url = "https://zipcloud.ibsnet.co.jp/api/search?zipcode=5140007"
+data = read_json(url)
+address = data$results[[1]]
+cat(address$address1, address$address2, address$address3, "\n")
+</code></pre>
+
+<h3>Weather Hacks</h3>
+
+<p><a href="http://www.livedoor.com">livedoor</a>（LINE Corporation）の提供する<a href="http://weather.livedoor.com/weather_hacks/">Weather Hacks</a>は，場所を指定すると天気予報が取得できます。詳細は<a href="http://weather.livedoor.com/weather_hacks/webservice">Webサービス仕様</a>参照。</p>
+
+<pre>
+<code>url = "http://weather.livedoor.com/forecast/webservice/json/v1?city=240010" # 三重県津市
+data = read_json(url)
+for (x in data$forecasts)
+    cat(x$dateLabel, "の天気:", x$telop, "\n")
+</code></pre>
+
+<h3>openBD</h3>
+
+<p><a href="https://calil.jp">カーリル</a>・<a href="https://www.hanmoto.com">版元ドットコム</a>の<a href="https://openbd.jp">openBD</a>は書誌情報・書影を提供しています。</p>
+
+<pre>
+<code>url = "https://api.openbd.jp/v1/get?isbn=978-4-7741-9690-9"
+data = read_json(url)
+cat("著者名:", data[[1]]$summary$author, "\n")
+cat("書名:", data[[1]]$summary$title, "\n")
+cat("出版社名:", data[[1]]$summary$publisher, "\n")
+cat("出版年月:", data[[1]]$summary$pubdate, "\n")
+</code></pre>
+
+<h3>HeartRails Express</h3>
+
+<p><a href="https://www.heartrails.com">ハートレイルズ</a>の<a href="http://express.heartrails.com">HeartRails Express</a>は路線／駅名データ等の地理情報を提供しています。</p>
+
+<pre>
+<code>url = "http://express.heartrails.com/api/json?method=getLines&amp;prefecture=三重県"
+data = read_json(url)
+cat("路線名一覧:\n")
+for (i in data$response$line)
+    cat(i, "\n")
+
+url = "http://express.heartrails.com/api/json?method=getStations&amp;line=近鉄名古屋線"
+data = read_json(url)
+cat("駅と経度・緯度:\n")
+for (i in data$response$station)
+    cat(i$name, i$x, i$y, "\n")
+</code></pre>
+
+<h3>お菓子の虜</h3>
+
+<p><a href="https://sysbird.jp/profile/">鳥山優子さん</a>のコンビニお菓子の情報サイト<a href="https://sysbird.jp/toriko/">お菓子の虜</a>の<a href="https://sysbird.jp/toriko/webapi/">Web API</a>。</p>
+
+<pre>
+<code>url = "https://sysbird.jp/toriko/api/?apikey=guest&format=json&keyword=マシュマロ"
+data = read_json(url)
+cat("菓子名・メーカー:\n")
+for (i in data$item)
+    cat(i$name, i$maker, "\n")
+</code></pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-07-06 12:41:02</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

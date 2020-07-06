@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>厚労省のCOVID-19オープンデータ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>厚労省のCOVID-19オープンデータ</h1>
+
+<p>厚労省はCOVID-19関係のデータを<a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">オープンデータ</a>として公開するようになった。これをRでプロットしてみる：</p>
+
+<pre><code>df = read.csv("https://www.mhlw.go.jp/content/pcr_positive_daily.csv", fileEncoding="UTF-8-BOM")
+plot(as.POSIXct(df[[1]]), df[[2]], type="h", xlab="月", ylab="感染者数", lwd=3, col="orange")
+</code></pre>
+
+<p>さらに死亡数を重ねてみる：</p>
+
+<pre><code>df2 = read.csv("https://www.mhlw.go.jp/content/death_total.csv", fileEncoding="UTF-8-BOM")
+points(as.POSIXct(df2[[1]])[2:142], diff(df2[[2]]), type="h", lwd=3, col="red")
+</code></pre>
+
+<figure><img src="img/200706a.png" alt=""></figure>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-07-06 15:22:26</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
