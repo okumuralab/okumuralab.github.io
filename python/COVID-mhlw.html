@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>COVID-19</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>COVID-19についての厚労省の（ほぼ）日報（アーカイブ）</h2>
+
+<p><a href="https://www.mhlw.go.jp">厚労省</a>の<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000121431_00086.html">報道発表一覧（新型コロナウイルス）</a>からリンクされている日報（ただし毎日ではない）の最近のものには，やや見やすい表がある。これから拾ったデータ <a href="data/COVID-mhlw.csv">COVID-mhlw.csv</a> によるその時点までのPCR検査結果（累計）は以下の通り（より古いデータ <a href="data/COVID-mhlw-old.csv">COVID-mhlw-old.csv</a> はチャーター機帰国者を含まない）。データには時刻（これまでのところ 12:00 つまり正午）が入っているが，x軸目盛は日の 0:00 に付いていることに注意。3月4日に検査人数が急増しているが，「「令和２年３月４日版」以後は、陽性となった者の濃厚接触者に対する検査も含めた検査実施人数を都道府県に照会し、回答を得たものを公表している」とのこと。陽性数が当日12時のものであるのに対し，検査人数は前日18時のもの。2020-03-19に累積の検査人数が減っているが，「千葉県が人数でなく件数でカウントしていたことが判明したため、千葉県の件数を引いたことによる」。2020-03-25にも909人減っているが理由は不明。<a href="https://stdio.sangwhan.com/wtf-japan-covid-19-report/">Japan's COVID-19 Reports - 140KBs of Unadulterated Incompetence</a> という指摘を受けたためか，2020-03-28から表の形式などが少し変わった。2020-05-09からまた大幅に変わった。12:00現在が0:00現在になり，入院者数は大幅減少。おそらくデータとしての連続性はないが，そのままグラフにしておく。CSVファイルの「 12:00」は，そもそも以前から12:00現在の値か怪しかったので，消した。</p>
+
+<figure><img src="img/COVID-mhlw2.svg" alt="COVID-19 (Japan)"></figure>
+
+<p>データの差分をとって，高さを1日あたりの数に直したものも描いてみる。</p>
+
+<pre><code>dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
+ax.bar(df.index, df['Examined'].diff() / dt, width=-dt+0.1, align='edge')
+ax.bar(df.index, df['Confirmed'].diff() / dt, width=-dt+0.1, align='edge')
+</code></pre>
+
+<figure><img src="img/COVID-mhlw3.svg" alt="COVID-19 (Japan)"></figure>
+
+<p>陰性の数が増えて（しかも報告が安定せず）見にくくなってきたので，検査人数を省いたグラフにした（以前は入院数も入れていたがデータが安定しないので外した）：</p>
+
+<figure><img src="img/COVID-mhlw5.svg" alt="COVID-19 (Japan)"></figure>
+
+<p>陽性の割合（累計）と95%信頼区間のグラフ：</p>
+
+<pre><code>from statsmodels.stats.proportion import proportion_confint
+
+p = [x['Confirmed'] / x['Examined'] for i, x in df.iterrows()]
+ci0, ci1 = np.array([proportion_confint(x['Confirmed'], x['Examined'], method='beta')
+                     for i, x in df.iterrows()]).T
+ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
+ax.grid(axis='y')
+</code></pre>
+
+<figure><img src="img/COVID-mhlw.svg" alt="COVID-19 proportion of positives (Japan)"></figure>
+
+<!--
+<p>こちらも差分なら次のようになる：</p>
+
+<pre><code>p = df['Confirmed'].diff() / df['Examined'].diff()
+ci0, ci1 = np.array([proportion_confint(x['Confirmed'], x['Examined'], method='beta')
+                     for i, x in df.diff().iterrows()]).T
+ax.errorbar(df.index, p, [p - ci0, ci1 - p], fmt="o", capsize=5, color="C1")
+ax.grid(axis='y')
+</code></pre>
+
+<figure><img src="img/COVID-mhlw4.svg" alt="COVID-19 (Japan)"></figure>
+-->
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-07-04 14:17:14</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
