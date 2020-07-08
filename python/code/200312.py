@@ -136,6 +136,40 @@ ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
 
 fig.savefig('../img/200312i.svg', bbox_inches="tight")
 
+#-----
+# 平均年代の推移
+
+# df1 = df[(df['受診都道府県'] == '東京都') & (df['年代'] != '不明')]
+df1 = df[(df['年代'].astype(str) != '不明') & (df['年代'].astype(str) != 'nan')]
+# df1['年代'].value_counts(sort=False)
+df1['年代'][df1['年代'] == '0-10'] = 0
+df1['年代'] = df1['年代'].astype(int)
+
+b = np.arange(datetime.datetime(2020,3,1),
+              max(df1['確定日']) + datetime.timedelta(days=1),
+              datetime.timedelta(days=1))
+
+a = []
+for i in b:
+    df2 = df1[df['確定日'] == i]
+    y = df2['年代'].values
+    if len(y) >= 10:
+        a.append(np.mean(y) + 5)
+    else:
+        a.append(np.nan)
+
+ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.plot(b, a, 'o-')
+ax.set_ylabel('平均年代')
+# ax.legend(['東京'])
+ax.legend(['全国'])
+
+fig.savefig('../img/200312j.svg', bbox_inches="tight")
+
+#-----
+
 exit()
 
 #-----
@@ -150,10 +184,6 @@ ax.hist(df1['発症日'], bins=b, edgecolor="black", alpha=0.5)
 ax.hist(df1['確定日'], bins=b, edgecolor="black", alpha=0.5)
 ax.set_xlim(datetime.datetime(2020,3,20), datetime.datetime(2020,5,1))
 ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
-
-fig.savefig('../img/200312j.svg', bbox_inches="tight")
-
-exit()
 
 #-----
 
@@ -189,33 +219,3 @@ ax.hist(df1['年代'][df1['確定日'] >= datetime.datetime(2020,6,1)], bins=ran
 ax.set_xlabel('年代')
 ax.set_ylabel('人数')
 plt.legend(['東京 6月以降'])
-
-#-----
-# 平均年代の推移
-
-# df1 = df[(df['受診都道府県'] == '東京都') & (df['年代'] != '不明')]
-df1 = df[(df['年代'].astype(str) != '不明') & (df['年代'].astype(str) != 'nan')]
-# df1['年代'].value_counts(sort=False)
-df1['年代'][df1['年代'] == '0-10'] = 0
-df1['年代'] = df1['年代'].astype(int)
-
-b = np.arange(datetime.datetime(2020,3,1),
-              max(df1['確定日']) + datetime.timedelta(days=1),
-              datetime.timedelta(days=1))
-
-a = []
-for i in b:
-    df2 = df1[df['確定日'] == i]
-    y = df2['年代'].values
-    if len(y) >= 10:
-        a.append(np.mean(y) + 5)
-    else:
-        a.append(np.nan)
-
-ax.clear()
-ax.xaxis.set_major_locator(locator)
-ax.xaxis.set_major_formatter(formatter)
-ax.plot(b, a, 'o-')
-ax.set_ylabel('平均年代')
-# ax.legend(['東京'])
-ax.legend(['全国'])
