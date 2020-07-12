@@ -107,13 +107,17 @@ Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
 
 <p>見かけは同じだが中身が違う。</p>
 
+<h3>「埼玉」と「埼⽟」</h3>
+
+<p>総務省のあるデータで「埼玉」（玉: U+7389）と「埼⽟」（⽟: U+2F5F）が混在しているという話を聞いた。こういうのは <code>unicodedata.normalize('NFKC', '「埼玉」と「埼⽟」')</code> で統一できる。<code>'NFKD'</code> だと濁点などが分離する。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-24 20:31:19</time>
+Last modified: <time>2020-07-12 22:14:11</time>
 <!-- hhmts end -->
 </p>
 </body>
