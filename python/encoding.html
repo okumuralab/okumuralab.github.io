@@ -109,7 +109,13 @@ Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
 
 <h3>「埼玉」と「埼⽟」</h3>
 
-<p>総務省のあるデータで「埼玉」（玉: U+7389）と「埼⽟」（⽟: U+2F5F）が混在しているという話を聞いた。こういうのは <code>unicodedata.normalize('NFKC', '「埼玉」と「埼⽟」')</code> で統一できる。<code>'NFKD'</code> だと濁点などが分離する。</p>
+<p>総務省のあるデータで「埼玉」（玉: U+7389）と「埼⽟」（⽟: U+2F5F）が混在しているという<a href="https://twitter.com/hal_sk/status/1281853581218336768">話</a>を聞いた。後者はCJK部首/康熙部首である。こういうのは <code>unicodedata.normalize('NFKC', '「埼玉」と「埼⽟」')</code> で統一できる（<code>'NFKD'</code> だと濁点などが分離する）。こういったものが混在する原因はAdobe DistillerまたはChromeのPDF出力である<a href="http://twitter.com/MurakamiShinyu/status/1282590800094756864">とのこと</a>。</p>
+
+<p>全部の部首が正規化されるわけではないようだ。次のようにすればよいと<a href="https://twitter.com/imabari_ehime/status/1282605117468897280">教えていただいた</a>：</p>
+
+<pre>
+<code>str.maketrans("⺟⺠⻁⻄⻑⻘⻝⻤⻨⻩⻫⻭⻯⻲戶", "母民虎西長青食鬼麦黄斉歯竜亀戸")
+</code></pre>
 
 <hr>
 
@@ -117,7 +123,7 @@ Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-07-12 22:14:11</time>
+Last modified: <time>2020-07-13 20:16:22</time>
 <!-- hhmts end -->
 </p>
 </body>
