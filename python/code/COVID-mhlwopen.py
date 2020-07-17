@@ -5,18 +5,25 @@ import matplotlib.dates as mdates
 import pandas as pd
 import time
 
-enc = "utf-8"
+def readcsv(url):
+    try:
+        df = pd.read_csv(url, parse_dates=['日付'])
+        print('utf-8:', url)
+    except UnicodeDecodeError:
+        df = pd.read_csv(url, parse_dates=['日付'], encoding='cp932')
+        print('cp932:', url)
+    return df
 
 now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
+
 # PCR検査陽性者数
-df1 = pd.read_csv("https://www.mhlw.go.jp/content/pcr_positive_daily.csv",
-                  parse_dates=['日付'], encoding=enc)
+df1 = readcsv("https://www.mhlw.go.jp/content/pcr_positive_daily.csv")
+
 # PCR検査実施人数
-df2 = pd.read_csv("https://www.mhlw.go.jp/content/pcr_tested_daily.csv",
-                  parse_dates=['日付'], encoding=enc)
+df2 = readcsv("https://www.mhlw.go.jp/content/pcr_tested_daily.csv")
+
 # 死亡者数
-df5 = pd.read_csv("https://www.mhlw.go.jp/content/death_total.csv",
-                  parse_dates=['日付'], encoding=enc)
+df5 = readcsv("https://www.mhlw.go.jp/content/death_total.csv")
 
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
