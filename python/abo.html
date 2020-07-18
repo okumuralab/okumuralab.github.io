@@ -42,6 +42,8 @@ MathJax = {
 
 <p>より小規模な<a href="https://twitter.com/dempacat/status/1134610198906097664">こちらのアンケート</a>では，A 297，B 197，O 253，AB 123という結果であった。割合では，A 34.1%，B 22.6%，O 29.1%，AB 14.1% である。</p>
 
+<p>[追記] <a href="https://twitter.com/fukada0318/status/1282903111300902912">深田えいみさんのアンケート</a>では，537356票中，O型167791，A型186333，B型116163，AB型67069であった。</p>
+
 <p>こういった結果は，母集団全体の比率と有意に異ならないか。もし異なるなら，何が原因だろう？</p>
 
 <p>そもそも母集団の比率が正確にわからなければならない。信頼のおけるデータはないか。ということで，下の古畑（田中）のデータと，より新しい高校生2.1万人のデータを吟味することにした。</p>
@@ -125,7 +127,7 @@ s / sum(s)
 
 <h2>データの比較</h2>
 
-<p>古畑（田中）のデータ，高校生のデータ，冒頭で挙げたツイッターでのアンケート2通りを，グラフで比較してみる。</p>
+<p>古畑（田中）のデータ，高校生のデータ，冒頭で挙げたツイッターでのアンケート3通りを，グラフで比較してみる。</p>
 
 <pre>
 <code>import matplotlib.pyplot as plt
@@ -136,6 +138,7 @@ n1 = np.round(df[["O型","A型","B型","AB型"]].iloc[49] / 100 * df['検査人�
 n2 = df2[["計O","計A","計B","計AB"]].sum(axis=0)
 n3 = [89326, 102229, 67376, 38469]
 n4 = [253, 297, 197, 123]
+n5 = [167791, 186333, 116163, 67069]
 
 def prop(n):
     n = np.array(n)
@@ -148,22 +151,27 @@ x = np.array([1,2,3,4])
 plt.clf()
 
 p, ci = prop(n1)
-plt.errorbar(x, p, ci, fmt="o")
+plt.errorbar(x, p, ci, fmt="o", label='古畑')
 
 p, ci = prop(n2)
-plt.errorbar(x+0.1, p, ci, fmt="o", capsize=5)
+plt.errorbar(x+0.1, p, ci, fmt="o", capsize=5, label='高校生')
 
 p, ci = prop(n3)
-plt.errorbar(x+0.2, p, ci, fmt="o", capsize=5)
+plt.errorbar(x+0.2, p, ci, fmt="o", capsize=5, label='@rocinate__')
 
 p, ci = prop(n4)
-plt.errorbar(x+0.3, p, ci, fmt="o", capsize=5)
+plt.errorbar(x+0.3, p, ci, fmt="o", capsize=5, label='@dempacat')
 
-plt.xticks(x+0.15, ["O","A","B","AB"])
-plt.savefig('abo4.png', bbox_inches="tight")
+p, ci = prop(n5)
+plt.errorbar(x+0.4, p, ci, fmt="o", capsize=5, label='@fukada0318')
+
+plt.xticks(x+0.2, ["O","A","B","AB"])
+plt.legend()
+
+plt.savefig('abo4.svg', bbox_inches="tight")
 </code></pre>
 
-<figure><img src="img/abo4.png" alt=""></figure>
+<figure><img src="img/abo4.svg" alt=""></figure>
 
 <p>エラーバーは95%信頼区間（Rの <code>binom.test()</code> と同じClopper-Pearson流）である。古畑（田中）のデータに比べ，高校生のデータはOが少なくABが多い。ツイッターのアンケート結果は平均に近づいているように見える。ランダムに答えた人がいるのかもしれない。</p>
 
@@ -309,7 +317,7 @@ plt.savefig('abo3.png', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-11 10:31:15</time>
+Last modified: <time>2020-07-18 13:53:06</time>
 <!-- hhmts end -->
 </p>
 </body>
