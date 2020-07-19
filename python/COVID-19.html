@@ -126,6 +126,19 @@ ax.legend(['Confirmed', 'Deaths'])
 
 <p>厚労省はCOVID-19関係のデータを<a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">オープンデータ</a>として公開するようになった。PCR検査陽性者数・実施人数は<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000164708_00001.html">厚労省のページ</a>にグラフがあるが，独自に描いたものを以下に挙げておく。なお，以前ここにあったものは<a href="COVID-mhlw.html">COVID-19についての厚労省の（ほぼ）日報（アーカイブ）</a>に移した。</p>
 
+<pre><code>import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pandas as pd
+
+df = pd.read_csv("https://www.mhlw.go.jp/content/pcr_positive_daily.csv", parse_dates=['日付'])
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+fig, ax = plt.subplots()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.bar(df['日付'], df['PCR 検査陽性者数(単日)'], width=1, color='C1')
+</code></pre>
+
 <figure><img src="img/COVID-mhlwopen1.svg" alt="厚労省 COVID-19"></figure>
 
 <figure><img src="img/COVID-mhlwopen2.svg" alt="厚労省 COVID-19"></figure>
@@ -246,7 +259,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-07-04 14:53:02</time>
+Last modified: <time>2020-07-19 21:54:37</time>
 <!-- hhmts end -->
 </p>
 </body>

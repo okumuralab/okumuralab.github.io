@@ -37,7 +37,7 @@ MathJax = {
 
 <p>ライブラリ <code>matplotlib</code>，<code>numpy</code> を使っています。</p>
 
-<p>2次関数 $y = x^2$ のグラフを $-3 \leqq x \leqq 3$ の範囲で描きます（Jupyter Notebook では <code>%matplotlib inline</code> という行を最初に追加してください）：</p>
+<p>2次関数 $y = x^2$ のグラフを $-3 \leqq x \leqq 3$ の範囲で描きます<del>（Jupyter Notebook では <code>%matplotlib inline</code> という行を最初に追加してください）</del>：</p>
 
 <pre>
 <code>import matplotlib.pyplot as plt
@@ -96,7 +96,7 @@ plt.plot(df['年'], df['世界全体'], 'o-')
 print("傾き", slope, "y切片", intercept)
 </code></pre>
 
-<p>前のプロットに続けて次のように打ち込むと，予測直線が重ね書きされます：</p>
+<p>前のプロットに続けて次のように打ち込むと，予測直線が重ね書きされます（Jupyter Notebookでは上の <code>plt.plot(df['年'], df['世界全体'], 'o-')</code> と同じセルの最後に付け加えてください）：</p>
 
 <pre>
 <code>plt.plot(df['年'], df['年'] * slope + intercept)
@@ -122,7 +122,7 @@ plt.plot(x, model.predict(x))
 
 <h3>データの集計</h3>
 
-<p>学生のデータを読み込み，学部ごとに集計して棒グラフを描きます（日本語フォントが設定されていない環境では文字化けしますので<a href="plot.html">プロット</a>の項を見て環境設定してください）：</p>
+<p>学生のデータを読み込み，学部ごとに集計して棒グラフを描きます（Google Colaboratory など日本語フォントが設定されていない環境では文字化けしますが無視するか，あるいは<a href="plot.html">プロット</a>の項を見て環境設定してください）：</p>
 
 <pre>
 <code>students = pd.read_csv("https://okumuralab.org/literacy3/students.csv")
@@ -184,7 +184,7 @@ def f(n):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-15 14:09:13</time>
+Last modified: <time>2020-07-19 20:56:09</time>
 <!-- hhmts end -->
 </p>
 </body>
