@@ -25,6 +25,17 @@ fig.savefig('../img/COVID-tokyo.svg', bbox_inches="tight")
 ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
+ax.plot(df['date'], df['confirmed'], 'o-', color='C1')
+ax.set_yscale('log')
+ax.set_xlim(pd.to_datetime('2020-03-01'), df['date'].values[-1] + pd.to_timedelta(1, 'day'))
+ax.legend(['Tokyo confirmed'], loc='upper left')
+fig.savefig('../img/COVID-tokyo-log.svg', bbox_inches="tight")
+
+exit()
+
+ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
 ax.bar(df['date'], df['confirmed'].cumsum(), align='edge', label='Tokyo cumulative confirmed')
 ax.set_xlim(pd.to_datetime('2020-03-01'), df['date'].values[-1] + pd.to_timedelta(1, 'day'))
 mx = df['confirmed'].cumsum().values[-1]
