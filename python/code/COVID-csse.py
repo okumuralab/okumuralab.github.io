@@ -117,6 +117,7 @@ japan = [x[i]['Japan'] for i in range(len(x))]
 ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan', zorder=-10)
 ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
 ax.set_ylabel('Deaths')
+ax.set_ylim(-100)
 ax.legend()
 
 fig.savefig('../img/COVID-csse3.svg', bbox_inches="tight")
