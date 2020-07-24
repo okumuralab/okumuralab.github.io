@@ -16,6 +16,12 @@
 
 <h1>COVID-19 番外編2</h1>
 
+<p>[2020-07-23] 再陽性を省いて計算する方針にしてみました：</p>
+
+<pre><code>df = df[['再陽性' not in x for x in df['備考'].astype(str)]].copy()</code></pre>
+
+<p>グラフはほとんど変わっていないように見えます。</p>
+
 <p><a href="COVID-19.html">COVID-19</a> の番外編。</p>
 
 <p><a href="https://gis.jag-japan.com/covid19jp/">都道府県別新型コロナウイルス感染者数マップ</a>というすばらしいサイトがある。作っておられるのは<a href="https://jag-japan.com">ジャッグジャパン株式会社</a>さん（→社長の大濱崎さんの<a href="https://jag-japan.com/blog/2020/02/covid-2019-blog1/">都道府県別新型コロナウイルス感染症患者数マップを作ってみて感じたこと</a>）。データも<a href="https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv">CSVファイル</a>で提供されている。これを使っていろいろプロットしてみる。</p>
@@ -52,6 +58,7 @@ fig.savefig('200312a.svg', bbox_inches="tight")
 
 <figure><img src="img/200312a.svg" alt="COVID-19 発症日，確定日"></figure>
 
+<!--
 <p>同じものを折れ線グラフで：</p>
 
 <pre><code>ax.clear()
@@ -66,6 +73,7 @@ ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
 </code></pre>
 
 <figure><img src="img/200312b.svg" alt="COVID-19 発症日，確定日"></figure>
+-->
 
 <p>発症日と確定日はどれくらい隔たっているのだろうか：</p>
 
@@ -144,7 +152,7 @@ ax.set_xlabel('確定日')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-07-08 10:47:41</time>
+Last modified: <time>2020-07-23 19:37:30</time>
 <!-- hhmts end -->
 </p>
 </body>
