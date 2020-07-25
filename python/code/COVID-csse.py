@@ -37,7 +37,7 @@ for i in x[-1].index:
 japan = [x[i]['Japan'] for i in range(len(x))]
 ax.plot(t, japan, 'o-k', label='Japan')
 ax.set_ylabel('Confirmed')
-ax.legend()
+ax.legend(loc='upper left')
 
 fig.savefig('../img/COVID-csse.svg', bbox_inches="tight")
 
@@ -63,7 +63,7 @@ japan = [x[i]['Japan'] for i in range(len(x))]
 ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan', zorder=-10)
 ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
 ax.set_ylabel('Confirmed')
-ax.legend()
+ax.legend(loc='upper left')
 
 fig.savefig('../img/COVID-csse1.svg', bbox_inches="tight")
 
@@ -92,7 +92,7 @@ for i in x[-1].index:
 japan = [x[i]['Japan'] for i in range(len(x))]
 ax.plot(t, japan, 'o-k', label='Japan')
 ax.set_ylabel('Deaths')
-ax.legend()
+ax.legend(loc='upper left')
 
 fig.savefig('../img/COVID-csse2.svg', bbox_inches="tight")
 
@@ -118,7 +118,7 @@ ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan', zorder=-10)
 ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
 ax.set_ylabel('Deaths')
 ax.set_ylim(-100)
-ax.legend()
+ax.legend(loc='upper left')
 
 fig.savefig('../img/COVID-csse3.svg', bbox_inches="tight")
 
