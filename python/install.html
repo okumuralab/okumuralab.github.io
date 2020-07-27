@@ -18,7 +18,7 @@
 
 <p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うなら，Python 3 にしましょう。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
 
-<p>最新のものは Python 3.8.3 です。すでに TensorFlow をはじめほとんどのツールが Python 3.8 に対応しましたので，そろそろ 3.7 から 3.8 に移行して大丈夫だと思います。私も遅ればせながら 3.8 にしました。もっとも，3.6 や 3.7 が動いていれば，強いて 3.8 にする意味はあまりありません。Google Colaboratory はまだ 3.6 です。</p>
+<p>最新のものは Python 3.8.5 です。すでに TensorFlow をはじめほとんどのツールが Python 3.8 に対応しましたので，そろそろ 3.7 から 3.8 に移行して大丈夫だと思います。私も遅ればせながら 3.8 にしました。もっとも，3.6 や 3.7 が動いていれば，強いて 3.8 にする意味はあまりありません。Google Colaboratory はまだ 3.6 です。</p>
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
@@ -32,7 +32,11 @@
 
 <p>まず，初心者のかたで，今までどこかで Python をインストールしたけれどうまく設定できていないという場合は，［スタートボタン］→［⚙設定］→［アプリ］で，それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
 
-<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが，ここでは Python 3.8.x の x が一番大きいものの64ビット版 Windows x86-64 executable installer を使います。初心者のかたは，インストーラの最初の画面で必ず「Add Python 3.8 to PATH」にチェックを付けておきましょう。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
+<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが，ここでは Python 3.8.x の x が一番大きいものの64ビット版 Windows x86-64 executable installer を使います（32ビット版でもかまいません）。初心者のかたは，インストーラの最初の画面で必ず「Add Python 3.8 to PATH」にチェックを付けておきましょう。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
+
+<div class="note">
+<p>ユーザ名に全角文字を使っていると問題が生じることがあるようです。Windowsのユーザ名はなるべくスペースを含まない半角英数字だけにしましょう（例：<code>okumura</code>）。なお，ユーザ名に全角文字を含んでも，次のようにすれば全角文字を含まないインストール場所が指定できます。インストーラが起動した画面で「Customize installation」をクリックし，「Next」をクリックし，「Customize install location」で <code>C:\Users\奥村 晴彦\AppData\Local\Programs\Python\...</code> のような全角フォルダ名が出た際，その右の「Browse」をクリックし，「PC」→「C:」を選び，「新しいフォルダーの作成」で例えば <code>Python</code> というフォルダを作り，それをインストール場所に設定します。このあたりは実験が不十分なので，情報があれば教えてください。</p>
+</div>
 
 <p>確認として，Windows PowerShell（あるいは VS Code のターミナル，またはコマンドプロンプト）を立ち上げ，</p>
 
@@ -147,6 +151,8 @@ export PATH
 <p><a href="https://www.anaconda.com/distribution/">Anaconda Distribution</a> からご自分の環境に合った最新のインストーラをダウンロードし，インストールします。全部入りなので，たいへん大きいパッケージです。最小限のインストールから始めて少しずつ足していくほうが好みの人は，下にある Miniconda を使うほうがいいでしょう。</p>
 
 <p>アップデートは <code>conda</code> コマンドで行います。具体的な方法は，下の Miniconda のところをご覧ください。</p>
+
+<p>Windows版はユーザ名に全角文字が含まれているとインストールできない（できてもまともに動かない）ようです。どうしてもAnacondaを使わなければならない場合には，ユーザ名を変更する方法をググってお調べください。</p>
 
 <h3>Homebrew によるインストール（Mac）</h3>
 
@@ -335,7 +341,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-31 08:31:56</time>
+Last modified: <time>2020-07-27 12:31:09</time>
 <!-- hhmts end -->
 </p>
 </footer>
