@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>NHKニュースのRSS</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>NHKニュースのRSS</h1>
+
+<p>NHKオンラインはRSSでニュースを提供している（→<a href="https://www.nhk.or.jp/toppage/rss/index.html">RSSについて</a>）。これを定期的に読んで，気になるニュースを通知してみよう。</p>
+
+<p>まずは主要ニュースのフィードを読んで各項目のタイトルを表示するだけのコード：</p>
+
+<pre><code>import feedparser
+
+d = feedparser.parse('https://www.nhk.or.jp/rss/news/cat0.xml')
+for i in d['entries']:
+    print(i['title'])
+</code></pre>
+
+<p>あとは好きなように拡張すればよい。例えば10分ごとに読みに行って新着ニュースのタイトルを表示し，タイトルに「東京」が含まれればMacの通知センターにも通知を表示する：</p>
+
+<pre><code>import feedparser
+import time
+import os
+
+s = set()
+
+while True:
+    print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()))
+    d = feedparser.parse('https://www.nhk.or.jp/rss/news/cat0.xml')
+    for i in d['entries']:
+        x = i['title']
+        if x not in s:
+            print(x)
+            s.add(x)
+            if '東京' in x:
+                x = x.replace("'", "").replace('"', '')
+                os.system(f"osascript -e 'display notification \"{x}\"'")
+    time.sleep(600)  # 10分
+</code></pre>
+
+<p>条件はいろいろ変えられる。例：</p>
+
+<pre><code>            if '東京' in x and ('感染' in x or 'コロナ' in x):</code></pre>
+
+<p>ほかにメールやLINEを送ったりツイートしたりすることもできる。メールを送るには postfix などが動いているマシンで次のようにする：</p>
+
+<pre><code>                os.system(f"echo '{x}' | mail hoge@example.com")</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-07-25 11:49:19</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
