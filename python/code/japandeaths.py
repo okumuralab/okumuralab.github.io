@@ -42,7 +42,7 @@ plt.savefig('../img/japandeaths2.svg', bbox_inches="tight")
 
 perday = np.array([p2 if np.isnan(p1) else p1 for p1, p2 in zip(perday1, perday2)])
 plt.clf()
-for m, n in [(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr')]:
+for m, n in [(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May')]:
     plt.plot(df[df['月'] == m]['年'], perday[df['月'] == m], 'o-', marker=f'${m}$', label=n)
 plt.ylabel('1日あたり死亡数')
 plt.legend()

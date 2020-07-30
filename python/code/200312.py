@@ -9,6 +9,8 @@ import time
 
 df = pd.read_csv("https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv",
                  parse_dates=['確定日', '発症日'], low_memory=False)
+# df = pd.read_csv("COVID-19.csv",
+#                  parse_dates=['確定日', '発症日'], low_memory=False)
 now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 
 # 再陽性を削除

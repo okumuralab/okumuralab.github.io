@@ -18,6 +18,8 @@
 
 <p><em>[2020-06-27]</em> 2020年4月分のデータを追加した。</p>
 
+<p><em>[2020-07-29]</em> 2020年5月分のデータを追加した。</p>
+
 <p><a href="https://www.mhlw.go.jp/toukei/list/81-1a.html#link05">人口動態統計速報</a>は集計に2ヶ月近くかかる（<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/02.html">2020年2月分</a>は2020年4月24日に出た。<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/03.html">3月分</a>は5月26日，<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/04.html">4月分</a>は6月26日に出た）。<a href="https://www.mhlw.go.jp/toukei/list/81-1a.html#link02">人口動態統計月報（概数）</a>は5ヶ月かかり，<a href="https://www.mhlw.go.jp/toukei/list/81-1a.html#link01">確定数</a>はもっともっとかかる。</p>
 
 <p>とりあえず2014年1月〜2019年12月の人口動態統計月報（概数）と，2019年10月からの速報を，e-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&amp;toukei=00450011&amp;tstat=000001028897">人口動態調査</a>から集めて，<a href="data/japandeaths.csv">japandeaths.csv</a> というファイルに収めた。</p>
@@ -68,7 +70,7 @@ plt.savefig('japandeaths2.svg', bbox_inches="tight")
 
 <pre><code>plt.clf()
 perday = np.array([p2 if np.isnan(p1) else p1 for p1, p2 in zip(perday1, perday2)])
-for m, n in [(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr')]:
+for m, n in [(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May')]:
     plt.plot(df[df['月'] == m]['年'], perday[df['月'] == m], marker=f'${m}$', label=n)
 plt.ylabel('1日あたり死亡数')
 plt.legend()
@@ -83,7 +85,7 @@ plt.savefig('japandeaths3.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-07-08 11:20:32</time>
+Last modified: <time>2020-07-29 19:01:57</time>
 <!-- hhmts end -->
 </p>
 </body>
