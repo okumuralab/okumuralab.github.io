@@ -9,13 +9,17 @@ import time
 
 df = pd.read_csv("https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv",
                  parse_dates=['確定日', '発症日'], low_memory=False)
-# df = pd.read_csv("COVID-19.csv",
-#                  parse_dates=['確定日', '発症日'], low_memory=False)
 now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 
 # 再陽性を削除
 pp = ['再陽性' not in x for x in df['備考'].astype(str)]
 df = df[pp].copy()
+
+if min(df['確定日']) < datetime.datetime(2020,1,1):
+    df.loc[df['確定日'] < datetime.datetime(2020,1,1), '確定日'] = pd.NaT
+
+if min(df['発症日']) < datetime.datetime(2020,1,1):
+    df.loc[df['発症日'] < datetime.datetime(2020,1,1), '発症日'] = pd.NaT
 
 b = np.arange(min(min(df['確定日']), min(df['発症日'])),
               max(max(df['確定日']), max(df['発症日'])) + datetime.timedelta(days=2),
