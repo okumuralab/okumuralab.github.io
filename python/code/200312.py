@@ -16,9 +16,11 @@ pp = ['再陽性' not in x for x in df['備考'].astype(str)]
 df = df[pp].copy()
 
 if min(df['確定日']) < datetime.datetime(2020,1,1):
+    print('min(確定日):', min(df['確定日']))
     df.loc[df['確定日'] < datetime.datetime(2020,1,1), '確定日'] = pd.NaT
 
 if min(df['発症日']) < datetime.datetime(2020,1,1):
+    print('min(発症日):', min(df['発症日']))
     df.loc[df['発症日'] < datetime.datetime(2020,1,1), '発症日'] = pd.NaT
 
 b = np.arange(min(min(df['確定日']), min(df['発症日'])),
