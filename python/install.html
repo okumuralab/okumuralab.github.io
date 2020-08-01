@@ -255,16 +255,18 @@ conda install ipython numpy scipy matplotlib pandas scikit-learn
 
 <p>CentOS 7 なら <code>yum install libffi-devel sqlite-devel</code> しておきます。</p>
 
-<p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し，ビルドします。次は3.7.4の場合です：</p>
+<p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し，ビルドします。次は3.7.7の場合です：</p>
 
 <pre>
-<code>wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz
-tar xvJf Python-3.7.4.tar.xz
-cd Python-3.7.4
+<code>wget https://www.python.org/ftp/python/3.7.7/Python-3.7.7.tar.xz
+tar xvJf Python-3.7.7.tar.xz
+cd Python-3.7.7
 ./configure --enable-optimizations
 make
 make install
 </code></pre>
+
+<p>Python 3.8.5 でやってみたらエラーになりました。<code>--enable-optimizations</code> をやめるか，未確認ですが GCC を 8.1.0 にアップデートすればよいようです。</p>
 
 <!--
 <div class="note">
@@ -341,7 +343,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-07-27 12:31:09</time>
+Last modified: <time>2020-08-01 17:16:29</time>
 <!-- hhmts end -->
 </p>
 </footer>

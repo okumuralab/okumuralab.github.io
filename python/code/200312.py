@@ -6,10 +6,14 @@ import pandas as pd
 import numpy as np
 import datetime
 import time
+import os
 
-df = pd.read_csv("https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv",
-                 parse_dates=['確定日', '発症日'], low_memory=False)
-now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
+os.system("wget -N https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv")
+p = os.stat("COVID-19.csv")
+# now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
+now = str(datetime.datetime.fromtimestamp(p.st_mtime))
+
+df = pd.read_csv("COVID-19.csv", parse_dates=['確定日', '発症日'], low_memory=False)
 
 # 再陽性を削除
 pp = ['再陽性' not in x for x in df['備考'].astype(str)]
