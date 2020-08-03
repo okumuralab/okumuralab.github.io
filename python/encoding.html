@@ -109,9 +109,9 @@ Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
 
 <h3>「埼玉」と「埼⽟」</h3>
 
-<p>総務省のあるデータで「埼玉」（玉: U+7389）と「埼⽟」（⽟: U+2F5F）が混在しているという<a href="https://twitter.com/hal_sk/status/1281853581218336768">話</a>を聞いた。後者はCJK部首/康熙部首である。こういうのは <code>unicodedata.normalize('NFKC', '「埼玉」と「埼⽟」')</code> で統一できる（<code>'NFKD'</code> だと濁点などが分離する）。こういったものが混在する原因はAdobe DistillerまたはChromeのPDF出力である<a href="http://twitter.com/MurakamiShinyu/status/1282590800094756864">とのこと</a>。</p>
+<p>総務省の<a href="https://www.soumu.go.jp/kojinbango_card/">マイナンバー制度とマイナンバーカード</a>にある「マイナンバーカード交付状況」PDFで「埼玉」（玉: U+7389）と「埼⽟」（⽟: U+2F5F）が混在しているという<a href="https://twitter.com/hal_sk/status/1281853581218336768">話</a>を聞いた。後者はCJK部首/康熙部首である。こういうのは <code>unicodedata.normalize('NFKC', '「埼玉」と「埼⽟」')</code> で統一できる（<code>'NFKD'</code> だと濁点などが分離する）。こういったものが混在する原因はAdobe DistillerまたはChromeのPDF出力である<a href="http://twitter.com/MurakamiShinyu/status/1282590800094756864">とのこと</a>。</p>
 
-<p>全部の部首が正規化されるわけではないようだ。次のようにすればよいと<a href="https://twitter.com/imabari_ehime/status/1282605117468897280">教えていただいた</a>：</p>
+<p>NFKC化で全部の部首が正規化されるわけではないようだ。次のようにすればよいと<a href="https://twitter.com/imabari_ehime/status/1282605117468897280">教えていただいた</a>：</p>
 
 <pre>
 <code>str.maketrans("⺟⺠⻁⻄⻑⻘⻝⻤⻨⻩⻫⻭⻯⻲戶", "母民虎西長青食鬼麦黄斉歯竜亀戸")
@@ -119,13 +119,32 @@ Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
 
 <p>詳しくは<a href="https://imabari.hateblo.jp/entry/2020/07/13/231857">マイナンバーカード交付状況のPDFをスクレイピング・CSV変換</a>参照。</p>
 
+<p>もう一つ事例を<a href="https://twitter.com/AkiraOkumura/status/1289787031644561410">教えていただいた</a>。<a href="https://www.pref.aichi.jp/site/covid19-aichi/kansensya-kensa.html">愛知県内の感染者・検査件数</a>からリンクされている「愛知県内発生事例一覧」PDF（例えば今日なら <a href="https://www.pref.aichi.jp/uploaded/attachment/342317.pdf">342317.pdf</a>）である。「長久手市」が「⻑久⼿市」に，「瀬戸市」が「瀬⼾市」に，「西尾市」が「⻄尾市」になってしまっている（ブラウザでは違いが見えにくいが⻑⼿⼾⻄が違う）。こちらはDistillerではなく &lt;&lt; ... /Creator (DocuWorks PDF Driver 7.0.4) /Producer (DocuWorks PDF Build 9)&gt;&gt; となっている。プリンタドライバ経由でPDF化したもののようだ。</p>
+
+<p>いずれにしても，次のようなフィルタで正規化できる：</p>
+
+<pre><code>#! /usr/bin/env python3
+
+import fileinput
+import unicodedata
+
+tbl = str.maketrans("⺟⺠⻁⻄⻑⻘⻝⻤⻨⻩⻫⻭⻯⻲戶黑", "母民虎西長青食鬼麦黄斉歯竜亀戸黒")
+
+for line in fileinput.input():
+    line = unicodedata.normalize('NFKC', line)
+    line = line.translate(tbl)
+    print(line, end="")
+</code></pre>
+
+<p>NFKC化の副作用？として，（）が()になるなど，全角の英数字・記号類が半角になる。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-07-21 14:04:18</time>
+Last modified: <time>2020-08-03 10:48:07</time>
 <!-- hhmts end -->
 </p>
 </body>
