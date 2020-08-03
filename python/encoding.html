@@ -107,6 +107,19 @@ Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
 
 <p>見かけは同じだが中身が違う。</p>
 
+<p>別の例（Pokémon の é）：</p>
+
+<pre>
+<code>In [ ]: list('é')
+Out[ ]: ['é']
+
+In [ ]: unicodedata.normalize('NFD', 'é')
+Out[ ]: 'é'
+
+In [ ]: list(unicodedata.normalize('NFD', 'é'))
+Out[ ]: ['e', '́']
+</code></pre>
+
 <h3>「埼玉」と「埼⽟」</h3>
 
 <p>総務省の<a href="https://www.soumu.go.jp/kojinbango_card/">マイナンバー制度とマイナンバーカード</a>にある「マイナンバーカード交付状況」PDFで「埼玉」（玉: U+7389）と「埼⽟」（⽟: U+2F5F）が混在しているという<a href="https://twitter.com/hal_sk/status/1281853581218336768">話</a>を聞いた。後者はCJK部首/康熙部首である。こういうのは <code>unicodedata.normalize('NFKC', '「埼玉」と「埼⽟」')</code> で統一できる（<code>'NFKD'</code> だと濁点などが分離する）。こういったものが混在する原因はAdobe DistillerまたはChromeのPDF出力である<a href="http://twitter.com/MurakamiShinyu/status/1282590800094756864">とのこと</a>。</p>
@@ -144,7 +157,7 @@ for line in fileinput.input():
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-08-03 10:48:07</time>
+Last modified: <time>2020-08-03 15:52:15</time>
 <!-- hhmts end -->
 </p>
 </body>
