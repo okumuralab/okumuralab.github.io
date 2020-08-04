@@ -22,7 +22,6 @@ formatter = mdates.ConciseDateFormatter(locator)
 fig, ax = plt.subplots(figsize=[7, 7])
 fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
 
-# ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.plot(t, x)
@@ -43,7 +42,9 @@ fig.savefig('../img/COVID-csse.svg', bbox_inches="tight")
 
 #-----
 
-ax.clear()
+fig, ax = plt.subplots(figsize=[7, 7])
+fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
+
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 dx = np.diff(np.array(x, dtype=np.float), axis=0)
@@ -77,7 +78,9 @@ df2 = pd.read_csv(url2)
 t = [parse(i) for i in df2.columns[4:]]
 x = [df2.groupby('Country/Region')[i].sum() for i in df2.columns[4:]]
 
-ax.clear()
+fig, ax = plt.subplots(figsize=[7, 7])
+fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
+
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.plot(t, x)
@@ -98,7 +101,9 @@ fig.savefig('../img/COVID-csse2.svg', bbox_inches="tight")
 
 #-----
 
-ax.clear()
+fig, ax = plt.subplots(figsize=[7, 7])
+fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
+
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 dx = np.diff(np.array(x, dtype=np.float), axis=0)
