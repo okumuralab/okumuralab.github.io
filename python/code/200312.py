@@ -31,12 +31,13 @@ b = np.arange(min(min(df['確定日']), min(df['発症日'])),
               max(max(df['確定日']), max(df['発症日'])) + datetime.timedelta(days=2),
               datetime.timedelta(days=1))
 
-fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
+
+fig, ax = plt.subplots()
 fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
 
-ax.clear()
+# ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
@@ -91,7 +92,10 @@ fig.savefig('../img/200312f.svg', bbox_inches="tight")
 
 #-----
 
-ax.clear()
+fig, ax = plt.subplots()
+fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
+
+# ax.clear()
 w2 = [t.dayofweek for t in df['確定日']]
 h1, h2 = np.histogram(w2, range(0,8))
 ax.bar(['月','火','水','木','金','土','日'], h1, color="lightgray", edgecolor="black")
