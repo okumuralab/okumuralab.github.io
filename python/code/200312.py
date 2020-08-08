@@ -13,7 +13,8 @@ p = os.stat("COVID-19.csv")
 # now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 now = str(datetime.datetime.fromtimestamp(p.st_mtime))
 
-df = pd.read_csv("COVID-19.csv", parse_dates=['確定日', '発症日'], low_memory=False)
+df = pd.read_csv("COVID-19.csv", parse_dates=['確定日', '発症日'],
+                 na_values='－', low_memory=False)
 
 # 再陽性を削除
 pp = ['再陽性' not in x for x in df['備考'].astype(str)]
@@ -155,6 +156,7 @@ ax.xaxis.set_major_formatter(formatter)
 ax.hist(df1['発症日'].values, bins=b, edgecolor="black", alpha=0.5)
 ax.hist(df1['確定日'].values, bins=b, edgecolor="black", alpha=0.5)
 ax.set_xlim(datetime.datetime(2020,3,20), datetime.datetime(2020,5,1))
+ax.set_ylim(0, 550)
 ax.legend(['発症日 (onset)', '確定日 (confirmed)'])
 
 fig.savefig('../img/200312i.svg', bbox_inches="tight")
