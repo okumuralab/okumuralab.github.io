@@ -168,6 +168,7 @@ fig.savefig('../img/200312i.svg', bbox_inches="tight")
 df1 = df[(df['年代'].astype(str) != '不明') & (df['年代'].astype(str) != 'nan')].copy()
 # df1['年代'].value_counts(sort=False)
 df1.loc[df1['年代'] == '0-10', '年代'] = 0
+df1.loc[df1['年代'] == '0−10', '年代'] = 0
 df1.loc[df1['年代'] == '10歳未満', '年代'] = 0
 df1.loc[df1['年代'] == '未就学児', '年代'] = 0
 df1['年代'] = df1['年代'].astype(int)
