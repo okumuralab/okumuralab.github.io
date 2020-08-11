@@ -165,7 +165,7 @@ fig.savefig('../img/200312i.svg', bbox_inches="tight")
 # 平均年代の推移
 
 # df1 = df[(df['受診都道府県'] == '東京都') & (df['年代'] != '不明')]
-df1 = df[(df['年代'].astype(str) != '不明') & (df['年代'].astype(str) != 'nan')].copy()
+df1 = df[(df['年代'].astype(str) != '不明') & (df['年代'].astype(str) != 'nan') & (df['年代'].astype(str) != '非公表')].copy()
 # df1['年代'].value_counts(sort=False)
 df1.loc[df1['年代'] == '0-10', '年代'] = 0
 df1.loc[df1['年代'] == '0−10', '年代'] = 0
@@ -230,7 +230,7 @@ for k in ken:
 #-----
 # 年代分布
 
-df1 = df[(df['受診都道府県'] == '東京都') & (df['年代'] != '不明')]
+df1 = df[(df['受診都道府県'] == '東京都') & (df['年代'] != '不明') & (df['年代'] != '非公表')]
 # df1['年代'].value_counts(sort=False)
 df1['年代'][df1['年代'] == '0-10'] = 0
 df1['年代'] = df1['年代'].astype(int)
