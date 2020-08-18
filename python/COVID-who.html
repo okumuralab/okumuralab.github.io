@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>COVID-19</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>COVID-19のWHOの日報（アーカイブ）</h1>
+
+<p>以下は<a href="COVID-19.html">COVID-19</a>の一部でしたが，WHOのSituation Reportsがダッシュボードになって日報PDFが週報になったので，2020年8月17日で更新を止めます。ここにあるのはその時点のアーカイブです。</p>
+
+<hr>
+
+<p>WHO の <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/">Coronavirus disease (COVID-2019) situation reports</a> に基づいて集計したデータ <a href="data/COVID-19.csv">COVID-19.csv</a> を Python でグラフにする。</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import pandas as pd
+
+df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-19.csv",
+                 index_col='Date', parse_dates=['Date'])
+</code></pre>
+
+<p>これで <code>df.plot()</code> とすれば全部のコラムがプロットできるが，見にくいので，もうちょっとがんばってみる：</p>
+
+<pre><code>import matplotlib.dates as mdates
+
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+fig, ax = plt.subplots()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+cmap = plt.get_cmap("tab20")
+ax.bar(df.index, df['Global Confirmed'], color=cmap(3))
+ax.bar(df.index, df['China Confirmed'], color=cmap(2))
+ax.bar(df.index, df['Global Deaths'], color=cmap(6))
+ax.legend(['Global Confirmed', 'China Confirmed', 'Global Deaths'])
+
+fig.savefig('COVID-19.svg', bbox_inches="tight")
+</code></pre>
+
+<p>2020-02-17から湖北省については laboratory-confirmed だけでなく clinically diagnosed も含めたので急増している。</p>
+
+<figure><img src="img/COVID-19.svg" alt="COVID-19"></figure>
+
+<p>対数グラフにするには <code>ax.bar()</code> の部分を次のように変える：</p>
+
+<pre><code>ax.plot(df.index, df['Global Confirmed'], "s-", color=cmap(3))
+ax.plot(df.index, df['China Confirmed'], "o-", color=cmap(2))
+ax.plot(df.index, df['Global Deaths'], "s-", color=cmap(7))
+ax.plot(df.index, df['China Deaths'], "o-", color=cmap(6))
+ax.set_yscale('log')
+</code></pre>
+
+<p>日本のデータもグラフに含めてみた。</p>
+
+<figure><img src="img/COVID-19-log.svg" alt="COVID-19"></figure>
+
+<p>以上は累計値である。差分（1日あたりの値）は次の通り。Confirmed の定義が変わった 2020-02-17 の差分は表示していない。この前後での比較は要注意。</p>
+
+<pre><code>import numpy as np
+
+dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
+c = df['Global Confirmed'].diff()
+c[df.index == '2020-02-17'] = np.nan
+ax.bar(df.index, c / dt, width=-dt, align='edge', color=cmap(3), edgecolor="white")
+ax.bar(df.index, df['Global Deaths'].diff() / dt, width=-dt,
+       align='edge', color=cmap(6), edgecolor="white")
+ax.legend(['Confirmed', 'Deaths'])
+</code></pre>
+
+<figure><img src="img/COVID-19-dif.svg" alt="COVID-19"></figure>
+
+<p>中国でのピークは2月上旬で過ぎていることがわかる。なお，こういう図をエピカーブ（epidemic curve, epi curve）という。エピカーブの横軸は発病日が一般的だが，ここでは報告日である。</p>
+
+<p>日本については，上記 WHO の日報から拾ったものを <a href="data/COVID-jp.csv">COVID-jp.csv</a> として置いておく。なお，2020-02-05 の数は 33 となっていたがこれは明らかに 23 の誤記だと思われるので訂正しておいた。</p>
+
+<p>累積</p>
+
+<figure><img src="img/COVID-jp.svg" alt="COVID-19 (Japan)"></figure>
+
+<p>差分（2020-03-18からWHOはその日の00:00 CET（08:00 JST）時点での各国からの報告に基づくようになったので，日本・中国・韓国などは2020-03-17と2020-03-18との差分はゼロになっている）。</p>
+
+<figure><img src="img/COVID-jp-dif.svg" alt="COVID-19 (Japan)"></figure>
+
+<p>同じ WHO の最新の日報から，<a href="200310.html">番外編1</a>で解説した方法で，国ごとの確定数，死亡数（500人以上）をプロットしたものも挙げておく。灰色の対角線は中国と同じ死亡数/確定数のラインである。オレンジと緑の線は中国と日本の履歴である。中国の履歴が突然右に飛んでいるのは 2020-02-17 に Confirmed の基準が変わったためである（上述）。さらに突然上に飛んでいるのは死者数が大幅に更新されたためである。</p>
+
+<figure><img src="img/COVID-world.svg" alt="COVID-19"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-08-18 10:08:49</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
