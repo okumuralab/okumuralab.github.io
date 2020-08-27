@@ -14,7 +14,7 @@ p = os.stat("COVID-19.csv")
 now = str(datetime.datetime.fromtimestamp(p.st_mtime))
 
 df = pd.read_csv("COVID-19.csv", parse_dates=['確定日', '発症日'],
-                 na_values=['ー','－','―','調査中'], low_memory=False)
+                 na_values=['ー','－','―','調査中','不明'], low_memory=False)
 
 # 再陽性を削除
 pp = ['再陽性' not in x for x in df['備考'].astype(str)]
@@ -179,6 +179,7 @@ df1.loc[df1['年代'] == '60代', '年代'] = 60
 df1.loc[df1['年代'] == '70代', '年代'] = 70
 df1.loc[df1['年代'] == '80代', '年代'] = 80
 df1.loc[df1['年代'] == '90代', '年代'] = 90
+df1.loc[df1['年代'] == '90以上', '年代'] = 90
 df1.loc[df1['年代'] == '未就学児', '年代'] = 0
 df1.loc[df1['年代'] == '100歳以上', '年代'] = 100
 df1['年代'] = df1['年代'].astype(int)
