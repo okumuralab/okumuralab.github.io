@@ -182,18 +182,21 @@ brew install gpg wget ghostscript imagemagick ffmpeg nkf exiftool
 
 <p><a href="http://qiita.com/scalper/items/b7d81beb8fbaada3ce5f">OSX - Yosemite で Emacs-24.4 をビルドして動かす</a>，<a href="http://qiita.com/scalper/items/7d779824d5e96353710b">El Capitanで Emacs-24.5 をビルドして動かす</a>，<a href="https://qiita.com/scalper/items/9ebe688099fc13b6c1a2">macOS で Emacs 25.2 をビルド</a> などを参考にした。ここでは千葉大の山本光晴さんによるパッチを当てたが，今はパッチなしでも問題ないようである。Homebrew を入れているので /usr/local にいろいろなディレクトリができて書き込み可能になっている状態だが，/usr/local/libexec はできていないかもしれないので，あらかじめ作って書き込み権限を与えておく。なお，以前何かのトラブルがあったのがきっかけで <code>./configure</code> には <code>--without-imagemagick</code> も付けているが，不要かもしれない。</p>
 
+<p>Emacs 27が出たので改訂。<a href="https://debbugs.gnu.org/cgi/bugreport.cgi?bug=42919">Byte compile のバグ</a> のパッチ <a href="https://debbugs.gnu.org/cgi/bugreport.cgi?msg=18;filename=0001-Fix-cond-jump-table-compilation-bug-42919.patch;att=1;bug=42919">0001-Fix-cond-jump-table-compilation-bug-42919.patch</a> を当てている。なお，twittering-mode.el の epa--decode-coding-string を decode-coding-string に直す必要があった。</p>
+
 <pre>
-wget http://ftp.jaist.ac.jp/pub/GNU/emacs/emacs-26.1.tar.xz
-wget ftp://ftp.math.s.chiba-u.ac.jp/emacs/emacs-26.1-mac-7.4.tar.gz
-tar xvzf emacs-26.1.tar.xz
-tar xvzf emacs-26.1-mac-7.4.tar.gz
-cd emacs-26.1
-patch -p1 < ../emacs-26.1-mac-7.4/patch-mac
-cp -R ../emacs-26.1-mac-7.4/mac .
-cp ../emacs-26.1-mac-7.4/src/* src/
-cp ../emacs-26.1-mac-7.4/lisp/term/mac-win.el lisp/term/
+wget http://ftp.jaist.ac.jp/pub/GNU/emacs/emacs-27.1.tar.xz
+wget ftp://ftp.math.s.chiba-u.ac.jp/emacs/emacs-27.1-mac-8.0.tar.gz
+tar xvzf emacs-27.1.tar.xz
+tar xvzf emacs-27.1-mac-8.0.tar.gz
+cd emacs-27.1
+patch -p1 < 0001-Fix-cond-jump-table-compilation-bug-42919.patch
+patch -p1 < ../emacs-27.1-mac-8.0/patch-mac
+cp -R ../emacs-27.1-mac-8.0/mac .
+cp ../emacs-27.1-mac-8.0/src/* src/
+cp ../emacs-27.1-mac-8.0/lisp/term/mac-win.el lisp/term/
 cp nextstep/Cocoa/Emacs.base/Contents/Resources/*.icns mac/Emacs.app/Contents/Resources/
-./configure --without-x  --without-imagemagick
+./configure --without-x --without-imagemagick
 make 
 make install
 </pre>
@@ -505,7 +508,7 @@ Host *
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-26 09:01:05</time>
+Last modified: <time>2020-08-27 20:25:50</time>
 <!-- hhmts end -->
 </p>
 </footer>
