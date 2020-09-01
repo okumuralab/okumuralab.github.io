@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>感染研の超過死亡データ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>感染研の超過死亡データ</h1>
+
+<p>国立感染症研究所感染症疫学センターの<a href="https://www.niid.go.jp/niid/ja/from-idsc/493-guidelines/9835-excess-mortality-20aug.html">我が国における超過死亡の推定 2020年8月</a>が出た。2通りのアルゴリズムで超過死亡を計算しているが，ここでは単純にグラフを描いて眺めてみよう。とりあえず東京：</p>
+
+<pre><code>import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+df = pd.read_csv("suppl3.csv",  parse_dates=['week_ending_date'], encoding="cp932")
+tokyo = df[df['prefectureEN'] == 'Tokyo']
+plt.plot(tokyo['week_ending_date'], tokyo['補正あり死亡数'])
+
+y = np.array([t.year for t in tokyo['week_ending_date']])
+d = np.array([t.dayofyear for t in tokyo['week_ending_date']])
+
+plt.clf()
+for i in range(2010, 2020):
+    plt.plot(d[y == i], tokyo[y == i]['補正あり死亡数'], marker=f'${i % 10}$')
+plt.plot(d[y == 2020], tokyo[y == 2020]['補正あり死亡数'], 'o-k')
+plt.savefig('200901a.svg', bbox_inches="tight")
+</code></pre>
+
+<p>横軸は毎年1月1日を1とする日数である。</p>
+
+<figure><img src="img/200901a.svg" alt="東京の超過死亡"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-09-01 20:22:45</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
