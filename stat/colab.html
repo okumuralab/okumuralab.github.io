@@ -18,6 +18,12 @@
 
 <p>最も簡単な方法は <a href="https://colab.research.google.com/notebook#create=true&amp;language=r">https://colab.research.google.com/notebook#create=true&amp;language=r</a> のリンクをたどることです。バックエンドが R になります。手で打ち込む際に便利な短縮URL <code>colab.fan/r</code> も用意されています。</p>
 
+<p>グラフのサイズを指定するには，例えば次のようにオプションを指定します：</p>
+
+<pre><code>options(repr.plot.width=8, repr.plot.height=6)</code></pre>
+
+<p>以降のセッションのすべてのグラフが影響を受けます。それぞれ幅と高さで，単位はインチです。1インチが120ピクセルに相当するサイズのPNG画像になります。Colabの中で見ていると小さいように見えても，ドラッグ＆ドロップで取り出して開くと，けっこうなサイズのものですので，あまり大きくしないようにしましょう。デフォルトは幅・高さとも7インチ（840ピクセル）です。</p>
+
 <p>Python と共存させたい場合には <a href="https://rpy2.github.io">rpy2</a> を使います。あらかじめ</p>
 
 <pre><code>%load_ext rpy2.ipython</code></pre>
@@ -42,7 +48,7 @@ curve(sin(x), -pi, pi, main="サインカーブ", family="IPAexGothic")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-08-30 14:13:42</time>
+Last modified: <time>2020-09-06 14:48:34</time>
 <!-- hhmts end -->
 </p>
 </body>
