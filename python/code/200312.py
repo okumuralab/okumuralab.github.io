@@ -164,25 +164,26 @@ fig.savefig('../img/200312i.svg', bbox_inches="tight")
 #-----
 # 平均年代の推移
 
-# df1 = df[(df['受診都道府県'] == '東京都') & (df['年'] != '不明')]
-df1 = df[(df['年'].astype(str) != '不明') & (df['年'].astype(str) != 'nan') & (df['年'].astype(str) != '非公表')].copy()
-# df1['年'].value_counts(sort=False)
-df1.loc[df1['年'] == '0-10', '年'] = 0
-df1.loc[df1['年'] == '0−10', '年'] = 0
-df1.loc[df1['年'] == '10歳未満', '年'] = 0
-df1.loc[df1['年'] == '10代', '年'] = 10
-df1.loc[df1['年'] == '20代', '年'] = 20
-df1.loc[df1['年'] == '30代', '年'] = 30
-df1.loc[df1['年'] == '40代', '年'] = 40
-df1.loc[df1['年'] == '50代', '年'] = 50
-df1.loc[df1['年'] == '60代', '年'] = 60
-df1.loc[df1['年'] == '70代', '年'] = 70
-df1.loc[df1['年'] == '80代', '年'] = 80
-df1.loc[df1['年'] == '90代', '年'] = 90
-df1.loc[df1['年'] == '90以上', '年'] = 90
-df1.loc[df1['年'] == '未就学児', '年'] = 0
-df1.loc[df1['年'] == '100歳以上', '年'] = 100
-df1['年'] = df1['年'].astype(int)
+# df1 = df[(df['受診都道府県'] == '東京都') & (df['年代'] != '不明')]
+df1 = df[(df['年代'].astype(str) != '不明') & (df['年代'].astype(str) != 'nan') & (df['年代'].astype(str) != '非公表')].copy()
+# df1['年代'].value_counts(sort=False)
+df1.loc[df1['年代'] == '0-10', '年代'] = 0
+df1.loc[df1['年代'] == '0−10', '年代'] = 0
+df1.loc[df1['年代'] == '10歳未満', '年代'] = 0
+df1.loc[df1['年代'] == '10代', '年代'] = 10
+df1.loc[df1['年代'] == '20代', '年代'] = 20
+df1.loc[df1['年代'] == '30代', '年代'] = 30
+df1.loc[df1['年代'] == '40代', '年代'] = 40
+df1.loc[df1['年代'] == '40 代', '年代'] = 40
+df1.loc[df1['年代'] == '50代', '年代'] = 50
+df1.loc[df1['年代'] == '60代', '年代'] = 60
+df1.loc[df1['年代'] == '70代', '年代'] = 70
+df1.loc[df1['年代'] == '80代', '年代'] = 80
+df1.loc[df1['年代'] == '90代', '年代'] = 90
+df1.loc[df1['年代'] == '90以上', '年代'] = 90
+df1.loc[df1['年代'] == '未就学児', '年代'] = 0
+df1.loc[df1['年代'] == '100歳以上', '年代'] = 100
+df1['年代'] = df1['年代'].astype(int)
 
 b = np.arange(datetime.datetime(2020,3,1),
               max(df1['確定日']) + datetime.timedelta(days=1),
@@ -191,7 +192,7 @@ b = np.arange(datetime.datetime(2020,3,1),
 a = []
 for i in b:
     df2 = df1[df1['確定日'] == i]
-    y = df2['年'].values
+    y = df2['年代'].values
     if len(y) >= 10:
         a.append(np.mean(y) + 5)
     else:
@@ -241,20 +242,20 @@ for k in ken:
 #-----
 # 年代分布
 
-df1 = df[(df['受診都道府県'] == '東京都') & (df['年'] != '不明') & (df['年'] != '非公表')]
-# df1['年'].value_counts(sort=False)
-df1['年'][df1['年'] == '0-10'] = 0
-df1['年'] = df1['年'].astype(int)
+df1 = df[(df['受診都道府県'] == '東京都') & (df['年代'] != '不明') & (df['年代'] != '非公表')]
+# df1['年代'].value_counts(sort=False)
+df1['年代'][df1['年代'] == '0-10'] = 0
+df1['年代'] = df1['年代'].astype(int)
 
 ax.clear()
-# ax.hist(df1['年'], bins=range(0,110,10), edgecolor="black")
-ax.hist(df1['年'][(df1['確定日'] >= datetime.datetime(2020,4,1)) & (df1['確定日'] < datetime.datetime(2020,5,1))], bins=range(0,110,10), color='gray', edgecolor="black")
-ax.set_xlabel('年')
+# ax.hist(df1['年代'], bins=range(0,110,10), edgecolor="black")
+ax.hist(df1['年代'][(df1['確定日'] >= datetime.datetime(2020,4,1)) & (df1['確定日'] < datetime.datetime(2020,5,1))], bins=range(0,110,10), color='gray', edgecolor="black")
+ax.set_xlabel('年代')
 ax.set_ylabel('人数')
 plt.legend(['東京 4月'])
 
 ax.clear()
-ax.hist(df1['年'][df1['確定日'] >= datetime.datetime(2020,6,1)], bins=range(0,110,10), color='gray', edgecolor="black")
-ax.set_xlabel('年')
+ax.hist(df1['年代'][df1['確定日'] >= datetime.datetime(2020,6,1)], bins=range(0,110,10), color='gray', edgecolor="black")
+ax.set_xlabel('年代')
 ax.set_ylabel('人数')
 plt.legend(['東京 6月以降'])
