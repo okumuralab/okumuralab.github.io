@@ -17,6 +17,8 @@
 
 <h1>シェープファイルを読む</h1>
 
+<p><em>[2020-09-17]</em> Rが4.xになったことと，国土数値情報の令和2年（2020年）版が出たことと，WindowsでRをお使いの方からフィードバックをいただけたことにより，このページと集約geojsonデータを改訂しました。</p>
+
 <h2>はじめに</h2>
 
 <p>シェープファイル（Shapefile）は，地図を表すベクトルデータ形式である。<a href="https://www.esri.com/">Esri</a> が提唱した。拡張子 shp，shx，dbf の三つのファイルから成る。ほかにも投影法についての情報を持つ prj や，メタデータの xml などを含むことがある。</p>
@@ -34,23 +36,14 @@
 library(sf)
 </code></pre>
 
-<p>シェープファイルを読む関数は <code>st_read()</code> または <code>read_sf()</code> である。前者はメッセージを出力し，後者は出力しない。前者はデフォルトで文字列をファクターに変換し，後者は変換しない。いずれにしても <code>options(stringsAsFactors=FALSE)</code> を実行しておけばファクターに変換されない。</p>
+<p>シェープファイルを読む関数はいくつかあるが <code>read_sf()</code> が良さそうである。</p>
 
 <h2>三重県のシェープファイル</h2>
 
-<p>ここでは国土数値情報の「行政区域」の三重県を使ってみる。ファイル名は <!a href="http://nlftp.mlit.go.jp/ksj/gml/data/N03/N03-18/N03-180101_24_GML.zip" rel="nofollow">N03-180101_24_GML.zip</a> である。これを展開し，Rでシェープファイルを読み込む。中身がシフトJIS（CP932）のため，エンコーディングの指定が必要である。ファイル名を指定する場合は shp のファイル名だけでよいし，shp，shx，dbf の入っているディレクトリを指定するだけでもよい（カレントディレクトリなら <code>"."</code>）。</p>
+<p>ここでは国土数値情報の「行政区域」の三重県を使ってみる。ファイル名は N03-200101_24_GML.zip である。これをカレントディレクトリの N03-200101_24_GML に展開し，Rでシェープファイルを読み込む。中身がシフトJIS（CP932）のため，エンコーディングの指定が必要である。ファイル名を指定する場合は shp のファイル名だけでよいし，shp，shx，dbf の入っているディレクトリを指定するだけでもよい（カレントディレクトリなら <code>"."</code>）。ただし，WindowsのRでファイル名を指定しないと動かなかったというご報告をいただいたので，以下ではshpファイル名を指定するようにした。</p>
 
 <pre>
-<code class="prom">options(stringsAsFactors=FALSE)</code>
-<code class="prom">mie = st_read("N03-180101_24_GML/", options="ENCODING=CP932")</code>
-<code>options:        ENCODING=CP932 </code>
-<code>Reading layer `N03-18_24_180101' from data source `/.../.../N03-180101_24_GML' using driver `ESRI Shapefile'</code>
-<code>Simple feature collection with 7480 features and 5 fields</code>
-<code>geometry type:  POLYGON</code>
-<code>dimension:      XY</code>
-<code>bbox:           xmin: 135.8532 ymin: 33.72286 xmax: 136.9901 ymax: 35.25765</code>
-<code>epsg (SRID):    NA</code>
-<code>proj4string:    +proj=longlat +ellps=GRS80 +no_defs</code>
+<code class="prom">mie = read_sf("N03-200101_24_GML/N03-20_24_200101.shp", options="ENCODING=CP932")</code>
 </pre>
 
 <p>中を見てみよう：</p>
@@ -61,29 +54,28 @@ library(sf)
 <code>geometry type:  POLYGON</code>
 <code>dimension:      XY</code>
 <code>bbox:           xmin: 135.8532 ymin: 33.72286 xmax: 136.9901 ymax: 35.25765</code>
-<code>epsg (SRID):    NA</code>
-<code>proj4string:    +proj=longlat +ellps=GRS80 +no_defs</code>
+<code>geographic CRS: JGD2011</code>
 <code># A tibble: 7,480 x 6</code>
-<code>   N03_001 N03_002 N03_003 N03_004  N03_007                            geometry</code>
-<code>   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;                         &lt;POLYGON [°]&gt;</code>
-<code> 1 三重県  NA      NA      津市     24201   ((136.5282 34.71053, 136.5276 34.7…</code>
-<code> 2 三重県  NA      NA      津市     24201   ((136.4232 34.84402, 136.4233 34.8…</code>
-<code> 3 三重県  NA      NA      四日市市 24202   ((136.6458 34.93301, 136.6458 34.9…</code>
-<code> 4 三重県  NA      NA      四日市市 24202   ((136.6466 34.94488, 136.6465 34.9…</code>
-<code> 5 三重県  NA      NA      四日市市 24202   ((136.6589 34.95153, 136.6588 34.9…</code>
-<code> 6 三重県  NA      NA      四日市市 24202   ((136.6771 34.97827, 136.6763 34.9…</code>
-<code> 7 三重県  NA      NA      四日市市 24202   ((136.652 34.98822, 136.6519 34.98…</code>
-<code> 8 三重県  NA      NA      四日市市 24202   ((136.6531 34.99381, 136.653 34.99…</code>
-<code> 9 三重県  NA      NA      四日市市 24202   ((136.673 34.99794, 136.6728 34.99…</code>
-<code>10 三重県  NA      NA      四日市市 24202   ((136.5404 35.06994, 136.5407 35.0…</code>
-<code># ... with 7,470 more rows</code>
+<code>   N03_001 N03_002 N03_003 N03_004  N03_007                             geometry</code>
+<code>   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;                          &lt;POLYGON [°]&gt;</code>
+<code> 1 三重県  NA      NA      津市     24201   ((136.2062 34.44868, 136.2065 34.44…</code>
+<code> 2 三重県  NA      NA      津市     24201   ((136.5276 34.7106, 136.5277 34.710…</code>
+<code> 3 三重県  NA      NA      四日市市 24202   ((136.625 34.90368, 136.6249 34.903…</code>
+<code> 4 三重県  NA      NA      四日市市 24202   ((136.6458 34.93301, 136.6458 34.93…</code>
+<code> 5 三重県  NA      NA      四日市市 24202   ((136.6466 34.94489, 136.6466 34.94…</code>
+<code> 6 三重県  NA      NA      四日市市 24202   ((136.6583 34.95221, 136.6573 34.95…</code>
+<code> 7 三重県  NA      NA      四日市市 24202   ((136.6522 34.98956, 136.6522 34.98…</code>
+<code> 8 三重県  NA      NA      四日市市 24202   ((136.6527 34.994, 136.6528 34.9940…</code>
+<code> 9 三重県  NA      NA      四日市市 24202   ((136.6833 34.98159, 136.6831 34.98…</code>
+<code>10 三重県  NA      NA      四日市市 24202   ((136.6742 35, 136.673 34.99794, 13…</code>
+<code># … with 7,470 more rows</code>
 <code class="prom">table(mie$N03_003)</code>
 
 <code>  員弁郡   桑名郡   三重郡   多気郡   度会郡 南牟婁郡 北牟婁郡 </code>
 <code>       1        1        6        7     2301       27     1362 </code>
 </pre>
 
-<p>N03_007 は <a href="http://www.soumu.go.jp/denshijiti/code.html">全国地方公共団体コード</a> の市区町村コードからチェックディジットを除いたものである。</p>
+<p>N03_007 は <a href="https://www.soumu.go.jp/denshijiti/code.html">全国地方公共団体コード</a> の市区町村コードからチェックディジットを除いたものである。</p>
 
 <div class="note">
 <p>もし読み込んでから文字化けがわかった場合，次のようにしてUTF-8に変換できる：</p>
@@ -110,14 +102,13 @@ mie$N03_004 = iconv(mie$N03_004, from="CP932", to="UTF-8")
 <code>geometry type:  POLYGON</code>
 <code>dimension:      XY</code>
 <code>bbox:           xmin: 135.8532 ymin: 33.72286 xmax: 136.9901 ymax: 35.25765</code>
-<code>epsg (SRID):    NA</code>
-<code>proj4string:    +proj=longlat +ellps=GRS80 +no_defs</code>
+<code>geographic CRS: JGD2011</code>
 <code>First 5 geometries:</code>
-<code>POLYGON ((136.5282 34.71053, 136.5276 34.71027,...</code>
-<code>POLYGON ((136.4232 34.84402, 136.4233 34.84401,...</code>
+<code>POLYGON ((136.2062 34.44868, 136.2065 34.44904,...</code>
+<code>POLYGON ((136.5276 34.7106, 136.5277 34.71062, ...</code>
+<code>POLYGON ((136.625 34.90368, 136.6249 34.90368, ...</code>
 <code>POLYGON ((136.6458 34.93301, 136.6458 34.93301,...</code>
-<code>POLYGON ((136.6466 34.94488, 136.6465 34.94479,...</code>
-<code>POLYGON ((136.6589 34.95153, 136.6588 34.9515, ...</code>
+<code>POLYGON ((136.6466 34.94489, 136.6466 34.94488,...</code>
 </pre>
 
 <p>したがって，</p>
@@ -165,18 +156,10 @@ plot(st_geometry(mie3), col=rgb(cols(mie3$x/100)/255))
 
 <h2>全国のシェープファイル</h2>
 
-<p>国土数値情報の <!a href="http://nlftp.mlit.go.jp/ksj/gml/data/N03/N03-18/N03-180101_GML.zip" rel="nofollow">N03-180101_GML.zip</a> をいただいてきて展開する。こちらのほうはシフトJISではないのでエンコーディングのオプションは不要であった。</p>
+<p>国土数値情報の N03-200101_GML.zip をいただいてきて展開する。こちらのほうはシフトJISではないのでエンコーディングのオプションは不要であった。</p>
 
 <pre>
-<code class="prom">options(stringsAsFactors=FALSE)</code>
-<code class="prom">japan = st_read("N03-180101_GML/")</code>
-<code>Reading layer `N03-18_180101' from data source `/.../N03-180101_GML' using driver `ESRI Shapefile'</code>
-<code>Simple feature collection with 116929 features and 5 fields</code>
-<code>geometry type:  POLYGON</code>
-<code>dimension:      XY</code>
-<code>bbox:           xmin: 122.9337 ymin: 20.42275 xmax: 153.9868 ymax: 45.55724</code>
-<code>epsg (SRID):    NA</code>
-<code>proj4string:    +proj=longlat +ellps=GRS80 +no_defs</code>
+<code class="prom">japan = read_sf("N03-200101_GML/N03-20_200101.shp")</code>
 </pre>
 
 <p>これをコードの上2桁で集約すると，1行が1都道府県になる（とても時間がかかる）：</p>
@@ -188,7 +171,9 @@ plot(st_geometry(mie3), col=rgb(cols(mie3$x/100)/255))
 <p>これをそのままプロットすると非常に重く，しかも境界が複雑で見栄えが悪い。そこで境界を単純化する。そのためには sf パッケージの <code>st_simplify()</code> が使えるが，より良いアルゴリズムが rmapshaper パッケージの <code>ms_simplify()</code> に実装されている。データ量を約 1/1000 に縮めてみよう：</p>
 
 <pre>
-<code>japan3 = ms_simplify(japan2, keep=0.001, keep_shapes=TRUE)
+<code>install.packages("rmapshaper")
+library(rmapshaper)
+japan3 = ms_simplify(japan2, keep=0.001, keep_shapes=TRUE)
 </code></pre>
 
 <div class="note">
@@ -222,7 +207,7 @@ names(japan) = c("code","pref","geometry")
 <p>できた <a href="https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan.geojson">japan.geojson</a> は公開しておく。次のように読む：</p>
 
 <pre>
-<code>japan = st_read("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan.geojson", stringsAsFactors=FALSE)
+<code>japan = read_sf("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan.geojson")
 </code></pre>
 
 <p>確認には <code>plot(st_geometry(japan))</code> としてみればよいが，ここでは投影法の確認も兼ねて，緯度・経度の線（graticule）や軸（axes）も描きこんでみよう：</p>
@@ -286,28 +271,28 @@ lines(c(-600,-300,100,100), c(4150,4150,4450,4750))
 
 <figure><img src="img/180806a.png" alt="普通教室のエアコン設置率"></figure>
 
-<p>ついでに全国を市町村レベルで集約して，約 1/100 に単純化したものを用意しておこう：</p>
+<p>ついでに全国を市町村レベルで集約して，約 1/100 に単純化したものを用意しておこう。重い作業なので，いったんRを再起動して最初からやり直す：</p>
 
 <pre>
 <code>library(sf)
 library(rmapshaper)
-options(stringsAsFactors=FALSE)
-japan = st_read("N03-180101_GML/")
+# options(stringsAsFactors=FALSE) # R 4.x ではデフォルト
+japan = read_sf("N03-200101_GML/N03-20_200101.shp")
 japan2 = aggregate(japan, list(japan$N03_007), head, n=1)
 japan3 = ms_simplify(japan2, keep=0.01, keep_shapes=TRUE)
 #
-# Fatal error in CALL_AND_RETRY_0
-# Allocation failed - process out of memory
+# Fatal error in , line 0
+# API fatal error handler returned after process out of memory
 #
 </code></pre>
 
-<p>データ量が多いと，このように R が落ちてしまう。そこで，北海道，本州，残りに分割する：</p>
+<p>今回はメモリ16GのMac miniでやったのだが，やはり R が落ちてしまう。そこで，北海道，本州，残りに分割する：</p>
 
 <pre>
 <code>library(sf)
 library(rmapshaper)
-options(stringsAsFactors=FALSE)
-japan = st_read("N03-180101_GML/")
+# options(stringsAsFactors=FALSE)
+japan = read_sf("N03-200101_GML/N03-20_200101.shp")
 japan2 = aggregate(japan, list(japan$N03_007), head, n=1)
 japan2$Group.1 = NULL
 japan2a = japan2[as.numeric(substr(japan2$N03_007, 1, 2)) %in% 1,]
@@ -320,10 +305,10 @@ japan3 = rbind(japan3a,japan3b,japan3c)
 st_write(japan3, "japan2.geojson")
 </code></pre>
 
-<p>できた <a href="https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan.geojson">japan2.geojson</a> は公開しておく。次のように読む：</p>
+<p>できた <a href="https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan2.geojson">japan2.geojson</a> は公開しておく。次のように読む：</p>
 
 <pre>
-<code>japan2 = st_read("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan2.geojson", stringsAsFactors=FALSE)
+<code>japan2 = read_sf("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan2.geojson", stringsAsFactors=FALSE)
 </code></pre>
 
 <p>これを使って三重県の白地図を描こう：</p>
@@ -381,7 +366,7 @@ text(st_coordinates(c), japan2$N03_004, cex=0.5)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-12-15 16:28:40</time>
+Last modified: <time>2020-09-17 11:41:14</time>
 <!-- hhmts end -->
 </p>
 </footer>
