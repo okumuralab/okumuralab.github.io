@@ -21,7 +21,7 @@ with open("COVID-19.csv") as f1:
             print(line, end="", file=f2)
 
 df = pd.read_csv("COVID-19a.csv", parse_dates=['確定日', '発症日'],
-                 na_values=['ー','－','―','調査中','不明',' '], low_memory=False)
+                 na_values=['ー','－','―','調査中','確認中','不明',' '], low_memory=False)
 
 # 再陽性を削除
 pp = ['再陽性' not in x for x in df['備考'].astype(str)]
