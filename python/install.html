@@ -32,7 +32,7 @@
 
 <p>まず，初心者のかたで，今までどこかで Python をインストールしたけれどうまく設定できていないという場合は，［スタートボタン］→［⚙設定］→［アプリ］で，それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
 
-<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが，ここでは Python 3.8.x の x が一番大きいものの64ビット版 Windows x86-64 executable installer を使います（32ビット版でもかまいません）。初心者のかたは，インストーラの最初の画面で必ず「Add Python 3.8 to PATH」にチェックを付けておきましょう。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
+<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが，ここでは Python 3.8.x の x が一番大きいものの64ビット版 Windows x86-64 executable installer を使います（32ビット版でもかまいません）。初心者のかたは，インストーラの最初の画面で必ず「Add Python 3.8 to PATH」にチェックを付けてから「Install Now」をクリックします。ユーザーアカウント制御「このアプリがデバイスに変更を加えることを許可しますか？」が出ますので「はい」をクリックするとインストールが始まります。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
 
 <div class="note">
 <p>ユーザ名に全角文字を使っていると問題が生じることがあるようです。Windowsのユーザ名はなるべくスペースを含まない半角英数字だけにしましょう（例：<code>okumura</code>）。なお，ユーザ名に全角文字を含んでも，次のようにすれば全角文字を含まないインストール場所が指定できます。インストーラが起動した画面で「Customize installation」をクリックし，「Next」をクリックし，「Customize install location」で <code>C:\Users\奥村 晴彦\AppData\Local\Programs\Python\...</code> のような全角フォルダ名が出た際，その右の「Browse」をクリックし，「PC」→「C:」を選び，「新しいフォルダーの作成」で例えば <code>Python</code> というフォルダを作り，それをインストール場所に設定します。このあたりは実験が不十分なので，情報があれば教えてください。</p>
@@ -343,7 +343,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-10-01 08:46:22</time>
+Last modified: <time>2020-10-04 12:55:21</time>
 <!-- hhmts end -->
 </p>
 </footer>
