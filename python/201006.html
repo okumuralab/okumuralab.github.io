@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>標準入力から3個の整数を読んで・・・</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>標準入力から3個の整数を読んで・・・</h1>
+
+<p>「標準入力から3個の整数を読んでその和を出力するプログラムを作れ」という問題がありました。もともとは AtCoder のサンプル問題（の一部）で，区切りのスペースや改行の入り方が指定されていたのですが，ここでは区切りは任意の空白文字（スペース，タブ，改行）とします。</p>
+
+<p>C言語なら</p>
+
+<pre><code>#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    int a, b, c;
+
+    scanf("%d%d%d", &a, &b, &c);
+    printf("%d\n", a + b + c);
+    return 0;
+}
+</code></pre>
+
+<p>でどんな空白文字がどんな順番で現れても大丈夫ですが，Pythonで <code>input()</code> を使うと1行ごとに戻ってきてしまうので，フォーマットが固定されていないと，けっこう難しい問題になりそうです。ところが，Twitter でいろいろお教えいただいて，<code>sys.stdin.read().split</code> で簡単にできることがわかりました。</p>
+
+<pre><code>import sys
+
+print(sum(int(s) for s in sys.stdin.read().split()))
+</code></pre>
+
+<p>同じことを <code>map()</code> を使って書くと</p>
+
+<pre><code>import sys
+
+print(sum(map(int, sys.stdin.read().split())))
+</code></pre>
+
+<p>となって，エレガントですが，どういうわけか Pythonista たちは <code>for</code> のほうを好むという話があるようです。</p>
+
+<pre><code>a = ['123', '234', '345', '456', '567', '678', '789']
+
+%timeit sum(int(x) for x in a)
+2.34 µs ± 189 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+
+%timeit sum(map(int, a))
+1.54 µs ± 59.5 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)
+</code></pre>
+
+<p>この場合は若干 <code>map()</code> のほうが速そうです。</p>
+
+<p>なお，実際は，標準入力を全部読むのではなく，頭の1000文字分くらいで十分でしょうから，<code>read(1000)</code> などとするほうが安全ですね。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-10-06 17:58:32</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
