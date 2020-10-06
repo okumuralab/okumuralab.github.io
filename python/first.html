@@ -97,6 +97,8 @@ NameError: name 'X' is not defined
 
 <p>上の例では <code>_ ** 2</code> は <code>65536 ** 2</code> と同じです。IPython では <code>__</code> が二つ前，<code>___</code> が三つ前です（四つ前はありません）。</p>
 
+<p>いげた印 <code>#</code> より右側はコメント（説明のための注釈）です。実際に打ち込むときはコメントは必要ありません。</p>
+
 <p>対話型の環境なら，これまでの例で示したように，式を打ち込めばそのまま答えが表示されますが，対話型でないプログラム中では <code>print()</code> 関数を使わないと出力されません：</p>
 
 <pre>
@@ -134,60 +136,45 @@ Hello
 NameError: name 'sin' is not defined
 </code></pre>
 
-<p>駄目ですね。数学関数はいくつかのライブラリで定義されていますが，ここでは標準ライブラリ <code>math</code> のものを使います（ほかに <a href="https://www.numpy.org">NumPy</a> や <a href="https://www.scipy.org">SciPy</a> でも定義されています）。ライブラリ <code>math</code> を使うには，次のようにインポートします：</p>
+<p>駄目ですね。数学関数はいくつかのライブラリで定義されています（標準数学ライブラリ <code>math</code>，<a href="https://www.numpy.org">NumPy</a>，<a href="https://www.scipy.org">SciPy</a>）。ここでは後で必要になる NumPy のものを使います（pip などでインストールが必要です）。次のようにインポートします：</p>
 
 <pre>
-<code>In [ ]: import math
+<code>In [ ]: import numpy as np
 </code></pre>
 
-<p>これで <code>math.</code> で始まる定数や関数が使えるようになります：</p>
+<p>これは <code>numpy</code> というライブラリを <code>np</code> という省略名で読み込む（インポートする）ことを意味します。よく使うライブラリには伝統的な省略名があるので，それに従いましょう。</p>
+
+<p>これで <code>np.</code> で始まる数学用のあれこれが使えるようになります：</p>
 
 <pre>
-<code>In [ ]: math.pi</code>   # 円周率
+<code>In [ ]: np.pi</code>   # 円周率
 <code>Out[ ]: 3.141592653589793</code>
 
-<code>In [ ]: math.e</code>    # 自然対数の底
+<code>In [ ]: np.e</code>    # 自然対数の底
 <code>Out[ ]: 2.718281828459045</code>
 </pre>
 
 <p>丸めて文字列にするには <code>format()</code> を使います：</p>
 
 <pre>
-<code>In [ ]: format(math.pi, ".4f")
+<code>In [ ]: format(np.pi, ".4f")
 Out[ ]: '3.1416'
 </code></pre>
 
-<p>いげた印 <code>#</code> より右側はコメント（説明のための注釈）です。以下では説明のためにコメントをいろいろ書いていますが，実際に打ち込むときはコメントは必要ありません。</p>
-
 <pre>
-<code>In [ ]: math.sin(math.pi / 2)
+<code>In [ ]: np.sin(np.pi / 2)
 Out[ ]: 1.0
 
-In [ ]: math.sin(math.pi)
+In [ ]: np.sin(np.pi)
 Out[ ]: 1.2246467991473532e-16
 </code></pre>
 
 <p>数値計算の誤差のため sin(π) は 0 にならず，1.22 × 10<sup>-16</sup> という小さな値になりました。</p>
 
-<div class="note">
-<p>NumPy で定義されているものは配列の形で引数を与えることもできます。NumPy を読み込むには</p>
-<pre>
-<code>In [ ]: import numpy as np
-</code></pre>
-<p>とします。これは <code>numpy</code> を <code>np</code> という省略名で読み込む（インポートする）ことを意味します。よく使うライブラリには伝統的な省略名があるので，それに従いましょう。</p>
-<pre>
-<code>In [ ]: np.sin(0.1)
-Out[ ]: 0.09983341664682815
-
-In [ ]: np.sin([0.1,0.2,0.3])
-Out[ ]: array([0.09983342, 0.19866933, 0.29552021])
-</code></pre>
-</div>
-
 <p>関数の括弧を閉じないとどうなるでしょうか。</p>
 
 <pre>
-<code>In [ ]: math.sin(math.pi/2
+<code>In [ ]: np.sin(np.pi/2
    ...: )
 Out[ ]: 1.0
 </code></pre>
@@ -248,11 +235,11 @@ The argument must be an iterable if specified.
 <p>眠れない夜は，ひつじを数えてみましょう🐑🐑🐑🐑🐑🐑🐑🐑🐑🐑。</p>
 
 <pre>
-<code>for i in range(1,11):
+<code>for i in range(1, 11):
     print("ひつじが", i, "ひき")
 </code></pre>
 
-<p><code>range(1,11)</code> は 1 以上 11 未満の整数を表します。Pythonはインデント（字下げ）でブロック構造を表しますので，必ず上の2行目は（半角の）スペースかタブでインデントします。多くの Python プログラマは（半角の）スペース4個でインデントする（そうなるようにテキストエディタを設定している）と思います。</p>
+<p><code>range(1, 11)</code> は 1 以上 11 未満の整数を表します。Pythonはインデント（字下げ）でブロック構造を表しますので，必ず上の2行目は（半角の）スペースかタブでインデントします。多くの Python プログラマは（半角の）スペース4個でインデントする（そうなるようにテキストエディタを設定している）と思います。</p>
 
 <pre>
 <code>ひつじが 1 ひき
@@ -273,7 +260,7 @@ The argument must be an iterable if specified.
 
 <pre>
 <code>def hitsuji(n):
-    for i in range(1,n+1):
+    for i in range(1, n+1):
         print("ひつじが", i, "ひき")
 </code></pre>
 
@@ -282,17 +269,17 @@ The argument must be an iterable if specified.
 <div class="note">
 <p>文字列に値を割り込ませる方法として <code>"ひつじが {} ひき".format(i)</code> あるいは <code>f"ひつじが {i} ひき"</code> という書き方もできます。中括弧の中に例えば <code>:2d</code> のような<a href="https://docs.python.org/3/library/string.html#formatstrings">書式指定</a>をすれば2桁右詰めになります：</p>
 <pre>
-<code>for i in range(1,11):
+<code>for i in range(1, 11):
     print("ひつじが {:2d} ひき".format(i))
 
-for i in range(1,11):
+for i in range(1, 11):
     print(f"ひつじが {i:2d} ひき")
 </code></pre>
 <p><code>"ひつじが %2d ひき" % i</code> のような古い<a href="https://docs.python.org/3/library/stdtypes.html#old-string-formatting">C言語スタイルの書式指定</a>もできます。次の例はいずれも出力が <code>'円周率はだいたい 3.1416 です。'</code> になります：</p>
 <pre>
-<code>In [ ]: "円周率はだいたい {:.4f} です。".format(math.pi)
-In [ ]: f"円周率はだいたい {math.pi:.4f} です。"
-In [ ]: "円周率はだいたい %.4f です。" % math.pi
+<code>In [ ]: "円周率はだいたい {:.4f} です。".format(np.pi)
+In [ ]: f"円周率はだいたい {np.pi:.4f} です。"
+In [ ]: "円周率はだいたい %.4f です。" % np.pi
 </code></pre>
 </div>
 
@@ -354,7 +341,7 @@ Out[ ]: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
 <p>テストしてみます：</p>
 
 <pre>
-<code>In [ ]: [fibn(n) for n in range(1,11)]
+<code>In [ ]: [fibn(n) for n in range(1, 11)]
 Out[ ]: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
 </code></pre>
 
@@ -363,7 +350,7 @@ Out[ ]: [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
 <pre>
 <code>a = [0] * 100
 a[0] = a[1] = 1
-for i in range(2,100):
+for i in range(2, 100):
     a[i] = a[i-2] + a[i-1]
 </code></pre>
 
@@ -375,7 +362,7 @@ for i in range(2,100):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-10 16:35:32</time>
+Last modified: <time>2020-10-06 11:08:28</time>
 <!-- hhmts end -->
 </p>
 </body>
