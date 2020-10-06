@@ -24,13 +24,27 @@
 
 <p>として全角文字のQRコードも正しく生成できます（Windows の VS Code のターミナルではうまくいかないという報告があります）。</p>
 
+<p>Google Colab でもうまくいくようです。</p>
+
+<pre>
+<code>!pip install qrcode
+!qr '奥村晴彦です' &gt; test.png
+</code></pre>
+
+<p>これで test.png というファイルができているので左ペインからダウンロードして表示します。あるいは，Google Colab のノートブックの中に表示したいのであれば次のようにします。</p>
+
+<pre>
+<code>from IPython.display import Image
+Image("test.png")
+</code></pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-11-13 15:29:28</time>
+Last modified: <time>2020-10-06 15:54:46</time>
 <!-- hhmts end -->
 </p>
 </body>
