@@ -39,7 +39,7 @@ s.remove(2) # 削除
 
 <pre>
 <code>n = 1000
-prime = {i for i in range(2,n)}
+prime = {i for i in range(2, n)}
 </code></pre>
 
 <p>2 以上 <code>n</code> 未満の整数 <code>i</code> について，もし <code>i</code> が <code>prime</code> に入っているなら，その倍数を <code>prime</code> から削除します：</p>
@@ -47,7 +47,7 @@ prime = {i for i in range(2,n)}
 <pre>
 <code>for i in range(2,n):
     if i in prime:
-        for j in range(i*2,n,i):
+        for j in range(i*2, n, i):
             if j in prime:
                 prime.remove(j)
 </code></pre>
@@ -97,9 +97,9 @@ prime = [False] * 2 + [True] * (n-2)
 <p>残りは集合の場合と同じですが，除去する際に，含まれているかどうかを判定する必要がありません：</p>
 
 <pre>
-<code>for i in range(2,n):
+<code>for i in range(2, n):
     if prime[i]:
-        for j in range(i*2,n,i):
+        for j in range(i*2, n, i):
             prime[j] = False
 </code></pre>
 
@@ -114,7 +114,7 @@ Out[ ]: 168
 
 <pre>
 <code>s = []
-for i in range(2,n):
+for i in range(2, n):
     if prime[i]:
         s.append(i)
 </code></pre>
@@ -122,13 +122,13 @@ for i in range(2,n):
 <p>これは次のようにも書けます：</p>
 
 <pre>
-<code>s = [i for i in range(2,n) if prime[i]]
+<code>s = [i for i in range(2, n) if prime[i]]
 </code></pre>
 
 <p>リストでなく集合を作るときにも同じようにできます：</p>
 
 <pre>
-<code>s = {i for i in range(2,n) if prime[i]}
+<code>s = {i for i in range(2, n) if prime[i]}
 </code></pre>
 
 <p>リストや集合のこのような <code>for</code> を使った表し方を内包表記（comprehension）と呼びます。</p>
@@ -163,7 +163,7 @@ Out[ ]: 1096
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-05-31 21:27:10</time>
+Last modified: <time>2020-10-12 10:24:48</time>
 <!-- hhmts end -->
 </p>
 </body>
