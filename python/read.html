@@ -31,12 +31,16 @@ df = pd.read_csv("filename.csv")
 df.head()   # 頭の5行だけ表示
 </code></pre>
 
-<p>表示精度を変えたいときは <code>pd.options.display.precision</code>（デフォルト6）に桁数の目標値を代入します（IPython の <code>%precision</code> には影響を受けないようです）。読み込んだデータは <code>DataFrame</code> オブジェクトです：</p>
+<p>読み込んだデータは <code>DataFrame</code> オブジェクトです：</p>
 
 <pre>
 <code>In [ ]: type(df)
 Out[ ]: pandas.core.frame.DataFrame
 </code></pre>
+
+<p>最大表示行数・列数を調べたり変えたりしたいときは <code>pd.options.display.max_rows</code>，<code>pd.options.display.max_columns</code> を見たり代入したりします。</p>
+
+<p>表示精度を変えたいときは <code>pd.options.display.precision</code>（デフォルト6）に桁数の目標値を代入します（IPython の <code>%precision</code> には影響を受けないようです）。</p>
 
 <p><code>read_csv()</code> でよく使うオプション：</p>
 
@@ -272,7 +276,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-06 13:17:02</time>
+Last modified: <time>2020-10-13 15:38:44</time>
 <!-- hhmts end -->
 </p>
 </body>
