@@ -9,7 +9,7 @@ import time
 import os
 import re
 
-# os.system("wget -N https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv")
+os.system("wget -N https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv")
 p = os.stat("COVID-19.csv")
 # now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 now = str(datetime.datetime.fromtimestamp(p.st_mtime))
