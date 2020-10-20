@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>時系列のグラフを描く</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>時系列のグラフを描く</h1>
+
+<p><a href="https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv">東京の毎日のCOVID-19感染者数の時系列データ</a>をプロットしてみましょう。</p>
+
+<pre>
+<code>import matplotlib.pyplot as plt
+import pandas as pd
+
+df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv')
+</code></pre>
+
+<p><code>df</code> を眺めてから，プロットしてみましょう。</p>
+
+<pre>
+<code>plt.plot(df['date'], df['confirmed'])
+</code></pre>
+
+<p>何となくプロットできているようですが，横軸がよくわかりません。日付が文字列になってしまっているようです。日付を日付として読むには，次のようにします。</p>
+
+<pre>
+<code>df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv',
+                 parse_dates=['date'])
+</code></pre>
+
+<p>同じように見えますが，これをプロットしてみましょう。</p>
+
+<pre>
+<code>plt.clf()
+plt.plot(df['date'], df['confirmed'])
+</code></pre>
+
+<p>今度は横軸を日付と認識してくれました。でも，重なって読みにくいので，少し傾けてみましょう。</p>
+
+<pre>
+<code>plt.xticks(rotation=20)
+</code></pre>
+
+<p>少し見やすくなりました。</p>
+
+<p>棒グラフにしてみましょう。</p>
+
+<pre>
+<code>plt.clf()
+plt.bar(df['date'], df['confirmed'], width=1)
+plt.xticks(rotation=20)
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-10-20 14:08:48</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
