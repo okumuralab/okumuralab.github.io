@@ -150,9 +150,11 @@ defaults write com.apple.Preview ApplePersistence -bool no
 
 <p>Finderよりターミナルをよく使う人種であれば，ターミナルの適切な設定が欠かせない。フォントは好みによる。昔は「Osaka-等幅」を使っていたが，Microsoft Office同梱の「Consolas」や，最近ではフリーフォントの <a href="https://github.com/google/fonts/tree/master/ofl/inconsolata">Inconsolata</a> が気に入っている。「テキストをアンチエイリアス処理」は必須。</p>
 
-<h2>コマンドラインツール</h2>
+<h2>コマンドラインツールなど</h2>
 
-<p>巨大なXcodeをインストールしなくても，gcc（clang）などのコマンドラインツールで十分なことが多い。コマンドラインツールは，（Xcodeをすでにインストールした場合はApplicationsフォルダのXcodeをゴミ箱に捨てて，もし古いXcodeがあるなら sudo /Developer/Library/uninstall-developer-folder してから）gccでもmakeでも何かトリガーとなるコマンドを打ち込めば，インストールするかと聞いてくる。あるいは明示的にはターミナルに <code>xcode-select --install</code> と打ち込めばよい。</p>
+<p>巨大なXcodeをインストールしなくても，gcc（clang）などのコマンドラインツールで十分なことが多い。コマンドラインツールは，（Xcodeをすでにインストールした場合はApplicationsフォルダのXcodeをゴミ箱に捨てて）<code>xcode-select --install</code> と打ち込めばよい。</p>
+
+<p>コマンドラインツールの更新は，システム環境設定の「ソフトウェアアップデート」に出てくることもあるが，出てこないことが多いようなので，ときどき <a href="https://developer.apple.com/download/more/">More Downloads for Apple Developers</a> から最新の Command Line Tools for Xcode（ファイル名 Command_Line_Tools_for_Xcode_*.dmg）をダウンロードして実行する。</p>
 
 <p>科学計算には <a href="http://gcc.gnu.org/wiki/GFortran">GFortran</a> も必要かもしれない。</p>
 
@@ -508,7 +510,7 @@ Host *
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-08-27 20:25:50</time>
+Last modified: <time>2020-10-24 08:05:04</time>
 <!-- hhmts end -->
 </p>
 </footer>
