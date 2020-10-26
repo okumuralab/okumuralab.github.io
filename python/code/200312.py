@@ -172,7 +172,7 @@ fig.savefig('../img/200312i.svg', bbox_inches="tight")
 # 平均年代の推移
 
 # df1 = df[(df['受診都道府県'] == '東京都') & (df['年代'] != '不明')]
-df1 = df[(df['年代'].astype(str) != '不明') & (df['年代'].astype(str) != 'nan') & (df['年代'].astype(str) != '非公表')].copy()
+df1 = df[(df['年代'].astype(str) != '-') & (df['年代'].astype(str) != '不明') & (df['年代'].astype(str) != 'nan') & (df['年代'].astype(str) != '非公表')].copy()
 # df1['年代'].value_counts(sort=False)
 df1.loc[df1['年代'] == '0-10', '年代'] = 0
 df1.loc[df1['年代'] == '0−10', '年代'] = 0
@@ -188,6 +188,7 @@ df1.loc[df1['年代'] == '50代', '年代'] = 50
 df1.loc[df1['年代'] == '60代', '年代'] = 60
 df1.loc[df1['年代'] == '70代', '年代'] = 70
 df1.loc[df1['年代'] == '80代', '年代'] = 80
+df1.loc[df1['年代'] == '80以上', '年代'] = 80
 df1.loc[df1['年代'] == '90代', '年代'] = 90
 df1.loc[df1['年代'] == '90以上', '年代'] = 90
 df1.loc[df1['年代'] == '未就学児', '年代'] = 0
