@@ -61,13 +61,51 @@ plt.bar(df['date'], df['confirmed'], width=1)
 plt.xticks(rotation=20)
 </code></pre>
 
+<p>同様に，厚労省の<a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">オープンデータ</a>もプロットしてみましょう。</p>
+
+<pre>
+<code>plt.clf()
+df1 = pd.read_csv('https://www.mhlw.go.jp/content/pcr_positive_daily.csv', parse_dates=['日付'])
+df2 = pd.read_csv('https://www.mhlw.go.jp/content/pcr_tested_daily.csv', parse_dates=['日付'])
+</code></pre>
+
+<p>これらを別々に描いてもいいのですが，マージして一つのデータフレームにしてみましょう。</p>
+
+<pre>
+<code>df = pd.merge(df1, df2)
+</code></pre>
+
+<pre>
+<code>plt.clf()
+plt.plot(df['日付'], df['PCR 検査陽性者数(単日)'])
+plt.plot(df['日付'], df['PCR 検査実施件数(単日)'])
+</code></pre>
+
+<p>これではどっちがどっちかわかりませんので，レジェンド（説明）を付けます。</p>
+
+<pre>
+<code>plt.legend(['陽性者数', '実施件数'])
+</code></pre>
+
+<p>割り算すれば陽性率が出せそうです。</p>
+
+<pre>
+<code>df['陽性率'] = df['PCR 検査陽性者数(単日)'] / df['PCR 検査実施件数(単日)']
+</code></pre>
+
+<p>陽性率もプロットしてみましょう。でも，データがいいかげんなのでとんでもない値が混じってしまっています。縦軸を0〜1までに制限すると見やすいと思います。</p>
+
+<pre>
+<code>plt.ylim([0, 1])
+</code></pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-10-20 14:08:48</time>
+Last modified: <time>2020-10-27 14:12:02</time>
 <!-- hhmts end -->
 </p>
 </body>
