@@ -18,7 +18,7 @@
 
 <p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うなら，Python 3 にしましょう。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
 
-<p>最新のものは Python 3.8.6 です。すでに TensorFlow をはじめほとんどのツールが Python 3.8 に対応しましたので，そろそろ 3.7 から 3.8 に移行して大丈夫だと思います。私も遅ればせながら 3.8 にしました。もっとも，3.6 や 3.7 が動いていれば，強いて 3.8 にする意味はあまりありません。Google Colaboratory はまだ 3.6 です。</p>
+<p>最新のものは Python 3.9.0 ですが，これはまだお勧めできません。Python 3.8.x の最新版をインストールしましょう。すでに TensorFlow をはじめほとんどのツールが Python 3.8 に対応しましたので，そろそろ 3.7 から 3.8 に移行して大丈夫だと思います。私も遅ればせながら 3.8 にしました。もっとも，3.6 や 3.7 が動いていれば，強いて 3.8 にする意味はあまりありません。Google Colaboratory はまだ 3.6 です。</p>
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
@@ -44,14 +44,14 @@
 <code>where.exe python
 </code></pre>
 
-<p>と打ち込んで，正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell では <code>.exe</code> を省略できないようです）。うまくいっていれば</p>
+<p>と打ち込んで，正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell ではうまくいかないようです）。うまくいっていれば</p>
 
 <pre>
 <code>C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38\python.exe
 C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 </code></pre>
 
-<p>と出ます（2行目はもともと入っている <code>python</code> コマンドで，後述のように，ストアアプリをダウンロードする画面に移動するだけの機能しかありません）。</p>
+<p>と出ます（2行目はもともと入っている <code>python</code> コマンドで，後述のように，ストアアプリをダウンロードする画面を開くだけの機能しかありません）。</p>
 
 <p>同様に <code>pip</code> も確認します。</p>
 
@@ -69,7 +69,13 @@ C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 <code>pip list --outdated
 </code></pre>
 
-<p>最初は pip そのものが古いはずですので，まずこれを <code>python -m pip install --upgrade pip</code> としてアップグレードします。これ以外に必要なパッケージは，その都度インストールします。例：</p>
+<p>最初は pip そのものが古いはずですので，まずこれを</p>
+
+<pre>
+<code>python -m pip install --upgrade pip
+</code></pre>
+
+<p>としてアップグレードします。これ以外に必要なパッケージは，その都度インストールします。例：</p>
 
 <pre>
 <code>pip install numpy matplotlib pandas jupyter
@@ -130,6 +136,12 @@ export PATH
 
 <p>アンインストールするには /Library/Frameworks/Python.framework および ~/Library/Python を消します。/usr/local/bin にできたシンボリックリンクも消します。~/.bash_profile に追加した PATH も消します。</p>
 
+<hr>
+
+<p>これ以降はあまり更新できていませんので，最新の情報でない可能性があります。</p>
+
+<hr>
+
 <h3>Microsoft Store 版 Python</h3>
 
 <p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら，PowerShell かコマンドプロンプトで「python」と打ち込むと，「ストア」が立ち上がって「Python」をインストールする画面が出てきます。インストール場所は C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps です。</p>
@@ -156,7 +168,7 @@ export PATH
 
 <h3>Homebrew によるインストール（Mac）</h3>
 
-<p>巨大な Xcode はたいていの場合に不要ですが，ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は，Mac を使っている開発者にとって必需品です。さらに，<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合，ターミナルに <code>brew install python3</code> と打ち込めば，簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等ですがまったく同じではありません（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。現在は Python 3.7 ですが Python 3（<code>python@3.8</code>）も入れることができます。混乱しやすいので 3.8 が Homebrew の正式になるまでは 3.7 を使い続けるほうがよさそうです。</p>
+<p>巨大な Xcode はたいていの場合に不要ですが，ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は，Mac を使っている開発者にとって必需品です。さらに，<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合，ターミナルに <code>brew install python3</code> と打ち込めば，簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等ですがまったく同じではありません（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。</p>
 
 <p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンドが入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
@@ -343,7 +355,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-10-05 08:47:13</time>
+Last modified: <time>2020-10-27 09:16:26</time>
 <!-- hhmts end -->
 </p>
 </footer>
