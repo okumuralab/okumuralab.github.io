@@ -34,9 +34,10 @@ em { font-style: normal; color: #F30 }
 a:hover, a:focus, a:active { color: red }
 a[name]:hover, a[name]:focus, a[name]:active { color: black }
 img { border-style: none }
-td, th { padding: 0.2em 0.7em }
+table { border: 3px solid; border-collapse: collapse }
+td, th { border: 1px solid; padding: 0.2em 0.7em }
 td { text-align: right }
-th { text-align: center }
+th { text-align: left }
 del { color: gray }
 .note {
   margin-left: 0em;
