@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Leafletとfolium</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Leafletとfolium</h1>
+
+<p>Leafletについては <a href="../stat/">統計・データ解析</a> のほうの <a href="../stat/leaflet.html">Leaflet</a> のページをご覧ください。</p>
+
+<p>ここではLeafletを用いた地図を簡単に描くためのPythonのライブラリ <a href="https://python-visualization.github.io/folium/">folium</a> を使ってみます。</p>
+
+<p>もしインストールされていなければ <code>pip install folium</code> などとしてインストールしておきます。</p>
+
+<p>デフォルトでは <a href="https://www.openstreetmap.org/">OpenStreetMap</a> を使います：</p>
+
+<pre><code>import folium
+
+map = folium.Map(location=[34.7468,136.5248], height=300, zoom_start=15)
+folium.Marker(location=[34.7468,136.5248], popup='ここにいます',
+              icon=folium.Icon(color='red', icon='home')).add_to(map)
+</code></pre>
+
+<p>これで Google Colaboratory なら <code>map</code> と打ち込めば地図が現れます。ただ，Coogle Colaboratory の中で表示させると，アイコンをクリックして出るポップアップの文字「ここにいます」が文字化けしてしまいます。これは japanize-matplotlib を使ってもダメのようです。そこで，</p>
+
+<pre><code>map.save('folium-osm-example.html')
+</code></pre>
+
+<p>のようにファイルに保存し，左端の「ファイル」からダウンロードしてダブルクリックすれば正常に動作します。これをWebブラウザにアップロードすれば，どこからでも見えるようになります。</p>
+
+<p><a href="folium-osm-example.html">こんなふうになります</a>。</p>
+
+<p><a href="https://cyberjapandata.gsi.go.jp">地理院地図</a>を使う例：</p>
+
+<pre><code>
+map2 = folium.Map(location=[34.7468,136.5248], height=300, zoom_start=15,
+    tiles='https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',
+    attr='&amp;copy; &lt;a href="https://maps.gsi.go.jp/development/ichiran.html"&gt;国土地理院&lt;/a&gt;')
+folium.Marker(location=[34.7468,136.5248], popup='ここにいます',
+              icon=folium.Icon(color='red', icon='home')).add_to(map2)
+
+map2.save('folium-gsi-example.html')
+</code></pre>
+
+<p><a href="folium-gsi-example.html">こんなふうになります</a>。</p>
+
+<p>応用として，<a href="https://www.info.city.tsu.mie.jp/www/contents/1001000000855/index.html">津市</a>のAED設置場所のプロット：</p>
+
+<pre><code>import pandas as pd
+import folium
+
+df = pd.read_csv('https://www.info.city.tsu.mie.jp/www/contents/1001000000855/simple/43472.csv')
+
+map = folium.Map(location=[34.7468,136.5248], zoom_start=14,
+    tiles='https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',
+    attr='&amp;copy; &lt;a href="https://maps.gsi.go.jp/development/ichiran.html"&gt;国土地理院&lt;/a&gt;')
+
+for _, row in df.iterrows():
+    folium.Marker(location=[row['緯度'], row['経度']],
+                  popup=row['施設名']).add_to(map)
+
+map.save('folium-tsu-aed.html')
+</code></pre>
+
+<p><a href="folium-tsu-aed.html">こんなふうになります</a>。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-11-01 17:57:53</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

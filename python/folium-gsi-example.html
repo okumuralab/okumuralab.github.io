@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_ed9c90daf70d4e54804ce3b9e130a0ca {
+                    position: relative;
+                    width: 100.0%;
+                    height: 300.0px;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_ed9c90daf70d4e54804ce3b9e130a0ca" ></div>
+        
+</body>
+<script>    
+    
+            var map_ed9c90daf70d4e54804ce3b9e130a0ca = L.map(
+                "map_ed9c90daf70d4e54804ce3b9e130a0ca",
+                {
+                    center: [34.7468, 136.5248],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 15,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_77108e5e32044768a9173c42194ac1a3 = L.tileLayer(
+                "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://maps.gsi.go.jp/development/ichiran.html\"\u003e\u56fd\u571f\u5730\u7406\u9662\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_ed9c90daf70d4e54804ce3b9e130a0ca);
+        
+    
+            var marker_2a87fc000dc34d8e9bc52f550b9e3526 = L.marker(
+                [34.7468, 136.5248],
+                {}
+            ).addTo(map_ed9c90daf70d4e54804ce3b9e130a0ca);
+        
+    
+            var icon_ea6f48beba3843ed85ab2d19167d1158 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "home", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_2a87fc000dc34d8e9bc52f550b9e3526.setIcon(icon_ea6f48beba3843ed85ab2d19167d1158);
+        
+    
+        var popup_568a1ffa70764f818a108dc3b66886ce = L.popup({"maxWidth": "100%"});
+
+        
+            var html_9a00392400fa4d51955f7980279bc6fa = $(`<div id="html_9a00392400fa4d51955f7980279bc6fa" style="width: 100.0%; height: 100.0%;">ここにいます</div>`)[0];
+            popup_568a1ffa70764f818a108dc3b66886ce.setContent(html_9a00392400fa4d51955f7980279bc6fa);
+        
+
+        marker_2a87fc000dc34d8e9bc52f550b9e3526.bindPopup(popup_568a1ffa70764f818a108dc3b66886ce)
+        ;
+
+        
+    
+</script>
