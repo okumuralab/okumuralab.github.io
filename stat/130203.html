@@ -18,6 +18,8 @@
 
 <p><em>[2019-02-04]</em> ざっと改訂した。</p>
 
+<p><em>[2020-10-03]</em> 最後に追記を設けた。</p>
+
 <h2>はじめに</h2>
 
 <p>例えば日本の人口は1.26億人であるといった個々の「事実」は自由に伝達できる（著作権法第十条2「事実の伝達にすぎない雑報及び時事の報道は、前項第一号に掲げる著作物に該当しない」）が，事実を集めたデータベースは一般に著作権法で保護される（著作権法第十二条の二「データベースでその情報の選択又は体系的な構成によつて創作性を有するものは、著作物として保護する」）。</p>
@@ -323,13 +325,23 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
   <li><a href="http://home.att.ne.jp/zeta/gen/excel/c01p10.htm">エクセルExcel大事典 第1 第2 第3 正規化 正規形 リレーション データベース 主キー</a></li>
 </ul>
 
+<h2>追記</h2>
+
+<p>2011年の大震災・原発事故関連データの混迷を機として以上の議論を始めたが，2020年のCOVID-19（いわゆる新型コロナ）でも相変わらずデータの混迷が生じてしまっている。患者情報はFAXでやりとりされ，お役所はデータをまとめきれず，公開データはまだまだPDF形式が多く，自動処理の妨げになっている。</p>
+
+<p>一方，自動処理のためのデータ形式はますますCSVやJSONに向かい，文字コードはもはやUTF-8以外は考えられなくなってきた。Windowsの「メモ帳」のデフォルトもBOMなしUTF-8になった。ExcelはBOM付きUTF-8のCSVを読み書きできるようになった（BOMなしCSVを開くと化けるのは何とかしてほしい）。</p>
+
+<p>独自にまとめたCSVデータを公開していたところ，Access-Control-Allow-Originを設定してほしいという話があったので，httpd.confに <code>Header set Access-Control-Allow-Origin '*'</code> と追記した。こうすることで他サイトのJavaScriptでデータを利用できる。これも時代の流れであろう。</p>
+
+<p>再利用しやすいデータについては <a href="https://www.jstatsoft.org/article/view/v059i10">tidy data</a>（整然データ）という呼称が広まった。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a> (<a href="http://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-13 12:25:59</time>
+Last modified: <time>2020-11-03 13:14:06</time>
 <!-- hhmts end -->
 </p>
 </footer>
