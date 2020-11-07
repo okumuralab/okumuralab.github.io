@@ -16,10 +16,16 @@ fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
 ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
-ax.bar(df['date'], df['confirmed'], color='C1', width=1, align='edge',
-       edgecolor="black", linewidth=0.5)
+ax.bar(df['date'], df['confirmed'], color='C1', width=1, align='edge')
+# , align='edge', edgecolor="black", linewidth=0.5)
 ax.set_xlim(pd.to_datetime('2020-03-01'), df['date'].values[-1] + pd.to_timedelta(1, 'day'))
 ax.legend(['Tokyo confirmed'], loc='upper left')
+
+ax_pos = ax.get_position()
+fig.text(ax_pos.x1 + 0.01,
+         (df['confirmed'].values[-1] / ax.get_ylim()[1]) *  (ax_pos.y1 - ax_pos.y0) + ax_pos.y0,
+         df['confirmed'].values[-1], verticalalignment='center')
+
 fig.savefig('../img/COVID-tokyo.svg', bbox_inches="tight")
 
 ax.clear()
