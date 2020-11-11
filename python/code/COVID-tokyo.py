@@ -13,7 +13,6 @@ locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
 
-ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.bar(df['date'], df['confirmed'], color='C1', width=-1, align='edge')
@@ -32,7 +31,11 @@ ax2.set_yticks([df['confirmed'].values[-1]])
 
 fig.savefig('../img/COVID-tokyo.svg', bbox_inches="tight")
 
-ax.clear()
+fig, ax = plt.subplots()
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
+
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.plot(df['date'], df['confirmed'], 'o-', color='C1')
