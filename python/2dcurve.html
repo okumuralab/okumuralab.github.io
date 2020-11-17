@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>平面曲線を描く</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>平面曲線を描く</h1>
+
+<p>Python の matplotlib で2次元平面上に5角形を描いてみましょう。同時に numpy の使い方も練習します。</p>
+
+<p>まず 0 から 4 までの5つの数を出す方法：</p>
+
+<pre>
+<code>import numpy as np
+
+np.arange(5)
+</code></pre>
+
+<p>結果は <code>array([0, 1, 2, 3, 4])</code> になります。これを 2π/5 倍するとラジアン単位で5角形の各頂点の位置が出そうです。それを x と y に直してプロットします。</p>
+
+<pre>
+<code>import matplotlib.pyplot as plt
+
+t = np.arange(5) * 2 * np.pi / 5
+x = np.cos(t)
+y = np.sin(t)
+plt.plot(x, y)
+</code></pre>
+
+<p>5点を結ぶ辺が描けましたが，閉じた5角形になっていません。閉じさせるためにはどうすればいいでしょうか？</p>
+
+<p>閉じた5角形になったけれど，縦横比が 1:1 になっていないのが気になります。縦横比を 1:1 にするコマンド：</p>
+
+<pre>
+<code>plt.axis('equal')
+</code></pre>
+
+<p>軸がじゃまなら，消してください：</p>
+
+<pre>
+<code>plt.axis('off')
+</code></pre>
+
+<p>軸が必要になったら <code>plt.axis('on')</code> で戻ります。</p>
+
+<p>底辺が水平でないのが気になりますね。どうすればいいでしょうか？</p>
+
+<figure><img src="img/pentagon.svg" alt="5角形"></figure>
+
+<p>星⭐️にするにはどうすればいいでしょうか？</p>
+
+<p>中を塗りつぶすには <code>plt.plot()</code> を <code>plt.fill()</code> にします。さらにオプション <code>color='yellow'</code> を付けて黄色い星にしてみましょう。</p>
+
+<figure><img src="img/star.svg" alt="星"></figure>
+
+<p>夜空の星にするためには背景が黒っぽいほうがいいかもしれません。最初に</p>
+
+<pre>
+<code>plt.figure(facecolor='gray')
+</code></pre>
+
+<p>などとしてから描けば背景色がつきます。</p>
+
+<p>ちなみに，<code>plt.fill()</code> の仲間には，y座標間を塗りつぶす <code>plt.fill_between()</code> や，x座標間を塗りつぶす <code>plt.fill_betweenx()</code> もあります。</p>
+
+<p>今度は円を描いてみましょう。円を描く命令もあるのですが，上と同様に極座標を使って360角形くらいを描けばほぼ円に見えます。やってみましょう。</p>
+
+<p>中身を塗りつぶしてみましょう。</p>
+
+<p>楕円はどうすれば描けるでしょうか。</p>
+
+<p>円に戻って，</p>
+
+<pre>
+<code>x = np.cos(t)
+y = np.sin(t)
+</code></pre>
+
+<p>のところを例えば</p>
+
+<pre>
+<code>x = np.cos(3 * t)
+y = np.sin(5 * t)
+</code></pre>
+
+<p>にしてみましょう。このような図形をリサジュー（Lissajous）図形といいます。</p>
+
+<p>YouTube でリサジュー図形を物理的に描く動画を見つけてみましょう。</p>
+
+<p>いろいろなリサジュー図形を描いてみましょう。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-11-17 13:43:04</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
