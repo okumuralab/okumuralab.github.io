@@ -29,6 +29,12 @@ plt.plot(x, y)
 
 <figure><img src="img/dnormcurve.png" alt="正規分布の密度関数"></figure>
 
+<p>x ≧ 1 の部分だけ塗りつぶしてみましょう。</p>
+
+<pre>
+<code>plt.fill_between(x[x >= 1], y[x >= 1])
+</code></pre>
+
 <p>計算式を書くのが面倒なら，SciPy の <code>scipy.stats.norm.pdf()</code> を使います。この <code>pdf</code> は PDF ファイルのことではなく確率密度関数（probability density function）のことです。</p>
 
 <pre>
@@ -64,7 +70,7 @@ plt.plot(x, norm.pdf(x))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-10-20 13:13:25</time>
+Last modified: <time>2020-11-17 15:41:45</time>
 <!-- hhmts end -->
 </p>
 </body>
