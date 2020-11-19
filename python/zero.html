@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>はじめの前に</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>はじめの前に</h1>
+
+<h2>Python とは</h2>
+
+<p>Python は Guido van Rossum（グィド・ヴァン・ロッサム）が作ったプログラミング言語です。作者がモンティ・パイソンのファンだったことから Python と命名されました（<a href="https://www.python.org/doc/essays/foreword/">Foreword for "Programming Python"</a>）。
+
+<h2>The Zen of Python</h2>
+
+<p>Python に <code>import this</code> と打ち込むと，Python の考え方を表した19行の格言のようなものが出力されます：</p>
+
+<pre>
+The Zen of Python, by Tim Peters
+
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
+</pre>
+
+<p>これは <a href="https://www.python.org/dev/peps/pep-0020/">PEP 20</a> としても公開されています（PEP = Python Enhancement Proposals）。要は，シンプルに考えよう，ということです。</p>
+
+<h2>PEP 8</h2>
+
+<p>PEP といえば，Python のスタイルガイド <a href="https://www.python.org/dev/peps/pep-0008/">PEP 8 -- Style Guide for Python Code</a> もぜひ（いずれは）読むべきものです。要は，シンプルに読めるような書き方をしようというものです。</p>
+
+<p>このスタイルに合わせるためのツールとして，<a href="https://github.com/hhatto/autopep8">autopep8</a>，<a href="https://gitlab.com/pycqa/flake8">flake8</a>，<a href="https://github.com/psf/black">black</a> などがあります。</p>
+
+<p>例えば black は <code>pip install black</code> でインストールできます。ターミナルに</p>
+
+<pre><code>black ファイル名</code></pre>
+
+<p>と打ち込むだけで，そのファイルを PEP 8 に合わせて書き直して（上書きして）くれます。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-11-19 11:13:53</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
