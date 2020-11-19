@@ -85,6 +85,8 @@ C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 
 <p>追記：ウイルスバスターが入っていると Jupyter Notebook がうまく立ち上がらないようです。ウイルスバスターは外して Windows Defender を使う設定にしましょう。</p>
 
+<p>なお，python のパスが設定されていない場合でも使えるように，py.exe というランチャー（起動用プログラム）が C:\Windows の中にインストールされます。こちらを使ってもかまいません。この場合，pip コマンドの代わりに <code>py -m pip</code> のように打ち込みます。</p>
+
 <h3>公式サイト Python.org からのインストール（Mac）</h3>
 
 <p><a href="https://www.python.org/download/">Download Python</a> からインストーラをダウンロードし，インストールします。/Library/Frameworks/Python.framework/Versions/3.8/bin に <code>python3</code> などのバイナリが入ります。</p>
@@ -355,7 +357,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-10-27 09:16:26</time>
+Last modified: <time>2020-11-19 21:32:58</time>
 <!-- hhmts end -->
 </p>
 </footer>
