@@ -327,13 +327,13 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 
 <h2>追記</h2>
 
-<p>2011年の大震災・原発事故関連データの混迷を機として以上の議論を始めたが，2020年のCOVID-19（いわゆる新型コロナ）でも相変わらずデータの混迷が生じてしまっている。患者情報はFAXでやりとりされ，お役所はデータをまとめきれず，公開データはまだまだPDF形式が多く，自動処理の妨げになっている。</p>
+<p>2011年の大震災・原発事故関連データの混迷を機として以上の議論を始めたが，2020年のCOVID-19（いわゆる新型コロナ）でも相変わらずデータの混迷が生じてしまっている。患者情報はFAXでやりとりされ，お役所はデータをまとめきれず，公開データはまだまだPDF形式が多く，自動処理の妨げになっている。PDFはデータ化しにくいだけでなく，環境によっては<a href="../python/encoding.html">こちら</a>の「「埼玉」と「埼⽟」」の項目に書いたようなコード点化けが生じることも問題である。</p>
 
 <p>一方，自動処理のためのデータ形式はますますCSVやJSONに向かい，文字コードはもはやUTF-8以外は考えられなくなってきた。Windowsの「メモ帳」のデフォルトもBOMなしUTF-8になった。ExcelはBOM付きUTF-8のCSVを読み書きできるようになった（BOMなしCSVを開くと化けるのは何とかしてほしい）。</p>
 
 <p>独自にまとめたCSVデータを公開していたところ，Access-Control-Allow-Originを設定してほしいという話があったので，httpd.confに <code>Header set Access-Control-Allow-Origin '*'</code> と追記した。こうすることで他サイトのJavaScriptでデータを利用できる。これも時代の流れであろう。</p>
 
-<p>再利用しやすいデータについては <a href="https://www.jstatsoft.org/article/view/v059i10">tidy data</a>（整然データ）という呼称が広まった。</p>
+<p>再利用しやすいデータについては <a href="https://www.jstatsoft.org/article/view/v059i10">tidy data</a>（整然データ）という呼称が広まった。The American Statistician の <a href="https://www.tandfonline.com/toc/utas20/72/1">Special Issue on Data Science</a> に含まれる <a href="https://doi.org/10.1080/00031305.2017.1375989">Data Organization in Spreadsheets</a> も参考になる。</p>
 
 <hr>
 
@@ -341,7 +341,7 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 <p><a href="../" rel="author">奥村 晴彦</a> (<a href="http://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-03 13:14:06</time>
+Last modified: <time>2020-11-21 21:53:13</time>
 <!-- hhmts end -->
 </p>
 </footer>
