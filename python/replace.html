@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>一括置換</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>一括置換</h1>
+
+<p><code>str.replace()</code> を使って（正規表現を使わず）ファイル中の文字列を一括置換するコマンドを作ってみましょう。</p>
+
+<pre><code>#! /usr/bin/env python3
+
+import sys
+
+for arg in sys.argv[3:]:
+    with open(arg) as f:
+        s = f.read()
+    t = s.replace(sys.argv[1], sys.argv[2])
+    if t != s:
+        with open(arg, 'w') as f:
+            f.write(t)
+</code></pre>
+
+<p>これを <code>replace.py</code> という名前で保存して，パスの通った場所に置いておき，例えば</p>
+
+<pre><code>replace.py hoge fuga *.tex</code></pre>
+
+<p>と打ち込めば，カレントディレクトリの <code>*.tex</code> 全体にわたって <code>hoge</code> を <code>fuga</code> に置き換えてくれます。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-11-22 20:25:32</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
