@@ -21,7 +21,8 @@ with open("COVID-19.csv") as f1:
             print(line, end="", file=f2)
 
 df = pd.read_csv("COVID-19a.csv", parse_dates=['確定日', '発症日'],
-                 na_values=['ー','－','―','調査中','確認中','不明',' '], low_memory=False)
+                 na_values=['ー','－','―','調査中','確認中','不明','不明　',' '],
+                 low_memory=False)
 
 # 再陽性を削除
 pp = ['再陽性' not in x for x in df['備考'].astype(str)]
@@ -183,29 +184,7 @@ def getnum(s):
 df1 = df
 df1['年代'] = [getnum(x) for x in df1['年代']]
 
-# # df1 = df[(df['受診都道府県'] == '東京都') & (df['年代'] != '不明')]
-# df1 = df[(df['年代'].astype(str) != '-') & (df['年代'].astype(str)[:2] != '不明') & (df['年代'].astype(str) != 'nan') & (df['年代'].astype(str) != '非公表')].copy()
-# # df1['年代'].value_counts(sort=False)
-# df1.loc[df1['年代'] == '0-10', '年代'] = 0
-# df1.loc[df1['年代'] == '0−10', '年代'] = 0
-# df1.loc[df1['年代'] == '\xa00-10', '年代'] = 0
-# df1.loc[df1['年代'] == '10歳未満', '年代'] = 0
-# df1.loc[df1['年代'] == '未0-10', '年代'] = 0
-# df1.loc[df1['年代'] == '10代', '年代'] = 10
-# df1.loc[df1['年代'] == '20代', '年代'] = 20
-# df1.loc[df1['年代'] == '30代', '年代'] = 30
-# df1.loc[df1['年代'] == '40代', '年代'] = 40
-# df1.loc[df1['年代'] == '40 代', '年代'] = 40
-# df1.loc[df1['年代'] == '50代', '年代'] = 50
-# df1.loc[df1['年代'] == '60代', '年代'] = 60
-# df1.loc[df1['年代'] == '70代', '年代'] = 70
-# df1.loc[df1['年代'] == '80代', '年代'] = 80
-# df1.loc[df1['年代'] == '80以上', '年代'] = 80
-# df1.loc[df1['年代'] == '90代', '年代'] = 90
-# df1.loc[df1['年代'] == '90以上', '年代'] = 90
-# df1.loc[df1['年代'] == '未就学児', '年代'] = 0
-# df1.loc[df1['年代'] == '100歳以上', '年代'] = 100
-# df1['年代'] = df1['年代'].astype(int)
+# df1['年代'].value_counts()
 
 b = np.arange(datetime.datetime(2020,3,1),
               max(df1['確定日']) + datetime.timedelta(days=1),
@@ -216,7 +195,7 @@ for i in b:
     df2 = df1[df1['確定日'] == i]
     y = df2['年代'].values
     if len(y) >= 10:
-        a.append(np.mean(y) + 5)
+        a.append(np.nanmean(y) + 5)
     else:
         a.append(np.nan)
 
@@ -225,7 +204,6 @@ ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.plot(b, a, 'o-')
 ax.set_ylabel('平均年代')
-# ax.legend(['東京'])
 ax.legend(['全国'])
 
 fig.savefig('../img/200312j.svg', bbox_inches="tight")
