@@ -41,20 +41,16 @@ fig.savefig('../img/COVID-csse.svg', bbox_inches="tight")
 
 #-----
 
-# fig, ax = plt.subplots(figsize=[7, 7])
-# fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
 ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
-o = np.argsort(-x[-1]).values
 dx = np.diff(x, axis=0)
+o = np.argsort(-dx[-1])
 
-for i in o[:7]:
-    ax.plot(t[1:], dx[:,i], 'o-', label=x[-1].index[i])
-    ax.text(t[-1], dx[-1,i], x[-1].index[i])
-japan = [x[i]['Japan'] for i in range(len(x))]
-ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan')
+for i in np.append(o[:7], list(x[0].index).index('Japan')):
+    ax.plot(t[1:], dx[:,i], 'o-', label=x[0].index[i])
+    ax.text(t[-1], dx[-1,i], x[0].index[i])
 ax.set_ylabel('Confirmed')
 ax.legend(loc='upper left')
 
@@ -82,16 +78,13 @@ fig.savefig('../img/COVID-csse1.svg', bbox_inches="tight")
 #-----
 
 url2 = 'https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
-# url2 = '/opt/local/GitHub/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
 
 df2 = pd.read_csv(url2)
 
 t = [parse(i) for i in df2.columns[4:]]
 x = [df2.groupby('Country/Region')[i].sum() for i in df2.columns[4:]]
 
-fig, ax = plt.subplots(figsize=[7, 7])
-fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
-
+ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.plot(t, x)
@@ -112,29 +105,37 @@ fig.savefig('../img/COVID-csse2.svg', bbox_inches="tight")
 
 #-----
 
-fig, ax = plt.subplots(figsize=[7, 7])
-fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
-
+ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
-dx = np.diff(np.array(x, dtype=np.float), axis=0)
-ax.plot(t[1:], dx, 'o-', zorder=-10)
-# ax.set_yscale('log')
 
-j = 0
-for i in x[-1].index:
-    # if dx[-1][j] > 20:
-    ax.text(t[-1], dx[-1][j], i)
-    j += 1
-    
-# ax.legend(x[-1].index)
+dx = np.diff(x, axis=0)
+o = np.argsort(-dx[-1])
 
-japan = [x[i]['Japan'] for i in range(len(x))]
-ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan', zorder=-10)
-ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
+for i in np.append(o[:7], list(x[0].index).index('Japan')):
+    ax.plot(t[1:], dx[:,i], 'o-', label=x[0].index[i])
+    ax.text(t[-1], dx[-1,i], x[0].index[i])
 ax.set_ylabel('Deaths')
-ax.set_ylim(-100)
 ax.legend(loc='upper left')
+
+# dx = np.diff(np.array(x, dtype=np.float), axis=0)
+# ax.plot(t[1:], dx, 'o-', zorder=-10)
+# # ax.set_yscale('log')
+
+# j = 0
+# for i in x[-1].index:
+#     # if dx[-1][j] > 20:
+#     ax.text(t[-1], dx[-1][j], i)
+#     j += 1
+    
+# # ax.legend(x[-1].index)
+
+# japan = [x[i]['Japan'] for i in range(len(x))]
+# ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan', zorder=-10)
+# ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
+# ax.set_ylabel('Deaths')
+# ax.set_ylim(-100)
+# ax.legend(loc='upper left')
 
 fig.savefig('../img/COVID-csse3.svg', bbox_inches="tight")
 
