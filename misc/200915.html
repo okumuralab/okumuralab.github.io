@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>添付ファイル名の文字化け</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<article>
+<h1>添付ファイル名の文字化け</h1>
+
+<p>Windowsからのメールの添付ファイル名がMacのMail.appでよく文字化けする。頭の部分が ???????? になることが多い。元のファイル名を調べるには次のようにする。文字コード変換ツール nkf を使う（Homebrew などでインストールできる）。</p>
+
+<p>「ファイル」→「別名で保存」でメッセージソースとして保存し，中をテキストエディタで見る。あるいは option + command + U でメッセージソースを表示してもよい。その中で，添付ファイルのヘッダを見る。例えばこんな具合：</p>
+
+<pre>
+Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;
+ name="=?UTF-8?B?44CQ6Z2e5bi45Yuk6IG35ZOh55So44CR54++5rOB5aCx5ZGK5pu477yI?=
+ =?UTF-8?B?54m55Lu744O75LqL5YuZ6KOc5L2Q5ZOh44O75YaN6ZuH55So77yJLnhs?=
+ =?UTF-8?Q?sx?="
+</pre>
+
+<p>これをファイル（例えば <code>x.txt</code>）に保存し，<code>nkf -m &lt; x.txt</code> のように打ち込むと，</p>
+
+<pre>
+Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;
+ name="【非常勤職員用】現況報告書（特任・事務補佐員・再雇用）.xlsx"
+</pre>
+
+<p>のようにファイル名が表示される。</p>
+
+<p><em>[2020-09-18追記]</em> 「このMac内」のメールボックスに移動するとファイル名の文字化けが直ると教えていただいた。やってみると直ったが，なぜかわからず，頭を抱えている。</p>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-09-18 22:49:52</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
