@@ -8,7 +8,6 @@ from dateutil.parser import parse
 import time
 
 url = 'https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv'
-# url = '/opt/local/GitHub/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv'
 
 df = pd.read_csv(url)
 now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
@@ -21,9 +20,9 @@ formatter = mdates.ConciseDateFormatter(locator)
 
 fig, ax = plt.subplots(figsize=[7, 7])
 fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
-
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
+
 ax.plot(t, x)
 ax.set_yscale('log')
 
@@ -42,29 +41,41 @@ fig.savefig('../img/COVID-csse.svg', bbox_inches="tight")
 
 #-----
 
-fig, ax = plt.subplots(figsize=[7, 7])
-fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
-
+# fig, ax = plt.subplots(figsize=[7, 7])
+# fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
+ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
-dx = np.diff(np.array(x, dtype=np.float), axis=0)
-dx[21][x[-1].index == 'China'] = np.nan
-ax.plot(t[1:], dx, 'o-', zorder=-10)
-# ax.set_yscale('log')
 
-j = 0
-for i in x[-1].index:
-    # if dx[-1][j] > 500:
-    ax.text(t[-1], dx[-1][j], i, zorder=-10)
-    j += 1
-    
-# ax.legend(x[-1].index)
+o = np.argsort(-x[-1]).values
+dx = np.diff(x, axis=0)
 
+for i in o[:7]:
+    ax.plot(t[1:], dx[:,i], 'o-', label=x[-1].index[i])
+    ax.text(t[-1], dx[-1,i], x[-1].index[i])
 japan = [x[i]['Japan'] for i in range(len(x))]
-ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan', zorder=-10)
-ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
+ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan')
 ax.set_ylabel('Confirmed')
 ax.legend(loc='upper left')
+
+# dx = np.diff(np.array(x, dtype=np.float), axis=0)
+# dx[21][x[-1].index == 'China'] = np.nan
+# ax.plot(t[1:], dx, 'o-', zorder=-10)
+# ax.set_yscale('log')
+
+# j = 0
+# for i in x[-1].index:
+#     # if dx[-1][j] > 500:
+#     ax.text(t[-1], dx[-1][j], i, zorder=-10)
+#     j += 1
+    
+# # ax.legend(x[-1].index)
+
+# japan = [x[i]['Japan'] for i in range(len(x))]
+# ax.plot(t[1:], np.diff(japan), 'o-k', label='Japan', zorder=-10)
+# ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
+# ax.set_ylabel('Confirmed')
+# ax.legend(loc='upper left')
 
 fig.savefig('../img/COVID-csse1.svg', bbox_inches="tight")
 
