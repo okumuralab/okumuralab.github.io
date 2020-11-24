@@ -16,9 +16,11 @@
 
 <h1>乱数</h1>
 
-<p>乱数生成には <a href="https://numpy.org/doc/stable/reference/random/index.html">numpy.random</a> を使います。Numpy 1.17.0 からは新しい PCG64 乱数が推奨されています。これは次のようにして使います：</p>
+<p>乱数生成には <a href="https://numpy.org/doc/stable/reference/random/index.html">numpy.random</a> を使います。NumPy 1.17.0 からは新しい PCG64 乱数が推奨されています。これは次のようにして使います：</p>
 
 <pre><code>import numpy as np
+
+np.__version__                # NumPyのバージョンを表示
 
 rng = np.random.default_rng() # ランダムに初期化
 rng.random(10)                # 0以上1未満の一様乱数10個
@@ -62,7 +64,7 @@ plt.hist(a)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-24 14:12:24</time>
+Last modified: <time>2020-11-24 15:59:05</time>
 <!-- hhmts end -->
 </p>
 </body>
