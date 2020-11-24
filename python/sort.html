@@ -113,13 +113,25 @@ Wall time: 23.5 ms
 
 <p>Python の <code>sort()</code> や <code>sorted()</code> は <a href="https://en.wikipedia.org/wiki/Timsort">Timsort</a> というアルゴリズムを使っています。</p>
 
+<p>NumPy にも整列の関数があります。</p>
+
+<pre>
+<code>import numpy as np
+
+rng = np.random.default_rng()
+a = rng.random(1000)
+b = np.sort(a)  # 上書きするなら a.sort()
+</code></pre>
+
+<p>降順に並べ替えるオプションはありませんが，<code>a[::-1]</code> で逆順にできます。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-16 09:56:22</time>
+Last modified: <time>2020-11-24 14:01:10</time>
 <!-- hhmts end -->
 </p>
 </body>
