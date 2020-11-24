@@ -23,7 +23,8 @@
 <pre>
 <code>import numpy as np
 
-a = np.random.random(1000000)
+rng = np.random.default_rng()
+a = rng.random(1000000)
 </code></pre>
 
 <p>これをPython標準の <code>sum()</code> 関数を使って合計するのに要する時間を計測します：</p>
@@ -99,7 +100,7 @@ def sum2(a):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-06-27 09:20:08</time>
+Last modified: <time>2020-11-24 20:22:20</time>
 <!-- hhmts end -->
 </p>
 </body>

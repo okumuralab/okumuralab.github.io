@@ -55,8 +55,10 @@ with ZipFile('ETL1.zip') as etl1:
 <p>ラベルは <a href="https://ja.wikipedia.org/wiki/JIS_X_0201">JIS X 0201</a> 文字コードである。画像はモノクロで 0〜15 の値を持つ。数字の部分をランダムに表示させた：</p>
 
 <pre>
-<code>lst = [i for i in range(len(etl)) if etl[i][1] in range(48,58)]  # 数字だけ
-perm = np.random.permutation(lst)
+<code>rng = np.random.default_rng()
+
+lst = [i for i in range(len(etl)) if etl[i][1] in range(48,58)]  # 数字だけ
+perm = rng.permutation(lst)
 for k in range(24):
     plt.subplot(3, 8, k+1)
     plt.xticks([])
@@ -72,7 +74,7 @@ fig.savefig("etlcdb.png", bbox_inches="tight")
 <p>数字以外にもたくさん文字が入っている：</p>
 
 <pre>
-<code>perm = np.random.permutation(len(etl))
+<code>perm = rng.permutation(len(etl))
 </code></pre>
 
 <figure><img src="img/etlcdb2.png" alt="ETL文字データベース"></figure>
@@ -85,7 +87,7 @@ fig.savefig("etlcdb.png", bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-13 12:02:40</time>
+Last modified: <time>2020-11-24 22:34:49</time>
 <!-- hhmts end -->
 </p>
 </body>

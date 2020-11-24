@@ -26,7 +26,8 @@ import numpy as np
 
 plt.rcParams['svg.fonttype'] = 'none' # SVGの文字をパスにしない
 
-x = np.random.multivariate_normal([68,68], [[6,4],[4,6]], 1000)
+rng = np.random.default_rng()
+x = rng.multivariate_normal([68,68], [[6,4],[4,6]], 1000)
 
 plt.plot(x[:,0], x[:,1], 'o')
 plt.title('散布図')
@@ -56,7 +57,7 @@ plt.savefig('200211b.svg')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-11 21:05:26</time>
+Last modified: <time>2020-11-24 22:37:55</time>
 <!-- hhmts end -->
 </p>
 </body>

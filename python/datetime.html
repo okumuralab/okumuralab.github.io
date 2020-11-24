@@ -83,7 +83,8 @@ y - x     # datetime.timedelta(seconds=秒, microseconds=μ秒)
 import matplotlib.pyplot as plt
 
 t = [datetime.datetime(2019,5,1) + datetime.timedelta(days=i) for i in range(32)]
-x = np.cumsum(np.random.randn(32))
+rng = np.random.default_rng()
+x = np.cumsum(rng.standard_normal(32))
 plt.plot(t, x)
 </code></pre>
 
@@ -150,7 +151,7 @@ t.dayofweek            #==> 2  # 水曜日
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-17 15:39:15</time>
+Last modified: <time>2020-11-24 20:27:03</time>
 <!-- hhmts end -->
 </p>
 </body>

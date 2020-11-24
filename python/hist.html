@@ -22,7 +22,8 @@
 <code>import matplotlib.pyplot as plt
 import numpy as np
 
-x = np.random.rand(1000)   # np.random.random(1000) でも同じ
+rng = np.random.default_rng()
+x = rng.random(1000)
 plt.hist(x)
 </code></pre>
 
@@ -57,7 +58,7 @@ plt.hist(x)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-16 12:55:27</time>
+Last modified: <time>2020-11-24 20:20:13</time>
 <!-- hhmts end -->
 </p>
 </body>

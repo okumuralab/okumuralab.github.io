@@ -43,8 +43,10 @@ for i in range(46):
         height = np.append(height, [i+145] * n)
         weight = np.append(weight, [j+37] * n)
 
+rng = np.random.default_rng()
+
 def jitter(x):
-    return x + np.random.random(len(x)) - 0.5
+    return x + rng.random(len(x)) - 0.5
 
 plt.figure(figsize=[7, 7])
 plt.plot(jitter(height), jitter(weight), ".")
@@ -135,7 +137,7 @@ pd.DataFrame(np.log(weight)).skew()   # 0.484013
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-10-28 15:11:07</time>
+Last modified: <time>2020-11-24 20:29:43</time>
 <!-- hhmts end -->
 </p>
 </footer>

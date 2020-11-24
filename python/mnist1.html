@@ -38,6 +38,8 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 import tensorflow as tf
 
+rng = np.random.default_rng()
+
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
 x = x_train.reshape(60000, 28*28)
@@ -53,7 +55,7 @@ def toimg(nx, ny, ax, ay):
     hy = (ny - 28) / (y2 - y1)
     h = min(hx, hy)
     for k in range(60000):
-        if np.random.random() &lt; 0.02:
+        if rng.random() &lt; 0.02:
             i1 = int(h * (ax[k] - x1))
             j1 = int(h * (y2 - ay[k]))
             for i in range(28):
@@ -74,7 +76,7 @@ plt.imsave("mnistpca.png", img, cmap='gray_r')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-01 17:30:44</time>
+Last modified: <time>2020-11-24 20:42:18</time>
 <!-- hhmts end -->
 </p>
 </body>
