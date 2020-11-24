@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>乱数</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>乱数</h1>
+
+<p>乱数生成には <a href="https://numpy.org/doc/stable/reference/random/index.html">numpy.random</a> を使います。Numpy 1.17.0 からは新しい PCG64 乱数が推奨されています。これは次のようにして使います：</p>
+
+<pre><code>import numpy as np
+
+rng = np.random.default_rng() # ランダムに初期化
+rng.random(10)                # 0以上1未満の一様乱数10個
+rng.standard_normal(10)       # 標準正規分布の乱数10個
+rng.integers(1, 7, size=10)   # 1以上7未満の整数の乱数10個
+</code></pre>
+
+<p>初期化は <code>rng = np.random.default_rng(12345)</code> のように明示的にすることもできます。その場合，毎回同じ乱数が生成されます。</p>
+
+<p>例えばモンテカルロ法で円周率を求めるには次のようにします：</p>
+
+<pre><code>import matplotlib.pyplot as plt
+
+N = 10000
+x = rng.random(N)
+y = rng.random(N)
+c = x*x + y*y &lt; 1
+plt.scatter(x, y, c=c)
+plt.axis('scaled')
+print('pi =', 4 * sum(c) / N)
+</code></pre>
+
+<p>ランダムウォークの例です：</p>
+
+<pre><code>N = 1000
+x = np.cumsum(rng.random(N) - 0.5)
+y = np.cumsum(rng.random(N) - 0.5)
+plt.plot(x, y)
+plt.axis('equal')
+</code></pre>
+
+<p>硬貨投げのシミュレーションは <code>rng.integers(0, 2, size=100)</code> のようにできます。表の枚数は <code>sum(rng.integers(0, 2, size=100))</code> です。これを何回もやってヒストグラムを描いてみましょう。</p>
+
+<pre><code>a = [sum(rng.integers(0, 2, size=100)) for _ in range(10000)]
+plt.hist(a)
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-11-24 14:12:24</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
