@@ -16,11 +16,35 @@
 
 <h1>乱数</h1>
 
-<p>乱数生成には <a href="https://numpy.org/doc/stable/reference/random/index.html">numpy.random</a> を使います。NumPy 1.17.0 からは新しい PCG64 乱数が推奨されています。これは次のようにして使います：</p>
+<p>Python には何通りかの乱数が用意されています。</p>
+
+<h2>標準ライブラリ random</h2>
+
+<p><a href="https://docs.python.org/3/library/random.html">random</a> は標準ライブラリですのでインストールする必要はありません。Mersenne Twister が使われています。</p>
+
+<pre><code>import random
+
+random.random()  # 引数をとらない。区間 [0,1) の1個の乱数を返す
+</code></pre>
+
+<h2>ライブラリ NumPy</h2>
+
+<p><a href="https://numpy.org/doc/stable/reference/random/index.html">numpy.random</a> を使います。</p>
+
+<h3>古い方法</h3>
+
+<p>Mersenne Twister が使われています。</p>
 
 <pre><code>import numpy as np
 
-np.__version__                # NumPyのバージョンを表示
+np.random.random(10)  # 区間 [0,1) の10個の乱数を返す
+</code></pre>
+
+<h3>新しい方法</h3>
+
+<p>2013年にリリースされた NumPy 1.17.0 からは Generator を使った新しいインターフェースが推奨されています。デフォルトのアルゴリズムは PCG64 です。これは次のようにして使います：</p>
+
+<pre><code>import numpy as np
 
 rng = np.random.default_rng() # ランダムに初期化
 rng.random(10)                # 0以上1未満の一様乱数10個
@@ -64,7 +88,7 @@ plt.hist(a)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-24 15:59:05</time>
+Last modified: <time>2020-11-26 13:18:10</time>
 <!-- hhmts end -->
 </p>
 </body>

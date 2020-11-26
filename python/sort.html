@@ -96,19 +96,21 @@ Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
 <p>時間を比べてみましょう。Wall time が実時間（壁にかかっている時計で計った時間）です：</p>
 
 <pre>
-<code>In [ ]: import random
+<code>In [ ]: import numpy as np
 
-In [ ]: a = [random.random() for _ in range(10000)]
+In [ ]: rng = np.random.default_rng()
+
+In [ ]: a = rng.random(10000)
 
 In [ ]: %time selectsort(a)
-CPU times: user 3.41 s, sys: 1.99 ms, total: 3.41 s
-Wall time: 3.41 s
+CPU times: user 19.1 s, sys: 10.3 ms, total: 19.1 s
+Wall time: 19.1 s
 
-In [ ]: a = [random.random() for _ in range(10000)]
+In [ ]: a = rng.random(10000)
 
 In [ ]: %time quicksort(a)
-CPU times: user 23.3 ms, sys: 743 µs, total: 24 ms
-Wall time: 23.5 ms
+CPU times: user 82.3 ms, sys: 3.79 ms, total: 86.1 ms
+Wall time: 84.8 ms
 </code></pre>
 
 <p>Python の <code>sort()</code> や <code>sorted()</code> は <a href="https://en.wikipedia.org/wiki/Timsort">Timsort</a> というアルゴリズムを使っています。</p>
@@ -116,14 +118,36 @@ Wall time: 23.5 ms
 <p>NumPy にも整列の関数があります。</p>
 
 <pre>
-<code>import numpy as np
+<code>In [ ]: a = rng.random(10000)
 
-rng = np.random.default_rng()
-a = rng.random(1000)
-b = np.sort(a)  # 上書きするなら a.sort()
+In [ ]: %time a.sort() # aを上書きする
+CPU times: user 702 µs, sys: 452 µs, total: 1.15 ms
+Wall time: 593 µs
+
+In [ ]: a = rng.random(10000)
+
+In [ ]: %time b = np.sort(a) # aを上書きしない
+CPU times: user 811 µs, sys: 647 µs, total: 1.46 ms
+Wall time: 817 µs
 </code></pre>
 
-<p>降順に並べ替えるオプションはありませんが，<code>a[::-1]</code> で逆順にできます。</p>
+<p>こちらは降順に並べ替えるオプションはありませんが，<code>a[::-1]</code> で逆順にできます。あるいは実際には並べ替えをせず並べ替えた順序だけを返す <code>np.argsort()</code> を使えば逆順もできます。</p>
+
+<pre>
+<code>In [ ]: a = np.array([3, 5, 2, 4, 1])
+
+In [ ]: o = np.argsort(a)
+
+In [ ]: a[o]
+
+Out[ ]: array([1, 2, 3, 4, 5])
+
+In [ ]: o = np.argsort(-a)
+
+In [ ]: a[o]
+
+Out[ ]: array([5, 4, 3, 2, 1])
+</code></pre>
 
 <hr>
 
@@ -131,7 +155,7 @@ b = np.sort(a)  # 上書きするなら a.sort()
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-24 14:01:10</time>
+Last modified: <time>2020-11-26 14:32:56</time>
 <!-- hhmts end -->
 </p>
 </body>
