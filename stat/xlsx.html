@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Excelファイルの中身</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Excelファイルの中身</h1>
+
+<p>Excelで次のCSVファイルに相当する2×2の表を作ったとしよう。</p>
+
+<pre>
+ほげ,ふが
+12.34,-
+</pre>
+
+<p>通常のExcel形式（*.xlsx）で保存すると次のファイルがZIPアーカイブされた<a href="https://ja.wikipedia.org/wiki/Office_Open_XML">Office Open XML</a>形式のファイルができる：</p>
+
+<ul>
+  <li><code>[Content_Types].xml</code></li>
+  <li><code>_rels/.rels</code></li>
+  <li><code>xl/_rels/workbook.xml.rels</code></li>
+  <li><code>xl/workbook.xml</code></li>
+  <li><code>xl/styles.xml</code></li>
+  <li><code>xl/theme/theme1.xml</code></li>
+  <li><code>xl/worksheets/sheet1.xml</code></li>
+  <li><code>xl/sharedStrings.xml</code></li>
+  <li><code>docProps/core.xml</code></li>
+  <li><code>docProps/app.xml</code></li>
+</ul>
+
+<p>このうち <code>xl/worksheets/sheet1.xml</code> がシート1の内容である。適宜改行とインデントを入れて見やすく整形したものを示す：</p>
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;worksheet ...(略)...&gt;
+  &lt;dimension ref="A1:B2"/&gt;
+  &lt;sheetViews&gt;
+    &lt;sheetView tabSelected="1" workbookViewId="0"&gt;
+      &lt;selection activeCell="B3" sqref="B3"/&gt;
+    &lt;/sheetView&gt;
+  &lt;/sheetViews&gt;
+  &lt;sheetFormatPr baseColWidth="10" defaultRowHeight="20"/&gt;
+  &lt;sheetData&gt;
+    &lt;row r="1" spans="1:2"&gt;
+      &lt;c r="A1" t="s"&gt;&lt;v&gt;0&lt;/v&gt;&lt;/c&gt;
+      &lt;c r="B1" t="s"&gt;&lt;v&gt;1&lt;/v&gt;&lt;/c&gt;
+    &lt;/row&gt;
+    &lt;row r="2" spans="1:2"&gt;
+      &lt;c r="A2"&gt;&lt;v&gt;12.34&lt;/v&gt;&lt;/c&gt;
+      &lt;c r="B2" t="s"&gt;&lt;v&gt;2&lt;/v&gt;&lt;/c&gt;
+    &lt;/row&gt;
+  &lt;/sheetData&gt;
+  &lt;phoneticPr fontId="1"/&gt;
+  &lt;pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/&gt;
+&lt;/worksheet&gt;
+</pre>
+
+<p>文字列は <code>xl/sharedStrings.xml</code> という別ファイルに収められる。これも見やすく整形したものを示す：</p>
+
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;sst xmlns="...(略)..." count="3" uniqueCount="3"&gt;
+  &lt;si&gt;&lt;t&gt;ほげ&lt;/t&gt;&lt;phoneticPr fontId="1"/&gt;&lt;/si&gt;
+  &lt;si&gt;&lt;t&gt;ふが&lt;/t&gt;&lt;phoneticPr fontId="1"/&gt;&lt;/si&gt;
+  &lt;si&gt;&lt;t&gt;-&lt;/t&gt;&lt;phoneticPr fontId="1"/&gt;&lt;/si&gt;
+&lt;/sst&gt;
+</pre>
+
+<p>フォントやスタイルの情報は <code>xl/styles.xml</code> に入る。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-11-28 10:04:42</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
