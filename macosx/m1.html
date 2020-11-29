@@ -78,16 +78,19 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <p>コマンドラインツールの /usr/bin/python3 は universal binary な 3.8.2 である。これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば TensorFlow とその依存するパッケージ群（numpy など）が入る。デフォルトで ~/tensorflow_macos_venv に入って <code>bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。</p>
 
-<p>pip で簡単にパッケージを入れるためには今のところ Rosetta で python.org のものか Homebrew のものを使うほうが楽である。</p>
+<p>pip で簡単にパッケージを入れるためには今のところ Rosetta で python.org のものか Homebrew のものを使うほうが楽である。しかも 3.9 ではなく 3.8.x が楽である。</p>
 
 <h3>TeX</h3>
 
-<p>Rosetta で使っても十分速いが，native なコードを使いたければ，MacTeX の <a href="http://www.tug.org/mactex/aboutarm.html">About Arm</a> のページから <a href="http://www.tug.org/mactex/MacTeX-2020-Universal.pkg">MacTeX-2020-Universal.pkg</a> をダウンロードして展開して得られるバイナリで置き換えればよい。</p>
+<p>Rosetta で使っても十分速いが，native なコードを使いたければ，MacTeX の <a href="http://www.tug.org/mactex/aboutarm.html">About Arm</a> のページから <a href="http://www.tug.org/mactex/MacTeX-2020-Universal.pkg">MacTeX-2020-Universal.pkg</a> をダウンロードして展開して得られるバイナリで TeX Live 2020 のバイナリを置き換えればよい。例えば TeX Live 2020 が /usr/local/texlive/2020 にインストールされているなら次のようにすればよい。</p>
 
 <pre>
-pkgutil --expand MacTeX-2020-Universal.pkg /tmp
-pax -rz -f /tmp/MacTeX-2020-Universal-Start.pkg/Payload
+pkgutil --expand MacTeX-2020-Universal.pkg /tmp/hoge
+pax -rz -f /tmp/hoge/MacTeX-2020-Universal-Start.pkg/Payload
+mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 </pre>
+
+<p>これで /usr/local/texlive/2020/bin/custom にパスを通す。</p>
 
 <h2>参考</h2>
 
@@ -99,11 +102,11 @@ pax -rz -f /tmp/MacTeX-2020-Universal-Start.pkg/Payload
 <hr>
 
 <footer>
-<p><a href="/~okumura/" rel="author">奥村 晴彦</a></p>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-29 20:53:28</time>
+Last modified: <time>2020-11-29 22:31:37</time>
 <!-- hhmts end -->
 </p>
 </footer>
