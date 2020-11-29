@@ -16,7 +16,7 @@
 <article>
 <h1>macOS</h1>
 
-<p>Mac OS X の時代は去り，macOS 11.x Big Sur になったが，まだ対応できていない。</p>
+<p>Mac OS X の時代は去り，macOS 11.x Big Sur になったが，まだ対応できていない。とりあえず <a href="m1.html">M1 Mac</a> のページを作り始めた。</p>
 
 <p>macOS Sierraは野良アプリが動かないという説があるが，従来通り，右クリック＞開くで実行できる（<a href="http://applech2.com/archives/macos-10-12-sierra-gatekeeper-bypass.html">Gatekeeperの機能が強化されたmacOS 10.12 Sierraで未署名のアプリを起動する方法</a>参照）。Homebrew を使うには，コマンドラインツールをインストール/アップデートし，/usr/local の持ち主を自分にする（新しいものは /usr/local が root の持ち物でも大丈夫）。</p>
 
@@ -188,15 +188,15 @@ brew install gpg wget ghostscript imagemagick ffmpeg nkf exiftool
 
 <pre>
 wget http://ftp.jaist.ac.jp/pub/GNU/emacs/emacs-27.1.tar.xz
-wget ftp://ftp.math.s.chiba-u.ac.jp/emacs/emacs-27.1-mac-8.0.tar.gz
+wget ftp://ftp.math.s.chiba-u.ac.jp/emacs/emacs-27.1-mac-8.1.tar.gz
 tar xvzf emacs-27.1.tar.xz
-tar xvzf emacs-27.1-mac-8.0.tar.gz
+tar xvzf emacs-27.1-mac-8.1.tar.gz
 cd emacs-27.1
 patch -p1 < 0001-Fix-cond-jump-table-compilation-bug-42919.patch
-patch -p1 < ../emacs-27.1-mac-8.0/patch-mac
-cp -R ../emacs-27.1-mac-8.0/mac .
-cp ../emacs-27.1-mac-8.0/src/* src/
-cp ../emacs-27.1-mac-8.0/lisp/term/mac-win.el lisp/term/
+patch -p1 < ../emacs-27.1-mac-8.1/patch-mac
+cp -R ../emacs-27.1-mac-8.1/mac .
+cp ../emacs-27.1-mac-8.1/src/* src/
+cp ../emacs-27.1-mac-8.1/lisp/term/mac-win.el lisp/term/
 cp nextstep/Cocoa/Emacs.base/Contents/Resources/*.icns mac/Emacs.app/Contents/Resources/
 ./configure --without-x --without-imagemagick
 make 
@@ -510,7 +510,7 @@ Host *
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-15 16:11:30</time>
+Last modified: <time>2020-11-29 19:41:40</time>
 <!-- hhmts end -->
 </p>
 </footer>

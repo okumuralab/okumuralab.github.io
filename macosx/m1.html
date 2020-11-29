@@ -5,10 +5,14 @@
 <meta name="viewport" content="width=device-width">
 <title>M1 Mac</title>
 <link rel="stylesheet" href="/~okumura/style6.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
+
+<nav id="breadcrumbs" itemprop="breadcrumb">
+<a href="../" rel="home">ホーム</a> &gt;
+<a href="./">macOS</a> &gt;
+</nav>
 
 <h1>M1 Mac</h1>
 
@@ -16,23 +20,25 @@
 
 <p>他の Mac からコピーという手もあったが，ここはクリーンセットアップすることにする。Apple ID を設定したら iCloud から多くの設定を拾ってくれたので，たいした手間ではない。アカウント名（ホームディレクトリ名）が okumuraharuhiko になったので okumura に直す。</p>
 
+<p>買ったばかりの OS は無名 11 であったので，システム環境設定→ソフトウェアアップデートで 11.0.1 にアップデート。</p>
+
 <p>コンピュータ名が長ったらしいものになったのでシステム環境設定の「共有」で直す。</p>
 
 <p>Finder の環境設定→詳細で「すべてのファイル名拡張子を表示」をオンにする。</p>
 
 <p>メール設定では，表示→「メッセージ内のリモートコンテンツを読み込む」をオフに，作成→メッセージのフォーマットを「標準テキスト」に。</p>
 
-<p>買ったばかりの OS は無名 11 であったので，システム環境設定→ソフトウェアアップデートで 11.0.1 にアップデート。</p>
+<p>システム環境設定でキーボード→ショートカット→入力ソースのショートカットは Emacs に有害なので外す。</p>
 
 <h3>ターミナル</h3>
 
-<p>ターミナルを開き，<code>uname -m</code> と打ち込むと arm64 と表示される。いったんターミナルを閉じて，Finder でターミナルを選択して「情報を見る」で「Rosettaを使用して開く」にチェックを付けてからターミナルを開こうとすると，Rosetta がインストールされる。Rosetta で開かれたターミナルに <code>uname -m</code> と打ち込むと x86_64 と表示される。今度は「Rosettaを使用して開く」をオフにしてターミナルを開き直して <code>uname -m</code> するとまた arm64 になるが，Rosetta がインストールされたので</p>
+<p>ターミナルを開き，試しに <code>uname -m</code> と打ち込むと arm64 と表示される。いったんターミナルを閉じて，Finder でターミナルを選択して「情報を見る」で「Rosettaを使用して開く」にチェックを付けると Rosetta がインストールされる。Rosetta で開かれたターミナルに <code>uname -m</code> と打ち込むと x86_64 と表示される。今度は「Rosettaを使用して開く」をオフにしてターミナルを開き直して <code>uname -m</code> するとまた arm64 になるが，Rosetta がインストールされたので</p>
 
 <pre>
 arch -x86_64 uname -m
 </pre>
 
-<p>と打ち込むと x86_64 になる（Rosetta がない状態ではこのコマンドは Bad CPU type in executable エラーになる）。このようにちょっとしたコマンドなら <code>arch -x86_64</code> を冠することにより Rosetta で実行できるが，</p>
+<p>と打ち込むと x86_64 になる（Rosetta がない状態ではこのコマンドは Bad CPU type in executable エラーになる）。このようにちょっとしたコマンドなら <code>arch -x86_64</code> を冠することにより Rosetta で実行できるが，まとまったことをするには</p>
 
 <pre>
 arch -x86_64 zsh
@@ -42,52 +48,37 @@ arch -x86_64 zsh
 
 <h3>シェル</h3>
 
-<p>今まで bash を使っていたが，クリーンインストールなので zsh になった。環境変数は <code>~/.zshenv</code></p> で設定するが，<code>setopt no_global_rcs</code> と書いておかないと PATH を上書きされてしまう。</p>
+<p>今まで bash を使っていたが，クリーンセットアップしたので zsh になった。環境変数は <code>~/.zshenv</code> で設定するが，<code>setopt no_global_rcs</code> と書いておかないと PATH を上書きされてしまう。</p>
 
 <pre>
 setopt no_global_rcs
-export PATH=... (bashと同様)
+export PATH=... # bashと同様
 </pre>
 
 <h3>Command Line Tools</h3>
 
-<p>何か（例えば python3）を実行しようとするとインストールを促される。あるいはターミナルに <code>xcode-select --install</code> と打ち込むか，<a href="https://developer.apple.com/downloads">https://developer.apple.com/downloads</a> からダウンロードしてインストールする。</p>
-
-<p>python3 は 3.8.2 である。</p>
+<p>何か（例えば python3）を実行しようとするとインストールを促される。より確実な方法は，ターミナルに <code>xcode-select --install</code> と打ち込むか，<a href="https://developer.apple.com/downloads">https://developer.apple.com/downloads</a> からダウンロードしてインストールする。</p>
 
 <h3>Homebrew</h3>
 
-<p>MacPorts のほうが M1 対応が進んでいるが，他のマシンに合わせて Homebrew を入れた。とりあえずは Intel 版で間に合わせることに。通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを Rosetta 設定のターミナルに打ち込むだけでインストールできる。</p>
+<p>MacPorts のほうが M1 対応が進んでいるが，他のマシンに合わせて Homebrew を入れた。とりあえずは Intel 版で間に合わせる。通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを <code>uname -m</code> が x86_64 なターミナルに打ち込めばインストールできる。</p>
 
-<p>ARM 版については Homebrew の <a href="https://docs.brew.sh/Installation">Installation</a> 参照。対応状況は <a href="https://github.com/Homebrew/brew/issues/7857">macOS 11 Big Sur compatibility on Apple Silicon #7857</a> にまとめられている。@yujiod さんの <a href="https://qiita.com/yujiod/items/56002a7cef5b5a3be3fb">Apple SiliconにおけるHomebrewのベストプラクティス</a> も参考になる。</p>
-
-<p>arm64 版は <code>/opt/homebrew</code>（ユーザ権限で書き込めるようにしておく）にインストールする。</p>
+<p>ARM 版については Homebrew の <a href="https://docs.brew.sh/Installation">Installation</a> 参照。対応状況は <a href="https://github.com/Homebrew/brew/issues/7857">macOS 11 Big Sur compatibility on Apple Silicon #7857</a> にまとめられている。@yujiod さんの <a href="https://qiita.com/yujiod/items/56002a7cef5b5a3be3fb">Apple SiliconにおけるHomebrewのベストプラクティス</a> も参考になる。<code>/opt/homebrew</code>（ユーザ権限で書き込めるようにしておく）にインストールする。</p>
 
 <pre>
-cd /opt/homebrew
+cd /opt
 curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
 </pre>
 
 <h3>Emacs 27</h3>
 
-<p>これもすぐ必要になるので，とりあえず Intel 版を入れる。バイナリをもらってきてもよかったが，ここでは他の Mac に合わせてソースからコンパイル。<a href="https://debbugs.gnu.org/cgi/bugreport.cgi?bug=42919">Byte compile のバグ</a> のパッチ <a href="https://debbugs.gnu.org/cgi/bugreport.cgi?msg=18;filename=0001-Fix-cond-jump-table-compilation-bug-42919.patch;att=1;bug=42919">0001-Fix-cond-jump-table-compilation-bug-42919.patch</a> を当てる。</p>
+<p>これもすぐ必要なので，とりあえず Intel 版を入れた。</p>
 
-<pre>
-wget http://ftp.jaist.ac.jp/pub/GNU/emacs/emacs-27.1.tar.xz
-wget ftp://ftp.math.s.chiba-u.ac.jp/emacs/emacs-27.1-mac-8.1.tar.gz
-tar xvzf emacs-27.1.tar.xz
-tar xvzf emacs-27.1-mac-8.1.tar.gz
-cd emacs-27.1
-patch -p1 < 0001-Fix-cond-jump-table-compilation-bug-42919.patch
-patch -p1 < ../emacs-27.1-mac-8.1/patch-mac
-cp -R ../emacs-27.1-mac-8.1/mac .
-cp ../emacs-27.1-mac-8.1/src/* src/
-cp ../emacs-27.1-mac-8.1/lisp/term/mac-win.el lisp/term/
-cp nextstep/Cocoa/Emacs.base/Contents/Resources/*.icns mac/Emacs.app/Contents/Resources/
-./configure --without-x --without-imagemagick
-make 
-make install
-</pre>
+<h3>Python</h3>
+
+<p>コマンドラインツールの /usr/bin/python3 は universal binary な 3.8.2 である。これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば TensorFlow とその依存するパッケージ群（numpy など）が入る。デフォルトで ~/tensorflow_macos_venv に入って <code>bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。</p>
+
+<p>pip で簡単にパッケージを入れるためには今のところ Rosetta で python.org のものか Homebrew のものを使うほうが楽である。</p>
 
 <h2>参考</h2>
 
@@ -103,7 +94,7 @@ make install
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-29 15:28:48</time>
+Last modified: <time>2020-11-29 19:44:32</time>
 <!-- hhmts end -->
 </p>
 </footer>
