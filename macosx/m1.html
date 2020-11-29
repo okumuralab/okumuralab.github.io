@@ -80,6 +80,15 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <p>pip で簡単にパッケージを入れるためには今のところ Rosetta で python.org のものか Homebrew のものを使うほうが楽である。</p>
 
+<h3>TeX</h3>
+
+<p>Rosetta で使っても十分速いが，native なコードを使いたければ，MacTeX の <a href="http://www.tug.org/mactex/aboutarm.html">About Arm</a> のページから <a href="http://www.tug.org/mactex/MacTeX-2020-Universal.pkg">MacTeX-2020-Universal.pkg</a> をダウンロードして展開して得られるバイナリで置き換えればよい。</p>
+
+<pre>
+pkgutil --expand MacTeX-2020-Universal.pkg /tmp
+pax -rz -f /tmp/MacTeX-2020-Universal-Start.pkg/Payload
+</pre>
+
 <h2>参考</h2>
 
 <ul>
@@ -94,11 +103,7 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <p>
 <!-- hhmts start -->
-<<<<<<< HEAD
-Last modified: <time>2020-11-29 20:00:02</time>
-=======
-Last modified: <time>2020-11-29 19:44:32</time>
->>>>>>> 43377c34d9c81d7d969f9047fc9e1cb8f8ecd494
+Last modified: <time>2020-11-29 20:53:28</time>
 <!-- hhmts end -->
 </p>
 </footer>
