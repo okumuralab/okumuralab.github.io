@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>待ち行列のシミュレーション</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>待ち行列のシミュレーション</h1>
+
+<p>第一学習社『情報の科学』の待ち行列の問題をPythonでやってみよう。</p>
+
+<p>客が来る間隔（分）は1〜6の整数である。どの客も窓口で3分のサービスを受ける。200人の客の平均待ち時間を求めよという問題である。</p>
+
+<pre><code>import numpy as np
+
+rng = np.random.default_rng()
+
+到着時刻 = 0
+開始時刻 = 0
+終了時刻 = 開始時刻 + 3
+待ち時間 = [開始時刻 - 到着時刻]
+for 客 in range(1, 200):
+    到着時刻 += rng.integers(1, 7)
+    開始時刻 = max(到着時刻, 終了時刻)
+    終了時刻 = 開始時刻 + 3
+    待ち時間.append(開始時刻 - 到着時刻)
+
+np.mean(待ち時間)
+</code></pre>
+
+<p>サービス時間も乱数にしてみよう。到着時刻を現実的（ポアソン過程）にしてみよう。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-01 13:14:39</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

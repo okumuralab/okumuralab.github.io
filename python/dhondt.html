@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ドント方式</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ドント方式</h1>
+
+<p>政党0，1，2，3がそれぞれ1000，650，200，150票を得た。10人当選させるには，各政党から何人ずつ選べばよいか。</p>
+
+<pre><code>r = 10  # 当選数
+n = a = np.array([1000, 650, 200, 150]) # 得票数
+for i in range(2, r + 1):
+    a = np.append(a, n / i)
+
+o = np.argsort(-a)
+(o % 4)[:r]
+
+a[o[:r]][-1] == a[o[:r+1]][-1]  # 次点と比較
+
+import pandas as pd
+
+pd.Series((o % 4)[:10]).value_counts()
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-01 14:02:31</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

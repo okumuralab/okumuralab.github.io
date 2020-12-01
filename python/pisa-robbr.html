@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>PISA「盗難事件」問題のシミュレーション</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PISA「盗難事件」問題のシミュレーション</h1>
+
+<p>有名な<a href="../stat/pisa-robbr.html">PISA「盗難事件」問題</a>についてPythonでシミュレーションしてみよう。</p>
+
+<p>全部で1024件の盗難事件が1998年・1999年の2年間に起こった場合，どちらの年も盗難の起きやすさは同じと仮定して（帰無仮説），両者の件数が8件以上異なる確率（<i>p</i> 値）をシミュレーションで求める。</p>
+
+<p>1998年を <code>0</code>，1999年を <code>1</code> として，全部で1024件の事件を作るには，次のようにする。</p>
+
+<pre><code>import numpy as np
+
+rng = np.random.default_rng()
+a = rng.integers(0, 2, size=1024)
+</code></pre>
+
+<p>両年の件数の差は <code>2 * abs(sum(a) - 512)</code> である。これが8以上なら True，8未満なら False を返す関数を作ってみる。</p>
+
+<pre><code>def f():
+    a = rng.integers(0, 2, size=1024)
+    return 2 * abs(sum(a) - 512) >= 8
+</code></pre>
+
+<p>これの返す値を要素とする長さ10000の配列を作り，True の割合を調べる。</p>
+
+<pre><code>b = [f() for _ in range(10000)]
+sum(b) / 10000
+</code></pre>
+
+<p>この値を <i>p</i> 値という。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-01 11:23:01</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
