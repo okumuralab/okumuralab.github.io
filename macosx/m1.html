@@ -36,7 +36,7 @@
 
 <h3>ターミナル</h3>
 
-<p>ターミナルを開き，試しに <code>uname -m</code> と打ち込むと arm64 と表示される。いったんターミナルを閉じて，Finder でターミナルを選択して「情報を見る」で「Rosettaを使用して開く」にチェックを付けると Rosetta がインストールされる。Rosetta で開かれたターミナルに <code>uname -m</code> と打ち込むと x86_64 と表示される。今度は「Rosettaを使用して開く」をオフにしてターミナルを開き直して <code>uname -m</code> するとまた arm64 になるが，Rosetta がインストールされたので</p>
+<p>ターミナルを開き，試しに <code>uname -m</code> と打ち込むと arm64 と表示される。いったんターミナルを閉じて，Finder でターミナルを選択して「情報を見る」で「Rosettaを使用して開く」にチェックを付けると Rosetta がインストールされる（一般には任意の x86_64 なアプリを最初に起動したときに Rosetta がインストールされるのであろう）。Rosetta で開かれたターミナルに <code>uname -m</code> と打ち込むと x86_64 と表示される。今度は「Rosettaを使用して開く」をオフにしてターミナルを開き直して <code>uname -m</code> するとまた arm64 になるが，Rosetta がインストールされたので</p>
 
 <pre>
 arch -x86_64 uname -m
@@ -59,6 +59,17 @@ ARCH=`uname -m`
 PROMPT="${ARCH} %m:%~%# "
 </pre>
 
+<p>あるいは場合分けもできる：</p>
+
+<pre>
+ARCH=`uname -m`
+if [[ $ARCH == 'arm64' ]]; then
+    PROMPT="[a] %m:%~%# "
+else
+    PROMPT="[x] %m:%~%# "
+fi
+</pre>
+
 <p>環境変数は <code>~/.zshenv</code> で設定するが，<code>setopt no_global_rcs</code> と書いておかないと PATH を上書きされてしまう。</p>
 
 <pre>
@@ -68,7 +79,7 @@ export PATH=... # bashと同様
 
 <h3>Command Line Tools</h3>
 
-<p>何か（例えば python3）を実行しようとするとインストールを促される。より確実な方法は，ターミナルに <code>xcode-select --install</code> と打ち込むか，<a href="https://developer.apple.com/downloads">https://developer.apple.com/downloads</a> からダウンロードしてインストールする。</p>
+<p>コマンドラインで開発する場合，巨大な Xcode をインストールする必要はない。コマンドライン用の開発ツールは，何らかの開発用コマンド（gcc とか python3 とか）を実行しようとするとインストールを促される。より確実な方法は，ターミナルに <code>xcode-select --install</code> と打ち込むか，<a href="https://developer.apple.com/downloads">https://developer.apple.com/downloads</a> からダウンロードしてインストールする。</p>
 
 <h3>Homebrew</h3>
 
@@ -83,11 +94,20 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <h3>Emacs 27</h3>
 
-<p>これもすぐ必要なので，とりあえず Intel 版を入れた。</p>
+<p>これもすぐ必要なので，とりあえず Rosetta 環境でソースからコンパイルした。簡単にコンパイルできた。</p>
 
 <h3>Python</h3>
 
-<p>コマンドラインツールの /usr/bin/python3 は universal binary な 3.8.2 である。これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば TensorFlow とその依存するパッケージ群（numpy など）が入る。デフォルトで ~/tensorflow_macos_venv に入って <code>bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。</p>
+<p>コマンドラインツールの /usr/bin/python3 は universal binary な 3.8.2 である：</p>
+
+<pre>
+% file /usr/bin/python3
+/usr/bin/python3: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64e:Mach-O 64-bit executable arm64e]
+/usr/bin/python3 (for architecture x86_64):	Mach-O 64-bit executable x86_64
+/usr/bin/python3 (for architecture arm64e):	Mach-O 64-bit executable arm64e
+</pre>
+
+<p>これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば TensorFlow とその依存するパッケージ群（numpy など）が入る。デフォルトで ~/tensorflow_macos_venv に入って <code>bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。pip で入れようとしてもコンパイルでエラーになる。</p>
 
 <p>pip で簡単にパッケージを入れるためには今のところ Rosetta で python.org のものか Homebrew のものを使うほうが楽である。しかも 3.9 ではなく 3.8.x が楽である。</p>
 
@@ -117,7 +137,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-30 11:11:56</time>
+Last modified: <time>2020-12-01 10:13:28</time>
 <!-- hhmts end -->
 </p>
 </footer>
