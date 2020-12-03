@@ -75,6 +75,7 @@ PROMPT="${ARCH} %m:%~%# "
 ARCH=`uname -m`
 if [[ $ARCH == 'arm64' ]]; then
     PROMPT="[a] %m:%~%# "
+    export PATH=/opt/homebrew/bin:$PATH
 else
     PROMPT="[x] %m:%~%# "
 fi
@@ -156,7 +157,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-02 17:08:49</time>
+Last modified: <time>2020-12-03 20:55:11</time>
 <!-- hhmts end -->
 </p>
 </footer>
