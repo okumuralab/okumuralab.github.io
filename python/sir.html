@@ -63,9 +63,10 @@ for t in range(200):
     aR.append(R / N)
     aRt.append(Rt)
 
-plt.plot(aS, "o-")
-plt.plot(aI, "o-")
-plt.plot(aR, "o-")
+plt.plot(aS, "v-", label="S")
+plt.plot(aI, "o-", label="I")
+plt.plot(aR, "^-", label="R")
+plt.legend()
 </code></pre>
 
 <hr>
@@ -74,7 +75,7 @@ plt.plot(aR, "o-")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-04 13:11:49</time>
+Last modified: <time>2020-12-04 13:31:17</time>
 <!-- hhmts end -->
 </p>
 </body>
