@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>SIRモデル</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>SIRモデル</h1>
+
+<p>COVID-19のような感染症の簡単なモデル。ここではWikipediaの<a href="https://ja.wikipedia.org/wiki/SIR%E3%83%A2%E3%83%87%E3%83%AB">SIRモデル</a>の解説にならって</p>
+
+\[ \frac{dS}{dt} = -\beta SI, \quad \frac{dI}{dt} = \beta SI - \gamma I, \quad \frac{dR}{dt} = \gamma I \]
+
+<p>とする。$S$ はまだ感染していない人（susceptible），$I$ は感染している人（infected），$R$ は治った人（recovered）または治った人＋死んだ人（removed）。</p>
+
+<p>人口を $N$ とすると，初期値は $S = N$ で，初期において1人の感染者は $1/\gamma$ の期間に $R_0 = \beta N / \gamma$ 人を感染させる割合で，指数関数的に感染者が増加する。</p>
+
+<p>これをPythonでごくおおざっぱにシミュレーションしてみる。</p>
+
+<pre><code>import matplotlib.pyplot as plt
+
+N = 126000000  # 日本の人口
+R0 = 2
+gamma = 0.2
+beta = R0 * gamma / N
+
+S = N
+I = 1  # 最初は1人が感染
+R = 0
+
+aS = [S / N]
+aI = [I / N]
+aR = [R / N]
+aRt = [R0]
+
+for t in range(200):
+    S, I, R = S - beta * S * I, I + beta * S * I - gamma * I, R + gamma * I
+    Rt = beta * S / gamma
+    aS.append(S / N)
+    aI.append(I / N)
+    aR.append(R / N)
+    aRt.append(Rt)
+
+plt.plot(aS, "o-")
+plt.plot(aI, "o-")
+plt.plot(aR, "o-")
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-04 13:11:49</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
