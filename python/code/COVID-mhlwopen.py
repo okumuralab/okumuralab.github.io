@@ -49,3 +49,10 @@ ax.bar(df5['日付'], df5['死亡者数'].diff(), width=1, color='C3')
 ax.legend(['Positive', 'Deaths'], loc='upper left')
 fig.savefig('../img/COVID-mhlwopen2.svg', bbox_inches="tight")
 
+ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.bar(df5['日付'], df5['死亡者数'].diff(), width=1, color='C3')
+ax.legend(['Deaths'], loc='upper left')
+fig.savefig('../img/COVID-mhlwopen3.svg', bbox_inches="tight")
+
