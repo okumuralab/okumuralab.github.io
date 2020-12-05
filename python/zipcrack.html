@@ -20,6 +20,10 @@
 
 <p>PythonでZipファイルを展開する方法は<a href="encoding.html">文字コード</a>のところに書いたが，同様にしてパスワードをブルートフォースで破ることも原理的には可能である。4桁数字のパスワードで暗号化した test.zip をクラックするには次のようにすればよいであろう：</p>
 
+<div class="note">
+<p>原理を説明するためのコードなのでわざと4桁数字に限定している。</p>
+</div>
+
 <pre><code>from zipfile import ZipFile
 
 with ZipFile('test.zip') as z:
@@ -42,7 +46,7 @@ with ZipFile('test.zip') as z:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-05 12:53:23</time>
+Last modified: <time>2020-12-05 20:11:59</time>
 <!-- hhmts end -->
 </p>
 </body>

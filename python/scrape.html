@@ -10,13 +10,13 @@
 <body>
 
 <nav id="breadcrumbs">
-<a href="/~okumura/">ホーム</a> &gt;
+<a href="../">ホーム</a> &gt;
 <a href="./">Python</a> &gt;
 </nav>
 
 <h1>スクレイピング</h1>
 
-<p>Webスクレイピングの基本は <a href="https://docs.python.org/3/library/urllib.request.html">urllib.request</a> またはより新しい <a href="https://2.python-requests.org">Requests</a> と，正規表現 <a href="https://docs.python.org/3/library/re.html">re</a> とである。より高レベルのライブラリとして Beautiful Soup がある（<code>pip install beautifulsoup4</code>，<code>from bs4 import BeautifulSoup</code>）。</p>
+<p>Webスクレイピングの基本は，標準ライブラリ <a href="https://docs.python.org/3/library/urllib.request.html">urllib.request</a> または <a href="https://requests.readthedocs.io">Requests</a>（<code>pip install requests</code> でインストール）と，正規表現 <a href="https://docs.python.org/3/library/re.html">re</a> とである。より高レベルのライブラリとして <a href="https://www.crummy.com/software/BeautifulSoup/">Beautiful Soup</a>（<code>pip install beautifulsoup4</code> でインストール）がある。詳しくは<a href="https://vaaaaaanquish.hatenablog.com/entry/2017/06/25/202924">PythonでWebスクレイピングする時の知見をまとめておく</a>が参考になる。</p>
 
 <p>例えば，このサイトにどれだけリンクがあるかを調べてみよう。まず urllib.request による方法：</p>
 
@@ -44,7 +44,23 @@ a = re.findall('&lt;a href="(.*?)"', r.text)
 
 <p>これで <code>a</code> には <code>['../', '../stat/', 'install.html', ...]</code> という配列が入る。</p>
 
-<p>ファイルのダウンロードは例えば次のようにする：</p>
+<p>Beautiful Soup による方法：</p>
+
+<pre>
+<code>import requests
+from bs4 import BeautifulSoup
+
+r = requests.get('http://example.jp/')
+if r.status_code != 200:  # エラーチェックが必要なら
+    raise ConnectionError()
+r.encoding = 'utf-8'
+s = BeautifulSoup(r.text)
+a = [x.get('href') for x in s.select('a')]
+</code></pre>
+
+<p>一般に正規表現は想定外の HTML の書き方に対応できないので Beautiful Soup のような高レベルの方法が良いとされる。</p>
+
+<p>バイナリファイルのダウンロードは例えば次のようにする：</p>
 
 <pre>
 <code>import requests
@@ -153,7 +169,7 @@ for u in urls:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-17 13:58:58</time>
+Last modified: <time>2020-12-05 22:14:39</time>
 <!-- hhmts end -->
 </p>
 </body>
