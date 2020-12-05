@@ -109,7 +109,7 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <h3>Python</h3>
 
-<p>コマンドラインツールの /usr/bin/python3 は universal binary な 3.8.2 である：</p>
+<p>Apple のコマンドラインツールに入っている /usr/bin/python3 は universal binary な 3.8.2 である：</p>
 
 <pre>
 % file /usr/bin/python3
@@ -118,7 +118,7 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 /usr/bin/python3 (for architecture arm64e):	Mach-O 64-bit executable arm64e
 </pre>
 
-<p>これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば TensorFlow とその依存するパッケージ群（numpy など）が入る。デフォルトで ~/tensorflow_macos_venv に入って <code>bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。pip で入れようとしてもコンパイルでエラーになる。</p>
+<p>これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば TensorFlow とその依存するパッケージ群（numpy など）が入る。bash で ~/tensorflow_macos_venv に入って <code>source bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。pip で入れようとしてもコンパイルでエラーになる。</p>
 
 <p>pip で簡単にパッケージを入れるためには今のところ Rosetta で python.org のものか Homebrew のものを使うほうが楽である。しかも 3.9 ではなく 3.8.x が楽である。</p>
 
@@ -157,7 +157,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-03 20:55:11</time>
+Last modified: <time>2020-12-05 12:32:55</time>
 <!-- hhmts end -->
 </p>
 </footer>
