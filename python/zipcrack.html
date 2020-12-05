@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Zipファイルのクラック</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Zipファイルのクラック</h1>
+
+<p>メールでZipファイルを送って次のメールでパスワードを送るという無意味より悪いセキュリティ対策が問題になっている。なぜ無意味より悪いかというと，Zip暗号化は強度が十分でない上に，次のメールで送るパスワードは無意味で，さらにゲートウェイでのウイルス対策ができなくなるのでウイルス送付に利用されやすいためである。</p>
+
+<p>PythonでZipファイルを展開する方法は<a href="encoding.html">文字コード</a>のところに書いたが，同様にしてパスワードをブルートフォースで破ることも原理的には可能である。4桁数字のパスワードで暗号化した test.zip をクラックするには次のようにすればよいであろう：</p>
+
+<pre><code>from zipfile import ZipFile
+
+with ZipFile('test.zip') as z:
+    for i in range(10000):
+        pw = f'{i:04d}'
+        try:
+            z.setpassword(pw.encode('utf-8'))
+            if z.testzip() == None:
+                print(pw)
+                break
+        except:
+            pass
+</code></pre>
+
+<p>試しに「ほげほげふがふが」とだけ書いたテキストファイルを 9999 というパスワードで Zip 化し，iPython の <code>%%timeit</code> で実行時間を測ったところ，Mac mini (2018) 3.6 GHz Core i3 では 534 ms，M1 MacBook Air で Rosetta 環境では 319 ms，ネイティブでは 191 ms でクラック成功した。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-05 12:53:23</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
