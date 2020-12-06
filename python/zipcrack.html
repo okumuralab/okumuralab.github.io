@@ -40,13 +40,17 @@ with ZipFile('test.zip') as z:
 
 <p>試しに「ほげほげふがふが」とだけ書いたテキストファイルを 9999 というパスワードで Zip 化し，iPython の <code>%%timeit</code> で実行時間を測ったところ，Mac mini (2018) 3.6 GHz Core i3 では 534 ms，M1 MacBook Air で Rosetta 環境では 319 ms，ネイティブでは 191 ms でクラック成功した。</p>
 
+<p>本当にパスワードをクラックしたいなら，より高速かつ便利な専用のツールがいろいろ出回っているので，ネットで検索されたい。</p>
+
+<p>一般的な暗号の解読時間については例えば dit の <a href="https://www.dit.co.jp/service/security/report/03.html">セキュリティ調査レポートVol.3</a>（2012年）に実測値が載っている。例えば英大小数字（62通り）×8文字では通常のZip暗号化は13.5時間で解読できるとのことである。同じZipでも拡張仕様の256ビットAESならずっと時間がかかるが，Windowsの機能だけでは復号できないのであまり使われていない。Microsoft Officeファイル（*.docx，*.xlsx など）の暗号化は，さらに強い。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-05 20:11:59</time>
+Last modified: <time>2020-12-06 14:57:13</time>
 <!-- hhmts end -->
 </p>
 </body>

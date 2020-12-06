@@ -36,13 +36,19 @@ with urllib.request.urlopen('http://example.jp/') as f:
 import re
 
 r = requests.get('http://example.jp/')
-if r.status_code != 200:  # エラーチェックが必要なら
-    raise ConnectionError()
-r.encoding = 'utf-8'  # 自動判断では 'ISO-8859-1' に間違えられることがある
+r.raise_for_status()  # エラーチェック
+r.encoding = 'UTF-8'  # 'ISO-8859-1' に間違えられることがある
 a = re.findall('&lt;a href="(.*?)"', r.text)
 </code></pre>
 
 <p>これで <code>a</code> には <code>['../', '../stat/', 'install.html', ...]</code> という配列が入る。</p>
+
+<div class="note">
+<ul>
+  <li><code>r.encoding</code> のデフォルトは ISO-8859-1 であり HTML の <code>&lt;meta charset="UTF-8"&gt;</code> を見てくれない。自動で UTF-8 と判断してほしければサーバ側で <code>AddDefaultCharset UTF-8</code> と設定しなければならない。</li>
+  <li>エラーチェックには <code>r.raise_for_status()</code> を呼び出す方法以外に <code>r.status_code</code> が200（正常）かどうか確かめる方法もある。</li>
+</ul>
+</div>
 
 <p>Beautiful Soup による方法：</p>
 
@@ -51,8 +57,7 @@ a = re.findall('&lt;a href="(.*?)"', r.text)
 from bs4 import BeautifulSoup
 
 r = requests.get('http://example.jp/')
-if r.status_code != 200:  # エラーチェックが必要なら
-    raise ConnectionError()
+r.raise_for_status()  # エラーチェック
 r.encoding = 'utf-8'
 s = BeautifulSoup(r.text)
 a = [x.get('href') for x in s.select('a')]
@@ -75,7 +80,8 @@ pathlib.Path("hoge.png").write_bytes(r.content)
 <p>User Agent（ブラウザの種類）は <code>"python-requests/2.22.0"</code> のような感じで先方のログに残る。これが嫌なら適当に変えられる：</p>
 
 <pre>
-<code>r = requests.get('http://example.jp/', headers={'User-Agent': 'hogehoge/001'})
+<code>r = requests.get('http://example.jp/',
+    headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15'})
 </code></pre>
 
 <p>最後に，いらすとやさんから「科学」ジャンルの画像のサムネール（256x256）をスクレイプする簡単なコード例を挙げておく。カレントディレクトリ下に <code>irasutoya</code> というサブディレクトリがあるとする。</p>
@@ -169,7 +175,7 @@ for u in urls:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-05 22:14:39</time>
+Last modified: <time>2020-12-06 10:37:47</time>
 <!-- hhmts end -->
 </p>
 </body>
