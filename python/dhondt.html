@@ -23,15 +23,16 @@ n = a = np.array([1000, 650, 200, 150]) # 得票数
 for i in range(2, r + 1):
     a = np.append(a, n / i)
 
-o = np.argsort(-a)
-(o % 4)[:r]
-
-a[o[:r]][-1] == a[o[:r+1]][-1]  # 次点と比較
-
-import pandas as pd
-
-pd.Series((o % 4)[:10]).value_counts()
+a
 </code></pre>
+
+<p>この上位 <code>r</code> 人を選べばよい。</p>
+
+<pre><code>o = np.argsort(-a)
+np.bincount((o % 4)[:r])
+</code></pre>
+
+<p>なお，タイがない（<code>a[o][r-1]</code> と <code>a[o][r]</code> が等しくない）ことも確認しなければならない。</p>
 
 <hr>
 
@@ -39,7 +40,7 @@ pd.Series((o % 4)[:10]).value_counts()
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-01 14:02:31</time>
+Last modified: <time>2020-12-08 11:13:54</time>
 <!-- hhmts end -->
 </p>
 </body>
