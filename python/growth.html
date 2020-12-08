@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>増え方のシミュレーション</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>増え方のシミュレーション</h1>
+
+<p>利息の増え方（複利計算）</p>
+
+<pre><code>預金 = 100000
+利息 = 0.05
+for i in range(11):
+    print(i, 預金)
+    預金 += 利息 * 預金
+</code></pre>
+
+<p>あるいは</p>
+
+<pre><code>預金 = [100000]
+利息 = 0.05
+for i in range(10):
+    預金.append((1 + 利息) * 預金[-1])
+預金
+</code></pre>
+
+<p>プロットするなら</p>
+
+<pre><code>import matplotlib.pyplot as plt
+
+plt.plot(預金, "o-")
+</code></pre>
+
+<p>100年くらい預けたらいくらになるか。</p>
+
+<p>生物も（少なくとも最初は）同じような増え方をする。</p>
+
+<pre><code>x = [1]
+r = 0.05
+for i in range(100):
+    x.append(x[-1] * (1 + r))
+plt.plot(x, "o-")
+</code></pre>
+
+<p>しかし，そのうちに上限に達し，それ以上増えなくなる。</p>
+
+<pre><code>xmax = 10
+x = [1]
+r = 0.05
+for i in range(100):
+    x.append(x[-1] * (1 + r * (1 - x[-1] / xmax)))
+plt.plot(x, "o-")
+</code></pre>
+
+<p>このような曲線をロジスティック曲線という（ウィキペディアの<a href="https://ja.wikipedia.org/wiki/%E3%83%AD%E3%82%B8%E3%82%B9%E3%83%86%E3%82%A3%E3%83%83%E3%82%AF%E6%96%B9%E7%A8%8B%E5%BC%8F">ロジスティック方程式</a>参照）。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-08 12:51:41</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
