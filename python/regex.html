@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>正規表現</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>正規表現</h1>
+
+<p>正規表現を扱うための標準ライブラリ <a href="https://docs.python.org/3/library/re.html">re</a>（<a href="https://docs.python.org/ja/3/library/re.html">日本語ドキュメント</a>）を使って正規表現に慣れましょう。</p>
+
+<pre><code>import re
+
+if re.search("ほげ", "ほげほげ"):
+    print("含まれます")
+else:
+    print("含まれません")
+</code></pre>
+
+<p>いろいろ変えてやってみましょう。</p>
+
+<p>次のようなこともできます。</p>
+
+<pre><code>m = re.search("^ほげ(.*)$", "ほげふが")
+m     # 一致しなければ偽
+m[0]  # 一致全体
+m[1]  # 1番目の括弧
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-08 15:55:23</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
