@@ -122,6 +122,10 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <p>pip で簡単にパッケージを入れるためには今のところ Rosetta で python.org のものか Homebrew のものを使うほうが楽である。しかも 3.9 ではなく 3.8.x が楽である。</p>
 
+<h3>R</h3>
+
+<p><a href="https://developer.r-project.org/Blog/public/2020/11/02/will-r-work-on-apple-silicon/">Will R Work on Apple Silicon?</a> まずは Fortran 90 compiler が必要とのこと。</p>
+
 <h3>TeX</h3>
 
 <p>Rosetta で使っても十分速いが，native なコードを使いたければ，MacTeX の <a href="http://www.tug.org/mactex/aboutarm.html">About Arm</a> のページから <a href="http://www.tug.org/mactex/MacTeX-2020-Universal.pkg">MacTeX-2020-Universal.pkg</a> をダウンロードして展開して得られるバイナリで TeX Live 2020 のバイナリを置き換えればよい。例えば TeX Live 2020 が /usr/local/texlive/2020 にインストールされているなら次のようにすればよい。</p>
@@ -157,7 +161,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-05 12:32:55</time>
+Last modified: <time>2020-12-09 12:31:52</time>
 <!-- hhmts end -->
 </p>
 </footer>
