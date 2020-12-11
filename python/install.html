@@ -14,11 +14,13 @@
 <a href="./">Python</a> &gt;
 </nav>
 
+<p><a href="../macosx/m1.html">M1 Mac</a> のページもご参照ください。</p>
+
 <h1>Python 3 インストール</h1>
 
-<p>macOS や Linux には Python 2.7 が /usr/bin/python として入っていますが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。Windows には Python が入っていません。いずれにしても，これから Python を使うなら，Python 3 にしましょう。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
+<p>macOS や Linux の /usr/bin/python コマンドは Python 2.7 ですが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。/usr/bin/python3 が Python 3.x ですが，バージョンがやや古い場合があるので，より新しいものを別途インストールしたいかもしれません。Windows には Python が入っていませんので別途インストールが必要です。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
 
-<p>最新のものは Python 3.9.0 ですが，これはまだお勧めできません。Python 3.8.x の最新版をインストールしましょう。すでに TensorFlow をはじめほとんどのツールが Python 3.8 に対応しましたので，そろそろ 3.7 から 3.8 に移行して大丈夫だと思います。私も遅ればせながら 3.8 にしました。もっとも，3.6 や 3.7 が動いていれば，強いて 3.8 にする意味はあまりありません。Google Colaboratory はまだ 3.6 です。</p>
+<p>最新のものは Python 3.9.1 ですが，もうちょっと我慢して，Python 3.8.x をインストールしましょう。3.8.x なら TensorFlow をはじめほとんどのライブラリが対応しています。3.6 や 3.7 が動いていれば，それでもかまいません。Google Colaboratory はまだ 3.6 です。</p>
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
@@ -91,14 +93,14 @@ C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 
 <p><a href="https://www.python.org/download/">Download Python</a> からインストーラをダウンロードし，インストールします。/Library/Frameworks/Python.framework/Versions/3.8/bin に <code>python3</code> などのバイナリが入ります。</p>
 
-<p>インストールすると，Mac では <code>~/.bash_profile</code> の最後にパスが付け加えられます：</p>
+<p>インストールすると，Mac では（bash を使っていれば）<code>~/.bash_profile</code> または（zsh を使っていれば）<code>~/.zprofile</code> の最後にパスが付け加えられます：</p>
 
 <pre>
 <code>PATH="/Library/Frameworks/Python.framework/Versions/3.8/bin:${PATH}"
 export PATH
 </code></pre>
 
-<p><code>~/.bash_profile</code> を更新したらターミナルに <code>. ~/.bash_profile</code> と打ち込みます。<code>python3</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
+<p>これらを更新したらターミナルに（bash なら）<code>. ~/.bash_profile</code>，（zsh なら）<code>source ~/.zprofile</code> と打ち込みます。<code>python3</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
 
 <p>いろいろなパッケージのインストールは <code>pip3</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
 
@@ -114,7 +116,7 @@ export PATH
 <code>pip3 install --user --upgrade pip
 </code></pre>
 
-<p>このように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます（次からはシステム側に書き込めないと自動的にユーザ側に書き込んでくれるようになるようです）。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> にさきほど追加されたものを</p>
+<p>このように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます（次からはシステム側に書き込めないと自動的にユーザ側に書き込んでくれるようになるようです）。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> または <code>source ~/.zprofile</code> にさきほど追加されたものを</p>
 
 <pre>
 <code>PATH="/Library/Frameworks/Python.framework/Versions/3.8/bin:${PATH}"
@@ -138,6 +140,16 @@ export PATH
 
 <p>アンインストールするには /Library/Frameworks/Python.framework および ~/Library/Python を消します。/usr/local/bin にできたシンボリックリンクも消します。~/.bash_profile に追加した PATH も消します。</p>
 
+<h3>macOS Big Sur の Python</h3>
+
+<p>macOS Big Sur では，ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールすると，universal binary の Python 3.8.2 が入ります。まずは</p>
+
+<pre>
+<code>/usr/bin/pip3 install --user --upgrade pip
+</code></pre>
+
+<p>で pip を更新します。新しい pip コマンド等が ~/Library/Python/3.8/bin に入りますので，そちらにパスを通しておきます。あとは本家のものと同じように使えそうです。</p>
+
 <hr>
 
 <p>これ以降はあまり更新できていませんので，最新の情報でない可能性があります。</p>
@@ -149,16 +161,6 @@ export PATH
 <p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら，PowerShell かコマンドプロンプトで「python」と打ち込むと，「ストア」が立ち上がって「Python」をインストールする画面が出てきます。インストール場所は C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps です。</p>
 
 <p>コマンドは 3 を付けても付けなくても同じです（python3 = python，pip3 = pip）。</p>
-
-<h3>macOS 10.15 Catalina の Python</h3>
-
-<p>2019-10-08 に出た macOS Catalina には，以前からの /usr/bin/python（バージョン 2.7.16）に加えて，/usr/bin/python3 が入っています。現時点のバージョンは 3.7.3 です。ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールしてから使います。まずは</p>
-
-<pre>
-<code>/usr/bin/pip3 install --user --upgrade pip
-</code></pre>
-
-<p>で pip を更新します。新しい pip コマンド等が ~/Library/Python/3.7/bin に入りますので，そちらにパスを通しておきます。あとは本家のものと同じように使えそうです。</p>
 
 <h3>Anaconda によるインストール</h3>
 
@@ -357,7 +359,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-19 21:32:58</time>
+Last modified: <time>2020-12-11 16:50:45</time>
 <!-- hhmts end -->
 </p>
 </footer>
