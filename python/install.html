@@ -18,9 +18,9 @@
 
 <h1>Python 3 インストール</h1>
 
-<p>macOS や Linux の /usr/bin/python コマンドは Python 2.7 ですが，<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。/usr/bin/python3 が Python 3.x ですが，バージョンがやや古い場合があるので，より新しいものを別途インストールしたいかもしれません。Windows には Python が入っていませんので別途インストールが必要です。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
+<p>macOS や Linux の <code>/usr/bin/python</code> コマンドは Python 2.7 です。<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。これからも python コマンドは 2.7 止まりで，新しい Python 3.x のコマンド名は <code>python3</code> となります（Windows 以外）。ただ，OS 付属の Python 3.x はバージョンがやや古い場合があるので，より新しいものを別途インストールしたいかもしれません。Windows には Python が入っていませんので別途インストールが必要です。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
 
-<p>最新のものは Python 3.9.1 ですが，もうちょっと我慢して，Python 3.8.x をインストールしましょう。3.8.x なら TensorFlow をはじめほとんどのライブラリが対応しています。3.6 や 3.7 が動いていれば，それでもかまいません。Google Colaboratory はまだ 3.6 です。</p>
+<p>最新のものは Python 3.9 ですが，苦労したくない場合は，自分の使うライブラリ群のバイナリが提供されているバージョンを選ぶのが楽です。3.8 なら TensorFlow をはじめほとんどのライブラリが対応しています（PyTorch は 3.9 に対応しました）。3.6 や 3.7 が動いていれば，それでもかまいません。Google Colaboratory はまだ 3.6 です。</p>
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
@@ -359,7 +359,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-11 16:50:45</time>
+Last modified: <time>2020-12-11 19:29:01</time>
 <!-- hhmts end -->
 </p>
 </footer>
