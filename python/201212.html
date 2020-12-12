@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>xlrd が xlsx に対応しなくなった</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>xlrd が xlsx に対応しなくなった</h1>
+
+<p>xlrd の <a href="https://xlrd.readthedocs.io/en/latest/changes.html">Changes</a> に書かれているように，xlrd 2.0.0 (11 December 2020) で "Remove support for anything other than .xls files." ということで，xlsx サポートがなくなった。</p>
+
+<p>このため，例えば<a href="https://github.com/okumuralab/literacy4">［改訂第4版］基礎からわかる情報リテラシー</a>のPythonの例題</p>
+
+<pre><code>import pandas as pd
+
+df = pd.read_excel('https://github.com/okumuralab/literacy4/raw/master/data/birthdeath.xlsx')
+</code></pre>
+
+<p>を実行すると XLRDError: Excel xlsx file; not supported というエラーになる。<code>pd.read_excel()</code> のデフォルトエンジンが xlrd のためである。対策は <code>pip install openpyxl</code> で openpyxl をインストールして</p>
+
+<pre><code>df = pd.read_excel('https://github.com/okumuralab/literacy4/raw/master/data/birthdeath.xlsx',
+                   engine='openpyxl')
+</code></pre>
+
+<p>とする。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-12 09:02:59</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
