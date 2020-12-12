@@ -61,26 +61,26 @@ collatz(n)
 
 <pre>
 <code>def collatz_max(n):
-    max = n
+    nmax = n
     while (n &gt; 1):
         if (n % 2 == 0):
             n = n // 2
         else:
             n = 3 * n + 1
-            if n &gt; max:
-                max = n
-    return max
+            if n &gt; nmax:
+                nmax = n
+    return nmax
 </code></pre>
 
 <p>これは <code>n</code> が大きくなるにつれてどれくらい大きくなるでしょうか。</p>
 
 <pre>
-<code>max = 0
+<code>mmax = 0
 for n in range(10000):
     m = collatz(n)
-    if m &gt; max:
+    if m &gt; mmax:
         print(n, m)
-        max = m
+        mmax = m
 </code></pre>
 
 <p><code>range()</code> の数をもっと大きくしてやってみましょう。</p>
@@ -95,7 +95,7 @@ for n in range(10000):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-08-16 16:38:45</time>
+Last modified: <time>2020-12-12 14:19:53</time>
 <!-- hhmts end -->
 </p>
 </body>
