@@ -16,24 +16,44 @@
 
 <h1>正規表現</h1>
 
-<p>正規表現を扱うための標準ライブラリ <a href="https://docs.python.org/3/library/re.html">re</a>（<a href="https://docs.python.org/ja/3/library/re.html">日本語ドキュメント</a>）を使って正規表現に慣れましょう。</p>
+<p>正規表現（regular expression）は文字列照合のための仕組みです。</p>
+
+<p>Python で正規表現を扱うためには，標準ライブラリ <a href="https://docs.python.org/3/library/re.html">re</a>（<a href="https://docs.python.org/ja/3/library/re.html">日本語ドキュメント</a>）またはサードパーティのライブラリ <a href="https://pypi.org/project/regex/">regex</a> を使います。以下では re を使います。</p>
+
+<p>次の例での正規表現は "げほ" という単純な文字列です。</p>
 
 <pre><code>import re
 
-if re.search("ほげ", "ほげほげ"):
-    print("含まれます")
+if re.search("げほ", "ほげほげ"):
+    print("「げほ」は「ほげほげ」に含まれます")
 else:
-    print("含まれません")
+    print("「げほ」は「ほげほげ」に含まれません")
+
+m = re.search("げほ", "ほげほげ")
+m.span()  # 一致位置を表すtuple (1, 3)
 </code></pre>
 
-<p>いろいろ変えてやってみましょう。</p>
+<p>先頭は <code>^</code>，末尾は <code>$</code>，任意の1文字は <code>.</code>，任意の0文字以上は <code>.*</code> で表します。括弧はグルーピングを意味します。</p>
 
-<p>次のようなこともできます。</p>
+<p>正規表現 <code>^ほげ(.*)$</code> は，先頭に「ほげ」があるパターンを表します。「ほげ」以下の末尾までは括弧で囲んでありますので一つのグループです。</p>
 
 <pre><code>m = re.search("^ほげ(.*)$", "ほげふが")
 m     # 一致しなければ偽
-m[0]  # 一致全体
-m[1]  # 1番目の括弧
+m[0]  # 一致全体「ほげふが」
+m[1]  # 1番目のグループ「ふが」
+
+m = re.search("^ほげ(.*)へ(.*)$", "ほげふがへろへろ")
+m[0]  # 一致全体「ほげふがへろへろ」
+m[1]  # 1番目のグループ「ふがへろ」
+m[2]  # 2番目のグループ「ろ」
+</code></pre>
+
+<p><code>.*</code> はできるだけ長い任意の文字列にマッチします。<code>.*?</code> はできるだけ短い任意の文字列にマッチします。</p>
+
+<pre><code>m = re.search("^ほげ(.*?)へ(.*)$", "ほげふがへろへろ")
+m[0]  # 一致全体「ほげふがへろへろ」
+m[1]  # 1番目のグループ「ふが」
+m[2]  # 2番目のグループ「ろへろ」
 </code></pre>
 
 <hr>
@@ -42,7 +62,7 @@ m[1]  # 1番目の括弧
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-08 15:55:23</time>
+Last modified: <time>2020-12-14 20:56:06</time>
 <!-- hhmts end -->
 </p>
 </body>
