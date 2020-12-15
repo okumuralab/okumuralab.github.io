@@ -27,7 +27,26 @@ for i in d['entries']:
     print(i['title'])
 </code></pre>
 
-<p>あとは好きなように拡張すればよい。例えば10分ごとに読みに行って新着ニュースのタイトルを表示し，タイトルに「東京」が含まれればMacの通知センターにも通知を表示する：</p>
+<p>10分ごとに自動で読みに行って新着ニュースのタイトルを表示する：</p>
+
+<pre><code>import feedparser
+import time
+
+s = set()   # 空集合
+
+while True:
+    d = feedparser.parse('https://www.nhk.or.jp/rss/news/cat0.xml')
+    for i in d['entries']:
+        x = i['title']
+        if x not in s:
+            print(x)
+            s.add(x)
+    time.sleep(600)  # 10分
+</code></pre>
+
+<p>Python で空集合は <code>set()</code> とすることに注意。<code>{}</code> では「空の辞書（dict）」になってしまう。</p>
+
+<p>あとは好きなように拡張すればよい。例えばタイトルに「東京」が含まれればMacの通知センターにも通知を表示する：</p>
 
 <pre><code>import feedparser
 import time
@@ -65,7 +84,7 @@ while True:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-07-30 20:13:13</time>
+Last modified: <time>2020-12-15 14:50:37</time>
 <!-- hhmts end -->
 </p>
 </body>

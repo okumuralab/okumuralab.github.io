@@ -60,7 +60,9 @@ r = requests.get('http://example.jp/')
 r.raise_for_status()  # エラーチェック
 r.encoding = 'utf-8'
 s = BeautifulSoup(r.text)
-a = [x.get('href') for x in s.select('a')]
+s                                       # HTML全体
+s.select('a')                           # &lt;a ...&gt; タグ
+[x.get('href') for x in s.select('a')]  # &lt;a ...&gt; タグの中のhref
 </code></pre>
 
 <p>一般に正規表現は想定外の HTML の書き方に対応できないので Beautiful Soup のような高レベルの方法が良いとされる。</p>
@@ -175,7 +177,7 @@ for u in urls:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-06 10:37:47</time>
+Last modified: <time>2020-12-15 14:59:22</time>
 <!-- hhmts end -->
 </p>
 </body>

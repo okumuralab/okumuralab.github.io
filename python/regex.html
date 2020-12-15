@@ -16,7 +16,11 @@
 
 <h1>正規表現</h1>
 
-<p>正規表現（regular expression）は文字列照合のための仕組みです。</p>
+<p>Python では，ある文字列が別の文字列に含まれているかどうかを調べるには <code>in</code> を使うことができます。例えば <code>"げほ" in "ほげほげ"</code> の値は True になります。</p>
+
+<p>このような文字列照合をさらに拡張した仕組みが正規表現（regular expression）です。</p>
+
+<p>よく使うコマンド grep も正規表現で文字列を検索するツールです。grep の語源は諸説ありますが，真ん中の re は regular expression を意味しています。</p>
 
 <p>Python で正規表現を扱うためには，標準ライブラリ <a href="https://docs.python.org/3/library/re.html">re</a>（<a href="https://docs.python.org/ja/3/library/re.html">日本語ドキュメント</a>）またはサードパーティのライブラリ <a href="https://pypi.org/project/regex/">regex</a> を使います。以下では re を使います。</p>
 
@@ -62,7 +66,7 @@ m[2]  # 2番目のグループ「ろへろ」
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-14 20:56:06</time>
+Last modified: <time>2020-12-15 14:19:50</time>
 <!-- hhmts end -->
 </p>
 </body>
