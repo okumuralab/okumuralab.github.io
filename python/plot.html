@@ -20,16 +20,57 @@
 
 <p>プロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a>（マットプロットリブ）という MATLAB ライクなライブラリを使います。</p>
 
-<p>もし，例えば</p>
+<h3>Google Colaboratory での利用</h3>
+
+<p>例えば次のように打ち込めばグラフが現れるはずです。</p>
+
+<pre class="cell">
+<code>import matplotlib.pyplot as plt
+
+plt.plot([-1, 1])
+</code></pre>
+
+<p>現状ではグラフ中に日本語が出力できません。簡単な解決策として <a href="https://qiita.com/uehara1414/items/6286590d2e1ffbf68f6c">pip install して import するだけで matplotlib を日本語表示対応させる</a> で紹介されている <code>japanize-matplotlib</code> というライブラリを使うのが簡単です。</p>
+
+<pre class="cell">
+<code>!pip install japanize-matplotlib</code>
+</pre>
+
+<p>と打ち込めばインストールできます。試してみましょう：</p>
+
+<pre class="cell">
+<code>import matplotlib.pyplot as plt
+import japanize_matplotlib
+
+plt.plot([-1, 1])
+plt.title('日本語タイトル')
+</code></pre>
+
+<h3>自分のマシンでの利用</h3>
+
+<p>対話型の環境なら</p>
 
 <pre>
 <code>import matplotlib.pyplot as plt
 
-plt.plot([-1,1])
-plt.show()
+plt.plot([-1, 1])
 </code></pre>
 
-<p>でエラーになるなら，設定ファイル matplotlibrc（Mac と Windows では <code>~/.matplotlib/matplotlibrc</code>，Linux では <code>~/.config/matplotlib/matplotlibrc</code>）の<a href="https://matplotlib.org/faq/usage_faq.html#what-is-a-backend">バックエンド</a>の指定を見直します。Mac の場合は</p>
+<p>でグラフが出ると思います。もし出なければ，この後に</p>
+
+<pre>
+<code>plt.show()
+</code></pre>
+
+<p>を補ってください。Jupyter Notebook の環境でうまく出ないなら，まず<p>
+
+<pre>
+<code>%matplotlib inline
+</code></pre>
+
+<p>を打ち込んでからプロットしてください。</p>
+
+<p>エラーになるなら，設定ファイル matplotlibrc（Mac と Windows では <code>~/.matplotlib/matplotlibrc</code>，Linux では <code>~/.config/matplotlib/matplotlibrc</code>）を作成し，<a href="https://matplotlib.org/faq/usage_faq.html#what-is-a-backend">バックエンド</a>の指定を書き込みます。Mac の場合は</p>
 
 <pre>
 <code>backend: MacOSX
@@ -389,7 +430,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-07 14:28:47</time>
+Last modified: <time>2020-12-16 17:07:09</time>
 <!-- hhmts end -->
 </p>
 </body>
