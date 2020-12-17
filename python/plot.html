@@ -16,7 +16,7 @@
 
 <h1>プロット</h1>
 
-<h2>matplotlib</h2>
+<h2>matplotlibの基本</h2>
 
 <p>プロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a>（マットプロットリブ）という MATLAB ライクなライブラリを使います。</p>
 
@@ -44,6 +44,28 @@ import japanize_matplotlib
 
 plt.plot([-1, 1])
 plt.title('日本語タイトル')
+</code></pre>
+
+<p>図の大きさを変えるには次のようにします。指定するのは横・縦のサイズで，単位はインチです。</p>
+
+<pre class="cell">
+<code>plt.figure(figsize=(8, 6))
+plt.plot([-1, 1])
+</code></pre>
+
+<p>図はドラッグ＆ドロップでダウンロードできます。</p>
+
+<p>図の上に余分なメッセージが出るのが嫌なら，セルの最後の行の最後にセミコロン <code>;</code> を付けるというハックがあります：</p>
+
+<pre class="cell">
+<code>plt.plot([-1, 1]);
+</code></pre>
+
+<p>より素直な方法は，最後に <code>plt.show()</code> を実行することです。</p>
+
+<pre class="cell">
+<code>plt.plot([-1, 1])
+plt.show()
 </code></pre>
 
 <h3>自分のマシンでの利用</h3>
@@ -90,13 +112,13 @@ plt.plot([-1, 1])
 <code>font.family: AppleGothic
 </code></pre>
 
-<p>でよさそうです。あるいは，<a href="https://ipafont.ipa.go.jp">こちら</a>から IPAex ゴシックをいただいてきてシステムにインストールし，次のように書き加えます：</p>
+<p>でよさそうです。あるいは，<a href="https://moji.or.jp/ipafont/">こちら</a>から IPAex ゴシックをいただいてきてシステムにインストールし，次のように書き加えます：</p>
 
 <pre>
 <code>font.family: IPAexGothic
 </code></pre>
 
-<p>新しいフォントをインストールしたら，フォント名のキャッシュ（Mac と Windows では <code>~/.matplotlib/fontlist-*.json</code>，Linux では <code>~/.cache/matplotlib/fontlist-*.json</code>）は消します（次回 matplotlib 使用の際に自動生成されます）。</p>
+<p>新しいフォントをインストールしたら，フォント名のキャッシュ（Mac と Windows では <code>~/.matplotlib/fontlist-*.json</code>，Linux では <code>~/.cache/matplotlib/fontlist-*.json</code>）を削除します（次回 matplotlib 使用の際に自動生成されます）。</p>
 
 <p>matplotlib 3.1.0 以降は TrueType Collection も表示できるようになりましたので，Windows なら</p>
 
@@ -430,7 +452,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-16 17:07:09</time>
+Last modified: <time>2020-12-17 10:17:29</time>
 <!-- hhmts end -->
 </p>
 </body>

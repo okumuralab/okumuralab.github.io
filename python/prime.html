@@ -71,9 +71,9 @@ def isprime(n):
 <p>今日（例えば 20190823）は素数か？</p>
 
 <pre>
-<code>import time
+<code>import datetime
 
-n = int(time.strftime('%Y%m%d', time.localtime()))
+n = int(f'{datetime.datetime.now():%Y%m%d}')
 isprime(n)
 </code></pre>
 
@@ -122,7 +122,7 @@ sympy.isprime(20190823)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-10-12 10:18:50</time>
+Last modified: <time>2020-12-17 14:42:46</time>
 <!-- hhmts end -->
 </p>
 </body>

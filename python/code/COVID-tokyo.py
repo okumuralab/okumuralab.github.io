@@ -3,10 +3,11 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
-import time
+import datetime
 
 df = pd.read_csv("../data/COVID-tokyo.csv", parse_dates=['date'])
-now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
+# now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
+now = f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S}'
 
 fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()
