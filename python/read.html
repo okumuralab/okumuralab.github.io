@@ -50,14 +50,16 @@ Out[ ]: pandas.core.frame.DataFrame
   <li><code>comment="#"</code>: <code>#</code> 以下をコメントと解釈する</li>
 </ul>
 
-<p>デフォルトでは次の文字列が欠測値（<code>NaN</code>）と判断されます（空文字列と <code>#N/A</code> はExcelでも欠測値と解釈されます）：</p>
+<p>デフォルトでは次の文字列が欠測値（<code>NaN</code>）と判断されます：</p>
 
 <pre>
 <code>'', '#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan',
 '1.#IND', '1.#QNAN', '<NA>', 'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null'
 </code></pre>
 
-<p>これ以外が必要なときは <code>na_values</code> と <code>keep_default_na</code>（デフォルトは <code>True</code>）で指定できます。空欄だけを欠測値としたい場合は次のようにします：</p>
+<p>空文字列と <code>#N/A</code> はExcelでも欠測値と解釈されますが，<code>#</code> をコメント開始文字と設定している場合（<code>comment="#"</code>）には <code>"#N/A"</code> のようにダブルクォートで囲む必要があります。</p>
+
+<p>これ以外の欠測値用文字列が必要なときは <code>na_values</code> と <code>keep_default_na</code>（デフォルトは <code>True</code>）で指定できます。空欄だけを欠測値としたい場合は次のようにします：</p>
 
 <pre>
 <code>df = pd.read_csv("finename.csv", na_values="", keep_default_na=False)
@@ -279,7 +281,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-22 11:03:39</time>
+Last modified: <time>2020-12-22 21:42:38</time>
 <!-- hhmts end -->
 </p>
 </body>

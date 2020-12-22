@@ -99,7 +99,16 @@ plt.rcParams['axes.prop_cycle'] = cycler(color=["black"])
 
 <p>とすればよさそうです。</p>
 
-<p>（まだ続きます）</p>
+<p>色のスタイルを変えるには次のようにします（<a href="https://matplotlib.org/3.3.2/tutorials/introductory/customizing.html">Customizing Matplotlib with style sheets and rcParams</a> 参照）：</p>
+
+<pre>
+<code>plt.style.use('ggplot')               # ggplot風
+plt.style.use('seaborn-colorblind')
+plt.style.use('tableau-colorblind10')
+plt.style.use('default')              # 元に戻す
+</code></pre>
+
+<p>スタイルの一覧は <code>plt.style.available</code> というリストに格納されています。個々のスタイルの実体は <code>ggplot.mplstyle</code> などというファイルに書き込まれています。</p>
 
 <p>リンク</p>
 
@@ -108,6 +117,7 @@ plt.rcParams['axes.prop_cycle'] = cycler(color=["black"])
   <li><a href="http://medvis.org/2016/02/23/better-than-the-rainbow-the-matplotlib-alternative-colormaps/">Better than the rainbow: The Matplotlib alternative colormaps</a></li>
   <li><a href="http://yyhhyy.hatenablog.com/entry/2017/05/04/200000">誤解を招かないように配慮された最新のカラーマップ（カラーパレット）について</a></li>
   <li><a href="https://doi.org/10.1371/journal.pone.0199239">Optimizing colormaps with consideration for color vision deficiency to enable accurate interpretation of scientific data</a> (<code>"cividis"</code> の提案)</li>
+  <li><a href="https://www.cta-observatory.org/wp-content/uploads/2020/10/CTA_ColourBlindness_BestPractices2.pdf">Best Practices for Colour Blind Friendly Publications and Descriptions</a></li>
 </ul>
 
 <hr>
@@ -116,7 +126,7 @@ plt.rcParams['axes.prop_cycle'] = cycler(color=["black"])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-29 11:37:18</time>
+Last modified: <time>2020-12-22 21:11:25</time>
 <!-- hhmts end -->
 </p>
 </body>
