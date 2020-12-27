@@ -57,11 +57,27 @@ td, th { border: 1px solid; }
   </tbody>
 </table>
 
-<p>なお，このような表をPythonでスクレイプするには，次のようにすればよい：</p>
+<p>上と同じ形のExcelファイルを <a href="data/tables-1-2-ex1.xlsx">tables-1-2-ex1.xlsx</a> として置いておく。このExcelファイルはPythonで簡単に読める：</p>
 
 <pre class="cell">
 import pandas as pd
 
+df = pd.read_excel("https://oku.edu.mie-u.ac.jp/~okumura/python/data/tables-1-2-ex1.xlsx")
+df
+</pre>
+
+<pre>
+     年度  仕入額   出荷額
+0  2015  373   973
+1  2016  434  1234
+2  2017  549  1449
+3  2018  638  1738
+4  2019  741  1841
+</pre>
+
+<p>このページにあるHTMLの表をPythonでスクレイプするのも，同様に簡単である：</p>
+
+<pre class="cell">
 tables = pd.read_html("https://oku.edu.mie-u.ac.jp/~okumura/python/tables.html")
 tables[0]
 </pre>
@@ -268,7 +284,7 @@ tables[4]
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-26 22:43:11</time>
+Last modified: <time>2020-12-27 09:53:03</time>
 <!-- hhmts end -->
 </p>
 </body>

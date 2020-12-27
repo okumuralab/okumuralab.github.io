@@ -78,11 +78,10 @@ df.A[0] - 1258.477    # -2.2737367544323206e-13
 
 <h3>Excel ファイルの読み込み</h3>
 
-<p>pandas の <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.html">read_excel()</a> を使うのが簡単ですが，<a href="201212.html">xlrd パッケージが xlsx 非対応になった</a>ため，注意が必要です。あらかじめ xlrd と openpyxl パッケージを <code>pip install xlrd openpyxl</code> などとしてインストールしておきます。</p>
+<p>pandas の <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.html">read_excel()</a> を使うのが簡単です<del>が，<a href="201212.html">xlrd パッケージが xlsx 非対応になった</a>ため，注意が必要です</del>。あらかじめ xlrd と openpyxl パッケージを <code>pip install xlrd openpyxl</code> などとしてインストールしておきます。</p>
 
 <pre>
-<code>df = pd.read_excel("filename.xls")                      # xlsの場合
-df = pd.read_excel("filename.xlsx", engine="openpyxl")  # xlsxの場合
+<code>df = pd.read_excel("filename.xlsx") # xlsも読める
 </code></pre>
 
 <p>pandas によるファイル読み込みの全般については <a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">pandas の IO Tools</a> のページをご覧ください。</p>
@@ -281,7 +280,7 @@ with open('file.csv') as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-22 21:42:38</time>
+Last modified: <time>2020-12-27 09:48:50</time>
 <!-- hhmts end -->
 </p>
 </body>
