@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>探索アルゴリズム</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>探索アルゴリズム</h1>
+
+<p><a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416756.htm">高等学校情報科「情報Ⅰ」教員研修用教材（本編）</a>の「第3章　コンピュータとプログラミング」の128ページ以降に，探索アルゴリズムの話があります。</p>
+
+<p>線形（逐次）探索：</p>
+
+<figure><img src="img/search1.png" alt="線形探索"></figure>
+
+<p>まずは読みやすいように（PEP 8に合わせて）書き直します。<code>p</code> を <code>x</code> にしたのは特に意味はありません（Python の標準モジュール <a href="https://docs.python.org/ja/3/library/bisect.html">bisect</a> に合わせました）。</p>
+
+<pre class="cell">
+def linsearch(a, x):
+    for i in range(len(a)):
+        if a[i] == x:
+            print("見つかりました")
+            break
+
+
+a = [61, 15, 82, 77, 21, 32, 53]
+x = 82
+linsearch(a, x)
+</pre>
+
+<p>ちなみに，<code>for</code> ループは次のようにするほうが Python らしくなります。</p>
+
+<pre class="cell">
+def linsearch(a, x):
+    for k in a:
+        if k == x:
+            print("見つかりました")
+            break
+</pre>
+
+<p>二分探索：</p>
+
+<figure><img src="img/search2.png" alt="線形探索"></figure>
+
+<p>これもまずは読みやすいように整形：</p>
+
+<pre class="cell">
+def binsearch(a, x):
+    i = 0
+    j = len(a) - 1
+    while i <= j:
+        m = (i + j) // 2
+        if a[m] == x:
+            print("見つかりました")
+            break
+        elif a[m] > x:
+            j = m - 1
+        else:
+            i = m + 1
+</pre>
+
+<p>もうちょっとスマートにすると次のようになります：</p>
+
+<pre class="cell">
+def binsearch(a, x):
+    i = 0
+    j = len(a) - 1
+    while i < j:
+        m = (i + j) // 2
+        if a[m] < x:
+            i = m + 1
+        else:
+            j = m
+    if a[i] == x:
+        print("見つかりました")
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-27 13:12:36</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
