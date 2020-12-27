@@ -16,13 +16,17 @@
 
 <h1>探索アルゴリズム</h1>
 
-<p><a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416756.htm">高等学校情報科「情報Ⅰ」教員研修用教材（本編）</a>の「第3章　コンピュータとプログラミング」の128ページ以降に，探索アルゴリズムの話があります。</p>
+<p><a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416756.htm">高等学校情報科「情報Ⅰ」教員研修用教材（本編）</a>の「第3章　コンピュータとプログラミング」ではPythonが使われています。<a href="https://qiita.com/nagataaaas/items/ba33c4c4e0df0b5aa0c4">文科省のPythonはPythonじゃねぇ</a>のような酷評がありました。その後，少しだけ改善されましたが，まだまだのところもあります。</p>
+
+<p>この128ページ以降に，探索アルゴリズムの話があります。</p>
 
 <p>線形（逐次）探索：</p>
 
 <figure><img src="img/search1.png" alt="線形探索"></figure>
 
-<p>まずは読みやすいように（PEP 8に合わせて）書き直します。<code>p</code> を <code>x</code> にしたのは特に意味はありません（Python の標準モジュール <a href="https://docs.python.org/ja/3/library/bisect.html">bisect</a> に合わせました）。</p>
+<p>インデントがスペース5個だったり4個だったりで統一がとれていませんね。<a href="zero.html#PEP8">PEP 8</a> で推奨されている演算子のまわりのスペースやコンマの後のスペースもほとんど入っていません。<code>range()</code> の書き方は始値・増分を省略しない方針のようです。</p>
+
+<p>とりあえず PEP 8 に合わせて書き直してみましょう。<code>range()</code> の流儀は悩ましいところですが，ここでは一般的な書き方に直しました。<code>p</code> を <code>x</code> にしたのは特に意味はありません（Python の標準モジュール <a href="https://docs.python.org/ja/3/library/bisect.html">bisect</a> に合わせました）。</p>
 
 <pre class="cell">
 def linsearch(a, x):
@@ -37,7 +41,7 @@ x = 82
 linsearch(a, x)
 </pre>
 
-<p>ちなみに，<code>for</code> ループは次のようにするほうが Python らしくなります。</p>
+<p>ちなみに，<code>for</code> ループは次のようにするほうが Python らしくなります。研修資料ではこれは教えない方針のようです。</p>
 
 <pre class="cell">
 def linsearch(a, x):
@@ -51,7 +55,7 @@ def linsearch(a, x):
 
 <figure><img src="img/search2.png" alt="線形探索"></figure>
 
-<p>これもまずは読みやすいように整形：</p>
+<p>これもまずは上と同じような方針で整形します。</p>
 
 <pre class="cell">
 def binsearch(a, x):
@@ -68,7 +72,7 @@ def binsearch(a, x):
             i = m + 1
 </pre>
 
-<p>もうちょっとスマートにすると次のようになります：</p>
+<p>これは，等しいか・大きいか・小さいかを毎回調べていることになり，三分探索のような感じです。以上か・未満かで二分するようにしてみましょう：</p>
 
 <pre class="cell">
 def binsearch(a, x):
@@ -84,13 +88,15 @@ def binsearch(a, x):
         print("見つかりました")
 </pre>
 
+<p>こちらのほうが比較回数が少ないはずです。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-27 13:12:36</time>
+Last modified: <time>2020-12-27 14:22:07</time>
 <!-- hhmts end -->
 </p>
 </body>
