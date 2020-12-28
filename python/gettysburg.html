@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>シーザー暗号</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>シーザー暗号</h1>
+
+<p>2025年の共通テストから「情報I」が入るはずである（まだ決まったわけではないが）。大学入試センターが作って限られたところに配付していた試作問題を，情報処理学会が大学入試センターと調整して<a href="http://www.ipsj.or.jp/education/edu202012.html">大学入学共通テストへの「情報」の出題について</a>の追記で公開した。この試作問題は「検討用イメージ」で，実際にこの形で出題されることが決まったわけではない。</p>
+
+<p>この第5問がプログラミングの問題で，シーザー暗号がとりあげられている。言語は今までもセンター試験で出題されていた「情報関係基礎」という科目で使われている擬似言語「DNCL」（DNCは大学入試センターの略）をPython風にアレンジしたものである。</p>
+
+<p>この問題を実際にPythonを使いながら眺めてみよう。</p>
+
+<p>この問題で解く暗号文は，問題の最後で，リンカーンの有名な<a href="http://www.abrahamlincolnonline.org/lincoln/speeches/gettysburg.htm">ゲティスバーグ演説</a>を小文字にしたものであることがわかる：</p>
+
+<pre class="cell">
+gettysburg = """Four score and seven years ago our fathers brought
+forth on this continent, a new nation, conceived in Liberty, and
+dedicated to the proposition that all men are created equal.
+
+Now we are engaged in a great civil war, testing whether that nation,
+or any nation so conceived and so dedicated, can long endure. We are
+met on a great battle-field of that war. We have come to dedicate a
+portion of that field, as a final resting place for those who here
+gave their lives that that nation might live. It is altogether fitting
+and proper that we should do this.
+
+But, in a larger sense, we can not dedicate -- we can not consecrate
+-- we can not hallow -- this ground. The brave men, living and dead,
+who struggled here, have consecrated it, far above our poor power to
+add or detract. The world will little note, nor long remember what we
+say here, but it can never forget what they did here. It is for us the
+living, rather, to be dedicated here to the unfinished work which they
+who fought here have thus far so nobly advanced. It is rather for us
+to be here dedicated to the great task remaining before us -- that
+from these honored dead we take increased devotion to that cause for
+which they gave the last full measure of devotion -- that we here
+highly resolve that these dead shall not have died in vain -- that
+this nation, under God, shall have a new birth of freedom -- and that
+government of the people, by the people, for the people, shall not
+perish from the earth."""
+
+Hirabun = gettysburg.lower()
+</pre>
+
+<p>暗号文はこれを10文字ずらしたシーザー暗号である。ただし，アルファベット以外の部分はそのままである。</p>
+
+<pre class="cell">
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+codebook = alphabet[10:] + alphabet[:10]
+
+tbl = str.maketrans(alphabet, codebook)
+
+Angoubun = Hirabun.translate(tbl)
+print(Angoubun)
+</pre>
+
+<pre>
+pyeb cmybo kxn cofox iokbc kqy yeb pkdrobc lbyeqrd pybdr yx drsc
+myxdsxoxd, k xog xkdsyx, myxmosfon sx vslobdi, kxn nonsmkdon dy dro
+zbyzycsdsyx drkd kvv wox kbo mbokdon oaekv.
+
+xyg go kbo oxqkqon sx k qbokd msfsv gkb, docdsxq grodrob drkd xkdsyx,
+yb kxi xkdsyx cy myxmosfon kxn cy nonsmkdon, mkx vyxq oxnebo. go kbo
+wod yx k qbokd lkddvo-psovn yp drkd gkb. go rkfo mywo dy nonsmkdo k
+zybdsyx yp drkd psovn, kc k psxkv bocdsxq zvkmo pyb dryco gry robo
+qkfo drosb vsfoc drkd drkd xkdsyx wsqrd vsfo. sd sc kvdyqodrob psddsxq
+kxn zbyzob drkd go cryevn ny drsc.
+
+led, sx k vkbqob coxco, go mkx xyd nonsmkdo -- go mkx xyd myxcombkdo
+-- go mkx xyd rkvvyg -- drsc qbyexn. dro lbkfo wox, vsfsxq kxn nokn,
+gry cdbeqqvon robo, rkfo myxcombkdon sd, pkb klyfo yeb zyyb zygob dy
+knn yb nodbkmd. dro gybvn gsvv vsddvo xydo, xyb vyxq bowowlob grkd go
+cki robo, led sd mkx xofob pybqod grkd droi nsn robo. sd sc pyb ec dro
+vsfsxq, bkdrob, dy lo nonsmkdon robo dy dro expsxscron gybu grsmr droi
+gry pyeqrd robo rkfo drec pkb cy xylvi knfkxmon. sd sc bkdrob pyb ec
+dy lo robo nonsmkdon dy dro qbokd dkcu bowksxsxq lopybo ec -- drkd
+pbyw droco ryxybon nokn go dkuo sxmbokcon nofydsyx dy drkd mkeco pyb
+grsmr droi qkfo dro vkcd pevv wokcebo yp nofydsyx -- drkd go robo
+rsqrvi bocyvfo drkd droco nokn crkvv xyd rkfo nson sx fksx -- drkd
+drsc xkdsyx, exnob qyn, crkvv rkfo k xog lsbdr yp pboonyw -- kxn drkd
+qyfobxwoxd yp dro zoyzvo, li dro zoyzvo, pyb dro zoyzvo, crkvv xyd
+zobscr pbyw dro okbdr.
+</pre>
+
+<p>問題ではまず出現するアルファベットの度数分布を調べる：</p>
+
+<figure><img src="img/gettysburg1.png" alt="図5 出現頻度を求めるプログラム"></figure>
+
+<p>ここで <code>差分()</code> は a〜z を 0〜25 に置き換える関数とのことである。ただし，アルファベット以外は -1 に置き換える。Pythonで書けば次のようになる：</p>
+
+<pre class="cell">
+def 差分(c):
+    d = ord(c) - ord("a")
+    if d < 0 or d > 25:
+        d = -1
+    return d
+</pre>
+
+<p>この関数を使えば，上の問題のプログラムはPythonでは次のようになる：</p>
+
+<pre class="cell">
+Hindo = [0] * 26
+for i in range(len(Angoubun)):
+    bangou = 差分(Angoubun[i])
+    if bangou != -1:
+        Hindo[bangou] = Hindo[bangou] + 1
+print(Hindo)
+</pre>
+
+<p>なお，Pythonとしては</p>
+
+<pre class="cell">
+for c in Angoubun:
+    bangou = 差分(c)
+    if bangou != -1:
+        Hindo[bangou] += 1
+</pre>
+
+<p>と書くほうがきれいである。</p>
+
+<p>この度数分布を棒グラフで表す：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+
+plt.bar(list(alphabet), Hindo)
+</pre>
+
+<figure><img src="img/gettysburg.svg" alt="図6 アルファベットと配列Hindoのグラフ表示"></figure>
+
+<p>このパターンから推理して，10文字ずらしたことを突き止め，解読に成功する，というストーリーである。</p>
+
+<figure><img src="img/gettysburg2.png" alt="図7 暗号文を復号するプログラム"></figure>
+
+<p>これをPythonにするのは練習問題として残しておく。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-28 14:37:54</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
