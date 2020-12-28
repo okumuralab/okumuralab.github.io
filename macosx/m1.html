@@ -71,6 +71,7 @@ arch -x86_64 zsh
 <pre>
 ARCH=`uname -m`
 PROMPT="${ARCH} %m:%~%# "
+export HISTFILE=${HOME}/.zsh_history
 </pre>
 
 <p>あるいは場合分けもできる：</p>
@@ -83,6 +84,7 @@ if [[ $ARCH == 'arm64' ]]; then
 else
     PROMPT="[x] %m:%~%# "
 fi
+export HISTFILE=${HOME}/.zsh_history
 </pre>
 
 <p>環境変数は <code>~/.zshenv</code> で設定するが，<code>setopt no_global_rcs</code> と書いておかないと PATH を上書きされてしまう。</p>
@@ -167,7 +169,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-21 09:59:32</time>
+Last modified: <time>2020-12-28 09:08:15</time>
 <!-- hhmts end -->
 </p>
 </footer>
