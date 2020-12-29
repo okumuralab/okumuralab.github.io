@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <title>グラフの例：出生数と死亡数</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
-<link rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -17,14 +16,14 @@
 
 <h1>グラフの例：出生数と死亡数</h1>
 
-<p><em>[2017-07-31]</em> <a href="http://www.mhlw.go.jp/toukei/saikin/hw/jinkou/kakutei15/index.html">平成27年（2015）人口動態統計（確定数）の概況</a>により <a href="data/birthdeath.csv">birthdeath.csv</a> を修正・追加しました。</p>
+<p><em>[2020-12-29]</em> <a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/kakutei19/index.html">令和元年（2019）人口動態統計（確定数）の概況</a>により <a href="data/birthdeath.csv">birthdeath.csv</a> を修正・追加しました。</p>
 
 <p>2020年の東京オリンピックが決まりました。<a href="http://www.j-cast.com/2013/09/09183393.html">「東京五輪までに結婚し子供がほしい」　ツイッターへの大量書き込みはなぜ</a>という記事には「東京オリンピックの1964年は開催が決まった7年前の57年と比較し出生率は0・01ポイントアップ。ただしオリンピック翌年の出生率は64年より0・9ポイントアップ」などと書かれていますが，オリンピックは出生数に影響するのでしょうか。</p>
 
 <p>厚生労働省の<a href="http://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai12/index.html">平成24年人口動態統計月報年計（概数）の概況</a>の下のほうにリンクされている「統計表」というExcelファイルから出生数と死亡数を拾ってCSV形式（文字コード：UTF-8）にしたものを <a href="data/birthdeath.csv">ここ</a> に置いておきました。</p>
 
 <pre>
-<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/birthdeath.csv")
+<code>data = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/birthdeath.csv")
 </code></pre>
 
 <p>折れ線グラフにしてみます。前回の東京オリンピックの年（1964年）だけ赤点にしました。</p>
@@ -60,7 +59,7 @@ points(rep(1964,2), data[data[,1]==1964,2:3]/10000, type="p", pch=16, col="red")
 <p>追記：出生数より出生率のほうがよかったかもしれません。また，「ひのえうま」前後は毎月のデータのほうがおもしろいかもしれません。e-Statの<a href="http://www.e-stat.go.jp/SG1/estat/GL02020101.do?method=extendTclass&amp;refTarget=toukeihyo&amp;listFormat=hierarchy&amp;statCode=00450013&amp;tstatCode=000001040871&amp;tclass1=&amp;tclass2=&amp;tclass3=&amp;tclass4=&amp;tclass5=">GL02020101</a>の2-2に月間出生率がありますので<a href="data/birthrate.csv">CSVファイル</a>にしてプロットしてみました。なお，月間出生率とは人口1000人に対する値のようです。</p>
 
 <pre>
-<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/birthrate.csv",
+<code>data = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/birthrate.csv",
                 as.is=TRUE)
 t = as.POSIXct(data$年月)
 t0 = as.POSIXct("1960-01-01")
@@ -80,7 +79,7 @@ for (x in seq(t0,t1,"year")) abline(v=x, col="gray")
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2017-08-01 10:28:34</time>
+Last modified: <time>2020-12-29 14:23:29</time>
 <!-- hhmts end -->
 </p>
 </footer>
