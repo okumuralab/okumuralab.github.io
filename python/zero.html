@@ -52,7 +52,7 @@ Namespaces are one honking great idea -- let's do more of those!
 
 <h2 id="PEP8">PEP 8 など</h2>
 
-<p>PEP といえば，Python のスタイルガイド <a href="https://www.python.org/dev/peps/pep-0008/">PEP 8 -- Style Guide for Python Code</a> もぜひ（いずれは）読むべきものです。要は，シンプルに読めるような書き方をしようというものです。</p>
+<p>PEP といえば，Python のスタイルガイド <a href="https://www.python.org/dev/peps/pep-0008/">PEP 8 -- Style Guide for Python Code</a>（PEP 8 = ペップ・エイト）もぜひ（いずれは）読むべきものです。<a href="https://pep8-ja.readthedocs.io/ja/latest/">日本語版</a> もあります。インデントはスペース4個で，代入 <code>=</code> やほとんどの演算記号の前後にスペース1個を入れる，といったルールが書かれています。</p>
 
 <p>このスタイルに合わせるためのツールとして，<a href="https://github.com/hhatto/autopep8">autopep8</a>，<a href="https://gitlab.com/pycqa/flake8">flake8</a>，<a href="https://github.com/psf/black">black</a> などがあります。</p>
 
@@ -64,13 +64,15 @@ Namespaces are one honking great idea -- let's do more of those!
 
 <p>PEP 8 と似たものに <a href="https://google.github.io/styleguide/pyguide.html">Google Python Style Guide</a> があります。両者の違いはニュアンスほどのものです（両者の違いをまとめた <a href="https://qiita.com/hi-asano/items/f43ced224483ea1f62f4">@hi-asano さんの記事</a> 参照）が，Google のほうがより具体的なところもあります。例えば <a href="https://www.pylint.org">Pylint</a> の使用を推奨しています。Pylint は <code>pip install pylint</code> でインストールできます。ターミナルに <code>pylint ファイル名</code> と打ち込めば，ファイルにおさめた Python コードの問題点を（英語で）注意してくれます。</p>
 
+<p>Python のほうが他の言語よりスタイルガイドに忠実に書かれる傾向があります。そもそも Python は正しくインデントしないと動かないようにデザインされています。PEP 8 のおかげで，C言語の K&amp;R 流と GNU 流のように対立する流儀がありません。そのため，Python を自己流で書くと目立ってしまいます。ソースコードは人間が読むためのものでもあるので，ぜひ PEP 8 に則った書き方をしましょう。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-27 13:25:53</time>
+Last modified: <time>2020-12-29 22:18:40</time>
 <!-- hhmts end -->
 </p>
 </footer>
