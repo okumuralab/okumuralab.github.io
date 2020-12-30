@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>仮説検定・p値</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>仮説検定・p値</h1>
+
+<p><a href="../stat/pisa-robbr.html">PISA「盗難事件」問題</a>でも書きましたが，昔PISAにこんな問題がありました：</p>
+
+<figure><img src="img/pisa-robbr.png" alt="盗難事件に関する問題（PISA2000年調査及び2003年調査問題）"></figure>
+
+<p>グラフから数値を読み取ると，それぞれ508，516，合わせて1024です。</p>
+
+<p>「激増している」の反対は「たいして変わらない」です。これを「1999年も1998年も盗難事件の起こる確率は同じ」というふうに言い換えて，モデル化してみましょう。</p>
+
+<p>1024件の事件がそれぞれ同じ確率で1998年・1999年に起きるということは，0・1 の<a href="random.html">乱数</a>を1024個作ることでモデル化できます。</p>
+
+<pre class="cell">
+import numpy as np
+
+rng = np.random.default_rng()
+rng.integers(0, 2, size=1024)
+</pre>
+
+<p>1999年に起きる事件の数は，1 の出る回数です。</p>
+
+<pre class="cell">
+sum(rng.integers(0, 2, size=1024))
+</pre>
+
+<p>これが516以上である確率を求めてみましょう。
+
+<pre class="cell">
+N = 10000
+s = 0
+for i in range(N):
+    if sum(rng.integers(0, 2, size=1024)) >= 516:
+        s = s + 1
+print(s / N)
+</pre>
+
+<p>同じことは次のように書くこともできます：</p>
+
+<pre class="cell">
+x = np.array([sum(rng.integers(0, 2, size=1024)) for _ in range(10000)])
+sum(x >= 516) / len(x)
+</pre>
+
+<p>ついでにヒストグラム：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+
+plt.hist(x, bins=range(512-64, 512+64, 4), edgecolor="black")
+</pre>
+
+<figure><img src="img/pvalue1.svg" alt=""></figure>
+
+<p>516以上だけ色を変えてみましょう。</p>
+
+<pre class="cell">
+plt.hist(x[x < 516], bins=range(512-64, 512+64, 4), color="C0", edgecolor="black")
+plt.hist(x[x >= 516], bins=range(512-64, 512+64, 4), color="C1", edgecolor="black")
+</pre>
+
+<figure><img src="img/pvalue2.svg" alt=""></figure>
+
+<p>1999年の事件が516件以上起きる確率は4割以上あることがわかるでしょう。つまり，どちらの年に事件が起きる確率も同じと仮定しても，こういうことはよく起きるので，「激増」とは言えなさそうです。</p>
+
+<p>ここで仮定した「どちらの年も同じ」という仮定を「帰無仮説」といいます。帰無仮説を仮定して，現実またはそれ以上の差が生じる確率を，「<i>p</i> 値」（<i>p</i>-value）といいます。<i>p</i> 値があらかじめ決めた値（有意水準）より小さければ，偶然とは考えられないほどの違いがあると考えます。</p>
+
+<p>上で述べたことは，2022年から学年進行で高校で教えられる「数学I」の「データの分析」で「具体的な事象において仮説検定の考え方を理解すること」と書かれていることに関連します。より高度な内容は同じく「数学B」で扱われます。<a href="https://www.mext.go.jp/a_menu/shotou/new-cs/1384661.htm">学習指導要領</a>から「数学B」の該当部分を引用しておきます：</p>
+
+<blockquote>
+<p>(2) 統計的な推測</p>
+<p style="margin-left: 1em; text-indent: 1em">統計的な推測について，数学的活動を通して，その有用性を認識するとともに，次の事項を身に付けることができるよう指導する。<p>
+<p style="margin-left: 2em; text-indent: -1em">ア　次のような知識及び技能を身に付けること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｱ) 標本調査の考え方について理解を深めること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｲ) 確率変数と確率分布について理解すること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｳ) 二項分布と正規分布の性質や特徴について理解すること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｴ) 正規分布を用いた区間推定及び仮説検定の方法を理解すること。</p>
+<p style="margin-left: 2em; text-indent: -1em">イ　次のような思考力，判断力，表現力等を身に付けること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｱ) 確率分布や標本分布の特徴を，確率変数の平均，分散，標準偏差などを用いて考察すること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｲ) 目的に応じて標本調査を設計し，収集したデータを基にコンピュータなどの情報機器を用いて処理するなどして，母集団の特徴や傾向を推測し判断するとともに，標本調査の方法や結果を批判的に考察すること。</p>
+<p>［用語・記号］信頼区間，有意水準</p>
+</blockquote>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-30 19:48:36</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

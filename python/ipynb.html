@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ipynbを公開する方法</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ipynbを公開する方法</h1>
+
+<p>Google Colaboratory や Jupyter Notebook，JupyterLab で作った ipynb（IPython Notebook）形式のファイルを公開する方法：</p>
+
+<h3>Google Colaboratory のリンクを共有する</h3>
+
+<p>右上の「共有」で，URLを知っている者に公開することができます。変更は保存されません。</p>
+
+<h3>GitHub または Gist にアップロードする</h3>
+
+<p>HTML に変換された形で表示されます。</p>
+
+<h3>nbconvert で HTML に変換する</h3>
+
+<p><a href="https://ipython.org/ipython-doc/1/interactive/nbconvert.html">Converting notebooks to other formats</a> 参照。要 pandoc。念のため <code>pip install ipython jupyter jupyterlab</code> しておく。ターミナルに次を打ち込む：</p>
+
+<pre>
+jupyter nbconvert --to html --template full *.ipynb
+</pre>
+
+<p>テンプレートは <code>full</code>（デフォルト）と <code>basic</code> があります。後者は他の HTML ファイルに挿入する形式です。</p>
+
+<p>私の環境（Mac，公式サイトからインストール）では上のコマンドがエラーになったので，次のようにして逃げました：</p>
+
+<pre>
+cd ~/Library/Jupyter/nbconvert/
+ls templates  # 空であることを確かめる
+rmdir templates
+ln -s ../../Python/3.9/share/jupyter/nbconvert/templates .
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2020-12-30 20:14:29</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
