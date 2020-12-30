@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <title>日本地図</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -18,11 +18,11 @@
 
 <p><a href="https://qiita.com/SaitoTsutomu/items/6d17889ba47357e44131">県別データの可視化</a>で紹介されている japanmap ライブラリを使って日本地図を描く。</p>
 
-<p>まずインストール：</p>
+<p>Python 3.9 でインストールがうまくいかなかったので少々工夫：</p>
 
 <pre>
-<code>pip install japanmap
-pip install --upgrade opencv-python pillow  # 必要に応じて
+<code>pip install opencv-python Pillow
+pip install --no-deps japanmap
 </code></pre>
 
 <p>都道府県名：</p>
@@ -46,8 +46,8 @@ plt.imshow(jp.picture())
 <pre>
 <code>import pandas as pd
 
-data = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/gansokuhou2016.csv")
-x = data['年齢調整罹患率日本総数'][1:48]
+df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/gansokuhou2016.csv")
+x = df['年齢調整罹患率日本総数'][1:48]
 x = (x - min(x)) / (max(x) - min(x))
 cmap = plt.get_cmap('bwr')  # or 'coolwarm' or 'cividis_r' etc...
 
@@ -98,7 +98,7 @@ with open("190613b.svg", "w") as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-11 21:06:30</time>
+Last modified: <time>2020-12-30 11:13:47</time>
 <!-- hhmts end -->
 </p>
 </body>
