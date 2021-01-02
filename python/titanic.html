@@ -161,7 +161,7 @@ min      0.000000    1.000000    0.420000    0.000000    0.000000    0.000000
 max      1.000000    3.000000   80.000000    8.000000    6.000000  512.329200
 </pre>
 
-<p>図を描いてみよう：</p>
+<p>性別と年齢と生存の関係を，図を描いて調べよう：</p>
 
 <pre class="cell">
 sns.swarmplot('sex', 'age', hue='survived', data=titanic)
@@ -171,13 +171,24 @@ sns.swarmplot('sex', 'age', hue='survived', data=titanic)
 
 <p>女性と子供が多く生存していることがわかる。</p>
 
+<p>男性だけについて，乗客クラスと料金と生存の関係を調べよう：</p>
+
+<pre class="cell">
+sns.swarmplot('pclass', 'fare', hue='survived',
+              data=titanic[titanic['sex'] == 'male'])
+</pre>
+
+<figure><img src="img/titanic2.svg" alt=""></figure>
+
+<p>どちらかといえば first class が多く生存したようだが，あまり明確ではない。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-02 17:54:44</time>
+Last modified: <time>2021-01-02 19:37:25</time>
 <!-- hhmts end -->
 </p>
 </body>
