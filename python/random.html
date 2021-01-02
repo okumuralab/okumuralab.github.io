@@ -48,13 +48,13 @@ np.random.random(10)  # 区間 [0,1) の10個の乱数を返す
 
 <pre><code>import numpy as np
 
-rng = np.random.default_rng() # ランダムに初期化
+rng = np.random.default_rng(20200102) # seedの設定（空も可）
 rng.random(10)                # 0以上1未満の一様乱数10個
 rng.standard_normal(10)       # 標準正規分布の乱数10個
 rng.integers(1, 7, size=10)   # 1以上7未満の整数の乱数10個
 </code></pre>
 
-<p>実際のシミュレーションでは <code>rng = np.random.default_rng(12345)</code> のように種（seed）を明示的に与えて初期化することをお勧めします。その場合，毎回同じ乱数が生成されますので，結果を再現できます。</p>
+<p>上の例のように「タネ（seed）」を与えるのがシミュレーションでの推奨です。同じタネからは同じ乱数列が生成されますので，あとで結果を再現できます。ゲームなどでは <code>rng = np.random.default_rng()</code> のように空にすると，再現性のない（毎回異なる）乱数列が得られます。</p>
 
 <p>例えばモンテカルロ法で円周率を求めるには次のようにします：</p>
 
@@ -90,7 +90,7 @@ plt.hist(a)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-05 14:03:57</time>
+Last modified: <time>2021-01-02 20:02:42</time>
 <!-- hhmts end -->
 </p>
 </body>

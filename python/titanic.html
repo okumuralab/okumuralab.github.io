@@ -59,11 +59,13 @@ Index(['survived', 'pclass', 'sex', 'age', 'sibsp', 'parch', 'fare',
 
 <p>それぞれ，生存（0/1），乗客クラス（1〜3），性別（male/female），年齢，同乗の兄弟姉妹配偶者の数，同乗の親子供の数，料金，乗船港（C = Cherbourg, Q = Queenstown, S = Southampton），乗客クラス（First/Second/Third），男女子供（man/woman/child），成人男性（True/False），デッキ（A〜G），乗船港（Cherbourg/Queenstown/Southampton），生存（yes/no），一人旅（True/False）である。</p>
 
-<p>いくつかの項目は冗長である。alone は sibsp + parch が 0 に等しいことを意味する。年齢が 1 以上で xx.5 のような小数になっているものは推定年齢が xx であることを意味する。child は16歳未満（15歳以下）を意味する。成人男性と man は同義である。</p>
+<p>年齢が 1 以上で xx.5 のような小数になっているものは推定年齢が xx であることを意味する。</p>
+
+<p>いくつかの項目は冗長である。後述のように，alone は sibsp + parch が 0 に等しいことを意味する。child は16歳未満（15歳以下）を意味する。成人男性と who == 'man' は同義である。</p>
 
 <p>Kaggle のデータでは他に Name（氏名），Ticket（チケット番号），Cabin（客室番号）が含まれている。seaborn の deck は Kaggle の Cabin の頭1文字に相当する。例えば2番目の乗客は客室番号 C85 であるのでデッキは C である。</p>
 
-<p>欠測値を考えなければ，独立な項目は 'survived', 'pclass', 'sex', 'age', 'sibsp', 'parch', 'fare', 'embarked', 'deck' の9個のはずである。ところが，項目によっては欠測値がある：</p>
+<p>項目ごとの欠測値の数は次の通りである：</p>
 
 <pre class="cell">
 titanic.isna().sum()
@@ -88,7 +90,17 @@ alone            0
 dtype: int64
 </pre>
 
-<p>つまり，age と sex から who が導けるわけではない。しかし who から adult_male は導ける。
+<p>age には欠測値が多いが who にはない。Kaggle のデータに who に相当する項目がないので最初不思議に思ったが，どうやら単純に age &lt; 16 を child としているだけで，欠測は自動的に大人にされてしまっているようだ：</p>
+
+<pre class="cell">
+((titanic['who'] == 'child') == (titanic['age'] < 16)).all()
+</pre>
+
+<pre>
+True
+</pre>
+
+<p>adult_male も機械的に導いているようだ：</p>
 
 <pre class="cell">
 ((titanic['who'] == 'man') == titanic['adult_male']).all()
@@ -98,7 +110,7 @@ dtype: int64
 True
 </pre>
 
-<p>同様に，alive が yes であることと survived が True であることは等価である：</p>
+<p>alive が yes であることと survived が True であることは等価である：</p>
 
 <pre class="cell">
 ((titanic['alive'] == 'yes') == titanic['survived']).all()
@@ -118,29 +130,29 @@ True
 True
 </pre>
 
-<p>結局次の10項目で十分である：</p>
+<p>結局次の9項目で十分である：</p>
 
 <pre class="cell">
 titanic = titanic[['survived', 'pclass', 'sex', 'age', 'sibsp',
-                   'parch', 'fare', 'embarked', 'who', 'deck']]
+                   'parch', 'fare', 'embarked', 'deck']]
 titanic
 </pre>
 
 <pre>
-     survived  pclass     sex   age  sibsp  parch     fare embarked    who deck
-0           0       3    male  22.0      1      0   7.2500        S    man  NaN
-1           1       1  female  38.0      1      0  71.2833        C  woman    C
-2           1       3  female  26.0      0      0   7.9250        S  woman  NaN
-3           1       1  female  35.0      1      0  53.1000        S  woman    C
-4           0       3    male  35.0      0      0   8.0500        S    man  NaN
-..        ...     ...     ...   ...    ...    ...      ...      ...    ...  ...
-886         0       2    male  27.0      0      0  13.0000        S    man  NaN
-887         1       1  female  19.0      0      0  30.0000        S  woman    B
-888         0       3  female   NaN      1      2  23.4500        S  woman  NaN
-889         1       1    male  26.0      0      0  30.0000        C    man    C
-890         0       3    male  32.0      0      0   7.7500        Q    man  NaN
+     survived  pclass     sex   age  sibsp  parch     fare embarked deck
+0           0       3    male  22.0      1      0   7.2500        S  NaN
+1           1       1  female  38.0      1      0  71.2833        C    C
+2           1       3  female  26.0      0      0   7.9250        S  NaN
+3           1       1  female  35.0      1      0  53.1000        S    C
+4           0       3    male  35.0      0      0   8.0500        S  NaN
+..        ...     ...     ...   ...    ...    ...      ...      ...  ...
+886         0       2    male  27.0      0      0  13.0000        S  NaN
+887         1       1  female  19.0      0      0  30.0000        S    B
+888         0       3  female   NaN      1      2  23.4500        S  NaN
+889         1       1    male  26.0      0      0  30.0000        C    C
+890         0       3    male  32.0      0      0   7.7500        Q  NaN
 
-[891 rows x 10 columns]
+[891 rows x 9 columns]
 </pre>
 
 <p>次のようにすれば数値データの項目について要約統計量が得られる：</p>
@@ -182,13 +194,15 @@ sns.swarmplot('pclass', 'fare', hue='survived',
 
 <p>どちらかといえば first class が多く生存したようだが，あまり明確ではない。</p>
 
+<p><code>titanic[titanic['sex'] == 'male']</code> は <code>titanic.query("sex == 'male'")</code> でもよい（<a href="https://stackoverflow.com/questions/17071871/how-to-select-rows-from-a-dataframe-based-on-column-values">How to select rows from a DataFrame based on column values</a>）。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-02 19:37:25</time>
+Last modified: <time>2021-01-02 21:06:52</time>
 <!-- hhmts end -->
 </p>
 </body>
