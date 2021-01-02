@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <title>ヒストグラム</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -22,12 +22,12 @@
 <code>import matplotlib.pyplot as plt
 import numpy as np
 
-rng = np.random.default_rng()
+rng = np.random.default_rng(12345)
 x = rng.random(1000)
 plt.hist(x)
 </code></pre>
 
-<figure><img src="img/hist1.png" alt="ヒストグラム1"></figure>
+<figure><img src="img/hist1.svg" alt="ヒストグラム1"></figure>
 
 <p>R 風に描くには，次のようにする：</p>
 
@@ -35,22 +35,31 @@ plt.hist(x)
 <code>plt.hist(x, color="lightgray", edgecolor="black")
 </code></pre>
 
-<figure><img src="img/hist2.png" alt="ヒストグラム2"></figure>
+<figure><img src="img/hist2.svg" alt="ヒストグラム2"></figure>
 
-<p>seaborn 風（やや ggplot2 風）に描くには，次のようにする：</p>
+<p>seaborn の darkgrid 風に描くには，次のようにする（seaborn がインストールされていれば import しなくてもよい）：</p>
+
+<pre>
+<code>plt.style.use("seaborn-darkgrid")
+plt.hist(x)
+</code></pre>
+
+<p>やや不完全なので，seaborn を import してやってみる：</p>
 
 <pre>
 <code>import seaborn as sns
 
-sns.set()
+sns.set_style("darkgrid")
 plt.hist(x)
 </code></pre>
 
-<figure><img src="img/hist3.png" alt="ヒストグラム3"></figure>
+<figure><img src="img/hist3.svg" alt="ヒストグラム3"></figure>
 
 <p>オプション <code>density=True</code> で縦軸が個数でなく密度になる。<code>orientation='horizontal'</code> で横向きになる。</p>
 
 <p>例えば <code>bins=50</code> で，だいたい50分割になる。また，例えば <code>bins=[0,1,2,3,4]</code> のように分割点を指定できる。この場合，区間は左閉区間 [0,1)，[1,2)，[2,3)，[3,4] になる。一番右が閉区間となるのに注意。左が閉じた区間になるのは，R のデフォルトとは逆で，R ではオプション <code>right=FALSE</code> を付けると <code>plt.hist()</code> と同じになる。ちなみに Excel の「グラフ」メニューに加わった「ヒストグラム」も左開区間にしかできないようで，悩ましい。</p>
+
+<p>なお，seaborn だけでも <code>sns.histplot(x)</code> できる。区切り方が <code>plt.hist(x)</code> と少し違う。</p>
 
 <hr>
 
@@ -58,7 +67,7 @@ plt.hist(x)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-24 20:20:13</time>
+Last modified: <time>2021-01-02 13:59:27</time>
 <!-- hhmts end -->
 </p>
 </body>
