@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>タイタニック号沈没事故</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>タイタニック号沈没事故</h1>
+
+<p>統計・データ解析の<a href="../stat/titanic.html">タイタニック号沈没事故</a>でも扱ったデータをPythonでいじってみよう。</p>
+
+<p>ここでは <a href="seaborn.html">seaborn</a> のデータレポジトリにあるデータを使う：</p>
+
+<pre class="cell">
+import seaborn as sns
+
+titanic = sns.load_dataset('titanic')
+titanic
+</pre>
+
+<pre>
+     survived  pclass     sex   age  sibsp  ...  adult_male  deck  embark_town alive  alone
+0           0       3    male  22.0      1  ...        True   NaN  Southampton    no  False
+1           1       1  female  38.0      1  ...       False     C    Cherbourg   yes  False
+2           1       3  female  26.0      0  ...       False   NaN  Southampton   yes   True
+3           1       1  female  35.0      1  ...       False     C  Southampton   yes  False
+4           0       3    male  35.0      0  ...        True   NaN  Southampton    no   True
+..        ...     ...     ...   ...    ...  ...         ...   ...          ...   ...    ...
+886         0       2    male  27.0      0  ...        True   NaN  Southampton    no   True
+887         1       1  female  19.0      0  ...       False     B  Southampton   yes   True
+888         0       3  female   NaN      1  ...       False   NaN  Southampton    no  False
+889         1       1    male  26.0      0  ...        True     C    Cherbourg   yes   True
+890         0       3    male  32.0      0  ...        True   NaN   Queenstown    no   True
+
+[891 rows x 15 columns]
+</pre>
+
+<p>乗客891人しか含んでいない。Rのデータセットは全体2201人，乗客1316人であった。これは <a href="https://www.kaggle.com/c/titanic/data">Kaggle の titanic データセット</a> の train.csv から生成したデータであるためである（test.csv の418人分のデータは入っていない）。</p>
+
+<pre class="cell">
+titanic.columns
+</pre>
+
+<pre>
+Index(['survived', 'pclass', 'sex', 'age', 'sibsp', 'parch', 'fare',
+       'embarked', 'class', 'who', 'adult_male', 'deck', 'embark_town',
+       'alive', 'alone'],
+      dtype='object')
+</pre>
+
+<p>それぞれ，生存（0/1），乗客クラス（1〜3），性別（male/female），年齢，同乗の兄弟姉妹配偶者の数，同乗の親子供の数，料金，乗船港（C = Cherbourg, Q = Queenstown, S = Southampton），乗客クラス（First/Second/Third），男女子供（man/woman/child），成人男性（True/False），デッキ（A〜G），乗船港（Cherbourg/Queenstown/Southampton），生存（yes/no），一人旅（True/False）である。</p>
+
+<p>いくつかの項目は冗長である。alone は sibsp + parch が 0 に等しいことを意味する。年齢が 1 以上で xx.5 のような小数になっているものは推定年齢が xx であることを意味する。child は16歳未満（15歳以下）を意味する。成人男性と man は同義である。</p>
+
+<p>Kaggle のデータでは他に Name（氏名），Ticket（チケット番号），Cabin（客室番号）が含まれている。seaborn の deck は Kaggle の Cabin の頭1文字に相当する。例えば2番目の乗客は客室番号 C85 であるのでデッキは C である。</p>
+
+<p>欠測値を考えなければ，独立な項目は 'survived', 'pclass', 'sex', 'age', 'sibsp', 'parch', 'fare', 'embarked', 'deck' の9個のはずである。ところが，項目によっては欠測値がある：</p>
+
+<pre class="cell">
+titanic.isna().sum()
+</pre>
+
+<pre>
+survived         0
+pclass           0
+sex              0
+age            177
+sibsp            0
+parch            0
+fare             0
+embarked         2
+class            0
+who              0
+adult_male       0
+deck           688
+embark_town      2
+alive            0
+alone            0
+dtype: int64
+</pre>
+
+<p>つまり，age と sex から who が導けるわけではない。しかし who から adult_male は導ける。
+
+<pre class="cell">
+((titanic['who'] == 'man') == titanic['adult_male']).all()
+</pre>
+
+<pre>
+True
+</pre>
+
+<p>同様に，alive が yes であることと survived が True であることは等価である：</p>
+
+<pre class="cell">
+((titanic['alive'] == 'yes') == titanic['survived']).all()
+</pre>
+
+<pre>
+True
+</pre>
+
+<p>sibsp + parch が 0 であることと alone が True であることも等価である：</p>
+
+<pre class="cell">
+((titanic['sibsp'] + titanic['parch'] == 0) == titanic['alone']).all()
+</pre>
+
+<pre>
+True
+</pre>
+
+<p>結局次の10項目で十分である：</p>
+
+<pre class="cell">
+titanic = titanic[['survived', 'pclass', 'sex', 'age', 'sibsp',
+                   'parch', 'fare', 'embarked', 'who', 'deck']]
+titanic
+</pre>
+
+<pre>
+     survived  pclass     sex   age  sibsp  parch     fare embarked    who deck
+0           0       3    male  22.0      1      0   7.2500        S    man  NaN
+1           1       1  female  38.0      1      0  71.2833        C  woman    C
+2           1       3  female  26.0      0      0   7.9250        S  woman  NaN
+3           1       1  female  35.0      1      0  53.1000        S  woman    C
+4           0       3    male  35.0      0      0   8.0500        S    man  NaN
+..        ...     ...     ...   ...    ...    ...      ...      ...    ...  ...
+886         0       2    male  27.0      0      0  13.0000        S    man  NaN
+887         1       1  female  19.0      0      0  30.0000        S  woman    B
+888         0       3  female   NaN      1      2  23.4500        S  woman  NaN
+889         1       1    male  26.0      0      0  30.0000        C    man    C
+890         0       3    male  32.0      0      0   7.7500        Q    man  NaN
+
+[891 rows x 10 columns]
+</pre>
+
+<p>次のようにすれば数値データの項目について要約統計量が得られる：</p>
+
+<pre class="cell">
+titanic.describe()
+</pre>
+
+<pre>
+         survived      pclass         age       sibsp       parch        fare
+count  891.000000  891.000000  714.000000  891.000000  891.000000  891.000000
+mean     0.383838    2.308642   29.699118    0.523008    0.381594   32.204208
+std      0.486592    0.836071   14.526497    1.102743    0.806057   49.693429
+min      0.000000    1.000000    0.420000    0.000000    0.000000    0.000000
+25%      0.000000    2.000000   20.125000    0.000000    0.000000    7.910400
+50%      0.000000    3.000000   28.000000    0.000000    0.000000   14.454200
+75%      1.000000    3.000000   38.000000    1.000000    0.000000   31.000000
+max      1.000000    3.000000   80.000000    8.000000    6.000000  512.329200
+</pre>
+
+<p>図を描いてみよう：</p>
+
+<pre class="cell">
+sns.swarmplot('sex', 'age', hue='survived', data=titanic)
+</pre>
+
+<figure><img src="img/titanic1.svg" alt=""></figure>
+
+<p>女性と子供が多く生存していることがわかる。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-01-02 17:54:44</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
