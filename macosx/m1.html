@@ -16,9 +16,7 @@
 
 <h1>M1 Mac</h1>
 
-<p><em>[TL;DR]</em> Rosetta で x86_64 バイナリを使えば問題ない。それでも Intel より速い。arm64 ネイティブなバイナリは今のところ Apple 製のものや TeX など一部に限られる。ソースからのコンパイルはけっこうたいへん。</p>
-
-<p><em>[HHKB について注意]</em> HHKB は macOS Big Sur 11 でドライバ更新が必要。<del>ただし 11.1 にすると <a href="https://faq.pfu.jp/faq/show/3726?site_domain=hhkb">旧製品が動作しない</a>。ドライバをアンインストールしてシステム環境設定→キーボード→ショートカット→入力ソースで適当なキーに設定する。デフォルトは Control + Space だが Emacs を使う場合は他のキー（例えば Control-O や Control-\）に設定する。</del> 11.1 用のドライバが出た。</p>
+<p><em>[TL;DR]</em> Rosetta で x86_64 バイナリを使えば問題ない。それでも Intel より速い。arm64 ネイティブなバイナリもどんどん増えてきた。</p>
 
 <h3>前口上</h3>
 
@@ -113,9 +111,11 @@ export PATH=... # bashと同様
 
 <h3>Homebrew</h3>
 
-<p>MacPorts のほうが M1 対応が進んでいるが，他のマシンに合わせて Homebrew を入れた。とりあえずは Intel 版で間に合わせる。通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを <code>uname -m</code> が x86_64 なターミナルに打ち込めばインストールできる。</p>
+<p>Rosetta で実行する Intel 版は通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを <code>uname -m</code> が x86_64 なターミナルに打ち込めばインストールできる。</p>
 
-<p>ARM 版については Homebrew の <a href="https://docs.brew.sh/Installation">Installation</a> 参照。対応状況は <a href="https://github.com/Homebrew/brew/issues/7857">macOS 11 Big Sur compatibility on Apple Silicon #7857</a> にまとめられている。@yujiod さんの <a href="https://qiita.com/yujiod/items/56002a7cef5b5a3be3fb">Apple SiliconにおけるHomebrewのベストプラクティス</a> も参考になる。<code>/opt/homebrew</code>（ユーザ権限で書き込めるようにしておく）にインストールする。</p>
+<p><del>ARM 版の対応状況は <a href="https://github.com/Homebrew/brew/issues/7857">macOS 11 Big Sur compatibility on Apple Silicon #7857</a> にまとめられている。</del> ← ARM 版の対応はどんどん進み，対応状況の表はあまり参考にならなくなった。</p>
+
+<p>ARM 版は，<a href="https://docs.brew.sh/Installation">Installation</a> にあるように <code>/opt/homebrew</code>（ユーザ権限で書き込めるようにしておく）にインストールする：</p>
 
 <pre>
 cd /opt
@@ -137,11 +137,13 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 /usr/bin/python3 (for architecture arm64e):	Mach-O 64-bit executable arm64e
 </pre>
 
-<p>これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば TensorFlow とその依存するパッケージ群（numpy など）が入る。bash で ~/tensorflow_macos_venv に入って <code>source bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。pip で入れようとしてもコンパイルでエラーになる。</p>
+<p>これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば TensorFlow とその依存するパッケージ群（numpy など）が入る。TensorFlow Blog の <a href="https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html">Accelerating TensorFlow Performance on Mac</a> 参照。<a href="https://docs.python.org/3/tutorial/venv.html">venv</a> なので，bash 互換シェル（zsh でもよい）で <code>source ~/tensorflow_macos_venv/bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。pip で入れようとしてもコンパイルでエラーになる。</p>
 
-<p>pip で簡単にパッケージを入れるためには今のところ Rosetta で python.org のものか Homebrew のものを使うほうが楽である。しかも 3.9 ではなく 3.8.x が楽である。</p>
+<p>pip で簡単にパッケージを入れるためには今のところ Rosetta で python.org のものか Homebrew のものを使うほうが楽である。</p>
 
 <p>本家 <a href="https://www.python.org">python.org</a> の Python が 3.9.1 から universal バイナリも experimental という括弧書きで提供されるようになった。本家のものをインストールすると，zsh を使っている場合は <code>.zprofile</code> のほうに PATH が書き込まれる。</p>
+
+<p>一方，<a href="https://github.com/conda-forge/miniforge">miniforge</a> を使えば主要ライブラリを含めてインストールできる（<a href="https://qiita.com/syoyo/items/6ad890c8a902d02d8c5a">こちら</a>参照）。うまくすれば Apple の TensorFlow と組み合わせることもできる（<a href="https://towardsdatascience.com/tensorflow-2-4-on-apple-silicon-m1-installation-under-conda-environment-ba6de962b3b8">TensorFlow 2.4 on Apple Silicon M1: installation under Conda environment</a> および <a href="https://towardsdatascience.com/benchmark-m1-vs-xeon-vs-core-i5-vs-k80-and-t4-e3802f27421c">Benchmark M1 vs Xeon vs Core i5 vs K80 and T4</a> 参照）。</p>
 
 <h3>R</h3>
 
@@ -173,6 +175,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 <ul>
   <li>@shibukawa さんの <a href="https://qiita.com/shibukawa/items/797b7cbb7e530842e6f7">M1 Macの開発環境</a></li>
   <li>iori さんの <a href="https://zenn.dev/ioridev/articles/c74af379e4e73151790d">個人的 M1 mac 開発環境状況</a></li>
+  <li>@yujiod さんの <a href="https://qiita.com/yujiod/items/56002a7cef5b5a3be3fb">Apple SiliconにおけるHomebrewのベストプラクティス</a></li>
 </ul>
 
 <hr>
@@ -182,7 +185,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-28 20:48:52</time>
+Last modified: <time>2021-01-03 22:16:44</time>
 <!-- hhmts end -->
 </p>
 </footer>
