@@ -176,7 +176,7 @@ max      1.000000    3.000000   80.000000    8.000000    6.000000  512.329200
 <p>性別と年齢と生存の関係を，図を描いて調べよう：</p>
 
 <pre class="cell">
-sns.swarmplot('sex', 'age', hue='survived', data=titanic)
+sns.swarmplot(x='sex', y='age', hue='survived', data=titanic)
 </pre>
 
 <figure><img src="img/titanic1.svg" alt=""></figure>
@@ -186,7 +186,7 @@ sns.swarmplot('sex', 'age', hue='survived', data=titanic)
 <p>男性だけについて，乗客クラスと料金と生存の関係を調べよう：</p>
 
 <pre class="cell">
-sns.swarmplot('pclass', 'fare', hue='survived',
+sns.swarmplot(x='pclass', y='fare', hue='survived',
               data=titanic[titanic['sex'] == 'male'])
 </pre>
 
@@ -194,7 +194,11 @@ sns.swarmplot('pclass', 'fare', hue='survived',
 
 <p>どちらかといえば first class が多く生存したようだが，あまり明確ではない。</p>
 
+<p><span lang="en">UserWarning: XX.X% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot.</span> のような警告が出るので，デフォルトのマーカーの大きさ <code>size=5</code> を減らすか，<code>sns.stripplot()</code> を使うか，その両方を行う。</p>
+
+<div class="note">
 <p><code>titanic[titanic['sex'] == 'male']</code> は <code>titanic.query("sex == 'male'")</code> でもよい（<a href="https://stackoverflow.com/questions/17071871/how-to-select-rows-from-a-dataframe-based-on-column-values">How to select rows from a DataFrame based on column values</a>）。</p>
+</div>
 
 <hr>
 
@@ -202,7 +206,7 @@ sns.swarmplot('pclass', 'fare', hue='survived',
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-02 21:06:52</time>
+Last modified: <time>2021-01-03 10:17:19</time>
 <!-- hhmts end -->
 </p>
 </body>
