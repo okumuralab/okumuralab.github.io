@@ -242,7 +242,9 @@ sns.swarmplot(x='pclass', y='fare', hue='survived',
 <p><code>titanic[titanic['sex'] == 'male']</code> は <code>titanic.query("sex == 'male'")</code> でもよい（<a href="https://stackoverflow.com/questions/17071871/how-to-select-rows-from-a-dataframe-based-on-column-values">How to select rows from a DataFrame based on column values</a>）。</p>
 </div>
 
-<p>このあとは，機械学習の準備として，まずは欠測値を適当に埋める。</p>
+<p>このあとは，なんちゃって機械学習（本当はちゃんと勉強してからやろう）。</p>
+
+<p>まずは欠測値を適当に埋める。</p>
 
 <pre class="cell">
 titanic['age'] = titanic['age'].fillna(titanic['age'].median())
@@ -312,7 +314,7 @@ confusion_matrix(y_test, y_pred)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-05 14:58:41</time>
+Last modified: <time>2021-01-06 09:29:55</time>
 <!-- hhmts end -->
 </p>
 </body>
