@@ -122,6 +122,8 @@ cd /opt
 curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
 </pre>
 
+<p>ARM 版 Homebrew で <code>brew install emacs</code> でインストールされる emacs はターミナル版。<code>brew install --cask emacs</code> でインストールされるものは <a href="https://emacsformacosx.com">Emacs for Mac OS X</a> のバイナリで M1 用ではないが Rosetta で動く。</p>
+
 <h3>Emacs 27</h3>
 
 <p>arm64 環境でビルドしてみたがエラー。Rosetta 環境でなら簡単にできた。</p>
@@ -185,7 +187,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-03 22:16:44</time>
+Last modified: <time>2021-01-06 22:50:31</time>
 <!-- hhmts end -->
 </p>
 </footer>
