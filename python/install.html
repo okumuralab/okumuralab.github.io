@@ -176,7 +176,7 @@ export PATH
 
 <p>巨大な Xcode はたいていの場合に不要ですが，ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は，Mac を使っている開発者にとって必需品です。さらに，<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合，ターミナルに <code>brew install python3</code> と打ち込めば，簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等ですがまったく同じではありません（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。</p>
 
-<p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンドが入ります。また，<code>/usr/local/opt/python/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
+<p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンドが入ります。また，<code>/usr/local/opt/python@3.9/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
 <p><code>/usr/local/bin</code> のシンボリックリンクは python.org のものをインストールしたら上書きされてしまいますので，Homebrew のものを主に使う場合は <code>brew link --overwrite python3</code> と打ち込みます。さらにわけがわからなくなったら <code>brew reinstall python3</code> で再インストールできます。</p>
 
@@ -186,9 +186,7 @@ export PATH
 <code>pip3 install --upgrade pip
 </code></pre>
 
-<p>これで <code>/usr/local/bin</code> にまったく同じ <code>pip</code>，<code>pip3</code>，<code>pip3.7</code> が入るはずですので，以降は <code>pip</code> でも <code>pip3</code> でもかまいません（確認してください）。</p>
-
-<p>これで <code>python</code> と打ち込むと macOS 側の Python 2 が，<code>python3</code> と打ち込むと Homebrew 側の Python 3 が動くことになります。<code>ipython</code> は macOS 側にないので <code>3</code> を付ける必要はありません（付けてもかまいません）。<code>python</code> と打ち込んで Python 3 が動くようにしたければ，<code>/usr/local/opt/python/libexec/bin</code> のパスを <code>/usr/bin</code> より先に設定します。</p>
+<p>インストールしたパッケージは <code>/usr/local/lib/python3.9/site-packages</code> に入ります。</p>
 
 <div class="note">
 <p>ApplePersistenceIgnoreState という警告を消すにはターミナルに <code>defaults write org.python.python ApplePersistenceIgnoreState NO</code> と打てばよいみたいです（<a href="https://github.com/Homebrew/homebrew-core/issues/24424">参照</a>）。</p>
@@ -361,7 +359,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-30 11:14:48</time>
+Last modified: <time>2021-01-07 09:15:43</time>
 <!-- hhmts end -->
 </p>
 </footer>
