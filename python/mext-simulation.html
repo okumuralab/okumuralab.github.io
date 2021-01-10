@@ -22,7 +22,7 @@
 
 <figure><img src="img/mext-simulation1.png" alt="図表7 乱数発生のプログラム"></figure>
 
-<p>この方法は互換性維持のため現在でも使えるが，2013年にリリースされた NumPy 1.17.0 からは Generator を使った新しいインターフェースが推奨されている：</p>
+<p>この方法は互換性維持のため現在でも使えるが，2013年にリリースされた NumPy 1.17.0 からは <a href="https://numpy.org/doc/stable/reference/random/index.html">Generator を使った新しいインターフェース</a>が推奨されている：</p>
 
 <pre><code>import numpy as np
 
@@ -132,7 +132,7 @@ print("円周率:", incount * 4 / totalcount)
 y = rng.random(totalcount)
 c = x*x + y*y < 1
 plt.scatter(x, y, c=c)
-plt.axis('scaled')
+plt.axis('scaled')  # これをしないとアスペクト比が1にならない
 </code></pre>
 
 <p>色を選ぶ方法はいろいろ考えられそう。パレットをいじらずに済ませる方法：</p>
@@ -149,7 +149,7 @@ plt.scatter(x[np.logical_not(c)], y[np.logical_not(c)], color="blue")
 
 <p>seaborn を使う例（デフォルトでうまい具合の色になる）：</p>
 
-<pre><code>sns.scatterplot(x, y, hue=c)
+<pre><code>sns.scatterplot(x=x, y=y, hue=c)
 </code></pre>
 
 <p>ちなみに，<a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">文科省の研修用教材</a>には<a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1421808.htm">他プログラミング言語版</a>としてJavaScript版，VBA版，ドリトル版，ｓｗｉｆｔ版（なぜかSwiftだけ全角文字で小文字で始まっている）がある。2019年11月21日に出たVBA版では次のようになっていた：</p>
@@ -160,7 +160,7 @@ plt.scatter(x[np.logical_not(c)], y[np.logical_not(c)], color="blue")
 
 <figure><img src="img/mext-simulation7.png" alt="図表14 実行結果（VBA版）"></figure>
 
-<p>これを見ればバグっていることは自明である。どこがおかしいかわかるだろうか。ちなみに私たちがツイッターで騒いだせいか，12月11日にはリンク切れとなり，12月27日には修正版が出た。</p>
+<p>これを見ればバグっていることは自明である。どこがおかしいかわかるだろうか。ちなみに私たちがツイッターで騒いだせいか，2019年12月11日にはリンク切れとなり，12月27日には修正版が出た。</p>
 
 <hr>
 
@@ -168,7 +168,7 @@ plt.scatter(x[np.logical_not(c)], y[np.logical_not(c)], color="blue")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-10 14:54:40</time>
+Last modified: <time>2021-01-10 20:11:17</time>
 <!-- hhmts end -->
 </p>
 </body>
