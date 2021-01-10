@@ -98,7 +98,7 @@ zobscr pbyw dro okbdr.
 
 <figure><img src="img/gettysburg1.png" alt="図5 出現頻度を求めるプログラム"></figure>
 
-<p>ここで <code>差分()</code> は a〜z を 0〜25 に置き換える関数とのことである。ただし，アルファベット以外は -1 に置き換える。Pythonで書けば次のようになる：</p>
+<p>ここで <code>差分()</code> は a〜z を 0〜25 に置き換える関数とのことである（ちょっと名前がそぐわない？）。ただし，アルファベット以外は -1 に置き換える。Pythonで書けば次のようになる：</p>
 
 <pre class="cell">
 def 差分(c):
@@ -128,7 +128,7 @@ for c in Angoubun:
         Hindo[bangou] += 1
 </pre>
 
-<p>と書くほうがきれいである。なお，Pythonのスタイルガイド <a href="zero.html#PEP8">PEP 8</a> では変数名や関数名は小文字が推奨されているが，ここでは問題に従った（大学入試センター試験「情報関係基礎」で使われているDNCLという擬似言語では配列名は大文字で始める）。</p>
+<p>と書くほうがきれいである。なお，Pythonのスタイルガイド <a href="zero.html#PEP8">PEP 8</a> では変数名や関数名は小文字が推奨されているが，ここでは問題に従った（大学入試センター試験「情報関係基礎」で使われているDNCLという擬似言語では配列名は大文字で始める）。Pythonは大文字で始めるとクラス名みたいに見えるので，本当にPython風にするなら小文字で始めるほうがいいように思う。</p>
 
 <p>この度数分布を棒グラフで表す：</p>
 
@@ -152,7 +152,7 @@ plt.bar(list(alphabet), Hindo)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-29 21:26:28</time>
+Last modified: <time>2021-01-10 08:37:40</time>
 <!-- hhmts end -->
 </p>
 </body>

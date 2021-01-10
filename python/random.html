@@ -66,7 +66,7 @@ y = rng.random(N)
 c = x*x + y*y &lt; 1
 plt.scatter(x, y, c=c)
 plt.axis('scaled')
-print('pi =', 4 * sum(c) / N)
+print('pi =', 4 * np.sum(c) / N)
 </code></pre>
 
 <p>ランダムウォークの例です：</p>
@@ -78,9 +78,9 @@ plt.plot(x, y)
 plt.axis('equal')
 </code></pre>
 
-<p>硬貨投げのシミュレーションは <code>rng.integers(0, 2, size=100)</code> のようにできます。表の枚数は <code>sum(rng.integers(0, 2, size=100))</code> です。これを何回もやってヒストグラムを描いてみましょう。</p>
+<p>硬貨投げのシミュレーションは <code>rng.integers(0, 2, size=100)</code> のようにできます。表の枚数は <code>np.sum(rng.integers(0, 2, size=100))</code> です。これを何回もやってヒストグラムを描いてみましょう。</p>
 
-<pre><code>a = [sum(rng.integers(0, 2, size=100)) for _ in range(10000)]
+<pre><code>a = [np.sum(rng.integers(0, 2, size=100)) for _ in range(10000)]
 plt.hist(a)
 </code></pre>
 
@@ -90,7 +90,7 @@ plt.hist(a)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-02 20:02:42</time>
+Last modified: <time>2021-01-10 11:28:39</time>
 <!-- hhmts end -->
 </p>
 </body>
