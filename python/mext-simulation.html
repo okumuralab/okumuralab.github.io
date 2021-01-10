@@ -36,7 +36,7 @@ print(ransuu)
 <pre><code>rng = np.random.default_rng(12345)
 </code></pre>
 
-<p>上では適当な数を与えたが，課題では各自の学籍番号・出席番号をタネとして使わせてもよかろう。</p>
+<p>授業の課題では各自の学籍番号・出席番号をタネとして使わせてもよかろう。</p>
 
 <p>次はさいころを100回振るプログラムである：</p>
 
@@ -109,17 +109,17 @@ incount = 0
 for i in range(totalcount):
     x = rng.random()
     y = rng.random()
-    if x**2 + y**2 < 1.0:
+    if x**2 + y**2 < 1:
         incount += 1
-print("円周率:", incount * 4.0 / totalcount)
+print("円周率:", incount * 4 / totalcount)
 </code></pre>
 
 <p>最後の7行はループをベクトル化すると次のようになる：</p>
 
 <pre><code>x = rng.random(totalcount)
 y = rng.random(totalcount)
-incount = np.count_nonzero(x**2 + y**2 < 1.0)
-print("円周率:", incount * 4.0 / totalcount)
+incount = np.count_nonzero(x**2 + y**2 < 1)
+print("円周率:", incount * 4 / totalcount)
 </code></pre>
 
 <p>散布図を描くプログラム：</p>
@@ -141,10 +141,26 @@ plt.axis('scaled')
 plt.scatter(x, y, color=col)
 </code></pre>
 
+<p>別解</p>
+
+<pre><code>plt.scatter(x[c], y[c], color="red")
+plt.scatter(x[np.logical_not(c)], y[np.logical_not(c)], color="blue")
+</code></pre>
+
 <p>seaborn を使う例（デフォルトでうまい具合の色になる）：</p>
 
 <pre><code>sns.scatterplot(x, y, hue=c)
 </code></pre>
+
+<p>ちなみに，2019年11月21日に出たVBA版では次のようになっていた：</p>
+
+<figure><img src="img/mext-simulation6.png" alt="図表13 散布図を作成するプログラム（VBA版）"></figure>
+
+<p>実行結果は次の通り：</p>
+
+<figure><img src="img/mext-simulation7.png" alt="図表14 実行結果（VBA版）"></figure>
+
+<p>どこがバグっているかわかるだろうか。ちなみにツイッターで騒いだせいか，12月11日にはリンク切れとなり，12月27日には修正版が出た。</p>
 
 <hr>
 
@@ -152,7 +168,7 @@ plt.scatter(x, y, color=col)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-10 13:24:01</time>
+Last modified: <time>2021-01-10 14:47:51</time>
 <!-- hhmts end -->
 </p>
 </body>
