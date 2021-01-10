@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>文科省教材：確率モデルのシミュレーション</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>文科省教材：確率モデルのシミュレーション</h1>
+
+<p><a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416756.htm">高等学校情報科「情報Ⅰ」教員研修用教材（本編）</a>の「第3章　コンピュータとプログラミング」の乱数を使ったシミュレーション（p.138〜）についてコメントする。</p>
+
+<p>まず，Pythonでの乱数の作り方：</p>
+
+<figure><img src="img/mext-simulation1.png" alt="図表7 乱数発生のプログラム"></figure>
+
+<p>この方法は互換性維持のため現在でも使えるが，2013年にリリースされた NumPy 1.17.0 からは Generator を使った新しいインターフェースが推奨されている：</p>
+
+<pre><code>import numpy as np
+
+rng = np.random.default_rng()
+ransuu = rng.random()
+print(ransuu)
+</code></pre>
+
+<p>古い方法より1行余分に必要なので採用しなかったのかもしれないが，とりあえず指摘しておく。なお，ここでは不要であるが，実際のシミュレーションでは再現性が大切なので，乱数のタネ（seed）を例えば次のように設定する：</p>
+
+<pre><code>rng = np.random.default_rng(12345)
+</code></pre>
+
+<p>上では適当な数を与えたが，課題では各自の学籍番号・出席番号をタネとして使わせてもよかろう。</p>
+
+<p>次はさいころを100回振るプログラムである：</p>
+
+<figure><img src="img/mext-simulation2.png" alt="図表8 サイコロのプログラム"></figure>
+
+<p>とりあえず Generator を使う方式に直して，PEP 8 に合わせて書き直す：</p>
+
+<pre><code>import numpy as np
+
+rng = np.random.default_rng()
+saikoro = rng.integers(1, 7, size=100)
+print(saikoro)
+deme = []
+for i in range(6):
+    deme.append(np.count_nonzero(saikoro == i + 1))
+print("出現数:", deme)
+</code></pre>
+
+<p><code>np.count_nonzero()</code> は，<code>np.sum()</code> や，単なる <code>sum()</code> でもよいが，この場合は <code>np.count_nonzero()</code> が最も速く，次に <code>np.sum()</code> が速い。</p>
+
+<p>最後の4行は次のようにできる：</p>
+
+<pre><code>deme = [np.count_nonzero(saikoro == i + 1) for i in range(6)]
+</code></pre>
+
+<code>np.unique()</code> を使えばもっとスマートにできる：</p>
+
+<pre><code>x, deme = np.unique(saikoro, return_counts=True)
+</code></pre>
+
+<p>これを使えば，次の度数分布図も簡単になる：</p>
+
+<pre><code>import matplotlib.pyplot as plt
+
+plt.bar(x, deme)
+</code></pre>
+
+<p>さて，度数分布図である：</p>
+
+<figure><img src="img/mext-simulation3.png" alt="図表10 度数分布（棒グラフ）表現のプログラム"></figure>
+
+<p>これはこれで問題ないが，<code>align="center"</code> はデフォルトなので省いて，次でもよい：</p>
+
+<pre><code>plt.bar(range(1, 7), deme)
+</code></pre>
+
+<p><a href="https://note.com/evjunior/n/ndce84b6d5eea">E.V.ジュニアさんのnote</a>では次の賢い方法が使われている：</p>
+
+<pre><code>plt.hist(saikoro, bins=np.arange(0.5, 7.5), rwidth=0.8)
+</code></pre>
+
+<p>seaborn を使えばもっと簡単である：</p>
+
+<pre><code>import seaborn as sns
+
+sns.histplot(saikoro, discrete=True)
+</code></pre>
+
+<p>次はモンテカルロ法で円周率を求めるプログラムである：</p>
+
+<figure><img src="img/mext-simulation4.png" alt="図表12  円周率を求めるプログラム"></figure>
+
+<p>Generator を用いる方式に直す：</p>
+
+<pre><code>import numpy as np
+
+rng = np.random.default_rng()
+totalcount = 1000
+incount = 0
+for i in range(totalcount):
+    x = rng.random()
+    y = rng.random()
+    if x**2 + y**2 < 1.0:
+        incount += 1
+print("円周率:", incount * 4.0 / totalcount)
+</code></pre>
+
+<p>最後の7行はループをベクトル化すると次のようになる：</p>
+
+<pre><code>x = rng.random(totalcount)
+y = rng.random(totalcount)
+incount = np.count_nonzero(x**2 + y**2 < 1.0)
+print("円周率:", incount * 4.0 / totalcount)
+</code></pre>
+
+<p>散布図を描くプログラム：</p>
+
+<figure><img src="img/mext-simulation5.png" alt="図表13 散布図を作成するプログラム"></figure>
+
+<p><code>plt.scatter()</code> を点ごとに呼び出すのはたいへん能率が悪い。ループ全体は次のようにできる：</p>
+
+<pre><code>x = rng.random(totalcount)
+y = rng.random(totalcount)
+c = x*x + y*y < 1
+plt.scatter(x, y, c=c)
+plt.axis('scaled')
+</code></pre>
+
+<p>色を選ぶ方法はいろいろ考えられそう。パレットをいじらずに済ませる方法：</p>
+
+<pre><code>col = ['red' if i else 'blue' for i in c]
+plt.scatter(x, y, color=col)
+</code></pre>
+
+<p>seaborn を使う例（デフォルトでうまい具合の色になる）：</p>
+
+<pre><code>sns.scatterplot(x, y, hue=c)
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-01-10 13:24:01</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
