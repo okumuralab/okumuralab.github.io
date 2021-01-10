@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Let's Encryptの更新</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<article>
+<h1>Let's Encryptの更新</h1>
+
+<p>certbot-auto を使って Let's Encrypt の証明書を更新していたが，次のようなエラーが出るようになった：</p>
+
+<blockquote>
+<p>Your system is not supported by certbot-auto anymore.<br>
+Certbot will no longer receive updates.<br>
+Please visit <a href="https://certbot.eff.org/">https://certbot.eff.org/</a> to check for other alternatives.</p>
+</blockquote>
+
+<p>まず古い certbot があれば消す（yum は CentOS 8 なら dnf に読み替える）：</p>
+
+<pre>
+# yum remove certbot
+</pre>
+
+<p>snapd をインストール：</p>
+
+<pre>
+# yum install snapd
+</pre>
+
+<p>もし上記が失敗したら <code>yum install epel-release</code> してからやり直す。</p>
+
+<pre>
+# systemctl enable --now snapd.socket
+# ln -s /var/lib/snapd/snap /snap
+# systemctl start snapd
+# snap install core
+# snap install --classic certbot
+# ln -s /snap/bin/certbot /usr/bin/certbot
+</pre>
+
+<p>まだ証明書をインストールしていないなら</p>
+
+<pre>
+# certbot --apache
+</pre>
+
+<p>更新テスト</p>
+
+<pre>
+# certbot renew --dry-run
+</pre>
+
+<p><code>systemctl list-timers</code> して snap.certbot.renew.timer，snap.certbot.renew.service が入っていることを確認（あるいは /etc/systemd/system にこれらのファイルがあることを確認）。</p>
+
+<p><code>crontab -e</code> で certbot(-auto) の動く行を消す。</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-01-09 17:29:04</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
