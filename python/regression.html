@@ -6,6 +6,19 @@
 <title>回帰</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
 </head>
 <body>
 
@@ -15,6 +28,16 @@
 </nav>
 
 <h1>回帰</h1>
+
+<h2>線形回帰</h2>
+
+<p>データ $(x_i, y_i)$ に直線 $y = ax + b$ をあてはめて，誤差の2乗の和</p>
+
+\[ \sum_{i=1}^{n} (ax_i + b - y_i)^2 \]
+
+<p>が最小になるような $a$ と $b$ を求めるのが（通常の線形の）回帰分析です。</p>
+
+<p>なぜ「回帰」というのでしょうか。</p>
 
 <p>正規分布の乱数を2組作って，足したり引いたりして，ある程度の相関があるようにして，プロットしてみます：</p>
 
@@ -76,7 +99,22 @@ df['世界全体'] = df['世界全体'].str.replace('*', '', regex=False).astype
 <p>のようにすれば数値に変換できます。</p>
 </div>
 
-<p>直線をあてはめて，傾きを求めてください。</p>
+<p>直線の傾きを求めてください。</p>
+
+<h2>ロジスティック回帰</h2>
+
+<p>$y$ の値が 0 から 1 までに限られる回帰です。確率を予測するときに使います。データは，起こった（$y_i = 1$）か起こらない（$y_i = 0$）かのどちらかです。予測の式は</p>
+
+\[ y = \frac{1}{1 + e^{-(ax+b)}} \]
+
+<p>です。$a$ と $b$ は最小2乗法ではなく最尤法で求めます。つまり，</p>
+
+\[ \prod_{y_i = 1} \frac{1}{1 + e^{-(ax_i+b)}} \cdot
+   \prod_{y_i = 0} \left( 1 - \frac{1}{1 + e^{-(ax_i+b)}} \right) \]
+
+<p>を最大にするような $a$ と $b$ を求めます。</p>
+
+<p>Python での例は<a href="titanic.html">タイタニック号</a>のところに出てきます。</p>
 
 <hr>
 
@@ -84,7 +122,7 @@ df['世界全体'] = df['世界全体'].str.replace('*', '', regex=False).astype
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-12 14:23:51</time>
+Last modified: <time>2021-01-12 14:55:18</time>
 <!-- hhmts end -->
 </p>
 </body>
