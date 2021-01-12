@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>回帰</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>回帰</h1>
+
+<p>正規分布の乱数を2組作って，足したり引いたりして，ある程度の相関があるようにして，プロットしてみます：</p>
+
+<pre class="cell">import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+rng = np.random.default_rng(20200112)
+r1 = rng.standard_normal(500)  # 正規乱数
+r2 = rng.standard_normal(500)  # 正規乱数
+x = r1 + r2 / 2
+y = r1 - r2 / 2
+x = x / np.std(x)  # 標準偏差で割る
+y = y / np.std(y)  # 標準偏差で割る
+np.corrcoef(x, y)  # 相関係数
+</pre>
+
+<pre>
+array([[1.        , 0.59072439],
+       [0.59072439, 1.        ]])
+</pre>
+
+<pre class="cell">
+sns.regplot(x=x, y=y)
+plt.axis('equal')
+</pre>
+
+<figure><img src="img/regression1.svg" alt=""></figure>
+
+<p>x軸とy軸のスケールを等しくしているので，各データ点に最も近い直線は斜め45°の主軸のはずですが，xが与えられたときにyの値を（最小2乗法の意味で）最もよく近似するのは45°より水平に近い直線です。</p>
+
+<pre class="cell">
+np.polyfit(x, y, 1)
+</pre>
+
+<pre>
+array([ 0.59072439, -0.04323489])
+</pre>
+
+<p>この直線の傾きは0.59ほどです。</p>
+
+<p>例えばxを親の身長，yを子の身長とすると，だいたいこんな感じに相関しているのですが，親が平均身長より3cm高ければ，子の身長は平均身長より2cm高い程度で，子は親より平均に近いことが多いということになります。この傾向（「平均への回帰」）を調べるために使われた方法ですので，こういう方法を「回帰分析」といいます。</p>
+
+<p>別の例をやってみましょう。気象庁の地球温暖化のデータです。</p>
+
+<pre class="cell">
+import pandas as pd
+
+df = pd.read_csv('http://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv',
+                 encoding='cp932')
+sns.regplot(x='年', y='世界全体', data=df)
+</code></pre>
+
+<div class="note">
+<p>現在，上のデータの最新の部分（速報値）に <code>*</code> が付いているため，数値と解釈できなくなっています。<a href="https://www.data.jma.go.jp/cpdinfo/temp/list/an_wld.html">HTML版</a>によれば <code>*</code> は「1月から11月までの月平均気温の偏差をもとに算出した速報値」だそうです。とりあえず</p>
+<pre>
+df['世界全体'] = df['世界全体'].str.replace('*', '', regex=False).astype(float)
+</pre>
+<p>のようにすれば数値に変換できます。</p>
+</div>
+
+<p>直線をあてはめて，傾きを求めてください。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-01-12 14:23:51</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
