@@ -16,6 +16,8 @@
 
 <h1>あやめ（iris）</h1>
 
+<h2>データの取得と簡単なプロット</h2>
+
 <p>Fisher の有名な「あやめ」のデータをプロットしてみます。まず，データをロードします：</p>
 
 <pre>
@@ -46,6 +48,8 @@ plt.legend(iris.target_names)
 </code></pre>
 
 <p>印刷用には <code>'o'</code> を <code>'ko'</code> にすれば黒になります。</p>
+
+<h2>主成分分析</h2>
 
 <p>主成分分析（<a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA">PCA</a>）で2次元にしてからプロットしてみます：</p>
 
@@ -100,9 +104,29 @@ ax.set_zlabel("3rd")
 
 <p>マウスでぐりぐりできます。</p>
 
-<hr>
+<h2>決定木</h2>
 
-<p>細かな操作のためには pandas のデータフレームに変換するほうが扱いやすいかもしれません：</p>
+<pre>
+<code>from sklearn.tree import DecisionTreeClassifier, export_graphviz
+
+model = DecisionTreeClassifier(max_depth=3)
+model.fit(iris.data, iris.target)
+export_graphviz(model, "tree.dot",
+                feature_names=iris.feature_names,
+                class_names=iris.target_names)
+</code></pre>
+
+<p>これで <code>tree.dot</code> というテキストファイルができます。これを画像に変換するには <a href="https://www.graphviz.org">Graphviz</a> を使います。Mac へのインストールは <code>brew install graphviz</code> でできます。Graphviz の dot コマンドを使っていろいろな画像に変換できます：</p>
+
+<pre>
+<code>dot -Tpng tree.dot -o tree.png
+dot -Tpdf tree.dot -o tree.pdf
+dot -Tsvg tree.dot -o tree.svg
+</code></pre>
+
+<figure><img src="img/iris-tree.svg" alt="あやめの分類木"></figure>
+
+<h2>pandas のデータフレームに変換する方法</h2>
 
 <pre>
 <code>import pandas as pd
@@ -124,7 +148,7 @@ df.corr()
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-09 17:29:40</time>
+Last modified: <time>2021-01-12 21:53:27</time>
 <!-- hhmts end -->
 </p>
 </body>
