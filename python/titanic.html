@@ -299,6 +299,13 @@ model = MLPClassifier()
 <pre class="cell">
 model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
+</pre>
+
+<p>正解率：</p>
+
+<pre class="cell">
+from sklearn.metrics import accuracy_score, confusion_matrix
+
 accuracy_score(y_test, y_pred)
 </pre>
 
@@ -314,7 +321,7 @@ confusion_matrix(y_test, y_pred)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-06 09:29:55</time>
+Last modified: <time>2021-01-12 15:56:57</time>
 <!-- hhmts end -->
 </p>
 </body>
