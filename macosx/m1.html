@@ -40,13 +40,22 @@
 
 <p>システム環境設定でキーボード→ショートカット→入力ソースのショートカットは Emacs に有害なので外す。キーボード→音声入力はデフォルトではControlキーを2回だが，これもControlキーを多用すると間違いやすいので，これ以外（例えばFnを2回）にする。</p>
 
-<p>コントロールセンターでキーボードの輝度をゼロに。</p>
+<p>コントロールセンターでキーボードの輝度をゼロに（MacBook Air）。</p>
 
-<p>システム環境設定でディスプレイを1日中 Night Shift に設定する。色温度は好みに。</p>
+<p>「システム環境設定」→「ディスプレイ」で正しい解像度が選べない場合は Option キーを押しながら「変更」をクリック（→ <a href="https://www.eizo.co.jp/support/compati/pc/mac/apple-m1/">Apple M1チップ搭載MacとEIZOモニターの互換性</a>）。</p>
+
+<p>（これは好みだが）システム環境設定でディスプレイの色温度を自分好みに設定する。あるいは1日中 Night Shift に設定するのが簡単。</p>
 
 <div class="note">
 <p>以上以外に，私は非常に慎重を期すためにいつも自分を管理者から外している。具体的には，システム環境設定の「ユーザとグループ」で自分（奥村）以外に管理者（名前は例えば admin とする）を一人作成し，その管理者（Apple ID には紐付けない）でログインし直して奥村を一般ユーザに格下げする。これで何か重要なことをする際には管理者の名前とパスワードを聞いてくるのでうっかり危ないコマンドを実行する危険性が減る。Unix 的には sudoers から外したことに相当する。コマンドでシステム領域に触れたいときは <code>su admin</code> してから <code>sudo 何々</code> する。ただ，macOS はデフォルトでずいぶん安全になったので，今はここまでする必要はないかもしれない。</p>
 </div>
+
+<p>M1 Mac に残る問題：</p>
+
+<ul>
+  <li>Bluetooth の接続がよく切れる</li>
+  <li>スクリーンセーバー解除ができなくなる（他マシンからログインして ScreenSaverEngine を kill すればよい）</li>
+</ul>
 
 <h3>ターミナル</h3>
 
@@ -62,7 +71,7 @@ arch -x86_64 uname -m
 arch -x86_64 zsh
 </pre>
 
-<p>とすれば Rosetta で zsh が立ち上がる。この状態で Homebrew の Intel 版のインストールに進めばよい。</p>
+<p>とすれば Rosetta で zsh が立ち上がる。x86_64 のコードを実行するにはこの状態で行う。</p>
 
 <h3>シェル</h3>
 
@@ -113,9 +122,9 @@ export PATH=... # bashと同様
 
 <h3>Homebrew</h3>
 
-<p>Rosetta で実行する Intel 版は通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを <code>uname -m</code> が x86_64 なターミナルに打ち込めばインストールできる。</p>
+<p>もう ARM 版だけでほとんど大丈夫だと思われるが，Rosetta で実行する Intel 版は通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを <code>uname -m</code> が x86_64 なターミナルに打ち込めばインストールできる。</p>
 
-<p><del>ARM 版の対応状況は <a href="https://github.com/Homebrew/brew/issues/7857">macOS 11 Big Sur compatibility on Apple Silicon #7857</a> にまとめられている。</del> ← ARM 版の対応はどんどん進み，対応状況の表はあまり参考にならなくなった。</p>
+<p><del>ARM 版の対応状況は <a href="https://github.com/Homebrew/brew/issues/7857">macOS 11 Big Sur compatibility on Apple Silicon #7857</a> にまとめられている。</del> ← ARM 版の対応はどんどん進み，対応状況の表はあまり参考にならなくなった。2021-01-14 現在，wget，gnupg，pinentry-mac，imagemagick，poppler，ffmpeg，graphviz は大丈夫。pandoc はまだ Intel 版だけ。</p>
 
 <p>ARM 版は，<a href="https://docs.brew.sh/Installation">Installation</a> にあるように <code>/opt/homebrew</code>（ユーザ権限で書き込めるようにしておく）にインストールする：</p>
 
@@ -174,6 +183,10 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
   <li>Mac mini (Late 2014) 8GB 22.514秒</li>
 </ul>
 
+<h3>VS Code</h3>
+
+<p><a href="https://code.visualstudio.com/download">Download Visual Studio Code</a> からダウンロードできる Mac 版は Intel 用。<a href="https://code.visualstudio.com/insiders/">Download Visual Studio Code Insiders</a> で ARM64 をクリックすれば ARM 版が入る。</p>
+
 <h2>参考</h2>
 
 <ul>
@@ -190,7 +203,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-13 10:20:22</time>
+Last modified: <time>2021-01-14 14:59:15</time>
 <!-- hhmts end -->
 </p>
 </footer>
