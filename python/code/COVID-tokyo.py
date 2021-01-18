@@ -10,8 +10,7 @@ df = pd.read_csv("../data/COVID-tokyo.csv", parse_dates=['date'])
 # now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 # now = f'{datetime.datetime.now():%Y-%m-%d %H:%M:%S}'
 p = os.stat("../data/COVID-tokyo.csv")
-# now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
-now = str(datetime.datetime.fromtimestamp(p.st_mtime))
+now = f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}'
 
 fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()

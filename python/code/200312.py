@@ -32,13 +32,13 @@ if min(df['確定日']) < datetime.datetime(2020,1,1):
     print('min(確定日):', min(df['確定日']))
     df.loc[df['確定日'] < datetime.datetime(2020,1,1), '確定日'] = pd.NaT
 
-if min(df['発症日']) < datetime.datetime(2020,1,1):
-    print('min(発症日):', min(df['発症日']))
+if np.min(df['発症日']) < datetime.datetime(2020,1,1):
+    print('min(発症日):', np.min(df['発症日']))
     df.loc[df['発症日'] < datetime.datetime(2020,1,1), '発症日'] = pd.NaT
 
-b = np.arange(min(min(df['確定日']), min(df['発症日'])),
-              max(max(df['確定日']), max(df['発症日'])) + datetime.timedelta(days=2),
-              datetime.timedelta(days=1))
+b = np.arange(np.min(np.min(df['確定日']), np.min(df['発症日'])),
+              np.max(np.max(df['確定日']), np.max(df['発症日'])) + np.timedelta64(2, "D"),
+              np.timedelta64(1, "D"))
 
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
