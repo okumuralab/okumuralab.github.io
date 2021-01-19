@@ -74,3 +74,30 @@ ax.set_xlim(0, 20)
 ax.set_xticks(range(0, 25, 5))
 ax.legend(['確定日-発症日 median=' + str(np.nanmedian(t))])
 fig.savefig('../img/COVID-tokyo2c.svg', bbox_inches="tight")
+
+df1 = df[df['公表_年月日'] >= np.datetime64('2021-01-01')]
+t = (df1['確定_年月日'] - df1['発症_年月日']).dt.days
+ax.clear()
+ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
+         color="lightgray", edgecolor="black")
+ax.set_xlim(0, 20)
+ax.set_xticks(range(0, 25, 5))
+ax.legend(['2021年公表 確定日-発症日 median=' + str(np.nanmedian(t))])
+fig.savefig('../img/COVID-tokyo2d.svg', bbox_inches="tight")
+
+exit()
+#---
+
+h = [np.nanmedian(t[df['確定_年月日'] == i]) for i in b]
+
+ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+ax.plot(df['確定_年月日'], t, 'ko', markersize=5, alpha=0.1, zorder=-10)
+ax.plot(b, h, color='C1')
+ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
+ax.set_xlabel('確定日')
+ax.set_ylabel('確定日-発症日')
+
+fig.savefig('../img/COVID-tokyo2d.svg', bbox_inches="tight")
