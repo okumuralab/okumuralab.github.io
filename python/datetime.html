@@ -158,7 +158,7 @@ np.datetime64("2019-05-01 12:34:56")  # np.datetime64("2019-05-01 12:34:56", "s"
 
 <h2>pandas</h2>
 
-<p>pandas の Timestamp は NumPy の <code>datetime64[ns]</code>（ナノ秒単位）に限定しているので，1677年から2262年くらいまでしか扱えない（<a href="read.html">データの読み書き</a>参照）。</p>
+<p>pandas の Timestamp は NumPy の <code>datetime64[ns]</code>（ナノ秒単位）に限定しているので，1677-09-21（<code>pd.Timestamp(-2**63+808)</code>）から2262-04-11（<code>pd.Timestamp(2**63-1)</code>）くらいまでしか扱えない（<a href="read.html">データの読み書き</a>参照）。</p>
 
 <pre>
 <code>import pandas as pd
@@ -179,13 +179,24 @@ t.dayofweek            #==> 2  # 水曜日
 
 <p>format の形式については <a href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes">strftime() and strptime() Format Codes</a> 参照。</p>
 
+<h2>その他</h2>
+
+<p>ファイルのタイムスタンプは次のようにして取得できる：</p>
+
+<pre>
+<code>import os
+
+p = os.stat("ファイル名")
+print(f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}')
+</code></pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-06 13:34:40</time>
+Last modified: <time>2021-01-18 21:56:01</time>
 <!-- hhmts end -->
 </p>
 </body>

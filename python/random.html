@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <title>乱数</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -25,6 +25,8 @@
 <pre><code>import random
 
 random.random()  # 引数をとらない。区間 [0,1) の1個の乱数を返す
+random.randrange(1, 7)  # 1から6までの整数の乱数
+random.randint(1, 6)    # 1から6までの整数の乱数
 </code></pre>
 
 <p>本格的なシミュレーションで大量の乱数を必要とする場合には次の NumPy による方法を使います。</p>
@@ -90,7 +92,7 @@ plt.hist(a)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-11 10:38:14</time>
+Last modified: <time>2021-01-19 08:43:59</time>
 <!-- hhmts end -->
 </p>
 </body>

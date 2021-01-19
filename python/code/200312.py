@@ -12,7 +12,8 @@ import re
 os.system("wget -N https://dl.dropboxusercontent.com/s/6mztoeb6xf78g5w/COVID-19.csv")
 p = os.stat("COVID-19.csv")
 # now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
-now = str(datetime.datetime.fromtimestamp(p.st_mtime))
+# now = str(datetime.datetime.fromtimestamp(p.st_mtime))
+now = f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}'
 
 with open("COVID-19.csv") as f1:
     with open("COVID-19a.csv", "w") as f2:
@@ -36,8 +37,8 @@ if np.min(df['発症日']) < datetime.datetime(2020,1,1):
     print('min(発症日):', np.min(df['発症日']))
     df.loc[df['発症日'] < datetime.datetime(2020,1,1), '発症日'] = pd.NaT
 
-b = np.arange(np.min(np.min(df['確定日']), np.min(df['発症日'])),
-              np.max(np.max(df['確定日']), np.max(df['発症日'])) + np.timedelta64(2, "D"),
+b = np.arange(min(np.min(df['確定日']), np.min(df['発症日'])),
+              max(np.max(df['確定日']), np.max(df['発症日'])) + np.timedelta64(2, "D"),
               np.timedelta64(1, "D"))
 
 locator = mdates.AutoDateLocator()
