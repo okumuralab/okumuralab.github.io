@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>2021年 共通テスト 情報関係基礎 第3問</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>2021年 共通テスト 情報関係基礎 第3問</h1>
+
+<p>「情報関係基礎」は，専門教育を主とする農業，工業，商業，水産，家庭，看護，情報及び福祉の8教科に設定されている情報に関する基礎的科目が出題範囲ということになっていますが，実際にはかなり自由に出題されているようです。問題は数学②の別冊子にあり，受験の際に申し込みが必要です。数学II/II・Bの代わりに使えるかどうかは大学によります。上記8教科を履修した受験生に限り認めるとしている大学が多いようですが，特に制限を設けていない大学もあります。</p>
+
+<p>第3問（プログラミング），第4問（表計算ソフト）はどちらかを選択します。プログラミングはDNCL（Daigaku Nyushi Center Language）という擬似言語で出題されます。日本語で読めばわかるように記述されていますが，仕様のようなものが，例えば<a href="https://www.dnc.ac.jp/sp/center/shiken_jouhou/jisshikekka/index_copy.html">令和２年度本試験の問題</a>の下のほうからリンクされている「センター試験用手順記述標準言語（DNCL）の説明」というPDFに書かれています。</p>
+
+<p><a href="https://www.asahi.com/edu/center-exam/shiken2020/mondai02day/jouhoukankei.html">2021年共通テスト情報関係基礎</a>の第3問をPythonで解いてみました。</p>
+
+<p>「出た目」はPythonのイテレータを使うのが簡単そうです。</p>
+
+<pre>
+<code>出た目 = iter([3, 1, 6, 4, 2, 3, 1, 5, 2, 3, 4, 5, 3, 3])
+masu = [1, 1, -1, 0.5, 1, 0, 1, 0, 1, 1, -1, 0.5, 1, -1, 0]
+ninzu = 2
+owari = 0
+r = 0
+koma = [0] * ninzu
+while owari == 0:
+    r += 1
+    for i in range(ninzu):
+        saikoro = next(出た目)
+        k = koma[i]
+        bairitu = masu[k]
+        if bairitu == 0 and saikoro >= 4:
+            bairitu = 1
+        idou = int(saikoro * bairitu)
+        koma[i] = k + idou
+        if koma[i] < 0:
+            koma[i] = 0
+        if koma[i] >= len(masu) - 1:
+            koma[i] = len(masu) - 1
+            owari = 1
+        print(r, i + 1, saikoro, koma[i] + 1)
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-01-19 19:22:37</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
