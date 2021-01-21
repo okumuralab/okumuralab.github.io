@@ -106,4 +106,4 @@ ax2.set_yticks([df['confirmed'].values[-1]])
 #          (df['confirmed'].values[-1] / ax.get_ylim()[1]) *  (ax_pos.y1 - ax_pos.y0) + ax_pos.y0,
 #          df['confirmed'].values[-1], verticalalignment='center')
 
-fig.savefig('../img/COVID-tokyo.svg', bbox_inches="tight")
+fig.savefig('../img/COVID-tokyo-a.svg', bbox_inches="tight")

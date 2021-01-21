@@ -21,7 +21,7 @@ now = f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}'
 
 df = pd.read_csv("130001_tokyo_covid19_patients.csv",
                  parse_dates=['公表_年月日', '発症_年月日', '確定_年月日'],
-                 na_values=['-', '―', '不明'],
+                 na_values=['-', '―', '－', ' ', '不明', '不明性'],
                  low_memory=False)
 
 # for c in df.columns:
