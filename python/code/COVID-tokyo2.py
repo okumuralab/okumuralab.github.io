@@ -15,7 +15,7 @@ locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 
 URL = "https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv"
-# os.system("wget -N " + URL)
+os.system("wget -N " + URL)
 p = os.stat("130001_tokyo_covid19_patients.csv")
 now = f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}'
 
