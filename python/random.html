@@ -41,7 +41,8 @@ random.randint(1, 6)    # 1から6までの整数の乱数
 
 <pre><code>import numpy as np
 
-np.random.random(10)  # 区間 [0,1) の10個の乱数を返す
+np.random.random(10)             # 0以上1未満の一様乱数10個
+np.random.randint(1, 7, size=10) # 1以上7未満の整数の乱数10個
 </code></pre>
 
 <h3>新しい方法</h3>
@@ -92,7 +93,7 @@ plt.hist(a)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-19 08:43:59</time>
+Last modified: <time>2021-01-22 16:29:11</time>
 <!-- hhmts end -->
 </p>
 </body>
