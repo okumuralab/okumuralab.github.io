@@ -19,18 +19,18 @@
 <p>利息の増え方（複利計算）</p>
 
 <pre><code>預金 = 100000
-利息 = 0.05
+利率 = 0.05
 for i in range(11):
     print(i, 預金)
-    預金 += 利息 * 預金
+    預金 += 利率 * 預金
 </code></pre>
 
 <p>あるいは</p>
 
 <pre><code>預金 = [100000]
-利息 = 0.05
+利率 = 0.05
 for i in range(10):
-    預金.append((1 + 利息) * 預金[-1])
+    預金.append((1 + 利率) * 預金[-1])
 預金
 </code></pre>
 
@@ -70,7 +70,7 @@ plt.plot(x, "o-")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-08 12:51:41</time>
+Last modified: <time>2021-01-23 09:16:20</time>
 <!-- hhmts end -->
 </p>
 </body>
