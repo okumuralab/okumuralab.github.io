@@ -6,6 +6,11 @@
 <title>タイタニック号沈没事故</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+</style>
 </head>
 <body>
 
@@ -247,6 +252,8 @@ sns.swarmplot(x='pclass', y='fare', hue='survived',
 <p>まずは欠測値を適当に埋める。</p>
 
 <pre class="cell">
+import pandas as pd
+
 titanic['age'] = titanic['age'].fillna(titanic['age'].median())
 titanic['embarked'] = titanic['embarked'].fillna('N')
 titanic['deck'] = pd.Categorical(titanic['deck'],
@@ -270,12 +277,14 @@ y = titanic['survived'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 </pre>
 
+<p>それぞれの 0 と 1 の割合は例えば <code>import numpy as np</code> して <code>np.unique(y_test, return_counts=True)</code> とすれば求められる。</p>
+
 <p>決定木の場合：</p>
 
 <pre class="cell">
 from sklearn.tree import DecisionTreeClassifier
 
-model = DecisionTreeClassifier()
+model = DecisionTreeClassifier(max_depth=3)
 </pre>
 
 <p>ロジスティック回帰の場合：</p>
@@ -315,13 +324,44 @@ accuracy_score(y_test, y_pred)
 confusion_matrix(y_test, y_pred)
 </pre>
 
+<p>結果は（数値を文字で置き換えて）次のような感じになる：</p>
+
+<pre>
+array([[<i>a</i>, <i>b</i>],
+       [<i>c</i>, <i>d</i>]])
+</pre>
+
+<p><code>y_test</code> が 0（実際に死亡）が <i>a</i> + <i>b</i>，<code>y_test</code> が 1（実際に生存）が <i>c</i> + <i>d</i> になる。また，<code>y_pred</code> が 0（予測は死亡）が <i>a</i> + <i>c</i>，<code>y_pred</code> が 1（予測が生存）が <i>b</i> + <i>d</i> になる。正解率 accuracy score は (<i>a</i> + <i>d</i>) / (<i>a</i> + <i>b</i> + <i>c</i> + <i>d</i>) である。</p>
+
+<p>病気の診断の場合にも混同行列がよく使われる。例えば</p>
+
+<table>
+  <tbody>
+  <tr><th></th><th>陰性（病気なしと判断）</th><th>陽性（病気ありと判断）</th></tr>
+  <tr><th>実際に病気なし</th><td>真陰性</td><td>偽陽性</td></tr>
+  <tr><th>実際に病気あり</th><td>偽陰性</td><td>真陽性</td></tr>
+  </tbody>
+</table>
+
+<p>真陽性 / (偽陰性 + 真陽性) を感度，真陰性 / (真陰性 + 偽陽性) を特異度という。例えば</p>
+
+<table>
+  <tbody>
+  <tr><th></th><th>陰性（病気なしと判断）</th><th>陽性（病気ありと判断）</th></tr>
+  <tr><th>実際に病気なし</th><td>99</td><td>1</td></tr>
+  <tr><th>実際に病気あり</th><td>3</td><td>7</td></tr>
+  </tbody>
+</table>
+
+<p>の場合に感度・特異度を計算してみよう。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-12 15:56:57</time>
+Last modified: <time>2021-01-26 14:47:28</time>
 <!-- hhmts end -->
 </p>
 </body>
