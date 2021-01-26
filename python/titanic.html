@@ -249,16 +249,10 @@ sns.swarmplot(x='pclass', y='fare', hue='survived',
 
 <p>このあとは，なんちゃって機械学習（本当はちゃんと勉強してからやろう）。</p>
 
-<p>まずは欠測値を適当に埋める。</p>
+<p>まずは年齢の欠測値を適当に埋める。ここでは中央値とした。</p>
 
 <pre class="cell">
-import pandas as pd
-
 titanic['age'] = titanic['age'].fillna(titanic['age'].median())
-titanic['embarked'] = titanic['embarked'].fillna('N')
-titanic['deck'] = pd.Categorical(titanic['deck'],
-                                 categories=['A','B','C','D','E','F','G','N']
-                                 ).fillna('N')
 </pre>
 
 <p>女/男は 0/1 でエンコードする：</p>
@@ -267,7 +261,18 @@ titanic['deck'] = pd.Categorical(titanic['deck'],
 titanic['sex'] = titanic['sex'].map({'female': 0, 'male': 1})
 </pre>
 
-<p>ほかにもエンコードすべきものがあるが，とりあえず旅客クラス・性・年齢で機械学習してみる：</p>
+<p>あとは，以下では使わないが，他の欠測値も例えば次のようにして埋められる：</p>
+
+<pre class="cell">
+import pandas as pd
+
+titanic['embarked'] = titanic['embarked'].fillna('N')
+titanic['deck'] = pd.Categorical(titanic['deck'],
+                                 categories=['A','B','C','D','E','F','G','N']
+                                 ).fillna('N')
+</pre>
+
+<p>とりあえず旅客クラス・性・年齢で機械学習してみる：</p>
 
 <pre class="cell">
 from sklearn.model_selection import train_test_split
@@ -277,7 +282,7 @@ y = titanic['survived'].values
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 </pre>
 
-<p>それぞれの 0 と 1 の割合は例えば <code>import numpy as np</code> して <code>np.unique(y_test, return_counts=True)</code> とすれば求められる。</p>
+<p>それぞれの度数分布は <code>import numpy as np</code> して例えば <code>np.unique(y_test, return_counts=True)</code> のようにすれば求められる。</p>
 
 <p>決定木の場合：</p>
 
@@ -361,7 +366,7 @@ array([[<i>a</i>, <i>b</i>],
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-26 14:47:28</time>
+Last modified: <time>2021-01-26 15:30:17</time>
 <!-- hhmts end -->
 </p>
 </body>
