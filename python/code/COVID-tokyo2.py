@@ -85,6 +85,15 @@ ax.set_xticks(range(0, 25, 5))
 ax.legend(['2021年公表 確定日-発症日 median=' + str(np.nanmedian(t))])
 fig.savefig('../img/COVID-tokyo2d.svg', bbox_inches="tight")
 
+t = (df1['公表_年月日'] - df1['確定_年月日']).dt.days
+ax.clear()
+ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
+         color="lightgray", edgecolor="black")
+ax.set_xlim(0, 20)
+ax.set_xticks(range(0, 25, 5))
+ax.legend(['2021年公表 公表日-確定日 median=' + str(np.nanmedian(t))])
+fig.savefig('../img/COVID-tokyo2e.svg', bbox_inches="tight")
+
 exit()
 #---
 
