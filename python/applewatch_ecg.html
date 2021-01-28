@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Apple Watchで心電図</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Apple Watchで心電図</h1>
+
+<p>2021-01-27のwatchOS 7.3，iOS 14.4で日本でも心電図アプリが解禁になった。<a href="https://support.apple.com/ja-jp/guide/watch/apdea4c50a57/watchos">Apple Watchの「心電図」Appで心電図を記録する</a>参照。</p>
+
+<p>記録はCSV形式で簡単に読み出すことができる。iPhoneの「ヘルスケア」アプリを開き，右上の自分のアイコンをタップし，「すべてのヘルスケアデータを書き出す」をタップする。共有方法は何でもいいが，私はAirDropでMacに転送した。</p>
+
+<p>Macの「ダウンロード」フォルダ（/Users/自分の名前/Downloads）に「書き出したデータ.zip」というファイルが現れるので，それを展開する。apple_health_export/electrocardiograms/ecg_2021-01-28.csv のようなファイルが得られる：</p>
+
+<pre>
+名前,奥村晴彦
+生年月日,"XXXX/XX/XX"
+記録日,2021-01-28 09:43:04 +0900
+分類,洞調律
+症状,
+ソフトウェアバージョン,1.90
+デバイス,"Watch5,1"
+サンプルレート,512.703ヘルツ
+
+
+リード,リードI
+単位,µV
+
+-37.819
+-40.449
+...(以下略)...
+</pre>
+
+<p>これを読んでプロットする：</p>
+
+<pre>
+<code>import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("apple_health_export/electrocardiograms/ecg_2021-01-28.csv",
+                 skiprows=13, header=None)
+
+plt.plot(df[0])
+plt.xlim(8000, 10000)  # 適当な範囲を指定する
+</code></pre>
+
+<figure><img src="img/applewatchecg.svg" alt="Apple Watch ECG"></figure>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-01-28 10:09:32</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
