@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>全国学力テスト模擬データ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>全国学力テスト模擬データ</h1>
+
+<p>文科省が<a href="http://www.nier.go.jp/kaihatsu/zenkokugakuryoku.html">全国学力・学習状況調査</a>（全国学力テスト）の<a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/1404609.htm">パブリックユースデータ（擬似データ）</a>を公開した。これをRで読み込んで中を調べる方法は<a href="../stat/180613.html">こちら</a>にある。これはそのPython版である。</p>
+
+<p>ここでは<a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/__icsFiles/afieldfile/2018/05/07/1404609_2_1.xlsx">生徒データ（Excel:3126KB）</a>つまり中学生（中3）のデータを使う。まずはダウンロードして，Excelで開いてみよう。このような，1行目に変数名，2行目以降に値が並び，セル結合をしていない素直な長方形データは，RやPythonで簡単に扱える。</p>
+
+<pre class="cell">
+import pandas as pd
+
+df = pd.read_excel("1404609_2_1.xlsx")
+</pre>
+
+<p>これで df という変数に生徒データが読み込まれた。</p>
+
+<pre class="cell">
+df
+</pre>
+
+<p>とだけ打ち込むと雰囲気がわかる。変数名一覧は</p>
+
+<pre class="cell">
+df.columns
+</pre>
+
+<p>だけでは全部表示されない。表示オプションを変えるか，あるいは</p>
+
+<pre class="cell">
+for x in df.columns:
+    print(x)
+</pre>
+
+<p>とする。</p>
+
+<p>詳しくは<a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/__icsFiles/afieldfile/2018/05/15/1404609_1.pdf">データレイアウト（PDF:784KB）</a>にあるが，実施年はすべて2015，地域規模は1:大都市，2:中核市，3:その他の市，4:町村，性別は1:男子，2:女子，0:不明，生徒質問紙種別はすべて欠測値（NaN）である。その次からが正答数と，100点満点に換算した正答率が続く。</p>
+
+<p>国語A，国語B，数学A，数学B，理科の5科目それぞれ45分で答える。Aは基本，Bは応用である。それぞれの満点はデータの最大値に等しい。データでは理科以外に理科A，理科Bがあるが，便宜上二つに分けたようで，基本・応用という区別ではなさそうである。5科目を単純にプロットしてみる：</p>
+
+<pre class="cell">
+import seaborn as sns
+
+sns.pairplot(df.iloc[:, 5:10])
+</pre>
+
+<p>ヒストグラムが凸凹なのは，ビンの取り方に問題があるからである。きれいなヒストグラムを描いてみよう。</p>
+
+<pre class="cell">
+sns.histplot(df['正答数_国Ａ'], discrete=True)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-02-02 13:30:39</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
