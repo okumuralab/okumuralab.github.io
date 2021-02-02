@@ -16,15 +16,13 @@
 
 <h1>M1 Mac</h1>
 
-<p><em>[TL;DR]</em> Rosetta で x86_64 バイナリを使えば問題ない。それでも Intel より速い。arm64 ネイティブなバイナリもどんどん増えてきた。</p>
-
 <h3>はじめに</h3>
-
-<p>メモリ16Gにしたが，通常は8Gで十分かも。SSDは満タンの半分程度で使うつもりで選ぶほうが安心。</p>
 
 <p>2020-11-13 に Apple Store で注文した MacBook Air 16G/256G が 2020-11-29 に届いたのでさっそく設定。</p>
 
 <p>2020-11-20 に生協に注文した Mac mini 16G/256G は 2021-01-12 に届いた。</p>
+
+<p>どちらもメモリ16Gにしたが，通常は8Gで十分かも。SSDは満タンの半分程度で使うつもりで選ぶほうが安心。</p>
 
 <h3>セットアップと一般的な設定</h3>
 
@@ -51,6 +49,8 @@
 </div>
 
 <p>M1 Mac に残る問題：</p>
+
+<p>おそらく Big Sur 11.2 で修正されたはず：</p>
 
 <ul>
   <li>Bluetooth の接続がよく切れる</li>
@@ -150,17 +150,19 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 /usr/bin/python3 (for architecture arm64e):	Mach-O 64-bit executable arm64e
 </pre>
 
-<p>これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば TensorFlow とその依存するパッケージ群（numpy など）が入る。TensorFlow Blog の <a href="https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html">Accelerating TensorFlow Performance on Mac</a> 参照。<a href="https://docs.python.org/3/tutorial/venv.html">venv</a> なので，bash 互換シェル（zsh でもよい）で <code>source ~/tensorflow_macos_venv/bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。pip で入れようとしてもコンパイルでエラーになる。</p>
+<p>これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば Apple Silicon に最適化された TensorFlow とその依存するパッケージ群（numpy など）が入る。TensorFlow Blog の <a href="https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html">Accelerating TensorFlow Performance on Mac</a> 参照。<a href="https://docs.python.org/3/tutorial/venv.html">venv</a> なので，bash 互換シェル（zsh でもよい）で <code>source ~/tensorflow_macos_venv/bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。pip で入れようとしてもコンパイルでエラーになる。強者用である。</p>
 
-<p>pip で簡単にパッケージを入れるためには今のところ Rosetta で python.org のものか Homebrew のものを使うほうが楽である。</p>
+<p>本家 <a href="https://www.python.org">python.org</a> の Python が 3.9.1 から universal バイナリも experimental という括弧書きで提供されるようになった。ただし pip で簡単にパッケージを追加できる状況にないので，混乱しないためには通常の macOS 64-bit Intel installer でインストールし，Rosetta で使うのが簡単である。インストールすると zsh を使っている場合は <code>.zprofile</code> に PATH が追記されるので適宜修正する。</p>
 
-<p>本家 <a href="https://www.python.org">python.org</a> の Python が 3.9.1 から universal バイナリも experimental という括弧書きで提供されるようになった。本家のものをインストールすると，zsh を使っている場合は <code>.zprofile</code> のほうに PATH が書き込まれる。</p>
+<p>一方，<a href="https://github.com/conda-forge/miniforge">miniforge</a> を使えば主要ライブラリを含めて arm64 版がインストールできる（<a href="https://qiita.com/syoyo/items/6ad890c8a902d02d8c5a">こちら</a>参照）。うまくすれば Apple の TensorFlow と組み合わせることもできる（<a href="https://towardsdatascience.com/tensorflow-2-4-on-apple-silicon-m1-installation-under-conda-environment-ba6de962b3b8">TensorFlow 2.4 on Apple Silicon M1: installation under Conda environment</a> および <a href="https://towardsdatascience.com/benchmark-m1-vs-xeon-vs-core-i5-vs-k80-and-t4-e3802f27421c">Benchmark M1 vs Xeon vs Core i5 vs K80 and T4</a> 参照）。</p>
 
-<p>一方，<a href="https://github.com/conda-forge/miniforge">miniforge</a> を使えば主要ライブラリを含めてインストールできる（<a href="https://qiita.com/syoyo/items/6ad890c8a902d02d8c5a">こちら</a>参照）。うまくすれば Apple の TensorFlow と組み合わせることもできる（<a href="https://towardsdatascience.com/tensorflow-2-4-on-apple-silicon-m1-installation-under-conda-environment-ba6de962b3b8">TensorFlow 2.4 on Apple Silicon M1: installation under Conda environment</a> および <a href="https://towardsdatascience.com/benchmark-m1-vs-xeon-vs-core-i5-vs-k80-and-t4-e3802f27421c">Benchmark M1 vs Xeon vs Core i5 vs K80 and T4</a> 参照）。</p>
+<p>miniforge は Homebrew で入れるのが簡単。<code>/opt/homebrew/bin/brew install miniforge</code> とすればよい。/opt/homebrew/Caskroom/miniforge 以下に入るので /opt/homebrew/Caskroom/miniforge/base/bin をPATHに加える。<code>conda update --all</code>，<code>conda list</code>，<code>conda install ...</code> のようにして管理する。パッケージは /opt/homebrew/Caskroom/miniforge/base/lib/python3.9/site-packages に入る。</p>
+
+<p>ただ，<code>ipython --matplotlib</code> と打ち込んだだけで bus error で落ちてしまった。通常のコードは実行できるし，<code>ipython --simple-prompt --matplotlib</code> なら落ちないので，UI がらみか。</p>
 
 <h3>R</h3>
 
-<p><a href="https://developer.r-project.org/Blog/public/2020/11/02/will-r-work-on-apple-silicon/">Will R Work on Apple Silicon?</a> まずは Fortran 90 compiler が必要とのこと。</p>
+<p><a href="https://www.r-project.org">R</a> は今のところ arm64 対応していない（<a href="https://developer.r-project.org/Blog/public/2020/11/02/will-r-work-on-apple-silicon/">Will R Work on Apple Silicon?</a> 参照）。まずは Fortran 90 compiler が必要とのこと。</p>
 
 <h3>TeX</h3>
 
@@ -207,7 +209,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-31 20:32:32</time>
+Last modified: <time>2021-02-02 12:30:59</time>
 <!-- hhmts end -->
 </p>
 </footer>

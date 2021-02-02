@@ -45,6 +45,13 @@ for x in df.columns:
     print(x)
 </pre>
 
+<p>または</p>
+
+<pre class="cell">
+for i, x in enumerate(df.columns):
+    print(i, x)
+</pre>
+
 <p>とする。</p>
 
 <p>詳しくは<a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/__icsFiles/afieldfile/2018/05/15/1404609_1.pdf">データレイアウト（PDF:784KB）</a>にあるが，実施年はすべて2015，地域規模は1:大都市，2:中核市，3:その他の市，4:町村，性別は1:男子，2:女子，0:不明，生徒質問紙種別はすべて欠測値（NaN）である。その次からが正答数と，100点満点に換算した正答率が続く。</p>
@@ -57,11 +64,21 @@ import seaborn as sns
 sns.pairplot(df.iloc[:, 5:10])
 </pre>
 
-<p>ヒストグラムが凸凹なのは，ビンの取り方に問題があるからである。きれいなヒストグラムを描いてみよう。</p>
+<p>スタイルは <code>sns.set_style("darkgrid")</code> などと指定できる。<code>white</code>，<code>dark</code>，<code>whitegrid</code>，<code>darkgrid</code>，<code>ticks</code> から選ぶ。</p>
+
+<p>ヒストグラムが凸凹なのは，ビン（階級）の取り方に問題があるからである。次の <code>discrete=True</code> オプションでどう変わるか試してみよう。</p>
 
 <pre class="cell">
 sns.histplot(df['正答数_国Ａ'], discrete=True)
 </pre>
+
+<p>散布図と回帰直線を描いてみよう。</p>
+
+<pre class="cell">
+sns.regplot(df['正答数_国Ａ'], df['正答数_数Ａ'])
+</pre>
+
+<p>箱ひげ図なども挑戦してみよう。</p>
 
 <hr>
 
@@ -70,7 +87,7 @@ sns.histplot(df['正答数_国Ａ'], discrete=True)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-02 13:30:39</time>
+Last modified: <time>2021-02-02 14:12:30</time>
 <!-- hhmts end -->
 </p>
 </footer>
