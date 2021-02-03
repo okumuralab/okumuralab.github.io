@@ -71,7 +71,7 @@ arch -x86_64 uname -m
 arch -x86_64 zsh
 </pre>
 
-<p>とすれば Rosetta で zsh が立ち上がる。x86_64 のコードを実行するにはこの状態で行う。</p>
+<p>とすれば Rosetta で zsh が立ち上がる。x86_64 のコードを実行するにはこの状態で行う。.zshrc に <code>alias x86='arch -x86_64 zsh'</code> のようにエイリアスを作っておけば <code>x86</code> と入力するだけでこの状態になる。</p>
 
 <h3>シェル</h3>
 
@@ -116,9 +116,11 @@ setopt NO_GLOBAL_RCS
 export PATH=... # bashと同様
 </pre>
 
+<p>PATH は上記のように場合分けして設定する。</p>
+
 <h3>Command Line Tools</h3>
 
-<p>コマンドラインで開発する場合，巨大な Xcode をインストールする必要はない。コマンドライン用の開発ツールは，何らかの開発用コマンド（gcc とか python3 とか）を実行しようとするとインストールを促される。より確実な方法は，ターミナルに <code>xcode-select --install</code> と打ち込むか，<a href="https://developer.apple.com/downloads">https://developer.apple.com/downloads</a> からダウンロードしてインストールする。2021-01-27現在 Command Line Tools for Xcode 12.4 が最新。</p>
+<p>コマンドラインで開発する場合，巨大な Xcode をインストールする必要はない。コマンドライン用の開発ツールは，何らかの開発用コマンド（gcc とか python3 とか）を実行しようとするとインストールを促される。より確実な方法は，ターミナルに <code>xcode-select --install</code> と打ち込むか，<a href="https://developer.apple.com/downloads">https://developer.apple.com/downloads</a> からダウンロードしてインストールする。</p>
 
 <h3>Homebrew</h3>
 
@@ -137,7 +139,7 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <h3>Emacs 27</h3>
 
-<p>arm64 環境でビルドしてみたがエラー。Rosetta 環境でなら簡単にできた。</p>
+<p>arm64 環境でビルドしてみたがエラー。Rosetta 環境でなら簡単にできたので，現在はそれを使っている。ビルドが面倒な場合には適当なバイナリを探してくる。</p>
 
 <h3>Python</h3>
 
@@ -209,7 +211,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-02 12:30:59</time>
+Last modified: <time>2021-02-03 10:20:18</time>
 <!-- hhmts end -->
 </p>
 </footer>
