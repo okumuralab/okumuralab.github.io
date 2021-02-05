@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>COCOAのファイルを読む</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>COCOAのファイルを読む</h1>
+
+<h2>接触チェックの記録</h2>
+
+<p>iPhoneに<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/cocoa_00138.html">COCOA</a>をインストールしている。接触チェックの記録は，「設定」→「接触通知」→「接触のログ記録の状況」→「接触チェックの記録」→「接触チェックの記録を書き出す」でAirDropなどの手段で書き出すことができる。書き出されるのは ExposureChecks-YYYY-MM-DD.json のようなJSONファイルである。これを読んでみよう。</p>
+
+<p><code>ExportVersion</code> という項目があり，古いものは1，新しいものは2になっている。次のようにすれば接触情報（<code>MatchCount</code> が0以外）だけを表示できる：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import sys
+import json
+
+
+def show(x, y):
+    print()
+    print(x)
+    for k in ["Hash", "MatchCount", "Timestamp"]:
+        print(k, y[k])
+
+
+for arg in sys.argv[1:]:
+    with open(arg) as f:
+        d = json.load(f)
+    if d["ExportVersion"] == 1:
+        for i in d["ExposureChecks"]:
+            if i["MatchCount"] != 0:
+                show(arg, i)
+    elif d["ExportVersion"] == 2:
+        for i in d["ExposureChecks"]:
+            for j in i["Files"]:
+                if j["MatchCount"] != 0:
+                    show(arg, j)
+    else:
+        print(arg, "Unknown ExportVersion:", d["ExportVersion"])
+</pre>
+
+<p>出力例：</p>
+
+<pre>
+ExposureChecks-2020-09-12.json
+Hash 6CBAA717FA2D584F2E8A77731C4B7D5294ED4B7E899EC3D4E54598BDCDE0400B
+MatchCount 1
+Timestamp 2020-09-12 01:15:24 +0900
+</pre>
+
+<h2>COCOAのログ</h2>
+
+<p>COCOAのログについては
+<a href="https://github.com/cocoa-mhlw/cocoa/issues/16">COCOA 突如として初期化される問題（UserDataが壊れている） #16</a>
+に詳しい。</p>
+
+<p>COCOAアプリを立ち上げて，左上の三本線メニュー→「アプリに関するお問い合わせ」→「動作情報を送信」→「動作情報を確認する」→「保存完了OK」，いったんCOCOAを閉じて「ファイル」アプリを立ち上げ，「接触確認アプリ」フォルダを開き，cocoa_log_*.zip というファイルを長押しし，「共有」でAirDropなどでパソコンに送る（zipファイルを長押ししないでタップするとiPhoneの中で展開される）。</p>
+
+<p>このzipファイルを展開すると2週間分のcsvファイルが出てくる。中はCOCOAの動作ログである。</p>
+
+<p>次のようなスクリプトでエラー行だけ表示することができる：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import re
+import sys
+from zipfile import ZipFile
+
+for arg in sys.argv[1:]:
+    with ZipFile(arg) as z:
+        for x in z.namelist():
+            with z.open(x) as f:
+                for r in f:
+                    line = r.decode('utf-8')
+                    if re.search('^.*?,"Error",', line):
+                        print(line)
+</pre>
+
+<p>出力例：</p>
+
+<pre>
+"2021/02/01 13:09:59","Error","Fail to download files, ...(後略)...
+"2021/02/01 17:12:55","Error","Failed to get terms update info., ...(後略)...
+"2021/01/31 21:14:08","Error","Failed to check version., ...(後略)...
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-02-05 17:14:44</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
