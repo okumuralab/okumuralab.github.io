@@ -160,7 +160,7 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <p>miniforge は Homebrew で入れるのが簡単。<code>/opt/homebrew/bin/brew install miniforge</code> とすればよい。/opt/homebrew/Caskroom/miniforge 以下に入るので /opt/homebrew/Caskroom/miniforge/base/bin をPATHに加える。<code>conda update --all</code>，<code>conda list</code>，<code>conda install ...</code> のようにして管理する。パッケージは /opt/homebrew/Caskroom/miniforge/base/lib/python3.9/site-packages に入る。</p>
 
-<p>ただ，<code>ipython --matplotlib</code> と打ち込んだだけで bus error で落ちてしまった。通常のコードは実行できるし，<code>ipython --simple-prompt --matplotlib</code> なら落ちないので，UI がらみか。</p>
+<p><del>ただ，<code>ipython --matplotlib</code> と打ち込んだだけで bus error で落ちてしまった。通常のコードは実行できるし，<code>ipython --simple-prompt --matplotlib</code> なら落ちないので，UI がらみか。</del> ← 直った。</p>
 
 <h3>R</h3>
 
@@ -211,7 +211,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-03 10:20:18</time>
+Last modified: <time>2021-02-05 20:56:23</time>
 <!-- hhmts end -->
 </p>
 </footer>
