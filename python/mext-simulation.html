@@ -145,6 +145,7 @@ plt.scatter(x, y, color=col)
 
 <pre><code>plt.scatter(x[c], y[c], color="red")
 plt.scatter(x[np.logical_not(c)], y[np.logical_not(c)], color="blue")
+# または plt.scatter(x[~c], y[~c], color="blue")
 </code></pre>
 
 <p>seaborn を使う例（デフォルトでうまい具合の色になる）：</p>
@@ -168,7 +169,7 @@ plt.scatter(x[np.logical_not(c)], y[np.logical_not(c)], color="blue")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-10 20:11:17</time>
+Last modified: <time>2021-02-06 13:38:47</time>
 <!-- hhmts end -->
 </p>
 </body>
