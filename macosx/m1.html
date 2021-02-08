@@ -48,13 +48,12 @@
 <p>以上以外に，私は非常に慎重を期すためにいつも自分を管理者から外している。具体的には，システム環境設定の「ユーザとグループ」で自分（奥村）以外に管理者（名前は例えば admin とする）を一人作成し，その管理者（Apple ID には紐付けない）でログインし直して奥村を一般ユーザに格下げする。これで何か重要なことをする際には管理者の名前とパスワードを聞いてくるのでうっかり危ないコマンドを実行する危険性が減る。Unix 的には sudoers から外したことに相当する。コマンドでシステム領域に触れたいときは <code>su admin</code> してから <code>sudo 何々</code> する。ただ，macOS はデフォルトでずいぶん安全になったので，今はここまでする必要はないかもしれない。</p>
 </div>
 
-<p>M1 Mac に残る問題：</p>
-
-<p>おそらく Big Sur 11.2 で修正されたはず：</p>
+<p>M1 Mac に残る問題（おそらく Big Sur 11.2 で改善されたはず）：</p>
 
 <ul>
   <li>Bluetooth の接続がよく切れる</li>
   <li>スクリーンセーバー解除ができなくなる（他マシンからログインして ScreenSaverEngine を kill すればよい）</li>
+  <li>Big Sur 11.2 になっても iPhone からの Bluetooth テザリングがうまくいかない（できたという人もいる）</li>
 </ul>
 
 <h3>ターミナル</h3>
@@ -160,11 +159,13 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <p>miniforge は Homebrew で入れるのが簡単。<code>/opt/homebrew/bin/brew install miniforge</code> とすればよい。/opt/homebrew/Caskroom/miniforge 以下に入るので /opt/homebrew/Caskroom/miniforge/base/bin をPATHに加える。<code>conda update --all</code>，<code>conda list</code>，<code>conda install ...</code> のようにして管理する。パッケージは /opt/homebrew/Caskroom/miniforge/base/lib/python3.9/site-packages に入る。</p>
 
-<p>ただ，<code>ipython --matplotlib</code> と打ち込んだだけで bus error で落ちてしまった。通常のコードは実行できるし，<code>ipython --simple-prompt --matplotlib</code> なら落ちないので，UI がらみか。</p>
+<p><del>ただ，<code>ipython --matplotlib</code> と打ち込んだだけで bus error で落ちてしまった。通常のコードは実行できるし，<code>ipython --simple-prompt --matplotlib</code> なら落ちないので，UI がらみか。</del> ← 直った。</p>
 
 <h3>R</h3>
 
-<p><a href="https://www.r-project.org">R</a> は今のところ arm64 対応していない（<a href="https://developer.r-project.org/Blog/public/2020/11/02/will-r-work-on-apple-silicon/">Will R Work on Apple Silicon?</a> 参照）。まずは Fortran 90 compiler が必要とのこと。</p>
+<p><a href="https://rud.is/b/2021/02/07/fully-native-m1-apple-silicon-r-setup/">Fully Native M1/Apple Silicon R Setup</a> のようにすれば arm64 版 R ができるとのこと。</p>
+
+<p><del><a href="https://www.r-project.org">R</a> は今のところ arm64 対応していない（<a href="https://developer.r-project.org/Blog/public/2020/11/02/will-r-work-on-apple-silicon/">Will R Work on Apple Silicon?</a> 参照）。まずは Fortran 90 compiler が必要とのこと。</del></p>
 
 <h3>TeX</h3>
 
@@ -211,7 +212,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-03 10:20:18</time>
+Last modified: <time>2021-02-08 13:54:29</time>
 <!-- hhmts end -->
 </p>
 </footer>
