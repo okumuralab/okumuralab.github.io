@@ -58,6 +58,15 @@ t2 = time.time()
 print(t2 - t1)
 </code></pre>
 
+<p>より精度の良い時間計測には <code>time.perf_counter()</code> を使う。こちらは差だけに意味がある。</p>
+
+<pre>
+<code>t1 = time.perf_counter()
+time.sleep(1.5)
+t2 = time.perf_counter()
+print(t2 - t1)
+</code></pre>
+
 <p>年月日時分秒で表した時刻：</p>
 
 <pre>
@@ -196,7 +205,7 @@ print(f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-18 21:56:01</time>
+Last modified: <time>2021-02-06 13:06:44</time>
 <!-- hhmts end -->
 </p>
 </body>

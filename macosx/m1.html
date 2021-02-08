@@ -123,9 +123,10 @@ export PATH=... # bashと同様
 
 <h3>Homebrew</h3>
 
-<p>もう ARM 版だけでほとんど大丈夫だと思われるが，Rosetta で実行する Intel 版は通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを <code>uname -m</code> が x86_64 なターミナルに打ち込めばインストールできる。</p>
+<p><a href="https://brew.sh/2021/02/05/homebrew-3.0.0/">Homebrew 3.0.0</a>:
+"Apple Silicon is now officially supported for installations in /opt/homebrew."</p>
 
-<p><del>ARM 版の対応状況は <a href="https://github.com/Homebrew/brew/issues/7857">macOS 11 Big Sur compatibility on Apple Silicon #7857</a> にまとめられている。</del> ← ARM 版の対応はどんどん進み，対応状況の表はあまり参考にならなくなった。2021-01-14 現在，wget，gnupg，pinentry-mac，imagemagick，poppler，ffmpeg，graphviz は大丈夫。pandoc はまだ Intel 版だけ。</p>
+<p>wget，gnupg，pinentry-mac，imagemagick，poppler，ffmpeg，graphviz など，大部分のものは Apple Silicon 版が用意されるようになった。pandoc はまだ Intel 版だけ。</p>
 
 <p>ARM 版は，<a href="https://docs.brew.sh/Installation">Installation</a> にあるように <code>/opt/homebrew</code>（ユーザ権限で書き込めるようにしておく）にインストールする：</p>
 
@@ -135,6 +136,8 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 </pre>
 
 <p>ARM 版 Homebrew で <code>brew install emacs</code> でインストールされる emacs はターミナル版。<code>brew install --cask emacs</code> でインストールされるものは <a href="https://emacsformacosx.com">Emacs for Mac OS X</a> のバイナリで M1 用ではないが Rosetta で動く。</p>
+
+<p>Rosetta で実行する Intel 版は通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを <code>uname -m</code> が x86_64 なターミナルに打ち込めばインストールできる。</p>
 
 <h3>Emacs 27</h3>
 
@@ -212,7 +215,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-08 13:54:29</time>
+Last modified: <time>2021-02-08 13:56:49</time>
 <!-- hhmts end -->
 </p>
 </footer>
