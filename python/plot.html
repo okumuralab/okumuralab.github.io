@@ -340,8 +340,14 @@ display.set_matplotlib_formats('svg')
 <p>軸の最小値・最大値を指定する：</p>
 
 <pre>
-<code>plt.xlim(最小値,最大値)
-plt.ylim(最小値,最大値)
+<code>plt.xlim(最小値, 最大値)
+plt.ylim(最小値, 最大値)
+</code></pre>
+
+<p>あるいは両者をまとめて</p>
+
+<pre>
+<code>plt.axis([xの最小値, xの最大値, yの最小値, yの最大値])
 </code></pre>
 
 <p>軸の目盛位置と目盛ラベルを指定する：</p>
@@ -452,7 +458,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-17 10:17:29</time>
+Last modified: <time>2021-02-09 10:48:04</time>
 <!-- hhmts end -->
 </p>
 </body>
