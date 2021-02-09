@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>M1 Mac</title>
+<link rel="stylesheet" href="../style6.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs" itemprop="breadcrumb">
+<a href="../" rel="home">ホーム</a> &gt;
+<a href="./">macOS</a> &gt;
+</nav>
+
+<h1>音声合成</h1>
+
+<p>iPhoneはiOS 13以降で言語の切り替えがシステムワイドにしか行えなくなったようだが，Macなら日本語環境で簡単に外国語をしゃべらせることができる。「システム環境設定」→「アクセシビリティ」→「読み上げコンテンツ」で，「システムの声」→「カスタマイズ」で声を追加する。米語の女声ならAvaやSamanthaが聞きやすそうだ。例えばKindleで英語の本を開いて，「ツール」→「読み上げ機能を開始」（⌘T）でそのページの先頭から読み上げる。「ツール」→「読み上げ機能を終了」（⌘T）で終了する。残念ながら読み上げ速度は調節できない。</p>
+
+<p>より柔軟にコントロールするにはターミナルで <code>say</code> コマンドを使う。海上忍さんの<a href="https://news.mynavi.jp/article/osxhack-224/">「Kyoko」と「Otoya」に語らせたい、あんなこと・こんなこと</a>に解説がある。例えばAvaさんにしゃべってもらうには</p>
+
+<pre>
+say -v Ava 'Hello, world!'
+</pre>
+
+<p>オプションは <code>man say</code> で調べられる。ちょっと早口にしてみよう：</p>
+
+<pre>
+say -v Ava -r 300 'Hello, world!'
+</pre>
+
+<p>標準入力から読むには</p>
+
+<pre>
+say -v Ava -r 300 -f -
+</pre>
+
+<p>とする。入力待ちの状態になるので，読ませたいテキストをターミナルにコピペする。どんどん追加できるので便利である。</p>
+
+<p>細かな調節は埋め込みコマンド <code>[[ ... ]]</code> で指定できるようだ。海上さんの解説にもあるが，詳しくは <a href="https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/SpeechSynthesisProgrammingGuide/">Speech Synthesis Programming Guide</a> の <a href="https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/SpeechSynthesisProgrammingGuide/FineTuning/FineTuning.html">Techniques for Customizing Synthesized Speech</a> Table 3-1 Embedded speech commands にある。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-02-09 15:57:16</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
