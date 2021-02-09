@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
 <title>M1 Mac</title>
-<link rel="stylesheet" href="../style6.css">
+<link rel="stylesheet" href="../style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
@@ -16,9 +16,11 @@
 
 <h1>音声合成</h1>
 
-<p>iPhoneはiOS 13以降で言語の切り替えがシステムワイドにしか行えなくなったようだが，Macなら日本語環境で簡単に外国語をしゃべらせることができる。「システム環境設定」→「アクセシビリティ」→「読み上げコンテンツ」で，「システムの声」→「カスタマイズ」で声を追加する。米語の女声ならAvaやSamanthaが聞きやすそうだ。例えばKindleで英語の本を開いて，「ツール」→「読み上げ機能を開始」（⌘T）でそのページの先頭から読み上げる。「ツール」→「読み上げ機能を終了」（⌘T）で終了する。残念ながら読み上げ速度は調節できない。</p>
+<p>iPhoneはiOS 13以降で言語の切り替えがシステムワイドにしか行えなくなったようだが，Macなら日本語環境で簡単に外国語をしゃべらせることができる。「システム環境設定」→「アクセシビリティ」→「読み上げコンテンツ」で，「システムの声」→「カスタマイズ」で声を追加する。米語の女声ならAvaやSamanthaが聞きやすそうだ（なぜかSiriは使えない）。例えばKindleで英語の本を開いて，「ツール」→「読み上げ機能を開始」（⌘T）でそのページの先頭から読み上げる。「ツール」→「読み上げ機能を終了」（⌘T）で終了する。残念ながら読み上げ速度は調節できない。</p>
 
-<p>より柔軟にコントロールするにはターミナルで <code>say</code> コマンドを使う。海上忍さんの<a href="https://news.mynavi.jp/article/osxhack-224/">「Kyoko」と「Otoya」に語らせたい、あんなこと・こんなこと</a>に解説がある。例えばAvaさんにしゃべってもらうには</p>
+<p>「システム環境設定」→「アクセシビリティ」→「読み上げコンテンツ」で「選択項目を読み上げる」をオンにしておけば，選択した場所を Option + Esc で読み上げることができる。これはKindleに限らずどんなアプリでも使えるので便利である（Kindleの場合は最後に著作権情報が入る）。Siriの声も使えるし，「読み上げ速度」も設定できる。</p>
+
+<p>ターミナルで <code>say</code> コマンドを使って発声させることもできる。海上忍さんの<a href="https://news.mynavi.jp/article/osxhack-224/">「Kyoko」と「Otoya」に語らせたい、あんなこと・こんなこと</a>に解説がある。なぜかSiriの声は使えない。例えばAvaにしゃべってもらうには</p>
 
 <pre>
 say -v Ava 'Hello, world!'
@@ -38,7 +40,7 @@ say -v Ava -r 300 -f -
 
 <p>とする。入力待ちの状態になるので，読ませたいテキストをターミナルにコピペする。どんどん追加できるので便利である。</p>
 
-<p>細かな調節は埋め込みコマンド <code>[[ ... ]]</code> で指定できる。海上さんの解説にもあるが，詳しくは <a href="https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/SpeechSynthesisProgrammingGuide/">Speech Synthesis Programming Guide</a> の <a href="https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/SpeechSynthesisProgrammingGuide/FineTuning/FineTuning.html">Techniques for Customizing Synthesized Speech</a> Table 3-1 Embedded speech commands にある。</p>
+<p>細かな調節は埋め込みコマンド <code>[[ ... ]]</code> で指定できる。海上さんの解説にもあるが，詳しくは <a href="https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/SpeechSynthesisProgrammingGuide/">Speech Synthesis Programming Guide</a> の <a href="https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/SpeechSynthesisProgrammingGuide/FineTuning/FineTuning.html">Techniques for Customizing Synthesized Speech</a> Table 3-1 Embedded speech commands にまとめてある。</p>
 
 <hr>
 
@@ -47,7 +49,7 @@ say -v Ava -r 300 -f -
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-09 17:09:13</time>
+Last modified: <time>2021-02-09 22:13:13</time>
 <!-- hhmts end -->
 </p>
 </footer>

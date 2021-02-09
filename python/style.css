@@ -54,7 +54,6 @@ hr { clear: both }
 blockquote > p { margin: 0 }
 figure { margin-left: 0em; margin-right: 0em }
 img { max-width: 100%; height: auto }
-#map_canvas img { max-width: none; }
 
 @media print {
   body { margin: 0%; }
