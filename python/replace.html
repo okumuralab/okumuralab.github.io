@@ -37,13 +37,31 @@ for arg in sys.argv[3:]:
 
 <p>と打ち込めば，カレントディレクトリの <code>*.tex</code> 全体にわたって <code>hoge</code> を <code>fuga</code> に置き換えてくれます。</p>
 
+<p><code>str.replace()</code> は複数行の置き換えにも対応します。例えば <code>s.replace("hoge\nfuga\n", "")</code> とすると「hoge改行fuga改行」という2行を削除します。</p>
+
+<p><code>str.replace()</code> には3番目の引数もあって，例えば <code>s.replace("hoge", "fuga", 1)</code> とするとそのファイルについて1回だけ置換を実行します。</p>
+
+<p>一括置換をより安全に実行するには，別にフォルダを作っておき，置換した結果をそちらに入れて，問題がなければオリジナルを置き換えます：</p>
+
+<pre>
+<code>for arg in sys.argv[1:]:
+    with open(arg) as f:
+        orig = f.read()
+    text = orig
+    text = text.replace("A", "B")
+    text = text.replace("C", "D")
+    if text != orig:
+        with open('new/' + arg, 'w') as f:
+            f.write(text)
+</code></pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-22 20:25:32</time>
+Last modified: <time>2021-02-10 12:44:44</time>
 <!-- hhmts end -->
 </p>
 </body>
