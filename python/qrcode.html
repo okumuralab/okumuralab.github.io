@@ -16,7 +16,7 @@
 
 <h1>QRコード</h1>
 
-<p><a href="https://github.com/lincolnloop/python-qrcode">Pure python QR Code generator</a> を使います。<code>pip install qrcode</code> などとしてインストールします（<code>pillow</code> もインストールしておく必要があるようです）。Python ライブラリだけでなく，<code>qr</code> というスクリプトもインストールされます。Mac のターミナルまたは Windows のコマンドプロンプト等で</p>
+<p><a href="https://github.com/lincolnloop/python-qrcode">Pure python QR Code generator</a> を使います。<code>pip install qrcode</code> などとしてインストールします（<code>pillow</code> も使われます）。Python ライブラリだけでなく，<code>qr</code> というスクリプトもインストールされます。Mac のターミナルまたは Windows のコマンドプロンプト等で</p>
 
 <pre>
 <code>qr '奥村晴彦です' &gt; test.png
@@ -38,13 +38,39 @@
 Image("test.png")
 </code></pre>
 
+<p>コマンドラインではなく Python だけで処理するには次のようにします：</p>
+
+<pre>
+<code>import qrcode
+
+img = qrcode.make('奥村晴彦です')
+img.show()           # 表示
+img.save("test.png") # 保存
+</code></pre>
+
+<p>ほかに <a href="https://pypi.org/project/qrcodegen/">qrcodegen</a> や，<a href="https://pypi.org/project/PyQRCode/">PyQRCode</a> からフォークした <a href="https://pypi.org/project/PyQRCodeNG/">PyQRCodeNG</a> など，多数のQRコード生成ライブラリがあります。</p>
+
+<p>QRコードを読むためのライブラリとして，ここでは <a href="https://pypi.org/project/pyzbar-x/">pyzbar-x</a> を使ってみます。インストールは <code>pip install pyzbar-x</code> です。Mac ではあらかじめ <code>brew install zbar</code> として zbar を入れておきます。次のような実行ファイル qrdecode.py を作っておくと便利です。パスの通ったところに置いておき <code>qrdecode.py *.png *.jpg</code> などとすれば画像からQRコードを見つけて復号してくれるはずです：</p>
+
+<pre>
+<code>#! /usr/bin/env python3
+
+import sys
+from pyzbar.pyzbar import decode
+from PIL import Image
+
+for arg in sys.argv[1:]:
+    for x in decode(Image.open(arg)):
+        print(x[0].decode('utf-8'))
+</code></pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-10-06 15:54:46</time>
+Last modified: <time>2021-02-14 17:46:38</time>
 <!-- hhmts end -->
 </p>
 </body>
