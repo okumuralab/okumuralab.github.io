@@ -64,13 +64,17 @@ for arg in sys.argv[1:]:
         print(x[0].decode('utf-8'))
 </code></pre>
 
+<div class="note">
+<p>M1 Macのarm64ネイティブなminiforge版Pythonではpyzbarを <code>conda install pyzbar</code> でインストールした。zbarライブラリは <code>brew install zbar</code> で入るが，パスの関係で見つけられないようだ。とりあえず <code>ln -s /opt/homebrew/lib/libzbar.dylib /opt/homebrew/Caskroom/miniforge/base/lib/</code> のようにシンボリックリンクを張れば大丈夫なようだ。</p>
+</div>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-14 17:46:38</time>
+Last modified: <time>2021-02-15 11:29:38</time>
 <!-- hhmts end -->
 </p>
 </body>
