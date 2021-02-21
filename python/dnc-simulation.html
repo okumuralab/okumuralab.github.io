@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>情報I試作問題のシミュレーション</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>情報I試作問題のシミュレーション</h1>
+
+<p>共通テスト「情報I」の「検討用イメージ」（<a href="http://www.ipsj.or.jp/education/edu202012.html">大学入学共通テストへの「情報」の出題について</a>）の第4問（交通量シミュレーション）をPythonで解いてみる。まずは準備：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+
+rng = np.random.default_rng()
+</pre>
+
+<p>交差点に10秒間に国道は8〜12台，県道は3〜4台の車が来る。この様子（図2）を描く。「乱数で決まる」としか書かれていないが，どうやら（Poissonではなく）一様乱数のようである。</p>
+
+<pre class="cell">
+t = np.arange(0, 1810, 10)
+kokudou = rng.integers(8, 13, size=181)
+kendou = rng.integers(3, 5, size=181)
+plt.bar(t - 2, kokudou, width=3)
+plt.bar(t + 2, kendou, width=3)
+plt.xlim(-10, 255)  # 見たい範囲（なければ全範囲）
+plt.legend(['国道', '県道'])
+</pre>
+
+<p>図3相当のものを描く：</p>
+
+<pre class="cell">
+s_koku = s_ken = 0
+kokudou_juutai = [s_koku]
+kendou_juutai = [s_ken]
+for i in range(180):
+    s_koku += kokudou[i]
+    s_ken += kendou[i]
+    if i % 9 < 6:
+        s_koku = max(s_koku - 20, 0)
+    else:
+        s_ken = max(s_ken - 10, 0)
+    kokudou_juutai.append(s_koku)
+    kendou_juutai.append(s_ken)
+plt.plot(t, kokudou_juutai, 'o-')
+plt.plot(t, kendou_juutai, 's-')
+plt.legend(['国道', '県道'])
+</pre>
+
+<p>最初 <code>kokudou[0]</code>，<code>kendou[0]</code> 台の車が来た時点から始まるのかと思ったが，図3を見れば 0 から始まっている。このため，181個の乱数を作っておきながら，180個しか使っていない。</p>
+
+<p><code>for i, (koku, ken) in enumerate(zip(kokudou[:-1], kendou)):</code> のようにするほうがPythonistaっぽいというご意見と，逆に <code>append()</code> を使うより <code>kokudou_juutai = np.zeros(181)</code> とかで配列を作っておいて代入するほうが平易というご意見をいただいた。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-02-21 14:38:57</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
