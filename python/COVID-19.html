@@ -99,6 +99,10 @@ ax.bar(df['日付'], df['PCR 検査陽性者数(単日)'], width=1, color='C1')
 
 <figure><img src="img/COVID-tokyo-log.svg" alt="東京"></figure>
 
+<p>実効再生産数を，(直近7日間の陽性数/n日前7日間の陽性数)**(5/n)で近似したもの。<a href="https://toyokeizai.net/sp/visual/tko/covid19/">東洋経済オンライン</a>では n=7 としているが，ここでは 1 から 7 までの7本のグラフを示した。</p>
+
+<figure><img src="img/COVID-tokyo-rt.svg" alt="東京"></figure>
+
 <!--
 <p>累積（倍加時間を見るために最終日の値とその半分を点線で示した）：</p>
 <figure><img src="img/COVID-tokyo-cum.svg" alt="東京"></figure>
@@ -193,7 +197,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-22 14:53:34</time>
+Last modified: <time>2021-02-23 14:27:42</time>
 <!-- hhmts end -->
 </p>
 </body>
