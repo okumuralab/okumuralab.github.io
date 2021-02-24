@@ -72,6 +72,17 @@ while True:
     print(address["address1"], address["address2"], address["address3"])
 </code></pre>
 
+<h3>気象庁API</h3>
+
+<p>2021-02-24 13:00:00 のリニューアルによってさまざまなAPIが使えるようになったようだ。例：</p>
+
+<pre>
+<code>url = "https://www.jma.go.jp/bosai/forecast/data/overview_forecast/240000.json"
+data = requests.get(url).json()
+print(data['headlineText'])
+print(data['text'])
+</code></pre>
+
 <h3>Weather Hacks</h3>
 
 <p><a href="http://www.livedoor.com">livedoor</a>（LINE Corporation）の提供する<a href="http://weather.livedoor.com/weather_hacks/">Weather Hacks</a>は，場所を指定すると天気予報が取得できる。詳細は<a href="http://weather.livedoor.com/weather_hacks/webservice">Webサービス仕様</a>参照。</p>
@@ -145,7 +156,7 @@ for i in data["item"]:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-07-06 12:34:22</time>
+Last modified: <time>2021-02-24 17:02:38</time>
 <!-- hhmts end -->
 </p>
 </body>
