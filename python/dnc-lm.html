@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>情報I試作問題の回帰・相関・因果</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>情報I試作問題の回帰・相関・因果</h1>
+
+<p>共通テスト「情報I」の「検討用イメージ」（<a href="http://www.ipsj.or.jp/education/edu202012.html">大学入学共通テストへの「情報」の出題について</a>）の第8問（データの収集・整理・分析）のC（分析）をPythonで解いてみる。まずは準備：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+</pre>
+
+<p>問題は次の通りである。</p>
+
+<blockquote style="text-indent:1em">
+<p>Mさんはこの1年間，精力的にSNSを利用して情報を発信してきた。そこで，SNSの 情報発信がどの程度Webサイトへの訪問件数に影響を与えたか調べることにした。</p>
+<p>SNSへの情報発信件数を過去の履歴から調べ，Webサイトの訪問回数を月別に集計したところ表3のようになった。また，この関係をグラフに表したら図2のようになった。</p>
+</blockquote>
+
+<p>表3は，月（10月〜翌年9月），SNS発信件数，Webサイト訪問回数の表であるが，ここではPythonの形式で与えておく：</p>
+
+<pre class="cell">
+mon = [10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+sns = [9, 12, 27, 24, 14, 9, 11, 20, 18, 26, 32, 16]
+web = [150, 198, 501, 423, 259, 283, 301, 492, 489, 701, 789, 520]
+</pre>
+
+<p>図2は，SNS発信件数とWebサイト訪問回数の散布図である：</p>
+
+<figure><img src="img/dnc-lm-zu2.png" alt=""></figure>
+
+<p>Pythonで描いてみよう。後で月の影響も見るため，ここでは線でつないだ散布図を描き，月を書き添える：</p>
+
+<pre class="cell">
+plt.plot(sns, web, "o-")
+for s, w, m in zip(sns, web, mon):
+    plt.text(s, w, m)
+plt.xlabel("SNS")
+plt.ylabel("Web")
+</pre>
+
+<figure><img src="img/dnc-lm.svg" alt=""></figure>
+
+<p>月を追うごとにWebサイト訪問件数は増えているように見える。</p>
+
+<p>Webサイト訪問回数がSNS発信件数だけに依存するとすれば</p>
+
+<pre class="cell">
+np.polyfit(sns, web, 1)
+</pre>
+
+<p>と打ち込むと <code>array([22.48996397, 16.93232115])</code> と出るので y = 22.49x + 16.93 という回帰式を得る。</p>
+
+<p>しかし，このあたりで統計屋としては物足りなく感じ始めるので，Rを併用することにする。Rを直接使ってもいいが，ここでは<a href="pyper.html">PypeR</a>でPythonからRを使うことにする：</p>
+
+<pre class="cell">
+import pyper
+
+r = pyper.R()
+r.assign("sns", sns)  # sns = c(9, 12, 27, ...)
+r.assign("web", web)  # web = c(150, 198, 501, ...)
+print(r("summary(lm(web ~ sns))"))
+</pre>
+
+<p>次のように出力される：</p>
+
+<pre>
+Call:
+lm(formula = web ~ sns)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-133.69  -76.80   30.97   64.56  143.23 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   16.932     74.940   0.226 0.825794    
+sns           22.490      3.824   5.881 0.000155 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 97.32 on 10 degrees of freedom
+Multiple R-squared:  0.7757,	Adjusted R-squared:  0.7533 
+F-statistic: 34.58 on 1 and 10 DF,  p-value: 0.000155
+</pre>
+
+<p>SNS発信が1件増えるごとにWebアクセスが22.5件増える（22.5の標準誤差は3.8）。</p>
+
+<p>月の影響も見るために，通し番号を説明変数に加える：</p>
+
+<pre class="cell">
+r("i = 1:12")
+print(r("summary(lm(web ~ sns + i))"))
+</pre>
+
+<p>出力：</p>
+
+<pre>
+Call:
+lm(formula = web ~ sns + i)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-53.386 -12.555   0.235  18.251  44.719 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -66.611     25.832  -2.579   0.0298 *  
+sns           17.551      1.345  13.047 3.76e-07 ***
+i             26.656      2.863   9.311 6.46e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 31.46 on 9 degrees of freedom
+Multiple R-squared:  0.9789,	Adjusted R-squared:  0.9742 
+F-statistic: 208.8 on 2 and 9 DF,  p-value: 2.875e-08
+</pre>
+
+<p>通し番号は非常に有意である。つまり，SNS発信が1件増えるごとにWebアクセスが18件増え，さらに月ごとに27件増える。</p>
+
+<p>さて，問1は，表3と図2から分かることを解答群から二つ選ぶわけだが，試作問題の作題者はこのあたりで息が切れたのか，解答群の表現がどれもあいまいで，どれを選べばいいのかよくわからない。</p>
+
+<p>具体的には，「① Webサイトへの訪問回数が増えるとSNSの発信件数が増えている」「② SNSで情報発信の件数を増やすとWebサイトへの訪問回数が増える傾向がある」「③ Webサイトの訪問回数は月を追うごとに増えている」はどれも（因果関係ではなく相関関係として捉えれば）正しい。「⑤ SNSで発信しだした頃より，最近の方がSNSの発信件数に比してWebサイトの訪問回数が多い傾向にある」も正しい。「⑧ Webサイトの訪問回数とSNSの発信回数との間には双方向に相関関係があると考えられる」も，相関関係は双方向に決まっているという点を除けば，正しい。ということで，①②③⑤⑧のどれも正しそうに思える（正解は②⑤）。</p>
+
+<p>因果関係については微妙である。SNS発信回数を増やせばそれを見た人がWebサイトを訪問するので訪問数が増えるという因果関係はありそうであるし，逆に，Webサイト訪問数が増えればうれしくなってSNS発信回数も増やしたくなるという因果関係もあるかもしれない。さらに，まったく別の原因（例えばこのWebサイトやSNSアカウントのテーマに関連する事件が起きた）によって訪問数も増え，同じ原因によってそれに関連するSNS発信数も増えるという因果関係も考えられる。要するに，表（や図）からは，相関関係はわかるが因果関係は断定できない。そのあたりの問題を出したかったが力尽きてしまったのかもしれない。</p>
+
+<p>問2は，y = 22.49x + 16.932 から，SNSの一回の情報発信に対して，Webサイト訪問回数が概ね何回増加していることが読み取れるかを解答群から選ぶ。正答は「概ね22回」。こちらは特に問題なさそうである。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-02-28 15:20:31</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
