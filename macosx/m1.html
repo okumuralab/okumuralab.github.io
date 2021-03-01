@@ -162,13 +162,9 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <p>miniforge は Homebrew で入れるのが簡単。<code>/opt/homebrew/bin/brew install miniforge</code> とすればよい。/opt/homebrew/Caskroom/miniforge 以下に入るので /opt/homebrew/Caskroom/miniforge/base/bin をPATHに加える。<code>conda update --all</code>，<code>conda list</code>，<code>conda install ...</code> のようにして管理する。パッケージは /opt/homebrew/Caskroom/miniforge/base/lib/python3.9/site-packages に入る。</p>
 
-<p><del>ただ，<code>ipython --matplotlib</code> と打ち込んだだけで bus error で落ちてしまった。通常のコードは実行できるし，<code>ipython --simple-prompt --matplotlib</code> なら落ちないので，UI がらみか。</del> ← 直った。</p>
-
 <h3>R</h3>
 
-<p><a href="https://rud.is/b/2021/02/07/fully-native-m1-apple-silicon-r-setup/">Fully Native M1/Apple Silicon R Setup</a> のようにすれば arm64 版 R ができるとのこと。</p>
-
-<p><del><a href="https://www.r-project.org">R</a> は今のところ arm64 対応していない（<a href="https://developer.r-project.org/Blog/public/2020/11/02/will-r-work-on-apple-silicon/">Will R Work on Apple Silicon?</a> 参照）。まずは Fortran 90 compiler が必要とのこと。</del></p>
+<p><a href="https://mac.r-project.org">R for macOS Developers</a> や <a href="https://rud.is/b/2021/02/07/fully-native-m1-apple-silicon-r-setup/">Fully Native M1/Apple Silicon R Setup</a> 参照。正式版は R 4.1.0 以降とのこと。</p>
 
 <h3>TeX</h3>
 
@@ -215,7 +211,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-09 20:51:13</time>
+Last modified: <time>2021-02-22 16:11:05</time>
 <!-- hhmts end -->
 </p>
 </footer>
