@@ -34,6 +34,7 @@ ax2.set_yticks([df['confirmed'].values[-1]])
 #          df['confirmed'].values[-1], verticalalignment='center')
 
 fig.savefig('../img/COVID-tokyo.svg', bbox_inches="tight")
+fig.savefig('../img/COVID-tokyo.png', bbox_inches="tight")
 
 #----
 
@@ -66,6 +67,7 @@ ax2.set_yticks([df['confirmed'].values[-1]])
 #          df['confirmed'].values[-1], verticalalignment='center')
 
 fig.savefig('../img/COVID-tokyo-a.svg', bbox_inches="tight")
+fig.savefig('../img/COVID-tokyo-a.png', bbox_inches="tight")
 
 #----
 
@@ -82,7 +84,31 @@ ax.set_xlim(pd.to_datetime('2020-03-01'), df['date'].values[-1]) # + pd.to_timed
 ax.legend(['Tokyo confirmed'], loc='upper left')
 fig.savefig('../img/COVID-tokyo-log.svg', bbox_inches="tight")
 
+#-----
+
+ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+def rt(i, interval):
+    mean1 = df['confirmed'][i-6:i+1].mean()
+    mean2 = df['confirmed'][i-6-interval:i+1-interval].mean()
+    return (mean1 / mean2) ** (5/interval)
+
+for interval in range(1, 8):
+    a = [rt(i, interval) for i in range(300, df.shape[0])]
+    plt.plot(df['date'][300:df.shape[0]], a, label=interval)
+ax.set_xlim(pd.to_datetime('2020-12-01'), df['date'].values[-1] + pd.to_timedelta(1, 'day'))
+plt.axhline(1, color='black', linewidth=1, zorder=-1)
+plt.legend()
+fig.savefig('../img/COVID-tokyo-rt.svg', bbox_inches="tight")
+fig.savefig('../img/COVID-tokyo-rt.png', bbox_inches="tight")
+
+#-----
+
 exit()
+
+#-----
 
 ax.clear()
 ax.xaxis.set_major_locator(locator)

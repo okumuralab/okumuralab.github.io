@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>タートルグラフィックス</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>タートルグラフィックス</h1>
+
+<p>Python には <a href="https://docs.python.org/3/library/turtle.html">turtle</a> というタートルグラフィックスライブラリが標準で備わっています。対話型の環境で</p>
+
+<pre>
+<code>from turtle import *
+</code></pre>
+
+<p>とすると，まだ何も起こりません。続けて</p>
+
+<pre>
+<code>for i in range(5):
+    forward(200)
+    left(72)
+</code></pre>
+
+<p>と打ち込むと，Python Turtle Graphics という画面が開き，➤ のような「亀」が正五角形を描くはずです。</p>
+
+<p>次の例は，ペンカラーを黒，フィルカラーを黄色にして，塗りつぶします。</p>
+
+<pre>
+<code>color("black", "yellow")
+begin_fill()
+for i in range(5):
+    forward(200)
+    left(72)
+end_fill()
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-02-24 09:41:09</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
