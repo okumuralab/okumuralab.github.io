@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ライフゲーム（Game of Life）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ライフゲーム（Game of Life）</h1>
+
+<p>ライフゲーム（Game of Life）は John Horton Conway が考案したシミュレーションゲーム（セル・オートマトン）である。Conway は2020年4月11日に COVID-19 で亡くなった。</p>
+
+<p>ルールはウィキペディア等に書かれているのでここでは省略する。</p>
+
+<p>次のプログラム例は生の Python または IPython 用である。<del>Web ブラウザ（Jupyter Notebook や Google Colab）では動かない。</del><ins><code>%matplotlib notebook</code> を付ければ Jupyter Notebook でも動いた（@CinderellaJapan 先生のご教示感謝！）</ins></p>
+
+<pre><code>#! /usr/bin/env python3
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+N = 100
+
+x = np.arange(N * N) % N
+y = np.arange(N * N) // N
+
+# 初期状態（任意に与える）
+a = np.zeros((N, N), dtype="int8")
+a[N // 2, N // 2] = 1
+a[N // 2 - 1, N // 2] = 1
+a[N // 2 + 1, N // 2] = 1
+a[N // 2, N // 2 - 1] = 1
+a[N // 2 - 1, N // 2 + 1] = 1
+a.shape = N * N
+
+fig = plt.figure(figsize=(7, 7))
+plt.axis([-1, N, -1, N])
+line, = plt.plot(x[a != 0], y[a != 0], ".")
+
+def update(_):
+    line.set_data(x[a != 0], y[a != 0])
+    b = a.copy()
+    for i in range(N + 1, N * N - N - 1):
+        n = (
+            b[i - N - 1]
+            + b[i - N]
+            + b[i - N + 1]
+            + b[i - 1]
+            + b[i + 1]
+            + b[i + N - 1]
+            + b[i + N]
+            + b[i + N + 1]
+        )
+        if n == 3:
+            a[i] = 1
+        elif n != 2:
+            a[i] = 0
+
+ani = FuncAnimation(fig, update, interval=100)
+plt.show()
+</code></pre>
+
+<p>最後を例えば</p>
+
+<pre><code>ani = FuncAnimation(fig, update, interval=100, frames=1000)
+ani.save("gameoflife.gif")
+</code></pre>
+
+<p>とすると1000世代までGIFで保存できる。</p>
+
+<figure><img src="img/gameoflife.gif" alt="Game of Life"></figure>
+
+<p>難しいところを解説すると，<code>plt.plot()</code> の戻り値は普通は使わないが，matplotlib.lines.Line2D というもののリストが返される。上のコードの <code>line, = ...</code> まで実行した時点で <code>line.get_data()</code> を調べると <code>(array([50, 51, 49, 50, 50]), array([49, 49, 50, 50, 51]))</code> となっていることがわかる。この <code>line, = ...</code> は要素が一つだけのリストの要素を取り出すための常套句で，<code>lines = ...</code> としてから <code>line = lines[0]</code> とするのと同じである。</p>
+
+<p>この <code>line</code> のデータを100ミリ秒ごとに更新するのが <code>FuncAnimation(fig, update, interval=100)</code> である。第2引数で指定した関数 <code>update()</code> は，この場合はシーケンス番号 0，1，2，… を引数として100ミリ秒ごとに呼び出される。この中で <code>line.set_data(x[a != 0], y[a != 0])</code> によってデータだけ取り替え，配列 <code>a</code> を更新する。</p>
+
+<p>このあたりがトリッキーなら，次のように毎回普通に描いても問題なく動作する：</p>
+
+<pre><code>fig = plt.figure(figsize=(7, 7))
+
+def update(_):
+    plt.cla()  # clear current axes
+    plt.axis([-1, N, -1, N])
+    plt.plot(x[a != 0], y[a != 0], ".")
+    # 以下は同じ
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-03-03 14:52:38</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
