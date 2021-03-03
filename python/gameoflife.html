@@ -20,7 +20,7 @@
 
 <p>ルールはウィキペディア等に書かれているのでここでは省略する。</p>
 
-<p>次のプログラム例は生の Python または IPython 用である。<del>Web ブラウザ（Jupyter Notebook や Google Colab）では動かない。</del><ins><code>%matplotlib notebook</code> を付ければ Jupyter Notebook でも動いた（@CinderellaJapan 先生のご教示感謝！）</ins></p>
+<p>次のプログラム例は生の Python または IPython 用である。Google Colab では動かないようだ。Jupyter Notebook では <code>%matplotlib notebook</code> を付ければ動いた（@CinderellaJapan 先生のご教示感謝！）。</p>
 
 <pre><code>#! /usr/bin/env python3
 
@@ -79,7 +79,29 @@ ani.save("gameoflife.gif")
 
 <figure><img src="img/gameoflife.gif" alt="Game of Life"></figure>
 
-<p>難しいところを解説すると，<code>plt.plot()</code> の戻り値は普通は使わないが，matplotlib.lines.Line2D というもののリストが返される。上のコードの <code>line, = ...</code> まで実行した時点で <code>line.get_data()</code> を調べると <code>(array([50, 51, 49, 50, 50]), array([49, 49, 50, 50, 51]))</code> となっていることがわかる。この <code>line, = ...</code> は要素が一つだけのリストの要素を取り出すための常套句で，<code>lines = ...</code> としてから <code>line = lines[0]</code> とするのと同じである。</p>
+<p>難しいところを解説すると，<code>plt.plot()</code> の戻り値は普通は使わないが，matplotlib.lines.Line2D というもののリストが返される。Google Colab などで <code>plt.plot()</code> すると <code>[<matplotlib.lines.Line2D at 0xxxxxxxxxxxxx>]</code> のような表示が出るのはこのためである。これには図の座標の情報などが入っている。この情報を書き換えることにより図を更新している。</p>
+
+<p>上のコードの <code>line, = ...</code> まで実行した時点で</p>
+
+<pre><code>line.get_data()</code></pre>
+
+<p>と打ち込むと</p>
+
+<pre><code>(array([50, 51, 49, 50, 50]), array([49, 49, 50, 50, 51]))</code></pre>
+
+<p>のようなグラフを構成する点の座標の配列のタプルが返る。この <code>line, = ...</code> は要素が一つだけのリストの要素を取り出すための常套句で，<code>lines = ...</code> としてから <code>line = lines[0]</code> とするのと同じである。このコンマの用法は</p>
+
+<pre><code>t, u = [1, 2]</code></pre>
+
+<p>とすると <code>t</code> に 1 が入り <code>u</code> に 2 が入ることを思い出せば理解しやすくなる。この要素が一つになれば</p>
+
+<pre><code>t, = [1]</code></pre>
+
+<p>とすると <code>t</code> に 1 が入る。</p>
+
+<pre><code>t = [1]</code></pre>
+
+<p>では <code>t</code> にリスト <code>[1]</code> が入ってしまう。</p>
 
 <p>この <code>line</code> のデータを100ミリ秒ごとに更新するのが <code>FuncAnimation(fig, update, interval=100)</code> である。第2引数で指定した関数 <code>update()</code> は，この場合はシーケンス番号 0，1，2，… を引数として100ミリ秒ごとに呼び出される。この中で <code>line.set_data(x[a != 0], y[a != 0])</code> によってデータだけ取り替え，配列 <code>a</code> を更新する。</p>
 
@@ -100,7 +122,7 @@ def update(_):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-03 14:52:38</time>
+Last modified: <time>2021-03-03 17:53:15</time>
 <!-- hhmts end -->
 </p>
 </body>
