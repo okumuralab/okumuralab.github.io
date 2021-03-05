@@ -105,15 +105,20 @@ ani.save("gameoflife.gif")
 
 <p>この <code>line</code> のデータを100ミリ秒ごとに更新するのが <code>FuncAnimation(fig, update, interval=100)</code> である。第2引数で指定した関数 <code>update()</code> は，この場合はシーケンス番号 0，1，2，… を引数として100ミリ秒ごとに呼び出される。この中で <code>line.set_data(x[a != 0], y[a != 0])</code> によってデータだけ取り替え，配列 <code>a</code> を更新する。</p>
 
-<p>このあたりがトリッキーなら，次のように毎回普通に描いても問題なく動作する：</p>
+<p>上のコードは難しいと不評だったようだ。次のように毎回普通に描く方法のほうがわかりやすそうだ：</p>
 
-<pre><code>fig = plt.figure(figsize=(7, 7))
+<pre><code># 前半の準備は上と同じ
+
+fig = plt.figure(figsize=(7, 7))
+# plt.axis(...) ← 消す
+# line, = ...   ← 消す
 
 def update(_):
-    plt.cla()  # clear current axes
+    plt.cla()  # 画面クリア (clear current axes)
     plt.axis([-1, N, -1, N])
     plt.plot(x[a != 0], y[a != 0], ".")
-    # 以下は同じ
+    b = a.copy()
+    # 以下同じ
 </code></pre>
 
 <hr>
@@ -122,7 +127,7 @@ def update(_):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-03 17:53:15</time>
+Last modified: <time>2021-03-05 21:22:00</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -162,6 +162,30 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <p>miniforge は Homebrew で入れるのが簡単。<code>/opt/homebrew/bin/brew install miniforge</code> とすればよい。/opt/homebrew/Caskroom/miniforge 以下に入るので /opt/homebrew/Caskroom/miniforge/base/bin をPATHに加える。<code>conda update --all</code>，<code>conda list</code>，<code>conda install ...</code> のようにして管理する。パッケージは /opt/homebrew/Caskroom/miniforge/base/lib/python3.9/site-packages に入る。</p>
 
+<p>miniforge + Apple の TensorFlow は <a href="https://github.com/apple/tensorflow_macos/issues/153">Instructions to install TensorFlow in a Conda Environment</a> のようにすれば実現できる。以下では apple という名前の環境を作る：</p>
+
+<pre>
+wget -N https://raw.githubusercontent.com/mwidjaja1/DSOnMacARM/main/environment.yml
+conda env create --file=environment.yml --name=apple
+conda init zsh
+# .zshrc が書き変わるのでzshを再起動 (. ~/.zshrc)
+# プロンプトの先頭に (base) が付く
+conda activate apple
+pip install --upgrade --force --no-dependencies \
+    https://github.com/apple/tensorflow_macos/releases/download/v0.1alpha3/tensorflow_macos-0.1a3-cp38-cp38-macosx_11_0_arm64.whl
+    https://github.com/apple/tensorflow_macos/releases/download/v0.1alpha3/tensorflow_addons_macos-0.1a3-cp38-cp38-macosx_11_0_arm64.whl
+
+ipython
+
+In [1]: import tensorflow as tf
+
+In [2]: tf.__version__
+Out[2]: '2.4.0-rc0'
+
+In [3]: quit
+conda deactivate
+</pre>
+
 <h3>R</h3>
 
 <p><a href="https://mac.r-project.org">R for macOS Developers</a> や <a href="https://rud.is/b/2021/02/07/fully-native-m1-apple-silicon-r-setup/">Fully Native M1/Apple Silicon R Setup</a> 参照。正式版は R 4.1.0 以降とのこと。</p>
@@ -213,7 +237,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-05 09:54:08</time>
+Last modified: <time>2021-03-05 20:36:13</time>
 <!-- hhmts end -->
 </p>
 </footer>
