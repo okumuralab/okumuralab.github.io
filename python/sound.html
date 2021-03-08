@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>音</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>音</h1>
+
+<h2>WAVファイルの作成</h2>
+
+<p>880Hzの音と1320Hzの音を混ぜると，あるはずのない440Hzの音も聞こえるという話を聞いたので確かめてみよう。</p>
+
+<pre class="cell">
+import numpy as np
+from scipy.io import wavfile
+
+samplerate = 44100 # 44100Hzサンプリング
+duration = 5       # 5秒
+t = np.linspace(0, 2 * np.pi * duration, samplerate * duration + 1)
+
+data = 10000 * (np.sin(880 * t) + np.sin(1320 * t))
+wavfile.write("test.wav", samplerate, (data + 0.5).astype("int16"))
+</pre>
+
+<p>こうしてできた test.wav を再生してみよう。Macであればターミナルに <code>afplay test.wav</code> と打ち込めば再生できる。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-03-08 16:06:39</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
