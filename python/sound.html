@@ -16,6 +16,8 @@
 
 <h1>音</h1>
 
+<p>WAVファイルを操作するPython標準ライブラリ <a href="https://docs.python.org/3/library/wave.html">wave</a> もあるが，以下のようにするほうが楽。</p>
+
 <h2>WAVファイルの作成</h2>
 
 <p>880Hzの音と1320Hzの音を混ぜると，あるはずのない440Hzの音も聞こえるという話を聞いたので確かめてみよう。numpy と scipy はインストールしておく（<code>pip install numpy scipy</code>）。</p>
@@ -55,7 +57,7 @@ data = 10000 * np.sin(880 * t) + 5000 * w * np.sin(1320 * t)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-09 14:44:20</time>
+Last modified: <time>2021-03-09 15:59:14</time>
 <!-- hhmts end -->
 </p>
 </body>
