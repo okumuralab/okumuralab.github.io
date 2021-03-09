@@ -18,7 +18,7 @@
 
 <h2>WAVファイルの作成</h2>
 
-<p>880Hzの音と1320Hzの音を混ぜると，あるはずのない440Hzの音も聞こえるという話を聞いたので確かめてみよう。</p>
+<p>880Hzの音と1320Hzの音を混ぜると，あるはずのない440Hzの音も聞こえるという話を聞いたので確かめてみよう。numpy と scipy はインストールしておく（<code>pip install numpy scipy</code>）。</p>
 
 <pre class="cell">
 import numpy as np
@@ -34,13 +34,28 @@ wavfile.write("test.wav", samplerate, (data + 0.5).astype("int16"))
 
 <p>こうしてできた test.wav を再生してみよう。Macであればターミナルに <code>afplay test.wav</code> と打ち込めば再生できる。</p>
 
+<p>880Hzを左耳，1320Hzを右耳に出すには，<code>data = ...</code> の行を次のようにする：</p>
+
+<pre>
+data = 10000 * np.c_[np.sin(880 * t), np.sin(1320 * t)]
+</pre>
+
+<p>1320Hzのほうを少し小さい音にして，1秒遅れて出す：</p>
+
+<pre>
+w = np.append(np.zeros(samplerate), np.ones(samplerate * (duration - 1) + 1))
+data = 10000 * np.sin(880 * t) + 5000 * w * np.sin(1320 * t)
+</pre>
+
+<p>いろいろ試してください。聞こえるのは差 (1320-880)Hz だという説もありますが，それなら高い方を例えば 1374 にすれば (1374-880)Hz でほぼレの音が聞こえるはずですね。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-08 16:06:39</time>
+Last modified: <time>2021-03-09 14:44:20</time>
 <!-- hhmts end -->
 </p>
 </body>
