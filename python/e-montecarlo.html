@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>モンテカルロ法でeを求める</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>モンテカルロ法でeを求める</h1>
+
+<p>モンテカルロ法でπを求めるのは，よく見かける（<a href="mext-simulation.html">例</a>）。eは [0,1) 一様分布の乱数の和が1を超える個数の期待値として求められる（Twitterで教えていただいた証明例：<a href="https://hdl.handle.net/10424/3581">一様分布の和の平均到達時間 ―eを近似する確率シミュレーション―</a>，<a href="https://prase.cz/kalva/putnam/psoln/psol583.html">18th Putnam 1958 Problem A3</a>）。</p>
+
+<p>Pythonで書いてみよう：</p>
+
+<pre class="cell">
+import random
+
+def ne():
+    s = 0
+    i = 0
+    while s < 1:
+        s += random.random()
+        i += 1
+    return i
+
+
+n = 1000000
+t = 0
+for _ in range(n):
+    t += ne()
+print(t / n)
+</pre>
+
+<p>ほぼ 2.718 となる。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-03-09 13:14:43</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
