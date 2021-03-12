@@ -43,11 +43,74 @@ print(t / n)
 
 <hr>
 
+<p>M1 Mac mini では <code>n = 100000000</code> で 29.6s だった（arm64 ネイティブの Python 3.8.8）。</p>
+
+<p>せっかくなので <a href="numba.html">Numba</a> を使ってみる。</p>
+
+<pre class="cell">
+import random
+from numba import jit
+
+@jit(nopython=True)
+def ne():
+    s = 0
+    i = 0
+    while s < 1:
+        s += random.random()
+        i += 1
+    return i
+
+def main():
+    n = 100000000
+    t = 0
+    for _ in range(n):
+        t += ne()
+    print(t / n)
+
+%time main()
+</pre>
+
+<p>8.65s になった。</p>
+
+<p>メインループもJIT化してみる：</p>
+
+<pre>
+@jit(nopython=True)
+def main():
+</pre>
+
+<p>2.8s になった。</p>
+
+<p>一つの関数にしてJIT化する：</p>
+
+<pre class="cell">
+@jit(nopython=True)
+def main():
+    def ne():
+        s = 0
+        i = 0
+        while s < 1:
+            s += random.random()
+            i += 1
+        return i
+    n = 100000000
+    t = 0
+    for _ in range(n):
+        t += ne()
+    print(t / n)
+
+%time main()
+</pre>
+
+<p>2.23s になった。</p>
+
+<hr>
+
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-09 13:14:43</time>
+Last modified: <time>2021-03-11 21:09:34</time>
 <!-- hhmts end -->
 </p>
 </body>
