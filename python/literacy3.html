@@ -63,14 +63,12 @@ plt.axhline()
 
 <h3>データファイルの読み方</h3>
 
-<p><em>[2020-12-12]</em> <a href="201212.html">xlrd が xlsx に対応しなくなった</a>ため，修正しました。</p>
-
-<p>ライブラリ <code>pandas</code>, <code>openpyxl</code> を使っています。</p>
+<p>ライブラリ <code>pandas</code> を使っています。Excel ファイルを読むために <code>pandas</code> から <code>openpyxl</code> が呼び出されます。</p>
 
 <pre>
 <code>import pandas as pd
 
-birthdeath = pd.read_excel("https://okumuralab.org/literacy3/birthdeath.xlsx", engine="openpyxl")
+birthdeath = pd.read_excel("https://okumuralab.org/literacy3/birthdeath.xlsx")
 birthdeath.head()
 </code></pre>
 
@@ -186,7 +184,7 @@ def f(n):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-12 09:54:28</time>
+Last modified: <time>2021-03-15 15:34:18</time>
 <!-- hhmts end -->
 </p>
 </body>
