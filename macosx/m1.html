@@ -22,15 +22,15 @@
 
 <p>2020-11-20 に生協に注文した Mac mini 16G/256G は 2021-01-12 に届いた。</p>
 
-<p>どちらもメモリ16Gにしたが，通常は8Gで十分かも。SSDは満タンの半分程度で使うつもりで選ぶほうが安心。</p>
+<p>どちらもメモリ16Gにしたが，通常の用途には8Gで十分かも。SSDは満タンの半分程度で使うつもりで選ぶほうが安心らしいので，据置き用には外付けHDDをAPFSフォーマットして使う。</p>
 
 <h3>セットアップと一般的な設定</h3>
 
-<p>他の Mac からコピーという手もあったが，ここはクリーンセットアップすることにする。Apple ID を設定したら iCloud から多くの設定を拾ってくれたので，たいした手間ではない。セットアップ中に「コンピュータアカウントを作成」でアカウント名が okumuraharuhiko とサジェストされるので okumura に直す（後でも直せる）。</p>
+<p>他の Mac からコピーという手もあったが，ここはクリーンセットアップすることにする。Apple ID を設定したら iCloud から多くの設定を拾ってくれたので，たいした手間ではない。セットアップ中に「コンピュータアカウントを作成」でサジェストされるアカウント名（私の場合は okumuraharuhiko だった）は，普段使っているユーザ名（私の場合 okumura）に直す（後でも直せる）。</p>
 
-<p>まずは「システム環境設定」→「ソフトウェアアップデート」でOSをアップデート。「セキュリティとプライバシー」で FileVault をオンにする。</p>
+<p>まずは「システム環境設定」→「ソフトウェアアップデート」でOSをアップデート。「セキュリティとプライバシー」で FileVault（暗号化）をオンにする。ドライブを暗号化しておけば，盗まれても安心だし，廃棄する際にも鍵を捨てるだけで復号不能になる。パフォーマンス低下は無視できるはず。</p>
 
-<p>コンピュータ名が長ったらしいものになったのでシステム環境設定の「共有」で直す。ついでに「リモートログイン」を許可しておく（ssh でログインするため）。</p>
+<p>コンピュータ名が長ったらしいものになったのでシステム環境設定の「共有」で直す。ついでに「リモートログイン」を許可しておく（ssh でログインするため）。いずれにしてもパスワードは十分複雑なものにしておく。ちなみにパスワードは大文字小文字数字記号を混在させる必要はない。その分，長くすれば，問題ない。</p>
 
 <p>Finder の環境設定→詳細で「すべてのファイル名拡張子を表示」をオンにする。Safari の環境設定「一般」で「ダウンロード後、“安全な”ファイルを開く」をオフにする。</p>
 
@@ -48,12 +48,12 @@
 <p>以上以外に，私は非常に慎重を期すためにいつも自分を管理者から外している。具体的には，システム環境設定の「ユーザとグループ」で自分（奥村）以外に管理者（名前は例えば admin とする）を一人作成し，その管理者（Apple ID には紐付けない）でログインし直して奥村を一般ユーザに格下げする。これで何か重要なことをする際には管理者の名前とパスワードを聞いてくるのでうっかり危ないコマンドを実行する危険性が減る。Unix 的には sudoers から外したことに相当する。コマンドでシステム領域に触れたいときは <code>su admin</code> してから <code>sudo 何々</code> する。ただ，macOS はデフォルトでずいぶん安全になったので，今はここまでする必要はないかもしれない。</p>
 </div>
 
-<p>M1 Mac に残る問題（おそらく Big Sur 11.2 で改善されたはず）：</p>
+<p>初期の M1 Mac にあった問題（おそらく Big Sur 11.2 で改善されたはず）：</p>
 
 <ul>
   <li>Bluetooth の接続がよく切れる</li>
   <li>スクリーンセーバー解除ができなくなる（他マシンからログインして ScreenSaverEngine を kill すればよい）</li>
-  <li>Big Sur 11.2 になっても iPhone から M1 MacBook Air への Bluetooth テザリングがうまくいかない（M1 Mac mini ならできる）。</li>
+  <li>Big Sur 11.2 になっても iPhone から M1 MacBook Air への Bluetooth テザリングがうまくいかない（M1 Mac mini ならできるので理由がわからない）。</li>
 </ul>
 
 <h3>ターミナル</h3>
@@ -115,11 +115,28 @@ setopt NO_GLOBAL_RCS
 export PATH=... # bashと同様
 </pre>
 
-<p>PATH は上記のように場合分けして設定する。</p>
+<p>PATH は場合分けして設定できる。例えば</p>
+
+<pre>
+setopt NO_GLOBAL_RCS
+ARCH=`uname -m`
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+PATH=/Library/Frameworks/R.framework/Versions/4.0/Resources/bin:$PATH
+if [[ $ARCH == 'arm64' ]]; then
+    PATH=/usr/local/texlive/2020/bin/custom:$PATH
+    PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
+    PATH=/opt/homebrew/Caskroom/miniforge/base/bin:$PATH
+else
+    PATH=/usr/local/texlive/2020/bin/x86_64-darwin:$PATH
+    PATH=/Library/Frameworks/Python.framework/Versions/3.9/bin:$PATH
+    PATH=/Users/okumura/Library/Python/3.9/bin:$PATH
+fi
+export PATH
+</pre>
 
 <h3>Command Line Tools</h3>
 
-<p>コマンドラインで開発する場合，巨大な Xcode をインストールする必要はない。コマンドライン用の開発ツールは，何らかの開発用コマンド（gcc とか python3 とか）を実行しようとするとインストールを促される。より確実な方法は，ターミナルに <code>xcode-select --install</code> と打ち込むか，<a href="https://developer.apple.com/downloads">https://developer.apple.com/downloads</a> からダウンロードしてインストールする。</p>
+<p>コマンドラインで開発する場合，巨大な Xcode をインストールする必要はない。コマンドライン用の開発ツールは，何らかの開発用コマンド（gcc とか python3 とか）を実行しようとするとインストールを促される。より確実な方法は，ターミナルに <code>xcode-select --install</code> と打ち込むか，<a href="https://developer.apple.com/downloads">https://developer.apple.com/downloads</a> からダウンロードしてインストールする。OS を更新するとコマンドラインツールも再インストールが必要になることが多いので注意。</p>
 
 <h3>Homebrew</h3>
 
@@ -135,13 +152,13 @@ cd /opt
 curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
 </pre>
 
-<p>ARM 版 Homebrew で <code>brew install emacs</code> でインストールされる emacs はターミナル版。<code>brew install --cask emacs</code> でインストールされるものは <a href="https://emacsformacosx.com">Emacs for Mac OS X</a> のバイナリで M1 用ではないが Rosetta で動く。</p>
-
 <p>Rosetta で実行する Intel 版は通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを <code>uname -m</code> が x86_64 なターミナルに打ち込めばインストールできる。</p>
 
 <h3>Emacs 27</h3>
 
-<p>arm64 環境でビルドしてみたがエラー。Rosetta 環境でなら簡単にできたので，現在はそれを使っている。ビルドが面倒な場合には適当なバイナリを探してくる。</p>
+<p>ソースから arm64 環境でビルドしてみたがエラー。よくわからないが Rosetta 環境でなら簡単にビルドできるので，現在はそれを使っている。ビルドが面倒な場合には適当なバイナリを探してくる。</p>
+
+<p>ARM 版 Homebrew で <code>brew install emacs</code> でインストールされる emacs はターミナル版。<code>brew install --cask emacs</code> でインストールされるものは <a href="https://emacsformacosx.com">Emacs for Mac OS X</a> のバイナリで M1 用ではないが Rosetta で動く。</p>
 
 <h3>Python</h3>
 
@@ -152,6 +169,8 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 /usr/bin/python3: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64e:Mach-O 64-bit executable arm64e]
 /usr/bin/python3 (for architecture x86_64):	Mach-O 64-bit executable x86_64
 /usr/bin/python3 (for architecture arm64e):	Mach-O 64-bit executable arm64e
+% /usr/bin/python3 --version
+Python 3.8.2
 </pre>
 
 <p>これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば Apple Silicon に最適化された TensorFlow とその依存するパッケージ群（numpy など）が入る。TensorFlow Blog の <a href="https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html">Accelerating TensorFlow Performance on Mac</a> 参照。<a href="https://docs.python.org/3/tutorial/venv.html">venv</a> なので，bash 互換シェル（zsh でもよい）で <code>source ~/tensorflow_macos_venv/bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。pip で入れようとしてもコンパイルでエラーになる。強者用である。</p>
@@ -237,7 +256,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-05 20:36:13</time>
+Last modified: <time>2021-03-15 11:09:21</time>
 <!-- hhmts end -->
 </p>
 </footer>
