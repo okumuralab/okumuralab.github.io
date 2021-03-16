@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <title>Web API</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -159,13 +159,46 @@ for i in data["item"]:
   <li><a href="https://api.gnavi.co.jp/api/">ぐるなびAPI</a>「2021年6月30日に無料APIサービスの提供を終了する事となりました」</li>
 </ul>
 
+<h3>取り過ぎに注意</h3>
+
+<p>あまり頻繁に同じファイルをアクセスすると遮断されることがありうる。Google ColabやJupyter Notebookなら，データ取得部分は試行錯誤が必要な部分とセルを分ける。例：</p>
+
+<pre class="cell">
+# このセルは最初に1回だけ実行
+import pandas as pd
+
+URL = "https://www.jma.go.jp/bosai/quake/data/list.json"
+df = pd.read_json(URL)
+</pre>
+
+<p>一般の場合は，いろいろ手がありそうだが，例えば次のようにすれば，まずはカレントディレクトリにすでにファイルがあればそのタイムスタンプから600秒（10分）経っていなければそのファイルを読むだけにする。そうでなければ <code>wget -N</code> によりファイルをダウンロードするが，カレントディレクトリにすでにファイルがあればそのタイムスタンプより新しいものが提供されていない限りダウンロードしない。</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import os
+import time
+import pandas as pd
+
+URL = "https://www.jma.go.jp/bosai/quake/data/list.json"
+
+try:
+    t = os.stat("list.json").st_mtime
+except:
+    t = 0
+if time.time() - t > 600:  # 初回か10分より古ければ再取得
+    os.system("wget -N " + URL)
+df = pd.read_json("list.json")
+...
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-14 16:39:53</time>
+Last modified: <time>2021-03-16 21:53:29</time>
 <!-- hhmts end -->
 </p>
 </body>
