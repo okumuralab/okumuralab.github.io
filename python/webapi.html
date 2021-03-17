@@ -161,7 +161,7 @@ for i in data["item"]:
 
 <h3>取り過ぎに注意</h3>
 
-<p>あまり頻繁に同じファイルをアクセスすると遮断されることがありうる。Google ColabやJupyter Notebookなら，データ取得部分は試行錯誤が必要な部分とセルを分ける。例：</p>
+<p>あまり頻繁に同じデータにアクセスすると遮断されることがありうる。対策として，Google ColabやJupyter Notebookなら，データ取得部分は試行錯誤が必要な部分とセルを分ける。例：</p>
 
 <pre class="cell">
 # このセルは最初に1回だけ実行
@@ -192,13 +192,35 @@ df = pd.read_json("list.json")
 ...
 </pre>
 
+<p>キャッシュのためのライブラリもある（<a href="https://qiita.com/roko18366758/items/49cf48341b877d84ab4a">PythonでHTTPキャッシュを使う</a>参照）。Scrapyにもキャッシュ機能がある（<a href="https://shinyorke.hatenablog.com/entry/scrapy-example-yakiu">「人とWebに優しい」Scrapyの使い方サンプル</a>参照）。</p>
+
+<p>上のJSON読み込みに応用してみよう。ライブラリ <code>cachecontrol</code>，<code>lockfile</code> をインストールしておく。</p>
+
+<pre>
+import pandas as pd
+import requests
+from cachecontrol import CacheControl
+from cachecontrol.caches.file_cache import FileCache
+
+URL = "https://www.jma.go.jp/bosai/quake/data/list.json"
+
+# cache = FileCache('.web_cache') # 本番用
+cache = FileCache('.web_cache', forever=True) # テスト用
+sess = CacheControl(requests.Session(), cache)
+r = sess.get(URL)
+
+df = pd.read_json(r.text)
+</pre>
+
+<p>カレントディレクトリに .web_cache というディレクトリができて，その中にキャッシュが入る。<code>forever=True</code> にしておくとキャッシュがある限り元データにアクセスしない。キャッシュから読んだか直接読んだかは <code>r.from_cache</code> が True か False かで確認できる。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-16 21:53:29</time>
+Last modified: <time>2021-03-17 10:48:20</time>
 <!-- hhmts end -->
 </p>
 </body>
