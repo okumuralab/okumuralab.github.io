@@ -83,7 +83,7 @@ print(data['headlineText'])
 print(data['text'])
 </code></pre>
 
-<p>（参考）アシアル岡本さんの<a href="https://anko.education/apps/weather_api">気象庁の天気予報JSONファイルをWebAPI的に利用したサンプルアプリ</a></p>
+<p>（参考）アシアル岡本さんの<a href="https://anko.education/apps/weather_api">気象庁の天気予報JSONファイルをWebAPI的に利用したサンプルアプリ</a>，加納靖之先生の<a href="https://note.com/ykano/n/n93ec73290e25">気象庁の新しい地震情報をみてみた</a></p>
 
 <h3>Weather Hacks</h3>
 
@@ -149,6 +149,35 @@ for i in data["item"]:
 <h3>Google Calendar API</h3>
 
 <p><a href="https://developers.google.com/calendar/quickstart/python">ここ</a>に書かれている通りにすれば，Pythonの簡単なプログラムからGoogle Calendarの予定を取り出すことができる。</p>
+
+<h3>Geolonia 住所データ</h3>
+
+<p><a href="https://geolonia.com">Geolonia</a> の <a href="https://github.com/geolonia/japanese-addresses">住所データ</a> は全国の町丁目レベル（189,540件）の住所を収録したもの。CSVでダウンロードできるほか，APIとしても提供されている。</p>
+
+<p>例：三重県の全自治体名を出力</p>
+
+<pre>
+<code>import requests
+
+url = "https://geolonia.github.io/japanese-addresses/api/ja.json"
+data = requests.get(url).json()
+for i, x in enumerate(data['三重県']):
+    print(i + 1, x)
+</code></pre>
+
+<p>例：三重県津市の全町名を出力</p>
+
+<pre>
+<code>import requests
+import urllib.parse
+
+query = "三重県/津市"
+
+url = "https://geolonia.github.io/japanese-addresses/api/ja/"
+data = requests.get(url + urllib.parse.quote(query) + ".json").json()
+for i, x in enumerate(data):
+    print(i + 1, x)
+</code></pre>
 
 <h3>その他の登録不要のAPI（お教えいただいたもの）</h3>
 
@@ -229,7 +258,7 @@ sess.mount("https://", adapter)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-17 21:04:08</time>
+Last modified: <time>2021-03-18 13:41:13</time>
 <!-- hhmts end -->
 </p>
 </body>
