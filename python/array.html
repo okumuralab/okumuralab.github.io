@@ -24,7 +24,7 @@
 
 <pre class="cell">
 a = [3, 5, 7]
-for i in range(10):
+for i in range(3):
     print(a[i])
 </pre>
 
@@ -32,8 +32,9 @@ for i in range(10):
 3
 5
 7
-IndexError: list index out of range
 </pre>
+
+<p>範囲外の要素，例えば <code>a[3]</code> にアクセスすると，IndexError: list index out of range というエラーになる。</p>
 
 <p>同じ要素のリストなら次のようにして作るのが簡単：</p>
 
@@ -62,7 +63,8 @@ a
 <p>上と同じことは次のようにも書ける（リスト内包表記，list comprehension）：</p>
 
 <pre class="cell">
-[i for i in range(3, 8, 2)]
+a = [i for i in range(3, 8, 2)]
+a
 </pre>
 
 <pre>
@@ -155,7 +157,31 @@ array([[1., 1., 1.],
        [1., 1., 1.]])
 </pre>
 
-<p>各要素にアクセスするには <code>a[i, j]</code> でも <code>a[i][j]</code> でもよい。</p>
+<p>各要素にアクセスするには <code>a[i, j]</code> でも <code>a[i][j]</code> でも（通常は）同じ意味であるが <code>a[i, j]</code> のほうが倍ほど速い：</p>
+
+<pre class="cell">
+a = np.empty((1000, 1000))
+
+%timeit a[123][456]
+%timeit a[123, 456]
+</pre>
+
+<p>Intel Mac mini で <code>a[123][456]</code> は 204ns，<code>a[123, 456]</code> は 108ns であった。M1 Mac mini ではそれぞれ 109ns，58ns であった。</p>
+
+<p><code>a</code>，<code>b</code> が array なら，例えば <code>a + b</code> は要素ごとの和になる。つまり，ベクトルや行列の演算はループしなくても高速にできる。</p>
+
+<p><code>a = a + b</code> は <code>a + b</code> を計算してそれに <code>a</code> という名前を付ける（古い <code>a</code> はアクセスできなくなる）。一方で，<code>a += b</code> は <code>a</code> に <code>b</code> をその場で加える。大きな array の計算はこの方がメモリを節約できるし，速い：</p>
+
+<pre class="cell">
+a = np.empty((1000, 1000))
+b = np.empty((1000, 1000))
+
+%%timeit
+global a, b
+a = a + b  # または a += b
+</pre>
+
+<p>M1 Mac mini で <code>a = a + b</code> は 724µs，<code>a += b</code> は 331µs であった。</p>
 
 <hr>
 
@@ -163,7 +189,7 @@ array([[1., 1., 1.],
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-19 16:53:04</time>
+Last modified: <time>2021-03-19 18:09:13</time>
 <!-- hhmts end -->
 </p>
 </body>
