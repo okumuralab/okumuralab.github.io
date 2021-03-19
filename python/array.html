@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>配列</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>配列</h1>
+
+<p>Pythonの「配列」は，通常は「リスト」（list）を使う。数値計算にはNumPyの array を使う。いずれもインデックスは 0 から始まる。</p>
+
+<h2>リスト</h2>
+
+<p>3個の要素からなるリストを作ってみる：</p>
+
+<pre class="cell">
+a = [3, 5, 7]
+for i in range(10):
+    print(a[i])
+</pre>
+
+<pre>
+3
+5
+7
+IndexError: list index out of range
+</pre>
+
+<p>同じ要素のリストなら次のようにして作るのが簡単：</p>
+
+<pre class="cell">
+a = [5] * 10   # 5が10個
+a
+</pre>
+
+<pre>
+[5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+</pre>
+
+<p>アペンドを繰り返して作ることもできる：</p>
+
+<pre class="cell">
+a = []
+for i in range(3, 8, 2):  # 3から始まり8未満2ずつ増える
+    a.append(i)
+a
+</pre>
+
+<pre>
+[3, 5, 7]
+</pre>
+
+<p>上と同じことは次のようにも書ける（リスト内包表記，list comprehension）：</p>
+
+<pre class="cell">
+[i for i in range(3, 8, 2)]
+</pre>
+
+<pre>
+[3, 5, 7]
+</pre>
+
+<p>リストの要素は同じ型でなくてもよい。<code>[3, 5, 'seven']</code> のようなリストも可能である。</p>
+
+<p>行列はリストのリストとして作れる：</p>
+
+<pre class="cell">
+a = [[2, 9, 4], [7, 5, 3], [6, 1, 8]]
+a[1][2]
+</pre>
+
+<pre>
+3
+</pre>
+
+<h2>NumPy の array</h2>
+
+<p>ベクトル・行列などの数値計算をより高速に行うにはNumPyの array を使う。</p>
+
+<pre class="cell">
+import numpy as np
+
+a = np.array([3, 5, 7])
+a
+</pre>
+
+<pre>
+array([3, 5, 7])
+</pre>
+
+<pre class="cell">
+type(a)
+</pre>
+
+<pre>
+numpy.ndarray
+</pre>
+
+<pre class="cell">
+a.dtype
+</pre>
+
+<pre>
+dtype('int64')
+</pre>
+
+<p>一つでも浮動小数点数にすると，全部が浮動小数点数になる。</p>
+
+<pre class="cell">
+a = np.array([3, 5, 7.])
+a
+</pre>
+
+<pre>
+array([3., 5., 7.])
+</pre>
+
+<pre class="cell">
+a.dtype
+</pre>
+
+<pre>
+dtype('float64')
+</pre>
+
+<p>データ型を指定することもできる：</p>
+
+<pre class="cell">
+a = np.array([3, 5, 7], dtype="int8")  # 8ビット整数型
+a
+</pre>
+
+<pre>
+array([3, 5, 7], dtype=int8)
+</pre>
+
+<p>0 に初期化された長さ <code>n</code> の配列を作るには <code>np.zeros(n)</code> とする。同様に，1 に初期化された長さ <code>n</code> の配列は <code>np.ones(n)</code> である。初期化の必要がなければ <code>np.empty(n)</code> とする。行列は，<code>n</code> のところを例えば <code>(m, n)</code> のように <code>(行数, 列数)</code> とする。同様に任意次元の配列が作れる。</p>
+
+<pre class="cell">
+a = np.ones((2, 3))
+a
+</pre>
+
+<pre>
+array([[1., 1., 1.],
+       [1., 1., 1.]])
+</pre>
+
+<p>各要素にアクセスするには <code>a[i, j]</code> でも <code>a[i][j]</code> でもよい。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-03-19 16:53:04</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
