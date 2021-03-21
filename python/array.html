@@ -183,13 +183,44 @@ a = a + b  # または a += b
 
 <p>M1 Mac mini で <code>a = a + b</code> は 724µs，<code>a += b</code> は 331µs であった。</p>
 
+<p>ベクトル・行列の生成は他に <code>np.arange()</code>（arange = array range）も使える：</p>
+
+<pre class="cell">
+np.arange(6)
+</pre>
+
+<pre>
+array([0, 1, 2, 3, 4, 5])
+</pre>
+
+<pre class="cell">
+np.arange(6).reshape(2, 3)  # 2行3列にする
+</pre>
+
+<pre>
+array([[0, 1, 2],
+       [3, 4, 5]])
+</pre>
+
+<p><code>np.arange(3)</code> は <code>array([0, 1, 2])</code> だが <code>np.arange(3.)</code> は浮動小数点の <code>array([0., 1., 2.])</code> になる。</p>
+
+<p><code>np.empty(n, dtype="int8")</code> などのようにデータ型を指定することができる。</p>
+
+<p>乱数のベクトルの生成は<a href="random.html">乱数</a>を参照のこと。</p>
+
+<h2>PyTorch や Tensorflow のテンソル</h2>
+
+<p>PyTorch や Tensorflow などの機械学習ライブラリでは「テンソル」（tensor）というものを使う。これも要するに配列である。</p>
+
+<p>PyTorch なら <code>import torch</code> して，<code>np.array()</code> の代わりに <code>torch.tensor()</code> を，<code>np.ones()</code> の代わりに <code>torch.ones()</code> を使うなどとすればよい。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-19 18:09:13</time>
+Last modified: <time>2021-03-21 19:42:12</time>
 <!-- hhmts end -->
 </p>
 </body>

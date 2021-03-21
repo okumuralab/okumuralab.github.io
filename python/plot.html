@@ -68,6 +68,16 @@ plt.plot([-1, 1])
 plt.show()
 </code></pre>
 
+<p>画像をSVG形式にすることもできます：</p>
+
+<pre class="cell">
+<code>from IPython import display
+
+display.set_matplotlib_formats('svg')
+</code></pre>
+
+<p>このほうが画像がくっきり表示されますが，ドラッグ＆ドロップで画像だけをダウンロードすることはできなくなるようです。</p>
+
 <h3>自分のマシンでの利用</h3>
 
 <p>対話型の環境なら</p>
@@ -458,7 +468,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-09 10:48:04</time>
+Last modified: <time>2021-03-21 17:11:55</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -205,6 +205,12 @@ In [3]: quit
 conda deactivate
 </pre>
 
+<p><a href="https://pytorch.org">PyTorch</a> は miniforge の Python 3.9 に普通にインストールできるようだ。TensorflowのようなM1への最適化は<a href="https://github.com/pytorch/pytorch/issues/47702">要望</a>はあるがまだのようだ。</p>
+
+<pre>
+conda install pytorch torchvision  # torchaudio はまだダメ
+</pre>
+
 <h3>R</h3>
 
 <p><a href="https://mac.r-project.org">R for macOS Developers</a> や <a href="https://rud.is/b/2021/02/07/fully-native-m1-apple-silicon-r-setup/">Fully Native M1/Apple Silicon R Setup</a> 参照。正式版は R 4.1.0 以降とのこと。</p>
@@ -256,7 +262,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-15 11:09:21</time>
+Last modified: <time>2021-03-21 20:45:16</time>
 <!-- hhmts end -->
 </p>
 </footer>
