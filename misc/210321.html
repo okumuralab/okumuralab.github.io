@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>更新があったらメールで知らせる</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<article>
+<h1>更新があったらメールで知らせる</h1>
+
+<p>crontab等に <code>/path/to/watch.sh 'https://example.com'</code> のように登録しておけばサイトの更新があったらメールで差分を知らせてくれるbashスクリプトを（bashのマニュアルを調べながら）書いた。あらかじめ作業用のディレクトリ（ここでは <code>/home/okumura/watch</code>）を作っておく。</p>
+
+<pre>
+#! /bin/bash
+
+if [ $# -ne 1 ]; then
+    exit 1
+fi
+
+export LC_ALL=en_US
+cd /home/okumura/watch
+
+uri=$1
+
+md=`echo -n $uri | md5sum | cut -d ' ' -f 1`
+
+if [ -d $md ]; then
+    cd $md
+    f=`ls`
+    cp -fp $f .$f
+    wget -N $uri 2&gt;.out
+    if grep saved .out; then
+	if ! diff .$f $f &gt;.$f.diff; then
+            cat .$f.diff | mail -s "Changed: $uri" okumura@example.org
+	fi
+    fi
+else
+    if [ -e $md ]; then
+	rm -f $md
+    fi
+    mkdir $md
+    cd $md
+    wget -N $uri 2&gt;.out
+fi
+</pre>
+
+<p>URLから生成したハッシュ値のディレクトリを作り，その中で <code>wget -N</code> する。新しいファイルが取得され，なおかつ差分があれば，メールで報告する。</p>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-03-21 14:40:40</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
