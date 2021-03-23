@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <title>時系列のグラフを描く</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -18,11 +18,12 @@
 
 <p><a href="https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv">東京の毎日のCOVID-19感染者数の時系列データ</a>をプロットしてみましょう。</p>
 
-<pre>
+<pre class="cell">
 <code>import matplotlib.pyplot as plt
 import pandas as pd
 
-df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv')
+URL = 'https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv'
+df = pd.read_csv(URL)
 </code></pre>
 
 <p><code>df</code> を眺めてから，プロットしてみましょう。</p>
@@ -34,15 +35,13 @@ df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.c
 <p>何となくプロットできているようですが，横軸がよくわかりません。日付が文字列になってしまっているようです。日付を日付として読むには，次のようにします。</p>
 
 <pre>
-<code>df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv',
-                 parse_dates=['date'])
+<code>df = pd.read_csv(URL, parse_dates=['date'])
 </code></pre>
 
 <p>同じように見えますが，これをプロットしてみましょう。</p>
 
 <pre>
-<code>plt.clf()
-plt.plot(df['date'], df['confirmed'])
+<code>plt.plot(df['date'], df['confirmed'])
 </code></pre>
 
 <p>今度は横軸を日付と認識してくれました。でも，重なって読みにくいので，少し傾けてみましょう。</p>
@@ -56,17 +55,18 @@ plt.plot(df['date'], df['confirmed'])
 <p>棒グラフにしてみましょう。</p>
 
 <pre>
-<code>plt.clf()
-plt.bar(df['date'], df['confirmed'], width=1)
+<code>plt.bar(df['date'], df['confirmed'], width=1)
 plt.xticks(rotation=20)
 </code></pre>
 
 <p>同様に，厚労省の<a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">オープンデータ</a>もプロットしてみましょう。</p>
 
 <pre>
-<code>plt.clf()
-df1 = pd.read_csv('https://www.mhlw.go.jp/content/pcr_positive_daily.csv', parse_dates=['日付'])
-df2 = pd.read_csv('https://www.mhlw.go.jp/content/pcr_tested_daily.csv', parse_dates=['日付'])
+<code>
+URL1 = 'https://www.mhlw.go.jp/content/pcr_positive_daily.csv'
+URL2 = 'https://www.mhlw.go.jp/content/pcr_tested_daily.csv'
+df1 = pd.read_csv(URL1, parse_dates=['日付'])
+df2 = pd.read_csv(URL2, parse_dates=['日付'])
 </code></pre>
 
 <p>これらを別々に描いてもいいのですが，マージして一つのデータフレームにしてみましょう。</p>
@@ -76,8 +76,7 @@ df2 = pd.read_csv('https://www.mhlw.go.jp/content/pcr_tested_daily.csv', parse_d
 </code></pre>
 
 <pre>
-<code>plt.clf()
-plt.plot(df['日付'], df['PCR 検査陽性者数(単日)'])
+<code>plt.plot(df['日付'], df['PCR 検査陽性者数(単日)'])
 plt.plot(df['日付'], df['PCR 検査実施件数(単日)'])
 </code></pre>
 
@@ -99,13 +98,69 @@ plt.plot(df['日付'], df['PCR 検査実施件数(単日)'])
 <code>plt.ylim([0, 1])
 </code></pre>
 
+<p>日付を傾けるのではなく，日付のフォーマットを変えてみましょう。</p>
+
+<pre class="cell">
+<code>import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pandas as pd
+
+fig, ax = plt.subplots()
+formatter = mdates.DateFormatter("%m-%d")
+ax.xaxis.set_major_formatter(formatter)
+
+URL = 'https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv'
+df = pd.read_csv(URL, parse_dates=['date'])
+ax.bar(df['date'], df['confirmed'], width=1)
+</code></pre>
+
+<p>これなら傾けなくても重ならずに表示できそうです。</p>
+
+<p>さらに凝ってみましょう。</p>
+
+<pre class="cell">
+<code>import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pandas as pd
+
+fig, ax = plt.subplots()
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+ax.xaxis.set_major_formatter(formatter)
+
+URL = 'https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv'
+df = pd.read_csv(URL, parse_dates=['date'])
+ax.bar(df['date'], df['confirmed'], width=1)
+</code></pre>
+
+<p>さらにカスタマイズしてみましょう。</p>
+
+<pre class="cell">
+<code>import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pandas as pd
+
+fig, ax = plt.subplots()
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+formatter.formats=['%Y年', '%m月', '%d日', '%H:%M', '%H:%M', '%S.%f']
+formatter.zero_formats=['', '%Y年', '%m月', '%m-%d', '%H:%M', '%H:%M']
+formatter.offset_formats=['', '%Y年', '%Y-%m', '%Y-%m-%d',
+                          '%Y-%m-%d', '%Y-%m-%d %H:%M']
+ax.xaxis.set_major_formatter(formatter)
+
+URL = 'https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv'
+df = pd.read_csv(URL, parse_dates=['date'])
+ax.bar(df['date'], df['confirmed'], width=1)
+</code></pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-10-27 14:12:02</time>
+Last modified: <time>2021-03-23 14:28:32</time>
 <!-- hhmts end -->
 </p>
 </body>

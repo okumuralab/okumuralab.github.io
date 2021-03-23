@@ -274,31 +274,13 @@ conda install ipython numpy scipy matplotlib pandas scikit-learn
 <p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し，ビルドします。次は3.7.7の場合です：</p>
 
 <pre>
-<code>wget https://www.python.org/ftp/python/3.7.7/Python-3.7.7.tar.xz
-tar xvJf Python-3.7.7.tar.xz
-cd Python-3.7.7
+<code>wget wget -N https://www.python.org/ftp/python/3.9.2/Python-3.9.2.tar.xz
+tar xvJf Python-3.9.2.tar.xz
+cd Python-3.9.2
 ./configure --enable-optimizations
 make
 make install
 </code></pre>
-
-<p>Python 3.8.5 でやってみたらエラーになりました。<code>--enable-optimizations</code> をやめるか，未確認ですが GCC を 8.1.0 にアップデートすればよいようです。</p>
-
-<!--
-<div class="note">
-<p>ある CentOS 7 マシンで Python 3.7.3 をインストールしようとしたら <code>make install</code> で次のようなエラーに遭遇：</p>
-<pre>
-<code>  File "/usr/local/src/Python-3.7.3/Lib/ctypes/__init__.py", line 7, in <module>
-    from _ctypes import Union, Structure, Array
-ModuleNotFoundError: No module named '_ctypes'
-make: *** [install] エラー 1
-</code></pre>
-<p>次のようにして <code>libffi-devel</code> をインストールして再度 <code>make install</code> したらうまくいった：</p>
-<pre>
-<code># yum install libffi-devel
-</code></pre>
-</div>
--->
 
 <p>実行ファイル <code>python3</code>，<code>pip</code> などが（デフォルトでは）<code>/usr/local/bin</code> に入りますので，そこにパスを通しておきます。Linux では <code>python</code> コマンドで Python 2 が動くことが想定されていることがあるので，<code>python3</code> という名前はそのままにしておくほうがよさそうです。</p>
 
@@ -359,7 +341,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-15 12:45:49</time>
+Last modified: <time>2021-03-23 10:15:26</time>
 <!-- hhmts end -->
 </p>
 </footer>
