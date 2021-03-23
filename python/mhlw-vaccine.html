@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>新型コロナワクチンの接種実績</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>新型コロナワクチンの接種実績</h1>
+
+<p>厚労省<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html">新型コロナワクチンの接種実績</a>の表をすクレープしてグラフにする。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import pandas as pd
+
+URL = "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html"
+df = pd.read_html(URL, header=0)[0]
+
+t = pd.to_datetime(df['日付'][:-1])
+n1 = df['内１回目'][:-1]
+n2 = df['内２回目'][:-1]
+
+plt.bar(t, n1, label="1st")
+plt.bar(t, n2, bottom=n1, label="2nd")
+plt.legend()
+plt.xticks(rotation=20)
+</pre>
+
+<figure><img src="img/mhlw-vaccine.svg" alt="新型コロナワクチンの接種実績"></figure>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-03-23 10:25:45</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
