@@ -280,6 +280,9 @@ cd Python-3.9.2
 ./configure --enable-optimizations
 make
 make install
+
+python3 --version  # 3.9.2であることを確認
+python3 -m pip install --upgrade pip
 </code></pre>
 
 <p>実行ファイル <code>python3</code>，<code>pip</code> などが（デフォルトでは）<code>/usr/local/bin</code> に入りますので，そこにパスを通しておきます。Linux では <code>python</code> コマンドで Python 2 が動くことが想定されていることがあるので，<code>python3</code> という名前はそのままにしておくほうがよさそうです。</p>
@@ -341,7 +344,7 @@ c.NotebookApp.port = 8888
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-23 10:15:26</time>
+Last modified: <time>2021-03-23 15:31:34</time>
 <!-- hhmts end -->
 </p>
 </footer>
