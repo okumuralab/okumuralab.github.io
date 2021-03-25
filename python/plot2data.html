@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>プロットをデータに</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>プロットをデータに</h1>
+
+<p>プロット画像をデータに自動で変換する <a href="https://github.com/dilawar/PlotDigitizer">PlotDigitizer</a> のようなツールもあるが，自前でやってみる。</p>
+
+<p><code>plt.ginput()</code> を使う。これは最後に開いた図上でクリックした座標のリストを返す。</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import numpy as np
+
+img = plt.imread("filename.png") # 画像を読む
+print(img.shape)                 # サイズを確認
+plt.figure(figsize=[20, 10])     # できるだけ大きくする
+plt.imshow(img)                  # 画像を表示
+
+x1, x2, y1, y2 = 250, 500, 0, 2.5 # 既知の2点の座標
+
+# 上の2点を各3回ずつクリックして中央値をとる
+a1, b1 = np.median(plt.ginput(3, timeout=0), axis=0)
+a2, b2 = np.median(plt.ginput(3, timeout=0), axis=0)
+
+# プロット点を順に1回ずつクリック
+# 右クリック（Ctrl-クリック）で一つ前を削除
+# 中クリック（Alt-クリック）で終了
+p = plt.ginput(-1, timeout=0)
+
+def conv(t, t1, t2, u1, u2):
+    return (u2 - u1) * (t - t1) / (t2 - t1) + u1
+
+# CSV出力
+print("x,y")
+for x, y in p:
+    x = conv(x, a1, a2, x1, x2)
+    y = conv(y, b1, b2, y1, y2)
+    print(f"{x:.3f},{y:.3f}")    # ここでは小数第3位まで
+</code></pre>
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-03-25 15:49:31</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
