@@ -43,11 +43,12 @@ def conv(t, t1, t2, u1, u2):
     return (u2 - u1) * (t - t1) / (t2 - t1) + u1
 
 # CSV出力
-print("x,y")
-for x, y in p:
-    x = conv(x, a1, a2, x1, x2)
-    y = conv(y, b1, b2, y1, y2)
-    print(f"{x:.3f},{y:.3f}")    # ここでは小数第3位まで
+with open("filename.csv", "w") as f:
+    print("x,y", file=f)
+    for x, y in p:
+        x = conv(x, a1, a2, x1, x2)
+        y = conv(y, b1, b2, y1, y2)
+        print(f"{x:.3f},{y:.3f}", file=f) # 小数第3位まで
 </code></pre>
 <hr>
 
@@ -55,7 +56,7 @@ for x, y in p:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-25 15:49:31</time>
+Last modified: <time>2021-03-25 16:13:22</time>
 <!-- hhmts end -->
 </p>
 </body>
