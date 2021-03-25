@@ -48,6 +48,15 @@ ax.legend(['公表日', '発症日'])
 fig.savefig('../img/COVID-tokyo2.svg', bbox_inches="tight")
 
 ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.hist(df['公表_年月日'].values, bins=b, alpha=0.5)
+ax.hist(df['発症_年月日'].values, bins=b, alpha=0.5, edgecolor="black", linewidth=0.5)
+ax.set_xlim(np.datetime64('2021-01-01'), b[-1])
+ax.legend(['公表日', '発症日'])
+fig.savefig('../img/COVID-tokyo2f.svg', bbox_inches="tight")
+
+ax.clear()
 t = (df['公表_年月日'] - df['発症_年月日']).dt.days
 ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
          color="lightgray", edgecolor="black")
