@@ -151,11 +151,52 @@ Out[ ]: array([5, 4, 3, 2, 1])
 
 <hr>
 
+<p>文科省の<a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">高等学校情報<科教員研修用教材</a>ページ→高等学校情報科「情報Ⅰ」教員研修用教材（本編）→第3章　コンピュータとプログラミング (PDF:9.3MB) のp.131にクイックソートのPythonプログラム例が載っていますが，これには微妙なバグが潜んでいることをE.V.ジュニアさんが見つけてくださいました（→<a href="https://note.com/evjunior/n/n25c3e831d110">クイックソートは難しい？ ： 文科省研修教材のコードには虫がいるよ</a>）。</p>
+
+<p>念のため，こちらにも文科省のコードを載せておきます：</p>
+
+<figure><img src="img/mext-quicksort.png" alt="文科省のクイックソート"></figure>
+
+<p>さらに念のため，これをそのままテキスト化したもの：</p>
+
+<pre><code>def quicksort(a,start,end):
+    m = int((start+end)/2)
+    i = start
+    j = end
+    while(i&lt;j):
+        while a[i] &lt; a[m]:
+            i = i+1
+        while a[j] &gt; a[m]:
+            j = j-1
+        if i&gt;=j:
+            break
+        temp = a[i]
+        a[i] = a[j]
+        a[j] = temp
+        if i==m:
+            m = j
+        elif j==m:
+            m = i
+        i = i+1
+        j = j-1
+    if start &lt; i-1:
+        quicksort(a,start,m-1)
+    if end &gt; j+1:
+        quicksort(a,m+1,end)
+
+a = [7,22,11,34,17,52,26,13,40,20,10,5,16,8,4,2,1]
+print("ソート前",a)
+quicksort(a,0,len(a)-1)
+print("ソート後",a)
+</code></pre>
+
+<hr>
+
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-26 14:32:56</time>
+Last modified: <time>2021-03-27 10:43:50</time>
 <!-- hhmts end -->
 </p>
 </body>
