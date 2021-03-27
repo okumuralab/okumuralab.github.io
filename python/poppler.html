@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>PopplerでPDFを読む</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PopplerでPDFを読む</h1>
+
+<p><a href="https://poppler.freedesktop.org">Poppler</a> はPDF操作のためのライブラリで，これをPythonから使えるようにしたのが <a href="https://pypi.org/project/python-poppler/">python-poppler</a> ライブラリである。<code>pip install python-poppler</code> で入る。</p>
+
+<p>ローカルのPDFファイルを読んでテキスト化する：</p>
+
+<pre class="cell">
+import poppler
+
+pdf = poppler.load_from_file("test.pdf")
+for i in range(pdf.pages):
+    p = pdf.create_page(i)
+    print(p.text())
+</pre>
+
+<p>URLで指定されたPDFファイルを読んでテキスト化する：</p>
+
+<pre class="cell">
+import requests
+import poppler
+
+r = requests.get("https://example.org/test.pdf")
+pdf = poppler.load_from_data(r.content)
+for i in range(pdf.pages):
+    p = pdf.create_page(i)
+    print(p.text())
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-03-27 19:27:13</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
