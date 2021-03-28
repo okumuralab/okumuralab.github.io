@@ -278,13 +278,32 @@ with open('file.csv') as f:
 
 <p><a href="https://modin.readthedocs.io">Modin</a> を使えば，<code>import pandas as pd</code> を <code>import modin.pandas as pd</code> と書き換えるだけで pandas が高速になります。</p>
 
+<h2>キャッシュ</h2>
+
+<p>他サイトから何度も読むデータについては，キャッシュすることが推奨されます。カレントディレクトリに <code>.web_cache</code> というディレクトリができ，その中にキャッシュが保存されます。サイトへのアクセスは毎回しますが，前回から変わってない（ステータスコードが200ではなく304）場合はキャッシュから読みます。</p>
+
+<pre><code>import pandas as pd
+from io import StringIO
+import requests
+from cachecontrol import CacheControl
+from cachecontrol.caches.file_cache import FileCache
+
+URL = "https://example.org/test.csv"
+
+cache = FileCache('.web_cache', forever=True)
+sess = CacheControl(requests.Session(), cache)
+r = sess.get(URL)
+r.encoding = "UTF-8"  # または "Shift_JIS"
+df = pd.read_csv(StringIO(r.text))
+</code></pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-23 12:40:02</time>
+Last modified: <time>2021-03-28 20:19:12</time>
 <!-- hhmts end -->
 </p>
 </body>
