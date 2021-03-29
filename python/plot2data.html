@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <title>プロットをデータに</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -18,7 +18,7 @@
 
 <p>プロット画像をデータに自動で変換する <a href="https://github.com/dilawar/PlotDigitizer">PlotDigitizer</a> のようなツールもあるが，自前でやってみる。</p>
 
-<p><code>plt.ginput()</code> を使う。これは最後に開いた図上でクリックした座標のリストを返す。</p>
+<p><code>plt.ginput()</code> を使う。これは最後に開いた図上でクリックした座標のリストを返す。Jupyter Notebook 等ではうまくいかない。</p>
 
 <pre><code>import matplotlib.pyplot as plt
 import numpy as np
@@ -56,7 +56,7 @@ with open("filename.csv", "w") as f:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-25 16:13:22</time>
+Last modified: <time>2021-03-29 21:59:35</time>
 <!-- hhmts end -->
 </p>
 </body>

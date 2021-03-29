@@ -195,19 +195,20 @@ brew install gpg wget ghostscript imagemagick ffmpeg nkf exiftool
 
 <p>Emacs 27が出たので改訂。<a href="https://debbugs.gnu.org/cgi/bugreport.cgi?bug=42919">Byte compile のバグ</a> のパッチ <a href="https://debbugs.gnu.org/cgi/bugreport.cgi?msg=18;filename=0001-Fix-cond-jump-table-compilation-bug-42919.patch;att=1;bug=42919">0001-Fix-cond-jump-table-compilation-bug-42919.patch</a> を当てている。なお，twittering-mode.el の epa--decode-coding-string を decode-coding-string に直す必要があった。</p>
 
+<p>Emacs 27.2が出たので改訂。</p>
+
 <pre>
-wget http://ftp.jaist.ac.jp/pub/GNU/emacs/emacs-27.1.tar.xz
-wget ftp://ftp.math.s.chiba-u.ac.jp/emacs/emacs-27.1-mac-8.1.tar.gz
-tar xvzf emacs-27.1.tar.xz
-tar xvzf emacs-27.1-mac-8.1.tar.gz
-cd emacs-27.1
-patch -p1 < 0001-Fix-cond-jump-table-compilation-bug-42919.patch
-patch -p1 < ../emacs-27.1-mac-8.1/patch-mac
-cp -R ../emacs-27.1-mac-8.1/mac .
-cp ../emacs-27.1-mac-8.1/src/* src/
-cp ../emacs-27.1-mac-8.1/lisp/term/mac-win.el lisp/term/
+wget -N http://ftp.gnu.org/gnu/emacs/emacs-27.2.tar.xz
+wget -N ftp://ftp.math.s.chiba-u.ac.jp/emacs/emacs-27.2-mac-8.2.tar.gz
+tar xvzf emacs-27.2.tar.xz
+tar xvzf emacs-27.2-mac-8.2.tar.gz
+cd emacs-27.2
+patch -p1 < ../emacs-27.2-mac-8.2/patch-mac
+cp -R ../emacs-27.2-mac-8.2/mac .
+cp ../emacs-27.2-mac-8.2/src/* src/
+cp ../emacs-27.2-mac-8.2/lisp/term/mac-win.el lisp/term/
 cp nextstep/Cocoa/Emacs.base/Contents/Resources/*.icns mac/Emacs.app/Contents/Resources/
-./configure --without-x --without-imagemagick
+./configure --without-x
 make 
 make install
 </pre>
@@ -519,7 +520,7 @@ Host *
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-14 21:46:49</time>
+Last modified: <time>2021-03-29 17:35:05</time>
 <!-- hhmts end -->
 </p>
 </footer>
