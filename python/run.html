@@ -241,13 +241,23 @@ print(sys.argv)
 
 <p>拡張子 <code>py</code> のファイルを開くと，自動的に Python モードになります。まずは C-c C-p (run-python) で IPython プロセスを起動します（拡張子 <code>py</code> のファイルを開かなくても直接 M-x run-python でも起動できます）。バッファ全体を実行するには C-c C-c (python-shell-send-buffer)，選択したリージョンを実行するには C-c C-r (python-shell-send-region) とします。詳しくは，M-x help の次に m と打つと，モードのヘルプが現れます。</p>
 
+<h3>Emacs で EIN を動かす</h3>
+
+<p><a href="https://github.com/millejoh/emacs-ipython-notebook">EIN -- Emacs IPython Notebook</a> は Emacs で Jupyter Notebook を動かします。</p>
+
+<p>あらかじめ ~/.mailcap に Mac なら <code>image/*; open -a Preview %s</code> のように画像ビューアを設定しておきます。</p>
+
+<p>起動は M-x ein:run するか .ipynb ファイルを開いて C-c C-o します。終了は M-x ein:stop です。</p>
+
+<p>セル（<code>In [ ]:</code> の下）に何行かのコードを入力して M-RET すると，実行され，次のセルが挿入されます。C-c C-a で上にセルを挿入，C-c C-b で下にセルを挿入します。C-u C-c C-a で上にマークダウンを挿入，C-u C-c C-b で下にマークダウンを挿入します。C-c C-k でセルを消します。C-c ↑ や C-c ↓ でセルを上や下に移動します。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-10-06 10:01:14</time>
+Last modified: <time>2021-03-29 16:16:09</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -156,11 +156,11 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <h3>Emacs 27</h3>
 
-<p><a href="https://emacsformacosx.com">Emacs for Mac OS X</a> にある27.2-2はarm64対応のユニバーサルバイナリである。日本語入力中に画面表示がちらつくことがあるが，許容範囲内であろう。</p>
+<p><a href="https://emacsformacosx.com">Emacs for Mac OS X</a> にある 27.2-2 は arm64 対応のユニバーサルバイナリである。下の自分でビルドしたものと比べて，日本語入力中に画面表示がちらつくことがあるが，許容範囲内であろう。</p>
 
-<p>システム環境設定の「セキュリティとプライバシー」の「プライバシー」で，「フルディスクアクセス」を許可する必要がある。私の場合，なぜかフルディスクアクセスを許可しても外付けHDDにアクセスできなかったが，ターミナルから一度 <code>open -a Emacs /Volumes/opt</code> と打ち込んで強制的にアクセスさせたら，以後は問題なくなった。</p>
+<p>初回の起動は右クリックして「開く」。そのままではディスクにアクセスできないので，システム環境設定の「セキュリティとプライバシー」の「プライバシー」で「フルディスクアクセス」を許可する必要がある。私の場合，なぜかフルディスクアクセスを許可しても外付けHDDにアクセスできなかったが，ターミナルから一度 <code>open -a Emacs /Volumes/opt</code> と打ち込んで強制的にアクセスさせたら，以後は問題なくなった。</p>
 
-<p>ソースからビルドするには次のようにする：</p>
+<p>Homebrew 環境でソースからビルドするには次のようにする：</p>
 
 <pre>
 wget -N http://ftp.gnu.org/gnu/emacs/emacs-27.2.tar.xz
@@ -177,6 +177,8 @@ cp nextstep/Cocoa/Emacs.base/Contents/Resources/*.icns mac/Emacs.app/Contents/Re
 make 
 make install
 </pre>
+
+<p>これで mac サブディレクトリの中にできる Emacs.app を /Applications にドラッグ＆ドロップでコピーする。</p>
 
 <p>ARM 版 Homebrew で <code>brew install emacs</code> でインストールされる emacs はターミナル版。<code>brew install --cask emacs</code> でインストールされるものは <a href="https://emacsformacosx.com">Emacs for Mac OS X</a> のもの。</p>
 
@@ -237,7 +239,7 @@ conda install pytorch torchvision  # torchaudio はまだダメ
 
 <h3>TeX</h3>
 
-<p><a href="https://tug.org/texlive/pretest.html">TeX Live 2021 pretest</a> が出た。Universal バイナリが含まれているようだ。以下は古い情報。</p>
+<p><a href="https://tug.org/texlive/pretest.html">TeX Live 2021 pretest</a> が出た。Universal バイナリが含まれているようだ。<a href="http://www.tug.org/texlive/">TeX Live</a> 2021は4月1日に出るとのことなので，待とう。以下は古い情報。</p>
 
 <p>Rosetta で使っても十分速いが，native なコードを使いたければ，MacTeX の <a href="http://www.tug.org/mactex/aboutarm.html">About Arm</a> のページから <a href="http://www.tug.org/mactex/MacTeX-2020-Universal.pkg">MacTeX-2020-Universal.pkg</a> をダウンロードして展開して得られるバイナリで TeX Live 2020 のバイナリを置き換えればよい。例えば TeX Live 2020 が /usr/local/texlive/2020 にインストールされているなら次のようにすればよい。</p>
 
@@ -282,7 +284,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-29 12:41:09</time>
+Last modified: <time>2021-03-29 14:05:50</time>
 <!-- hhmts end -->
 </p>
 </footer>

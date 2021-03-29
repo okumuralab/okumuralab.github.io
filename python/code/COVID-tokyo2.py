@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/local/bin/python3
 
 # https://catalog.data.metro.tokyo.lg.jp/dataset/t000010d0000000068
 # wget -N https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv

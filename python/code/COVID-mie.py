@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/local/bin/python3
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
