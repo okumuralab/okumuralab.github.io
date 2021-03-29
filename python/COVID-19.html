@@ -36,19 +36,19 @@
 
 <p>Johns Hopkins 大学の Center for Systems Science and Engineering (CSSE) は <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> という COVID-19 可視化サイトを早くから立ち上げている。データについては GitHub の <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a> で公開している。そのデータのプロット例を<a href="200310.html">番外編1</a>の後半で示した。最新の図をこちらにも載せておく。まずは確定数。黒丸マーカーを付けたものが日本である。</p>
 
-<figure><img src="img/COVID-csse.svg" alt="COVID-19"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse.svg" alt="COVID-19"></figure>
 
 <p>差分（つまり1日ごとの増分）最終日の7位まで＋日本（トルコが1日だけ外れ値を出している）：</p>
 
-<figure><img src="img/COVID-csse1.svg" alt="COVID-19"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse1.svg" alt="COVID-19"></figure>
 
 <p>死亡数：</p>
 
-<figure><img src="img/COVID-csse2.svg" alt="COVID-19"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse2.svg" alt="COVID-19"></figure>
 
 <p>差分（つまり1日ごとの増分）最終日の7位まで＋日本：</p>
 
-<figure><img src="img/COVID-csse3.svg" alt="COVID-19"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse3.svg" alt="COVID-19"></figure>
 
 <h2>厚労省のデータ</h2>
 
@@ -67,11 +67,11 @@ ax.xaxis.set_major_formatter(formatter)
 ax.bar(df['日付'], df['PCR 検査陽性者数(単日)'], width=1, color='C1')
 </code></pre>
 
-<figure><img src="img/COVID-mhlwopen1.svg" alt="厚労省 COVID-19"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-mhlwopen1.svg" alt="厚労省 COVID-19"></figure>
 
-<figure><img src="img/COVID-mhlwopen2.svg" alt="厚労省 COVID-19"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-mhlwopen2.svg" alt="厚労省 COVID-19"></figure>
 
-<figure><img src="img/COVID-mhlwopen3.svg" alt="厚労省 COVID-19"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-mhlwopen3.svg" alt="厚労省 COVID-19"></figure>
 
 <h2>各地の状況</h2>
 
@@ -91,21 +91,21 @@ ax.bar(df['日付'], df['PCR 検査陽性者数(単日)'], width=1, color='C1')
 
 <p>東京都の元情報は<a href="https://www.bousai.metro.tokyo.lg.jp">東京都防災ホームページ</a>や<a href="https://www.fukushihoken.metro.tokyo.lg.jp">東京都福祉保健局</a>から発信され，それをもとに<a href="https://stopcovid19.metro.tokyo.lg.jp">都内の最新感染動向</a>が作られているようだ。それらより早くマスメディアで毎日の感染確認者数が発表されるので，それをもとに <a href="data/COVID-tokyo.csv">COVID-tokyo.csv</a> を作成している。そのグラフ：</p>
 
-<figure><img src="img/COVID-tokyo.svg" alt="東京"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-tokyo.svg" alt="東京"></figure>
 
-<figure><img src="img/COVID-tokyo-a.svg" alt="東京"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-tokyo-a.svg" alt="東京"></figure>
 
 <p>縦軸を対数目盛にしたもの：</p>
 
-<figure><img src="img/COVID-tokyo-log.svg" alt="東京"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-tokyo-log.svg" alt="東京"></figure>
 
 <p>実効再生産数を，(直近7日間の陽性数/n日前7日間の陽性数)**(5/n)で近似したもの。<a href="https://toyokeizai.net/sp/visual/tko/covid19/">東洋経済オンライン</a>では n=7 としているが，ここでは 1 から 7 までの7本のグラフを示した。</p>
 
-<figure><img src="img/COVID-tokyo-rt.svg" alt="東京"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-tokyo-rt.svg" alt="東京"></figure>
 
 <!--
 <p>累積（倍加時間を見るために最終日の値とその半分を点線で示した）：</p>
-<figure><img src="img/COVID-tokyo-cum.svg" alt="東京"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-tokyo-cum.svg" alt="東京"></figure>
 -->
 
 <!--
@@ -162,7 +162,7 @@ ax.legend(['Negative', 'Positive'])
 fig.savefig('COVID-mie.svg', bbox_inches="tight")
 </code></pre>
 
-<figure><img src="img/COVID-mie.svg" alt="三重県"></figure>
+<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-mie.svg" alt="三重県"></figure>
 
 <h2>関連サイトへのリンク</h2>
 
@@ -197,7 +197,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-23 14:27:42</time>
+Last modified: <time>2021-03-29 09:34:16</time>
 <!-- hhmts end -->
 </p>
 </body>
