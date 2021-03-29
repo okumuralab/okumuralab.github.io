@@ -156,9 +156,29 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <h3>Emacs 27</h3>
 
-<p>ソースから arm64 環境でビルドしてみたがエラー。よくわからないが Rosetta 環境でなら簡単にビルドできるので，現在はそれを使っている。ビルドが面倒な場合には適当なバイナリを探してくる。</p>
+<p><a href="https://emacsformacosx.com">Emacs for Mac OS X</a> にある27.2-2はarm64対応のユニバーサルバイナリである。日本語入力中に画面表示がちらつくことがあるが，許容範囲内であろう。</p>
 
-<p>ARM 版 Homebrew で <code>brew install emacs</code> でインストールされる emacs はターミナル版。<code>brew install --cask emacs</code> でインストールされるものは <a href="https://emacsformacosx.com">Emacs for Mac OS X</a> のバイナリで M1 用ではないが Rosetta で動く。</p>
+<p>システム環境設定の「セキュリティとプライバシー」の「プライバシー」で，「フルディスクアクセス」を許可する必要がある。私の場合，なぜかフルディスクアクセスを許可しても外付けHDDにアクセスできなかったが，ターミナルから一度 <code>open -a Emacs /Volumes/opt</code> と打ち込んで強制的にアクセスさせたら，以後は問題なくなった。</p>
+
+<p>ソースからビルドするには次のようにする：</p>
+
+<pre>
+wget -N http://ftp.gnu.org/gnu/emacs/emacs-27.2.tar.xz
+wget -N ftp://ftp.math.s.chiba-u.ac.jp/emacs/emacs-27.2-mac-8.2.tar.gz
+tar xvzf emacs-27.2.tar.xz
+tar xvzf emacs-27.2-mac-8.2.tar.gz
+cd emacs-27.2
+patch -p1 < ../emacs-27.2-mac-8.2/patch-mac
+cp -R ../emacs-27.2-mac-8.2/mac .
+cp ../emacs-27.2-mac-8.2/src/* src/
+cp ../emacs-27.2-mac-8.2/lisp/term/mac-win.el lisp/term/
+cp nextstep/Cocoa/Emacs.base/Contents/Resources/*.icns mac/Emacs.app/Contents/Resources/
+./configure --prefix=/opt/homebrew --without-x
+make 
+make install
+</pre>
+
+<p>ARM 版 Homebrew で <code>brew install emacs</code> でインストールされる emacs はターミナル版。<code>brew install --cask emacs</code> でインストールされるものは <a href="https://emacsformacosx.com">Emacs for Mac OS X</a> のもの。</p>
 
 <h3>Python</h3>
 
@@ -262,7 +282,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-21 20:45:16</time>
+Last modified: <time>2021-03-29 12:41:09</time>
 <!-- hhmts end -->
 </p>
 </footer>
