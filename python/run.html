@@ -18,7 +18,7 @@
 
 <p>Python 3 を実行するには，いろいろな方法があります。初心者はまず Google Colab で実行してみましょう。</p>
 
-<h3>Google Colab を使う</h3>
+<h2>Google Colab を使う</h2>
 
 <p>Google Colaboratory（略称 Google Colab）を使えば Web 上で Python が使えます。ただし，Google のアカウントが必要です。古いブラウザ（IE など）では使えません。Windows は Edge でも Shift + Enter がうまくいかないことがあるようです。できれば Google Chrome か Firefox を使ってください。Mac は Safari で問題ありません。</p>
 
@@ -36,7 +36,7 @@
 
 <p>あとは<a href="first.html">Pythonの初歩</a>を見ながらいろいろ試してください。</p>
 
-<h3>python コマンド（REPL）</h3>
+<h2>python コマンド（REPL）</h2>
 
 <p>以下ではパソコンに Python 3 が<a href="install.html">インストール</a>されていることを前提に説明します。Python 3 を起動するコマンドは <code>python3</code> だと仮定します（環境によっては <code>python</code> でよいかもしれません）。</p>
 
@@ -69,11 +69,11 @@ python3 --version
 <p>REPL（Read-Eval-Print Loop）は対話的にコードを実行することを指す語です。</p>
 </div>
 
-<h3>IDLE</h3>
+<h2>IDLE</h2>
 
 <p>オマケに付いている IDLE という IDE（統合開発環境）を起動すれば，上記「python コマンド」と同じように使えます。あまり使いやすくないかもしれません。</p>
 
-<h3>IPython</h3>
+<h2>IPython</h2>
 
 <p>IPython なら，もう少し対話的に（interactive に）Python を使えます。ターミナル（Windows であれば PowerShell など）に</p>
 
@@ -99,7 +99,7 @@ python3 --version
 
 <p><code>quit</code> または <code>exit</code> と打ち込めば終了します。</p>
 
-<h3>スクリプト</h3>
+<h2>スクリプト</h2>
 
 <p>Python プログラム，例えば</p>
 
@@ -165,7 +165,7 @@ print(sys.argv)
 
 <p>もし Python 2 で書かれたスクリプト <code>filename.py</code> があれば，コマンド <code>2to3 -w filename.py</code> で Python 3 の文法に書き直してくれます。オリジナルは <code>filename.py.bak</code> にリネームされます。詳しくはマニュアルの <a href="https://docs.python.org/3/library/2to3.html">2to3</a> 参照。</p>
 
-<h3>One-Liner</h3>
+<h2>One-Liner</h2>
 
 <p>ターミナルで1行だけの Python スクリプトを実行できます：</p>
 
@@ -174,7 +174,7 @@ print(sys.argv)
 4294967296
 </code></pre>
 
-<h3>Jupyter Notebook</h3>
+<h2>Jupyter Notebook</h2>
 
 <p><a href="https://jupyter.org">Jupyter Notebook</a>（ジュピター・ノートブック）はブラウザ上で使える Mathematica Notebook のような環境です。もともと Julia，Python，R などをサポートするということで Jupyter という名前になったようですが，今は40以上の言語に対応しています。もしインストールされていなかったなら，<code>pip install jupyter</code> でインストールできます。</p>
 
@@ -194,7 +194,15 @@ print(sys.argv)
 
 <p>拡張子 ipynb のファイルを GitHub にプッシュすれば，ドキュメントとコードと実行結果が公開できます。この方法によるドキュメント作成は GitHub 上で数式を表示するための便利な方法でもあります（Markdown 形式では数式はうまく表示できません）。</p>
 
-<h3>JupyterLab</h3>
+<p>次のようにいろいろなオプションを指定できます：</p>
+
+<pre>
+jupyter notebook --no-browser --no-mathjax --port=8888 &amp;
+jupyter notebook list
+jupyter notebook stop
+</pre>
+
+<h2>JupyterLab</h2>
 
 <p>Jupyter Notebook の新しい顔です。<code>pip install jupyterlab</code> で入ります。ターミナルに</p>
 
@@ -204,13 +212,13 @@ print(sys.argv)
 
 <p>と打てば立ち上がります。使い方は Jupyter Notebook と同様です。</p>
 
-<h3>Spyder</h3>
+<h2>Spyder</h2>
 
 <p><a href="https://www.spyder-ide.org">Spyder</a> は Anaconda に付いている IDE（統合開発環境）です。R の RStudio に似ています。</p>
 
 <p>Anaconda を入れなくても <code>pip install spyder</code> でインストールすることができます（詳しくは<a href="https://docs.spyder-ide.org/installation.html">こちら</a>参照）。Homebrew 環境なら /usr/local/bin/spyder3 という実行ファイルができますので，ターミナルで spyder3 と打ち込めば立ち上がります。</p>
 
-<h3>VS Code</h3>
+<h2>VS Code</h2>
 
 <p><a href="https://code.visualstudio.com">Visual Studio Code</a>（VS Code）を使う場合，まず最初に Extension ボタン（正方形が3+1個）をクリックして「Japanese」と入れ，Japanese Language Pack for ... を Install し，「Restart Now」のボタンを押して VS Code を再起動すると，メニューが日本語になります。「基本設定」→「配色テーマ」で自分好みの配色を選びます。</p>
 
@@ -228,7 +236,7 @@ print(sys.argv)
 <p>上記以外のVS Codeの拡張機能では，Markdown Preview Enhanced，LaTeX Workshopがお薦めです。</p>
 </div>
 
-<h3>Emacs 内で IPython を動かす</h3>
+<h2>Emacs 内で IPython を動かす</h2>
 
 <p>いろいろな方法があるようですが（<a href="https://www.emacswiki.org/emacs/PythonProgrammingInEmacs">Python Programming In Emacs</a> 参照），デフォルトの python.el で提供される Python モードでの方法を説明します。</p>
 
@@ -241,13 +249,15 @@ print(sys.argv)
 
 <p>拡張子 <code>py</code> のファイルを開くと，自動的に Python モードになります。まずは C-c C-p (run-python) で IPython プロセスを起動します（拡張子 <code>py</code> のファイルを開かなくても直接 M-x run-python でも起動できます）。バッファ全体を実行するには C-c C-c (python-shell-send-buffer)，選択したリージョンを実行するには C-c C-r (python-shell-send-region) とします。詳しくは，M-x help の次に m と打つと，モードのヘルプが現れます。</p>
 
-<h3>Emacs で EIN を動かす</h3>
+<h2>Emacs で EIN（アイン）を動かす</h2>
 
-<p><a href="https://github.com/millejoh/emacs-ipython-notebook">EIN -- Emacs IPython Notebook</a> は Emacs で Jupyter Notebook を動かします。インストールは melpa でできます。emacs.el に EIN 特有のことを書く必要はありません。</p>
+<p><a href="https://github.com/millejoh/emacs-ipython-notebook">EIN -- Emacs IPython Notebook</a> は Emacs 上の Jupyter Notebook クライアントです。<a href="https://github.com/tkf">Takafumi Arakaki</a> さんが開発し，<a href="https://github.com/millejoh">John Miller</a> さんがメンテナンスされています。</p>
 
-<p>あらかじめ ~/.mailcap に Mac なら <code>image/*; open -a Preview %s</code> のように画像ビューアを設定しておきます。</p>
+<p>インストールは melpa でできます。emacs.el に EIN 特有のことを書く必要はありません。</p>
 
-<p>起動は M-x ein:run するか .ipynb ファイルを開いて C-c C-o します。終了は M-x ein:stop です。</p>
+<p>あらかじめ ~/.mailcap に Mac なら <code>image/*; open -a Preview "%s"</code> のように画像ビューアを設定しておきます（プレビューの環境設定でウィンドウの背景を白に設定しておく必要があります）。</p>
+
+<p>起動は M-x ein:run するか .ipynb ファイルを開いて C-c C-o します。すでに起動している Jupyter サーバに接続するには M-x ein:login します（URLかポートを聞いてきますが，localhost:8888 で動いているなら 8888 と入れます）。終了は M-x ein:stop です。</p>
 
 <p>セル（<code>In [ ]:</code> の下）に何行かのコードを入力して M-RET すると，実行され，次のセルが挿入されます。C-c C-a で上にセルを挿入，C-c C-b で下にセルを挿入します。C-u C-c C-a で上にマークダウンを挿入，C-u C-c C-b で下にマークダウンを挿入します。C-c C-k でセルを消します。C-c ↑ や C-c ↓ でセルを上や下に移動します。</p>
 
@@ -257,7 +267,7 @@ print(sys.argv)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-29 20:37:30</time>
+Last modified: <time>2021-03-30 16:25:37</time>
 <!-- hhmts end -->
 </p>
 </body>

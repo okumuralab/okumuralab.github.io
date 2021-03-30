@@ -251,21 +251,15 @@ open -a Emacs.app
 
 <p><del>でEmacsを立ち上げる（export ... は .bashrc に書いておけばよい）。この場合，パスワードはEmacsのミニバッファではなくターミナルに入力する。ただ，この方法はSierraになってから不安定で，2回に1回くらいキーの取得に失敗しエコーバックされてしまう。</del></p>
 
-<p>Emacsのパッケージは一つずつ手で入れてもいいが，最近のEmacsにデフォルトで入っている <code>package</code> というパッケージを使って管理すると簡単である。次のように <code>init.el</code> に書き込んでおく：</p>
+<p>Emacsのパッケージは一つずつ手で入れてもいいが，<a href="https://melpa.org">melpa</a> を使うと楽。次のように <code>init.el</code> に書き込んでおく：</p>
 
 <pre>
 (require 'package)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
-(when (not package-archive-contents) (package-refresh-contents))
-
-(let ((default-directory "~/.emacs.d/elpa/"))
-  (normal-top-level-add-to-load-path '("."))
-  (normal-top-level-add-subdirs-to-load-path))
 </pre>
 
-<p>これでEmacsを再起動するか M-x eval-buffer する。次に M-x package-list-packages するとパッケージ一覧が表示されるので，必要なパッケージあるいは更新したいパッケージの上にカーソルを動かして i キーを打つ（<code>I</code> マークが付く）。次に x キーを打つと実際にインストールされる。</p>
+<p>これで M-x package-list-packages するとパッケージ一覧が表示されるので，必要なパッケージあるいは更新したいパッケージの上にカーソルを動かして i キーを打つ（<code>I</code> マークが付く）。次に x キーを打つと実際にインストールされる。</p>
 
 <p>Emacsからの子プロセスは必ずしもシェルの環境変数を受け継がない。受け継がせるにはEmacsをシェルから <code>open -a Emacs</code> で起動するか，あるいは <code>init.el</code> に次のように書いておく：</p>
 
@@ -520,7 +514,7 @@ Host *
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-29 17:35:05</time>
+Last modified: <time>2021-03-30 10:33:57</time>
 <!-- hhmts end -->
 </p>
 </footer>

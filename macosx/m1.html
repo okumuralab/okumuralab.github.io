@@ -16,7 +16,7 @@
 
 <h1>M1 Mac</h1>
 
-<h3>はじめに</h3>
+<h2>はじめに</h2>
 
 <p>2020-11-13 に Apple Store で注文した MacBook Air 16G/256G が 2020-11-29 に届いたのでさっそく設定。</p>
 
@@ -24,7 +24,7 @@
 
 <p>どちらもメモリ16Gにしたが，通常の用途には8Gで十分かも。SSDは満タンの半分程度で使うつもりで選ぶほうが安心らしいので，据置き用には外付けHDDをAPFSフォーマットして使う。</p>
 
-<h3>セットアップと一般的な設定</h3>
+<h2>セットアップと一般的な設定</h2>
 
 <p>他の Mac からコピーという手もあったが，ここはクリーンセットアップすることにする。Apple ID を設定したら iCloud から多くの設定を拾ってくれたので，たいした手間ではない。セットアップ中に「コンピュータアカウントを作成」でサジェストされるアカウント名（私の場合は okumuraharuhiko だった）は，普段使っているユーザ名（私の場合 okumura）に直す（後でも直せる）。</p>
 
@@ -56,7 +56,7 @@
   <li>Big Sur 11.2 になっても iPhone から M1 MacBook Air への Bluetooth テザリングがうまくいかない（M1 Mac mini ならできるので理由がわからない）。</li>
 </ul>
 
-<h3>ターミナル</h3>
+<h2>ターミナル</h2>
 
 <p>ターミナルを開き，試しに <code>uname -m</code> と打ち込むと arm64 と表示される。いったんターミナルを閉じて，Finder でターミナルを選択して「情報を見る」で「Rosettaを使用して開く」にチェックを付けると Rosetta がインストールされる（一般には任意の x86_64 なアプリを最初に起動したときに Rosetta がインストールされるのであろう）。Rosetta で開かれたターミナルに <code>uname -m</code> と打ち込むと x86_64 と表示される。今度は「Rosettaを使用して開く」をオフにしてターミナルを開き直して <code>uname -m</code> するとまた arm64 になるが，Rosetta がインストールされたので</p>
 
@@ -72,7 +72,7 @@ arch -x86_64 zsh
 
 <p>とすれば Rosetta で zsh が立ち上がる。x86_64 のコードを実行するにはこの状態で行う。.zshrc に <code>alias x86='arch -x86_64 zsh'</code> のようにエイリアスを作っておけば <code>x86</code> と入力するだけでこの状態になる。</p>
 
-<h3>シェル</h3>
+<h2>シェル</h2>
 
 <p>今まで bash を使っていたが，クリーンセットアップしたので zsh になった。とりあえずプロンプトを見やすくするために <code>~/.zshrc</code> に <code>PROMPT='%m:%~%# '</code> と書き込む。あるいは Rosetta 状態かどうかをプロンプトに含めてもよい：</p>
 
@@ -134,11 +134,11 @@ fi
 export PATH
 </pre>
 
-<h3>Command Line Tools</h3>
+<h2>Command Line Tools</h2>
 
 <p>コマンドラインで開発する場合，巨大な Xcode をインストールする必要はない。コマンドライン用の開発ツールは，何らかの開発用コマンド（gcc とか python3 とか）を実行しようとするとインストールを促される。より確実な方法は，ターミナルに <code>xcode-select --install</code> と打ち込むか，<a href="https://developer.apple.com/downloads">https://developer.apple.com/downloads</a> からダウンロードしてインストールする。OS を更新するとコマンドラインツールも再インストールが必要になることが多いので注意。</p>
 
-<h3>Homebrew</h3>
+<h2>Homebrew</h2>
 
 <p><a href="https://brew.sh/2021/02/05/homebrew-3.0.0/">Homebrew 3.0.0</a>:
 "Apple Silicon is now officially supported for installations in /opt/homebrew."</p>
@@ -154,7 +154,7 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <p>Rosetta で実行する Intel 版は通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを <code>uname -m</code> が x86_64 なターミナルに打ち込めばインストールできる。</p>
 
-<h3>Emacs 27</h3>
+<h2>Emacs 27</h2>
 
 <p><a href="https://emacsformacosx.com">Emacs for Mac OS X</a> にある 27.2-2 は arm64 対応のユニバーサルバイナリである。下の自分でビルドしたものと比べて，日本語入力中に画面表示がちらつくことがあるが，許容範囲内であろう。</p>
 
@@ -182,11 +182,20 @@ make install
 
 <p>ARM 版 Homebrew で <code>brew install emacs</code> でインストールされる emacs はターミナル版。<code>brew install --cask emacs</code> でインストールされるものは <a href="https://emacsformacosx.com">Emacs for Mac OS X</a> のもの。</p>
 
-<h3>Python</h3>
+<h2>Python</h2>
 
-<p>Apple のコマンドラインツールに入っている /usr/bin/python3 は universal binary な 3.8.2 である：</p>
+<h3>コマンドラインツールのPython</h3>
+
+<p>Apple のコマンドラインツールに入っている /usr/bin/python，/usr/bin/python3 は universal binary である：</p>
 
 <pre>
+% file /usr/bin/python
+/usr/bin/python: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64e:Mach-O 64-bit executable arm64e]
+/usr/bin/python (for architecture x86_64):	Mach-O 64-bit executable x86_64
+/usr/bin/python (for architecture arm64e):	Mach-O 64-bit executable arm64e
+% /usr/bin/python --version
+Python 2.7.16
+
 % file /usr/bin/python3
 /usr/bin/python3: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64e:Mach-O 64-bit executable arm64e]
 /usr/bin/python3 (for architecture x86_64):	Mach-O 64-bit executable x86_64
@@ -195,27 +204,57 @@ make install
 Python 3.8.2
 </pre>
 
-<p>これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば Apple Silicon に最適化された TensorFlow とその依存するパッケージ群（numpy など）が入る。TensorFlow Blog の <a href="https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html">Accelerating TensorFlow Performance on Mac</a> 参照。<a href="https://docs.python.org/3/tutorial/venv.html">venv</a> なので，bash 互換シェル（zsh でもよい）で <code>source ~/tensorflow_macos_venv/bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。pip で入れようとしてもコンパイルでエラーになる。強者用である。</p>
+<p>この arm64e 側を使うことは可能だが，現状では pip でライブラリを追加することは困難。</p>
 
-<p>本家 <a href="https://www.python.org">python.org</a> の Python が 3.9.1 から universal バイナリも experimental という括弧書きで提供されるようになった。ただし pip で簡単にパッケージを追加できる状況にないので，混乱しないためには通常の macOS 64-bit Intel installer でインストールし，Rosetta で使うのが簡単である。インストールすると zsh を使っている場合は <code>.zprofile</code> に PATH が追記されるので適宜修正する。</p>
+<h3>本家のPython 3.9</h3>
 
-<p>一方，<a href="https://github.com/conda-forge/miniforge">miniforge</a> を使えば主要ライブラリを含めて arm64 版がインストールできる（<a href="https://qiita.com/syoyo/items/6ad890c8a902d02d8c5a">こちら</a>参照）。うまくすれば Apple の TensorFlow と組み合わせることもできる（<a href="https://towardsdatascience.com/tensorflow-2-4-on-apple-silicon-m1-installation-under-conda-environment-ba6de962b3b8">TensorFlow 2.4 on Apple Silicon M1: installation under Conda environment</a> および <a href="https://towardsdatascience.com/benchmark-m1-vs-xeon-vs-core-i5-vs-k80-and-t4-e3802f27421c">Benchmark M1 vs Xeon vs Core i5 vs K80 and T4</a> 参照）。</p>
+<p>本家 <a href="https://www.python.org">python.org</a> の Python が 3.9.1 から universal バイナリも experimental という括弧書きで提供されるようになった。ただし現状では pip で簡単にパッケージを追加できる状況にないので，混乱しないためには通常の macOS 64-bit Intel installer でインストールし，Rosetta で使うのが簡単である。インストールすると zsh を使っている場合は <code>.zprofile</code> に PATH が追記されるので適宜修正する。</p>
 
-<p>miniforge は Homebrew で入れるのが簡単。<code>/opt/homebrew/bin/brew install miniforge</code> とすればよい。/opt/homebrew/Caskroom/miniforge 以下に入るので /opt/homebrew/Caskroom/miniforge/base/bin をPATHに加える。<code>conda update --all</code>，<code>conda list</code>，<code>conda install ...</code> のようにして管理する。パッケージは /opt/homebrew/Caskroom/miniforge/base/lib/python3.9/site-packages に入る。</p>
+<h3>miniforgeのPython 3.9</h3>
 
-<p>miniforge + Apple の TensorFlow は <a href="https://github.com/apple/tensorflow_macos/issues/153">Instructions to install TensorFlow in a Conda Environment</a> のようにすれば実現できる。以下では apple という名前の環境を作る：</p>
+<p><a href="https://github.com/conda-forge/miniforge">miniforge</a> を使えば主要ライブラリを含めて arm64 版がインストールできる。</p>
+
+<!-- <p>（<a href="https://qiita.com/syoyo/items/6ad890c8a902d02d8c5a">こちら</a>参照）。うまくすれば Apple の TensorFlow と組み合わせることもできる（<a href="https://towardsdatascience.com/tensorflow-2-4-on-apple-silicon-m1-installation-under-conda-environment-ba6de962b3b8">TensorFlow 2.4 on Apple Silicon M1: installation under Conda environment</a> および <a href="https://towardsdatascience.com/benchmark-m1-vs-xeon-vs-core-i5-vs-k80-and-t4-e3802f27421c">Benchmark M1 vs Xeon vs Core i5 vs K80 and T4</a> 参照）。</p> -->
+
+<p>miniforge は単体で入れることもできるが，Homebrew で入れるには <code>/opt/homebrew/bin/brew install miniforge</code> とすればよい。/opt/homebrew/Caskroom/miniforge 以下に入るので /opt/homebrew/Caskroom/miniforge/base/bin をPATHに加える。<code>conda update --all</code>，<code>conda list</code>，<code>conda install ...</code> のようにして管理する。パッケージは /opt/homebrew/Caskroom/miniforge/base/lib/python3.9/site-packages に入る。</p>
+
+<p><a href="https://pytorch.org">PyTorch</a> は miniforge の Python 3.9 に普通にインストールできるようだ。次の TensorFlow と同様の Apple Silicon への最適化は<a href="https://github.com/pytorch/pytorch/issues/47702">要望</a>はあるがまだのようだ。</p>
+
+<pre>
+conda install pytorch torchvision  # torchaudio はまだダメ
+</pre>
+
+<!--
+<p>これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば Apple Silicon に最適化された TensorFlow とその依存するパッケージ群（numpy など）が入る。<a href="https://docs.python.org/3/tutorial/venv.html">venv</a> なので，bash 互換シェル（zsh でもよい）で <code>source ~/tensorflow_macos_venv/bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。pip で入れようとしてもコンパイルでエラーになる。強者用である。</p>
+-->
+
+<h3>miniforgeのPython 3.8とAppleのTensorFlow</h3>
+
+<p>Apple の <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> は Apple Silicon に最適化されている（TensorFlow Blog の <a href="https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html">Accelerating TensorFlow Performance on Mac</a> 参照）。<a href="https://github.com/apple/tensorflow_macos/issues/153">Instructions to install TensorFlow in a Conda Environment</a> のようにすれば miniforge の Python 3.8 環境にインストールできる。以下では apple という名前の環境を作る：</p>
 
 <pre>
 wget -N https://raw.githubusercontent.com/mwidjaja1/DSOnMacARM/main/environment.yml
 conda env create --file=environment.yml --name=apple
 conda init zsh
-# .zshrc が書き変わるのでzshを再起動 (. ~/.zshrc)
-# プロンプトの先頭に (base) が付く
+</pre>
+
+<p><code>.zshrc</code> が書き変わるのでzshを再起動するか <code>. ~/.zshrc</code> と打ち込む。プロンプトの先頭に <code>(base)</code> が付くようになる。</p>
+
+<pre>
 conda activate apple
+</pre>
+
+<p>とすれば新しい環境に移行する（プロンプトの先頭が <code>(apple)</code> になる）。この状態で Apple の TensorFlow をインストールする。</p>
+
+<pre>
 pip install --upgrade --force --no-dependencies \
     https://github.com/apple/tensorflow_macos/releases/download/v0.1alpha3/tensorflow_macos-0.1a3-cp38-cp38-macosx_11_0_arm64.whl
     https://github.com/apple/tensorflow_macos/releases/download/v0.1alpha3/tensorflow_addons_macos-0.1a3-cp38-cp38-macosx_11_0_arm64.whl
+</pre>
 
+<p>うまくインストールできたか IPython で試してみる：</p>
+
+<pre>
 ipython
 
 In [1]: import tensorflow as tf
@@ -224,20 +263,15 @@ In [2]: tf.__version__
 Out[2]: '2.4.0-rc0'
 
 In [3]: quit
-conda deactivate
 </pre>
 
-<p><a href="https://pytorch.org">PyTorch</a> は miniforge の Python 3.9 に普通にインストールできるようだ。TensorflowのようなM1への最適化は<a href="https://github.com/pytorch/pytorch/issues/47702">要望</a>はあるがまだのようだ。</p>
+<p><code>conda deactivate</code> とすれば元の <code>(base)</code> 環境に戻る。</p>
 
-<pre>
-conda install pytorch torchvision  # torchaudio はまだダメ
-</pre>
-
-<h3>R</h3>
+<h2>R</h2>
 
 <p><a href="https://mac.r-project.org">R for macOS Developers</a> や <a href="https://rud.is/b/2021/02/07/fully-native-m1-apple-silicon-r-setup/">Fully Native M1/Apple Silicon R Setup</a> 参照。正式版は R 4.1.0 以降とのこと。</p>
 
-<h3>TeX</h3>
+<h2>TeX</h2>
 
 <p><a href="https://tug.org/texlive/pretest.html">TeX Live 2021 pretest</a> が出た。Universal バイナリが含まれているようだ。<a href="http://www.tug.org/texlive/">TeX Live</a> 2021は4月1日に出るとのことなので，待とう。以下は古い情報。</p>
 
@@ -260,11 +294,11 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
   <li>Mac mini (Late 2014) 8GB 22.514秒</li>
 </ul>
 
-<h3>VS Code</h3>
+<h2>VS Code</h2>
 
 <p><a href="https://code.visualstudio.com">VS Code</a> はデフォルトで M1 Mac に対応した。</p>
 
-<h3>X Window System</h3>
+<h2>X Window System</h2>
 
 <p><a href="https://www.xquartz.org">XQuartz</a> は 2.8.0 beta1 以降で Apple Silicon をサポート。</p>
 
@@ -284,7 +318,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-29 14:05:50</time>
+Last modified: <time>2021-03-30 14:20:52</time>
 <!-- hhmts end -->
 </p>
 </footer>
