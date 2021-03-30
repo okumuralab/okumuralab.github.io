@@ -20,13 +20,37 @@
 
 <figure><img src="img/EIN.png" alt="EIN"></figure>
 
-<p>インストールは melpa でできます。emacs.el に EIN 特有のことを書く必要はありません。</p>
+<p>インストールは melpa でできます。具体的には，~/.emacs.d/init.el に</p>
 
-<p>あらかじめ ~/.mailcap に Mac なら <code>image/*; open -a Preview "%s"</code> のように画像ビューアを設定しておきます（プレビューの環境設定でウィンドウの背景を白に設定しておく必要があります）。設定により画像をインライン表示することもできます。</p>
+<pre>
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+</pre>
 
-<p>起動は M-x ein:run するか .ipynb ファイルを開いて C-c C-o します。すでに起動している Jupyter サーバに接続するには M-x ein:login します（URLかポートを聞いてきますが，localhost:8888 で動いているなら 8888 と入れます）。終了は M-x ein:stop です。</p>
+<p>と書いて Emacs を再起動し（あるいは上の3行を評価し），M-x package-list-packages して表示されるパッケージ一覧の ein の上にカーソルを動かして i キーを打ち（<code>I</code> マークが付く），x キーを打つと実際にインストールされます。</p>
+
+<p>あらかじめ ~/.mailcap に Mac なら <code>image/*; open -a Preview "%s"</code> のように画像ビューアを設定しておきます（プレビューの環境設定でウィンドウの背景を白に設定します）。</p>
+
+<p>起動は M-x ein:run するか .ipynb ファイルを開いて C-c C-o します。終了は M-x ein:stop です。</p>
 
 <p>セル（<code>In [ ]:</code> の下）に何行かのコードを入力して M-RET すると，実行され，次のセルが挿入されます。C-c C-a で上にセルを挿入，C-c C-b で下にセルを挿入します。C-u C-c C-a で上にマークダウンを挿入，C-u C-c C-b で下にマークダウンを挿入します。C-c C-k でセルを消します。C-c ↑ や C-c ↓ でセルを上や下に移動します。</p>
+
+<p>画像はデフォルトでは外部ビューアで表示しますが，インライン表示するには M-x customize-group RET ein と打ち，▷ Ein Output Area Inlined Images の先頭で RET し，TOGGLE を押して，ページ先頭の Apply and Save を押します。</p>
+
+<p>別の起動のしかたとして，ターミナルで作業ディレクトリに移動して，好きな Python の venv を設定し，</p>
+
+<pre>
+jupyter notebook --no-browser --no-mathjax &amp;
+</pre>
+
+<p>と打ち込んで Jupyter サーバを起動してから，Emacs 側で M-x ein:login します。URL かポートを聞いてきますので，デフォルトでは 8888 と入れます。Emacs 側で EIN を終了したら，ターミナルで</p>
+
+<pre>
+jupyter notebook stop
+</pre>
+
+<p>しておきます。</p>
 
 <hr>
 
@@ -34,7 +58,7 @@
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-30 20:51:56</time>
+Last modified: <time>2021-03-30 21:18:09</time>
 <!-- hhmts end -->
 </p>
 </body>
