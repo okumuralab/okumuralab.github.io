@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>EIN（アイン）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>EIN（アイン）</h1>
+
+<p><a href="https://github.com/millejoh/emacs-ipython-notebook">EIN -- Emacs IPython Notebook</a> は Emacs 上の Jupyter Notebook クライアントです。<a href="https://github.com/tkf">Takafumi Arakaki</a> さんが開発し，<a href="https://github.com/millejoh">John Miller</a> さんがメンテナンスされています。</p>
+
+<figure><img src="img/EIN.png" alt="EIN"></figure>
+
+<p>インストールは melpa でできます。emacs.el に EIN 特有のことを書く必要はありません。</p>
+
+<p>あらかじめ ~/.mailcap に Mac なら <code>image/*; open -a Preview "%s"</code> のように画像ビューアを設定しておきます（プレビューの環境設定でウィンドウの背景を白に設定しておく必要があります）。設定により画像をインライン表示することもできます。</p>
+
+<p>起動は M-x ein:run するか .ipynb ファイルを開いて C-c C-o します。すでに起動している Jupyter サーバに接続するには M-x ein:login します（URLかポートを聞いてきますが，localhost:8888 で動いているなら 8888 と入れます）。終了は M-x ein:stop です。</p>
+
+<p>セル（<code>In [ ]:</code> の下）に何行かのコードを入力して M-RET すると，実行され，次のセルが挿入されます。C-c C-a で上にセルを挿入，C-c C-b で下にセルを挿入します。C-u C-c C-a で上にマークダウンを挿入，C-u C-c C-b で下にマークダウンを挿入します。C-c C-k でセルを消します。C-c ↑ や C-c ↓ でセルを上や下に移動します。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-03-30 20:51:56</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
