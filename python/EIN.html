@@ -54,13 +54,35 @@ jupyter notebook stop
 
 <p>しておきます。</p>
 
+<p>Jupyter サーバは自マシンでなくてもかまいません。他のマシンにログインして</p>
+
+<pre>
+jupyter notebook --ip='*' --no-browser --no-mathjax &amp;
+</pre>
+
+<p>のようにして http://ホスト名:8888/?token=... でアクセスすることもできます。他人にアクセスしてもらうときは，下手をすると Jupyter サーバを起動した人の権限で何でもできてしまいますので，十分注意する必要があります。</p>
+
+<p>あるいは</p>
+
+<pre>
+ssh -L 8888:localhost:8888 hostname
+</pre>
+
+<p>で他マシンにログインして</p>
+
+<pre>
+jupyter notebook --no-browser --no-mathjax &amp;
+</pre>
+
+<p>してから M-x ein:login で 8888 と打つという手もあります。ssh トンネルを通るので暗号化されます。ポートを変えれば複数のサーバを同時に使うこともできます（ein の作業ディレクトリは別にする必要があります）。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-31 10:13:26</time>
+Last modified: <time>2021-03-31 21:32:11</time>
 <!-- hhmts end -->
 </p>
 </body>
