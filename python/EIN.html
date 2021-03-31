@@ -32,19 +32,21 @@
 
 <p>あらかじめ ~/.mailcap というファイルを作成し，Mac なら <code>image/*; open -a Preview "%s"</code> のように書き込んで画像ビューアとして「プレビュー」を設定します。ついでに「プレビュー」の環境設定でウィンドウの背景を白に設定します。</p>
 
-<p>起動は M-x ein:run するか .ipynb ファイルを開いて C-c C-o します。終了は M-x ein:stop です。</p>
+<p>起動は M-x ein:run して，[New Notebook] の上で RET します（Enter キーを押します）。デフォルトでは Untitled.ipynb というノートブックが作成されますが，C-x C-w でリネームできます。ときどき C-x C-s で保存します。別の方法として，既存の .ipynb ファイルを開いて C-c C-o します。終了は M-x ein:stop です。</p>
 
-<p>セル（<code>In [ ]:</code> の下）に何行かのコードを入力して M-RET すると，実行され，次のセルが挿入されます。C-c C-a で上にセルを挿入，C-c C-b で下にセルを挿入します。C-u C-c C-a で上にマークダウンを挿入，C-u C-c C-b で下にマークダウンを挿入します。C-c C-k でセルを消します。C-c ↑ や C-c ↓ でセルを上や下に移動します。</p>
+<p>セル（<code>In [ ]:</code> の下）に何行かのコードを入力して M-RET すると，実行され，次のセルに移動または新しいセルが挿入されます。C-c C-a で上にセルを挿入，C-c C-b で下にセルを挿入します。C-u C-c C-a で上にマークダウンを挿入，C-u C-c C-b で下にマークダウンを挿入します。C-c C-k でセルを消します。C-c ↑ や C-c ↓ でセルを上や下に移動します。</p>
 
-<p>画像はデフォルトでは外部ビューアで表示しますが，インライン表示するには M-x customize-group RET ein と打ち，▷ Ein Output Area Inlined Images の先頭で RET し，TOGGLE を押して，ページ先頭の Apply and Save を押します。</p>
+<p>長い出力があると見通しが悪くなるので，出力の上で C-c C-e して出力を隠すことができます。もう一度 C-c C-e すると現れます。</p>
 
-<p>別の起動のしかたとして，ターミナルで作業ディレクトリに移動して，好きな Python の venv を設定し，</p>
+<p>画像はデフォルトでは外部ビューアで表示しますが，インライン表示するには M-x customize-group RET ein と打ち，▷ Ein Output Area Inlined Images の先頭で RET し，Toggle を押してその右を on にし，ページ先頭の Apply and Save を押します。こうすることによって ~/.emacs.d/init.el の <code>(custom-set-variables ...)</code> の中に <code>'(ein:output-area-inlined-images t)</code> が挿入されますが，手で挿入すると間違えやすいので上のような手順が推奨です。</p>
+
+<p>別の起動のしかたとして，ターミナルで作業ディレクトリに移動して，好きな Python の環境で例えば</p>
 
 <pre>
-jupyter notebook --no-browser --no-mathjax &amp;
+jupyter notebook --no-browser --no-mathjax --port=8888 &amp;
 </pre>
 
-<p>と打ち込んで Jupyter サーバを起動してから，Emacs 側で M-x ein:login します。URL かポートを聞いてきますので，デフォルトでは 8888 と入れます。Emacs 側で EIN を終了したら，ターミナルで</p>
+<p>と打ち込んで Jupyter サーバを起動してから，Emacs 側で M-x ein:login します。ポート番号は 8888 がデフォルトです。EIN を開くときに URL かポートを聞いてきますので，上で指定したポート番号を入れます。Emacs 側で EIN を終了したら，ターミナルで</p>
 
 <pre>
 jupyter notebook stop
@@ -58,7 +60,7 @@ jupyter notebook stop
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-30 21:29:51</time>
+Last modified: <time>2021-03-31 10:13:26</time>
 <!-- hhmts end -->
 </p>
 </body>
