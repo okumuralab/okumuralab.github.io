@@ -1,8 +1,10 @@
+#! /usr/bin/env python3
+
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 
-df = pd.read_csv("../data/covid-mieu.csv", parse_dates=['date'])
+df = pd.read_csv("../data/COVID-mieu.csv", parse_dates=['date'])
 
 # df['students'].sum() # 65
 # df['others'].sum()   #  4

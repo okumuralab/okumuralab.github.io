@@ -67,7 +67,7 @@ jupyter notebook --ip='*' --no-browser --no-mathjax &amp;
 <p>あるいは</p>
 
 <pre>
-ssh -L 8888:localhost:8888 hostname
+ssh -L 8888:hostname:8888 hostname
 </pre>
 
 <p>で他マシンにログインして</p>
@@ -76,7 +76,7 @@ ssh -L 8888:localhost:8888 hostname
 jupyter notebook --no-browser --no-mathjax &amp;
 </pre>
 
-<p>してから M-x ein:login で 8888 と打つという手もあります。ssh トンネルを通るので暗号化されます。ポートを変えれば複数のサーバを同時に使うこともできます（ein の作業ディレクトリは別にする必要があります）。</p>
+<p>してから M-x ein:login で 8888 と打つという手もあります。ssh トンネルを通るので暗号化されます。ポートを変えれば複数のサーバを同時に使うこともできます。</p>
 
 <hr>
 
@@ -84,7 +84,7 @@ jupyter notebook --no-browser --no-mathjax &amp;
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-01 15:23:40</time>
+Last modified: <time>2021-04-01 17:48:37</time>
 <!-- hhmts end -->
 </p>
 </body>
