@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 
-df = pd.read_csv("covid-mieu.csv", parse_dates=['date'])
+df = pd.read_csv("../data/covid-mieu.csv", parse_dates=['date'])
 
 # df['students'].sum() # 65
 # df['others'].sum()   #  4
@@ -21,4 +21,4 @@ for x in ['others', 'students']:
            label=x)
     bottom += df[x]
 ax.legend()
-plt.savefig('covid-mieu.svg', bbox_inches="tight")
+plt.savefig('../img/COVID-mieu.svg', bbox_inches="tight")
