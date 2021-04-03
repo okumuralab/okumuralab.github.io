@@ -18,8 +18,6 @@
 
 <p><a href="https://www.tensorflow.org/">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。</p>
 
-<p>TensorFlow 2.2.0 が出た。Python 3.8 でも大丈夫。</p>
-
 <pre>
 <code>pip install tensorflow
 </code></pre>
@@ -29,7 +27,7 @@
 <p><code>tf.keras</code> を使う上では TensorFlow 1 系 と 2 系で見かけ上の違いはほぼない。</p>
 
 <div class="note">
-<p>TensorFlow 2 で 1.x のコードを走らるには</p>
+<p>TensorFlow 2 で 1.x のコードを走らせるには</p>
 <pre>
 <code>import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
@@ -45,14 +43,6 @@ tf.disable_v2_behavior()
 <p>と打ち込む。<code>dir/</code> が元のディレクトリ，<code>dir2/</code> は新しく作られるディレクトリ（あらかじめ作成しておいてはいけない）。必ずしもうまくいくとは限らない。</p>
 </div>
 
-<div class="note">
-<p>Google Colab は現時点ではまだ 1.14.0 である。2.x を使うには，インポートの前に</p>
-<pre>
-<code>%tensorflow_version 2.x
-</code></pre>
-<p>と打ち込むようだ。</p>
-</div>
-
 <p>インポートする：</p>
 
 <pre>
@@ -63,10 +53,10 @@ tf.disable_v2_behavior()
 
 <pre>
 <code>In [ ]: tf.__version__
-Out[ ]: '2.2.0'
+Out[ ]: '2.4.0-rc0'
 
 In [ ]: tf.keras.__version__
-Out[ ]: '2.3.0-tf'
+Out[ ]: '2.4.0'
 </code></pre>
 
 <p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="mnist.html">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
@@ -78,8 +68,7 @@ Out[ ]: '2.3.0-tf'
 <p>ピクセルは0〜255の整数値だが，0〜1の実数に変換する：</p>
 
 <pre>
-<code>x_train = x_train / 255.0
-x_test  = x_test  / 255.0
+<code>x_train, x_test = x_train / 255.0, x_test / 255.0
 </code></pre>
 
 <p>ごくごく簡単なモデルを定義する：</p>
@@ -89,11 +78,13 @@ x_test  = x_test  / 255.0
   tf.keras.layers.Flatten(input_shape=(28, 28)),
   tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Dropout(0.2),
-  tf.keras.layers.Dense(10, activation='softmax')
+  tf.keras.layers.Dense(10)
 ])
 
+loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+
 model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
+              loss=loss_fn,
               metrics=['accuracy'])
 </code></pre>
 
@@ -114,7 +105,7 @@ model.compile(optimizer='adam',
 <p>予測は次のようにして求められる：</p>
 
 <pre>
-<code>y_pred = np.argmax(model.predict(x_test), axis=-1)
+<code>y_pred = tf.argmax(model.predict(x_test), axis=-1)
 </code></pre>
 
 <p>混同行列を求める：</p>
@@ -158,7 +149,7 @@ array([[ 970,    0,    2,    0,    1,    0,    4,    1,    2,    0],
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-05-28 20:29:09</time>
+Last modified: <time>2021-04-03 16:32:36</time>
 <!-- hhmts end -->
 </p>
 </body>
