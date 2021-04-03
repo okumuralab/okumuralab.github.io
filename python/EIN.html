@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <title>EIN（アイン）</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -62,7 +62,7 @@ jupyter notebook stop
 jupyter notebook --ip='*' --no-browser --no-mathjax &amp;
 </pre>
 
-<p>のようにして http://ホスト名:8888/?token=... でアクセスすることもできます。他人にアクセスしてもらうときは，下手をすると Jupyter サーバを起動した人の権限で何でもできてしまいますので，十分注意する必要があります。</p>
+<p>のようにして http://ホスト名:8888/?token=... でアクセスすることもできます。デフォルトは http なので注意。さらに，他人にアクセスしてもらうときは，Jupyter サーバを起動した人の権限で何でもできてしまいますので，十分注意する必要があります。</p>
 
 <p>あるいは</p>
 
@@ -76,7 +76,9 @@ ssh -L 8888:hostname:8888 hostname
 jupyter notebook --no-browser --no-mathjax &amp;
 </pre>
 
-<p>してから M-x ein:login で 8888 と打つという手もあります。ssh トンネルを通るので暗号化されます。ポートを変えれば複数のサーバを同時に使うこともできます。</p>
+<p>してから M-x ein:login で 8888 と打つという手もあります。ssh トンネルを通るので暗号化されます。ポートを変えれば複数のサーバを同時に使うこともできます。EIN がパスワードを聞いてくるときは，Jupyter サーバを立ち上げたときに表示されるトークン文字列を入力します。</p>
+
+<p>ヘルプの別窓表示が壊れているようです。とりあえず <code>?hoge</code> でなく <code>help(hoge)</code> を使えば大丈夫のようです。</p>
 
 <hr>
 
@@ -84,7 +86,7 @@ jupyter notebook --no-browser --no-mathjax &amp;
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-01 17:48:37</time>
+Last modified: <time>2021-04-03 11:14:40</time>
 <!-- hhmts end -->
 </p>
 </body>
