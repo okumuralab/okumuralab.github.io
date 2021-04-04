@@ -65,7 +65,7 @@ Out[ ]: '2.4.0'
 <code>(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 </code></pre>
 
-<p>ピクセルは0〜255の整数値だが，0〜1の実数に変換する：</p>
+<p>初回はネットからダウンロードするが次回からは ~/.keras 以下のキャッシュ（11Mバイトくらい）を使う。ピクセルは0〜255の整数値だが，0〜1の実数に変換する：</p>
 
 <pre>
 <code>x_train, x_test = x_train / 255.0, x_test / 255.0
@@ -88,7 +88,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 </code></pre>
 
-<p>いよいよフィット（重い）：</p>
+<p>いよいよフィット（重い。といってもM1 Macなら数秒）：</p>
 
 <pre>
 <code>model.fit(x_train, y_train, epochs=5)
@@ -105,7 +105,7 @@ model.compile(optimizer='adam',
 <p>予測は次のようにして求められる：</p>
 
 <pre>
-<code>y_pred = tf.argmax(model.predict(x_test), axis=-1)
+<code>y_pred = tf.argmax(model.predict(x_test), axis=-1).numpy()
 </code></pre>
 
 <p>混同行列を求める：</p>
@@ -149,7 +149,7 @@ array([[ 970,    0,    2,    0,    1,    0,    4,    1,    2,    0],
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-03 16:32:36</time>
+Last modified: <time>2021-04-03 19:56:11</time>
 <!-- hhmts end -->
 </p>
 </body>
