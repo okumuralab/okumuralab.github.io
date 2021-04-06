@@ -20,7 +20,7 @@ bottom = 0
 for x in ['others', 'students']:
     ax.bar(df['date'], df[x], width=1, bottom=bottom,
            align='edge', edgecolor="black", linewidth=0.5,
-           label=x)
+           label=x + ' (' + str(df[x].sum()) + ')')
     bottom += df[x]
 ax.legend()
 plt.savefig('../img/COVID-mieu.svg', bbox_inches="tight")
