@@ -18,6 +18,10 @@
 
 <p>三重大学の学生・教職員のCOVID-19の感染確認状況は<a href="https://www.mie-u.ac.jp/COVID-19/">新型コロナウイルス感染症への対応について</a>で公開されている。個々のケースのより詳しい情報は<a href="https://www.pref.mie.lg.jp/covid19.shtm">県のサイト</a>で公開されている（リンクがたどりにくいが2021年4月は<a href="https://www.pref.mie.lg.jp/YAKUMUS/HP/m0068000066_00040.htm">こちら</a>）。感染確認数を CSV にしたものを <a href="data/COVID-mieu.csv">COVID-mieu.csv</a> として置いておく。項目は日付・学生の感染確認数・教職員の感染確認数・備考・情報源である。</p>
 
+<div class="note">
+<p>大学の41報・42報がどちらも2021-04-06で1件ずつである。重複なのか合わせて2人なのか不明。下のグラフは合わせて2人と解釈して描いた。</p>
+</div>
+
 <p>教職員（青）・学生（オレンジ）の積み重ね棒グラフを描くためのPythonプログラム（実際には両者が重ならないので積み重ねになっていない）：</p>
 
 <pre class="cell">
@@ -26,6 +30,7 @@ import matplotlib.dates as mdates
 import pandas as pd
 
 df = pd.read_csv("COVID-mieu.csv", parse_dates=['date'])
+df = df.groupby('date', as_index=False).sum() # 同じ日の複数の報告は合算
 
 fig, ax = plt.subplots(figsize=(10, 3))
 locator = mdates.AutoDateLocator()
@@ -66,7 +71,7 @@ plt.savefig('COVID-mieu.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-06 13:01:33</time>
+Last modified: <time>2021-04-09 14:47:51</time>
 <!-- hhmts end -->
 </p>
 </body>

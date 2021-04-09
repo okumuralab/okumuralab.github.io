@@ -5,6 +5,7 @@ import matplotlib.dates as mdates
 import pandas as pd
 
 df = pd.read_csv("../data/COVID-mieu.csv", parse_dates=['date'])
+df = df.groupby('date', as_index=False).sum()
 
 # df['students'].sum() # 65
 # df['others'].sum()   #  4
@@ -13,7 +14,7 @@ fig, ax = plt.subplots(figsize=(10, 3))
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 
-ax.clear()
+# ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 bottom = 0
