@@ -3,6 +3,7 @@
 import json
 import numpy as np
 import matplotlib.pyplot as plt
+from statsmodels.stats.proportion import proportion_confint
 
 with open("data.json") as f:
     data = json.load(f)
@@ -64,3 +65,32 @@ plt.figtext(0.9, 0.89,
             data["updated"]["last"]["ja"] + " " + data["updated"]["demography"]["ja"],
             horizontalalignment='right')
 plt.savefig("../img/COVID-toyokeizai-2.svg", bbox_inches="tight")
+
+plt.clf()
+plt.scatter(carriers / population, deaths / carriers)
+for x, y, s in zip(carriers / population, deaths / carriers, kenmei):
+    plt.text(x, y, s)
+plt.xlabel("人口1000人あたり感染者数")
+plt.ylabel("死者数/感染者数")
+plt.figtext(0.9, 0.89,
+            data["updated"]["last"]["ja"] + " " + data["updated"]["demography"]["ja"],
+            horizontalalignment='right')
+plt.savefig("../img/COVID-toyokeizai-3.svg", bbox_inches="tight")
+
+ci0, ci1 = proportion_confint(deaths, carriers, method='beta')
+
+plt.clf()
+plt.scatter(carriers / population, deaths / carriers)
+y0, y1 = plt.ylim()
+plt.errorbar(carriers / population, deaths / carriers,
+              [deaths / carriers - ci0, ci1 - deaths / carriers],
+              fmt="o", capsize=5)
+plt.ylim(y0, y1)
+for x, y, s in zip(carriers / population, deaths / carriers, kenmei):
+    plt.text(x, y, s)
+plt.xlabel("人口1000人あたり感染者数")
+plt.ylabel("死者数/感染者数")
+plt.figtext(0.9, 0.89,
+            data["updated"]["last"]["ja"] + " " + data["updated"]["demography"]["ja"],
+            horizontalalignment='right')
+plt.savefig("../img/COVID-toyokeizai-4.svg", bbox_inches="tight")

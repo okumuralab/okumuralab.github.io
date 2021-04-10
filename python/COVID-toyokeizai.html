@@ -143,13 +143,46 @@ plt.ylabel("人口1000人あたり死者数")
 
 <figure><img src="img/COVID-toyokeizai-2.svg", alt="都道府県別のCOVID-19感染者数と死者数"></figure>
 
+<p>これでもまだ横軸・縦軸の相関が強いので，次のようにしてみる：</p>
+
+<pre class="cell">
+plt.scatter(carriers / population, deaths / carriers)
+for x, y, s in zip(carriers / population, deaths / carriers, kenmei):
+    plt.text(x, y, s)
+plt.xlabel("人口1000人あたり感染者数")
+plt.ylabel("死者数/感染者数")
+</pre>
+
+<figure><img src="img/COVID-toyokeizai-3.svg", alt="都道府県別のCOVID-19感染者数と死者数"></figure>
+
+<p>左ほどばらついているように見えるので，エラーバー（Clopper-Pearson 95%信頼区間）を描いてみる。エラーバーなしのときのyの範囲を覚えておき，それと同じ範囲を描くようにした：</p>
+
+<pre class="cell">
+from statsmodels.stats.proportion import proportion_confint
+
+ci0, ci1 = proportion_confint(deaths, carriers, method='beta')
+
+plt.scatter(carriers / population, deaths / carriers)
+y0, y1 = plt.ylim()
+plt.errorbar(carriers / population, deaths / carriers,
+             [deaths / carriers - ci0, ci1 - deaths / carriers],
+             fmt="o", capsize=5)
+plt.ylim(y0, y1)
+for x, y, s in zip(carriers / population, deaths / carriers, kenmei):
+    plt.text(x, y, s)
+plt.xlabel("人口1000人あたり感染者数")
+plt.ylabel("死者数/感染者数")
+</pre>
+
+<figure><img src="img/COVID-toyokeizai-4.svg", alt="都道府県別のCOVID-19感染者数と死者数"></figure>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-10 14:22:39</time>
+Last modified: <time>2021-04-10 20:58:16</time>
 <!-- hhmts end -->
 </p>
 </body>
