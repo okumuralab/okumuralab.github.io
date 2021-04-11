@@ -16,7 +16,7 @@ import time
 
 # url = 'https://www.pref.mie.lg.jp/common/content/000896967.csv'
 URL = "https://www.pref.mie.lg.jp/common/content/000948322.csv"
-# os.system("wget -N " + URL)
+os.system("wget -N " + URL)
 p = os.stat("000948322.csv")
 now = f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}'
 df = pd.read_csv("000948322.csv", encoding='cp932', parse_dates=['日付'])
