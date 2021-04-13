@@ -18,6 +18,10 @@
 
 <p><a href="https://poppler.freedesktop.org">Poppler</a> はPDF操作のためのライブラリで，これをPythonから使えるようにしたのが <a href="https://pypi.org/project/python-poppler/">python-poppler</a> ライブラリである。<code>pip install python-poppler</code> で入る。</p>
 
+<div class="note">
+<p>conda の場合は <code>brew install poppler cmake</code>，<code>conda install poppler</code>，<code>pip install --no-deps python-poppler</code> で入った。</p>
+</div>
+
 <p>ローカルのPDFファイルを読んでテキスト化する：</p>
 
 <pre class="cell">
@@ -51,7 +55,7 @@ for i in range(pdf.pages):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-06 13:58:22</time>
+Last modified: <time>2021-04-13 20:05:45</time>
 <!-- hhmts end -->
 </p>
 </footer>
