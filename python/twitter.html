@@ -62,7 +62,7 @@ home = api.GetHomeTimeline() # ホームタイムラインを取得（デフォ�
 
 <pre>
 <code>api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
-               media="hoge.jpg",  # 添付画像ファイル
+               media="hoge.jpg",  # 添付画像ファイル（複数あればリスト）
                in_reply_to_status_id=1140050903828819970, # リプライ先のツイートID
                auto_populate_reply_metadata=True, # リプライ先の @... を自動挿入
                attachment_url="https://twitter.com/.../status/...", # 引用リツイート
@@ -220,7 +220,7 @@ plt.savefig('hist.png', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-08-01 21:57:04</time>
+Last modified: <time>2021-04-12 20:09:33</time>
 <!-- hhmts end -->
 </p>
 </body>
