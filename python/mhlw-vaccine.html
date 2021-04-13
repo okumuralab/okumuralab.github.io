@@ -16,7 +16,9 @@
 
 <h1>新型コロナワクチンの接種実績</h1>
 
-<p>厚労省<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html">新型コロナワクチンの接種実績</a>の表をすクレープしてグラフにする。</p>
+<figure><img src="img/mhlw-vaccine.svg" alt="新型コロナワクチンの接種実績"></figure>
+
+<p>このグラフは，もともと厚労省<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html">新型コロナワクチンの接種実績</a>の表をスクレープしてグラフにしていた：</p>
 
 <pre class="cell">
 import matplotlib.pyplot as plt
@@ -35,7 +37,7 @@ plt.legend()
 plt.xticks(rotation=20)
 </pre>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/mhlw-vaccine.svg" alt="新型コロナワクチンの接種実績"></figure>
+<p>ところが2021-04-09以降は更新されなくなったので，とりあえず首相官邸の<a href="https://www.kantei.go.jp/jp/headline/kansensho/vaccine.html">新型コロナワクチンについて</a>から手動でデータを取ることにした。こちらでは累積だけ発表されるようなので，<a href="data/vaccines.csv">こちら</a>に累積のデータを置いておくことにする。</p>
 
 <hr>
 
@@ -43,7 +45,7 @@ plt.xticks(rotation=20)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-29 09:31:14</time>
+Last modified: <time>2021-04-13 12:13:11</time>
 <!-- hhmts end -->
 </p>
 </footer>
