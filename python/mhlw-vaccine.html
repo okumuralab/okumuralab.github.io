@@ -37,7 +37,20 @@ plt.legend()
 plt.xticks(rotation=20)
 </pre>
 
-<p>ところが2021-04-09以降は更新されなくなったので，とりあえず首相官邸の<a href="https://www.kantei.go.jp/jp/headline/kansensho/vaccine.html">新型コロナワクチンについて</a>から手動でデータを取ることにした。こちらでは累積だけ発表されるようなので，<a href="data/vaccines.csv">こちら</a>に累積のデータを置いておくことにする。</p>
+<p>ところが2021-04-09以降は更新されなくなった。2021-04-12以降は，首相官邸の<a href="https://www.kantei.go.jp/jp/headline/kansensho/vaccine.html">新型コロナワクチンについて</a>でExcelファイルが公開されている。とりあえずここから手動でデータを取ることにした。念のため<a href="data/vaccines.csv">こちら</a>にデータを置いておく（やりかたを変更するかもしれない）。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import pandas as pd
+
+df = pd.read_csv("vaccines.csv", parse_dates=['日付'])
+bottom = 0
+for c in df.columns[1:]:
+    plt.bar(df['日付'], df[c], bottom=bottom, label=c)
+    bottom += df[c]
+plt.legend()
+plt.xticks(rotation=20)
+</pre>
 
 <hr>
 
@@ -45,7 +58,7 @@ plt.xticks(rotation=20)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-13 12:13:11</time>
+Last modified: <time>2021-04-14 20:57:04</time>
 <!-- hhmts end -->
 </p>
 </footer>
