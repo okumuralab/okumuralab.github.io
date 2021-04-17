@@ -18,21 +18,66 @@
 
 <p>政党0，1，2，3がそれぞれ1000，650，200，150票を得た。10人当選させるには，各政党から何人ずつ選べばよいか。</p>
 
-<pre><code>r = 10  # 当選数
+<pre class="cell">
+import numpy as np
+
+r = 10  # 当選数
 n = a = np.array([1000, 650, 200, 150]) # 得票数
 for i in range(2, r + 1):
     a = np.append(a, n / i)
 
 a
-</code></pre>
+</pre>
+
+<pre>
+array([1000.        ,  650.        ,  200.        ,  150.        ,
+        500.        ,  325.        ,  100.        ,   75.        ,
+        333.33333333,  216.66666667,   66.66666667,   50.        ,
+        250.        ,  162.5       ,   50.        ,   37.5       ,
+        200.        ,  130.        ,   40.        ,   30.        ,
+        166.66666667,  108.33333333,   33.33333333,   25.        ,
+        142.85714286,   92.85714286,   28.57142857,   21.42857143,
+        125.        ,   81.25      ,   25.        ,   18.75      ,
+        111.11111111,   72.22222222,   22.22222222,   16.66666667,
+        100.        ,   65.        ,   20.        ,   15.        ])
+</pre>
 
 <p>この上位 <code>r</code> 人を選べばよい。</p>
 
-<pre><code>o = np.argsort(-a)
+<pre class="cell">
+o = np.argsort(-a)
 np.bincount((o % 4)[:r])
-</code></pre>
+</pre>
 
-<p>なお，タイがない（<code>a[o][r-1]</code> と <code>a[o][r]</code> が等しくない）ことも確認しなければならない。</p>
+<pre>
+array([6, 3, 1])
+</pre>
+
+<p>この場合，最後の 0 は出力されない。なお，タイがない（<code>a[o][r-1]</code> と <code>a[o][r]</code> が等しくない）ことも確認しなければならない。</p>
+
+<p>別解：</p>
+
+<pre class="cell">
+r = 10  # 当選数
+n = np.array([1000, 650, 200, 150]) # 得票数
+h = np.zeros_like(n)  # 配分（最初はすべて0）
+for _ in range(r):
+    a = n / (h + 1)
+    h[np.argmax(a)] += 1
+
+h
+</pre>
+
+<pre>
+array([6, 3, 1, 0])
+</pre>
+
+<p>この場合，タイを検出するには，最後の <code>np.argmax(a)</code> が一意であることを示せばよい。例えば：</p>
+
+<pre class="cell">
+if np.argmax(a) != len(a) - 1 - np.argmax(a[::-1]):
+    print("タイです")
+</pre>
 
 <hr>
 
@@ -40,7 +85,7 @@ np.bincount((o % 4)[:r])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-08 11:13:54</time>
+Last modified: <time>2021-04-17 14:44:15</time>
 <!-- hhmts end -->
 </p>
 </body>
