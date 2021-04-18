@@ -79,13 +79,21 @@ if np.argmax(a) != len(a) - 1 - np.argmax(a[::-1]):
     print("タイです")
 </pre>
 
+<p>あるいは</p>
+
+<pre class="cell">
+i, = (a == a.max()).nonzero()
+if len(i) > 1:
+    print("タイ:", i)
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-17 14:44:15</time>
+Last modified: <time>2021-04-18 14:11:14</time>
 <!-- hhmts end -->
 </p>
 </body>
