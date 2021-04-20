@@ -221,6 +221,22 @@ df = pd.read_json("list.json")
 ...
 </pre>
 
+<p>今は <code>os.system()</code> より <code>subprocess.run()</code> が推奨されている。こちらを使えば例えば次のようにできる。</p>
+
+<pre>
+import subprocess
+
+r = subprocess.run(["wget", "-N", URL],
+                   capture_output=True, text=True,
+                   env={"PATH": "/usr/local/bin", "LANG": "en"})
+
+if not " saved " in r.stderr:
+    print("Not saved.")
+    exit()
+
+df = pd.read_json(...)
+</pre>
+
 <p>ライブラリ <code>cachecontrol</code> を使えば次のようにできる（<code>lockfile</code> もインストールしておく）。</p>
 
 <pre>
@@ -258,7 +274,7 @@ sess.mount("https://", adapter)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-18 13:41:13</time>
+Last modified: <time>2021-04-20 10:53:26</time>
 <!-- hhmts end -->
 </p>
 </body>
