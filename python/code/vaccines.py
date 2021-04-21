@@ -1,5 +1,8 @@
-#! /usr/bin/env python3
+#! /usr/local/bin/python3
 
+import os
+import re
+import time
 import subprocess
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -7,7 +10,16 @@ import pandas as pd
 URL2 = "https://www.kantei.go.jp/jp/content/IRYO-vaccination_data.xlsx"
 URL3 = "https://www.kantei.go.jp/jp/content/KOREI-vaccination_data.xlsx"
 
+def filename(url):
+    return re.sub("^.*/", "", url)
+
 def wget(url):
+    try:
+        t = os.stat(filename(url)).st_mtime
+    except:
+        t = 0
+    if time.time() - t < 3600 * 20:  # 20時間より新しければ再取得しない
+        return False
     r = subprocess.run(["wget", "-N", url],
                        capture_output=True, text=True,
                        env={"PATH": "/usr/local/bin:/usr/bin", "LANG": "en"})
@@ -16,7 +28,6 @@ def wget(url):
 t2 = wget(URL2)
 t3 = wget(URL3)
 if not (t2 or t3):
-    print("No new data")
     exit()
 
 df1 = pd.read_csv("../data/vaccines.csv", parse_dates=['日付'])
@@ -39,3 +50,5 @@ plt.legend()
 plt.xticks(rotation=20)
 
 plt.savefig('../img/mhlw-vaccine.svg', bbox_inches="tight")
+
+print("mhlw-vaccine.svg generated.")
