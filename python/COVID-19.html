@@ -20,6 +20,7 @@
 
 <p><a href="200310.html">番外編1</a>，<a href="200312.html">番外編2</a>も参考になるかもしれません。もう変化のない<a href="diamondprincess.html">クルーズ船ダイヤモンド・プリンセス号</a>は別ページにしました。</p>
 
+<!--
 <h2>はじめに</h2>
 
 <p>日本では「新型コロナウイルス感染症」と呼ばれている COVID-19（コービッド・ナインティーン）についての最新のデータを収集し，Python でグラフにする。COVID-19 は病名で，ウイルス名は当初 2019-nCoV と呼ばれたが現在は SARS-CoV-2（サーズ・シーオーブイ・ツー）が公式名である。</p>
@@ -32,21 +33,23 @@
 
 <p>新しいダッシュボードのデータは <a href="https://covid19.who.int/page-data/table/page-data.json">page-data.json</a> にある。日々のデータは <a href="https://covid19.who.int/WHO-COVID-19-global-data.csv">WHO-COVID-19-global-data.csv</a> にある。</p>
 
+-->
+
 <h2>CSSEのデータ</h2>
 
-<p>Johns Hopkins 大学の Center for Systems Science and Engineering (CSSE) は <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus COVID-19 Global Cases by Johns Hopkins CSSE</a> という COVID-19 可視化サイトを早くから立ち上げている。データについては GitHub の <a href="https://github.com/CSSEGISandData/COVID-19">2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE</a> で公開している。そのデータのプロット例を<a href="200310.html">番外編1</a>の後半で示した。最新の図をこちらにも載せておく。まずは確定数。黒丸マーカーを付けたものが日本である。</p>
+<p>Johns Hopkins 大学の Center for Systems Science and Engineering (CSSE) は <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">COVID-19 Dashboard by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University (JHU)</a> という COVID-19 可視化サイトを早くから立ち上げている。データについては GitHub の <a href="https://github.com/CSSEGISandData/COVID-19">COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University</a> で公開している。このデータをそのまま描いた図を以下に示す。まずは確定数（累積）。黒丸マーカーを付けたものが日本である。</p>
 
 <figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse.svg" alt="COVID-19"></figure>
 
-<p>差分（つまり1日ごとの増分）最終日の7位まで＋日本（トルコが1日だけ外れ値を出している）：</p>
+<p>差分（つまり1日ごとの増分）最終週平均の7位まで＋日本（トルコが1日だけ外れ値を出している）：</p>
 
 <figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse1.svg" alt="COVID-19"></figure>
 
-<p>死亡数：</p>
+<p>死亡数（累積）：</p>
 
 <figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse2.svg" alt="COVID-19"></figure>
 
-<p>差分（つまり1日ごとの増分）最終日の7位まで＋日本：</p>
+<p>差分（つまり1日ごとの増分）最終週平均の7位まで＋日本：</p>
 
 <figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse3.svg" alt="COVID-19"></figure>
 
@@ -90,68 +93,9 @@
 
 <figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-tokyo-rt.svg" alt="東京"></figure>
 
-<!--
-<p>累積（倍加時間を見るために最終日の値とその半分を点線で示した）：</p>
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-tokyo-cum.svg" alt="東京"></figure>
--->
-
-<!--
-<h3>北海道</h3>
-
-<p>日本で一番多いのが北海道である。<a href="http://www.pref.hokkaido.lg.jp/hf/kth/kak/singatakoronahaien.htm">新型コロナウイルス感染症について</a>の下のほうの「北海道感染症危機管理対策本部会議」というところからリンクされている会議資料に記載がある。3月7日以降はその上の「記者会見等」のところに記載あり。最初の感染者の確定日が 2020-01-28 なので，<a href="data/COVID-hokkaido.csv">COVID-hokkaido.csv</a> ではその日の 00:00 をカウント数 0 として，差分を描くことにする。</p>
-
-<pre><code>df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-hokkaido.csv",
-                 index_col='Date', parse_dates=['Date'])
-
-dt = (df.index.to_series().diff() / pd.Timedelta(days=1))
-ax.bar(df.index, df['Examined'].diff() / dt, width=-dt, align='edge', edgecolor="white")
-ax.bar(df.index, df['Positive'].diff() / dt, width=-dt, align='edge', edgecolor="white")
-ax.legend(['Negative', 'Positive'])
-</code></pre>
-
-<figure><img src="img/COVID-hokkaido-dif.svg" alt="北海道"></figure>
-
-<p>なお，下の<a href="https://stopcovid19.metro.tokyo.lg.jp">都内の最新感染動向</a>の<a href="https://github.com/tokyo-metropolitan-gov/covid19">ソース</a>を使って<a href="https://stopcovid19.hokkaido.dev">道内の最新感染動向</a>が作られた。</p>
-
-<h3>東京都</h3>
-
-<p>東京都の元情報は<a href="https://www.bousai.metro.tokyo.lg.jp">東京都防災ホームページ</a>の「東京都新型コロナウイルス感染症対策本部会議・東京都危機管理対策会議資料」にある。「第11回」資料04には検体数，検査実施人数が分けて書かれており，資料05には毎日の検査実施数（検体数らしい）が書かれている。<a href="data/COVID-tokyo.csv">COVID-tokyo.csv</a> は人数（と思われるもの）で統一した。</p>
-
-<figure><img src="img/COVID-tokyo-dif.svg" alt="東京都"></figure>
-
-<p>なお，<a href="https://stopcovid19.metro.tokyo.lg.jp">都内の最新感染動向</a>サイトで見やすく発信されるようになったが，検体数はあっても検査人数はない。</p>
-
-<h3>和歌山県</h3>
-
-<p>和歌山県は済生会有田病院の院内感染が疑われ，和歌山県だけでは無理なので近隣自治体も巻き込んで，可能性の大きい人から順に検査した。現在は落ち着いている。データは<a href="https://www.pref.wakayama.lg.jp/prefg/041200/d00203387.html">和歌山県における新型コロナウイルス感染症発生状況</a>にあるが，まとめたものを <a href="data/COVID-wakayama.csv">COVID-wakayama.csv</a> として置いておく。</p>
-
-<figure><img src="img/COVID-wakayama-dif.svg" alt="和歌山県"></figure>
--->
-
-<h3>三重県</h3>
-
-<p>三重県は<a href="https://www.pref.mie.lg.jp/YAKUMUS/HP/m0068000066_00002.htm">こちら</a>からCSVでデータが提供されるようになった：</p>
-
-<pre><code>import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import pandas as pd
-
-url = 'https://www.pref.mie.lg.jp/common/content/000896967.csv'
-df = pd.read_csv(url, encoding='cp932', parse_dates=['日付'])
-fig, ax = plt.subplots()
-locator = mdates.AutoDateLocator()
-formatter = mdates.ConciseDateFormatter(locator)
-ax.xaxis.set_major_locator(locator)
-ax.xaxis.set_major_formatter(formatter)
-ax.bar(df['日付'], df['検査件数'], width=1)
-ax.bar(df['日付'], df['陽性'], width=1)
-ax.legend(['Negative', 'Positive'])
-fig.savefig('COVID-mie.svg', bbox_inches="tight")
-</code></pre>
-
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-mie.svg" alt="三重県"></figure>
-
 <h2>関連サイトへのリンク</h2>
+
+<p>（古い情報も含まれています）</p>
 
 <ul>
   <li><a href="https://note.com/azalush/n/n790867d82054">新型コロナウィルス感染症（COVID-19） 統計情報 リアルタイム更新サイト一覧</a></li>
@@ -184,7 +128,7 @@ fig.savefig('COVID-mie.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-22 08:22:17</time>
+Last modified: <time>2021-04-22 16:26:03</time>
 <!-- hhmts end -->
 </p>
 </body>

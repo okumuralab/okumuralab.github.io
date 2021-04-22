@@ -228,7 +228,8 @@ import subprocess
 
 r = subprocess.run(["wget", "-N", URL],
                    capture_output=True, text=True,
-                   env={"PATH": "/usr/local/bin", "LANG": "en"})
+                   env={"PATH": "/opt/homebrew/bin:/usr/local/bin:/usr/bin",
+                        "LANG": "en"})
 
 if not " saved " in r.stderr:
     print("Not saved.")
@@ -237,7 +238,8 @@ if not " saved " in r.stderr:
 df = pd.read_json(...)
 </pre>
 
-<p>ライブラリ <code>cachecontrol</code> を使えば次のようにできる（<code>lockfile</code> もインストールしておく）。</p>
+<div class="note">
+<p>（この部分についてはよく理解できていないがとりあえず残しておく：）ライブラリ <code>cachecontrol</code> を使えば次のようにできる（<code>lockfile</code> もインストールしておく）。</p>
 
 <pre>
 import pandas as pd
@@ -265,8 +267,9 @@ from cachecontrol import CacheControlAdapter
 adapter = CacheControlAdapter(heuristic=ExpiresAfter(days=1))
 sess.mount("https://", adapter)
 </pre>
+</div>
 
-<p>ただ，NATしている大学のPC教室だと，全員が同じIPアドレスになるので，演習で同じデータにアクセスしたら遮断される危険があるかもしれない。</p>
+<p>NATしている大学のPC教室だと，全員が同じIPアドレスになるので，演習で一斉に同じデータにアクセスしたら，DOS攻撃と間違えられて遮断される危険があるかもしれない。</p>
 
 <hr>
 
@@ -274,7 +277,7 @@ sess.mount("https://", adapter)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-20 10:53:26</time>
+Last modified: <time>2021-04-22 13:30:21</time>
 <!-- hhmts end -->
 </p>
 </body>

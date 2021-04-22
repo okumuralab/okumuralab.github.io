@@ -7,9 +7,10 @@ import numpy as np
 from dateutil.parser import parse
 import time
 
-url = 'https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv'
+URLC = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+URLD = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
 
-df = pd.read_csv(url)
+df = pd.read_csv(URLC)
 now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 
 t = [parse(i) for i in df.columns[4:]]
@@ -46,7 +47,7 @@ ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
 dx = np.diff(x, axis=0)
-o = np.argsort(-dx[-1])
+o = np.argsort(-np.mean(dx[-8:-1], axis=0))
 
 for i in np.append(o[:7], list(x[0].index).index('Japan')):
     ax.plot(t[1:], dx[:,i], 'o-', label=x[0].index[i])
@@ -78,9 +79,7 @@ fig.savefig('../img/COVID-csse1.svg', bbox_inches="tight")
 
 #-----
 
-url2 = 'https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv'
-
-df2 = pd.read_csv(url2)
+df2 = pd.read_csv(URLD)
 
 t = [parse(i) for i in df2.columns[4:]]
 x = [df2.groupby('Country/Region')[i].sum() for i in df2.columns[4:]]
@@ -111,7 +110,7 @@ ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
 dx = np.diff(x, axis=0)
-o = np.argsort(-dx[-1])
+o = np.argsort(-np.mean(dx[-8:-1], axis=0))
 
 for i in np.append(o[:7], list(x[0].index).index('Japan')):
     ax.plot(t[1:], dx[:,i], 'o-', label=x[0].index[i])
