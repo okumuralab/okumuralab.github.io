@@ -3,19 +3,24 @@
 # https://catalog.data.metro.tokyo.lg.jp/dataset/t000010d0000000068
 # wget -N https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv
 
+import os
+import subprocess
+import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-# import seaborn as sns
 import numpy as np
-import datetime
-import os
-
-locator = mdates.AutoDateLocator()
-formatter = mdates.ConciseDateFormatter(locator)
 
 URL = "https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv"
-os.system("wget -N " + URL)
+
+r = subprocess.run(["wget", "-N", URL],
+                   capture_output=True, text=True,
+                   env={"PATH": "/usr/local/bin:/usr/bin",
+                        "LANG": "en"})
+if not " saved " in r.stderr:
+    print("COVID-tokyo2.py: not modified.")  # 304 Not Modified
+    exit()
+
 p = os.stat("130001_tokyo_covid19_patients.csv")
 now = f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}'
 
@@ -30,6 +35,9 @@ df = pd.read_csv("130001_tokyo_covid19_patients.csv",
 #     print(df[c].value_counts())
 
 # df.isna().sum()
+
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
 
 fig, ax = plt.subplots()
 fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
@@ -47,11 +55,18 @@ ax.set_xlim(np.datetime64('2020-03-01'), b[-1])
 ax.legend(['公表日', '発症日'])
 fig.savefig('../img/COVID-tokyo2.svg', bbox_inches="tight")
 
+onsets, _ = np.histogram(df['発症_年月日'].values, bins=b)
+cmap = plt.get_cmap('tab20')
+col = [cmap(3), cmap(3), cmap(3), cmap(3), cmap(3), cmap(2), cmap(2)]
+cols = [col[pd.Timestamp(i).dayofweek] for i in b[:-1]]
+
 ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.hist(df['公表_年月日'].values, bins=b, alpha=0.5)
-ax.hist(df['発症_年月日'].values, bins=b, alpha=0.5, edgecolor="black", linewidth=0.5)
+# ax.hist(df['発症_年月日'].values, bins=b, alpha=0.5, edgecolor="black", linewidth=0.5)
+ax.bar(b[:-1], onsets, alpha=0.5, width=0.99, color=cols, align='edge',
+       edgecolor="black", linewidth=0.5)
 ax.set_xlim(np.datetime64('2021-01-01'), b[-1])
 ax.legend(['公表日', '発症日'])
 fig.savefig('../img/COVID-tokyo2f.svg', bbox_inches="tight")
@@ -102,6 +117,8 @@ ax.set_xlim(0, 20)
 ax.set_xticks(range(0, 25, 5))
 ax.legend(['2021年公表 公表日-確定日 median=' + str(np.nanmedian(t))])
 fig.savefig('../img/COVID-tokyo2e.svg', bbox_inches="tight")
+
+print("COVID-tokyo2.py: succeeded.")
 
 exit()
 #---

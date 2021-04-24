@@ -20,7 +20,7 @@
 
 <p>iPhoneに<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/cocoa_00138.html">COCOA</a>をインストールしている。接触チェックの記録は，「設定」→「接触通知」→「接触のログ記録の状況」→「接触チェックの記録」→「接触チェックの記録を書き出す」でAirDropなどの手段で書き出すことができる。書き出されるのは ExposureChecks-YYYY-MM-DD.json のようなJSONファイルである。これを読んでみよう。</p>
 
-<p><code>ExportVersion</code> という項目があり，古いものは1，新しいものは2になっている。次のようにすれば接触情報（<code>MatchCount</code> が0以外）だけを表示できる：</p>
+<p><code>ExportVersion</code> という項目があり，古いものは1，新しいものは2になっている。次のようにすれば接触情報（<code>MatchCount</code> が0以外）および毎日のキー数を表示できる：</p>
 
 <pre>
 #! /usr/bin/env python3
@@ -28,37 +28,60 @@
 import sys
 import json
 
-
-def show(x, y):
+def show(d):
     print()
-    print(x)
     for k in ["Hash", "MatchCount", "Timestamp"]:
-        print(k, y[k])
+        print(k, d[k])
 
+keycount = {}
 
 for arg in sys.argv[1:]:
     with open(arg) as f:
         d = json.load(f)
+    print(arg, "ExportVersion:", d["ExportVersion"])
     if d["ExportVersion"] == 1:
         for i in d["ExposureChecks"]:
+            keycount[i["Timestamp"]] = keycount.get(i["Timestamp"], 0) + i["RandomIDCount"]
             if i["MatchCount"] != 0:
-                show(arg, i)
+                show(i)
     elif d["ExportVersion"] == 2:
         for i in d["ExposureChecks"]:
             for j in i["Files"]:
+                keycount[i["Timestamp"]] = keycount.get(i["Timestamp"], 0) + j["KeyCount"]
                 if j["MatchCount"] != 0:
-                    show(arg, j)
+                    show(j)
     else:
         print(arg, "Unknown ExportVersion:", d["ExportVersion"])
+
+print()
+for k in sorted(keycount):
+    print(k, keycount[k])
 </pre>
 
 <p>出力例：</p>
 
 <pre>
-ExposureChecks-2020-09-12.json
+ExposureChecks-2020-09-12.json ExportVersion: 2
+
 Hash 6CBAA717FA2D584F2E8A77731C4B7D5294ED4B7E899EC3D4E54598BDCDE0400B
 MatchCount 1
 Timestamp 2020-09-12 01:15:24 +0900
+
+2020-08-29 00:38:00 +0900 408
+2020-08-30 00:41:07 +0900 178
+2020-08-31 01:08:33 +0900 162
+2020-09-01 00:48:51 +0900 422
+2020-09-02 01:46:07 +0900 207
+2020-09-03 03:01:08 +0900 328
+2020-09-04 03:20:12 +0900 289
+2020-09-05 03:50:32 +0900 315
+2020-09-06 00:13:21 +0900 121
+2020-09-07 00:22:34 +0900 58
+2020-09-08 00:45:24 +0900 276
+2020-09-09 00:54:57 +0900 209
+2020-09-10 01:04:33 +0900 236
+2020-09-11 03:08:06 +0900 481
+2020-09-12 01:15:24 +0900 412
 </pre>
 
 <h2>COCOAの動作ログ</h2>
@@ -104,7 +127,7 @@ for arg in sys.argv[1:]:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-05 17:19:09</time>
+Last modified: <time>2021-04-24 08:55:13</time>
 <!-- hhmts end -->
 </p>
 </body>
