@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>CentOS 7にpython-popplerをインストール</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>CentOS 7にpython-popplerをインストール</h1>
+
+<p>小ネタ。<code>pip install python-poppler</code> がこけたので試行錯誤。</p>
+
+<p>まず cmake のバージョンが古いと言っているみたい。<code>yum install cmake3</code> で /usr/bin/{cmake3,ccmake3,cpack3,ctest3} を入れて，それを /usr/local/bin/{cmake,ccmake,cpack,ctest} にシンボリックリンクした（本当は alternatives というコマンドで cmake と cmake3 を切り替えるようにできるのだが手を抜いた）。</p>
+
+<p>ほかには poppler poppler-cpp poppler-devel poppler-cpp-devel を yum install した。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-04-12 19:49:18</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
