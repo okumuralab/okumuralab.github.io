@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>デバッグ出力</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>デバッグ出力</h1>
+
+<p><code>print()</code> でデバッグ出力するべきではない。あとで外すのが面倒で，間違えて必要な <code>print()</code> まで外す可能性もある。</p>
+
+<p>そんなときは <a href="https://docs.python.org/3/library/logging.html">logging</a> という仕組みを使う（<a href="https://docs.python.org/3/howto/logging.html">Logging HOWTO</a> も参照）。</p>
+
+<p>次の例はコマンドラインオプション <code>--debug</code> を付けたときだけデバッグ出力する。</p>
+
+<pre><code>#! /usr/bin/env python3
+
+import logging
+import sys
+
+if "--debug" in sys.argv:
+    logging.basicConfig(level=logging.DEBUG)
+
+print("ふつうのprint")
+logging.debug("デバッグメッセージ")
+</code></pre>
+
+<p>デバッグメッセージの前には <code>DEBUG:root:</code> のような文字列が付く。これを日時にするには次のようにする：</p>
+
+<pre><code>logging.basicConfig(format='%(asctime)s:%(message)s',
+                    level=logging.DEBUG)
+</code></pre>
+
+<p>ロギングのレベルは <code>logging.DEBUG</code> &lt; <code>logging.INFO</code> &lt; <code>logging.WARNING</code> &lt; <code>logging.ERROR</code> &lt; <code>logging.CRITICAL</code> の5段階があり，これらに対応して <code>logging.debug()</code> &lt; <code>logging.info()</code> &lt; <code>logging.warning()</code> &lt; <code>logging.error()</code> &lt; <code>logging.critical()</code> がある。デフォルトのレベルは <code>logging.WARNING</code> で，そのレベル以上のものが出力される。</p>
+
+<p>サードパーティのライブラリを呼び出すと，その中で大量のデバッグメッセージが出力されることがある。そういうときは，その直前で例えば <code>logging.disable(logging.INFO)</code> とすると，それ以降は <code>logging.INFO</code> 以下のメッセージを出力しない。<code>logging.disable(logging.NOTSET)</code> で当初の <code>logging.basicConfig()</code> で設定したレベルに戻る。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-04-23 16:25:31</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
