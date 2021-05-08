@@ -54,7 +54,7 @@ for i in np.append(o[:7], list(x[0].index).index('Japan')):
     ax.text(t[-1], dx[-1,i], x[0].index[i])
 ax.set_ylabel('Confirmed')
 ax.legend(loc='upper left')
-ax.set_ylim(0, 400000)
+ax.set_ylim(0, 450000)
 
 # dx = np.diff(np.array(x, dtype=np.float), axis=0)
 # dx[21][x[-1].index == 'China'] = np.nan

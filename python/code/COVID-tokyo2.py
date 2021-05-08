@@ -5,24 +5,38 @@
 
 import os
 import subprocess
+import time
 import datetime
+import logging
+import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
 
+if "--debug" in sys.argv:
+    logging.basicConfig(format='%(asctime)s:%(message)s', level=logging.DEBUG)
+
 URL = "https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv"
+
+try:
+    t = os.stat("130001_tokyo_covid19_patients.csv").st_mtime
+except:
+    t = 0
+if time.time() - t < 36000:  # 10時間未満なら
+    logging.debug("File less than 10 hours old.")
+    exit()
 
 r = subprocess.run(["wget", "-N", URL],
                    capture_output=True, text=True,
                    env={"PATH": "/usr/local/bin:/usr/bin",
                         "LANG": "en"})
 if not " saved " in r.stderr:
-    print("COVID-tokyo2.py: not modified.")  # 304 Not Modified
+    logging.debug("File not modified.")  # 304 Not Modified
     exit()
 
-p = os.stat("130001_tokyo_covid19_patients.csv")
-now = f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}'
+t = os.stat("130001_tokyo_covid19_patients.csv").st_mtime
+now = f'{datetime.datetime.fromtimestamp(t):%Y-%m-%d %H:%M:%S}'
 
 df = pd.read_csv("130001_tokyo_covid19_patients.csv",
                  parse_dates=['公表_年月日', '発症_年月日', '確定_年月日'],
