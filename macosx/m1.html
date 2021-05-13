@@ -275,6 +275,79 @@ In [3]: quit
 
 <p><a href="https://tug.org/texlive/">TeX Live</a> 2021 からユニバーサルバイナリになった。</p>
 
+<p>インストールにはいくつかの方法があるが，以下はネットワークインストールによる方法を説明する。あらかじめ（例えば）<code>/usr/local/texlive</code> というディレクトリを作っておき，ユーザ権限で書き込めるようにしておく（私の場合，この中に歴代の TeX Live と，それ以外のものを入れるための <code>texmf-local</code> ディレクトリがある）。適当な作業ディレクトリで <a href="https://tug.org/texlive/acquire-netinstall.html">Installing TeX Live over the Internet</a> から <a href="https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz">install-tl-unx.tar.gz</a> をダウンロードし，</p>
+
+<pre>
+tar xvzf install-tl-unx.tar.gz
+</pre>
+
+<p>とすると <code>install-tl-2021XXXX</code> のような名前のディレクトリにインストーラが展開されるので，その中に入り，<code>./install-tl</code> で起動する。GUIが嫌なら <code>./install-tl --no-gui</code> とする。特定の（近場の）リポジトリを指定したいなら例えば</p>
+
+<pre>
+./install-tl --no-gui --repository http://ftp.jaist.ac.jp/pub/CTAN/systems/texlive/tlnet/
+</pre>
+
+<p>のような感じで指定する。次のようなメニューが出る：</p>
+
+<pre>
+======================&gt; TeX Live installation procedure &lt;=====================
+
+======&gt;   Letters/digits in &lt;angle brackets&gt; indicate   &lt;=======
+======&gt;   menu items for actions or customizations      &lt;=======
+= help&gt;   https://tug.org/texlive/doc/install-tl.html   &lt;=======
+
+ Detected platform: MacOSX current (10.14-) on ARM/x86_64
+ 
+ &lt;B&gt; set binary platforms: 1 out of 16
+
+ &lt;S&gt; set installation scheme: scheme-custom
+
+ &lt;C&gt; set installation collections:
+     40 collections out of 41, disk space required: 7143 MB
+
+ &lt;D&gt; set directories:
+   TEXDIR (the main TeX directory):
+     /usr/local/texlive/2021
+   TEXMFLOCAL (directory for site-wide local files):
+     /usr/local/texlive/texmf-local
+   TEXMFSYSVAR (directory for variable and automatically generated data):
+     /usr/local/texlive/2021/texmf-var
+   TEXMFSYSCONFIG (directory for local config):
+     /usr/local/texlive/2021/texmf-config
+   TEXMFVAR (personal directory for variable and automatically generated data):
+     ~/Library/texlive/2021/texmf-var
+   TEXMFCONFIG (personal directory for local config):
+     ~/Library/texlive/2021/texmf-config
+   TEXMFHOME (directory for user-specific files):
+     ~/Library/texmf
+
+ &lt;O&gt; options:
+   [ ] use letter size instead of A4 by default
+   [X] allow execution of restricted list of programs via \write18
+   [X] create all format files
+   [X] install macro/font doc tree
+   [X] install macro/font source tree
+   [ ] create symlinks to standard directories
+
+ &lt;V&gt; set up for portable installation
+
+Actions:
+ &lt;I&gt; start installation to hard disk
+ &lt;P&gt; save installation profile to 'texlive.profile' and exit
+ &lt;Q&gt; quit
+
+Enter command: 
+</pre>
+
+<p>ここで <code>I</code> を入力するとインストールが始まる。あとは気長に待つだけ。上の設定では <code>/usr/local/texlive/2021</code> 以下にインストールされるので，その下の <code>bin/universal-darwin</code> にPATHを設定する。これで完了。あとはときどき <code>tlmgr update --self --all</code> と打ち込んでアップデートする。</p>
+
+<p>ちなみに，私は何台もMacを持っているので，一つだけで上記のようにインストール・アップデートし，他のマシンはそこから rsync している：</p>
+
+<pre>
+cd /usr/local/texlive
+rsync -auvz --exclude='backups/*' メインマシン:/usr/local/texlive/2021 .
+</pre>
+
 <!--
 <p>以下は古い情報。</p>
 
@@ -322,7 +395,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-14 21:20:16</time>
+Last modified: <time>2021-05-13 17:31:58</time>
 <!-- hhmts end -->
 </p>
 </footer>
