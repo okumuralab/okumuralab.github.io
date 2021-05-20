@@ -73,6 +73,8 @@ print(uuid.uuid4())
 
 <p>[2021-01-08] その昔，インターネットナンバーなるものがあった。<a href="https://internet.watch.impress.co.jp/www/article/2002/0723/numberword.htm">インターネットナンバーとJWordが相互乗り入れ、数字と日本語の双方に対応</a>，<a href="https://internet.watch.impress.co.jp/cda/news/2004/02/23/2180.html">URLを数字に置き換える2社のサービス、番号共通化で業務提携</a></p>
 
+<p>[2021-05-20] UUIDについて書いたついでに <a href="https://github.com/ulid/spec">ULID</a> (Universally Unique Lexicographically Sortable Identifier) はUUIDと同じ128ビット（ただしUUIDv4は6ビット固定なので実質122ビット）だがUUIDは36文字なのにこちらは26文字で表せる。先頭48ビット（10文字）はタイムスタンプ（ミリ秒単位のUNIX時刻）で，文字列としてソートすると時刻順になる。Pythonの実装は <a href="https://pypi.org/project/python-ulid/">python-ulid</a> などいくつかある。</p>
+
 <hr>
 
 <footer>
@@ -81,7 +83,7 @@ print(uuid.uuid4())
 <p>
 Permanent ID of this document: 03719fac2f417ee6629ff53e194b95ab<br>
 <!-- hhmts start -->
-Last modified: <time>2021-01-08 10:06:40</time>
+Last modified: <time>2021-05-20 09:30:12</time>
 <!-- hhmts end -->
 </p>
 </footer>
