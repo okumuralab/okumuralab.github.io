@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>誕生日の問題とユニークな識別子</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>誕生日の問題とユニークな識別子</h1>
+
+<h2>誕生日の問題</h2>
+
+<p>誕生日は $N = 365$ 通りあります。$n$ 人（$n < N$）がパーティを開きました。誕生日が同じ人がいる確率は</p>
+
+\[ 1 - \frac{365}{365} \times \frac{364}{365} \times \frac{363}{365} \times \cdots \times \frac{365 - n + 1}{365} \]
+
+<p>です。次の近似式でも計算できます（証明は例えばWikipediaの <a href="https://en.wikipedia.org/wiki/Birthday_problem">Birthday problem</a> 参照）：</p>
+
+\[ 1 - e^{-n^2/(2N)} \]
+
+<h2>接種券番号の問題</h2>
+
+<p>日本では2021年に新型コロナ感染症ワクチン接種券を配りました。ところが接種券を発行するのは各自治体だったため，10桁の接種券番号も自治体ごとに付番されました。仮に番号がランダムだったとして，番号の衝突（重複）はあるでしょうか。</p>
+
+<p>接種券の枚数を1億枚 $n = 10^8$ とします。10桁の番号は $N = 10^{10}$ 通りです。計算してみれば，</p>
+
+\[ 1 - e^{-n^2/(2N)} \approx 1 \]
+
+<p>ですので，確実に衝突が起こります。</p>
+
+<p>では，何桁の番号であれば，各自治体がばらばらに付番しても，衝突が起こらないといえるでしょうか。</p>
+
+<p>うんと大きい数は10進法でない符号化をすることが多いので，ビット数で表すほうが便利です。$N$ が80ビットなら $1 - e^{-n^2/(2N)}$ はおよそ $4 \times 10^{-9}$，100ビットならおよそ $4 \times 10^{-15}$ ですので，衝突はまず起こらないといえます。</p>
+
+<h2>UUID</h2>
+
+<p>128ビットのランダムな値を表す <a href="https://ja.wikipedia.org/wiki/UUID">UUID</a>（Universally Unique Identifier）というものが <a href="https://datatracker.ietf.org/doc/html/rfc4122">RFC 4122</a> で定められています。Pythonには <a href="https://docs.python.org/ja/3/library/uuid.html">uuid</a> という標準ライブラリがあります。</p>
+
+<p>UUIDにはいくつかのバージョンがありますが，ここではまったくランダムなバージョン4のUUIDを試してみましょう。128ビットですが，6ビットは固定で，ランダムな部分は122ビットです。</p>
+
+<pre class="cell">
+import uuid
+
+uuid.uuid4()
+</pre>
+
+<pre>
+UUID('3585b7a9-e35a-433b-be8e-3916c75f6240')
+</pre>
+
+<h2>ULID</h2>
+
+<p><a href="https://github.com/ulid/spec">ULID</a>（Universally Unique Lexicographically Sortable Identifier）はUUIDを改良したもので，UUIDと同じ128ビットでありながら，UUIDは36文字ですが，ULIDは26文字で表されます。128ビットのうち，先頭の48ビットはタイムスタンプで，UNIX時刻をミリ秒の単位で表したものです。10889年まで桁あふれしません。残りの80ビットがランダムな部分です。文字列としてソートすると，時刻順に並びます（lexicographically sortable）。</p>
+
+<p>Pythonではいくつかのライブラリがありますが，ここでは <a href="https://pypi.org/project/python-ulid/">python-ulid</a> を使ってみます。<code>pip install python-ulid</code> でインストールします（余分なものが入らないのでconda環境でもpipでインストールして大丈夫です）。</p>
+
+<pre class="cell">
+from ulid import ULID
+
+ULID()
+</pre>
+
+<pre>
+ULID(01F63ZWFQGSMGM3XGXBE8CTRDT)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-05-20 13:25:33</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
