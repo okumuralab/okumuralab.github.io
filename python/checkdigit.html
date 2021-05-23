@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>チェックディジット</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="/~okumura/">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>チェックディジット</h1>
+
+<p>番号の最後に付けて誤記をチェックするための余分の桁。10進法（0〜9）の範囲に限れば，<a href="https://ja.wikipedia.org/wiki/Dammアルゴリズム">Dammアルゴリズム</a>が有名である。これを付けておけば，1文字を書き間違えたときや，隣同士の桁を入れ替えたときに，必ずチェックに引っかかる。</p>
+
+<p>Pythonでは <code>pip install damm</code> として入るモジュールでDammアルゴリズムのチェックディジットが計算できる。</p>
+
+<pre><code>import damm
+
+damm.encode(12345)  # => 9
+damm.check(123459)  # => True
+damm.check(128459)  # => False
+damm.check(124359)  # => False
+
+damm.encode("01234") # 文字列でもよい
+</code></pre>
+
+<p>16進の場合は <code>import damm16</code> とする。</p>
+
+<p>本当に1文字の間違いや隣同士の桁の交換を検出できるかテスト：</p>
+
+<pre><code>import numpy as np
+
+rng = np.random.default_rng(20210523)
+
+def test1():
+    s = '00000000' + str(rng.integers(0, 1000000000))
+    s = s[len(s) - 9:]
+    t = s + str(damm.encode(s))
+    i = rng.integers(0, 10)
+    j = rng.integers(0, 9)
+    if j &gt;= int(t[i]):
+        j += 1
+    u = t[:i] + str(j) + t[i+1:]
+    if damm.check(u):
+        print("Damm error:", t, "-&gt;", u)
+    i = rng.integers(0, 9)
+    u = t[:i] + t[i+1] + t[i] + t[i+2:]
+    if t != u and damm.check(u):
+        print("Damm error:", t, "-&gt;", u)
+
+for i in range(10000):
+    test1()
+</code></pre>
+
+<p>ハッシュ値を0〜9にしたものを追加する方法もある。例：</p>
+
+<pre><code>import hashlib
+
+def md5digit(s):
+    return int(hashlib.md5(s.encode('utf-8')).hexdigest(), 16) % 10
+
+def md5check(s):
+    return md5digit(s[:len(s)-1]) == int(s[len(s)-1])
+</code></pre>
+
+<p>これはどんな間違いも一様に（9/10の確率で）検出できるが，1文字の間違いや隣同士の桁の交換を検出できないこともある（練習問題：試してみよ）。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-05-23 16:34:52</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
