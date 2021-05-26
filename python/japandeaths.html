@@ -16,6 +16,8 @@
 
 <h1>日本の超過死亡？</h1>
 
+<p><em>[2021-05-26]</em> 2021年3月分までのデータを追加した。図のキャプションで「確定値」としていたものを「概数」に直した。</p>
+
 <p><em>[2020-12-29]</em> 2020年10月分までのデータを追加した。また，<a href="https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00450011&tstat=000001028897&cycle=7&year=20190&month=0&tclass1=000001053058&tclass2=000001053061&tclass3=000001053065&result_back=1&tclass4val=0">e-Statの人口動態統計</a>の5-4「死亡月別にみた年次別死亡数及び死亡率（人口千対）」に基づき，過去の統計を更新した。古いデータは<a href="data/japandeaths-old.csv">japandeaths-old.csv</a>に残しておく。</p>
 
 <p><a href="https://www.mhlw.go.jp/toukei/list/81-1a.html#link05">人口動態統計速報</a>は集計に2ヶ月近くかかる（<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/02.html">2020年2月分</a>は2020年4月24日に出た。<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/03.html">3月分</a>は5月26日，<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/04.html">4月分</a>は6月26日に出た）。<a href="https://www.mhlw.go.jp/toukei/list/81-1a.html#link02">人口動態統計月報（概数）</a>は5ヶ月かかり，<a href="https://www.mhlw.go.jp/toukei/list/81-1a.html#link01">確定数</a>はもっともっとかかる。</p>
@@ -43,21 +45,20 @@ perday2 = np.array([r[3] / days(r[0], r[1]) for i, r in df.iterrows()])
 plt.plot(t, perday1, 'o-')
 plt.plot(t, perday2, 's-')
 plt.ylabel('1日あたり死亡数')
-plt.legend(['確定値', '速報値'])
+plt.legend(['概数', '速報値'])
 plt.savefig('japandeaths1.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/japandeaths1.svg" alt="Deaths in Japan"></figure>
 
 <pre><code>plt.clf()
-for y in range(2014, 2020):
+for y in range(2014, 2021):
     plt.plot(df[df['年'] == y]['月'], perday1[df['年'] == y],
              'o-', alpha=0.5, marker=f'${y % 10}$', label=y)
-
-plt.plot(df[df['年'] == 2019]['月'], perday2[df['年'] == 2019],
-         'o-', marker='$9$', label='2019速報値')
 plt.plot(df[df['年'] == 2020]['月'], perday2[df['年'] == 2020],
-         'o-k', label='2020速報値')
+         'o-', marker='$0$', label='2020速報値')
+plt.plot(df[df['年'] == 2021]['月'], perday2[df['年'] == 2021],
+         'o-k', label='2021速報値')
 plt.xlabel('月')
 plt.ylabel('1日あたり死亡数')
 plt.legend()
@@ -68,11 +69,9 @@ plt.savefig('japandeaths2.svg', bbox_inches="tight")
 
 <pre><code>plt.clf()
 perday = np.array([p2 if np.isnan(p1) else p1 for p1, p2 in zip(perday1, perday2)])
-for m, n in [(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May'), (6, 'Jun'),
-             (7, 'Jul'), (8, 'Aug'), (9, 'Sep'), (10, 'Oct')]:
-    plt.plot(df[df['月'] == m]['年'], perday[df['月'] == m], marker=f'${m}$', label=n)
+for m in range(1, 13):
+    plt.plot(df[df['月'] == m]['年'], perday[df['月'] == m], marker=f'${m}$')
 plt.ylabel('1日あたり死亡数')
-plt.legend()
 plt.savefig('japandeaths3.svg', bbox_inches="tight")
 </code></pre>
 
@@ -84,7 +83,7 @@ plt.savefig('japandeaths3.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-29 17:14:26</time>
+Last modified: <time>2021-05-26 11:25:46</time>
 <!-- hhmts end -->
 </p>
 </body>

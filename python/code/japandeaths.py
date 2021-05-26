@@ -22,19 +22,21 @@ plt.clf()
 plt.plot(t, perday1, 'o-')
 plt.plot(t, perday2, 's-')
 plt.ylabel('1日あたり死亡数')
-plt.legend(['確定値', '速報値'])
+plt.legend(['概数', '速報値'])
 
 plt.savefig('../img/japandeaths1.svg', bbox_inches="tight")
 
 plt.clf()
-for y in range(2014, 2020):
+for y in range(2014, 2021):
     plt.plot(df[df['年'] == y]['月'], perday1[df['年'] == y],
              'o-', alpha=0.5, marker=f'${y % 10}$', label=y)
 
-plt.plot(df[df['年'] == 2019]['月'], perday2[df['年'] == 2019],
-         'o-', marker='$9$', label='2019速報値')
+# plt.plot(df[df['年'] == 2019]['月'], perday2[df['年'] == 2019],
+#          'o-', marker='$9$', label='2019速報値')
 plt.plot(df[df['年'] == 2020]['月'], perday2[df['年'] == 2020],
-         'o-k', label='2020速報値')
+         'o-', marker='$0$', label='2020速報値')
+plt.plot(df[df['年'] == 2021]['月'], perday2[df['年'] == 2021],
+         'o-k', label='2021速報値')
 plt.xlabel('月')
 plt.ylabel('1日あたり死亡数')
 plt.legend()
@@ -42,8 +44,7 @@ plt.savefig('../img/japandeaths2.svg', bbox_inches="tight")
 
 perday = np.array([p2 if np.isnan(p1) else p1 for p1, p2 in zip(perday1, perday2)])
 plt.clf()
-for m, n in [(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May'), (6, 'Jun')]:
-    plt.plot(df[df['月'] == m]['年'], perday[df['月'] == m], 'o-', marker=f'${m}$', label=n)
+for m in range(1, 13):
+    plt.plot(df[df['月'] == m]['年'], perday[df['月'] == m], marker=f'${m}$')
 plt.ylabel('1日あたり死亡数')
-plt.legend()
 plt.savefig('../img/japandeaths3.svg', bbox_inches="tight")
