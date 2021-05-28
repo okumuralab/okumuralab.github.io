@@ -222,7 +222,7 @@ df.head()
 <code>df.to_excel("filename.xlsx")
 </code></pre>
 
-<p>JSON形式への変換・出力は <code>to_json()</code> です。<code>lines=True</code> で <a href="https://hackernoon.com/json-lines-format-76353b4e588d">JSONL</a> になります：</p>
+<p>JSON形式への変換・出力は <code>to_json()</code> です。<code>lines=True</code> で改行区切りJSON（<a href="https://jsonlines.org">JSONL</a> = JSON Lines，<a href="http://ndjson.org">NDJSON</a> = Newline Delimited JSON，<a href="https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON">LDJSON</a> = Line Delimited JSON）になります：</p>
 
 <pre>
 <code>df = pd.DataFrame({"A":[1,2],"B":[1.5,2.5]})
@@ -239,6 +239,8 @@ df.to_json('hoge.jsonl', orient="records", lines=True) # ファイルに出力
 <pre>
 <code>df = pd.read_json('hoge.jsonl', orient='records', lines=True)
 </code></pre>
+
+<p>ちなみに，JSONファイルの操作には <a href="https://stedolan.github.io/jq/">jq</a> が便利です（MacならHomebrewで入れられます）。</p>
 
 <p>DataFrame を dict 形式にするには：</p>
 
@@ -303,7 +305,7 @@ df = pd.read_csv(StringIO(r.text))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-28 20:19:12</time>
+Last modified: <time>2021-05-28 09:03:57</time>
 <!-- hhmts end -->
 </p>
 </body>
