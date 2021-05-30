@@ -57,7 +57,7 @@ plt.hist(x)
 
 <p>オプション <code>density=True</code> で縦軸が個数でなく密度になる。<code>orientation='horizontal'</code> で横向きになる。</p>
 
-<p>例えば <code>bins=50</code> で，だいたい50分割になる。また，例えば <code>bins=[0,1,2,3,4]</code> のように分割点を指定できる。この場合，区間は左閉区間 [0,1)，[1,2)，[2,3)，[3,4] になる。一番右が閉区間となるのに注意。左が閉じた区間になるのは，R のデフォルトとは逆で，R ではオプション <code>right=FALSE</code> を付けると <code>plt.hist()</code> と同じになる。ちなみに Excel の「グラフ」メニューに加わった「ヒストグラム」も左開区間にしかできないようで，悩ましい。</p>
+<p>例えば <code>bins=50</code> で50分割になる。また，例えば <code>bins=[0,1,2,3,4]</code> のように分割点を指定できる（<code>bins=range(5)</code> と書いても同じ）。この場合，区間は左閉区間 [0,1)，[1,2)，[2,3)，[3,4] になる。一番右が閉区間となるのに注意。左が閉じた区間になるのは，R のデフォルトとは逆で，R ではオプション <code>right=FALSE</code> を付けると <code>plt.hist()</code> と同じになる。ちなみに Excel の「グラフ」メニューに加わった「ヒストグラム」も左開区間にしかできないようで，悩ましい。</p>
 
 <p>なお，seaborn だけでも <code>sns.histplot(x)</code> できる。区切り方が <code>plt.hist(x)</code> と少し違う。</p>
 
@@ -67,7 +67,7 @@ plt.hist(x)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-02 13:59:27</time>
+Last modified: <time>2021-05-30 14:05:55</time>
 <!-- hhmts end -->
 </p>
 </body>
