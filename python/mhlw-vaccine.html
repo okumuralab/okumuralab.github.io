@@ -18,28 +18,9 @@
 
 <figure><img src="img/mhlw-vaccine.svg" alt="新型コロナワクチンの接種実績"></figure>
 
-<p>このグラフは，もともと厚労省<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html">新型コロナワクチンの接種実績</a>の表をスクレープしてグラフにしていた：</p>
+<p>このグラフは，もともと厚労省<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html">新型コロナワクチンの接種実績</a>の表をスクレープしてグラフにしていた。ところが <time>2021-04-09</time> 以降は更新されなくなった。念のため最後の更新時のデータを<a href="data/vaccines.csv">こちら</a>に置いておく。<time>2021-04-12</time> 以降は，首相官邸の<a href="https://www.kantei.go.jp/jp/headline/kansensho/vaccine.html">新型コロナワクチンについて</a>でExcelファイルが公開されている。今後はこれらをダウンロードして，厚労省のデータにマージして使うことにする。<time>2021-06-04</time> にファイル名と形式が変更になった。</p>
 
-<pre class="cell">
-import matplotlib.pyplot as plt
-import pandas as pd
-
-URL = "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/vaccine_sesshujisseki.html"
-df = pd.read_html(URL, header=0)[0]
-
-t = pd.to_datetime(df['日付'][:-1])
-n1 = df['内１回目'][:-1]
-n2 = df['内２回目'][:-1]
-
-plt.bar(t, n1, label="1st")
-plt.bar(t, n2, bottom=n1, label="2nd")
-plt.legend()
-plt.xticks(rotation=20)
-</pre>
-
-<p>ところが <time>2021-04-09</time> 以降は更新されなくなった。念のため最後の更新時のデータを<a href="data/vaccines.csv">こちら</a>に置いておく。<time>2021-04-12</time> 以降は，首相官邸の<a href="https://www.kantei.go.jp/jp/headline/kansensho/vaccine.html">新型コロナワクチンについて</a>でExcelファイルが公開されている。今後はこれらをダウンロードして，厚労省のデータにマージして使うことにする。</p>
-
-<p>[<time>2021-05-27</time>] 政府CIOポータルに<a href="https://cio.go.jp/c19vaccine_dashboard">新型コロナワクチンの接種状況（高齢者等）</a>ダッシュボードができた。データもNDJSON/CSV形式のオープンデータで公開されるようになった。現在は高齢者等だけで，医療従事者は公開準備中とのこと。</p>
+<p>[<time>2021-05-27</time>] 政府CIOポータルに<a href="https://cio.go.jp/c19vaccine_dashboard">新型コロナワクチンの接種状況（高齢者等）</a>ダッシュボードができた。データもNDJSON/CSV形式のオープンデータで公開されるようになった。<del>現在は高齢者等だけで，医療従事者は公開準備中とのこと。</del></p>
 
 <hr>
 
@@ -47,7 +28,7 @@ plt.xticks(rotation=20)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-05-28 09:54:28</time>
+Last modified: <time>2021-06-05 10:53:46</time>
 <!-- hhmts end -->
 </p>
 </footer>
