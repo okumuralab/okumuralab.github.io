@@ -224,13 +224,11 @@ Python 3.8.2
 conda install pytorch torchvision  # torchaudio はまだダメ
 </pre>
 
-<!--
-<p>これに Apple から提供されている <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> を入れれば Apple Silicon に最適化された TensorFlow とその依存するパッケージ群（numpy など）が入る。<a href="https://docs.python.org/3/tutorial/venv.html">venv</a> なので，bash 互換シェル（zsh でもよい）で <code>source ~/tensorflow_macos_venv/bin/activate</code> すると使えるようになり，<code>deactivate</code> で戻る。matplotlib や pandas は入らない。pip で入れようとしてもコンパイルでエラーになる。強者用である。</p>
--->
+<h3>miniforgeのPython 3.8とAppleのTensorFlow（古）</h3>
 
-<h3>miniforgeのPython 3.8とAppleのTensorFlow</h3>
+<p><a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> はアーカイブ入りした。最新の方法は次の tensorflow-metal にある。</p>
 
-<p>Apple の <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> は Apple Silicon に最適化されている（TensorFlow Blog の <a href="https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html">Accelerating TensorFlow Performance on Mac</a> 参照）。<a href="https://github.com/apple/tensorflow_macos/issues/153">Instructions to install TensorFlow in a Conda Environment</a> のようにすれば miniforge の Python 3.8 環境にインストールできる。以下では apple という名前の環境を作る：</p>
+<p><del>Apple の <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> は Apple Silicon に最適化されている（TensorFlow Blog の <a href="https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html">Accelerating TensorFlow Performance on Mac</a> 参照）。<a href="https://github.com/apple/tensorflow_macos/issues/153">Instructions to install TensorFlow in a Conda Environment</a> のようにすれば miniforge の Python 3.8 環境にインストールできる。以下では apple という名前の環境を作る：</del></p>
 
 <pre>
 wget -N https://raw.githubusercontent.com/mwidjaja1/DSOnMacARM/main/environment.yml
@@ -238,13 +236,13 @@ conda env create --file=environment.yml --name=apple
 conda init zsh
 </pre>
 
-<p><code>.zshrc</code> が書き変わるのでzshを再起動するか <code>. ~/.zshrc</code> と打ち込む。プロンプトの先頭に <code>(base)</code> が付くようになる。</p>
+<p><del><code>.zshrc</code> が書き変わるのでzshを再起動するか <code>. ~/.zshrc</code> と打ち込む。プロンプトの先頭に <code>(base)</code> が付くようになる。</del></p>
 
 <pre>
 conda activate apple
 </pre>
 
-<p>とすれば新しい環境に移行する（プロンプトの先頭が <code>(apple)</code> になる）。この状態で Apple の TensorFlow をインストールする。</p>
+<p><del>とすれば新しい環境に移行する（プロンプトの先頭が <code>(apple)</code> になる）。この状態で Apple の TensorFlow をインストールする。</del></p>
 
 <pre>
 pip install --upgrade --force --no-dependencies \
@@ -252,7 +250,7 @@ pip install --upgrade --force --no-dependencies \
     https://github.com/apple/tensorflow_macos/releases/download/v0.1alpha3/tensorflow_addons_macos-0.1a3-cp38-cp38-macosx_11_0_arm64.whl
 </pre>
 
-<p>うまくインストールできたか IPython で試してみる：</p>
+<p><del>うまくインストールできたか IPython で試してみる：</del></p>
 
 <pre>
 ipython
@@ -265,7 +263,83 @@ Out[2]: '2.4.0-rc0'
 In [3]: quit
 </pre>
 
-<p><code>conda deactivate</code> とすれば元の <code>(base)</code> 環境に戻る。</p>
+<p><del><code>conda deactivate</code> とすれば元の <code>(base)</code> 環境に戻る。</del></p>
+
+<h3>tensorflow-metal</h3>
+
+<p><a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> 参照。</p>
+
+<p>まず <a href="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh">Miniforge3-MacOSX-arm64.sh</a> をダウンロードし，<code>sh Miniforge3-MacOSX-arm64.sh</code> とすると miniforge のインストールが始まる。</p>
+
+<pre style="color:black">
+Welcome to Miniforge3 4.10.1-4
+
+In order to continue the installation process, please review the license
+agreement.
+Please, press ENTER to continue
+>>> <span style="color:maroon">ENTER</span>
+
+...中略...
+
+Do you accept the license terms? [yes|no]
+[no] >>> <span style="color:maroon">yes</span>
+
+Miniforge3 will now be installed into this location:
+/Users/okumura/miniforge3
+
+  - Press ENTER to confirm the location
+  - Press CTRL-C to abort the installation
+  - Or specify a different location below
+
+[/Users/okumura/miniforge3] >>> <span style="color:maroon">ENTER</span>
+
+...中略...
+
+Do you wish the installer to initialize Miniforge3
+by running conda init? [yes|no]
+[no] >>> <span style="color:maroon">yes</span>
+
+==> For changes to take effect, close and re-open your current shell. <==
+
+If you'd prefer that conda's base environment not be activated on startup, 
+   set the auto_activate_base parameter to false: 
+
+conda config --set auto_activate_base false
+
+Thank you for installing Miniforge3!
+</pre>
+
+<p>これでシェルを立ち上げ直す。<code>.zshrc</code> に追記されていることを確認し <code>conda install -c apple tensorflow-deps</code> と打つ。</p>
+
+<pre style="color:black">
+...中略...
+
+Proceed ([y]/n)? <span style="color:maroon">ENTER</span>
+</pre>
+
+<p>最後に</p>
+
+<pre>
+python -m pip install tensorflow-macos
+python -m pip install tensorflow-metal
+</pre>
+
+<p>で完成。とりあえず <code>conda install ipython</code> して，確認：</p>
+
+<pre style="color:black">
+% <span style="color:maroon">ipython</span>
+Python 3.9.4 | packaged by conda-forge | (default, May 10 2021, 22:10:52) 
+Type 'copyright', 'credits' or 'license' for more information
+IPython 7.24.1 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: <span style="color:maroon">import tensorflow as tf</span>
+Init Plugin
+Init Graph Optimizer
+Init Kernel
+
+In [2]: <span style="color:maroon">tf.__version__</span>
+Out[2]: '2.5.0'
+</pre>
 
 <h2>R</h2>
 
@@ -395,7 +469,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-06-09 13:09:42</time>
+Last modified: <time>2021-06-10 12:09:53</time>
 <!-- hhmts end -->
 </p>
 </footer>
