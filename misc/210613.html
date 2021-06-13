@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ssocrによる7セグ数字認識</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>ssocrによる7セグ数字認識</h1>
+
+<p><a href="https://www.unix-ag.uni-kl.de/~auerswal/ssocr/">ssocr</a> (Seven Segment Optical Character Recognition) は7セグ数字を認識するツール。</p>
+
+<p>Intel Mac では <code>brew install imlib2</code> してから <code>make</code>，<code>make install</code> で作れた（M1 Mac ではまだやってない）。</p>
+
+<p>実行は <code>ssocr -T -d -1 画像ファイル名</code> で標準出力に認識結果のテキストを出力する。ただし，なかなかうまくいかないので次のようにしてデバッグ用の画像を出力してそれを見ながら調節するとよい：</p>
+
+<pre>
+ssocr -D crop <i>x</i> <i>y</i> <i>w</i> <i>h</i> invert rotate <i>t</i> -T -d -1 画像ファイル名
+</pre>
+
+<p><code>-D</code> はデバッグ用画像 testbild.png を出力する。</p>
+
+<p><code>crop <i>x</i> <i>y</i> <i>w</i> <i>h</i></code> は画像左上隅を原点とした文字部分の左上隅の座標と幅・高さを与える。</p>
+
+<p>暗い背景に明るい文字の場合は <code>invert</code> で白黒反転する。</p>
+
+<p><code>rotate <i>t</i></code> は右回りに <i>t</i> 度回転する（正の値を指定）。</p>
+
+<p><code>-T</code> は2値化の閾値の自動判定。</p>
+
+<p><code>-d <i>n</i></code> は桁数の指定（-1 で自動判定）。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-06-13 19:21:38</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
