@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <title>TensorFlowによる機械学習</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -16,13 +16,13 @@
 
 <h1>TensorFlowによる機械学習</h1>
 
-<p><a href="https://www.tensorflow.org/">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。</p>
+<p><a href="https://www.tensorflow.org/">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。通常は</p>
 
 <pre>
 <code>pip install tensorflow
 </code></pre>
 
-<p>で入るはずである。</p>
+<p>で入るはずである。M1 Macでの入れ方は<a href="../macosx/m1.html">こちら</a>参照。</p>
 
 <p><code>tf.keras</code> を使う上では TensorFlow 1 系 と 2 系で見かけ上の違いはほぼない。</p>
 
@@ -53,10 +53,10 @@ tf.disable_v2_behavior()
 
 <pre>
 <code>In [ ]: tf.__version__
-Out[ ]: '2.4.0-rc0'
+Out[ ]: '2.5.0'
 
 In [ ]: tf.keras.__version__
-Out[ ]: '2.4.0'
+Out[ ]: '2.5.0'
 </code></pre>
 
 <p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="mnist.html">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
@@ -88,7 +88,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 </code></pre>
 
-<p>いよいよフィット（重い。といってもM1 Macなら数秒）：</p>
+<p>いよいよフィット（重い）：</p>
 
 <pre>
 <code>model.fit(x_train, y_train, epochs=5)
@@ -149,7 +149,7 @@ array([[ 970,    0,    2,    0,    1,    0,    4,    1,    2,    0],
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-03 19:56:11</time>
+Last modified: <time>2021-06-23 15:10:01</time>
 <!-- hhmts end -->
 </p>
 </body>
