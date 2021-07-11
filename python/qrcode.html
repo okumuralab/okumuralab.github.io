@@ -50,7 +50,7 @@ img.save("test.png") # 保存
 
 <p>ほかに <a href="https://pypi.org/project/qrcodegen/">qrcodegen</a> や，<a href="https://pypi.org/project/PyQRCode/">PyQRCode</a> からフォークした <a href="https://pypi.org/project/PyQRCodeNG/">PyQRCodeNG</a> など，多数のQRコード生成ライブラリがあります。</p>
 
-<p>QRコードを読むためのライブラリとして，ここでは <a href="https://pypi.org/project/pyzbar-x/">pyzbar-x</a> を使ってみます。インストールは <code>pip install pyzbar-x</code> です。Mac ではあらかじめ <code>brew install zbar</code> として zbar を入れておきます。次のような実行ファイル qrdecode.py を作っておくと便利です。パスの通ったところに置いておき <code>qrdecode.py *.png *.jpg</code> などとすれば画像からQRコードを見つけて復号してくれるはずです。ファイル名を与えなければクリップボードから画像を読みます。</p>
+<p>QRコードを読むためのライブラリとして，ここでは <a href="https://pypi.org/project/pyzbar/">pyzbar</a> を使ってみます。インストールは <code>pip install pyzbar</code> です。Mac ではあらかじめ <code>brew install zbar</code> として zbar を入れておきます。次のような実行ファイル qrdecode.py を作っておくと便利です。パスの通ったところに置いておき <code>qrdecode.py *.png *.jpg</code> などとすれば画像からQRコードを見つけて復号してくれるはずです。ファイル名を与えなければクリップボードから画像を読みます。</p>
 
 <pre>
 <code>#! /usr/bin/env python3
@@ -72,8 +72,10 @@ else:
         qrdecode(Image.open(arg))
 </code></pre>
 
+<p>実はこれはQRコードだけでなく通常のバーコードも読めます。</p>
+
 <div class="note">
-<p>M1 Macのarm64ネイティブなminiforge版Pythonではpyzbarを <code>conda install pyzbar</code> でインストールした。zbarライブラリは <code>brew install zbar</code> で入るが，パスの関係で見つけられないようだ。とりあえず <code>ln -s /opt/homebrew/lib/libzbar.dylib /opt/homebrew/Caskroom/miniforge/base/lib/</code> のようにシンボリックリンクを張れば大丈夫なようだ。</p>
+<p>M1 Macのarm64版Homebrewで入れたminiforgeのPythonではpyzbarを <code>conda install pyzbar</code> でインストールした。zbarライブラリは <code>brew install zbar</code> で入るが，パスの関係で見つけられないようだ。とりあえず <code>ln -s /opt/homebrew/lib/libzbar.dylib /opt/homebrew/Caskroom/miniforge/base/lib/</code> のようにシンボリックリンクを張れば大丈夫なようだ。</p>
 </div>
 
 <hr>
@@ -82,7 +84,7 @@ else:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-20 15:42:29</time>
+Last modified: <time>2021-07-11 16:08:59</time>
 <!-- hhmts end -->
 </p>
 </body>
