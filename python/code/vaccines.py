@@ -30,13 +30,11 @@ t = wget(URL)
 if not t:
     exit()
 
-filename = "000085533.xlsx"
-
 df1 = pd.read_csv("../data/vaccines.csv", parse_dates=['日付'])
-df2 = pd.read_excel(filename, sheet_name="医療従事者等",
+df2 = pd.read_excel(filename(URL), sheet_name="医療従事者等",
                    header=None, skiprows=5,
                    usecols="A,D,E,F,G").dropna(thresh=3).fillna(0)
-df3 = pd.read_excel(filename, sheet_name="一般接種",
+df3 = pd.read_excel(filename(URL), sheet_name="一般接種",
                    header=None, skiprows=6,
                    usecols="A,D,E,F,G").dropna(thresh=3).fillna(0)
 df2.iloc[:, 1] += df2.iloc[:, 2]
