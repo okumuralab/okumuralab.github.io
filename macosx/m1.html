@@ -210,6 +210,8 @@ Python 3.8.2
 
 <p>本家 <a href="https://www.python.org">python.org</a> の Python が 3.9.1 から universal バイナリも experimental という括弧書きで提供されるようになった。ただし現状では pip で簡単にパッケージを追加できる状況にないので，混乱しないためには通常の macOS 64-bit Intel installer でインストールし，Rosetta で使うのが簡単である。インストールすると zsh を使っている場合は <code>.zprofile</code> に PATH が追記されるので適宜修正する。</p>
 
+<p>現在では numpy が Apple Silicon に対応し，他のツールもかなりソースからビルドできるようになってきたので，基本的なことであれば universal バイナリを arm64 環境で使うことができる。まだ scikit-learn や tensorflow-macos はうまくインストールできない。</p>
+
 <h3>miniforgeのPython 3.9</h3>
 
 <p><a href="https://github.com/conda-forge/miniforge">miniforge</a> を使えば主要ライブラリを含めて arm64 版がインストールできる。</p>
@@ -469,7 +471,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-06-25 12:08:38</time>
+Last modified: <time>2021-07-30 13:45:49</time>
 <!-- hhmts end -->
 </p>
 </footer>
