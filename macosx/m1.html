@@ -184,6 +184,8 @@ make install
 
 <h2>Python</h2>
 
+<p>いろいろ試したが，結局最後の「tensorflow-metal」と書いたところのやりかた（ただし tensorflow-metal そのものはインストールしない）に落ち着いた。</p>
+
 <h3>コマンドラインツールのPython</h3>
 
 <p>Apple のコマンドラインツールに入っている /usr/bin/python，/usr/bin/python3 は universal binary である：</p>
@@ -267,7 +269,7 @@ In [3]: quit
 
 <h3>tensorflow-metal</h3>
 
-<p><a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> 参照。macOS 12+ となっているが Big Sur にもとりあえず入った。正しく動いていない気もする。</p>
+<p><a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> 参照。macOS 12+ となっているが Big Sur にもとりあえず入った。正しく動いていない気もする。後で書くように，tensorflow-metal は入れず，tensorflow-macos だけにするほうがいいかもしれない。</p>
 
 <p>まず <a href="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh">Miniforge3-MacOSX-arm64.sh</a> をダウンロードし，<code>sh Miniforge3-MacOSX-arm64.sh</code> とすると miniforge のインストールが始まる。</p>
 
@@ -321,7 +323,7 @@ Proceed ([y]/n)? <span style="color:maroon">ENTER</span>
 
 <pre>
 python -m pip install tensorflow-macos
-python -m pip install tensorflow-metal
+<del>python -m pip install tensorflow-metal</del>
 </pre>
 
 <p>で完成。とりあえず <code>conda install ipython</code> して，確認：</p>
@@ -341,9 +343,11 @@ In [2]: <span style="color:maroon">tf.__version__</span>
 Out[2]: '2.5.0'
 </pre>
 
+<p>なぜか遅いので，<code>pip uninstall tensorflow-metal</code> してしまった。このほうが速い。</p>
+
 <h2>R</h2>
 
-<p><a href="https://mac.r-project.org">R for macOS Developers</a> に実験的な Apple Silicon 用バイナリがある。正式版は R 4.1.0 以降とのこと。</p>
+<p>R 4.1.0 で Apple Silicon に対応した。</p>
 
 <h2>TeX</h2>
 
@@ -469,7 +473,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-06-25 12:08:38</time>
+Last modified: <time>2021-07-29 16:42:38</time>
 <!-- hhmts end -->
 </p>
 </footer>
