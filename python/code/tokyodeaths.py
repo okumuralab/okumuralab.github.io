@@ -13,10 +13,10 @@ def days(year, month):
 
 perday = np.array([r[2] / days(r[0], r[1]) for i, r in df.iterrows()])
 
-for y in range(2010, 2020):
+for y in range(2010, 2021):
     plt.plot(df[df['year'] == y]['month'], perday[df['year'] == y], 'o-k', alpha=0.2)
 plt.plot(df[df['year'] == 2011]['month'], perday[df['year'] == 2011], 'o-', label='2011')
-plt.plot(df[df['year'] == 2020]['month'], perday[df['year'] == 2020], 'o-', label='2020')
+plt.plot(df[df['year'] == 2021]['month'], perday[df['year'] == 2021], 'o-', label='2021')
 plt.legend()
 plt.savefig('../img/tokyodeaths1.svg', bbox_inches="tight")
 

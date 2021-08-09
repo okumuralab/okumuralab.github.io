@@ -39,7 +39,7 @@ plt.plot(df[df['年'] == 2021]['月'], perday2[df['年'] == 2021],
          'o-k', label='2021速報値')
 plt.xlabel('月')
 plt.ylabel('1日あたり死亡数')
-plt.legend()
+plt.legend(loc=(0.45,0.48))
 plt.savefig('../img/japandeaths2.svg', bbox_inches="tight")
 
 perday = np.array([p2 if np.isnan(p1) else p1 for p1, p2 in zip(perday1, perday2)])
