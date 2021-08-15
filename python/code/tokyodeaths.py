@@ -20,9 +20,13 @@ plt.plot(df[df['year'] == 2021]['month'], perday[df['year'] == 2021], 'o-', labe
 plt.legend()
 plt.savefig('../img/tokyodeaths1.svg', bbox_inches="tight")
 
+# plt.clf()
+# for m, n in [(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May'), (6, 'Jun')]:
+#     plt.plot(df[df['month'] == m]['year'], perday[df['month'] == m], marker=f'${m}$', label=n)
+
 plt.clf()
-for m, n in [(1, 'Jan'), (2, 'Feb'), (3, 'Mar'), (4, 'Apr'), (5, 'May'), (6, 'Jun')]:
-    plt.plot(df[df['month'] == m]['year'], perday[df['month'] == m], marker=f'${m}$', label=n)
-plt.legend()
+for m in range(1, 13):
+    plt.plot(df[df['month'] == m]['year'], perday[df['month'] == m], marker=f'${m}$')
+# plt.legend()
 plt.savefig('../img/tokyodeaths2.svg', bbox_inches="tight")
 

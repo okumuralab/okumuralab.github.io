@@ -19,8 +19,9 @@ plt.legend()
 plt.savefig('../img/osakadeaths.svg', bbox_inches="tight")
 
 plt.clf()
-for i in range(1, 13):
-    plt.plot(df[df['month'] == i]['year'], perday[df['month'] == i], 'o-', label=str(i)+'月')
-plt.legend()
+for m in range(1, 13):
+    plt.plot(df[df['month'] == m]['year'], perday[df['month'] == m],
+             marker=f'${m}$', label=str(m)+'月')
+# plt.legend()
 plt.savefig('../img/osakadeaths1.svg', bbox_inches="tight")
 

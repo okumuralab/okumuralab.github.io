@@ -35,7 +35,7 @@ def days(year, month):
 
 perday = np.array([r[2] / days(r[0], r[1]) for i, r in df.iterrows()])
 
-for y in range(2015, 2021):
+for y in range(2015, 2022):
     plt.plot(df[df['year'] == y]['month'], perday[df['year'] == y], 'o-', label=y)
 
 plt.legend()
@@ -45,13 +45,9 @@ plt.savefig('osakadeaths.svg', bbox_inches="tight")
 <figure><img src="img/osakadeaths.svg" alt="Deaths in Osaka"></figure>
 
 <pre><code>plt.clf()
-plt.plot(df[df['month'] == 1]['year'], perday[df['month'] == 1], 'o-', label='Jan')
-plt.plot(df[df['month'] == 2]['year'], perday[df['month'] == 2], 'o-', label='Feb')
-plt.plot(df[df['month'] == 3]['year'], perday[df['month'] == 3], 'o-', label='Mar')
-plt.plot(df[df['month'] == 4]['year'], perday[df['month'] == 4], 'o-', label='Apr')
-plt.plot(df[df['month'] == 5]['year'], perday[df['month'] == 5], 'o-', label='May')
-plt.xticks(range(2016, 2021))
-plt.legend()
+for m in range(1, 13):
+    plt.plot(df[df['month'] == m]['year'], perday[df['month'] == m],
+             marker=f'${m}$', label=str(m)+'月')
 plt.savefig('osakadeaths1.svg', bbox_inches="tight")
 </code></pre>
 
@@ -65,7 +61,7 @@ plt.savefig('osakadeaths1.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-08-09 20:48:10</time>
+Last modified: <time>2021-08-15 10:25:23</time>
 <!-- hhmts end -->
 </p>
 </body>
