@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width">
 <title>データ作法</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -185,7 +185,7 @@ Year/Month,Male,Female
 </div>
 
 <div class="note">
-<p>CSV形式の欠点は，データに型が指定できないことである。特にExcelでダブルクリックで開く場合にこの欠点が顕在化し，例えば <code>"001"</code> は数値 1 に，<code>"1-2-3"</code> は日付 2001/2/3 に，<code>"1E3"</code> は指数表示の数 1.00E+03 に，STAP細胞で有名になった遺伝子名 <code>"Oct4"</code> は日付 4-Oct になる（これらはExcelに手入力した場合と同じ振舞いである）。遺伝子関係の論文の2割くらいがこの罠に引っかかっているそうである（<a href="http://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1044-7">Gene name errors are widespread in the scientific literature</a>）。対策としては，拡張子をtxtに変えてExcelの「開く」メニューで開き，ウィザードで各列の「データ形式」を「文字列」に指定する。あるいは <code>="001"</code> のように <code>="…"</code> で囲むという奥の手もある。</p>
+<p>CSV形式の欠点は，データに型が指定できないことである。特にExcelでダブルクリックで開く場合にこの欠点が顕在化し，例えば <code>"001"</code> は数値 1 に，<code>"1-2-3"</code> は日付 2001/2/3 に，<code>"1E3"</code> は指数表示の数 1.00E+03 に，STAP細胞で有名になった遺伝子名 <code>"Oct4"</code> は日付 4-Oct になる（これらはExcelに手入力した場合と同じ振舞いである）。遺伝子関係の論文の2割くらいがこの罠に引っかかっているそうである（<a href="http://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1044-7">Gene name errors are widespread in the scientific literature</a>，<a href="https://doi.org/10.1038/d41586-021-02211-4">Autocorrect errors in Excel still creating genomics headache</a>）。対策としては，拡張子をtxtに変えてExcelの「開く」メニューで開き，ウィザードで各列の「データ形式」を「文字列」に指定する。あるいは <code>="001"</code> のように <code>="…"</code> で囲むという奥の手もある。</p>
 
 <p><em>[2018-08-11]</em> Excelで遺伝子はOct4に限らずFeb，Mar，Apr，Jun，Aug，Sep，Oct，Nov，Decが危ないとのこと。あと化学のCASナンバーや，住所の「番地」でも問題が生じ得る。電話番号やクレジットカード番号は数値と解釈されて先頭の0が落ちたり16桁を超えると右の桁が0になったりする。</p>
 </div>
@@ -342,10 +342,10 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 <hr>
 
 <footer>
-<p><a href="../" rel="author">奥村 晴彦</a> (<a href="http://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
+<p><a href="../" rel="author">奥村 晴彦</a> (<a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-05 22:50:17</time>
+Last modified: <time>2021-08-23 14:08:00</time>
 <!-- hhmts end -->
 </p>
 </footer>
