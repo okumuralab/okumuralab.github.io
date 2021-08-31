@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>全国学力テストの都道府県別正答率（2021年版）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+window.onload = function() {
+  document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>全国学力テストの都道府県別平均正答率（2021年版）</h1>
+
+<p><a href="atest2019.html">全国学力テストの都道府県別平均正答率（2019年版）</a>の2021年版。</p>
+
+<p><a href="https://www.nier.go.jp/21chousakekkahoukoku/">令和３年度　全国学力・学習状況調査　報告書・調査結果資料</a>から求めた都道府県ごとの正答率を求めてCSV形式にした。</p>
+
+<p>まず，<a href="https://www.nier.go.jp/19chousakekkahoukoku/index.html">報告書・調査結果資料</a>からリンクされているファイル群を全部ダウンロードする（これはPythonではなくUNIXのコマンドである）。実際に全部を使うわけではないので，もっと絞ることも可能であるが，とりあえず：</p>
+
+<pre>
+<code>wget --timestamping --recursive --no-parent --wait=1 \
+     https://www.nier.go.jp/21chousakekkahoukoku/index.html
+</code></pre>
+
+<p>必要なファイル名のリストを得るには <a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> と正規表現ライブラリ <a href="https://docs.python.org/3/library/re.html">re</a> を使う：</p>
+
+<pre>
+<code>import pathlib, re
+
+path = pathlib.Path("www.nier.go.jp/21chousakekkahoukoku/factsheet/21prefecture-City")
+names = sorted([p for p in path.glob("**/*.xlsx") if re.search(r"/\d\dp_21r\.xlsx$", str(p))])
+</code></pre>
+
+<p>まず小学校についてExcelファイルを読んで平均正答率を計算する：</p>
+
+<pre>
+<code>from openpyxl import load_workbook
+import numpy as np
+
+def f(n):
+    wb = load_workbook(n, read_only=True)
+    ws = wb.worksheets[0]['AE8:AE22']
+    n = len(ws)
+    x = np.array([ws[i][0].value for i in range(n)])
+    koku = (x @ np.arange(n)[::-1]) / np.sum(x) * (100 / (n-1))
+    ws = wb.worksheets[1]['AE8:AE24']
+    n = len(ws)
+    x = np.array([ws[i][0].value for i in range(n)])
+    san = (x @ np.arange(n)[::-1]) / np.sum(x) * (100 / (n-1))
+    return [koku, san]
+
+sho = np.array([f(n) for n in names])
+</code></pre>
+
+<p>同様に中学校も：</p>
+
+<pre>
+<code>names = sorted([p for p in path.glob("**/*.xlsx") if re.search(r"/\d\dm_21r\.xlsx$", str(p))])
+
+def f(n):
+    wb = load_workbook(n, read_only=True)
+    ws = wb.worksheets[0]['AE8:AE22']
+    n = len(ws)
+    x = np.array([ws[i][0].value for i in range(n)])
+    koku = (x @ np.arange(n)[::-1]) / np.sum(x) * (100 / (n-1))
+    ws = wb.worksheets[1]['AE8:AE24']
+    n = len(ws)
+    x = np.array([ws[i][0].value for i in range(n)])
+    suu = (x @ np.arange(n)[::-1]) / np.sum(x) * (100 / (n-1))
+    return [koku, suu]
+
+chu = np.array([f(n) for n in names])
+</code></pre>
+
+<p>水平方向に結合する：</p>
+
+<pre>
+<code>shochu = np.hstack((sho, chu))
+</code></pre>
+
+<p>CSV形式で保存（Excelや「メモ帳」で文字化けしないようにBOM付きUTF-8，行末CRLF）：</p>
+
+<pre>
+<code>import pandas as pd
+
+pd.DataFrame(shochu).to_csv("atest2021.csv", index=False,
+                            encoding="utf_8_sig", line_terminator="\r\n",
+                            header=["小国","小算","中国","中数"])
+</code></pre>
+
+<p>結果は <a href="data/atest2021.csv">atest2021.csv</a> として置いておく。</p>
+
+<p>都道府県名は特に付けていない。必要なら次のリストを使う：</p>
+
+<pre>
+<code>kenmei = ["北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県",
+  "福島県", "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都",
+  "神奈川県", "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県",
+  "岐阜県", "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府",
+  "兵庫県", "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県",
+  "山口県", "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県",
+  "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"]
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-08-31 20:41:26</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
