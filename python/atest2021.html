@@ -6,11 +6,6 @@
 <title>全国学力テストの都道府県別正答率（2021年版）</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
-<script>
-window.onload = function() {
-  document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];
-}
-</script>
 </head>
 <body>
 
@@ -23,13 +18,13 @@ window.onload = function() {
 
 <p><a href="atest2019.html">全国学力テストの都道府県別平均正答率（2019年版）</a>の2021年版。</p>
 
-<p><a href="https://www.nier.go.jp/21chousakekkahoukoku/">令和３年度　全国学力・学習状況調査　報告書・調査結果資料</a>から求めた都道府県ごとの正答率を求めてCSV形式にした。</p>
+<p><a href="https://www.nier.go.jp/21chousakekkahoukoku/">令和３年度　全国学力・学習状況調査　報告書・調査結果資料</a>から求めた都道府県ごとの正答率を求めてCSV形式にした。公式資料と異なり，小数点以下を丸めていない。</p>
 
-<p>まず，<a href="https://www.nier.go.jp/19chousakekkahoukoku/index.html">報告書・調査結果資料</a>からリンクされているファイル群を全部ダウンロードする（これはPythonではなくUNIXのコマンドである）。実際に全部を使うわけではないので，もっと絞ることも可能であるが，とりあえず：</p>
+<p>まず，上記サイトからリンクされているファイル群を全部ダウンロードする（これはターミナルで実行するコマンドである）。以下では全部を使うわけではないので，もっと絞れるが，とりあえず：</p>
 
 <pre>
 <code>wget --timestamping --recursive --no-parent --wait=1 \
-     https://www.nier.go.jp/21chousakekkahoukoku/index.html
+     https://www.nier.go.jp/21chousakekkahoukoku/
 </code></pre>
 
 <p>必要なファイル名のリストを得るには <a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> と正規表現ライブラリ <a href="https://docs.python.org/3/library/re.html">re</a> を使う：</p>
@@ -118,7 +113,7 @@ pd.DataFrame(shochu).to_csv("atest2021.csv", index=False,
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-08-31 20:41:26</time>
+Last modified: <time>2021-09-03 08:17:16</time>
 <!-- hhmts end -->
 </p>
 </body>
