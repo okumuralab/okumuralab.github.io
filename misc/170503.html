@@ -34,7 +34,7 @@ head /dev/urandom | md5     # BSD（Macなど）
 <pre>
 head /dev/urandom | md5sum  # Linuxなど
 </pre>
-<p>でユニークなIDを生成すればよいとしている。私が当初考えたアイデアは，IDを生成する時点でのURLのハッシュ値をIDとするというものであった。例えば http://oku.edu.mie-u.ac.jp/~okumura/misc/170503.html であれば</p>
+<p>でユニークなIDを生成すればよいとしている（ちなみにLinuxでは <code>/dev/urandom</code> より <code>/dev/random</code> のほうが遅いがよりランダムである）。私が当初考えたアイデアは，IDを生成する時点でのURLのハッシュ値をIDとするというものであった。例えば http://oku.edu.mie-u.ac.jp/~okumura/misc/170503.html であれば</p>
 <pre>
 echo -n 'http://oku.edu.mie-u.ac.jp/~okumura/misc/170503.html' | md5
 </pre>
