@@ -16,19 +16,11 @@
 
 <h1>日本の超過死亡？</h1>
 
-<p><em>[2021-10-13]</em> 2021年7月分までのデータを追加した。</p>
+<p><em>[2021-10-15]</em> 2021年5月までの概数，7月までの速報を追加した。</p>
 
-<p><em>[2021-09-01]</em> 2021年6月分までのデータを追加した。</p>
+<p>厚労省<a href="https://www.mhlw.go.jp/toukei/list/81-1a.html">人口動態調査</a>から，人口動態統計（確定数），人口動態統計月報（概数），人口動態統計速報がリンクされている。確定数は翌年9月ごろにならないと出ない。概数はほぼ5ヶ月後，速報はほぼ2ヶ月後に出る。</p>
 
-<p><em>[2021-08-09]</em> 2021年5月分までのデータを追加した。</p>
-
-<p><em>[2021-05-26]</em> 2021年3月分までのデータを追加した。図のキャプションで「確定値」としていたものを「概数」に直した。</p>
-
-<p><em>[2020-12-29]</em> 2020年10月分までのデータを追加した。また，<a href="https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00450011&tstat=000001028897&cycle=7&year=20190&month=0&tclass1=000001053058&tclass2=000001053061&tclass3=000001053065&result_back=1&tclass4val=0">e-Statの人口動態統計</a>の5-4「死亡月別にみた年次別死亡数及び死亡率（人口千対）」に基づき，過去の統計を更新した。古いデータは<a href="data/japandeaths-old.csv">japandeaths-old.csv</a>に残しておく。</p>
-
-<p><a href="https://www.mhlw.go.jp/toukei/list/81-1a.html#link05">人口動態統計速報</a>は集計に2ヶ月近くかかる（<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/02.html">2020年2月分</a>は2020年4月24日に出た。<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/03.html">3月分</a>は5月26日，<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/s2020/04.html">4月分</a>は6月26日に出た）。<a href="https://www.mhlw.go.jp/toukei/list/81-1a.html#link02">人口動態統計月報（概数）</a>は5ヶ月かかり，<a href="https://www.mhlw.go.jp/toukei/list/81-1a.html#link01">確定数</a>はもっともっとかかる。</p>
-
-<p>とりあえず2014年1月〜2019年12月の人口動態統計月報（概数）と，2019年10月からの速報を，e-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&amp;toukei=00450011&amp;tstat=000001028897">人口動態調査</a>から集めて，<a href="data/japandeaths.csv">japandeaths.csv</a> というファイルに収めた。</p>
+<p>データはe-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&amp;toukei=00450011&amp;tstat=000001028897">人口動態調査</a>で公開されている。ここから集めた概数・速報データを <a href="data/japandeaths.csv">japandeaths.csv</a> というファイルに収めた。</p>
 
 <pre><code>import matplotlib.pyplot as plt
 import pandas as pd
@@ -57,24 +49,20 @@ plt.savefig('japandeaths1.svg', bbox_inches="tight")
 
 <figure><img src="img/japandeaths1.svg" alt="Deaths in Japan"></figure>
 
-<pre><code>plt.clf()
-for y in range(2014, 2021):
+<pre><code>for y in range(2014, 2022):
     plt.plot(df[df['年'] == y]['月'], perday1[df['年'] == y],
-             'o-', alpha=0.5, marker=f'${y % 10}$', label=y)
-plt.plot(df[df['年'] == 2020]['月'], perday2[df['年'] == 2020],
-         'o-', marker='$0$', label='2020速報値')
+             alpha=0.5, marker=f'${y % 10}$', label=y)
 plt.plot(df[df['年'] == 2021]['月'], perday2[df['年'] == 2021],
          'o-k', label='2021速報値')
 plt.xlabel('月')
 plt.ylabel('1日あたり死亡数')
-plt.legend()
+plt.legend(loc=(0.45,0.48))
 plt.savefig('japandeaths2.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/japandeaths2.svg" alt="Deaths in Japan"></figure>
 
-<pre><code>plt.clf()
-perday = np.array([p2 if np.isnan(p1) else p1 for p1, p2 in zip(perday1, perday2)])
+<pre><code>perday = np.array([p2 if np.isnan(p1) else p1 for p1, p2 in zip(perday1, perday2)])
 for m in range(1, 13):
     plt.plot(df[df['月'] == m]['年'], perday[df['月'] == m], marker=f'${m}$')
 plt.ylabel('1日あたり死亡数')
@@ -89,7 +77,7 @@ plt.savefig('japandeaths3.svg', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-09-01 13:49:52</time>
+Last modified: <time>2021-10-15 20:52:22</time>
 <!-- hhmts end -->
 </p>
 </body>

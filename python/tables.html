@@ -34,7 +34,7 @@ td, th { border: 1px solid; }
 
 <h4>チェック項目1-1 ファイル形式はExcelかCSVとなっているか</h4>
 
-<p>Excelならxlsではなくxlsx形式にすべきことや，パーマリンクを付けてほしいことを，意見照会では書いたが，反映されなかった。なお，CSVなら今後は文字コードをUTF-8にするべきである。BOM付きUTF-8ならExcelでも文字化けせず開ける。</p>
+<p>Excelならxlsではなくxlsx形式にすべきことや，パーマリンクを付けてほしいことを，意見照会では書いたが，反映されなかった。なお，CSVの文字コードは現在はShift JISが多いが，今後は国際化を考えてUTF-8にするべきである。本来ならBOMなしUTF-8が望ましいが，日本語環境のExcelはBOMなしUTF-8で文字化けするので，当面はBOM付きUTF-8を許容する。なお，JSONはBOMなしUTF-8にしなければならない。</p>
 
 <h2>第2節 Excelファイルによる統計表のレイアウト</h2>
 
@@ -253,7 +253,7 @@ tables[0]
 
 <figure><img src="img/tables-1-13-ex.png" alt="1-13-例"></figure>
 
-<p>改善案：欠測値を *** で表すのは，それで統一されていれば問題ないが，Excelでグラフを描く場合に 0 と扱われる点に注意しなければならない。別の案として，ExcelでもPython（pandas）でも欠測値の意味になる <code>#N/A</code> はどうか。CSVの場合は <code>#</code> 以下がコメントと解釈されないように <code>"#N/A"</code> のようにダブルクォートで囲む。Excelで合計や平均を求める際には <code>=SUMIF(範囲,"&lt;&gt;#N/A")</code> や <code>=AVERAGEIF(範囲,"&lt;&gt;#N/A")</code> のように書く。</p>
+<p>改善案：欠測値を *** で表すのは，それで統一されていれば問題ないが，Excelでグラフを描く場合に 0 と扱われる点に注意しなければならない。別の案として，ExcelでもPython（pandas）でも欠測値の意味になる <code>#N/A</code> はどうか。CSVの場合は <code>#</code> 以下がコメントと解釈されないように <code>"#N/A"</code> のようにダブルクォートで囲む。Excelで合計や平均を求める際には <code>=SUMIF(範囲,"&lt;&gt;#N/A")</code> や <code>=AVERAGEIF(範囲,"&lt;&gt;#N/A")</code> のようにして計算する。</p>
 
 <table id="1-13-例">
   <thead>
@@ -282,13 +282,15 @@ tables[4]
 3  宮城県      NaN      NaN
 </pre>
 
+<p>ほかに（特にRで読む場合は）<code>NA</code> もよく使われる。<code>-</code>（U+002D HYPHEN-MINUS）を使ってもいいが，<code>−</code>（U+2212 MINUS SIGN），<code>－</code>（U+FF0D FULLWIDTH HYPHEN-MINUS），<code>ー</code>（U+30FC KATAKANA-HIRAGANA PROLONGED SOUND MARK）などの類似文字が多いので気を付ける。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-06-14 10:19:36</time>
+Last modified: <time>2021-10-15 21:54:18</time>
 <!-- hhmts end -->
 </p>
 </body>
