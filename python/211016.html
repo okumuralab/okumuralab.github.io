@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>データの整然化の例</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td, th { border: 1px solid; }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>データの整然化の例</h1>
+
+<p>e-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&amp;toukei=00450011&amp;tstat=000001028897">人口動態調査</a>の確定数→死亡→年次→2020年とたどって，5-4「死亡月別にみた年次別死亡数及び死亡率（人口千対）」をCSV形式でダウンロードし，Excelで開く：</p>
+
+<figure><img src="img/211016a.png" alt="mc040000.csv"></figure>
+
+<p>これは整然データになっていない。これを次のような整然データに直したい。ただし，5個の「不詳」は無視する。</p>
+
+<table id="tidy">
+  <thead>
+  <tr><th>年</th><th>月</th><th>死亡数</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>1947</td><td>1</td><td>109940</td></tr>
+  <tr><td>1947</td><td>2</td><td>115405</td></tr>
+  <tr><td>1947</td><td>3</td><td>116996</td></tr>
+  <tr><td>…</td><td>…</td><td>…</td></tr>
+  </tbody>
+</table>
+
+<p>次のようにすればよい：</p>
+
+<pre><code>import pandas as pd
+
+df = pd.read_csv('mc040000.csv', encoding='cp932', skiprows=5, nrows=28)
+df.columns = ['年次', '年', '総数'] + list(range(1, 13)) + ['不詳']
+df = df.melt(id_vars=['年'], value_vars=range(1, 13),
+             var_name='月', value_name='死亡数')
+df['月'] = df['月'].astype(int)
+df = df.sort_values(by=['年', '月'])
+</code></pre>
+
+<p>これで <code>df</code> は次のようになる：</p>
+
+<pre><code>        年   月       死亡数
+0    1947   1  109940.0
+28   1947   2  115405.0
+56   1947   3  116996.0
+84   1947   4   99403.0
+112  1947   5   92456.0
+..    ...  ..       ...
+223  2020   8  111141.0
+251  2020   9  106345.0
+279  2020  10  116951.0
+307  2020  11  117607.0
+335  2020  12  132148.0
+</code></pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-10-16 20:39:54</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
