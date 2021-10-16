@@ -119,7 +119,7 @@ tables[0]
 
 <figure><img src="img/tables-1-3-ex3.png" alt="1-3-例3"></figure>
 
-<p>改善案：最初の列に列名が欲しい。「1月」「2月」「3月」は2019-01，2019-02，2019-03のように年を併記したい。「商品Ａ」は「商品A」のようにいわゆる半角で統一したい。</p>
+<p>改善案：最初の列に列名が欲しい。「1月」「2月」「3月」は2019-01，2019-02，2019-03のように年を併記するほうがわかりやすい（いずれにしても数値に「月」などは付けない）。「商品Ａ」は「商品A」のようにいわゆる半角で統一したい。</p>
 
 <h4>チェック項目1-4 セルの結合をしていないか</h4>
 
@@ -223,7 +223,7 @@ tables[0]
 
 <figure><img src="img/tables-1-11-ex.png" alt="1-11-例"></figure>
 
-<p>改善案：e-Statの時間軸コードはそのままではRやPythonで扱えないので，特に理由がない限り，通常の日付表記（2020，2020-12，2020-12-31など）に統一していただければありがたい。「年」などは付けない。「2006年度4〜9月期」のような複雑な場合は，幅が一定（半期ごと）であれば始値「2006-04」だけ，幅が不定であれば始値と幅または始値と終値の2欄に分ける。</p>
+<p>改善案：e-Statの時間軸コードはそのままではRやPythonで扱えないので，特に理由がない限り，通常の日付表記（2020，2020-12，2020-12-31など）に統一していただければありがたい。あるいは年と月を別の行にしてもよい。いずれにしても数値に「年」などは付けない。「2006年度4〜9月期」のような複雑な場合は，幅が一定（半期ごと）であれば始値「2006-04」だけ，幅が不定であれば始値と幅または始値と終値の2欄に分ける。</p>
 
 <table id="1-11-例">
   <thead>
@@ -282,7 +282,7 @@ tables[4]
 3  宮城県      NaN      NaN
 </pre>
 
-<p>ほかに（特にRで読む場合は）<code>NA</code> もよく使われる。<code>-</code>（U+002D HYPHEN-MINUS）を使ってもいいが，<code>−</code>（U+2212 MINUS SIGN），<code>－</code>（U+FF0D FULLWIDTH HYPHEN-MINUS），<code>ー</code>（U+30FC KATAKANA-HIRAGANA PROLONGED SOUND MARK）などの類似文字が多いので気を付ける。</p>
+<p>ほかに（特にRで読む場合は）<code>NA</code> もよく使われる。<code>-</code>（U+002D HYPHEN-MINUS）を使ってもいいが，<code>―</code>（U+2015 HORIZONTAL BAR），<code>−</code>（U+2212 MINUS SIGN），<code>－</code>（U+FF0D FULLWIDTH HYPHEN-MINUS），<code>ー</code>（U+30FC KATAKANA-HIRAGANA PROLONGED SOUND MARK）などの類似文字が多いので気を付ける。</p>
 
 <hr>
 
@@ -290,7 +290,7 @@ tables[4]
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-10-15 21:54:18</time>
+Last modified: <time>2021-10-16 16:20:34</time>
 <!-- hhmts end -->
 </p>
 </body>
