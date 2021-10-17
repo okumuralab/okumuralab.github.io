@@ -86,7 +86,7 @@ df = pd.read_csv("test.csv")
 
 <p>ダブルクォートで囲めばフィールド中に改行が含まれていても大丈夫です。コメント以外のすべてのフィールドをダブルクォートで囲んでしまってもかまいません。ダブルクォートで囲まれたフィールド中にダブルクォートが含まれる場合は，内側のダブルクォートは <code>""</code> のように2重にします（つまりダブルクォートをダブルクォートでエスケープします）。</p>
 
-<p>文字コードやコメント開始文字を指定して読むには，次のようにします：</p>
+<p>文字コード，コメント開始文字を指定して読むには，次のようにします：</p>
 
 <pre class="cell">
 df = pd.read_csv("test.csv", encoding="cp932", comment="#")
@@ -94,14 +94,14 @@ df = pd.read_csv("test.csv", encoding="cp932", comment="#")
 
 <p>文字コードは Python（pandas）では UTF-8（<code>utf_8</code>）や BOM 付き UTF-8（<code>utf_8_sig</code>）はデフォルトで読めますので，指定する必要があるのは <code>cp932</code>（拡張 Shift JIS）くらいでしょう。</p>
 
-<p>データ型は自動で判断されます（対話型の Python 環境で <code>df.dtypes</code> と打ち込めば，各列のデータ型が表示されますので，確認しましょう）。ただ，特に大きいデータの場合，データ型を指定するほうが速く読めます。文字列は <code>str</code> または <code>object</code>，整数は <code>"int8"</code>，<code>"int16"</code>，<code>"int32"</code>，<code>"int64"</code>（<code>int</code> と同じ），浮動小数点数は <code>"float16"</code>，<code>"float32"</code>，<code>"float64"</code>（<code>float</code> と同じ），<code>"float128"</code>，論理型（<code>True</code>，<code>False</code>）の <code>bool</code> などが指定できます。例：</p>
+<p>データ型は自動で判断されます（対話型の Python 環境で <code>df.dtypes</code> と打ち込めば，各列のデータ型が表示されますので，確認しましょう）。ただ，特に大きいデータの場合，データ型を指定するほうが速く読めます。文字列は <code>str</code> または <code>object</code>，整数は <code>"int8"</code>, <code>"int16"</code>, <code>"int32"</code>, <code>"int64"</code>（<code>int</code> と同じ），浮動小数点数は <code>"float16"</code>, <code>"float32"</code>, <code>"float64"</code>（<code>float</code> と同じ），<code>"float128"</code>，論理型（<code>True</code>, <code>False</code>）の <code>bool</code> などが指定できます。例：</p>
 
 <pre class="cell">
 df = pd.read_csv("test.csv",
                  dtype={"名前": str, "質量": float, "電荷": int})
 </pre>
 
-<p>欠測値（欠損値）は，Python（pandas）では，空文字列，<code>#N/A</code>，<code>#N/A N/A</code>，<code>#NA</code>，<code>-1.#IND</code>，<code>-1.#QNAN</code>，<code>-NaN</code>，<code>-nan</code>，<code>1.#IND</code>，<code>1.#QNAN</code>，<code>&lt;NA&gt;</code>，<code>N/A</code>，<code>NA</code>，<code>NULL</code>，<code>NaN</code>，<code>n/a</code>，<code>nan</code>，<code>null</code> のどれかで表すのがデフォルトです。空文字列が無難ですが，未入力と区別するために何か入れたい場合には <code>"#N/A"</code> とすれば Excel でも欠測値と解釈されます（コメントと解釈されないようにダブルクォートで囲んでおきます）。なお，R では <code>NA</code> がよく使われます。これ以外に例えば <code>-</code> を使いたいなら，次のように明示的に指定しておきます：</p>
+<p>欠測値（欠損値）は，Python（pandas）では，空文字列，<code>#N/A</code>, <code>#N/A N/A</code>, <code>#NA</code>, <code>-1.#IND</code>, <code>-1.#QNAN</code>, <code>-NaN</code>, <code>-nan</code>, <code>1.#IND</code>, <code>1.#QNAN</code>, <code>&lt;NA&gt;</code>, <code>N/A</code>, <code>NA</code>, <code>NULL</code>, <code>NaN</code>, <code>n/a</code>, <code>nan</code>, <code>null</code> のどれかで表すのがデフォルトです。空文字列が無難ですが，未入力と区別するために何か入れたい場合には <code>"#N/A"</code> とすれば Excel でも欠測値と解釈されます（コメントと解釈されないようにダブルクォートで囲んでおきます）。なお，R では <code>NA</code> がよく使われます。これ以外に例えば <code>-</code> を使いたいなら，次のように明示的に指定しておきます：</p>
 
 <pre class="cell">
 df = pd.read_csv("test.csv", na_values="-", keep_default_na=False)
@@ -174,7 +174,7 @@ AddType text/csv;charset=Shift_JIS csv
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-10-17 22:00:31</time>
+Last modified: <time>2021-10-17 22:31:09</time>
 <!-- hhmts end -->
 </p>
 </body>
