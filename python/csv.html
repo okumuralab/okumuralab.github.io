@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>CSVファイルの作法</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td, th { border: 1px solid; }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>CSVファイルの作法</h1>
+
+<h2>CSVファイルの概要</h2>
+
+<p>CSV（comma-separated values）ファイルは，値をコンマで区切って並べただけのテキストファイルです。Excel で読み書きできます。表形式のデータを表すのに便利です。Excel で読み書きできます（後述）。</p>
+
+<p>表形式のデータの例：</p>
+
+<table>
+  <thead>
+  <tr><th>名前</th><th>質量</th><th>電荷</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>陽子</td><td>938.3</td><td>1</td></tr>
+  <tr><td>電子</td><td>0.511</td><td>-1</td></tr>
+  </tbody>
+</table>
+
+<p>上と同じ内容の CSV ファイル：</p>
+
+<pre>
+名前,質量,電荷
+陽子,938.3,1
+電子,0.511,-1
+</pre>
+
+<p>Python で CSV ファイルを読むには次のようにするのが基本です：</p>
+
+<pre class="cell">
+import pandas as pd
+
+df = pd.read_csv("test.csv")
+</pre>
+
+<p>ちなみに，CSV 以外に最近は JSON という形式もよく使われます。上と同じ内容の JSON ファイル：</p>
+
+<pre>
+[
+  {"名前":"陽子", "質量":938.3, "電荷":1},
+  {"名前":"電子", "質量":0.511, "電荷":-1}
+]
+</pre>
+
+<p>表形式のデータの場合は JSON より CSV のほうが無駄がないですね。</p>
+
+<p>CSV ファイルの構造は <a href="https://datatracker.ietf.org/doc/html/rfc4180">RFC 4180</a> という文書で定められています。それによれば，1行目（ヘッダ行）は，なくてもかまいません。行末は CRLF（0D 0A の2バイト）とされていますが，現実には LF（0A の1バイト）だけの場合もよくあります。文字コードは特に定められていませんが，国際化を考えれば UTF-8 が望ましいでしょう（JSON は UTF-8 と定められています）。ただし，日本語環境の Excel では CP932（拡張 Shift JIS）または BOM 付き UTF-8 のどちらかでないと文字化けします。</p>
+
+<p>RFC 4180 では定められていませんが，CSV には次のように通常 <code>#</code> で始まるコメントを付けることがあります：</p>
+
+<pre>
+# 質量: MeV/c^2
+# 電荷: e
+名前,質量,電荷
+陽子,938.3,1
+電子,0.511,-1
+</pre>
+
+<p>この場合，<code>pd.read_csv()</code> にオプション <code>comment='#'</code> が必要です（以下の例参照）。その際は，コメント以外の <code>#</code> はダブルクォートで囲みます：</p>
+
+<pre>
+# 素粒子のハッシュタグ
+名前,ハッシュタグ
+陽子,"#proton"
+電子,"#electron"
+</pre>
+
+<p>ダブルクォートで囲めばフィールド中に改行が含まれていても大丈夫です。コメント以外のすべてのフィールドをダブルクォートで囲んでしまってもかまいません。ダブルクォートで囲まれたフィールド中にダブルクォートが含まれる場合は，内側のダブルクォートは <code>""</code> のように2重にします（つまりダブルクォートをダブルクォートでエスケープします）。</p>
+
+<p>文字コードやコメント開始文字を指定して読むには，次のようにします：</p>
+
+<pre class="cell">
+df = pd.read_csv("test.csv", encoding="cp932", comment="#")
+</pre>
+
+<p>文字コードは Python（pandas）では UTF-8（<code>utf_8</code>）や BOM 付き UTF-8（<code>utf_8_sig</code>）はデフォルトで読めますので，指定する必要があるのは <code>cp932</code>（拡張 Shift JIS）くらいでしょう。</p>
+
+<p>データ型は自動で判断されます（対話型の Python 環境で <code>df.dtypes</code> と打ち込めば，各列のデータ型が表示されますので，確認しましょう）。ただ，特に大きいデータの場合，データ型を指定するほうが速く読めます。文字列は <code>str</code> または <code>object</code>，整数は <code>"int8"</code>，<code>"int16"</code>，<code>"int32"</code>，<code>"int64"</code>（<code>int</code> と同じ），浮動小数点数は <code>"float16"</code>，<code>"float32"</code>，<code>"float64"</code>（<code>float</code> と同じ），<code>"float128"</code>，論理型（<code>True</code>，<code>False</code>）の <code>bool</code> などが指定できます。例：</p>
+
+<pre class="cell">
+df = pd.read_csv("test.csv",
+                 dtype={"名前": str, "質量": float, "電荷": int})
+</pre>
+
+<p>欠測値（欠損値）は，Python（pandas）では，空文字列，<code>#N/A</code>，<code>#N/A N/A</code>，<code>#NA</code>，<code>-1.#IND</code>，<code>-1.#QNAN</code>，<code>-NaN</code>，<code>-nan</code>，<code>1.#IND</code>，<code>1.#QNAN</code>，<code>&lt;NA&gt;</code>，<code>N/A</code>，<code>NA</code>，<code>NULL</code>，<code>NaN</code>，<code>n/a</code>，<code>nan</code>，<code>null</code> のどれかで表すのがデフォルトです。空文字列が無難ですが，未入力と区別するために何か入れたい場合には <code>"#N/A"</code> とすれば Excel でも欠測値と解釈されます（コメントと解釈されないようにダブルクォートで囲んでおきます）。なお，R では <code>NA</code> がよく使われます。これ以外に例えば <code>-</code> を使いたいなら，次のように明示的に指定しておきます：</p>
+
+<pre class="cell">
+df = pd.read_csv("test.csv", na_values="-", keep_default_na=False)
+</pre>
+
+<p>整数型のデータでは欠測値を表すことができません。</p>
+
+<h2>Excel で CSV ファイルを扱う場合の注意</h2>
+
+<p>CSV ファイルは，Excel でデータを作成し，保存時に「CSV UTF-8 (コンマ区切り)」を指定するのが簡単です。この場合，文字コードは BOM 付きの UTF-8 になります。「CSV (コンマ区切り)」にすれば文字コードは CP932（拡張 Shift JIS）になります。</p>
+
+<p>ただし，Excel は <code>#</code> で始まるコメントを認識しません。<code>#</code> で始まる文字列を入力することはできますが，通常の文字列フィールドと同じ扱いになりますので，データ中に <code>#</code> が含まれる場合は注意を要します（自動的にダブルクォートで囲んでくれません）。</p>
+
+<p><code>0</code> で始まる数字の列は要注意です。Excel は数値だと解釈して，頭の <code>0</code> を消してしまいます。例えば都道府県の地域コード（<code>01</code> 北海道，<code>02</code> 青森県，……，<code>47</code> 沖縄県）は <code>0</code> で始まるものがありますので要注意です。入力時に例えば <code>'01</code> のように頭にシングルクォートを付ければ文字列として解釈されるので <code>01</code> が入力できますが，そのような CSV ファイルを読み込む際には，やはり先頭の <code>0</code> が消えてしまいます。対策として <code>01 北海道</code> までを一つのセルに入れてしまうような工夫がなされているようです。</p>
+
+<p>さらに微妙なのが，日付として解釈される文字列です。<a href="../stat/130203.html">データ作法</a>でも詳しく説明しましたが，例えば <code>Oct4</code> のような遺伝子名は日付 4-Oct に化けます。<code>1-2-3</code> は日付 2001/2/3 に，<code>1E3</code> は指数表示の数 1.00E+03 になります。</p>
+
+<p>こういったことが該当する CSV 形式のデータは Excel で扱わないほうが安全です。そういったデータを Excel で作る場合は，非数値部分は「セルの書式設定」で文字列に設定し，CSV には書き出さず xlsx 形式で閉じるようにするしかありません。</p>
+
+<p>テキストエディタには CSV 閲覧・編集用のモードがあるものがあります。特に Windows 用のテキストエディタ <a href="https://jp.emeditor.com">EmEditor Professional</a> の CSV 編集機能は定評があります（<a href="https://forest.watch.impress.co.jp/docs/shseri/emedimaster/1336706.html">最強のCSVエディター「EmEditor」はExcelの代わりにも使える ～テキスト編集上級者への道</a>参照）。VS Code にも Edit csv という拡張機能があります。Emacs にも csv-mode があります。</p>
+
+<p>CSV ファイルの閲覧・編集に特化した無償アプリもいくつかあるようです（例：<a href="https://www.plus-one.tech/csv-plus/">CSV+</a>）。</p>
+
+<h2>Web で提供する CSV ファイル</h2>
+
+<p>Web で CSV ファイルを提供する場合，ブラウザで見たときに文字化けしないように，文字コードを指定したいことがあります。そのための簡単な方法として，Web サーバの同じディレクトリに <code>.htaccess</code> というファイルを置いて，それに</p>
+
+<pre>
+AddType text/csv;charset=utf-8 csv
+</pre>
+
+<p>または</p>
+
+<pre>
+AddType text/csv;charset=Shift_JIS csv
+</pre>
+
+<p>のように書いておきます（これができない場合もありますのでサーバの管理者にお問い合わせください）。</p>
+
+<p>CSV ファイルのメタデータ（各列のデータ型など）を提供するための仕組みで一般に使われているものはなさそうです。W3C は <a href="https://www.w3.org/TR/tabular-data-primer/">CSV on the Web</a> というものを提案しています（<a href="https://wiki.suikawiki.org/n/CSVW">suikawiki の CSVW のページ</a>も参照）が，あまり使われているところを見ません。</p>
+
+<p>CSV on the Web では，例えばこのページの最初の例なら，同じディレクトリに <code>test.csv-metadata.json</code> という名前の JSON ファイルを作り，次のように書き込みます。</p>
+
+<pre>
+{
+  "@context": "http://www.w3.org/ns/csvw"</code>,
+  "url": "test.csv",
+  "tableSchema": {
+    "columns": [
+      {
+        "titles": "名前",
+        "datatype": "string"
+      }, {
+        "titles": "質量",
+        "datatype": "number"
+      }, {
+        "titles": "電荷",
+        "datatype": "integer"
+      }
+    ]
+  }
+}
+</pre>
+
+<p>このファイルのメディアタイプは <code>application/json</code> ではなく <code>application/csvm+json</code> とするとのことですが，そのためのうまい方法がありません。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-10-17 22:00:31</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
