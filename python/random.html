@@ -52,9 +52,17 @@ np.random.randint(1, 7, size=10) # 1以上7未満の整数の乱数10個
 <pre><code>import numpy as np
 
 rng = np.random.default_rng(20200102) # seedの設定（空も可）
-rng.random(10)                # 0以上1未満の一様乱数10個
-rng.standard_normal(10)       # 標準正規分布の乱数10個
-rng.integers(1, 7, size=10)   # 1以上7未満の整数の乱数10個
+
+rng.random()             # 0以上1未満の一様乱数
+rng.random(10)           # 0以上1未満の一様乱数10個の配列
+rng.normal(5, 3)         # 平均5，標準偏差3の正規分布の乱数
+rng.normal(5, 3, 10)     # 平均5，標準偏差3の正規分布の乱数10個の配列
+rng.standard_normal()    # 標準正規分布（平均0，標準偏差1）の乱数
+rng.standard_normal(10)  # 標準正規分布の乱数10個の配列
+rng.integers(1, 7)       # 1以上7未満の整数の乱数
+rng.integers(1, 7, 10)   # 1以上7未満の整数の乱数10個の配列
+rng.exponential(3)       # 平均3の指数分布の乱数
+rng.exponential(3, 10)   # 平均3の指数分布の乱数10個の配列
 </code></pre>
 
 <p>上の例のように「タネ（seed）」を与えるのがシミュレーションでの推奨です。同じタネからは同じ乱数列が生成されますので，あとで結果を再現できます。ゲームなどでは <code>rng = np.random.default_rng()</code> のように空にすると，再現性のない（毎回異なる）乱数列が得られます。</p>
@@ -93,7 +101,7 @@ plt.hist(a)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-22 16:29:11</time>
+Last modified: <time>2021-10-26 15:17:32</time>
 <!-- hhmts end -->
 </p>
 </body>

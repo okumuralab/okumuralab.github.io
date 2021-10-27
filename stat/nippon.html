@@ -16,6 +16,8 @@
 
 <h1>日本地図</h1>
 
+<p><em>[2021年10月追記]</em> 最新のデータを追加。</p>
+
 <p><em>[2019年11月追記]</em> NipponパッケージがCRANから消されてしまったのでNipponMapだけで描くように手直しした。</p>
 
 <p><em>[2017年12月追記]</em> 谷村先生ご自身によるNipponパッケージの紹介スライドが
@@ -32,7 +34,7 @@
 <a href="https://CRAN.R-project.org/package=NipponMap">NipponMap</a>
 を使って日本地図を描いてみる。</p>
 
-<p>データは，神戸市立科学技術高等学校の 中野 由章 先生が毎年調べられている<a href="http://nakano.ac/index.php?%B9%E2%B9%BB%A1%D6%BE%F0%CA%F3%A1%D7%B6%B5%B0%F7%BA%CE%CD%D1%BB%EE%B8%B3%BE%F5%B6%B7">高校「情報」教員採用試験状況</a>である。</p>
+<p>データは，工学院大学附属中学校・高等学校校長の 中野 由章 先生が毎年調べられている<a href="https://nakano.ac/index.php?%B9%E2%B9%BB%A1%D6%BE%F0%CA%F3%A1%D7%B6%B5%B0%F7%BA%CE%CD%D1%BB%EE%B8%B3%BE%F5%B6%B7">高校「情報」教員採用試験状況</a>である。</p>
 
 <p>まずNipponMapパッケージのインストール：</p>
 
@@ -41,7 +43,7 @@
 install.packages("NipponMap")
 </code></pre>
 
-<p>2020年度採用の高校「情報」教員採用試験で，副免許不要の都道府県は青，副免許必要の都道府県は黄を塗る。</p>
+<p>2022年度採用の高校「情報」教員採用試験で，副免許不要の都道府県は青，副免許必要の都道府県は黄を塗る。</p>
 
 <pre>
 <code>library(NipponMap)
@@ -53,26 +55,32 @@ kenmei = c("北海道", "青森", "岩手", "宮城", "秋田", "山形", "福�
            "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄")
 cols = rep("white", 47)
 names(cols) = kenmei
-cols[c("青森","岩手","千葉","石川","福井","静岡","愛知","岐阜","京都","大阪","和歌山",
-       "岡山","広島","徳島","高知","福岡","佐賀","熊本","大分","宮崎","沖縄")] = "blue"
-cols[c("北海道","宮城","茨城","埼玉","東京","神奈川","富山","長野","兵庫","山口")] = "yellow"
+cols[c("青森","岩手","秋田","山形","福島","栃木","群馬","千葉","東京","神奈川","山梨",
+       "新潟","富山","石川","福井","長野","静岡","愛知","岐阜","京都","大阪","和歌山",
+       "鳥取","岡山","広島","徳島","香川","高知","福岡","佐賀","長崎","熊本","大分",
+       "宮崎","沖縄")] = "blue"
+cols[c("北海道","宮城","茨城","埼玉","滋賀","兵庫","島根","愛媛","山口","鹿児島")] = "yellow"
 par(mar=c(0,0,0,0))
 JapanPrefMap(col=cols)
 legend(143, 33, c("副免許不要","副免許必要"), fill=c("blue","yellow"))
 </code></pre>
 
-<figure><img src="img/191105a.png" alt="2020年度高校「情報」教員採用試験状況"></figure>
+<figure><img src="img/211024a.png" alt="2022年度高校「情報」教員採用試験状況"></figure>
 
-<p>「白いところは何なんですか？」とよく尋ねられる。「採用なし」である。ちなみに，高校「情報」は必履修の教科である。これでも白いところが減ってきた。</p>
+<p>白いところ（「採用なし」）はずいぶん減った。</p>
 
 <h2 id="animation">アニメーション化</h2>
 
-<p>ついでに，<a href="http://nakano.ac/index.php?%B9%E2%B9%BB%A1%D6%BE%F0%CA%F3%A1%D7%B6%B5%B0%F7%BA%CE%CD%D1%BB%EE%B8%B3%BE%F5%B6%B7">中野先生のページ</a>から副免許の要・不要も書き込まれたデータをすべていただいてきて，アニメーションで表示する：</p>
-
 <pre>
-<code>year = 2001:2021
-cols = matrix(rep("white", 47*21), nrow=47)
+<code>year = 2001:2022
+cols = matrix(rep("white", 47*22), nrow=47)
 rownames(cols) = kenmei
+
+cols[c("青森","岩手","秋田","山形","福島","栃木","群馬","千葉","東京","神奈川","山梨",
+       "新潟","富山","石川","福井","長野","静岡","愛知","岐阜","京都","大阪","和歌山",
+       "鳥取","岡山","広島","徳島","香川","高知","福岡","佐賀","長崎","熊本","大分",
+       "宮崎","沖縄"), 22] = "blue"
+cols[c("北海道","宮城","茨城","埼玉","滋賀","兵庫","島根","愛媛","山口","鹿児島"), 22] = "yellow"
 
 cols[c("青森","岩手","山形","栃木","千葉","東京","神奈川","山梨","新潟","石川","福井",
        "静岡","愛知","岐阜","京都","大阪","鳥取","岡山","広島","徳島","高知","福岡",
@@ -121,7 +129,7 @@ cols[c("茨城","群馬","埼玉","東京","富山","愛知","鳥取"), 8] = "ye
 
 library(animation)
 saveGIF({
-    for (i in 8:21) {
+    for (i in 8:22) {
         par(mar=c(0,0,2,0))
         JapanPrefMap(col=cols[,i])
         title(year[i])
@@ -130,7 +138,7 @@ saveGIF({
 })
 </code></pre>
 
-<figure><img src="img/200514a.gif" alt="高校で「情報」教員が採用された都道府県"></figure>
+<figure><img src="img/211024b.gif" alt="高校で「情報」教員が採用された都道府県"></figure>
 
 <h2>投影法の変更</h2>
 
@@ -174,7 +182,7 @@ function (col = NULL, inset = TRUE, ...)
 legend(600, 3700, c("副免許不要","副免許必要"), fill=c("blue","yellow"))
 </code></pre>
 
-<figure><img src="img/191105c.png" alt="2019年度高校「情報」教員採用試験状況"></figure>
+<figure><img src="img/211024c.png" alt="2022年度高校「情報」教員採用試験状況"></figure>
 
 <p>UTM 54N以外に，<a href="http://gis.stackexchange.com/questions/73107/suitable-projection-for-a-map-of-japan">Suitable projection for a map of Japan</a> で次のような経線がまっすぐになるものも薦められている：</p>
 
@@ -193,7 +201,7 @@ legend(600, 3700, c("副免許不要","副免許必要"), fill=c("blue","yellow"
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-08 13:46:24</time>
+Last modified: <time>2021-10-24 11:34:10</time>
 <!-- hhmts end -->
 </p>
 </footer>

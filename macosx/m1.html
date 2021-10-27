@@ -22,7 +22,9 @@
 
 <p>2020-11-20 に生協に注文した Mac mini 16G/256G は 2021-01-12 に届いた。</p>
 
-<p>どちらもメモリ16Gにしたが，通常の用途には8Gで十分かも。SSDは満タンの半分程度で使うつもりで選ぶほうが安心らしいので，据置き用には外付けHDDをAPFSフォーマットして使う。</p>
+<p>どちらもメモリ16Gにしたが，通常の用途には8Gで十分かも。SSDは満タンの半分程度で使うつもりで選ぶほうが安心らしいので，据置き用には外付けSSD/HDDをAPFSフォーマットしてつなぎ，データ類はそちらに逃す。</p>
+
+<p>2021-10-26 macOS Monterey に更新。</p>
 
 <h2>セットアップと一般的な設定</h2>
 
@@ -45,10 +47,10 @@
 <p>（これは好みだが）システム環境設定でディスプレイの色温度を自分好みに設定する。あるいは1日中 Night Shift に設定するのが簡単。</p>
 
 <div class="note">
-<p>以上以外に，私は非常に慎重を期すためにいつも自分を管理者から外している。具体的には，システム環境設定の「ユーザとグループ」で自分（奥村）以外に管理者（名前は例えば admin とする）を一人作成し，その管理者（Apple ID には紐付けない）でログインし直して奥村を一般ユーザに格下げする。これで何か重要なことをする際には管理者の名前とパスワードを聞いてくるのでうっかり危ないコマンドを実行する危険性が減る。Unix 的には sudoers から外したことに相当する。コマンドでシステム領域に触れたいときは <code>su admin</code> してから <code>sudo 何々</code> する。ただ，macOS はデフォルトでずいぶん安全になったので，今はここまでする必要はないかもしれない。</p>
+<p>以上以外に，私は非常に慎重を期すためにいつも自分を管理者から外している。具体的には，システム環境設定の「ユーザとグループ」で自分（奥村）以外に管理者（名前は例えば admin とする）を一人作成し，その管理者（Apple ID には紐付けない）でログインし直して奥村を一般ユーザに格下げする。これで何か重要なことをする際には管理者の名前とパスワードを聞いてくるのでうっかり危ないコマンドを実行する危険性が減る。Unix 的には sudoers から外したことに相当する。コマンドでシステム領域に触れたいときは <code>su admin</code> してから <code>sudo 何々</code> する。ただ，macOS はデフォルトでずいぶん安全になったので，今はここまでする必要はないかもしれない。Big Sur から Monterey に更新する際には admin でログインし直す必要があった。</p>
 </div>
 
-<p>初期の M1 Mac にあった問題（おそらく Big Sur 11.2 で改善されたはず）：</p>
+<p>初期の M1 Mac にあった問題（おそらく改善されたはず）：</p>
 
 <ul>
   <li>Bluetooth の接続がよく切れる</li>
@@ -143,7 +145,7 @@ export PATH
 <p><a href="https://brew.sh/2021/02/05/homebrew-3.0.0/">Homebrew 3.0.0</a>:
 "Apple Silicon is now officially supported for installations in /opt/homebrew."</p>
 
-<p>wget，gnupg，pinentry-mac，imagemagick，poppler，ffmpeg，graphviz，pandoc など，大部分のものは Apple Silicon 版が用意されるようになった。<del>pandoc はまだ Intel 版だけ。</del></p>
+<p>wget，gnupg，pinentry-mac，imagemagick，poppler，ffmpeg，graphviz，pandoc など，大部分のものは Apple Silicon 版が用意されるようになった。</del></p>
 
 <p>ARM 版は，<a href="https://docs.brew.sh/Installation">Installation</a> にあるように <code>/opt/homebrew</code>（ユーザ権限で書き込めるようにしておく）にインストールする：</p>
 
@@ -184,7 +186,7 @@ make install
 
 <h2>Python</h2>
 
-<p>いろいろ試したが，結局最後の「tensorflow-metal」と書いたところのやりかた（ただし tensorflow-metal そのものはインストールしない）に落ち着いた。</p>
+<p>いろいろ試したが，今は miniforge 版を使っている。</p>
 
 <h3>コマンドラインツールのPython</h3>
 
@@ -196,17 +198,17 @@ make install
 /usr/bin/python (for architecture x86_64):	Mach-O 64-bit executable x86_64
 /usr/bin/python (for architecture arm64e):	Mach-O 64-bit executable arm64e
 % /usr/bin/python --version
-Python 2.7.16
+Python 2.7.18
 
 % file /usr/bin/python3
 /usr/bin/python3: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64e:Mach-O 64-bit executable arm64e]
 /usr/bin/python3 (for architecture x86_64):	Mach-O 64-bit executable x86_64
 /usr/bin/python3 (for architecture arm64e):	Mach-O 64-bit executable arm64e
 % /usr/bin/python3 --version
-Python 3.8.2
+Python 3.8.9
 </pre>
 
-<p>この arm64e 側を使うことは可能だが，現状では pip でライブラリを追加することは困難。</p>
+<p>この arm64e 側を使うことは可能だが，現状では pip でバイナリが提供されているライブラリは少ない。</p>
 
 <h3>本家のPython 3.9</h3>
 
@@ -220,63 +222,10 @@ Python 3.8.2
 
 <!-- <p>（<a href="https://qiita.com/syoyo/items/6ad890c8a902d02d8c5a">こちら</a>参照）。うまくすれば Apple の TensorFlow と組み合わせることもできる（<a href="https://towardsdatascience.com/tensorflow-2-4-on-apple-silicon-m1-installation-under-conda-environment-ba6de962b3b8">TensorFlow 2.4 on Apple Silicon M1: installation under Conda environment</a> および <a href="https://towardsdatascience.com/benchmark-m1-vs-xeon-vs-core-i5-vs-k80-and-t4-e3802f27421c">Benchmark M1 vs Xeon vs Core i5 vs K80 and T4</a> 参照）。</p> -->
 
-<p>miniforge は単体で入れることもできるが，Homebrew で入れるには <code>/opt/homebrew/bin/brew install miniforge</code> とすればよい。/opt/homebrew/Caskroom/miniforge 以下に入るので /opt/homebrew/Caskroom/miniforge/base/bin をPATHに加える。<code>conda update --all</code>，<code>conda list</code>，<code>conda install ...</code> のようにして管理する。パッケージは /opt/homebrew/Caskroom/miniforge/base/lib/python3.9/site-packages に入る。</p>
-
-<p><a href="https://pytorch.org">PyTorch</a> は miniforge の Python 3.9 に普通にインストールできるようだ。次の TensorFlow と同様の Apple Silicon への最適化は<a href="https://github.com/pytorch/pytorch/issues/47702">要望</a>はあるがまだのようだ。</p>
-
-<pre>
-conda install pytorch torchvision  # torchaudio はまだダメ
-</pre>
-
-<h3>miniforgeのPython 3.8とAppleのTensorFlow（古）</h3>
-
-<p><a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> はアーカイブ入りした。最新の方法は次の tensorflow-metal にある。</p>
-
-<p><del>Apple の <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> は Apple Silicon に最適化されている（TensorFlow Blog の <a href="https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html">Accelerating TensorFlow Performance on Mac</a> 参照）。<a href="https://github.com/apple/tensorflow_macos/issues/153">Instructions to install TensorFlow in a Conda Environment</a> のようにすれば miniforge の Python 3.8 環境にインストールできる。以下では apple という名前の環境を作る：</del></p>
-
-<pre>
-wget -N https://raw.githubusercontent.com/mwidjaja1/DSOnMacARM/main/environment.yml
-conda env create --file=environment.yml --name=apple
-conda init zsh
-</pre>
-
-<p><del><code>.zshrc</code> が書き変わるのでzshを再起動するか <code>. ~/.zshrc</code> と打ち込む。プロンプトの先頭に <code>(base)</code> が付くようになる。</del></p>
-
-<pre>
-conda activate apple
-</pre>
-
-<p><del>とすれば新しい環境に移行する（プロンプトの先頭が <code>(apple)</code> になる）。この状態で Apple の TensorFlow をインストールする。</del></p>
-
-<pre>
-pip install --upgrade --force --no-dependencies \
-    https://github.com/apple/tensorflow_macos/releases/download/v0.1alpha3/tensorflow_macos-0.1a3-cp38-cp38-macosx_11_0_arm64.whl
-    https://github.com/apple/tensorflow_macos/releases/download/v0.1alpha3/tensorflow_addons_macos-0.1a3-cp38-cp38-macosx_11_0_arm64.whl
-</pre>
-
-<p><del>うまくインストールできたか IPython で試してみる：</del></p>
-
-<pre>
-ipython
-
-In [1]: import tensorflow as tf
-
-In [2]: tf.__version__
-Out[2]: '2.4.0-rc0'
-
-In [3]: quit
-</pre>
-
-<p><del><code>conda deactivate</code> とすれば元の <code>(base)</code> 環境に戻る。</del></p>
-
-<h3>tensorflow-metal</h3>
-
-<p><a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> 参照。macOS 12+ となっているが Big Sur にもとりあえず入った。正しく動いていない気もする。後で書くように，tensorflow-metal は入れず，tensorflow-macos だけにするほうがいいかもしれない。</p>
-
-<p>まず <a href="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh">Miniforge3-MacOSX-arm64.sh</a> をダウンロードし，<code>sh Miniforge3-MacOSX-arm64.sh</code> とすると miniforge のインストールが始まる。</p>
+<p>上記サイトから Miniforge3-MacOSX-arm64.sh をダウンロードし，<code>sh Miniforge3-MacOSX-arm64.sh</code> とすると miniforge のインストールが始まる。</p>
 
 <pre style="color:black">
-Welcome to Miniforge3 4.10.1-4
+Welcome to Miniforge3 ......
 
 In order to continue the installation process, please review the license
 agreement.
@@ -313,39 +262,60 @@ conda config --set auto_activate_base false
 Thank you for installing Miniforge3!
 </pre>
 
-<p>これでシェルを立ち上げ直す。<code>.zshrc</code> に追記されていることを確認し <code>conda install -c apple tensorflow-deps</code> と打つ。</p>
+<p><code>.zshrc</code> が書き変わるのでzshを再起動するか <code>. ~/.zshrc</code> と打ち込む。プロンプトの先頭に <code>(base)</code> が付くようになる。</p>
 
-<pre style="color:black">
-...中略...
+<p>ときどき <code>conda update --all</code> で更新する。ほかに <code>conda list</code>，<code>conda install ...</code> を覚えておけばよい。</p>
 
-Proceed ([y]/n)? <span style="color:maroon">ENTER</span>
-</pre>
+<p>（別の方法として，miniforge を Homebrew で入れるには <code>/opt/homebrew/bin/brew install miniforge</code> とすればよい。/opt/homebrew/Caskroom/miniforge 以下に入るので /opt/homebrew/Caskroom/miniforge/base/bin をPATHに加える。パッケージは /opt/homebrew/Caskroom/miniforge/base/lib/python3.9/site-packages に入る。）</p>
 
-<p>最後に</p>
+<p>Tensorflow は <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> に従ってインストールできる。しかし，なぜか tensorflow-metal が遅いので，<code>pip uninstall tensorflow-metal</code> してしまった。</p>
+
+<p><a href="https://pytorch.org">PyTorch</a> は miniforge の Python 3.9 に普通にインストールできるようだ。次の TensorFlow と同様の Apple Silicon への最適化は<a href="https://github.com/pytorch/pytorch/issues/47702">要望</a>はあるがまだのようだ。</p>
 
 <pre>
-python -m pip install tensorflow-macos
-<del>python -m pip install tensorflow-metal</del>
+conda install pytorch torchvision  # torchaudio はまだダメ
 </pre>
 
-<p>で完成。とりあえず <code>conda install ipython</code> して，確認：</p>
+<!--
+<h3>miniforgeのPython 3.8とAppleのTensorFlow（古）</h3>
 
-<pre style="color:black">
-% <span style="color:maroon">ipython</span>
-Python 3.9.4 | packaged by conda-forge | (default, May 10 2021, 22:10:52) 
-Type 'copyright', 'credits' or 'license' for more information
-IPython 7.24.1 -- An enhanced Interactive Python. Type '?' for help.
+<p><a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> はアーカイブ入りした。最新の方法は次の tensorflow-metal にある。</p>
 
-In [1]: <span style="color:maroon">import tensorflow as tf</span>
-Init Plugin
-Init Graph Optimizer
-Init Kernel
+<p><del>Apple の <a href="https://github.com/apple/tensorflow_macos">tensorflow_macos</a> は Apple Silicon に最適化されている（TensorFlow Blog の <a href="https://blog.tensorflow.org/2020/11/accelerating-tensorflow-performance-on-mac.html">Accelerating TensorFlow Performance on Mac</a> 参照）。<a href="https://github.com/apple/tensorflow_macos/issues/153">Instructions to install TensorFlow in a Conda Environment</a> のようにすれば miniforge の Python 3.8 環境にインストールできる。以下では apple という名前の環境を作る：</del></p>
 
-In [2]: <span style="color:maroon">tf.__version__</span>
-Out[2]: '2.5.0'
+<pre>
+wget -N https://raw.githubusercontent.com/mwidjaja1/DSOnMacARM/main/environment.yml
+conda env create --file=environment.yml --name=apple
+conda init zsh
 </pre>
 
-<p>なぜか遅いので，<code>pip uninstall tensorflow-metal</code> してしまった。このほうが速い。</p>
+<pre>
+conda activate apple
+</pre>
+
+<p><del>とすれば新しい環境に移行する（プロンプトの先頭が <code>(apple)</code> になる）。この状態で Apple の TensorFlow をインストールする。</del></p>
+
+<pre>
+pip install --upgrade --force --no-dependencies \
+    https://github.com/apple/tensorflow_macos/releases/download/v0.1alpha3/tensorflow_macos-0.1a3-cp38-cp38-macosx_11_0_arm64.whl
+    https://github.com/apple/tensorflow_macos/releases/download/v0.1alpha3/tensorflow_addons_macos-0.1a3-cp38-cp38-macosx_11_0_arm64.whl
+</pre>
+
+<p><del>うまくインストールできたか IPython で試してみる：</del></p>
+
+<pre>
+ipython
+
+In [1]: import tensorflow as tf
+
+In [2]: tf.__version__
+Out[2]: '2.4.0-rc0'
+
+In [3]: quit
+</pre>
+
+<p><del><code>conda deactivate</code> とすれば元の <code>(base)</code> 環境に戻る。</del></p>
+-->
 
 <h2>R</h2>
 
@@ -475,7 +445,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-08-08 15:28:15</time>
+Last modified: <time>2021-10-26 13:52:26</time>
 <!-- hhmts end -->
 </p>
 </footer>
