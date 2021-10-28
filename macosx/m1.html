@@ -24,8 +24,6 @@
 
 <p>どちらもメモリ16Gにしたが，通常の用途には8Gで十分かも。SSDは満タンの半分程度で使うつもりで選ぶほうが安心らしいので，据置き用には外付けSSD/HDDをAPFSフォーマットしてつなぎ，データ類はそちらに逃す。</p>
 
-<p>2021-10-26 macOS Monterey に更新。</p>
-
 <h2>セットアップと一般的な設定</h2>
 
 <p>他の Mac からコピーという手もあったが，ここはクリーンセットアップすることにする。Apple ID を設定したら iCloud から多くの設定を拾ってくれたので，たいした手間ではない。セットアップ中に「コンピュータアカウントを作成」でサジェストされるアカウント名（私の場合は okumuraharuhiko だった）は，普段使っているユーザ名（私の場合 okumura）に直す（後でも直せる）。</p>
@@ -56,6 +54,13 @@
   <li>Bluetooth の接続がよく切れる</li>
   <li>スクリーンセーバー解除ができなくなる（他マシンからログインして ScreenSaverEngine を kill すればよい）</li>
   <li>M1 MacBook AirでiPhone経由のBluetoothテザリングがうまくいかない問題は，Macのシステム環境設定→BluetoothでiPhoneを右クリックし「ネットワークへ接続」を選ぶ方法でできるようになった（<a href="https://bbs.kakaku.com/bbs/K0001311299/SortID=23940755/">出典</a>）。</li>
+</ul>
+
+<p>[2021-10-26] macOS Monterey に更新してから起きている問題（未解決）：</p>
+
+<ul>
+  <li>iPhone に Bluetooth で接続できなくなった（M1 も Intel も）。</li>
+  <li>外付けカメラが一晩置くと使えなくなる。<code>lsof | grep VDC</code> で調べても何かのプロセスがカメラを抱えているわけでもなく，<code>sudo killall VDCAssistant</code> しても直らない。OS 再起動で直る。</li>
 </ul>
 
 <h2>ターミナル</h2>
@@ -445,7 +450,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-10-26 13:52:26</time>
+Last modified: <time>2021-10-28 14:10:57</time>
 <!-- hhmts end -->
 </p>
 </footer>
