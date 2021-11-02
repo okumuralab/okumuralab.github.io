@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>melt</title>
+<title>データの整然化</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <style>
@@ -18,13 +18,71 @@ td, th { border: 1px solid; }
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>melt</h1>
+<h1>データの整然化</h1>
 
-<p>Hadley Wickham の R パッケージ <a href="http://had.co.nz/reshape/">reshape</a> で deshape() という関数が導入されたが，のちに melt() と改名された。これについては2007年の彼の論文 <a href="https://www.jstatsoft.org/article/view/v021i12">Reshaping Data with the reshape Package</a> に詳しい。このパッケージはその後 <a href="https://github.com/hadley/reshape">reshape2</a> となった。Wickham は2014年に <a href="https://www.jstatsoft.org/article/view/v059i10">Tidy Data</a> という論文を書き，tidy data（整然データ）という概念を提唱する。その後 Wickham は <a href="https://tidyr.tidyverse.org">tidyr</a> というパッケージを作り，melt() に相当する gather() という関数を実装する。tidyr 1.0.0 からは gather() は pivot_longer() で置き換えられる</p>
+<p>R の ggplot2 などのパッケージで有名な Hadley Wickham は，2014年に <a href="https://www.jstatsoft.org/article/view/v059i10">Tidy Data</a> という論文を書き，tidy data（整然データ）という概念を提唱する。</p>
 
-<p>ここまでは R の話だが，Python の pandas パッケージにもバージョン 0.6.0（2011-11-25）から <a href="https://pandas.pydata.org/docs/reference/api/pandas.melt.html">melt()</a> という関数が導入される。</p>
+<p>世の中の「データ」は，Excel で紙に印刷して人間が眺めるために作られたものが多く，データとして扱うには整形が必要なことが多い。そういう雑然データ（messy data）を整然データに変えよう，という話である。</p>
 
+<p>この論文によれば，tidy data とは，データベースの第3正規形と同様の概念で，次のように定義できるという：</p>
 
+<ol>
+  <li>一つの変数は一つの列をなす（Each variable forms a column.）</li>
+  <li>一つの観測は一つの行をなす（Each observation forms a row.）</li>
+  <li>一つのタイプの観測群は一つの表をなす（Each type of observational unit forms a table.）</li>
+</ol>
+
+<p>彼の2017年の著書 <a href="https://r4ds.had.co.nz">R for Data Science</a> の <a href="https://r4ds.had.co.nz/tidy-data.html">Tidy data</a> の章には，よりわかりやすくまとめてある：</p>
+
+<ol>
+  <li>一つの変数は一つの列に（Each variable must have its own column.）</li>
+  <li>一つの観測は一つの行に（Each observation must have its own row.）</li>
+  <li>一つの値は一つのセルに（Each value must have its own cell.）</li>
+</ol>
+
+<p>難しいのが「一つの変数は一つの列に」である。例えば，次のように，列名が変数になってしまっていることがよくある：</p>
+
+<table>
+  <thead>
+  <tr><th>都道府県</th><th>1月</th><th>2月</th><th>…</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>東京都</td><td>40367</td><td>10997</td><td>…</td></tr>
+  <tr><td>大阪府</td><td>13721</td><td>3365</td><td>…</td></tr>
+  </tbody>
+</table>
+
+<p>これは次のようにするほうがよい：</p>
+
+<table>
+  <thead>
+  <tr><th>都道府県</th><th>年月</th><th>感染者数</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>東京都</td><td>2021-01</td><td>40367</td></tr>
+  <tr><td>東京都</td><td>2021-02</td><td>10997</td></tr>
+  <tr><td>東京都</td><td>…</td><td>…</td></tr>
+  <tr><td>大阪府</td><td>2021-01</td><td>13721</td></tr>
+  <tr><td>大阪府</td><td>2021-02</td><td>3365</td></tr>
+  <tr><td>大阪府</td></td><td>…</td><td>…</td></tr>
+  </tbody>
+</table>
+
+<p>年と月は別の列に分けてもよい。月だけだと，そのうち困る。</p>
+
+<p>概して，横長の表は要注意である。</p>
+
+<p>R や Python には，横長の表を縦長の表にする関数が用意されている。</p>
+
+<p>R では，Wickham の R パッケージ <a href="http://had.co.nz/reshape/">reshape</a> に deshape() という関数があったが，のちに melt() と改名された。これについては2007年の彼の論文 <a href="https://www.jstatsoft.org/article/view/v021i12">Reshaping Data with the reshape Package</a> に詳しい。このパッケージはその後 <a href="https://github.com/hadley/reshape">reshape2</a> となった。その後 Wickham は <a href="https://tidyr.tidyverse.org">tidyr</a> というパッケージを作り，melt() に相当する gather() という関数を実装する。tidyr 1.0.0 からは gather() は pivot_longer() で置き換えられる。</p>
+
+<p>Python の pandas パッケージにはバージョン 0.6.0（2011-11-25）から <a href="https://pandas.pydata.org/docs/reference/api/pandas.melt.html">melt()</a> が導入される。</p>
+
+<p>参考：</p>
+
+<ul>
+  <li><a href="211016.html">データの整然化の例</a></li>
+</ul>
 
 <hr>
 
@@ -32,7 +90,7 @@ td, th { border: 1px solid; }
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-10-30 09:05:10</time>
+Last modified: <time>2021-11-02 14:42:18</time>
 <!-- hhmts end -->
 </p>
 </body>
