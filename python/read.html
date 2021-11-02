@@ -276,6 +276,15 @@ with open('file.csv') as f:
         print(row)
 </code></pre>
 
+<p>別の方法として，次のように少しずつ読み込む方法があります。次の例では1000行ずつ読み込んでいます。この場合 <code>df</code> は DataFrame を読み込むためのイテレータになります。</p>
+
+<pre>
+<code>df = pd.read_csv('file.csv', chunksize=1000)
+
+for chunk in df:
+    print(chunk.head())
+</code></pre>
+
 <h2>並列処理</h2>
 
 <p><a href="https://modin.readthedocs.io">Modin</a> を使えば，<code>import pandas as pd</code> を <code>import modin.pandas as pd</code> と書き換えるだけで pandas が高速になります。</p>
@@ -305,7 +314,7 @@ df = pd.read_csv(StringIO(r.text))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-10-31 17:46:35</time>
+Last modified: <time>2021-11-02 20:26:19</time>
 <!-- hhmts end -->
 </p>
 </body>
