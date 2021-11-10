@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>気象庁の「世界の年平均気温偏差」データ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>気象庁の「世界の年平均気温偏差」データ</h1>
+
+<p>気象庁で<a href="https://www.data.jma.go.jp/cpdinfo/temp/list/an_wld.html">世界の年平均気温偏差（℃）</a>が公開されている。毎年最新のデータに更新され，結果はCSVファイル <a href="https://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv">an_wld.csv</a> でも公開されている。</p>
+
+<p>このデータを読んでグラフを描くのは簡単で，</p>
+
+<pre class="cell">
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv('http://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv',
+                 encoding='sjis')
+plt.plot(df['年'], df['世界全体'], 'o-')
+</pre>
+
+<p>でよい。いつもPythonの演習に使っている。</p>
+
+<p>ところが，あるとき上のコードが働かなくなった。調べてみると，2020-12-22に更新されたCSVファイルが</p>
+
+<pre>
+年,世界全体,北半球,南半球
+1891,-0.63,-0.68,-0.59
+1892,-0.71,-0.80,-0.62
+（中略）
+2019,+0.43,+0.57,+0.30
+2020,+0.47*,+0.70*,+0.25*
+</pre>
+
+<p>のように，2020年のデータに余計な <code>*</code> が付いているため，数値と解釈できなくなってしまっている。<a href="https://www.data.jma.go.jp/cpdinfo/temp/list/an_wld.html">世界の年平均気温偏差（℃）</a>によれば <code>*</code> は「1月から11月までの月平均気温の偏差をもとに算出した速報値」だそうである（余計なことを💢）。とりあえず</p>
+
+<pre class="cell">
+df['世界全体'] = df['世界全体'].str.replace('*', '', regex=False).astype(float)
+</pre>
+
+<p>などのようにすれば数値に変換できる。別の方法として</p>
+
+<pre class="cell">
+def foo(x):
+    return float(x.replace('*', ''))
+
+df = pd.read_csv('.../an_wld.csv', encoding='cp932',
+                 converters={1:foo, 2:foo, 3:foo})
+</pre>
+
+<p>のようにコンバータを使う手がある。</p>
+
+<p>なお，上記の余分な <code>*</code> はタイムスタンプ 2021-02-01 のCSVファイルでは消えた。2020年の数値も改訂されている：</p>
+
+<pre>
+2020,+0.45,+0.67,+0.23
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-11-10 14:24:55</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
