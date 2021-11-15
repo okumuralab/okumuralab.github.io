@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>マイナンバーカード普及状況</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td, th { border: 1px solid; }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>マイナンバーカード普及状況</h1>
+
+<p><a href="https://mynumbercard.code4japan.org">マイナンバーカード普及状況ダッシュボード</a>の「性別・年齢別」グラフを見ると，老人ほど男性の交付率が大きい。なぜだろう？</p>
+
+<p><a href="https://mynumbercard.code4japan.org/data/latest">最新データ</a>の<a href="https://mynumbercard.code4japan.org/static/data/latest/demographics.csv">demographics.csv</a>をダウンロードして調べてみる（ここでは2021/11/01時点のものを使った）。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import pandas as pd
+
+df = pd.read_csv("demographics.csv")
+age = (df.index[1:] - 1) * 5
+men = df["交付率(男)"][1:]
+women = df["交付率(女)"][1:]
+
+fig, ax = plt.subplots(ncols=2, figsize=(8, 6))
+
+# 左（男）
+ax[0].barh(age, men, color="C0", height=5, align="edge", edgecolor="black")
+ax[0].yaxis.tick_right()             # 軸を右に
+ax[0].set_yticks(range(0, 110, 10))  # 10歳刻み
+ax[0].set_yticklabels([])            # こちらの軸ラベルは非表示
+ax[0].set_xlim([65, 0])             # x軸反転
+ax[0].set_xlabel("男（%）")
+# 右（女）
+ax[1].barh(age, women, color="C1", height=5, align="edge", edgecolor="black")
+ax[1].set_yticks(range(0, 110, 10))
+ax[1].set_yticklabels([str(i) + "歳" for i in range(0, 110, 10)])
+ax[1].set_xlim([0, 65])
+ax[1].set_xlabel("女（%）")
+</pre>
+
+<figure><img src="img/211115a.svg" alt="マイナンバーカード普及状況（率）"></figure>
+
+<p>確かに年齢が上がるほど男性の交付率が多い。そこで，交付件数（つまり人数）で描き直してみる：</p>
+
+<pre class="cell">
+men = df["交付件数(男)"][1:] / 10000
+women = df["交付件数(女)"][1:] / 10000
+
+fig, ax = plt.subplots(ncols=2, figsize=(8, 6))
+
+# 左（男）
+ax[0].barh(age, men, color="C0", height=5, align="edge", edgecolor="black")
+ax[0].yaxis.tick_right()             # 軸を右に
+ax[0].set_yticks(range(0, 110, 10))  # 10歳刻み
+ax[0].set_yticklabels([])            # こちらの軸ラベルは非表示
+ax[0].set_xlim([230, 0])             # x軸反転
+ax[0].set_xlabel("男（万人）")
+# 右（女）
+ax[1].barh(age, women, color="C1", height=5, align="edge", edgecolor="black")
+ax[1].set_yticks(range(0, 110, 10))
+ax[1].set_yticklabels([str(i) + "歳" for i in range(0, 110, 10)])
+ax[1].set_xlim([0, 230])
+ax[1].set_xlabel("女（万人）")
+</pre>
+
+<figure><img src="img/211115b.svg" alt="マイナンバーカード普及状況（人数）"></figure>
+
+<p>男女の人数はほぼ変わらないことがわかる。おそらく夫婦で取得しているのだろう。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-11-15 14:26:35</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
