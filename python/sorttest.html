@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>並べ替え（整列）の時間</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>並べ替え（整列）の時間</h1>
+
+<p><a href="../stat/090607.html">グラフの例：実行時間の比較</a>では選択ソートとクイックソートの実行時間を比較する図をRで描いた。ここでは新しいM1 Mac miniで計測し直してPythonでプロットしてみる。</p>
+
+<p>まずは計測するプログラム：</p>
+
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+
+void selectsort(int n, double a[])
+{
+    int i, j, k;
+    double min;
+
+    for (i = 0; i &lt; n - 1; i++) {
+        min = a[i];  k = i;
+        for (j = i + 1; j &lt; n; j++) {
+            if (a[j] &lt; min) {
+                min = a[j];  k = j;
+            }
+        }
+        a[k] = a[i];  a[i] = min;
+    }
+}
+
+void quicksort(double a[], int first, int last)
+{
+    int i, j;
+    double x, t;
+
+    x = a[(first + last) / 2];
+    i = first;
+    j = last;
+    for ( ; ; ) {
+        while (a[i] &lt; x) i++;
+        while (x &lt; a[j]) j--;
+        if (i &gt;= j) break;
+        t = a[i];  a[i] = a[j];  a[j] = t;
+        i++;  j--;
+    }
+    if (first &lt; i - 1) quicksort(a, first, i - 1);
+    if (j + 1 &lt; last) quicksort(a, j + 1, last);
+}
+
+#define N 200000
+double a[N];
+
+int main(void)
+{
+    int i, n;
+    double t1, t2;
+
+    printf("n,selectsort,quicksort\n");
+    printf("0,0,0\n");
+    srand(time(NULL));
+    for (n = N / 10; n &lt;= N; n += N / 10) {
+        for (i = 0; i &lt; n; i++) {
+            a[i] = rand() / (RAND_MAX + 1.0);
+        }
+        t1 = clock();
+        selectsort(n, a);
+        t1 = (clock() - t1) / CLOCKS_PER_SEC;
+        for (i = 0; i &lt; n; i++) {
+            a[i] = rand() / (RAND_MAX + 1.0);
+        }
+        t2 = clock();
+        quicksort(a, 0, n - 1);
+        t2 = (clock() - t2) / CLOCKS_PER_SEC;
+        printf("%d,%g,%g\n", n, t1, t2);
+    }
+    return 0;
+}
+</pre>
+
+<p>これをMac mini (M1, 2020) メモリ16GB，macOS Monterey 12.0.1のClangでコンパイルし，実行する：</p>
+
+<pre>
+gcc sorttest.c
+./a.out &gt;sorttest.csv
+</pre>
+
+<p>次のようなCSVファイルが得られた：</p>
+
+<pre>
+n,selectsort,quicksort
+0,0,0
+20000,0.458851,0.002114
+40000,1.67997,0.00456
+60000,3.7764,0.006821
+80000,6.70887,0.009313
+100000,10.4805,0.011746
+120000,15.0893,0.014356
+140000,20.5392,0.016822
+160000,26.8221,0.019735
+180000,33.9387,0.022544
+200000,41.8947,0.025369
+</pre>
+
+<p>これを次のPythonコードでグラフにする：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+df = pd.read_csv("sorttest.csv")
+for i in ["selectsort", "quicksort"]:
+    plt.plot(df["n"], df[i], "o", label=i)
+plt.legend()
+n = df["n"].values[-1]
+x = np.linspace(0, n, 101)[1:]
+a = df["selectsort"].values[-1] / n ** 2
+plt.plot(x, a * x ** 2, color="C0")
+b = df["quicksort"].values[-1] / (n * np.log(n))
+plt.plot(x, b * x * np.log(x), color="C1")
+plt.xlabel("N")
+plt.ylabel("time (seconds)")
+plt.savefig("sort-lin.svg", bbox_inches="tight")
+
+plt.yscale("log")
+plt.savefig("sort-log.svg", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/sort-lin.svg" alt="整列時間の比較（リニア）"></figure>
+
+<figure><img src="img/sort-log.svg" alt="整列時間の比較（対数）"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-11-22 12:35:36</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
