@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>MacでBlu-ray</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs" itemprop="breadcrumb">
+<a href="../" rel="home">ホーム</a> &gt;
+<a href="./">macOS</a> &gt;
+</nav>
+
+<h1>MacでBlu-ray</h1>
+
+<h2>VLCでBlu-ray視聴</h2>
+
+<p><a href="https://www.buffalo.jp/product/detail/brxl-ptv6u3-bka.html">Buffalo BRXL-PTV6U3-BKA</a> を入手したので，Mac で Blu-ray を見てみたい。</p>
+
+<p><a href="https://www.videolan.org">VLC media player</a> はフリーで高性能な動画閲覧ツールである。多様な入力に対応しているが，Blu-ray はそのままでは見られない。</p>
+
+<p><a href="https://vlc-bluray.whoknowsmy.name">ここ</a>から KEYDB.cfg と libaacs.dylib をダウンロードして，後者は xattr -c で由来をクリアして，それぞれ指示通り ~/Library/Preferences/aacs/ と /usr/local/lib/ に置いてみたが，うまくいかない。<a href="https://itlogs.net/vlc-blu-ray/">ここ</a>を教えていただいて，新しい KEYDB.cfg で置き換えたところ，うまくいった。</p>
+
+<p>ただ，Blu-ray のシークのタイミングなど，ときどき途切れが生じる。また，静寂な環境では Blu-ray が回る音がやや気になる。</p>
+
+<p>なお，試したのは <a href="https://www.biwako-hall.or.jp/news/_blu-ray">びわ湖ホール プロデュースオペラ『神々の黄昏』Blu-ray</a> である。1枚目は片面1層，2枚目は片面2層。</p>
+
+<h2>MakeMKVでBlu-rayリッピング</h2>
+
+<p><a href="https://www.makemkv.com">MakeMKV</a> は30日間無料で使えるので，インストールしてリッピング。MKV ファイルは巨大（それぞれ 22629167730，39757038417 バイト）。このままでもいいが，ffmpeg で MP4 にエンコードする。オーディオが pcm_s16le なので flac にロスレス圧縮する：</p>
+
+<pre>
+ffmpeg -i disc1/title_t00.mkv -c:a flac -strict -2 disc1.mp4
+</pre>
+
+<p>これでそれぞれ 2526100960，2843760780 バイトになった。つまり数十ギガが数ギガに，1桁削減できた。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-11-25 19:15:22</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
