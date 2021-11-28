@@ -16,7 +16,7 @@
 
 <h1>ツイッターのフォロワー数の推移をプロット</h1>
 
-<p>Rで描いた<a href="../stat/followers.html">グラフの例：Twitterのフォロワー数</a>のPython版である。</p>
+<p>Rで描いた<a href="../stat/followers.html">グラフの例：Twitterのフォロワー数</a>のPython版である。2021-11-28改訂。</p>
 
 <p><a href="https://twilog.org/">Twilog</a> の該当者（ここでは<a href="https://twilog.org/h_okumura/">私</a>）のページの「Stats」をクリックし，ページのソースから <code>ar_</code> を含む部分をコピペする。</p>
 
@@ -51,29 +51,49 @@ df = pd.DataFrame(index=t, data={'followers':ar_data[7]})
 df.plot()
 </code></pre>
 
-<figure><img src="img/191229a.png" alt="ツイッターのフォロワー数の推移"></figure>
+<figure><img src="img/211128a.png" alt="ツイッターのフォロワー数の推移"></figure>
 
-<p>東日本大震災から半年だけ急増していることがわかる。</p>
-
-<p>最近を見てみよう。例えば10月以降：</p>
+<p>東日本大震災から数ヶ月だけ急増していることがわかる。その部分：</p>
 
 <pre>
-<code>df[df.index &gt;= "2019-10-01"].plot(marker="o")
+<code>df[(df.index &gt;= "2011-03-01") & (df.index &lt;= "2011-08-01")].plot(marker="o")
 </code></pre>
 
-<figure><img src="img/191229b.png" alt="ツイッターのフォロワー数の推移"></figure>
+<figure><img src="img/211128b.png" alt="ツイッターのフォロワー数の推移"></figure>
 
-<p>増えたり減ったりしている。10月下旬に急増している日がある。</p>
+<p>2019年10月以降：</p>
 
 <pre>
-<code>df[(df.index &gt;= "2019-10-20") & (df.index &lt;= "2019-10-31")].plot(marker="o")
+<code>df[(df.index &gt;= "2019-10-01") & (df.index &lt;= "2019-12-01")].plot(marker="o")
 </code></pre>
+
+<figure><img src="img/211128c.png" alt="ツイッターのフォロワー数の推移"></figure>
 
 <p>どうやら10月26日に急増したみたいだ。多分<a href="https://twitter.com/h_okumura/status/1187861548699512832">これ</a>の影響だろう。</p>
 
+<p>2020年はCOVID-19の影響で増えた：</p>
+
+<pre>
+<code>df[(df.index &gt;= "2020-01-01") & (df.index &lt;= "2020-12-01")].plot(marker="o")
+</code></pre>
+
+<figure><img src="img/211128d.png" alt="ツイッターのフォロワー数の推移"></figure>
+
+<p>2021年8月以降：</p>
+
+<pre>
+<code>df[df.index &gt;= "2021-08-01"].plot(marker="o")
+</code></pre>
+
+<figure><img src="img/211128e.png" alt="ツイッターのフォロワー数の推移"></figure>
+
+<p>2021-09-01直後に急増している。ひょっとしたら<a href="https://twitter.com/h_okumura/status/1432863654693642240">これ</a>だろうか。</p>
+
+<p>2021-11-04にTwitter Proに登録してみたが，その前後で変化はない。</p>
+
 <hr>
 
-<p><em>[2021-01-01]</em> 別のやりかたでやってみる：</p>
+<p>以下は2021-01-01に書いた別のプロットのやりかた：</p>
 
 <pre>
 <code>import matplotlib.pyplot as plt
@@ -96,15 +116,13 @@ fig.savefig('followers.svg', bbox_inches="tight")
 
 <figure><img src="img/followers.svg" alt="ツイッターのフォロワー数の推移"></figure>
 
-<p>2020年になって増えたのはCOVID-19のためであろう。</p>
-
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-01 15:11:34</time>
+Last modified: <time>2021-11-28 19:31:22</time>
 <!-- hhmts end -->
 </p>
 </body>
