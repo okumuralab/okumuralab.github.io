@@ -33,7 +33,7 @@ mean of x mean of y
       2.0       4.5 
 </pre>
 
-<p>Pythonでは次のようにするとだいたい同じことができます：</p>
+<p>Pythonでは <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html">scipy.stats.ttest_ind</a> を使って次のようにします：</p>
 
 <pre class="cell">
 from scipy import stats
@@ -45,7 +45,7 @@ stats.ttest_ind([1,2,3], [3,4,5,6], equal_var=False)
 Ttest_indResult(statistic=-2.886751345948129, pvalue=0.03464755328828571)
 </pre>
 
-<p>別の方法：</p>
+<p><a href="https://www.statsmodels.org/dev/generated/statsmodels.stats.weightstats.ttest_ind.html">statsmodels.stats.weightstats.ttest_ind</a> を使うこともできます：</p>
 
 <pre class="cell">
 from statsmodels.stats.weightstats import ttest_ind
@@ -103,7 +103,7 @@ t = -2.8868, df = 4.9592, p-value = 0.03465
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-11-30 17:21:10</time>
+Last modified: <time>2021-11-30 22:07:07</time>
 <!-- hhmts end -->
 </p>
 </body>
