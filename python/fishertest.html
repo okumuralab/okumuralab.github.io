@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Fisherの検定</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Fisherの検定</h1>
+
+<p>RでFisherの検定をするには <code>fisher.test()</code> を使います。行列は縦に読んで，行数（または列数）を指定します：</p>
+
+<pre>
+&gt; fisher.test(matrix(c(3, 1, 2, 4), nrow=2))
+
+	Fisher's Exact Test for Count Data
+
+data:  matrix(c(3, 1, 2, 4), nrow = 2)
+p-value = 0.5238
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+   0.218046 390.562917
+sample estimates:
+odds ratio 
+  4.918388 
+</pre>
+
+<p>Pythonでは <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.fisher_exact.html">scipy.stats.fisher_exact</a> を使います。残念ながら2×2行列しか扱えません。行列は行ごとに与えます：</p>
+
+<pre class="cell">
+from scipy.stats import fisher_exact
+
+fisher_exact([[3, 2], [1, 4]])
+</pre>
+
+<pre>
+(6.0, 0.523809523809524)
+</pre>
+
+<p>返ってくるのはオッズ比と<i>p</i>値です。Rの <code>fisher.test()</code> と違って，こちらの <code>[[a, b], [c, d]]</code> のオッズ比は <code>(a/b)/(c/d)</code> と同じです。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-12-02 22:05:48</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
