@@ -87,13 +87,47 @@ if len(i) > 1:
     print("タイ:", i)
 </pre>
 
+<br>
+
+<hr>
+
+<p>この問題が，大学入試センター共通テストで2025年から出題される予定の「情報I」の<a href="https://www.dnc.ac.jp/kyotsu/shiken_jouhou/r7ikou.html">サンプル問題</a>（2021-03-24）に出題された：</p>
+
+<figure><img src="img/dhondt-dncl.png" alt="大学入試センター共通テスト「情報I」サンプル問題のDNCL"></figure>
+
+<p>こういう日本語の擬似言語を大学入試センターではDNCL（Daigaku Nyushi Center Language）と呼んでいる。これをPythonに直すと次のようになる。配列名はDNCLでは大文字で始める約束のようだが，Pythonでは大文字で始めるとクラス名のように見えるので，ここでは小文字にした。擬似言語なので，上の <code>(06)</code>，<code>(07)</code> のような書き方でもエラーにならないが，Pythonはあらかじめ配列を確保しておかなければならない（Pythonがよくわかっていればこの部分は <code>hikaku = tokuhyo.copy()</code> と書くであろう）。</p>
+
+<pre class="cell">
+tomei = ["A党", "B党", "C党", "D党"]
+tokuhyo = [1200, 660, 1440, 180]
+tosen = [0, 0, 0, 0]
+tosenkei = 0
+giseki = 6
+hikaku = [0, 0, 0, 0]  # これがないとエラーになる
+for m in range(4):
+    hikaku[m] = tokuhyo[m]
+while tosenkei < giseki:
+    max = 0
+    for i in range(4):
+        if max < hikaku[i]:
+            max = hikaku[i]
+            maxi = i
+    tosen[maxi] = tosen[maxi] + 1
+    tosenkei = tosenkei + 1
+    hikaku[maxi] = int(tokuhyo[maxi] / (tosen[maxi] + 1))
+for k in range(4):
+    print(tomei[k], ":", tosen[k], "名")
+</pre>
+
+<p>こちらは商を切り捨てて整数にしている（<code>int(tokuhyo[maxi] / (tosen[maxi] + 1))</code> または <code>tokuhyo[maxi] // (tosen[maxi] + 1)</code>）ので，最初のアルゴリズムと若干答えが違ってくるかもしれない。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-18 14:15:55</time>
+Last modified: <time>2021-12-02 16:03:36</time>
 <!-- hhmts end -->
 </p>
 </body>
