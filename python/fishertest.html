@@ -33,7 +33,7 @@ odds ratio
   4.918388 
 </pre>
 
-<p>Pythonでは <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.fisher_exact.html">scipy.stats.fisher_exact</a> を使います。残念ながら2×2行列しか扱えません。行列は行ごとに与えます：</p>
+<p>Pythonでは <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.fisher_exact.html">scipy.stats.fisher_exact</a> を使います。行列は行ごとに与えます：</p>
 
 <pre class="cell">
 from scipy.stats import fisher_exact
@@ -47,13 +47,15 @@ fisher_exact([[3, 2], [1, 4]])
 
 <p>返ってくるのはオッズ比と<i>p</i>値です。Rの <code>fisher.test()</code> と違って，こちらの <code>[[a, b], [c, d]]</code> のオッズ比は <code>(a/b)/(c/d)</code> と同じです。</p>
 
+<p>残念ながら2×2行列しか扱えません。より大きな行列を扱うには <a href="https://pypi.org/project/FisherExact/">FisherExact</a> や <a href="https://github.com/boussoffara/fexact">fexact</a> があるようです。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-12-02 22:05:48</time>
+Last modified: <time>2021-12-02 22:20:52</time>
 <!-- hhmts end -->
 </p>
 </body>
