@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>2項検定</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>2項検定</h1>
+
+<p>Rには2項検定をする関数 <code>binom.test()</code> があります。信頼区間は Clopper and Pearson (1934) によって求めます：</p>
+
+<pre>
+&gt; binom.test(2, 10)
+
+	Exact binomial test
+
+data:  2 and 10
+number of successes = 2, number of trials = 10, p-value = 0.1094
+alternative hypothesis: true probability of success is not equal to 0.5
+95 percent confidence interval:
+ 0.02521073 0.55609546
+sample estimates:
+probability of success 
+                   0.2 
+</pre>
+
+<p>PythonではSciPyに，<i>p</i>値を返すだけの古い <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom_test.html">scipy.stats.binom_test</a> と，2021-06-20の <a href="https://scipy.github.io/devdocs/release.1.7.0.html">SciPy 1.7.0</a> で新しく追加された <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html">scipy.stats.binomtest</a> とがあります。計算量は，前者は O(n)，後者は2分探索を使うので O(log n) だそうです。</p>
+
+<pre class="cell">
+from scipy.stats import binomtest
+
+binomtest(2, 10)
+</pre>
+
+<pre>
+BinomTestResult(k=2, n=10, alternative='two-sided', proportion_estimate=0.2, pvalue=0.109375)
+</pre>
+
+<pre class="cell">
+binomtest(2, 10).proportion_ci()
+</pre>
+
+<pre>
+ConfidenceInterval(low=0.025210726326833497, high=0.5560954623076415)
+</pre>
+
+<p>信頼区間だけなら <a href="https://www.statsmodels.org/dev/generated/statsmodels.stats.proportion.proportion_confint.html">statsmodels.stats.proportion.proportion_confint</a> を使うこともできます：</p>
+
+<pre class="cell">
+from statsmodels.stats.proportion import proportion_confint
+
+proportion_confint(2, 10, method="beta")
+</pre>
+
+<pre>
+(0.02521072632683336, 0.5560954623076415)
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-11-30 22:10:11</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

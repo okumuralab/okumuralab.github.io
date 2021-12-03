@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>円周率をモンテカルロ法で</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>円周率をモンテカルロ法で</h1>
+
+<p><a href="mext-simulation.html">文科省教材：確率モデルのシミュレーション</a>でも書いたが，$[0, 1)$ の一様乱数 $x$, $y$ が $x^2 + y^2 < 1$ を満たす割合を4倍すれば円周率 $\pi$ の概数が求められる：</p>
+
+<pre class="cell">
+import numpy as np
+
+rng = np.random.default_rng(20210729)
+totalcount = 10000
+
+def pi1():
+    x = rng.random(totalcount)
+    y = rng.random(totalcount)
+    incount = np.count_nonzero(x**2 + y**2 < 1)
+    return incount * 4 / totalcount
+</pre>
+
+<p>1000回やってみて，平均と標準偏差を求める：</p>
+
+<pre class="cell">
+p1 = [pi1() for _ in range(1000)]
+np.mean(p1), np.std(p1)
+</pre>
+
+<p>これについて，三重大学の白井先生がおもしろい話を教えてくださった：</p>
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">
+  円周率を求める単純抽出のモンテカルロ法をちょっといじると精度がよくなるという話をしました（理由は「そりゃそうか」というものです）
+  <a href="https://t.co/Sy9TagyCSd">pic.twitter.com/Sy9TagyCSd</a></p>&mdash; Nobu C. Shirai (@nobucshirai) <a href="https://twitter.com/nobucshirai/status/1420157656375828480">2021年7月28日</a>
+</blockquote>
+
+<p>そりゃそうだ。で，上のコードをできるだけ生かして，次のようにしてみた。</p>
+
+<pre class="cell">
+def pi2():
+    x = rng.random(totalcount)
+    y = rng.random(totalcount)
+    incount = np.count_nonzero((x**2 + y**2 < 1) & ((1-x)**2 + (1-y)**2 < 1))
+    return incount * 2 / totalcount + 2
+
+p2 = [pi2() for _ in range(1000)]
+np.mean(p2), np.std(p2)
+</pre>
+
+<p>確かに標準偏差が小さくなっている。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-07-29 13:13:45</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
