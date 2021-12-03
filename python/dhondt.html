@@ -103,9 +103,11 @@ tokuhyo = [1200, 660, 1440, 180]
 tosen = [0, 0, 0, 0]
 tosenkei = 0
 giseki = 6
+
 hikaku = [0, 0, 0, 0]  # これがないとエラーになる
 for m in range(4):
     hikaku[m] = tokuhyo[m]
+
 while tosenkei < giseki:
     max = 0
     for i in range(4):
@@ -115,6 +117,7 @@ while tosenkei < giseki:
     tosen[maxi] = tosen[maxi] + 1
     tosenkei = tosenkei + 1
     hikaku[maxi] = int(tokuhyo[maxi] / (tosen[maxi] + 1))
+
 for k in range(4):
     print(tomei[k], ":", tosen[k], "名")
 </pre>
@@ -134,7 +137,7 @@ for k in range(4):
 <p style="text-indent: -1em"><b>３〜５</b>　略</p>
 </blockquote>
 
-<p>商を整数に切り捨てるのかどうかは書かれていない。</p>
+<p>商を整数に切り捨てるのかどうかは書かれていない。ただ，解説してあるページはどれも切り捨ててないようだし，切り捨てる意味もなさそうなので，サンプル問題の間違い（というほどでもないが）のように思う。</p>
 
 <p><a href="adams.html">アダムズ方式</a>も参照されたい。</p>
 
@@ -144,7 +147,7 @@ for k in range(4):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-12-03 19:13:31</time>
+Last modified: <time>2021-12-03 21:17:02</time>
 <!-- hhmts end -->
 </p>
 </body>
