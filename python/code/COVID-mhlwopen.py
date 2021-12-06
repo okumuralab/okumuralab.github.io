@@ -17,13 +17,17 @@ def readcsv(url):
 now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 
 # PCR検査陽性者数
-df1 = readcsv("https://www.mhlw.go.jp/content/pcr_positive_daily.csv")
+# df1 = readcsv("https://www.mhlw.go.jp/content/pcr_positive_daily.csv")
+df1 = pd.read_csv("https://covid19.mhlw.go.jp/public/opendata/newly_confirmed_cases_daily.csv", parse_dates=['Date'])
+# df1 = df1[df1.Prefecture == "ALL"]
 
-# PCR検査実施人数
+# PCR 検査実施件数(単日)
 df2 = readcsv("https://www.mhlw.go.jp/content/pcr_tested_daily.csv")
 
 # 死亡者数
-df5 = readcsv("https://www.mhlw.go.jp/content/death_total.csv")
+# df5 = readcsv("https://www.mhlw.go.jp/content/death_total.csv")
+df5 = pd.read_csv("https://covid19.mhlw.go.jp/public/opendata/deaths_cumulative_daily.csv", parse_dates=['Date'])
+# df5 = df5[df5.Prefecture == "ALL"]
 
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
@@ -37,22 +41,25 @@ ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.bar(df2['日付'], df2['PCR 検査実施件数(単日)'], width=1)
-ax.bar(df1['日付'], df1['PCR 検査陽性者数(単日)'], width=1)
+# ax.bar(df1['Date'], df1['Newly confirmed cases'], width=1)
+ax.bar(df1['Date'], df1['ALL'], width=1)
 ax.legend(['Negative', 'Positive'], loc='upper left')
 fig.savefig('../img/COVID-mhlwopen1.svg', bbox_inches="tight")
 
 ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
-ax.bar(df1['日付'], df1['PCR 検査陽性者数(単日)'], width=1, color='C1')
-ax.bar(df5['日付'], df5['死亡者数'].diff(), width=1, color='C3')
+# ax.bar(df1['Date'], df1['Newly confirmed cases'], width=1, color='C1')
+ax.bar(df1['Date'], df1['ALL'], width=1, color='C1')
+# ax.bar(df5['Date'], df5['Deaths(Cumulative)'].diff(), width=1, color='C3')
+ax.bar(df5['Date'], df5['ALL'].diff(), width=1, color='C3')
 ax.legend(['Positive', 'Deaths'], loc='upper left')
 fig.savefig('../img/COVID-mhlwopen2.svg', bbox_inches="tight")
 
 ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
-ax.bar(df5['日付'], df5['死亡者数'].diff(), width=1, color='C3')
+# ax.bar(df5['Date'], df5['Deaths(Cumulative)'].diff(), width=1, color='C3')
+ax.bar(df5['Date'], df5['ALL'].diff(), width=1, color='C3')
 ax.legend(['Deaths'], loc='upper left')
 fig.savefig('../img/COVID-mhlwopen3.svg', bbox_inches="tight")
-
