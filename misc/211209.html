@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>パスワードなしのログイン</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>パスワードなしのログイン</h1>
+
+<p>RSAはもう古い。Ed25519だ。</p>
+
+<pre>
+$ ssh-keygen -t ed25519
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/home/okumura/.ssh/id_ed25519): 
+Enter passphrase (empty for no passphrase): <span style="color:#F30">Enterだけ</span>
+Enter same passphrase again: <span style="color:#F30">Enterだけ</span>
+Your identification has been saved in /home/okumura/.ssh/id_ed25519.
+Your public key has been saved in /home/okumura/.ssh/id_ed25519.pub.
+The key fingerprint is:
+SHA256:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx hoge@example.com
+The key's randomart image is:
++--[ED25519 256]--+
+|      略         |
++----[SHA256]-----+
+</pre>
+
+<p>これで ~/.ssh に秘密鍵 id_ed25519 と公開鍵 id_ed25519.pub ができる。公開鍵のほうを，ログインしたい相手方の ~/.ssh/authorized_keys というファイルにアペンドする（なければ作る）。</p>
+
+<p>これで ssh でパスワードなしで入れるはず。うまくいかない場合は ssh -v でデバッグする。あるいは ~/.ssh/config に余計なことが書いてないか調べる。相手側の /etc/ssh/sshd_config に PubkeyAuthentication yes と書いてあるか調べる（書いてなくてもこれがデフォルトのはず）。sshd_config を変更したら sshd を restart する。</p>
+
+<p>今は Windows にも ssh が入っているので同様な手順でできる。</p>
+
+<div class="note">
+<p>これを書くきっかけは，パスワードの受け渡しはどうすればいいかというツイッターでの話題だった。DH 鍵交換すればいい。<a href="https://cryptotools.net/dhe">Diffie-Hellman Key Exchange</a> というページで JavaScript で計算できる（openssl を使うやりかたも載っている）。昔は /etc/shadow の行（ソルト＋ハッシュ）を送った。今なら id_rsa.pub を送ればいい。いや RSA はもう古い。という流れだ。</p>
+</div>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-12-09 19:57:13</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
