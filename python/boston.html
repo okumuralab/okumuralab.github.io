@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Bostonデータ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Bostonデータ</h1>
+
+<p>Boston データまたは Boston housing データと呼ばれるものは David Harrison, Jr. and Daniel L. Rubinfeld, "Hedonic Housing Prices and the Demand for Clean Air", <i>Journal of Environmental Economics and Management</i> <b>5</b>, 81-102 (1978) で使われたデータです。1970年のボストンの census tract（人口調査標準地域（米国の国勢調査単位））ごとに，住宅価格の中央値およびその地域のいろいろな特徴量が並べられています。なお，住宅価格（1000ドル単位）は 50 でセンサーされているようです。</p>
+
+<p>ここでは scikit-learn を使ってデータを読み込みます：</p>
+
+<pre class="cell">
+from sklearn.datasets import load_boston
+
+boston = load_boston()
+print(boston.DESCR)  # 説明を表示
+</pre>
+
+<p>データを通常のデータフレームに変換します：</p>
+
+<pre class="cell">
+import pandas as pd
+
+X = pd.DataFrame(data=boston["data"], columns=boston["feature_names"])
+y = boston["target"]
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-08-05 12:48:31</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
