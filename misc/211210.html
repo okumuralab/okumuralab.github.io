@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Diffie-Hellman鍵交換</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>Diffie-Hellman鍵交換</h1>
+
+<p>秘密情報（パスワードの類）を安全に共有するための Diffie-Hellman（DH）鍵交換を実際に試してみよう。盗聴されても大丈夫だが，中間者攻撃（MITM）には注意しなければならない。</p>
+
+<h2>通常のDH鍵交換</h2>
+
+<p><a href="https://cryptotools.net/dhe">Diffie-Hellman Key Exchange</a> というページではブラウザ（JavaScript）で実行できるようになっているが，手動で行う方法も書いてある。以下では <code>$</code> とその左側はプロンプトである（打ち込まない）。まず</p>
+
+<pre>
+$ openssl genpkey -genparam -algorithm DH -out param.pem
+</pre>
+
+<p>でパラメータ param.pem を生成し，共有する（盗聴されてもかまわない）。次に，このパラメータを使って，Alice と Bob は秘密鍵・公開鍵を作る：</p>
+
+<pre>
+A$ openssl genpkey -paramfile param.pem -out priv1.pem
+A$ openssl pkey -in priv1.pem -pubout -out pub1.pem
+
+B$ openssl genpkey -paramfile param.pem -out priv2.pem
+B$ openssl pkey -in priv2.pem -pubout -out pub2.pem
+</pre>
+
+<p>互いの公開鍵を交換し（盗聴されてもかまわない），自分の秘密鍵と相手の公開鍵から，秘密情報を作る：</p>
+
+<pre>
+A$ openssl pkeyutl -derive -inkey priv1.pem -peerkey pub2.pem -out shared1.bin
+B$ openssl pkeyutl -derive -inkey priv2.pem -peerkey pub1.pem -out shared2.bin
+</pre>
+
+<p>秘密情報は等しい（shared1.bin == shared2.bin）。バイナリなので，パスワードにして使いたいときは，Base64 に変換すればよい：</p>
+
+<pre>
+A$ base64 shared1.bin
+B$ base64 shared2.bin
+</pre>
+
+<h2>ECDH鍵交換</h2>
+
+<p>楕円曲線（elliptic curve）を使った ECDH 鍵交換もしてみよう。<a href="https://xenovation.com/blog/security/pki/creating-elliptic-curve-ecdh-key-with-openssl">Creating elliptic curve ECDH key with openssl</a> や <a href="https://docs.rackspace.com/support/how-to/elliptic-curve-operations/">Command-line Elliptic Curve operations</a> を参照した。</p>
+
+<p>まず，どんな楕円曲線が使えるか調べる。CentOS 7 上の OpenSSL では</p>
+
+<pre>
+$ openssl version
+OpenSSL 1.0.2k-fips  26 Jan 2017
+$ openssl ecparam -list_curves
+  secp256k1 : SECG curve over a 256 bit prime field
+  secp384r1 : NIST/SECG curve over a 384 bit prime field
+  secp521r1 : NIST/SECG curve over a 521 bit prime field
+  prime256v1: X9.62/SECG curve over a 256 bit prime field
+</pre>
+
+<p>macOS (Monterey) 上の OpenSSL の中身は LibreSSL である：</p>
+
+<pre>
+% openssl version
+LibreSSL 2.8.3
+% openssl ecparam -list_curves
+(たくさん)
+</pre>
+
+<p>一番長い secp521r1 を使うことにする。まずパラメータを生成する：</p>
+
+<pre>
+$ openssl ecparam -name secp521r1 -out param.pem
+</pre>
+
+<p>このあとは通常のDH鍵交換と同じである。</p>
+
+<p>もっとも，生成されるパラメータは一定のようなので，パラメータの生成をさぼって，次のようにしてもよさそうだ：</p>
+
+<pre>
+A$ openssl ecparam -name secp521r1 -genkey -noout -out key1.pem
+A$ openssl pkey -in key1.pem -pubout -out pub1.pem
+
+B$ openssl ecparam -name secp521r1 -genkey -noout -out key2.pem
+B$ openssl pkey -in key2.pem -pubout -out pub2.pem
+
+A$ openssl pkeyutl -derive -inkey key1.pem -peerkey pub2.pem -out shared1.bin
+B$ openssl pkeyutl -derive -inkey key2.pem -peerkey pub1.pem -out shared2.bin
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-12-10 15:06:44</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
