@@ -34,11 +34,15 @@ The key's randomart image is:
 +----[SHA256]-----+
 </pre>
 
+<p>「Enterだけ」と書いたところで，パスワード（パスフレーズ）を打ち込むこともできる。そのほうが安全だが，ここではパスワードなしのログインをしたいので，空にしておく。</p>
+
 <p>これで ~/.ssh に秘密鍵 id_ed25519 と公開鍵 id_ed25519.pub ができる。公開鍵のほうを，ログインしたい相手方の ~/.ssh/authorized_keys というファイルにアペンドする（なければ作る）。</p>
 
 <p>これで ssh でパスワードなしで入れるはず。うまくいかない場合は ssh -v でデバッグする。あるいは ~/.ssh/config に余計なことが書いてないか調べる。相手側の /etc/ssh/sshd_config に PubkeyAuthentication yes と書いてあるか調べる（書いてなくてもこれがデフォルトのはず）。sshd_config を変更したら sshd を restart する。</p>
 
 <p>今は Windows にも ssh が入っているので同様な手順でできる。</p>
+
+<p>ついでに，放置しておくと ssh 接続が切れるのを防ぎたければ，~/.ssh/config というファイルに <code>ServerAliveInterval 60</code> のようなのを書き込めばよい。</p>
 
 <div class="note">
 <p>これを書くきっかけは，パスワードの受け渡しはどうすればいいかというツイッターでの話題だった。DH 鍵交換すればいい。<a href="https://cryptotools.net/dhe">Diffie-Hellman Key Exchange</a> というページで JavaScript で計算できる（openssl を使うやりかたも載っている）。昔は /etc/shadow の行（ソルト＋ハッシュ）を送った。今なら id_rsa.pub を送ればいい。いや RSA はもう古い。という流れだ。</p>
@@ -50,7 +54,7 @@ The key's randomart image is:
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-12-09 19:57:13</time>
+Last modified: <time>2021-12-11 17:41:08</time>
 <!-- hhmts end -->
 </p>
 </footer>
