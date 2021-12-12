@@ -84,13 +84,39 @@ td, th { border: 1px solid; }
   <li><a href="211016.html">データの整然化の例</a></li>
 </ul>
 
+<p>[2021-12-12追記] 厚労省<a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">オープンデータ</a>からリンクされている<a href="https://covid19.mhlw.go.jp/public/opendata/newly_confirmed_cases_daily.csv">新規陽性者数の推移（日別）</a>というCSVファイルは，先月までは次のような3列の整然データであった：</p>
+
+<pre>
+Date,Prefecture,Newly confirmed cases
+2020/1/16,ALL,1
+2020/1/16,Hokkaido,0
+2020/1/16,Aomori,0
+2020/1/16,Iwate,0
+2020/1/16,Miyagi,0
+2020/1/16,Akita,0
+(後略)
+</pre>
+
+<p>ところが今月頭に次のような49列の形式に変わった：</p>
+
+<pre>
+Date,ALL,Hokkaido,Aomori,Iwate,Miyagi,Akita,(略),Okinawa
+2020/1/16,1,0,0,0,0,0,(略),0
+2020/1/17,0,0,0,0,0,0,(略),0
+2020/1/18,0,0,0,0,0,0,(略),0
+2020/1/19,0,0,0,0,0,0,(略),0
+(後略)
+</pre>
+
+<p>同様な形式の別のファイルも変わった。これによりファイルサイズは大幅に小さくなった。整然データが整然でないデータに変わった稀な例である。全国のデータだけをプロットするPythonコードは，元の整然データのほうが1行長いくらいで，どうということはないのだが，何の前触れもなく形式が変わると自動処理が失敗する。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-11-02 14:42:18</time>
+Last modified: <time>2021-12-12 19:57:44</time>
 <!-- hhmts end -->
 </p>
 </body>
