@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>最長共通部分列問題</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>最長共通部分列問題</h1>
+
+<h2>国家公務員試験デジタル区分のLCS問題</h2>
+
+<p>国家公務員試験にデジタル区分ができた。人事院<a href="https://www.jinji.go.jp/saiyo/syokai/digital_gaiyou.html">デジタル区分の新設等について</a>の試験問題例<a href="https://www.jinji.go.jp/saiyo/siken/mondairei/mondairei_13.html">総合職試験（大卒程度試験）教養区分以外</a>の専門試験（記述式）「デジタル」では，クイックソートやLCSの問題などが出題されている。以下ではこのLCSの問題についてPythonで実装してみよう。</p>
+
+<p>最長共通部分列（longest common subsequence，LCS）とは，二つの列に共通な部分列で最長のものである（一つとは限らない）。例えばABCBDABとBDCABAのLCSは長さ4で，BCBAなどがある。動的計画法（dynamic programming，DP）の問題としてしばしば例示に使われる。AtCoderでも<a href="https://atcoder.jp/contests/dp/tasks/dp_f">F - LCS</a>で出題されている。</p>
+
+<p>二つの文字列 <code>a</code>，<code>b</code> があるとする。これらの最後の文字 <code>a[-1]</code>，<code>b[-1]</code> が等しければ，それがLCSの最後の文字である。LCSのそれ以外の部分は <code>a</code>，<code>b</code> から最後の文字を取り除いた文字列 <code>a[:-1]</code>，<code>b[:-1]</code> のLCSである。</p>
+
+<p>最後の文字が等しくなければ，<code>a[:-1]</code> と <code>b</code> とのLCSと，<code>a</code> と <code>b[:-1]</code> とのLCSとのうち，長いほうを採ればよい。</p>
+
+<p>まずLCSの長さだけを求めることにしよう。上の手順を素直に書けば，次のような再帰的な関数ができる。</p>
+
+<pre class="cell">
+a = "ABCBDAB"
+b = "BDCABA"
+
+def lcs(a, b):
+    if a == "" or b == "":
+        return 0
+    if a[-1] == b[-1]:
+        return lcs(a[:-1], b[:-1]) + 1
+    return max(lcs(a[:-1], b), lcs(a, b[:-1]))
+</pre>
+
+<p>これが最初に挙げた公務員試験の最初のプログラム例の空欄を補ったものである。</p>
+
+<p>LCSの長さだけでなくLCSそのものを求めるには次のようにする。</p>
+
+<pre class="cell">
+def lcs(a, b):
+    if a == "" or b == "":
+        return ""
+    if a[-1] == b[-1]:
+        return lcs(a[:-1], b[:-1]) + a[-1]
+    s = lcs(a[:-1], b)
+    t = lcs(a, b[:-1])
+    if len(s) >= len(t):
+        return s
+    return t
+</pre>
+
+<p>同じことは次のように書くこともできる。</p>
+
+<pre class="cell">
+def lcs(a, b):
+    if a == "" or b == "":
+        return ""
+    if a[-1] == b[-1]:
+        return lcs(a[:-1], b[:-1]) + a[-1]
+    return max(lcs(a[:-1], b), lcs(a, b[:-1]), key=len)
+</pre>
+
+<p>次のように改変して，この関数が呼び出される回数を調べてみよう。</p>
+
+<pre class="cell">
+def lcs(a, b):
+    global count
+    count += 1
+    if a == "" or b == "":
+        return ""
+    if a[-1] == b[-1]:
+        return lcs(a[:-1], b[:-1]) + a[-1]
+    return max(lcs(a[:-1], b), lcs(a, b[:-1]), key=len)
+
+count = 0
+print(lcs(a, b))
+print(count)
+</pre>
+
+<p>文字列が長くなると，呼び出される回数は急増することがわかる。</p>
+
+<p>そこで動的計画法（DP）の登場である。要するに，再帰をなくして表を埋めていく形にすればよい。</p>
+
+<p>まず，長さだけを求める問題を考える。これが公務員試験の2番目のプログラム例を完成させたものである。</p>
+
+<pre class="cell">
+c = [[0] * (len(b) + 1) for i in range(len(a) + 1)]
+
+for i in range(1, len(a) + 1):
+    for j in range(1, len(b) + 1):
+        if a[i-1] == b[j-1]:
+            c[i][j] = c[i-1][j-1] + 1
+        else:
+            c[i][j] = max(c[i][j-1], c[i-1][j])
+
+print(c[-1][-1])
+</pre>
+
+<p>上の1行目は <code>len(a) + 1</code> 行 <code>len(b) + 1</code> 列の行列を作っている。この部分はNumPyを使って次のようにしてもよい。</p>
+
+<pre class="cell">
+import numpy as np
+
+c = np.zeros((len(a) + 1, len(b) + 1), dtype=int)
+</pre>
+
+<p>長さだけでなくLCSそのものを求めるには，上でできた表 <code>c</code> を逆にたどればよい。</p>
+
+<pre class="cell">
+s = ""
+i = len(a)
+j = len(b)
+while i > 0 and j > 0:
+    if a[i-1] == b[j-1]:
+        s = a[i-1] + s
+        i -= 1
+        j -= 1
+    elif c[i-1][j] >= c[i][j-1]:
+        i -= 1
+    else:
+        j -= 1
+
+print(s)
+</pre>
+
+<p>次のようにすれば，もっと簡単にLCSそのものが求められる。</p>
+
+<pre class="cell">
+c = [[""] * (len(b) + 1) for i in range(len(a) + 1)]
+
+for i in range(1, len(a) + 1):
+    for j in range(1, len(b) + 1):
+        if a[i-1] == b[j-1]:
+            c[i][j] = c[i-1][j-1] + a[i-1]
+        else:
+            c[i][j] = max(c[i][j-1], c[i-1][j], key=len)
+
+print(c[-1][-1])
+</pre>
+
+<p>さらによく考えれば，一つ前の行しか使っていないので，次のようにできる。</p>
+
+<pre class="cell">
+c = [""] * (len(b) + 1)
+
+for i in range(1, len(a) + 1):
+    cprev = c.copy()
+    for j in range(1, len(b) + 1):
+        if a[i-1] == b[j-1]:
+            c[j] = cprev[j-1] + a[i-1]
+        else:
+            c[j] = max(c[j-1], cprev[j], key=len)
+
+print(c[-1])
+</pre>
+
+<h2>蛇足</h2>
+
+<p>専門試験（多肢選択式）「デジタル」では，例えば次のような問題が出題されている。解答は1〜5の五択である。</p>
+
+<blockquote>
+<p style="text-indent:1em">C言語で記述された次の関数 f が実行可能のとき，f(177) の戻り値はいくらか。なお，二項演算子 &amp; はビットごとの論理積を行う演算子である。</p>
+<pre>
+int (f unsigned int n)
+{
+    int v = 0;
+    while (n) {
+        n = n &amp; (n - 1);
+        v++;
+    }
+    return v;
+}
+</pre>
+</blockquote>
+
+<p>専門試験（記述式）「デジタル」では，上に挙げたLCSのほかに，例えば次のような問題が出題されている。</p>
+
+<blockquote style="text-indent:1em">
+<p>https:// で始まるWebサイトにアクセスしたときの通信の手順について，セキュリティに関する箇所を次の国を全て用いて5行程度で説明せよ。</p>
+<p>ただし，用いた語句に下線を引くこと。</p>
+<p>［語句：<u>共通鍵</u>，<u>公開鍵</u>，<u>秘密鍵</u>］</p>
+</blockquote>
+
+<p>しかし，いまどきのTLS 1.2/1.3では(EC)DH鍵交換が主流/必須で，共通鍵を公開鍵で暗号化して秘密鍵で復号するといったことはほとんど行われていない。光成さんが次のような解答を考えてくださった（<a href="https://twitter.com/herumi/status/1467843902581653505">*</a>，<a href="https://twitter.com/herumi/status/1467850169983303682">*</a>）。</p>
+
+<blockquote>
+<p>楕円曲線を用いたDH鍵交換で秘密情報を共有し、それから認証付き暗号で利用する共通鍵を生成する。さらに公開鍵証明書に含まれる公開鍵を用いてサーバが秘密鍵で作成した署名を検証し、中間者攻撃を受けていないことを確認する。</p>
+</blockquote>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-12-17 10:32:24</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
