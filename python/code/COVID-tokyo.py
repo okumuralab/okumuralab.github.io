@@ -15,7 +15,7 @@ now = f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}'
 
 t = df['date'].values
 x = df['confirmed'].values
-t1 = pd.to_datetime('2021-01-01')
+t1 = pd.to_datetime('2021-07-01')
 DAY = pd.to_timedelta(1, 'day')
 
 fig, ax = plt.subplots()
