@@ -66,7 +66,7 @@ with ZipFile(sys.argv[1]) as z:
 
 <h3>NFC，NFD</h3>
 
-<p>Mac の場合，ファイル名の Unicode 正規化がほぼ NFD という形式になっている。例えばカレントディレクトリに「パンダ.txt」というファイルを作り，<a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> でファイル名を読み出す：</p>
+<p>新しい macOS では APFS というファイルシステムが用いられるが，従来の Mac で用いられていた HFS+ というファイルシステムでは，ファイル名の Unicode 正規化がほぼ NFD という形式になっていた。例えばカレントディレクトリに「パンダ.txt」というファイルを作り，<a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> でファイル名を読み出す：</p>
 
 <pre>
 <code>!touch パンダ.txt  # カレントディレクトリに「パンダ.txt」を作る
@@ -85,9 +85,23 @@ Out[ ]: 'パンダ.txt'
 
 In [ ]: list(s)
 Out[ ]: ['ハ', '゚', 'ン', 'タ', '゙', '.', 't', 'x', 't']
+
+In [ ]: [hex(ord(c)) for c in s]
+Out[ ]:
+['0x30cf',
+ '0x309a',
+ '0x30f3',
+ '0x30bf',
+ '0x3099',
+ '0x2e',
+ '0x74',
+ '0x78',
+ '0x74']
 </code></pre>
 
-<p>このように濁点・半濁点が分離されている。これが NFD である。通常の NFC に直すには <a href="https://docs.python.org/3/library/unicodedata.html">unicodedata</a> モジュールを使う：</p>
+<p>このように濁点・半濁点が分離される。これが NFD である。このように直前の文字に結合して半濁点，濁点を付ける文字はそれぞれ COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK（U+309A），COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK（U+3099）である。</p>
+
+<p>通常の NFC に直すには <a href="https://docs.python.org/3/library/unicodedata.html">unicodedata</a> モジュールを使う：</p>
 
 <pre>
 <code>import unicodedata
@@ -95,7 +109,7 @@ Out[ ]: ['ハ', '゚', 'ン', 'タ', '゙', '.', 't', 'x', 't']
 t = unicodedata.normalize('NFC', s)
 </code></pre>
 
-<p>とする。今度は</p>
+<p>すると，今度は</p>
 
 <pre>
 <code>In [ ]: t
@@ -119,6 +133,22 @@ Out[ ]: 'é'
 In [ ]: list(unicodedata.normalize('NFD', 'é'))
 Out[ ]: ['e', '́']
 </code></pre>
+
+<p>たとえAPFSでも，過去のHFS+からコピーしたファイルはNFDになっていることがあるので，要注意。</p>
+
+<p>カレントディレクトリ以下にあるすべてのファイルについて，ファイル名をNFCに直す。<code>XR8L0bKA6Ofb</code> は他と重ならないファイル名なら何でもいい。なぜか <code>os.rename(s, t)</code> ではうまくいかなかった。</p>
+
+<pre>
+<code>for x in pathlib.Path(".").glob("**/*"):
+    s = str(x)
+    t = unicodedata.normalize("NFC", s)
+    if s != t:
+        print("Renaming", s)
+        os.rename(s, "XR8L0bKA6Ofb")
+        os.rename("XR8L0bKA6Ofb", t)
+</code></pre>
+
+<p>Homebrewのrsyncは <code>--iconv=UTF8-MAC,UTF-8</code> というオプションでNFD→NFCにしてくれる。ただ，<code>-E</code> がmacOSのrsyncと違って "copy extended attributes, resource forks" の意味を持たないのが残念（<code>man -M /usr/share/man rsync</code> と <code>man -M /usr/local/share/man rsync</code> を比較）。</p>
 
 <h3>「埼玉」と「埼⽟」</h3>
 
@@ -167,7 +197,7 @@ for line in fileinput.input():
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-08-06 17:59:15</time>
+Last modified: <time>2021-12-19 15:02:38</time>
 <!-- hhmts end -->
 </p>
 </body>

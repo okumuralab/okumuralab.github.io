@@ -15,7 +15,8 @@ now = f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}'
 
 t = df['date'].values
 x = df['confirmed'].values
-t1 = pd.to_datetime('2021-07-01')
+# t1 = pd.to_datetime('2021-07-01')
+t1 = pd.to_datetime('2021-10-01')
 DAY = pd.to_timedelta(1, 'day')
 
 fig, ax = plt.subplots()
@@ -53,12 +54,14 @@ col = [cmap(3), cmap(3), cmap(3), cmap(3), cmap(3), cmap(2), cmap(2)]
 cols = np.array([col[pd.Timestamp(i).dayofweek] for i in t])
 
 ax.clear()
+ax2.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.bar(t, x, color=cols, width=DAY,
        align='edge',
        edgecolor="black", linewidth=0.5)
 ax.set_xlim(t1, t[-1] + DAY)
+ax.set_ylim(0, 1.02 * max(x[-sum(t >= t1):-1]))
 # ax.legend(['Tokyo confirmed'], loc='upper left')
 
 ax2 = ax.twinx()
