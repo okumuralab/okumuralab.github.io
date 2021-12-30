@@ -24,18 +24,25 @@
 
 <p>ファイル名または URL を指定して CSV ファイルを読み込みます：</p>
 
-<pre>
+<pre class="cell">
 <code>import pandas as pd
 
 df = pd.read_csv("filename.csv")
-df.head()   # 頭の5行だけ表示
+df   # 最初と最後だけ表示
 </code></pre>
+
+<p>Google Colaboratory なら対話型テーブルにして眺めることもできます：</p>
+
+<figure><img src="img/colab-interactive-table.png" alt="interactive table"></figure>
 
 <p>読み込んだデータは <code>DataFrame</code> オブジェクトです：</p>
 
+<pre class="cell">
+type(df)
+</pre>
+
 <pre>
-<code>In [ ]: type(df)
-Out[ ]: pandas.core.frame.DataFrame
+<code>pandas.core.frame.DataFrame
 </code></pre>
 
 <p>最大表示行数・列数を調べたり変えたりしたいときは <code>pd.options.display.max_rows</code>，<code>pd.options.display.max_columns</code> を見たり代入したりします。</p>
@@ -314,7 +321,7 @@ df = pd.read_csv(StringIO(r.text))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-11-02 20:26:19</time>
+Last modified: <time>2021-12-30 15:23:06</time>
 <!-- hhmts end -->
 </p>
 </body>
