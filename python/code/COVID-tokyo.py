@@ -15,9 +15,10 @@ now = f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}'
 
 t = df['date'].values
 x = df['confirmed'].values
-# t1 = pd.to_datetime('2021-07-01')
-t1 = pd.to_datetime('2021-10-01')
+
 DAY = pd.to_timedelta(1, 'day')
+t1 = pd.to_datetime('2021-10-01')
+t2 = t[-1] + DAY
 
 fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()
@@ -57,11 +58,9 @@ ax.clear()
 ax2.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
-ax.bar(t, x, color=cols, width=DAY,
-       align='edge',
-       edgecolor="black", linewidth=0.5)
-ax.set_xlim(t1, t[-1] + DAY)
-ax.set_ylim(0, 1.02 * max(x[-sum(t >= t1):-1]))
+ax.bar(t[t >= t1], x[t >= t1], color=cols[t >= t1], width=DAY,
+       align='edge', edgecolor="black", linewidth=0.5)
+ax.set_xlim(t1, t2)
 # ax.legend(['Tokyo confirmed'], loc='upper left')
 
 ax2 = ax.twinx()
@@ -109,8 +108,8 @@ def rt(i, interval):
 for interval in range(1, 8):
     a = np.array([rt(i, interval) for i in range(len(t))])
     ax.plot(t[t >= t1], a[t >= t1], label=interval)
-ax.set_xlim(t1, t[-1])
 plt.axhline(1, color='black', linewidth=1, zorder=-1)
+ax.set_xlim(t1, t2)
 plt.legend()
 fig.savefig('../img/COVID-tokyo-rt.svg', bbox_inches="tight")
 fig.savefig('../img/COVID-tokyo-rt.png', bbox_inches="tight")
