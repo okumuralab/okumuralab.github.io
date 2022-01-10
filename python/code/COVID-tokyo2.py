@@ -13,6 +13,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
+import re
 
 if "--debug" in sys.argv:
     logging.basicConfig(format='%(asctime)s:%(message)s', level=logging.DEBUG)
@@ -120,7 +121,7 @@ ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
          color="lightgray", edgecolor="black")
 ax.set_xlim(0, 20)
 ax.set_xticks(range(0, 25, 5))
-ax.legend(['2021年公表 確定日-発症日 median=' + str(np.nanmedian(t))])
+ax.legend(['2021年以降公表 確定日-発症日 median=' + str(np.nanmedian(t))])
 fig.savefig('../img/COVID-tokyo2d.svg', bbox_inches="tight")
 
 t = (df1['公表_年月日'] - df1['確定_年月日']).dt.days
@@ -129,23 +130,58 @@ ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
          color="lightgray", edgecolor="black")
 ax.set_xlim(0, 20)
 ax.set_xticks(range(0, 25, 5))
-ax.legend(['2021年公表 公表日-確定日 median=' + str(np.nanmedian(t))])
+ax.legend(['2021年以降公表 公表日-確定日 median=' + str(np.nanmedian(t))])
 fig.savefig('../img/COVID-tokyo2e.svg', bbox_inches="tight")
 
-print("COVID-tokyo2.py: succeeded.")
+#-----
+# 平均年代の推移
 
+def getnum(s):
+    if str(s) == '10歳未満':
+        return 0.0
+    m = re.search('^[^\d]*(\d+)', str(s))
+    if m:
+        return float(m.group(1))
+    else:
+        return np.nan
+
+df1['患者_年代'] = [getnum(x) for x in df1['患者_年代']]
+
+# df1['患者_年代'].value_counts()
+
+a = []
+for i in b:
+    df2 = df1[df1['確定_年月日'] == i]
+    y = df2['患者_年代'].values
+    y = y[~np.isnan(y)]
+    if len(y) >= 10:
+        a.append(np.mean(y) + 5)
+    else:
+        a.append(np.nan)
+
+ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.plot(b, a, 'o-')
+ax.set_ylabel('平均年齢')
+
+fig.savefig('../img/COVID-tokyo2g.svg', bbox_inches="tight")
+
+print("COVID-tokyo2.py: succeeded.")
 exit()
 #---
 
-h = [np.nanmedian(t[df['確定_年月日'] == i]) for i in b]
+h = [np.nanmedian(t[df1['確定_年月日'] == i]) for i in b]
 
 ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 
-ax.plot(df['確定_年月日'], t, 'ko', markersize=5, alpha=0.1, zorder=-10)
+ax.plot(df1['確定_年月日'], t, 'ko', markersize=5, alpha=0.1, zorder=-10)
 ax.plot(b, h, color='C1')
 ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
+ax.set_xlim(np.datetime64('2021-01-01'), b[-1])
+ax.set_ylim(0, 20)
 ax.set_xlabel('確定日')
 ax.set_ylabel('確定日-発症日')
 

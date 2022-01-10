@@ -396,7 +396,7 @@ for i in range(1, 11):
 
 <pre class="cell">
 a, b = 1, 1
-while a < 100:
+while a &lt; 100:
     print(a)
     a, b = b, a + b
 </pre>
@@ -408,7 +408,7 @@ def fib(n):
     """n未満のフィボナッチ数列を返す"""
     r = []          # 空のリスト
     a, b = 1, 1
-    while a < n:
+    while a &lt; n:
         r.append(a) # リストにアペンド
         a, b = b, a + b
     return r
@@ -443,7 +443,7 @@ fib(100)
 
 <pre class="cell">
 def fibn(n):
-    if n < 3:
+    if n &lt; 3:
         return 1
     else:
         return fibn(n - 2) + fibn(n - 1)
@@ -475,7 +475,7 @@ for i in range(2, 100):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-01-10 11:38:38</time>
+Last modified: <time>2022-01-09 13:24:50</time>
 <!-- hhmts end -->
 </p>
 </body>
