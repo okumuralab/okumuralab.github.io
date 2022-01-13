@@ -114,14 +114,17 @@ ax.set_xticks(range(0, 25, 5))
 ax.legend(['確定日-発症日 median=' + str(np.nanmedian(t))])
 fig.savefig('../img/COVID-tokyo2c.svg', bbox_inches="tight")
 
-df1 = df[df['公表_年月日'] >= np.datetime64('2021-01-01')]
+#-----
+# 2022年〜
+
+df1 = df[df['公表_年月日'] >= np.datetime64('2022-01-01')]
 t = (df1['確定_年月日'] - df1['発症_年月日']).dt.days
 ax.clear()
 ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
          color="lightgray", edgecolor="black")
 ax.set_xlim(0, 20)
 ax.set_xticks(range(0, 25, 5))
-ax.legend(['2021年以降公表 確定日-発症日 median=' + str(np.nanmedian(t))])
+ax.legend(['2022年以降公表 確定日-発症日 median=' + str(np.nanmedian(t))])
 fig.savefig('../img/COVID-tokyo2d.svg', bbox_inches="tight")
 
 t = (df1['公表_年月日'] - df1['確定_年月日']).dt.days
@@ -130,11 +133,13 @@ ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
          color="lightgray", edgecolor="black")
 ax.set_xlim(0, 20)
 ax.set_xticks(range(0, 25, 5))
-ax.legend(['2021年以降公表 公表日-確定日 median=' + str(np.nanmedian(t))])
+ax.legend(['2022年以降公表 公表日-確定日 median=' + str(np.nanmedian(t))])
 fig.savefig('../img/COVID-tokyo2e.svg', bbox_inches="tight")
 
 #-----
-# 平均年代の推移
+# 平均年代の推移（2021年〜）
+
+df1 = df[df['公表_年月日'] >= np.datetime64('2021-01-01')]
 
 def getnum(s):
     if str(s) == '10歳未満':

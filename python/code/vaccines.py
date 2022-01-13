@@ -35,13 +35,23 @@ df1 = pd.read_csv("../data/vaccines.csv", parse_dates=['日付'])
 df2 = pd.read_excel(filename(URL), sheet_name="医療従事者等",
                    header=None, skiprows=5,
                    usecols="A,D,E,F,G").dropna(thresh=3).fillna(0)
-# df3 = pd.read_excel(filename(URL), sheet_name="高齢者含む",
 df3 = pd.read_excel(filename(URL), sheet_name="一般接種",
                    header=None, skiprows=6,
                    usecols="A,D,E,F,G,H,I").dropna(thresh=3).fillna(0)
-df5 = pd.read_excel(filename(URL), sheet_name="総接種回数",
-                   header=None, skiprows=5,
-                   usecols="A,I").dropna().fillna(0)
+
+skip = 5
+while skip < 100:
+    df5 = pd.read_excel(filename(URL), sheet_name="総接種回数",
+                        header=None, skiprows=skip,
+                        usecols="A,I").dropna().fillna(0)
+    if df5.index[0] == 0 and type(df5[0][0]) == pd.Timestamp:
+        break
+    skip += 1
+
+if skip == 100:
+    print("Something is wrong.")
+    exit(1)
+
 df5[8] = df5[8].diff(-1).fillna(df5[8].values[-1])
 df2.iloc[:, 1] += df2.iloc[:, 2]
 df2.iloc[:, 3] += df2.iloc[:, 4]

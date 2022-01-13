@@ -65,7 +65,7 @@
 
 <h2>ターミナル</h2>
 
-<p>ターミナルを開き，試しに <code>uname -m</code> と打ち込むと arm64 と表示される。いったんターミナルを閉じて，Finder でターミナルを選択して「情報を見る」で「Rosettaを使用して開く」にチェックを付けると Rosetta がインストールされる（一般には任意の x86_64 なアプリを最初に起動したときに Rosetta がインストールされるのであろう）。Rosetta で開かれたターミナルに <code>uname -m</code> と打ち込むと x86_64 と表示される。今度は「Rosettaを使用して開く」をオフにしてターミナルを開き直して <code>uname -m</code> するとまた arm64 になるが，Rosetta がインストールされたので</p>
+<p>ターミナルを開き，試しに <code>uname -m</code> と打ち込むと arm64 と表示される。いったんターミナルを閉じて，Finder でターミナルを選択して「情報を見る」で「Rosettaを使用して開く」にチェックを付けると Rosetta がインストールされる（一般には任意の x86_64 なアプリを最初に起動したときに Rosetta がインストールされるのであろう。コマンド <code>softwareupdate --install-rosetta</code> でもインストールできる）。Rosetta で開かれたターミナルに <code>uname -m</code> と打ち込むと x86_64 と表示される。今度は「Rosettaを使用して開く」をオフにしてターミナルを開き直して <code>uname -m</code> するとまた arm64 になるが，Rosetta がインストールされたので</p>
 
 <pre>
 arch -x86_64 uname -m
@@ -275,7 +275,7 @@ Thank you for installing Miniforge3!
 
 <p>Tensorflow は <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> に従ってインストールできる。しかし，なぜか tensorflow-metal が遅いので，<code>pip uninstall tensorflow-metal</code> してしまった。</p>
 
-<p><a href="https://pytorch.org">PyTorch</a> は miniforge の Python 3.9 に普通にインストールできるようだ。次の TensorFlow と同様の Apple Silicon への最適化は<a href="https://github.com/pytorch/pytorch/issues/47702">要望</a>はあるがまだのようだ。</p>
+<p><a href="https://pytorch.org">PyTorch</a> は miniforge の Python 3.9 に普通にインストールできるようだ。次の TensorFlow と同様の Apple Silicon への最適化の<a href="https://github.com/pytorch/pytorch/issues/47702">要望</a>については，2021-11-11の時点では取り組み中だが，4ヶ月以内にパブリックアルファを出すのは難しそうとのこと。</p>
 
 <pre>
 conda install pytorch torchvision  # torchaudio はまだダメ
@@ -450,7 +450,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-11-05 08:11:01</time>
+Last modified: <time>2021-12-14 13:39:07</time>
 <!-- hhmts end -->
 </p>
 </footer>
