@@ -75,7 +75,7 @@ else:
 <p>実はこれはQRコードだけでなく通常のバーコードも読めます。</p>
 
 <div class="note">
-<p>M1 Macのarm64版Homebrewで入れたminiforgeのPythonではpyzbarを <code>conda install pyzbar</code> でインストールした。zbarライブラリは <code>brew install zbar</code> で入るが，パスの関係で見つけられないようだ。とりあえず <code>ln -s /opt/homebrew/lib/libzbar.dylib /opt/homebrew/Caskroom/miniforge/base/lib/</code> のようにシンボリックリンクを張れば大丈夫なようだ。</p>
+<p>M1 Macのarm64版Homebrewで入れたminiforgeのPythonではpyzbarを <code>conda install pyzbar</code> でインストールした。zbarライブラリは <code>brew install zbar</code> で入るが，パスの関係で見つけられないようだ。とりあえず <del><code>ln -s /opt/homebrew/lib/libzbar.dylib /opt/homebrew/Caskroom/miniforge/base/lib/</code></del> <ins><code>ln -s /opt/homebrew/lib/libzbar.dylib ~/miniforge3/lib/</code></ins> のようにシンボリックリンクを張れば大丈夫なようだ。</p>
 </div>
 
 <hr>
@@ -84,7 +84,7 @@ else:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-07-11 16:08:59</time>
+Last modified: <time>2022-01-16 21:06:27</time>
 <!-- hhmts end -->
 </p>
 </body>
