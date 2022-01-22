@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>2022年度からの高校数学の統計分野</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>2022年度からの高校数学の統計分野</h1>
+
+<h2>はじめに</h2>
+
+<p>2022年度入学の高校生からの<a href="https://www.mext.go.jp/a_menu/shotou/new-cs/index.htm">新学習指導要領</a>で統計がどう扱われるかを解説する。</p>
+
+<p>2013年度入学生からの高校の必履修科目「数学I」に「データの分析」が入り，2016年からはセンター試験にも出題されている。2022年度入学生からの新カリキュラムでは，この「データの分析」の四分位範囲・箱ひげ図が中学2年の数学に降ろされ，内容はさらに高度になる。さらに数学Bにあった「確率分布と統計的な推測」が「統計的な推測」となり，大学入試に出ないのでほとんどの高校で無視される状態から，進学校なら文系でも2年生で学び，共通テストでも選択されやすい状態に格上げされる。</p>
+
+<h2>数学I</h2>
+
+<p>必履修科目「数学I」は，4つの内容のうち最後が「データの分析」である。学習指導要領には次のように書かれているだけである。</p>
+
+<blockquote style="margin: 0em; padding: 1em; border: 1px solid">
+<p>(4) データの分析</p>
+<p style="text-indent: 1em">データの分析について，数学的活動を通して，その有用性を認識するとともに，次の事項を身に付けることができるよう指導する。<p>
+<p style="margin-left: 2em; text-indent: -1em">ア　次のような知識及び技能を身に付けること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｱ) 分散，標準偏差，散布図及び相関係数の意味やその用い方を理解すること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｲ) コンピュータなどの情報機器を用いるなどして，データを表やグラフに整理したり，分散や標準偏差などの基本的な統計量を求めたりすること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｳ) 具体的な事象において仮説検定の考え方を理解すること。</p>
+<p style="margin-left: 2em; text-indent: -1em">イ　次のような思考力，判断力，表現力等を身に付けること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｱ) データの散らばり具合や傾向を数値化する方法を考察すること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｲ) 目的に応じて複数の種類のデータを収集し，適切な統計量やグラフ，手法などを選択して分析を行い，データの傾向を把握して事象の特徴を表現すること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｳ) 不確実な事象の起こりやすさに着目し，主張の妥当性について，実験などを通して判断したり，批判的に考察したりすること。</p>
+<p>［用語・記号］外れ値</p>
+</blockquote>
+
+<p>詳しい説明は「学習指導要領解説」に書かれている。</p>
+
+<p>四分位範囲や箱ひげ図は中学2年に降りたとはいえ，まだその中学生は高校に来ていないので，最初はそこから始めなければならないであろう。</p>
+
+<p>文科省が定めた（学習指導要領には書いてないが解説には書かれていて，すべての教科書が準拠している）四分位数（しぶんいすう）の定義は，五数要約（最小値・第1〜第3四分位数・最大値）や箱ひげ図を広めたテューキー（J. W. Tukey，1915–2000）の定義でもなく，ExcelやRが出力する四分位数とも異なるので，注意が必要である。詳しくは<a href="quartile.html">四分位数の定義</a>のページを参照されたい。これに基づき，四分位範囲が「第1四分位数と第3四分位数の差」として定義される。また，箱ひげ図は，中学2年に移された旧学習指導要領の箱ひげ図とは異なり，「外れ値」は別に描く。これはオリジナルのTukeyの描き方に倣ったものである。</p>
+
+<figure><img src="img/boxplot.png" alt="箱ひげ図と外れ値"></figure>
+
+<p>「外れ値」（outlier）はいろいろな定義があるが，箱ひげ図を描くにあたっては，箱ひげ図の発案者Tukeyに従って，箱から1.5×四分位範囲離れた範囲を外れる値とするのが一般的である。Rが描く箱ひげ図もデフォルト（<code>range=1.5</code>）ではこのようになる。</p>
+
+<p>数学Iでは，この箱ひげ図をはじめとするいろいろなグラフ表現や，分散・標準偏差，相関係数の定義と意味を学ぶ。高校では分散は $n$ で割る方式を使う（不偏分散ではない）。和の記号 $\sum$ は数学Bの「数列」で習う。</p>
+
+<p>平均 $\bar{x}$：</p>
+
+\[ \bar{x} = \frac{1}{n} (x_1 + x_2 + \cdots + x_n) \]
+
+<p>分散 $s^2$，標準偏差 $s$：</p>
+
+\[ s^2 = \frac{1}{n} \{ (x_1 - \bar{x})^2 + (x_2 - \bar{x})^2 + \cdots + (x_n - \bar{x})^2 \} \]
+
+<p>相関係数 $r$：</p>
+
+\[ r = \frac{1}{n s_x s_y} \{ (x_1 - \bar{x})(y_1 - \bar{y}) + (x_2 - \bar{x})(y_2 - \bar{y}) + \cdots + (x_n - \bar{x})(y_n - \bar{y}) \} \]
+
+<p>仮説検定の考え方もここで触れる（詳しくは数学Bで扱う）。おそらく「ある仮説のもとで起こる確率が $5\,\%$ 以下なら，その仮説を棄却する（誤りと判断する）」のような単純化をするのであろうが，あまり単純化すると誤解を招きかねず，悩ましい。</p>
+
+<blockquote style="margin: 0em; padding: 1em; border: 1px solid">
+<p>(2) 統計的な推測</p>
+<p style="text-indent: 1em">統計的な推測について，数学的活動を通して，その有用性を認識するとともに，次の事項を身に付けることができるよう指導する。<p>
+<p style="margin-left: 2em; text-indent: -1em">ア　次のような知識及び技能を身に付けること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｱ) 標本調査の考え方について理解を深めること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｲ) 確率変数と確率分布について理解すること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｳ) 二項分布と正規分布の性質や特徴について理解すること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｴ) 正規分布を用いた区間推定及び仮説検定の方法を理解すること。</p>
+<p style="margin-left: 2em; text-indent: -1em">イ　次のような思考力，判断力，表現力等を身に付けること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｱ) 確率分布や標本分布の特徴を，確率変数の平均，分散，標準偏差などを用いて考察すること。</p>
+<p style="margin-left: 3em; text-indent: -1em">(ｲ) 目的に応じて標本調査を設計し，収集したデータを基にコンピュータなどの情報機器を用いて処理するなどして，母集団の特徴や傾向を推測し判断するとともに，標本調査の方法や結果を批判的に考察すること。</p>
+<p>［用語・記号］信頼区間，有意水準</p>
+</blockquote>
+
+<hr>
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2021-12-25 10:55:54</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
