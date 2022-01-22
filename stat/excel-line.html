@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Excelで折れ線グラフ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td, th { border: 1px solid; }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Excelで折れ線グラフ</h1>
+
+<p>次のデータを考えましょう。</p>
+
+<!--
+<table id="例1">
+  <thead>
+  <tr><th>年</th><th>感染者数</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>2020年</td><td>234109</td></tr>
+  <tr><td>2021年</td><td>1492897</td></tr>
+  </tbody>
+</table>
+-->
+
+<table id="例1">
+  <thead>
+  <tr><th>年</th><th>出生数</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>2014年</td><td>1003609</td></tr>
+  <tr><td>2015年</td><td>1005721</td></tr>
+  <tr><td>2016年</td><td>977242</td></tr>
+  <tr><td>2017年</td><td>946146</td></tr>
+  <tr><td>2018年</td><td>918400</td></tr>
+  <tr><td>2019年</td><td>865239</td></tr>
+  <tr><td>2020年</td><td>840832</td></tr>
+  </tbody>
+</table>
+
+<p>これをExcelにコピペして，A1〜B8を選択し，「挿入」→「折れ線グラフ」（マーカー付き）を選んでください。</p>
+
+<figure><img src="img/excel1.png" alt="例1"></figure>
+
+<p>とりあえずグラフができました。</p>
+
+<p>「折れ線グラフ」の代わりに「縦棒グラフ」を選んでも，やはり750000から始まるグラフになります。「折れ線グラフ」と「縦棒グラフ」はExcelにとっては同じ仕組みになっていて，横軸は文字列（順序尺度のカテゴリー変数）として扱います。</p>
+
+<p>上の例では「年」の列をわざと「○○○○年」のような文字列にしましたが，データ作法としては，余計な「年」を取って数値だけにするほうがいいでしょう。</p>
+
+<table id="例2">
+  <thead>
+  <tr><th>年</th><th>出生数</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>2014</td><td>1003609</td></tr>
+  <tr><td>2015</td><td>1005721</td></tr>
+  <tr><td>2016</td><td>977242</td></tr>
+  <tr><td>2017</td><td>946146</td></tr>
+  <tr><td>2018</td><td>918400</td></tr>
+  <tr><td>2019</td><td>865239</td></tr>
+  <tr><td>2020</td><td>840832</td></tr>
+  </tbody>
+</table>
+
+<p>同じようにExcelにコピペしてやってみましょう。</p>
+
+<figure><img src="img/excel2.png" alt="例2"></figure>
+
+<p>あれれ？ なんか意図通りになっていませんね。</p>
+
+<p>「縦棒グラフ」にしても，やはり変です。</p>
+
+<figure><img src="img/excel2a.png" alt="例2a"></figure>
+
+<p>試しに，データ作法としてはまずいかもしれませんが，列名の「年」を消してから，A1〜B8を選択し，「折れ線グラフ」を描いてみましょう。</p>
+
+<figure><img src="img/excel3.png" alt="例3"></figure>
+
+<p>なぜか，これならうまくいきました。</p>
+
+<p>あるいは，折れ線グラフや棒グラフを描く範囲は「出生数」B1〜B8 だけにして，あとでグラフエリアを右クリックして「データの選択」で「横（項目）軸ラベル」を A2〜A8 に設定する方法もあります。</p>
+
+<p>もっと簡単に意図通りにするには，普通に A1〜B8 を選択して，「折れ線グラフ」ではなく，「散布図」（マーカー付き，線分で結ぶ）を選びます。</p>
+
+<figure><img src="img/excel4.png" alt="例4"></figure>
+
+<p>このくらいのちっぽけなデータなら，散布図も折れ線グラフもあまり変わりませんが，もうちょっと大きなデータになると，見栄えの違いは顕著になります。</p>
+
+<table id="例2">
+  <thead>
+  <tr><th>年</th><th>出生数</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>1971</td><td>2000973</td></tr>
+  <tr><td>1972</td><td>2038682</td></tr>
+  <tr><td>1973</td><td>2091983</td></tr>
+  <tr><td>1974</td><td>2029989</td></tr>
+  <tr><td>1975</td><td>1901440</td></tr>
+  <tr><td>1976</td><td>1832617</td></tr>
+  <tr><td>1977</td><td>1755100</td></tr>
+  <tr><td>1978</td><td>1708643</td></tr>
+  <tr><td>1979</td><td>1642580</td></tr>
+  <tr><td>1980</td><td>1576889</td></tr>
+  <tr><td>1981</td><td>1529455</td></tr>
+  <tr><td>1982</td><td>1515392</td></tr>
+  <tr><td>1983</td><td>1508687</td></tr>
+  <tr><td>1984</td><td>1489780</td></tr>
+  <tr><td>1985</td><td>1431577</td></tr>
+  <tr><td>1986</td><td>1382946</td></tr>
+  <tr><td>1987</td><td>1346658</td></tr>
+  <tr><td>1988</td><td>1314006</td></tr>
+  <tr><td>1989</td><td>1246802</td></tr>
+  <tr><td>1990</td><td>1221585</td></tr>
+  <tr><td>1991</td><td>1223245</td></tr>
+  <tr><td>1992</td><td>1208989</td></tr>
+  <tr><td>1993</td><td>1188282</td></tr>
+  <tr><td>1994</td><td>1238328</td></tr>
+  <tr><td>1995</td><td>1187064</td></tr>
+  <tr><td>1996</td><td>1206555</td></tr>
+  <tr><td>1997</td><td>1191665</td></tr>
+  <tr><td>1998</td><td>1203147</td></tr>
+  <tr><td>1999</td><td>1177669</td></tr>
+  <tr><td>2000</td><td>1190547</td></tr>
+  <tr><td>2001</td><td>1170662</td></tr>
+  <tr><td>2002</td><td>1153855</td></tr>
+  <tr><td>2003</td><td>1123610</td></tr>
+  <tr><td>2004</td><td>1110721</td></tr>
+  <tr><td>2005</td><td>1062530</td></tr>
+  <tr><td>2006</td><td>1092674</td></tr>
+  <tr><td>2007</td><td>1089818</td></tr>
+  <tr><td>2008</td><td>1091156</td></tr>
+  <tr><td>2009</td><td>1070036</td></tr>
+  <tr><td>2010</td><td>1071305</td></tr>
+  <tr><td>2011</td><td>1050807</td></tr>
+  <tr><td>2012</td><td>1037232</td></tr>
+  <tr><td>2013</td><td>1029817</td></tr>
+  <tr><td>2014</td><td>1003609</td></tr>
+  <tr><td>2015</td><td>1005721</td></tr>
+  <tr><td>2016</td><td>977242</td></tr>
+  <tr><td>2017</td><td>946146</td></tr>
+  <tr><td>2018</td><td>918400</td></tr>
+  <tr><td>2019</td><td>865239</td></tr>
+  <tr><td>2020</td><td>840832</td></tr>
+  </tbody>
+</table>
+
+<p>まず「折れ線グラフ」です。</p>
+
+<figure><img src="img/excel6.png" alt="例5"></figure>
+
+<p>「散布図」です。</p>
+
+<figure><img src="img/excel5.png" alt="例6"></figure>
+
+<p>「散布図」で，横軸の「軸の書式設定」で最小値を1970，最大値を2020にしてみました。</p>
+
+<figure><img src="img/excel7.png" alt="例7"></figure>
+
+<p>ここまでは横軸のデータが等間隔（等差数列）でしたが，<a href="../python/rousui.html">このデータ</a>のように等間隔でないこともよくあります。気が向いたときに測定した体温のデータのように，時刻が不規則なこともあります。このような場合も，散布図ならうまく描けます。</p>
+
+<p>RやPythonで描く折れ線グラフは，Excelでいう「散布図」に相当します（つまり横軸は文字列ではなく数値です）。Excelでも「折れ線グラフ」でなく「散布図」を使いこなすようにしましょう。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-21 20:20:55</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
