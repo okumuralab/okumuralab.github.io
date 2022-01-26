@@ -156,7 +156,7 @@ df1['患者_年代'] = [getnum(x) for x in df1['患者_年代']]
 
 a = []
 for i in b:
-    df2 = df1[df1['確定_年月日'] == i]
+    df2 = df1[df1['公表_年月日'] == i]
     y = df2['患者_年代'].values
     y = y[~np.isnan(y)]
     if len(y) >= 10:
