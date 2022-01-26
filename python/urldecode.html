@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>16進をバイト列に</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>16進をバイト列に</h1>
+
+<p>URL中の特殊文字はバイト列として <code>%</code> で始まる16進2桁で表します。例えばスペース（16進 0x20）は <code>%20</code> になります。また，「日本語」という3文字は <code>%E6%97%A5%E6%9C%AC%E8%AA%9E</code> になります。この変換および逆変換は <code>urllib.parse.(un)quote</code> または <code>requests.utils.(un)quote</code> で行います：</p>
+
+<pre class="cell">
+import requests
+
+requests.utils.quote("日本語")
+</pre>
+
+<pre>
+'%E6%97%A5%E6%9C%AC%E8%AA%9E'
+</pre>
+
+<pre class="cell">
+requests.utils.unquote('%E6%97%A5%E6%9C%AC%E8%AA%9E')
+</pre>
+
+<pre>
+'日本語'
+</pre>
+
+<p>この <code>unquote</code> に相当することは Ruby では <code>s.gsub(/%([0-9A-F][0-9A-F])/) { [$1].pack("H*") }</code> のようにコンパクトに書けます。Python でもこんなに簡単に書ければいいのですが，なかなか難しそうです。次のようなことはできそうです：</p>
+
+<pre class="cell">
+import re
+import struct
+
+s = "%E6%97%A5%E6%9C%AC%E8%AA%9E"
+
+re.sub(b"%([0-9A-F][0-9A-F])",
+       lambda m: struct.pack("B", int(m[1], 16)),
+       s.encode()).decode()
+</pre>
+
+<pre>
+'日本語'
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-26 21:31:39</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
