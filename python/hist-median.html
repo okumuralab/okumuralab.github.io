@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ヒストグラムから中央値を求める</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ヒストグラムから中央値を求める</h1>
+
+<p>国立感染症研究所の<time>2022-01-13</time>の<a href="https://www.niid.go.jp/niid/ja/2019-ncov/2551-cepr/10903-b11529-period.html">SARS-CoV-2の変異株B.1.1.529系統（オミクロン株）の潜伏期間の推定：暫定報告</a>では，度数分布から中央値を求めるために，ガンマ分布でフィットして，中央値2.9日（95%信頼区間2.6-3.2）を出している。以下ではもっと単純に度数分布データから中央値を求めてみる。</p>
+
+<p>上の「データ1」はオミクロン株曝露-発症間隔（0，1，2，3，4，5日）の度数分布を表す次のような <span lang="en"><i>N</i> = 35</span> のデータである。</p>
+
+<pre class="cell">
+hist = [0, 2, 8, 15, 9, 1]
+</pre>
+
+<p><a href="dotplot.html">ドットプロット</a>：</p>
+
+<figure><img src="img/dotplot.svg" alt="ドットプロット"></figure>
+
+<p>このようなデータの中央値を求めるのが問題である。</p>
+
+<p><span lang="en"><i>N</i> = 35</span> であるから，18番目の値が中央値である。18番目は3のビンに入るので，中央値は3である。</p>
+
+<p>ここで，3のビンのデータが2.5から3.5までの範囲に一様分布しているとしてみよう（0日目の正午に暴露したとすれば3日目は2.5-3.5日に相当する）。3未満のビンには10個あるのだから，3のビンの15個中で8番目が中央値である。15個の8番目はちょうど中央であるので，こう考えても中央値は 3.0 になるとしてよさそうである。国立感染症研究所の結果（2.9日）ともほぼ一致する。</p>
+
+<p>より一般的に，度数分布で与えられる分布で，各ビン内では一様分布と仮定する場合，中央値は次の式で計算できる：</p>
+
+<div style="text-indent:2em">中央値 = 中央値を含むビンの左端 + (<span lang="en"><i>N</i>/2</span> - 中央値を含むビン未満の度数の合計) / 中央値を含むビンの度数 × 中央値を含むビンの幅</div>
+
+<p>この場合にあてはめると 2.5 + (35/2 - 10) / 15 * 1 = 3.0 となり，さきほどの結果と一致する。</p>
+
+<p>より一般に，階級値 0, 1, 2, 3, … についての度数のリスト <code>hist</code> が与えられたとき，このような中央値を求めるには，次のようにする：</p>
+
+<pre class="cell">
+def hmedian(hist):
+    n = sum(hist)
+    i = 0
+    s = hist[i]
+    while s < n / 2:
+        i += 1
+        s += hist[i]
+    return i + (n / 2 - s) / hist[i] + 0.5
+</pre>
+
+<p>これでいいと思っていたら，<code>[1, 1, 0, 1, 1]</code> のような真ん中が 0 の場合に小さすぎる値を出すようである。とりあえず，両側から攻めて，結果を平均するようにしてみた：</p>
+
+<pre class="cell">
+def hmedian(hist):
+    n = sum(hist)
+    i = 0
+    s = hist[i]
+    while s < n / 2:
+        i += 1
+        s += hist[i]
+    m1 = i + (n / 2 - s) / hist[i] + 0.5
+    i = len(hist) - 1
+    s = hist[i]
+    while s < n / 2:
+        i -= 1
+        s += hist[i]
+    m2 = i - (n / 2 - s) / hist[i] - 0.5
+    return (m1 + m2) / 2
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-28 11:17:01</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

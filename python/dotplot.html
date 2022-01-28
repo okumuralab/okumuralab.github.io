@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>ドットプロット</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ドットプロット</h1>
+
+<p>ドットプロットには2通りの意味がある。小学校で習うドットプロットと，Clevelandのドットプロットである。以下では小学校で習うドットプロットを扱う。</p>
+
+<p>現行（平成29年告示）小学校学習指導要領では，第1学年で絵を積み重ねたグラフ，第3学年で○を積み重ねたグラフを習う。ドットプロットという名前が登場するのは第6学年の「D データの活用」で，そこには「〔用語・記号〕ドットプロット　平均値　中央値　最頻値　階級」と書かれている。学習指導要領解説には度数分布を表す「柱状グラフ」も記述されている。</p>
+
+<p>このようなドットプロットは，Rでは <code>stripchart(..., method="stack")</code>）で描けるが，Pythonでは標準的な方法がなさそうで，<a href="https://stackoverflow.com/questions/49703938/how-to-create-a-dot-plot-in-matplotlib-not-a-scatter-plot">How to create a "dot plot" in Matplotlib? (not a scatter plot)</a> でいろいろな方法が挙げられている。次は，一番簡単そうな方法を少しアレンジしたものである：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+
+hist = [0, 2, 8, 15, 9, 1]  # for 0, 1, 2, 3, 4, 5
+
+for x, y in enumerate(hist):
+    plt.plot([x] * y, range(1, y + 1), "ko")
+
+# 以下は好みに応じて微調整
+plt.xticks(range(0, 6))
+plt.xlim(-0.5, 5.5)
+</pre>
+
+<figure><img src="img/dotplot.svg" alt="ドットプロット"></figure>
+
+<p>ほかにもいろいろな方法がある。例：</p>
+
+<pre class="cell">
+x = []
+y = []
+for i, h in enumerate(hist):
+    for j in range(h):
+        x.append(i)
+        y.append(j + 1)
+
+plt.scatter(x, y)
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-28 10:16:39</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
