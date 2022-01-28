@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>ヒストグラムから中央値を求める</title>
+<title>ヒストグラムから中央値・分位点を求める</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -14,9 +14,9 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>ヒストグラムから中央値を求める</h1>
+<h1>ヒストグラムから中央値・分位点を求める</h1>
 
-<p>国立感染症研究所の<time>2022-01-13</time>の<a href="https://www.niid.go.jp/niid/ja/2019-ncov/2551-cepr/10903-b11529-period.html">SARS-CoV-2の変異株B.1.1.529系統（オミクロン株）の潜伏期間の推定：暫定報告</a>では，度数分布から中央値を求めるために，ガンマ分布でフィットして，中央値2.9日（95%信頼区間2.6-3.2）を出している。以下ではもっと単純に度数分布データから中央値を求めてみる。</p>
+<p>国立感染症研究所の<time>2022-01-13</time>の<a href="https://www.niid.go.jp/niid/ja/2019-ncov/2551-cepr/10903-b11529-period.html">SARS-CoV-2の変異株B.1.1.529系統（オミクロン株）の潜伏期間の推定：暫定報告</a>では，度数分布から中央値を求めるために，ガンマ分布でフィットして，中央値2.9日（95%信頼区間2.6-3.2）を出している。以下では特別なモデルを仮定せず各ビンの中では一様分布（分布関数が折れ線）として度数分布データから中央値（一般に分位点）を求めてみる。</p>
 
 <p>上の「データ1」はオミクロン株曝露-発症間隔（0，1，2，3，4，5日）の度数分布を表す次のような <span lang="en"><i>N</i> = 35</span> のデータである。</p>
 
@@ -53,7 +53,7 @@ def hmedian(hist):
     return i + (n / 2 - s) / hist[i] + 0.5
 </pre>
 
-<p>これでいいと思っていたら，<code>[1, 1, 0, 1, 1]</code> のような真ん中が 0 の場合に小さすぎる値を出すようである。とりあえず，両側から攻めて，結果を平均するようにしてみた：</p>
+<p>これでいいと思っていたら，<code>[1, 1, 0, 1, 1]</code> のような真ん中が 0 の場合に，対称性を破る値を出すようである。とりあえず，両側から攻めて，結果を平均するようにしてみた：</p>
 
 <pre class="cell">
 def hmedian(hist):
@@ -73,13 +73,52 @@ def hmedian(hist):
     return (m1 + m2) / 2
 </pre>
 
+<p>別解（こっちのほうが良さそう）：</p>
+
+<pre class="cell">
+def hmedian(hist):
+    n = sum(hist)
+    i = 0
+    s = hist[i]
+    while s < n / 2:
+        i += 1
+        s += hist[i]
+    if s == n / 2 and hist[i + 1] == 0:
+        j = i + 2
+        while hist[j] == 0:
+            j += 1
+        return (i + j) / 2
+    return i + (n / 2 - s) / hist[i] + 0.5
+</pre>
+
+<p>ここで <code>n / 2</code> を別の値に変えれば任意の分位点が求められる。このことを使って一般化したのが次の関数である。<code>q</code> に0より大きく1より小さい値を与える。例えば0.25を与えれば四分位数を出力する。</p>
+
+<pre class="cell">
+def hquantile(hist, q=0.5):
+    n = sum(hist)
+    t = n * q
+    i = 0
+    s = hist[i]
+    while s < t:
+        i += 1
+        s += hist[i]
+    if s == t and hist[i + 1] == 0:
+        j = i + 2
+        while hist[j] == 0:
+            j += 1
+        return (i + j) / 2
+    return i + (t - s) / hist[i] + 0.5
+</pre>
+
+<p>ブートストラップを使えば分位点の信頼区間も求められる。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-28 11:17:01</time>
+Last modified: <time>2022-01-28 22:40:17</time>
 <!-- hhmts end -->
 </p>
 </body>
