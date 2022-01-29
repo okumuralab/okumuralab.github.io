@@ -16,6 +16,28 @@
 
 <h1>ヒストグラムから中央値・分位点を求める</h1>
 
+<p><em>[追記]</em> 中央値については中澤港先生の作られたRのパッケージ fmsb の <a href="https://minato.sip21c.org/msb/man/truemedian.html">truemedian</a> という関数にすでに実装されていました（中澤先生にご指摘いただきました。ありがとうございます）。truemedian は次のような実装になっています：</p>
+
+<pre>
+function (X, h = 1) 
+{
+    YY &lt;- rep(0, length(X))
+    XX &lt;- table(X)
+    q &lt;- length(XX)
+    k &lt;- 0
+    for (i in 1:q) {
+        L &lt;- as.numeric(names(XX)[i]) - h/2
+        for (j in 1:XX[[i]]) {
+            k &lt;- k + 1
+            YY[k] &lt;- L + h * (2 * j - 1)/(2 * XX[[i]])
+        }
+    }
+    return(median(YY))
+}
+</pre>
+
+<hr>
+
 <p>国立感染症研究所の<time>2022-01-13</time>の<a href="https://www.niid.go.jp/niid/ja/2019-ncov/2551-cepr/10903-b11529-period.html">SARS-CoV-2の変異株B.1.1.529系統（オミクロン株）の潜伏期間の推定：暫定報告</a>では，度数分布から中央値を求めるために，ガンマ分布でフィットして，中央値2.9日（95%信頼区間2.6-3.2）を出している。以下では特別なモデルを仮定せず各ビンの中では一様分布（分布関数が折れ線）として度数分布データから中央値（一般に分位点）を求めてみる。</p>
 
 <p>上の「データ1」はオミクロン株曝露-発症間隔（0，1，2，3，4，5日）の度数分布を表す次のような <span lang="en"><i>N</i> = 35</span> のデータである。</p>
@@ -118,7 +140,7 @@ def hquantile(hist, q=0.5):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-28 22:40:17</time>
+Last modified: <time>2022-01-29 09:07:32</time>
 <!-- hhmts end -->
 </p>
 </body>
