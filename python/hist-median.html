@@ -52,9 +52,15 @@ hist = [0, 2, 8, 15, 9, 1]
 
 <p>このようなデータの中央値を求めるのが問題である。</p>
 
-<p><span lang="en"><i>N</i> = 35</span> であるから，18番目の値が中央値である。18番目は3のビンに入るので，中央値は3である。</p>
+<p><span lang="en"><i>N</i> = 35</span> であるから，18番目の値が中央値である。18番目は3のビンに入るので，3のビンの15個がすべて3に等しければ，中央値は3である。</p>
 
-<p>ここで，3のビンのデータが2.5から3.5までの範囲に一様分布しているとしてみよう（0日目の正午に暴露したとすれば3日目は2.5-3.5日に相当する）。3未満のビンには10個あるのだから，3のビンの15個中で8番目が中央値である。15個の8番目はちょうど中央であるので，こう考えても中央値は 3.0 になるとしてよさそうである。国立感染症研究所の結果（2.9日）ともほぼ一致する。</p>
+<p>そうではなく，ここでは3のビンのデータは2.5から3.5までの範囲に一様分布すると仮定しよう。ここで考えているデータでは，0日目の正午に暴露したと仮定するのと同じことである。もし3のビンのデータが3から4までの範囲とするのであれば，以下の結果に0.5を加えればよい。</p>
+
+<p>このデータでは，3未満のビンには10個あるのだから，3のビンの15個中で8番目が中央値である。15個の8番目はちょうど中央であるので，こう考えても中央値は 3.0 になるとしてよさそうである。国立感染症研究所の結果（2.9日）ともほぼ一致する。</p>
+
+<p>これは，次の累積分布で 35/2 のところを求めることに相当する。</p>
+
+<figure><img src="img/dotplot-cum.svg" alt="ドットプロットの累積分布"></figure>
 
 <p>より一般的に，度数分布で与えられる分布で，各ビン内では一様分布と仮定する場合，中央値は次の式で計算できる：</p>
 
@@ -69,40 +75,45 @@ def hmedian(hist):
     n = sum(hist)
     i = 0
     s = hist[i]
-    while s < n / 2:
+    while s &lt; n / 2:
         i += 1
         s += hist[i]
     return i + (n / 2 - s) / hist[i] + 0.5
 </pre>
 
-<p>これでいいと思っていたら，<code>[1, 1, 0, 1, 1]</code> のような真ん中が 0 の場合に，対称性を破る値を出すようである。とりあえず，両側から攻めて，結果を平均するようにしてみた：</p>
+<p>これでいいと思っていたら，<code>[1, 1, 0, 1, 1]</code> のような真ん中が 0 の場合に，対称性を破る値を出してしまう。</p>
+
+<!--
+<p>とりあえず，両側から攻めて，結果を平均するようにしてみた：</p>
 
 <pre class="cell">
 def hmedian(hist):
     n = sum(hist)
     i = 0
     s = hist[i]
-    while s < n / 2:
+    while s &lt; n / 2:
         i += 1
         s += hist[i]
     m1 = i + (n / 2 - s) / hist[i] + 0.5
     i = len(hist) - 1
     s = hist[i]
-    while s < n / 2:
+    while s &lt; n / 2:
         i -= 1
         s += hist[i]
     m2 = i - (n / 2 - s) / hist[i] - 0.5
     return (m1 + m2) / 2
 </pre>
 
-<p>別解（こっちのほうが良さそう）：</p>
+-->
+
+<p>次のようにすればよさそうである：</p>
 
 <pre class="cell">
 def hmedian(hist):
     n = sum(hist)
     i = 0
     s = hist[i]
-    while s < n / 2:
+    while s &lt; n / 2:
         i += 1
         s += hist[i]
     if s == n / 2 and hist[i + 1] == 0:
@@ -121,7 +132,7 @@ def hquantile(hist, q=0.5):
     t = n * q
     i = 0
     s = hist[i]
-    while s < t:
+    while s &lt; t:
         i += 1
         s += hist[i]
     if s == t and hist[i + 1] == 0:
@@ -132,7 +143,47 @@ def hquantile(hist, q=0.5):
     return i + (t - s) / hist[i] + 0.5
 </pre>
 
+<p>データがヒストグラムではなく自然数のリストで与えられているときは，例えば次のようにしてヒストグラムに直す：</p>
+
+<pre class="cell">
+import numpy as np
+
+a = [0, 1, 1, 3, 5]  # リストで与えられたデータ
+hist, bin_edges = np.histogram(a, range(max(a) + 2))
+</pre>
+
+<p><code>bin_edges</code> は無視すればよい。</p>
+
+<p>逆に，ヒストグラムをデータに直すには次のようにする：</p>
+
+<pre class="cell">
+np.repeat(range(len(hist)), hist)
+</pre>
+
 <p>ブートストラップを使えば分位点の信頼区間も求められる。</p>
+
+<pre class="cell">
+rng = np.random.default_rng(20220129)
+
+hist = [0, 2, 8, 15, 9, 1]
+m = len(hist)
+n = sum(hist)
+x = np.repeat(range(len(hist)), hist)
+
+def func():
+    y = rng.choice(x, n)
+    h, _ = np.histogram(y, range(m + 1))
+    return hmedian(h)
+
+r = [func() for _ in range(10000)]
+np.quantile(r, [0.025, 0.975])
+</pre>
+
+<pre>
+array([2.66666667, 3.33333333])
+</pre>
+
+<p>中央値の95%信頼区間はだいたい [2.67, 3.33] である。</p>
 
 <hr>
 
@@ -140,7 +191,7 @@ def hquantile(hist, q=0.5):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-29 09:07:32</time>
+Last modified: <time>2022-01-30 09:16:44</time>
 <!-- hhmts end -->
 </p>
 </body>
