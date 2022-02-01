@@ -86,32 +86,49 @@ ax.set_xlim(np.datetime64('2021-01-01'), b[-1])
 ax.legend(['公表日', '発症日'])
 fig.savefig('../img/COVID-tokyo2f.svg', bbox_inches="tight")
 
+def hmedian(hist):
+    n = sum(hist)
+    i = 0
+    s = hist[i]
+    while s < n / 2:
+        i += 1
+        s += hist[i]
+    if s == n / 2 and hist[i + 1] == 0:
+        j = i + 2
+        while hist[j] == 0:
+            j += 1
+        return (i + j) / 2
+    return i + (n / 2 - s) / hist[i] + 0.5
+
 ax.clear()
 t = (df['公表_年月日'] - df['発症_年月日']).dt.days
-ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
-         color="lightgray", edgecolor="black")
-ax.set_xlim(0, 20)
+h, bins, _ = ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
+                     color="lightgray", edgecolor="black", align="left")
+ax.set_xlim(-0.5, 20.5)
 ax.set_xticks(range(0, 25, 5))
-ax.legend(['公表日-発症日 median=' + str(np.nanmedian(t))])
+# ax.legend(['公表日-発症日 median=' + str(np.nanmedian(t))])
+ax.legend([f'公表日-発症日 median={hmedian(h) + bins[0]:.2f}'])
 fig.savefig('../img/COVID-tokyo2a.svg', bbox_inches="tight")
 
 t = (df['公表_年月日'] - df['確定_年月日']).dt.days
 ax.clear()
 # sns.histplot(u, discrete=True)
-ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
-         color="lightgray", edgecolor="black")
-ax.set_xlim(0, 20)
+h, bins, _ = ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
+                     color="lightgray", edgecolor="black", align="left")
+ax.set_xlim(-0.5, 20.5)
 ax.set_xticks(range(0, 25, 5))
-ax.legend(['公表日-確定日 median=' + str(np.nanmedian(t))])
+# ax.legend(['確定日-発症日 median=' + str(np.nanmedian(t))])
+ax.legend([f'公表日-確定日 median={hmedian(h) + bins[0]:.2f}'])
 fig.savefig('../img/COVID-tokyo2b.svg', bbox_inches="tight")
 
 t = (df['確定_年月日'] - df['発症_年月日']).dt.days
 ax.clear()
-ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
-         color="lightgray", edgecolor="black")
-ax.set_xlim(0, 20)
+h, bins, _ = ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
+                     color="lightgray", edgecolor="black", align="left")
+ax.set_xlim(-0.5, 20.5)
 ax.set_xticks(range(0, 25, 5))
-ax.legend(['確定日-発症日 median=' + str(np.nanmedian(t))])
+# ax.legend(['確定日-発症日 median=' + str(np.nanmedian(t))])
+ax.legend([f'確定日-発症日 median={hmedian(h) + bins[0]:.2f}'])
 fig.savefig('../img/COVID-tokyo2c.svg', bbox_inches="tight")
 
 #-----
@@ -120,20 +137,22 @@ fig.savefig('../img/COVID-tokyo2c.svg', bbox_inches="tight")
 df1 = df[df['公表_年月日'] >= np.datetime64('2022-01-01')]
 t = (df1['確定_年月日'] - df1['発症_年月日']).dt.days
 ax.clear()
-ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
-         color="lightgray", edgecolor="black")
-ax.set_xlim(0, 20)
+h, bins, _ = ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
+                     color="lightgray", edgecolor="black", align="left")
+ax.set_xlim(-0.5, 20.5)
 ax.set_xticks(range(0, 25, 5))
-ax.legend(['2022年以降公表 確定日-発症日 median=' + str(np.nanmedian(t))])
+# ax.legend(['2022年以降公表 確定日-発症日 median=' + str(np.nanmedian(t))])
+ax.legend([f'2022年以降公表 確定日-発症日 median={hmedian(h) + bins[0]:.2f}'])
 fig.savefig('../img/COVID-tokyo2d.svg', bbox_inches="tight")
 
 t = (df1['公表_年月日'] - df1['確定_年月日']).dt.days
 ax.clear()
-ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
-         color="lightgray", edgecolor="black")
-ax.set_xlim(0, 20)
+h, bins, _ = ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
+                     color="lightgray", edgecolor="black", align="left")
+ax.set_xlim(-0.5, 20.5)
 ax.set_xticks(range(0, 25, 5))
-ax.legend(['2022年以降公表 公表日-確定日 median=' + str(np.nanmedian(t))])
+# ax.legend(['2022年以降公表 公表日-確定日 median=' + str(np.nanmedian(t))])
+ax.legend([f'2022年以降公表 公表日-確定日 median={hmedian(h) + bins[0]:.2f}'])
 fig.savefig('../img/COVID-tokyo2e.svg', bbox_inches="tight")
 
 #-----

@@ -36,6 +36,17 @@ function (X, h = 1)
 }
 </pre>
 
+<p>これを以下と同じ仕様にして Python で書けばこんな感じ：</p>
+
+<pre class="cell">
+def hmedian(hist):
+    a = np.array([])
+    for i, h in enumerate(hist):
+        if h != 0:
+            a = np.append(a, np.arange(1, 2 * h, 2) / (2 * h) + (i - 0.5))
+    return np.median(a)
+</pre>
+
 <hr>
 
 <p>国立感染症研究所の<time>2022-01-13</time>の<a href="https://www.niid.go.jp/niid/ja/2019-ncov/2551-cepr/10903-b11529-period.html">SARS-CoV-2の変異株B.1.1.529系統（オミクロン株）の潜伏期間の推定：暫定報告</a>では，度数分布から中央値を求めるために，ガンマ分布でフィットして，中央値2.9日（95%信頼区間2.6-3.2）を出している。以下では特別なモデルを仮定せず各ビンの中では一様分布（分布関数が折れ線）として度数分布データから中央値（一般に分位点）を求めてみる。</p>
@@ -168,7 +179,7 @@ rng = np.random.default_rng(20220129)
 hist = [0, 2, 8, 15, 9, 1]
 m = len(hist)
 n = sum(hist)
-x = np.repeat(range(len(hist)), hist)
+x = np.repeat(range(m), hist)
 
 def func():
     y = rng.choice(x, n)
@@ -185,13 +196,50 @@ array([2.66666667, 3.33333333])
 
 <p>中央値の95%信頼区間はだいたい [2.67, 3.33] である。</p>
 
+<p>この方法では区間の上下限は ..., 2.650, 2.656, 2.667, 2.675, 2.679, ..., 3.325, 3.333, 3.344, ... のような離散的な値しかとりえない。極端な場合，ビンが一つしかなければ，一つの値しかとりえないので，信頼区間は狭めに出ることが考えられる。</p>
+
+<hr>
+
+<p><em>[追記]</em> <a href="https://twitter.com/hyd3nekosuki/status/1488415587907043328">遠藤先生のバージョン</a>：</p>
+
+<pre class="cell">
+rng = np.random.default_rng(20220201)
+
+hist = [0, 2, 8, 15, 9, 1]
+n = sum(hist)
+x = np.repeat(range(len(hist)), hist)
+
+def func():
+    return np.median(rng.choice(x, n) + rng.random(n) - 0.5)
+
+r = [func() for _ in range(10000)]
+np.quantile(r, [0.025, 0.975])
+</pre>
+
+<pre>
+array([2.62720809, 3.37747261])
+</pre>
+
+<pre class="cell">
+r = [func() for _ in range(100000)]
+np.quantile(r, [0.025, 0.975])
+</pre>
+
+<pre>
+array([2.62591919, 3.37426923])
+</pre>
+
+<p>中央値の95%信頼区間はだいたい [2.63, 3.37] である。さきほどの結果よりほんの少し広くなった。</p>
+
+<p>この方法なら信頼区間の上下限は稠密な値をとりうる。ビンが一つでも正しい信頼区間が出る。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-30 09:16:44</time>
+Last modified: <time>2022-02-01 22:05:10</time>
 <!-- hhmts end -->
 </p>
 </body>
