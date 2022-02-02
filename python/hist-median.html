@@ -210,7 +210,7 @@ n = sum(hist)
 x = np.repeat(range(len(hist)), hist)
 
 def func():
-    return np.median(rng.choice(x, n) + rng.random(n) - 0.5)
+    return np.median(rng.choice(x, n) + rng.random(n)) - 0.5
 
 r = [func() for _ in range(10000)]
 np.quantile(r, [0.025, 0.975])
@@ -239,7 +239,7 @@ array([2.62591919, 3.37426923])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-01 22:05:10</time>
+Last modified: <time>2022-02-02 22:11:40</time>
 <!-- hhmts end -->
 </p>
 </body>
