@@ -195,6 +195,45 @@ print("COVID-tokyo2.py: succeeded.")
 exit()
 #---
 
+# 年代中央値の推移（2021年〜）
+
+df1 = df[df['公表_年月日'] >= np.datetime64('2021-01-01')]
+
+def getnum(s):
+    if str(s) == '10歳未満':
+        return 0.0
+    m = re.search('^[^\d]*(\d+)', str(s))
+    if m:
+        return float(m.group(1))
+    else:
+        return np.nan
+
+df1['患者_年代'] = [getnum(x) for x in df1['患者_年代']]
+
+# df1['患者_年代'].value_counts()
+
+a = []
+for i in b:
+    df2 = df1[df1['公表_年月日'] == i]
+    y = df2['患者_年代'].values
+    y = y[~np.isnan(y)]
+    if len(y) >= 10:
+        h, _ = np.histogram(y / 10, range(15))
+        a.append(hmedian(h) * 10 + 5)
+    else:
+        a.append(np.nan)
+
+ax.clear()
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.plot(b, a, 'o-')
+ax.set_ylabel('年齢中央値')
+
+fig.savefig('../img/COVID-tokyo2g.svg', bbox_inches="tight")
+
+
+#---
+
 h = [np.nanmedian(t[df1['確定_年月日'] == i]) for i in b]
 
 ax.clear()
