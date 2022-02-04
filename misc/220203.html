@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>「竈門禰󠄀豆子」をLaTeXで</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>「竈門禰󠄀豆子」をLaTeXで</h1>
+
+<p>「鬼滅の刃」のヒロイン「竈門禰󠄀豆子」（かまどねずこ）の「禰󠄀」は，「禰」（U+79B0）＋異体字セレクタ（U+E0100 VARIATION SELECTOR-17）でできている（→ <a href="https://qiita.com/ykami/items/d45ec72f8a5ea8b3288d">UTF-8のテーブル(MySQL5.6)に竈門禰󠄀豆子が格納できない問題を調べてみた</a>）。これをLaTeXで出せるか。</p>
+
+<p>使ったのは普通の TeX Live 2021 で，Mac 上でテストした。ドキュメントクラスは何でもいいが，platex・uplatex・lualatex のどれにも対応する jlreq にしてみた。</p>
+
+<pre>
+\documentclass{jlreq}
+\begin{document}
+
+竈門禰󠄀豆子
+
+\end{document}
+</pre>
+
+<p>まず platex してみよう。</p>
+
+<pre>
+l.4 竈門禰^^f3^^a0^^84^^80
+                          豆子
+? 
+</pre>
+
+<p>異体字セレクタでエラーになってしまう。</p>
+
+<p>uplatex では処理できた。しかし dvipdfmx で警告。</p>
+
+<pre>
+dvipdfmx:warning: No character mapping available.
+ CMap name: UniJIS-UTF16-H
+ input str: <db>
+</pre>
+
+<p>PDFを表示させると「竈門禰⊠豆子」のようになってしまう。</p>
+
+<p>lualatex ならちゃんと「竈門禰󠄀豆子」と表示されるPDFができた。</p>
+
+<p>異体字セレクタではないが，UTF-8が4バイトになることは，もっと簡単な文字でもありうる。2010年に常用漢字に追加された「𠮟る」の「𠮟」（シツ，しか（る），U+20B9F）も4バイトだ。platex では処理できない。</p>
+
+<pre>
+\documentclass{jlreq}
+\begin{document}
+
+𠮟る
+
+\end{document}
+</pre>
+
+<pre>
+l.4 ^^f0^^a0^^ae^^9f
+                    る
+? 
+</pre>
+
+<p>こちらは uplatex でも lualatex でも処理できる。</p>
+
+<p>ちなみに「叱」（字音「カ」，U+53F1）は本来は別字だが，UTF-8が3バイトに収まり，「𠮟」の代用として用いられてきた（←ややこしい歴史的経緯は省略^^;）。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-02-03 10:41:44</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
