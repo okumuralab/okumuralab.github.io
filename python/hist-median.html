@@ -3,9 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>ヒストグラムから中央値・分位点を求める</title>
+<title>ヒストグラムから中央値・分位数とその信頼区間を求める</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
 </head>
 <body>
 
@@ -14,44 +27,15 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>ヒストグラムから中央値・分位点を求める</h1>
+<h1>ヒストグラムから中央値・分位数とその信頼区間を求める</h1>
 
-<p><em>[追記]</em> 中央値については中澤港先生の作られたRのパッケージ fmsb の <a href="https://minato.sip21c.org/msb/man/truemedian.html">truemedian</a> という関数にすでに実装されていました（中澤先生にご指摘いただきました。ありがとうございます）。truemedian は次のような実装になっています：</p>
+<h2>はじめに</h2>
 
-<pre>
-function (X, h = 1) 
-{
-    YY &lt;- rep(0, length(X))
-    XX &lt;- table(X)
-    q &lt;- length(XX)
-    k &lt;- 0
-    for (i in 1:q) {
-        L &lt;- as.numeric(names(XX)[i]) - h/2
-        for (j in 1:XX[[i]]) {
-            k &lt;- k + 1
-            YY[k] &lt;- L + h * (2 * j - 1)/(2 * XX[[i]])
-        }
-    }
-    return(median(YY))
-}
-</pre>
+<p>国立感染症研究所の<time>2022-01-13</time>の<a href="https://www.niid.go.jp/niid/ja/2019-ncov/2551-cepr/10903-b11529-period.html">SARS-CoV-2の変異株B.1.1.529系統（オミクロン株）の潜伏期間の推定：暫定報告</a>では，度数分布から中央値を求めるために，ガンマ分布でフィットして，中央値2.9日（95%信頼区間2.6-3.2）を出している。以下では特別なモデルを仮定せず各ビンの中では一様分布（分布関数が折れ線）として度数分布データから中央値（一般に分位数）およびその信頼区間を求める。</p>
 
-<p>これを以下と同じ仕様にして Python で書けばこんな感じ：</p>
+<h2>ヒストグラムから中央値・分位数を求める</h2>
 
-<pre class="cell">
-def hmedian(hist):
-    a = np.array([])
-    for i, h in enumerate(hist):
-        if h != 0:
-            a = np.append(a, np.arange(1, 2 * h, 2) / (2 * h) + (i - 0.5))
-    return np.median(a)
-</pre>
-
-<hr>
-
-<p>国立感染症研究所の<time>2022-01-13</time>の<a href="https://www.niid.go.jp/niid/ja/2019-ncov/2551-cepr/10903-b11529-period.html">SARS-CoV-2の変異株B.1.1.529系統（オミクロン株）の潜伏期間の推定：暫定報告</a>では，度数分布から中央値を求めるために，ガンマ分布でフィットして，中央値2.9日（95%信頼区間2.6-3.2）を出している。以下では特別なモデルを仮定せず各ビンの中では一様分布（分布関数が折れ線）として度数分布データから中央値（一般に分位点）を求めてみる。</p>
-
-<p>上の「データ1」はオミクロン株曝露-発症間隔（0，1，2，3，4，5日）の度数分布を表す次のような <span lang="en"><i>N</i> = 35</span> のデータである。</p>
+<p>上述の「暫定報告」の「データ1」はオミクロン株曝露-発症間隔（0，1，2，3，4，5日）の度数分布を表す次のような $N = 35$ のデータである。</p>
 
 <pre class="cell">
 hist = [0, 2, 8, 15, 9, 1]
@@ -63,7 +47,7 @@ hist = [0, 2, 8, 15, 9, 1]
 
 <p>このようなデータの中央値を求めるのが問題である。</p>
 
-<p><span lang="en"><i>N</i> = 35</span> であるから，18番目の値が中央値である。18番目は3のビンに入るので，3のビンの15個がすべて3に等しければ，中央値は3である。</p>
+<p>$N = 35$ であるから，18番目の値が中央値である。18番目は3のビンに入るので，3のビンの15個がすべて3に等しければ，中央値は3である。</p>
 
 <p>そうではなく，ここでは3のビンのデータは2.5から3.5までの範囲に一様分布すると仮定しよう。ここで考えているデータでは，0日目の正午に暴露したと仮定するのと同じことである。もし3のビンのデータが3から4までの範囲とするのであれば，以下の結果に0.5を加えればよい。</p>
 
@@ -75,7 +59,7 @@ hist = [0, 2, 8, 15, 9, 1]
 
 <p>より一般的に，度数分布で与えられる分布で，各ビン内では一様分布と仮定する場合，中央値は次の式で計算できる：</p>
 
-<div style="text-indent:2em">中央値 = 中央値を含むビンの左端 + (<span lang="en"><i>N</i>/2</span> - 中央値を含むビン未満の度数の合計) / 中央値を含むビンの度数 × 中央値を含むビンの幅</div>
+<div style="text-indent:2em">中央値 = 中央値を含むビンの左端 + ($N/2$ - 中央値を含むビン未満の度数の合計) / 中央値を含むビンの度数 × 中央値を含むビンの幅</div>
 
 <p>この場合にあてはめると 2.5 + (35/2 - 10) / 15 * 1 = 3.0 となり，さきほどの結果と一致する。</p>
 
@@ -95,8 +79,8 @@ def hmedian(hist):
 <p>これでいいと思っていたら，<code>[1, 1, 0, 1, 1]</code> のような真ん中が 0 の場合に，対称性を破る値を出してしまう。</p>
 
 <!--
-<p>とりあえず，両側から攻めて，結果を平均するようにしてみた：</p>
-
+<div class="note">
+<p>対称性を回復する最初に考えた方法は，両側から攻めて，結果を平均するものであった：</p>
 <pre class="cell">
 def hmedian(hist):
     n = sum(hist)
@@ -114,7 +98,8 @@ def hmedian(hist):
     m2 = i - (n / 2 - s) / hist[i] - 0.5
     return (m1 + m2) / 2
 </pre>
-
+<p>しかし，ほとんどの場合にこれは無駄である。</p>
+</div>
 -->
 
 <p>次のようにすればよさそうである：</p>
@@ -135,7 +120,7 @@ def hmedian(hist):
     return i + (n / 2 - s) / hist[i] + 0.5
 </pre>
 
-<p>ここで <code>n / 2</code> を別の値に変えれば任意の分位点が求められる。このことを使って一般化したのが次の関数である。<code>q</code> に0より大きく1より小さい値を与える。例えば0.25を与えれば四分位数を出力する。</p>
+<p>ここで <code>n / 2</code> を別の値に変えれば任意の分位数が求められる。このことを使って一般化したのが次の関数である。<code>q</code> に0より大きく1より小さい値を与える。例えば0.25を与えれば四分位数を出力する。</p>
 
 <pre class="cell">
 def hquantile(hist, q=0.5):
@@ -163,7 +148,12 @@ a = [0, 1, 1, 3, 5]  # リストで与えられたデータ
 hist, bin_edges = np.histogram(a, range(max(a) + 2))
 </pre>
 
-<p><code>bin_edges</code> は無視すればよい。</p>
+<p><code>bin_edges</code> は無視すればよい。同様に，<code>plt.hist()</code> や <code>ax.hist()</code> でヒストグラムを描く際にも，通常は無視する戻り値を使えばよい：</p>
+
+<pre>
+h, bins, _ = ax.hist(a, range(int(np.nanmin(a)), int(np.nanmax(a)) + 2), align="left")
+print("Median =", hmedian(h) + bins[0])
+</pre> 
 
 <p>逆に，ヒストグラムをデータに直すには次のようにする：</p>
 
@@ -171,7 +161,42 @@ hist, bin_edges = np.histogram(a, range(max(a) + 2))
 np.repeat(range(len(hist)), hist)
 </pre>
 
-<p>ブートストラップを使えば分位点の信頼区間も求められる。</p>
+<h2>Rのパッケージfmsbの方法</h2>
+
+<p>中央値については中澤港先生の作られたRのパッケージ fmsb の <a href="https://minato.sip21c.org/msb/man/truemedian.html">truemedian</a> という関数にすでに実装されていることを中澤先生にご指摘いただいた。truemedian は次のような実装になっている：</p>
+
+<pre>
+truemedian &lt;- function (X, h = 1) 
+{
+    YY &lt;- rep(0, length(X))
+    XX &lt;- table(X)
+    q &lt;- length(XX)
+    k &lt;- 0
+    for (i in 1:q) {
+        L &lt;- as.numeric(names(XX)[i]) - h/2
+        for (j in 1:XX[[i]]) {
+            k &lt;- k + 1
+            YY[k] &lt;- L + h * (2 * j - 1)/(2 * XX[[i]])
+        }
+    }
+    return(median(YY))
+}
+</pre>
+
+<p>これを以下と同じ仕様にして Python で書けばこんな感じ：</p>
+
+<pre class="cell">
+def hmedian(hist):
+    a = np.array([])
+    for i, h in enumerate(hist):
+        if h != 0:
+            a = np.append(a, np.arange(1, 2 * h, 2) / (2 * h) + (i - 0.5))
+    return np.median(a)
+</pre>
+
+<h2>信頼区間をブートストラップで求める</h2>
+
+<p>ブートストラップを使えば分位数の信頼区間が簡単に求められる。</p>
 
 <pre class="cell">
 rng = np.random.default_rng(20220129)
@@ -196,11 +221,9 @@ array([2.66666667, 3.33333333])
 
 <p>中央値の95%信頼区間はだいたい [2.67, 3.33] である。</p>
 
-<p>この方法では区間の上下限は ..., 2.650, 2.656, 2.667, 2.675, 2.679, ..., 3.325, 3.333, 3.344, ... のような離散的な値しかとりえない。極端な場合，ビンが一つしかなければ，一つの値しかとりえないので，信頼区間は狭めに出ることが考えられる。</p>
+<p>この方法では区間の上下限は ..., 2.650, 2.656, 2.667, 2.675, 2.679, ..., 3.325, 3.333, 3.344, ... のような離散的な値しかとりえない。また，このようなブートストラップでは信頼区間が狭めに出ることが知られている（ファクタ $\sqrt{(n - 1) / n}$ くらい）。</p>
 
-<hr>
-
-<p><em>[追記]</em> <a href="https://twitter.com/hyd3nekosuki/status/1488415587907043328">遠藤先生のバージョン</a>：</p>
+<p><a href="https://twitter.com/hyd3nekosuki/status/1488415587907043328">遠藤先生</a>がもっと簡単かつ正確な方法を考えてくださった：</p>
 
 <pre class="cell">
 rng = np.random.default_rng(20220201)
@@ -231,7 +254,36 @@ array([2.62591919, 3.37426923])
 
 <p>中央値の95%信頼区間はだいたい [2.63, 3.37] である。さきほどの結果よりほんの少し広くなった。</p>
 
-<p>この方法なら信頼区間の上下限は稠密な値をとりうる。ビンが一つでも正しい信頼区間が出る。</p>
+<p>この方法なら信頼区間の上下限は稠密な値をとりうる。</p>
+
+<h2>2項分布による信頼区間</h2>
+
+<p>ある点 $L$ が中央値の95%信頼区間の下端であれば，$L$ 以下に半数以上のデータが入る確率は 0.025 である。分布がヒストグラム（各ビン内では一様分布）で与えられていれば，$L$ 以下の面積の割合 $p$ がヒストグラムから求められる。2項分布を仮定すれば</p>
+
+\[  \sum_{r=\lceil n/2\rceil}^n {}_nC_r p^r (1-p)^{n-r} = 1 - \sum_{r=0}^{\lceil n/2\rceil - 1} {}_nC_r p^r (1-p)^{n-r} = 0.025 \]
+
+<p>これを満たす $p$ を求めればよい。ここで第2辺の和は <code>scipy.stats.binom.cdf()</code>（R の <code>pbinom()</code>）で求められる。</p>
+
+<pre class="cell">
+import scipy.stats
+import scipy.optimize
+
+hist = [0, 2, 8, 15, 9, 1]
+n = sum(hist)
+
+def foo(p):
+    return 1 - scipy.stats.binom.cdf((n - 1) // 2, n, p) - 0.025
+
+p = scipy.optimize.root_scalar(foo, bracket=(0, 0.5))
+
+hquantile(hist, q=p.root), hquantile(hist, q=1-p.root)
+</pre>
+
+<pre>
+(2.6264133025787975, 3.3735866974212025)
+</pre>
+
+<p>
 
 <hr>
 
@@ -239,7 +291,7 @@ array([2.62591919, 3.37426923])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-02 22:11:40</time>
+Last modified: <time>2022-02-05 22:22:39</time>
 <!-- hhmts end -->
 </p>
 </body>
