@@ -16,7 +16,9 @@
 
 <h1>QRコード</h1>
 
-<p><a href="https://github.com/lincolnloop/python-qrcode">Pure python QR Code generator</a> を使います。<code>pip install qrcode</code> などとしてインストールします（<code>pillow</code> も使われます）。Python ライブラリだけでなく，<code>qr</code> というスクリプトもインストールされます。Mac のターミナルまたは Windows のコマンドプロンプト等で</p>
+<h2>生成する</h2>
+
+<p>ここでは <a href="https://github.com/lincolnloop/python-qrcode">Pure python QR Code generator</a> を使ってみます。<code>pip install qrcode</code> などとしてインストールします（<code>pillow</code> も使われます）。Python ライブラリだけでなく，<code>qr</code> というスクリプトもインストールされます。Mac のターミナルまたは Windows のコマンドプロンプト等で</p>
 
 <pre>
 <code>qr '奥村晴彦です' &gt; test.png
@@ -48,9 +50,11 @@ img.show()           # 表示
 img.save("test.png") # 保存
 </code></pre>
 
-<p>ほかに <a href="https://pypi.org/project/qrcodegen/">qrcodegen</a> や，<a href="https://pypi.org/project/PyQRCode/">PyQRCode</a> からフォークした <a href="https://pypi.org/project/PyQRCodeNG/">PyQRCodeNG</a> など，多数のQRコード生成ライブラリがあります。</p>
+<p>ほかに <a href="https://pypi.org/project/qrcodegen/">qrcodegen</a> や，<a href="https://pypi.org/project/PyQRCode/">PyQRCode</a> からフォークした <a href="https://pypi.org/project/PyQRCodeNG/">PyQRCodeNG</a> など，多数のQRコード生成ライブラリがあるようです。</p>
 
-<p>QRコードを読むためのライブラリとして，ここでは <a href="https://pypi.org/project/pyzbar/">pyzbar</a> を使ってみます。インストールは <code>pip install pyzbar</code> です。Mac ではあらかじめ <code>brew install zbar</code> として zbar を入れておきます。次のような実行ファイル qrdecode.py を作っておくと便利です。パスの通ったところに置いておき <code>qrdecode.py *.png *.jpg</code> などとすれば画像からQRコードを見つけて復号してくれるはずです。ファイル名を与えなければクリップボードから画像を読みます。</p>
+<h2>読む</h2>
+
+<p>QRコードを読むためのライブラリとして，ここでは <a href="https://pypi.org/project/pyzbar/">pyzbar</a> を使ってみます。インストールは <code>pip install pyzbar</code> です。Mac ではあらかじめ <code>brew install zbar</code> として zbar を入れておきます。次のような実行ファイル qrdecode.py を作っておくと便利です。パスの通ったところに置いておき <code>qrdecode.py *.png *.jpg</code> などとすれば画像からQRコードを見つけて復号してくれるはずです。ファイル名を与えなければクリップボードから画像を読みます。Macなら Control + Shift + Command + 4 でQRコードを含む部分をマウスで選択してから実行します。</p>
 
 <pre>
 <code>#! /usr/bin/env python3
@@ -84,7 +88,7 @@ else:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-16 21:06:27</time>
+Last modified: <time>2022-02-06 09:12:52</time>
 <!-- hhmts end -->
 </p>
 </body>
