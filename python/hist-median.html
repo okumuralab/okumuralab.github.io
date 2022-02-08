@@ -262,7 +262,7 @@ array([2.62591919, 3.37426923])
 
 \[  \sum_{r=\lceil n/2\rceil}^n {}_nC_r p^r (1-p)^{n-r} = 1 - \sum_{r=0}^{\lceil n/2\rceil - 1} {}_nC_r p^r (1-p)^{n-r} = 0.025 \]
 
-<p>これを満たす $p$ を求めればよい。ここで第2辺の和は <code>scipy.stats.binom.cdf()</code>（R の <code>pbinom()</code>）で求められる。</p>
+<p>これを満たす $p$ を求めればよい。ここで第2辺の和は <code>scipy.stats.binom.cdf()</code>（R の <code>pbinom()</code>）で求められる。ただ，$n$ が偶数のときはこれでは正確な中央値が求められないので，とりあえず $n$ を 1 増やして奇数にしている（もっといい手はないか）。</p>
 
 <pre class="cell">
 import scipy.stats
@@ -272,6 +272,8 @@ hist = [0, 2, 8, 15, 9, 1]
 n = sum(hist)
 
 def foo(p):
+    if n % 2 == 0:
+        n += 1
     return 1 - scipy.stats.binom.cdf((n - 1) // 2, n, p) - 0.025
 
 p = scipy.optimize.root_scalar(foo, bracket=(0, 0.5))
@@ -286,7 +288,7 @@ hquantile(hist, q=p.root), hquantile(hist, q=1-p.root)
 <p>ブートストラップ（遠藤先生バージョン）とほぼ同じ結果になった。</p>
 
 <div class="note">
-<p>こういうやりかたは既出なんだろうか。Rの DescTools パッケージの MedianCI という関数は，本質的な部分は次のようになっている：</p>
+<p>こういうやりかたは既知なんだろうか。Rの DescTools パッケージの MedianCI という関数は，本質的な部分は次のようになっている：</p>
 <pre>
 k &lt;- qbinom(p = (1 - conf.level)/2, size = n, prob = 0.5, lower.tail = TRUE)
 ci &lt;- sort(x)[c(k, n - k + 1)]
@@ -294,13 +296,45 @@ attr(ci, "conf.level") &lt;- 1 - 2 * pbinom(k - 1, size = n, prob = 0.5)
 </pre>
 </div>
 
+<p>念のため，簡単な場合にブートストラップと上述の2項分布の方法による $p$ の比較：</p>
+
+<pre>
+import matplotlib.pyplot as plt
+import numpy as np
+import scipy.stats
+import scipy.optimize
+
+rng = np.random.default_rng(20220207)
+
+def func(n):
+    r = [np.median(rng.random(n)) for _ in range(100000)]
+    return np.quantile(r, 0.025)
+
+a1 = [func(i) for i in range(1, 41)]
+
+def func(n):
+    if n % 2 == 0:
+        n += 1
+    def foo(p):
+        return 1 - scipy.stats.binom.cdf((n - 1) // 2, n, p) - 0.025
+    p = scipy.optimize.root_scalar(foo, bracket=(0, 0.5))
+    return p.root
+
+a2 = [func(i) for i in range(1, 41)]
+
+plt.plot(range(1, 41), a1, range(1, 41), a2, "o-")
+plt.legend(["bootstrap", "binomial"])
+</pre>
+
+<figure><img src="img/220208a.svg" alt="ブートストラップと2項分布の比較"></figure>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-06 09:41:45</time>
+Last modified: <time>2022-02-08 09:58:49</time>
 <!-- hhmts end -->
 </p>
 </body>
