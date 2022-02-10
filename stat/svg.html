@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>SVG画像</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
@@ -25,7 +24,7 @@
 
 <h2>はじめに</h2>
 
-<p>グラフを<a href="/~okumura/html5/svg.html">SVG形式</a>で描くには，ほぼR標準（cairo）の <code>svg()</code> を使うか，RSVGTipsDeviceパッケージの <code>devSVGTips()</code> を使うという選択肢がありました。2015年末にはHadley Wickhamが新しい <a href="https://cran.r-project.org/web/packages/svglite/index.html">svglite</a> というパッケージを作りました（<a href="http://blog.rstudio.org/2015/12/10/svglite-1-0-0/">アナウンス</a>，GitHubの <a href="https://github.com/hadley/svglite">hadley/svglite</a>）。</p>
+<p>グラフを<a href="../html5/svg.html">SVG形式</a>で描くには，ほぼR標準（cairo）の <code>svg()</code> を使うか，RSVGTipsDeviceパッケージの <code>devSVGTips()</code> を使うという選択肢がありました。2015年末にはHadley Wickhamが新しい <a href="https://cran.r-project.org/web/packages/svglite/index.html">svglite</a> というパッケージを作りました（<a href="http://blog.rstudio.org/2015/12/10/svglite-1-0-0/">アナウンス</a>，GitHubの <a href="https://github.com/hadley/svglite">hadley/svglite</a>）。</p>
 
 <p>cairo版では，文字も図形になり，ビューアに依存しないので安心ですが，日本語を使う場合は下の例のように日本語のフォント名を指定する必要があります。RSVGTipsDevice版では，SVGの <code>&lt;text&gt;</code> を使ってそのままUTF-8の文字列を書き込みますので，表示はビューアに依存しますが，文字列は検索・コピー可能になります。ツールチップ（マウスを乗せると現れる吹き出し）を埋め込むこともできます。svglite版はファイルサイズが他よりずっと小さいSVGを出力します。</p>
 

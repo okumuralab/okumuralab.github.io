@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>RでExcelのデータを読む方法</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 <style>
 table { border-collapse: collapse; }
@@ -256,7 +255,7 @@ Wide character in print at /Users/okumura/Library/R/2.15/library/gdata/perl/xls2
 4                &lt;NA&gt; 1899-12-31 00:00:00          &lt;NA&gt; 6.022000e+23
 </code></pre>
 
-<p>比較のため，RではなくRubyであるが，<a href="/~okumura/ruby/data.html">Rubyによるデータ処理</a>のspreadsheetライブラリの例で*.xlsを処理すると次のようになる（それぞれ
+<p>比較のため，RではなくRubyであるが，<a href="../ruby/data.html">Rubyによるデータ処理</a>のspreadsheetライブラリの例で*.xlsを処理すると次のようになる（それぞれ
 <code>puts row.join(',')</code> および <code>puts CSV.generate_line(row)</code> の出力）：</p>
 
 <pre>
@@ -388,7 +387,7 @@ alldata = do.call(rbind, lapply(names, read_excel))
 <h2>参考</h2>
 
 <ul>
-  <li><a href="/~okumura/ruby/data.html">Rubyによるデータ処理</a></li>
+  <li><a href="../ruby/data.html">Rubyによるデータ処理</a></li>
   <li><a href="http://support.microsoft.com/kb/214330/ja">Excel の 1900 年を基準とした日付方式と 1904 年を基準とした日付方式の違いについて</a></li>
   <li><a href="http://support.microsoft.com/kb/205719">XL2000: Office スプレッドシート コンポーネントで最早の日付は Excel からが異なります</a></li>
   <li><a href="http://www.r-bloggers.com/quickly-read-excel-xlsx-worksheets-into-r-on-any-platform/">Quickly read Excel (xlsx) worksheets into R on any platform | (R news &amp; tutorials)</a></li>

@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>音を描く</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
@@ -16,13 +15,13 @@
 
 <p>音源は何でもいい。昔はCDからリッピングしていたが，再現できる例として，Internet Archiveの<a href="https://archive.org/details/MusopenCollectionAsFlac">Musopen Collection as FLAC</a>を使うことにする。これはパブリックドメインの音源で，しかもFLAC（オープンなロスレス圧縮）形式である。ここでは最初のGoldberg変奏曲のAria（FLACで13519283バイト）を使う。</p>
 
-<p>これをまず<a href="https://xiph.org/flac/">FLAC</a>で<a href="/~okumura/wavefmt.html">WAV形式</a>に変換する：</p>
+<p>これをまず<a href="https://xiph.org/flac/">FLAC</a>で<a href="../wavefmt.html">WAV形式</a>に変換する：</p>
 
 <pre>
 <code>flac -d Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.flac
 </code></pre>
 
-<p>77376140バイトのWAVファイルができる。これをさらに<a href="/~okumura/dumpwave.c">dumpwave.c</a>でテキストに落とした：</p>
+<p>77376140バイトのWAVファイルができる。これをさらに<a href="../dumpwave.c">dumpwave.c</a>でテキストに落とした：</p>
 
 <pre>
 <code>$ gcc dumpwave.c -o dumpwave

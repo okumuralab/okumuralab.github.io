@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width">
 <title>音</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
@@ -22,7 +21,7 @@
 
 <h2 id="Mac">準備（Mac）</h2>
 
-<p>以下では<a href="/~okumura/wavefmt.html">WAV</a>などのオーディオファイルを扱う。MacではWAVファイルなどはおそらくiTunes.appに関連付けられているが，FinderでQuickTime Player.appまたは<a href="http://www.videolan.org/vlc/">VLC.app</a>に関連付けを変更しておくと便利である。ターミナルで例えばQuickTime Player.appでWAVファイルを開くには</p>
+<p>以下では<a href="../wavefmt.html">WAV</a>などのオーディオファイルを扱う。MacではWAVファイルなどはおそらくiTunes.appに関連付けられているが，FinderでQuickTime Player.appまたは<a href="http://www.videolan.org/vlc/">VLC.app</a>に関連付けを変更しておくと便利である。ターミナルで例えばQuickTime Player.appでWAVファイルを開くには</p>
 
 <pre>
 <code>open -a 'QuickTime Player' *.wav
@@ -199,7 +198,7 @@ points((s:t)/44100, bachr[s:t], type="l", col="#f3980080")
 </div>
 
 <div class="note">
-<p>別の方法として，WAVファイルを拙作<a href="/~okumura/dumpwave.c">dumpwave.c</a>でテキストに落としてから読み込む方法を紹介しておく。この方法なら，各サンプル値を4バイトのinteger型で読み込むことができる。</p>
+<p>別の方法として，WAVファイルを拙作<a href="../dumpwave.c">dumpwave.c</a>でテキストに落としてから読み込む方法を紹介しておく。この方法なら，各サンプル値を4バイトのinteger型で読み込むことができる。</p>
 <pre>
 <code>$ gcc dumpwave.c -o dumpwave
 $ ./dumpwave Bach_GoldbergVariations-JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.wav &gt;x.txt

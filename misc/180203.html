@@ -2,21 +2,23 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>音</title>
 <link rel="stylesheet" href="style.css">
-<link rel="author" href="https://plus.google.com/112494697412775886755?rel=author">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    processEscapes: true
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
   },
-  CommonHTML: { matchFontHeight: false }
-});
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
 </script>
-<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
 </head>
 <body>
 
@@ -73,7 +75,7 @@ MathJax.Hub.Config({
 <p>を得る。$\Delta P / P$ が実効値で $20\,\mathrm{mPa} / 10^5\,\mathrm{Pa} = 2 \times 10^{-7}$
 程度とすれば，空気の変位の速度も音速の $10^{-7}$ 倍のオーダーである。</p>
 
-<p>このことを表すアニメーションを<a href="/~okumura/stat/180203.html">こちら</a>で試し中だが，あまりうまくできていない。</p>
+<p>このことを表すアニメーションを<a href="../stat/180203.html">こちら</a>で試し中だが，あまりうまくできていない。</p>
 
 <hr>
 
