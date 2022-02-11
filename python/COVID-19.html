@@ -18,9 +18,9 @@
 
 <p>[ご注意] ブラウザによっては更新（再読み込み）しても古い画像が表示されることがあるようです。いわゆる「スーパーリロード」（[Shift] + [更新] または [Control] + [更新]）をお試しください。</p>
 
+<!--
 <p><a href="200310.html">番外編1</a>，<a href="200312.html">番外編2</a>も参考になるかもしれません。もう変化のない<a href="diamondprincess.html">クルーズ船ダイヤモンド・プリンセス号</a>は別ページにしました。</p>
 
-<!--
 <h2>はじめに</h2>
 
 <p>日本では「新型コロナウイルス感染症」と呼ばれている COVID-19（コービッド・ナインティーン）についての最新のデータを収集し，Python でグラフにする。COVID-19 は病名で，ウイルス名は当初 2019-nCoV と呼ばれたが現在は SARS-CoV-2（サーズ・シーオーブイ・ツー）が公式名である。</p>
@@ -39,29 +39,29 @@
 
 <p>Johns Hopkins 大学の Center for Systems Science and Engineering (CSSE) は <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">COVID-19 Dashboard by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University (JHU)</a> という COVID-19 可視化サイトを早くから立ち上げている。データについては GitHub の <a href="https://github.com/CSSEGISandData/COVID-19">COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University</a> で公開している。このデータをそのまま描いた図を以下に示す。まずは確定数（累積）。黒丸マーカーを付けたものが日本である。</p>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse.svg" alt="COVID-19"></figure>
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-csse.svg" alt="COVID-19"></figure>
 
-<p>差分（つまり1日ごとの増分）最終週平均の7位まで＋日本（トルコが1日だけ外れ値を出している）：</p>
+<p>差分（つまり1日ごとの増分）の7日間移動平均（7位まで＋日本）：</p>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse1.svg" alt="COVID-19"></figure>
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-csse1.svg" alt="COVID-19"></figure>
 
 <p>死亡数（累積）：</p>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse2.svg" alt="COVID-19"></figure>
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-csse2.svg" alt="COVID-19"></figure>
 
-<p>差分（つまり1日ごとの増分）最終週平均の7位まで＋日本：</p>
+<p>差分（つまり1日ごとの増分）の7日間移動平均（7位まで＋日本）：</p>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-csse3.svg" alt="COVID-19"></figure>
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-csse3.svg" alt="COVID-19"></figure>
 
 <h2>厚労省のデータ</h2>
 
 <p>厚労省も<a href="https://covid19.mhlw.go.jp">データからわかる－新型コロナウイルス感染症情報－</a>というページ（いわゆるダッシュボード）を作った。データは<a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">オープンデータ</a>のページで公開している。以下はこのオープンデータを使って自動生成したものである。2021-07-29よりデータファイルおよびフォーマットが変わった。</p>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-mhlwopen1.svg" alt="厚労省 COVID-19"></figure>
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-mhlwopen1.svg" alt="厚労省 COVID-19"></figure>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-mhlwopen2.svg" alt="厚労省 COVID-19"></figure>
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-mhlwopen2.svg" alt="厚労省 COVID-19"></figure>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-mhlwopen3.svg" alt="厚労省 COVID-19"></figure>
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-mhlwopen3.svg" alt="厚労省 COVID-19"></figure>
 
 <h2>日本の状況</h2>
 
@@ -81,18 +81,19 @@
 
 <p>東京都の情報は毎日<del>15:00</del><ins>2021-05-24以降は16:45</ins>に<a href="https://www.fukushihoken.metro.tokyo.lg.jp">東京都福祉保健局</a>からPDFで発表される。これをスクレープして <a href="data/COVID-tokyo.csv">COVID-tokyo.csv</a> を作成し，自動ツイートしている。そのグラフ：</p>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-tokyo.svg" alt="東京"></figure>
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo.svg" alt="東京"></figure>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-tokyo-a.svg" alt="東京"></figure>
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo-a.svg" alt="東京"></figure>
 
 <p>縦軸を対数目盛にしたもの：</p>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-tokyo-log.svg" alt="東京"></figure>
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo-log.svg" alt="東京"></figure>
 
 <p>実効再生産数を，(直近7日間の陽性数/n日前7日間の陽性数)**(5/n)で近似したもの。<a href="https://toyokeizai.net/sp/visual/tko/covid19/">東洋経済オンライン</a>では n=7 としているが，ここでは 1 から 7 までの7本のグラフを示した。</p>
 
-<figure><img src="https://oku.edu.mie-u.ac.jp/~okumura/python/img/COVID-tokyo-rt.svg" alt="東京"></figure>
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo-rt.svg" alt="東京"></figure>
 
+<!--
 <h2>関連サイトへのリンク</h2>
 
 <p>（古い情報も含まれています）</p>
@@ -121,6 +122,7 @@
   <li><a href="https://www.stopcovid19.jp">COVID-19 Japan 新型コロナウイルス対策ダッシュボード</a></li>
   <li><a href="https://covid19tokyo.live">東京都新型コロナウイルス感染状況</a></li>
 </ul>
+-->
 
 <hr>
 
@@ -128,7 +130,7 @@
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-09-02 15:14:51</time>
+Last modified: <time>2022-02-11 14:34:16</time>
 <!-- hhmts end -->
 </p>
 </body>

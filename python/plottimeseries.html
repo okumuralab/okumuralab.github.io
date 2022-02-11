@@ -6,6 +6,13 @@
 <title>時系列のグラフを描く</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+window.onload = function() {
+  let url = /^(.*\/).*\//.exec(location.href)[1];
+  let a = document.getElementsByClassName("dirurl");
+  [].forEach.call(a, function(x) {x.textContent = url});
+}
+</script>
 </head>
 <body>
 
@@ -16,13 +23,13 @@
 
 <h1>時系列のグラフを描く</h1>
 
-<p><a href="https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv">東京の毎日のCOVID-19感染者数の時系列データ</a>をプロットしてみましょう。</p>
+<p><a href="data/COVID-tokyo.csv">東京の毎日のCOVID-19感染者数の時系列データ</a>をプロットしてみましょう。</p>
 
 <pre class="cell">
 <code>import matplotlib.pyplot as plt
 import pandas as pd
 
-URL = 'https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv'
+URL = '<span class="dirurl">https://okumuralab.org/~okumura/</span>python/data/COVID-tokyo.csv'
 df = pd.read_csv(URL)
 </code></pre>
 
@@ -109,7 +116,7 @@ fig, ax = plt.subplots()
 formatter = mdates.DateFormatter("%m-%d")
 ax.xaxis.set_major_formatter(formatter)
 
-URL = 'https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv'
+URL = '<span class="dirurl">https://okumuralab.org/~okumura/</span>python/data/COVID-tokyo.csv'
 df = pd.read_csv(URL, parse_dates=['date'])
 ax.bar(df['date'], df['confirmed'], width=1)
 </code></pre>
@@ -128,7 +135,7 @@ locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 ax.xaxis.set_major_formatter(formatter)
 
-URL = 'https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv'
+URL = '<span class="dirurl">https://okumuralab.org/~okumura/</span>python/data/COVID-tokyo.csv'
 df = pd.read_csv(URL, parse_dates=['date'])
 ax.bar(df['date'], df['confirmed'], width=1)
 </code></pre>
@@ -149,7 +156,7 @@ formatter.offset_formats=['', '%Y年', '%Y-%m', '%Y-%m-%d',
                           '%Y-%m-%d', '%Y-%m-%d %H:%M']
 ax.xaxis.set_major_formatter(formatter)
 
-URL = 'https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-tokyo.csv'
+URL = '<span class="dirurl">https://okumuralab.org/~okumura/</span>python/data/COVID-tokyo.csv'
 df = pd.read_csv(URL, parse_dates=['date'])
 ax.bar(df['date'], df['confirmed'], width=1)
 </code></pre>
@@ -160,7 +167,7 @@ ax.bar(df['date'], df['confirmed'], width=1)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-23 14:28:32</time>
+Last modified: <time>2022-02-11 17:59:27</time>
 <!-- hhmts end -->
 </p>
 </body>

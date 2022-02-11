@@ -6,6 +6,13 @@
 <title>データの読み書き</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+window.onload = function() {
+  let url = /^(.*\/).*\//.exec(location.href)[1];
+  let a = document.getElementsByClassName("dirurl");
+  [].forEach.call(a, function(x) {x.textContent = url});
+}
+</script>
 </head>
 <body>
 
@@ -128,14 +135,14 @@ pd.crosstab(df['列名1'], df['列名2']) # クロス集計
 
 <p>この節については，いしおさんのブログ<a href="https://ishitonton.hatenablog.com/entry/2019/01/04/190748">DataFrameのメモリサイズを節約する</a>が参考になります。</p>
 
-<p>例えば <a href="https://oku.edu.mie-u.ac.jp/~okumura/stat/data/shinjuku.csv">shinjuku.csv</a> というCSVファイルを読み込むとしましょう。</p>
+<p>例えば <a href="../stat/data/shinjuku.csv">shinjuku.csv</a> というCSVファイルを読み込むとしましょう。</p>
 
 <pre>
 <code>import matplotlib.pyplot as plt
 import pandas as pd
 import sys
 
-url = "https://oku.edu.mie-u.ac.jp/~okumura/stat/data/shinjuku.csv"
+url = "<span class="dirurl">https://okumuralab.org/~okumura/</span>stat/data/shinjuku.csv"
 df1 = pd.read_csv(url)
 df1.shape           # (25705, 4)
 sys.getsizeof(df1)  # 2493489
@@ -321,7 +328,7 @@ df = pd.read_csv(StringIO(r.text))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-12-30 15:23:06</time>
+Last modified: <time>2022-02-11 15:58:46</time>
 <!-- hhmts end -->
 </p>
 </body>

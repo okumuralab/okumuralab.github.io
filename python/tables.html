@@ -10,6 +10,13 @@
 table { border-collapse: collapse; }
 td, th { border: 1px solid; }
 </style>
+<script>
+window.onload = function() {
+  let url = /^(.*\/).*\//.exec(location.href)[1];
+  let a = document.getElementsByClassName("dirurl");
+  [].forEach.call(a, function(x) {x.textContent = url});
+}
+</script>
 </head>
 <body>
 
@@ -70,7 +77,7 @@ td, th { border: 1px solid; }
 <pre class="cell">
 import pandas as pd
 
-df = pd.read_excel("https://oku.edu.mie-u.ac.jp/~okumura/python/data/tables-1-2-ex1.xlsx")
+df = pd.read_excel("<span class="dirurl">https://okumuralab.org/~okumura/</span>python/data/tables-1-2-ex1.xlsx")
 df
 </pre>
 
@@ -86,7 +93,7 @@ df
 <p>このページにあるHTMLの表をPythonでスクレイプするのも，同様に簡単である：</p>
 
 <pre class="cell">
-tables = pd.read_html("https://oku.edu.mie-u.ac.jp/~okumura/python/tables.html")
+tables = pd.read_html("<span class="dirurl">https://okumuralab.org/~okumura/</span>python/tables.html")
 tables[0]
 </pre>
 
@@ -274,7 +281,7 @@ tables[0]
 <br>
 
 <pre class="cell">
-tables = pd.read_html("https://oku.edu.mie-u.ac.jp/~okumura/python/tables.html")
+tables = pd.read_html("<span class="dirurl">https://okumuralab.org/~okumura/</span>python/tables.html")
 tables[4]
 </pre>
 
@@ -308,7 +315,7 @@ tables[4]
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-11-08 09:42:12</time>
+Last modified: <time>2022-02-11 15:52:43</time>
 <!-- hhmts end -->
 </p>
 </body>
