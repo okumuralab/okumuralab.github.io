@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CentOS 7 に GCC 8.2.0 と Python 3.9.10 を</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>CentOS 7 に GCC 8.2.0 と Python 3.9.10 を</h1>
+
+<p>CentOS 7 に Python 3.9.10 を入れようとして <code>./configure</code> に <code>--enable-optimizations</code> を付けるとうまくいかない。手っ取り早いのは GCC を更新することらしいので，ずっと前にソースをゲットしてあった GCC 8.2.0 をまず入れる（数時間かかる）。</p>
+
+<pre>
+sudo yum install gmp-devel mpfr-devel libmpc-devel
+tar xvJf gcc-8.2.0.tar.xz
+cd gcc-8.2.0
+./configure --disable-multilib
+make
+make install
+hash -r
+gcc -v  # 8.2.0 であることを確認
+</pre>
+
+<p>次に Python 3.9.10 を：</p>
+
+<pre>
+tar xvJf Python-3.9.10.tar.xz
+cd Python-3.9.10
+./configure --enable-optimizations
+make
+make install
+</pre>
+
+<!--
+Python build finished successfully!
+The necessary bits to build these optional modules were not found:
+_dbm                  _gdbm                 _tkinter           
+To find the necessary bits, look in setup.py in detect_modules() for the module's name.
+
+
+The following modules found by detect_modules() in setup.py, have been
+built by the Makefile instead, as configured by the Setup files:
+_abc                  atexit                pwd                
+time                                                           
+-->
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-02-11 08:15:55</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
