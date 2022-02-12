@@ -169,7 +169,7 @@ def getnum(s):
     else:
         return np.nan
 
-df1['患者_年代'] = [getnum(x) for x in df1['患者_年代']]
+df1['患者_年代'] = df1['患者_年代'].apply(getnum)
 
 # df1['患者_年代'].value_counts()
 
@@ -208,7 +208,7 @@ def getnum(s):
     else:
         return np.nan
 
-df1['患者_年代'] = [getnum(x) for x in df1['患者_年代']]
+df1['患者_年代'] = df1['患者_年代'].apply(getnum)
 
 # df1['患者_年代'].value_counts()
 
