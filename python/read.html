@@ -110,14 +110,16 @@ df.A[0] - 1258.477    # -2.2737367544323206e-13
 <code>df          # 全体を表示
 df.head()   # 頭の5行だけ表示
 df.tail()   # 末尾の5行だけ表示
+df.shape    # 行数・列数
 df.columns  # 各列の名前
 df.dtypes   # 各列の名前とデータ型を表示
 df.index    # 行の名前（デフォルトでは 0 から始まる行番号）
 df.describe() # 記述統計量を表示
 df.to_latex() # LaTeXのtabular形式に変換
 df1 = df.dropna() # 欠測値のある行を外す
-df2 = df.fillna(0) # 欠測値を0で置き換える
-df2 = df.fillna(method="ffill") # 欠測値を直前の行で置き換える
+df1 = df.fillna(0) # 欠測値を0で置き換える
+df1 = df.fillna(method="ffill") # 欠測値を直前の行で置き換える
+df["A"] = df["A"].apply(float)  # 列の各要素に関数（ここでは <code>float()</code>）を適用
 </code></pre>
 
 <p>データの（0から数えて）例えば2行目から4行目を選択するには <code>df[2:5]</code> のようにします。データの一部の列を選択するには <code>df.列名</code> あるいは <code>df['列名']</code> あるいは <code>df[['列名1','列名2']]</code> のようにします。行列のように行名・列名で選ぶには <code>df.loc['行名','列名']</code>，行番号・列番号で選ぶには <code>df.iloc[行番号,列番号]</code> とします。複数与えるには <code>[2,3,4]</code> のようにリストにするか，<code>2:5</code> のように範囲で表します（Pythonでは番号は0から数え，<code>2:5</code> のような範囲は最後の5を含まないことに注意）。</p>
@@ -328,7 +330,7 @@ df = pd.read_csv(StringIO(r.text))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-11 15:58:46</time>
+Last modified: <time>2022-02-13 16:05:48</time>
 <!-- hhmts end -->
 </p>
 </body>
