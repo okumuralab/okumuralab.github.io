@@ -78,6 +78,15 @@ time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime()) # 'YYYY-MM-DD HH:MM:SS J
 time.strftime('%Y-%m-%d %H:%M:%S %Z', time.gmtime())    # 'YYYY-MM-DD HH:MM:SS UTC'
 </code></pre>
 
+<p>ファイルのタイムスタンプ：</p>
+
+<pre>
+<code>import os
+
+p = os.stat("ファイルのパス")
+time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(p.st_mtime))
+</code></pre>
+
 <h2>datetime</h2>
 
 <p>標準モジュール <code>datetime</code> は <code>time</code> と違ってOSに依存しない。</p>
@@ -207,7 +216,7 @@ print(f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-28 09:23:55</time>
+Last modified: <time>2022-02-14 14:07:58</time>
 <!-- hhmts end -->
 </p>
 </body>
