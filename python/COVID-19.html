@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<title>COVID-19</title>
+<title>東京都のCOVID-19</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -14,9 +14,27 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>COVID-19</h1>
+<h1>東京都のCOVID-19</h1>
 
-<p>整理中</p>
+<div class="note">
+<p>整理中。CSSEのデータ関連は<a href="COVID-csse.html">こちら</a>に移動。厚労省のデータ関連は<a href="COVID-mhlwopen.html">こちら</a>に移動。<a href="COVID-tokyo.html">COVID-19 東京のオープンデータ</a>は別ページ。</p>
+</div>
+
+<p>東京都の情報は毎日<del>15:00</del><ins>2021-05-24以降は16:45</ins>に<a href="https://www.fukushihoken.metro.tokyo.lg.jp">東京都福祉保健局</a>からPDFで発表される。これをスクレープして <a href="data/COVID-tokyo.csv">COVID-tokyo.csv</a> を作成し，自動ツイートしている（描画部分のコード：<a href="code/COVID-tokyo.py">COVID-tokyo.py</a>）。そのグラフ：</p>
+
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo-a.svg" alt="東京"></figure>
+
+<p>実効再生産数を，(直近7日間の陽性数/n日前7日間の陽性数)**(5/n)で近似したもの。<a href="https://toyokeizai.net/sp/visual/tko/covid19/">東洋経済オンライン</a>では n=7 としているが，ここでは 1 から 7 までの7本のグラフを示した。</p>
+
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo-rt.svg" alt="東京"></figure>
+
+<p>全区間にわたってプロットしたもの：</p>
+
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo.svg" alt="東京"></figure>
+
+<p>縦軸を対数目盛にしたもの：</p>
+
+<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo-log.svg" alt="東京"></figure>
 
 <!--
 <p>[ご注意] ブラウザによっては更新（再読み込み）しても古い画像が表示されることがあるようです。いわゆる「スーパーリロード」（[Shift] + [更新] または [Control] + [更新]）をお試しください。</p>
@@ -35,17 +53,6 @@
 
 <p>新しいダッシュボードのデータは <a href="https://covid19.who.int/page-data/table/page-data.json">page-data.json</a> にある。日々のデータは <a href="https://covid19.who.int/WHO-COVID-19-global-data.csv">WHO-COVID-19-global-data.csv</a> にある。</p>
 
--->
-
-<h2>CSSEのデータ</h2>
-
-<p><a href="COVID-csse.html">こちら</a>に移動。</p>
-
-<h2>厚労省のデータ</h2>
-
-<p><a href="COVID-mhlwopen.html">こちら</a>に移動。</p>
-
-<!--
 <h2>日本の状況</h2>
 
 <p>都道府県ごとにPCR検査件数（または検査人数）・陽性数が報告されているが，おのおの報告の基準が違うため，比較するのは困難である。推移を見るだけに留めたい。</p>
@@ -57,27 +64,7 @@
 <p>東京都は<a href="https://stopcovid19.metro.tokyo.lg.jp">都内の最新感染動向</a>（<a href="https://covid19-tokyo.netlify.com">covid19-tokyo.netlify.com</a> のCNAME）で情報提供を始めた。ソースはGitHubでオープンソースとして開発されている（<a href="https://github.com/tokyo-metropolitan-gov/covid19">https://github.com/tokyo-metropolitan-gov/covid19</a>）。データは<a href="https://catalog.data.metro.tokyo.lg.jp/dataset/t000010d0000000068">東京都オープンデータカタログサイト</a>で公開されている。</p>
 
 <p>上の東京都のソースを使った最新感染動向サイトが各地にできている（<a href="https://stopcovid19.hokkaido.dev">北海道</a>，<a href="https://www.pref.kanagawa.jp/osirase/1369/">神奈川県</a>，<a href="https://stopcovid19.code4.nagoya/">愛知県</a>，<a href="https://stopcovid19.e-toda.jp/">埼玉県</a>，<a href="https://covid19-mie.netlify.com">三重県</a>，<a href="https://stopcovid19.codeforfukuoka.org">福岡市</a>，<a href="https://stop-covid19-hyogo.org">兵庫県</a>など。最新のリストは<a href="https://hackmd.io/9TTyyjchR8ufuMd9z08Rcg">HackMD</a>にまとめられている）。</p>
--->
 
-<h2>東京都</h2>
-
-<p>→ <a href="COVID-tokyo.html">COVID-19 東京のオープンデータ</a></p>
-
-<p>東京都の情報は毎日<del>15:00</del><ins>2021-05-24以降は16:45</ins>に<a href="https://www.fukushihoken.metro.tokyo.lg.jp">東京都福祉保健局</a>からPDFで発表される。これをスクレープして <a href="data/COVID-tokyo.csv">COVID-tokyo.csv</a> を作成し，自動ツイートしている。そのグラフ：</p>
-
-<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo.svg" alt="東京"></figure>
-
-<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo-a.svg" alt="東京"></figure>
-
-<p>縦軸を対数目盛にしたもの：</p>
-
-<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo-log.svg" alt="東京"></figure>
-
-<p>実効再生産数を，(直近7日間の陽性数/n日前7日間の陽性数)**(5/n)で近似したもの。<a href="https://toyokeizai.net/sp/visual/tko/covid19/">東洋経済オンライン</a>では n=7 としているが，ここでは 1 から 7 までの7本のグラフを示した。</p>
-
-<figure><img src="https://okumuralab.org/~okumura/python/img/COVID-tokyo-rt.svg" alt="東京"></figure>
-
-<!--
 <h2>関連サイトへのリンク</h2>
 
 <p>（古い情報も含まれています）</p>
@@ -114,7 +101,7 @@
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-13 15:24:33</time>
+Last modified: <time>2022-02-14 16:10:24</time>
 <!-- hhmts end -->
 </p>
 </body>

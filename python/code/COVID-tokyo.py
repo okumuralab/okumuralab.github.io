@@ -19,9 +19,10 @@ t1 = pd.to_datetime('2022-01-01')
 t2 = t[-1] + DAY
 
 fig, ax = plt.subplots()
+fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
+
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
-fig.text(0.9, 0.89, 'generated: ' + now, horizontalalignment='right')
 
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
@@ -90,6 +91,7 @@ def rt(i, interval):
 for interval in range(1, 8):
     a = np.array([rt(i, interval) for i in range(len(t))])
     ax.plot(t[t >= t1], a[t >= t1], label=interval)
+
 ax.axhline(1, color='black', linewidth=1, zorder=-1)
 ax.set_xlim(t1, t2)
 ax.legend()
