@@ -6,7 +6,6 @@
 import os
 import subprocess
 import time
-import datetime
 import logging
 import sys
 import pandas as pd
@@ -36,20 +35,13 @@ if not " saved " in r.stderr:
     logging.debug("File not modified.")  # 304 Not Modified
     exit()
 
-t = os.stat("130001_tokyo_covid19_patients.csv").st_mtime
-now = f'{datetime.datetime.fromtimestamp(t):%Y-%m-%d %H:%M:%S}'
+p = os.stat("130001_tokyo_covid19_patients.csv")
+now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(p.st_mtime))
 
 df = pd.read_csv("130001_tokyo_covid19_patients.csv",
                  parse_dates=['公表_年月日', '発症_年月日', '確定_年月日'],
                  na_values=['-', '―', '－', ' ', '不明', '不明性'],
                  low_memory=False)
-
-# for c in df.columns:
-#     print()
-#     print(c)
-#     print(df[c].value_counts())
-
-# df.isna().sum()
 
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
@@ -106,18 +98,15 @@ h, bins, _ = ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
                      color="lightgray", edgecolor="black", align="left")
 ax.set_xlim(-0.5, 20.5)
 ax.set_xticks(range(0, 25, 5))
-# ax.legend(['公表日-発症日 median=' + str(np.nanmedian(t))])
 ax.legend([f'公表日-発症日 median={hmedian(h) + bins[0]:.2f}'])
 fig.savefig('../img/COVID-tokyo2a.svg', bbox_inches="tight")
 
 t = (df['公表_年月日'] - df['確定_年月日']).dt.days
 ax.clear()
-# sns.histplot(u, discrete=True)
 h, bins, _ = ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
                      color="lightgray", edgecolor="black", align="left")
 ax.set_xlim(-0.5, 20.5)
 ax.set_xticks(range(0, 25, 5))
-# ax.legend(['確定日-発症日 median=' + str(np.nanmedian(t))])
 ax.legend([f'公表日-確定日 median={hmedian(h) + bins[0]:.2f}'])
 fig.savefig('../img/COVID-tokyo2b.svg', bbox_inches="tight")
 
@@ -127,7 +116,6 @@ h, bins, _ = ax.hist(t, range(int(np.nanmin(t)), int(np.nanmax(t)) + 2),
                      color="lightgray", edgecolor="black", align="left")
 ax.set_xlim(-0.5, 20.5)
 ax.set_xticks(range(0, 25, 5))
-# ax.legend(['確定日-発症日 median=' + str(np.nanmedian(t))])
 ax.legend([f'確定日-発症日 median={hmedian(h) + bins[0]:.2f}'])
 fig.savefig('../img/COVID-tokyo2c.svg', bbox_inches="tight")
 
@@ -191,61 +179,29 @@ ax.set_ylabel('平均年齢')
 
 fig.savefig('../img/COVID-tokyo2g.svg', bbox_inches="tight")
 
-print("COVID-tokyo2.py: succeeded.")
-exit()
 #---
 
-# 年代中央値の推移（2021年〜）
-
-df1 = df[df['公表_年月日'] >= np.datetime64('2021-01-01')]
-
-def getnum(s):
-    if str(s) == '10歳未満':
-        return 0.0
-    m = re.search('^[^\d]*(\d+)', str(s))
-    if m:
-        return float(m.group(1))
-    else:
-        return np.nan
-
-df1['患者_年代'] = df1['患者_年代'].apply(getnum)
-
-# df1['患者_年代'].value_counts()
+df['遅れ'] = (df['公表_年月日'] - df['発症_年月日']).dt.days
+days = b[-50:-1]
 
 a = []
-for i in b:
-    df2 = df1[df1['公表_年月日'] == i]
-    y = df2['患者_年代'].values
-    y = y[~np.isnan(y)]
-    if len(y) >= 10:
-        h, _ = np.histogram(y / 10, range(15))
-        a.append(hmedian(h) * 10 + 5)
+for day in days:
+    df1 = df[df['公表_年月日'] == day]
+    o = df1['遅れ'].values
+    o = o[~np.isnan(o)]
+    if len(o) > 10:
+        h, _ = np.histogram(o, np.arange(np.max(o) + 2))
+        a.append(hmedian(h))
     else:
         a.append(np.nan)
 
 ax.clear()
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
-ax.plot(b, a, 'o-')
-ax.set_ylabel('年齢中央値')
-
-fig.savefig('../img/COVID-tokyo2g.svg', bbox_inches="tight")
-
+ax.plot(days, a, 'o-')
+ax.grid()
+ax.legend(['（公表年月日-発症年月日）の中央値'])
+fig.savefig('../img/COVID-tokyo2h.svg', bbox_inches="tight")
 
 #---
-
-h = [np.nanmedian(t[df1['確定_年月日'] == i]) for i in b]
-
-ax.clear()
-ax.xaxis.set_major_locator(locator)
-ax.xaxis.set_major_formatter(formatter)
-
-ax.plot(df1['確定_年月日'], t, 'ko', markersize=5, alpha=0.1, zorder=-10)
-ax.plot(b, h, color='C1')
-ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
-ax.set_xlim(np.datetime64('2021-01-01'), b[-1])
-ax.set_ylim(0, 20)
-ax.set_xlabel('確定日')
-ax.set_ylabel('確定日-発症日')
-
-fig.savefig('../img/COVID-tokyo2d.svg', bbox_inches="tight")
+print("COVID-tokyo2.py: succeeded.")
