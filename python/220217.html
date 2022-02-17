@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>平均身長の推移</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td, th { border: 1px solid; }
+</style>
+<script>
+window.onload = function() {
+  let url = /^(.*\/).*\//.exec(location.href)[1];
+  let a = document.getElementsByClassName("dirurl");
+  [].forEach.call(a, function(x) {x.textContent = url});
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>平均身長の推移</h1>
+
+<p><a href="https://news.yahoo.co.jp/byline/arakawakazuhisa/20220217-00282462">「若者の給料」と同様に、30年間伸びていない「若者男子の低身長」問題</a>という記事の最初のグラフの横軸が何となく変だ。1930，1936，1950，1956という具合に目盛幅が等間隔でない。描き直してみよう。</p>
+
+<p>まずはデータを探す。文科省<a href="https://www.mext.go.jp/b_menu/toukei/chousa05/hoken/1268826.htm">学校保健統計調査</a>の<a href="http://www.e-stat.go.jp/SG1/estat/NewList.do?tid=000001011648">統計表一覧</a>リンクでe-Statに飛び，年次統計の「年齢別　平均身長の推移　（明治33年度～令和2年度）」にExcelファイルがある（<a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000032108447">学校保健統計調査 / 年次統計</a>）。明治33年度は1900年度，令和2年度は2020年度であるが，途中で飛びがあるので注意を要する。また，これは目で見るための表で，データとして扱いやすい形になっていない。手直しした <a href="data/height.csv">height.csv</a> を置いておく。</p>
+
+<p>問題の図を再現してみる：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import pandas as pd
+
+df = pd.read_csv("<span class="dirurl">https://okumuralab.org/~okumura/</span>python/data/height.csv")
+
+plt.figure(figsize=(10, 6))
+plt.plot(df['年度'], df[['男15歳', '男16歳', '男17歳']].mean(axis=1), "o-")
+</pre>
+
+<p>あるいは年齢ごとのほうがよいかもしれない：</p>
+
+<pre class="cell">
+for k in ["男17歳", "男16歳", "男15歳"]:
+    plt.plot(df["年度"], df[k], "o-", label=k)
+plt.legend()
+</pre>
+
+<figure><img src="img/220217a.svg" alt="平均身長の推移"></figure>
+
+<p>2020年度の値がちょっとだけ増えているように見えるのは，COVID-19のために調査時期に遅れが出たためらしい。</p>
+
+<p>男子全部をプロットするには：</p>
+
+<pre class="cell">
+plt.figure(figsize=(10, 10))
+for k in df.columns[13:0:-1]:
+    plt.plot(df["年度"], df[k], "o-", label=k)
+plt.legend(loc="upper left")
+</pre>
+
+<p>女子全部なら <code>df.columns[:13:-1]</code> にする。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-02-17 20:53:27</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
