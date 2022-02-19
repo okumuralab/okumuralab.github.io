@@ -83,7 +83,7 @@ fig.write_html("fig.html", include_plotlyjs=False, full_html=False,
 
 <h2>Plotly Express</h2>
 
-<p>上と同じ図を <a href="https://plotly.com/python/plotly-express/">Plotly Express</a> を使って描いてみよう：</p>
+<p>上と同じ図を <a href="https://plotly.com/python/plotly-express/">Plotly Express</a> の<a href="https://plotly.com/python/line-charts/">折れ線グラフ</a>を使って描いてみよう：</p>
 
 <pre class="cell">
 import pandas as pd
@@ -97,21 +97,22 @@ fig.write_html("fig.html", include_plotlyjs=False, full_html=False,
 
 <p>結果は上とほぼ同じなので省略する。</p>
 
-<p>別の例として，毎日の東京都のCOVID-19感染確認者数の棒グラフ：</p>
+<p><a href="https://plotly.com/python/bar-charts/">棒グラフ</a>の例として，毎日の東京都のCOVID-19感染確認者数：</p>
 
 <pre class="cell">
 import pandas as pd
 import plotly.express as px
 
-df = pd.read_csv("<span class="dirurl">https://okumuralab.org/~okumura/</span>python/data/COVID-tokyo.csv",
-                 parse_dates=['date'])
-fig = px.bar(df[df['date'] &gt;= pd.to_datetime('2022-01-01')], x='date', y='confirmed')
+df = pd.read_csv("<span class="dirurl">https://okumuralab.org/~okumura/</span>python/data/COVID-tokyo.csv")
+fig = px.bar(df.query('date &gt;= "2022-01-01"'), x='date', y='confirmed')
 fig.write_html("fig.html", include_plotlyjs=False, full_html=False,
                default_width=800, default_height=600)
 </pre>
 
 <div id="plotly_ex2" class="plotly-graph-div" style="height:600px; width:800px;"></div>
 <script src="js/plotly_ex2.js"></script>
+
+<p>棒の幅を丸一日（86400000ミリ秒）に広げたいときは <code>fig = ...</code> の次に <code>fig.update_traces(width=86400000)</code> を入れる。</p>
 
 <h2>図のJavaScript部分を切り出して別ファイルにする</h2>
 
@@ -150,7 +151,7 @@ if m:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-18 20:50:34</time>
+Last modified: <time>2022-02-19 21:10:47</time>
 <!-- hhmts end -->
 </p>
 </body>
