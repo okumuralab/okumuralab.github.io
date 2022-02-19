@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自殺統計</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+window.onload = function() {
+  let url = /^(.*\/).*\//.exec(location.href)[1];
+  let a = document.getElementsByClassName("dirurl");
+  [].forEach.call(a, function(x) {x.textContent = url});
+}
+</script>
+<script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+<script src="https://cdn.plot.ly/plotly-2.9.0.min.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>自殺統計</h1>
+
+<p>自殺統計はe-Statには新しいものが見つからなかったが，警察庁の<a href="https://www.npa.go.jp/publications/statistics/safetylife/jisatsu.html">自殺者数</a>ページにデータ（といってもPDF）があった。CSVにして <a href="data/suicide.csv">suicide.csv</a> として置いておく（2021年は暫定値）。</p>
+
+<pre class="cell">
+import pandas as pd
+import plotly.express as px
+
+df = pd.read_csv("<span class="dirurl">https://okumuralab.org/~okumura/</span>python/data/suicide.csv")
+
+fig = px.line(df, x='年', y=["男性", "女性"], markers=True, range_y=[0,26000])
+fig.show()
+</pre>
+
+<div id="suicide" class="plotly-graph-div" style="height:600px; width:800px;"></div>
+<script src="js/suicide.js"></script>
+
+<p>2020〜2021年は女性の自殺がおそらくコロナの影響で増えたが，男性はあまり変わらない。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-02-19 16:55:30</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
