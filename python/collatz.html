@@ -16,7 +16,7 @@
 
 <h1>Collatzの問題</h1>
 
-<p>1937年にドイツの数学者Collatz（コラッツ）が，「ある数が偶数なら2で割り，奇数なら3倍して1を足す。これを繰り返すとすべての数は1になるだろう」と予想しましたが，だれもそれを証明することができていません（ウィキペディアの<a href="https://ja.wikipedia.org/wiki/コラッツの問題">コラッツの問題</a>参照）。</p>
+<p>1937年にドイツの数学者Collatz（コラッツ）が，「ある数が偶数なら2で割り，奇数なら3倍して1を足す。これを繰り返すとすべての数は1になるだろう」と予想しましたが，だれもそれを証明することができていません（ウィキペディアの<a href="https://ja.wikipedia.org/wiki/コラッツの問題">コラッツの問題</a>参照）。<a href="https://mathprize.net/ja/posts/collatz-conjecture/">証明できたら1億2000万円もらえる</a>そうです。</p>
 
 <p>Pythonのプログラムで調べてみましょう。</p>
 
@@ -43,6 +43,10 @@
 <p>いろいろな数から出発して，Collatzの予想が正しいかどうか確かめてください。Pythonの整数はどんな大きな数でも扱えますので，桁あふれする心配はありません。</p>
 
 <p>なお，<code>n = n // 2</code> は <code>n //= 2</code> と書くこともできます。同様に，<code>n = n + 1</code> は <code>n += 1</code> と書けます。</p>
+
+<div class="note">
+<p><code>n // 2</code> は <code>n</code> を2で割った整数の商を求めます。実は，ここでは <code>n</code> は偶数ですので，単に <code>n / 2</code> としてもかまいません。</p>
+</div>
 
 <div class="note">
 <p><code>n = n + 1</code> と <code>n += 1</code> では，前者は <code>n</code> を2回評価し，後者は <code>n</code> を1回しか評価しないという違いがあります。評価することによって副作用が生じる場合は，結果が違うことがありますが，上のような単純な例では，まったく違いがないと考えて差し支えありません。<code>n += 1</code> のほうが必ずしも実行が速いというわけでもありません。</p>
@@ -95,7 +99,7 @@ for n in range(10000):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-12 14:19:53</time>
+Last modified: <time>2022-02-21 14:17:54</time>
 <!-- hhmts end -->
 </p>
 </body>

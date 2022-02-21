@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CSVファイルの作法</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -117,7 +117,7 @@ df = pd.read_csv("test.csv", na_values="-", keep_default_na=False)
 
 <p>ただし，Excel は <code>#</code> で始まる文字列を入力しても，コメントと認識せず，通常の文字列フィールドと同じ扱いになりますので，データ中に <code>#</code> が含まれる場合は例えば <code>"#abc"</code> のようにダブルクォートで囲んで入力するしかありませんが，その場合 CSV は <code>"""#abc"""</code> のようになります。</p>
 
-<p><code>0</code> で始まる数字の列は要注意です。Excel は数値だと解釈して，頭の <code>0</code> を消してしまいます。例えば都道府県の地域コード（<code>01</code> 北海道，<code>02</code> 青森県，……，<code>47</code> 沖縄県）は <code>0</code> で始まるものがありますので要注意です。入力時に例えば <code>'01</code> のように頭にシングルクォートを付ければ文字列として解釈されるので <code>01</code> が入力できますが，そのような CSV ファイルを読み込む際には，やはり先頭の <code>0</code> が消えてしまいます。対策として <code>01 北海道</code> までを一つのセルに入れてしまうような工夫がなされているようですが，別の列にするほうが後の処理が楽です。</p>
+<p><code>0</code> で始まる数字の列は要注意です。Excel は数値だと解釈して，頭の <code>0</code> を消してしまいます。例えば都道府県の地域コード（<code>01</code> 北海道，<code>02</code> 青森県，……，<code>47</code> 沖縄県）は <code>0</code> で始まるものがありますので要注意です。入力時に例えば <code>'01</code> のように頭にシングルクォートを付ければ文字列として解釈されるので <code>01</code> が入力できますが，そのような CSV ファイルを読み込む際には，やはり先頭の <code>0</code> が消えてしまいます。対策として <code>01 北海道</code> までを一つのセルに入れてしまうような工夫がなされているようですが，本来は一つのセルに二つの情報を入れるべきではなく，悩ましいところです。</p>
 
 <p>さらに微妙なのが，日付として解釈される文字列です。<a href="../stat/130203.html">データ作法</a>でも詳しく説明しましたが，例えば <code>Oct4</code> のような遺伝子名は日付 4-Oct に化けます。<code>1-2-3</code> は日付 2001/2/3 に，<code>1E3</code> は指数表示の数 1.00E+03 になります。</p>
 
@@ -129,7 +129,7 @@ df = pd.read_csv("test.csv", na_values="-", keep_default_na=False)
 
 <h2>Web で提供する CSV ファイル</h2>
 
-<p>Web で CSV ファイルを提供する場合，ブラウザで見たときに文字化けしないように，文字コードを指定したいことがあります。そのための簡単な方法として，Web サーバの同じディレクトリに <code>.htaccess</code> というファイルを置いて，それに</p>
+<p>Web で CSV ファイルを提供する場合，ブラウザで見たときに文字化けしないように，文字コードを指定したいことがあります。システム全体で <code>AddDefaultCharset UTF-8</code> などと設定してあればいいのですが，そうでない場合（あるいはそれを上書きしたい場合），Web サーバの当該ディレクトリに <code>.htaccess</code> というファイルを置いて，それに</p>
 
 <pre>
 AddType text/csv;charset=utf-8 csv
@@ -142,6 +142,8 @@ AddType text/csv;charset=Shift_JIS csv
 </pre>
 
 <p>のように書いておきます（これができない場合もありますのでサーバの管理者にお問い合わせください）。</p>
+
+<p>例えば毎日更新する情報を 20220221.csv のような日付入りのファイル名で提供する場合，最新のものに latest.csv のようなシンボリックリンクを張っておきましょう。</p>
 
 <p>CSV ファイルのメタデータ（各列のデータ型など）を提供するための仕組みで一般に使われているものはなさそうです。W3C は <a href="https://www.w3.org/TR/tabular-data-primer/">CSV on the Web</a> というものを提案しています（<a href="https://wiki.suikawiki.org/n/CSVW">suikawiki の CSVW のページ</a> も参照）。あまり使われているところを見ないのですが，<a href="https://www.gov.uk/government/publications/recommended-open-standards-for-government/using-metadata-to-describe-csv-data">GOV.UK では使われている</a> とのことです。</p>
 
@@ -176,7 +178,7 @@ AddType text/csv;charset=Shift_JIS csv
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-21 10:51:22</time>
+Last modified: <time>2022-02-21 11:40:51</time>
 <!-- hhmts end -->
 </p>
 </body>
