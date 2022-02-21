@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>共通テスト「情報I」サンプル問題 第3問 問2</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>共通テスト「情報I」サンプル問題 第3問 問2</h1>
+
+<p>2025年からの大学入学共通テストで出題される予定の「情報I」のサンプル問題が2021年3月24日に大学入試センターから<a href="https://www.dnc.ac.jp/kyotsu/shiken_jouhou/r7ikou.html">公開された</a>（これは大学入試センターが以前に作成して情報処理学会が<a href="http://www.ipsj.or.jp/education/edu202012.html">公開</a>した「情報」試作問題（検討用イメージ）より新しいものである）。ここでは，この新しいサンプル問題の，データを扱う第3問の問2について，細かい指摘をしておく。</p>
+
+<p>次の二つのデータと回帰直線を見て計算する問題である。回帰係数はあらかじめ計算されていて，その意味を読み取る問題である。</p>
+
+<figure><img src="img/210324.png" alt="二つの回帰直線"></figure>
+
+<p>この計算結果について，問題では「鈴木さんは，グラフからは傾きに大きな差が見られないこの二つの回帰直線について，実際に計算してみると差を見つけられることが実感できた。」と結論づけている。</p>
+
+<p>本当に「差を見つけられること」ができたのか？</p>
+
+<p>まず，図からおおまかな数値を読み取ってみる。かなりいいかげんである。</p>
+
+<p>左側：</p>
+
+<pre>
+x,y
+268,0.75
+288,1.0
+319,0.75
+320,1.0
+323,1.7
+325,1.3
+328,1.0
+335,1.25
+339,1.25
+342,1.9
+355,1.0
+364,1.0
+382,1.25
+385,2.2
+408,2.0
+454,2.25
+</pre>
+
+<p>R コード：</p>
+
+<pre>
+df = read.csv("1.csv")
+summary(lm(y ~ x, data=df))
+</pre>
+
+<p>結果：</p>
+
+<pre>
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.49473 -0.25074  0.00607  0.12650  0.58155 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)   
+(Intercept) -1.421916   0.699686  -2.032  0.06155 . 
+x            0.008013   0.002006   3.994  0.00133 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.3536 on 14 degrees of freedom
+Multiple R-squared:  0.5325,	Adjusted R-squared:  0.4992 
+F-statistic: 15.95 on 1 and 14 DF,  p-value: 0.001333
+</pre>
+
+<p>右側：</p>
+
+<pre>
+x,y
+186,0.0
+189,0.7
+216,0.3
+231,0.3
+237,0.7
+247,0.7
+249,1.0
+265,0.3
+279,0.3
+269,0.7
+293,0.7
+299,0.7
+303,1.0
+304,1.0
+316,1.0
+334,1.7
+</pre>
+
+<p>結果：</p>
+
+<pre>
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.49113 -0.19238 -0.02629  0.12650  0.56192 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)   
+(Intercept) -0.968824   0.478343  -2.025  0.06233 . 
+x            0.006308   0.001791   3.521  0.00339 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.3071 on 14 degrees of freedom
+Multiple R-squared:  0.4697,	Adjusted R-squared:  0.4318 
+F-statistic:  12.4 on 1 and 14 DF,  p-value: 0.003388
+</pre>
+
+<p>要は，それぞれの傾きの標準誤差が 0.0020，0.0018 といった値であるのに対して，傾きの差は 0.0016 しかない。つまり，統計的にまったく有意ではない。</p>
+
+<p>差を実感してもらっては困る，ということだ（受験生はわからなくていいけれども，出題者には差を実感してほしくない，という意味）。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-02-21 08:53:33</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
