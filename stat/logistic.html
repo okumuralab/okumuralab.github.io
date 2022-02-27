@@ -243,7 +243,15 @@ Number of Fisher Scoring iterations: 4
 
 <p>これは有名な Fisher の iris（あやめ）のデータです。3種類の iris（setosa，versicolor，virginica）それぞれ50個ずつについて，sepal length（萼（がく）の長さ），sepal width（萼（がく）の幅），petal length（花びらの長さ），petal width（花びらの幅）が与えられています（単位は cm）。</p>
 
-<p>まずは何らかの形でプロットしてみましょう。例えば萼と花びらの長さをプロット：</p>
+<pre>
+<code>&gt; sapply(iris[1:4], function(x) sapply(split(x, iris$Species), mean))
+           Sepal.Length Sepal.Width Petal.Length Petal.Width
+setosa            5.006       3.428        1.462       0.246
+versicolor        5.936       2.770        4.260       1.326
+virginica         6.588       2.974        5.552       2.026
+</code></pre>
+
+<p>例えば萼と花びらの長さをプロット：</p>
 
 <pre>
 <code>plot(iris$Sepal.Length, iris$Petal.Length, col=iris$Species)
@@ -253,7 +261,7 @@ legend("bottomright", legend=levels(iris$Species), pch=1, col=1:3)
 <p><a href="pca.html">主成分分析</a>をするのも手です：</p>
 
 <pre>
-<code>r = prcomp(iris[,1:4])
+<code>r = prcomp(iris[1:4])
 plot(r$x[,1], r$x[,2], col=iris$Species)
 legend("topright", legend=levels(iris$Species), pch=1, col=1:3)
 </code></pre>
@@ -367,7 +375,7 @@ Number of Fisher Scoring iterations: 4
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-01 18:01:30</time>
+Last modified: <time>2022-02-27 13:47:01</time>
 <!-- hhmts end -->
 </p>
 </body>
