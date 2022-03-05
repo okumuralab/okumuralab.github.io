@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/plotly.html">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plotly</title>
@@ -89,7 +90,7 @@ fig.write_html("fig.html", include_plotlyjs=False, full_html=False,
 import pandas as pd
 import plotly.express as px
 
-df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/height.csv")
+df = pd.read_csv("https://okumuralab.org/~okumura/python/data/height.csv")
 fig = px.line(df, x='年度', y=["男17歳", "男16歳", "男15歳"], markers=True)
 fig.write_html("fig.html", include_plotlyjs=False, full_html=False,
                default_width=800, default_height=600)

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/190903.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>キャッシュレス消費者還元事業登録リストのCSV化</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -75,7 +76,7 @@ for line in sys.stdin:
 <code>./test.py &lt; kameiten_touroku_list.txt &gt; kameiten_touroku_list.csv
 </code></pre>
 
-<p>でCSVになる。念のため <a href="https://oku.edu.mie-u.ac.jp/~okumura/python/data/kameiten_touroku_list.csv">kameiten_touroku_list.csv</a> として置いておく（文字コードは<del>UTF-8</del><ins>BOM付きUTF-8</ins>）。</p>
+<p>でCSVになる。念のため <a href="https://okumuralab.org/~okumura/python/data/kameiten_touroku_list.csv">kameiten_touroku_list.csv</a> として置いておく（文字コードは<del>UTF-8</del><ins>BOM付きUTF-8</ins>）。</p>
 
 <p>なお，<code>while ...</code> の部分は，pdftotext -raw による変換で長い行が複数行に分割されてしまうことへの対処である。pdftotext -table とすると今度は列間のスペースがなくなる行が出てくる。なかなか難しい。良いツール（あるいはpdftotextの改造法）があったら教えてください。</p>
 

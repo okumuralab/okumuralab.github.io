@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/nhk-yoron.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NHK世論調査</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -26,7 +27,7 @@ window.onload = function() {
 <pre>
 <code>import pandas as pd
 
-df = pd.read_csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/nhk-yoron.csv",
+df = pd.read_csv("<span id="dirurl">https://okumuralab.org/~okumura/stat/</span>data/nhk-yoron.csv",
                  index_col='調査日', parse_dates=['調査日'], comment='#')
 df.plot(marker="o", xlim=("2017-03-20","2019-07-31"))
 plt.savefig('nhk-yoron.png', bbox_inches="tight")

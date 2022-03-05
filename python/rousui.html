@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/rousui.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>老衰による死亡率の推移</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -44,7 +45,7 @@ window.onload = function() {
 <code>import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/python/</span>data/mc140000a.csv", comment="#")
+df = pd.read_csv("<span id="dirurl">https://okumuralab.org/~okumura/python/</span>data/mc140000a.csv", comment="#")
 df.head()   # 頭を表示して確認
 
 plt.plot(df['年'], df[['老衰男','老衰女']], "o-")

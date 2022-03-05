@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/diamondprincess.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>COVID-19</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -21,7 +22,7 @@
 <p>横浜港に停泊したクルーズ船ダイヤモンド・プリンセス号については，<a href="https://www.mhlw.go.jp/stf/new-info/">厚労省の新着情報</a>から「クルーズ船」で検索して集計した延べ人数は <a href="data/COVID-DP.csv">COVID-DP.csv</a> のようになる。発表日ベースで集計した。検体採取の日は不明（<a href="https://www3.nhk.or.jp/news/html/20200218/k10012290571000.html">NHKの2月18日のニュース</a>によれば「結果が出るまでにおよそ３日かかる」）。どういう人を選んで検査したかによって陽性率は大きく変わるであろうから，要注意。<a href="https://www3.nhk.or.jp/news/html/20200215/k10012287201000.html">NHKの2020-02-15 22:48のニュース</a>によれば，「７日以前にウイルスに感染し、　７日に発症した乗客が最も多かった。その後の新たな発症者は、特に今月10日以降は急激に少なくなっていて、検疫の効果が出ていると考えている」（厚生労働省の担当者）とのことだが，これはよくわからない（国立感染症研究所の<a href="https://www.niid.go.jp/niid/ja/diseases/ka/corona-virus/2019-ncov/2484-idsc/9410-covid-dp-01.html">現場からの概況：ダイアモンドプリンセス号におけるCOVID-19症例</a>（<a href="https://www.niid.go.jp/niid/en/2019-ncov-e/9407-covid-dp-fe-01.html">英語版</a>）の上のグラフが根拠のようである）。</p>
 
 <pre><code>
-df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-DP.csv",
+df = pd.read_csv("https://okumuralab.org/~okumura/python/data/COVID-DP.csv",
                  index_col='Date', parse_dates=['Date'])
 
 ax.bar(df.index, df['Examined'])
@@ -46,7 +47,7 @@ ax.grid(axis='y')
 
 <p>ダイヤモンド・プリンセス号については国立感染症研究所の<a href="https://www.niid.go.jp/niid/ja/diseases/ka/corona-virus/2019-ncov/2484-idsc/9422-covid-dp-2.html">現場からの概況：ダイアモンドプリンセス号におけるCOVID-19症例【更新】</a>（2020年2月26日掲載）に詳細がまとめられている。表1「COVID-19確定例の検体採取時の年齢群および症状別割合」（2月20日現在）の冗長でない部分を <a href="data/COVID-DP-hist.csv">COVID-DP-hist.csv</a> に書き写した。これをグラフにしてみる：</p>
 
-<pre><code>df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/COVID-DP-hist.csv")
+<pre><code>df = pd.read_csv("https://okumuralab.org/~okumura/python/data/COVID-DP-hist.csv")
 s = df['Symptomatic confirmed cases'].values
 a = df['Asymptomatic confirmed cases'].values
 t = df['Persons aboard on 5 February'].values
