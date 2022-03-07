@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/nippon2.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>日本地図: 2015年国勢調査のネット回答率</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -23,7 +24,7 @@
 <pre>
 <code># install.packages("NipponMap")
 library(NipponMap)
-data = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/census2015net.csv",
+data = read.csv("https://okumuralab.org/~okumura/stat/data/census2015net.csv",
                 fileEncoding="UTF-8", comment.char="#")
 x = data[,3]/data[,2] - 19175769/51950504 # 回答率から全国平均を引く
 x = (x / max(abs(x)) + 1) / 2  # [0,1]の範囲にスケール

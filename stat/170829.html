@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/170829.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>全国学力テストの都道府県別正答率</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -102,7 +103,7 @@ juku = sapply(1:47, function(i) 1 - as.numeric(x[9,i])/sum(as.numeric(x[c(9:13,1
 # [29] 0.5427592 0.5320781 0.3610875 0.3233766 0.4661890 0.4581543 0.4285054
 # [36] 0.4930064 0.4432964 0.4654696 0.4648547 0.3999904 0.3711454 0.3745027
 # [43] 0.3569343 0.3980394 0.3356785 0.3263963 0.3836275
-a = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/atest2017.csv")
+a = read.csv("https://okumuralab.org/~okumura/stat/data/atest2017.csv")
 kenmei = c("北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
    "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山", "石川",
    "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重", "滋賀", "京都",

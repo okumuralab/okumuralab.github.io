@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/170903.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>全国学力テストの都道府県別正答率と教員初任給</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -56,7 +57,7 @@ text(教員初任給/大卒初任給/1000, rowMeans(正答率[,2:9]), 都道府�
 <p>全国学力テストについては<a href="170829.html">こちら</a>参照：</p>
 
 <pre>
-<code>正答率 = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/atest2017.csv")
+<code>正答率 = read.csv("https://okumuralab.org/~okumura/stat/data/atest2017.csv")
 </code></pre>
 
 <p>大卒初任給については厚労省の<a href="http://www.mhlw.go.jp/toukei/list/53-1a.html">賃金構造基本統計調査（初任給）</a>→平成28年→「付表3　都道府県、性、学歴別初任給及び都道府県間格差」（fuhyo03.xls）にそのものずばりがある。男女計大学卒初任給（千円）は次の通り：</p>

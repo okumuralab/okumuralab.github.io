@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/140902.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>日本の薬の使用量</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -27,7 +28,7 @@
 </figure>
 
 <pre>
-<code>pharma = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/oecd_pharma.csv", comment.char="#")
+<code>pharma = read.csv("http://okumuralab.org/~okumura/stat/data/oecd_pharma.csv", comment.char="#")
 par(mgp=c(2,0.8,0))
 barplot(pharma[,4], names.arg=pharma[,1], las=TRUE, horiz=TRUE, xlab="USD", xlim=c(0,1000),
         col=ifelse(pharma[,1]=="JP","#f39800","#0068b7"))
@@ -39,7 +40,7 @@ text(x=pharma[,4], y=(0:30)*1.2+0.5, labels=round(pharma[,4]), pos=4, xpd=TRUE)
 <p>さて，問題は1人あたりではなく国全体の薬の使用量を求めることであるが，これはやはり<a href="http://dx.doi.org/10.1787/health-data-en">OECDのデータ</a>で提供されている国別の人口データを掛け算すればよいだろう。これもCSV形式（<a href="data/oecd_population.csv">oecd_population.csv</a>）にして置いておく。やはり1列目に2文字の国コードを付けた。これらを <code>merge()</code> すれば，同じ名前（国コード：<code>Code</code>）のところを揃えてマージ（ジョイン）してくれる：</p>
 
 <pre>
-<code>population = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/oecd_population.csv", comment.char="#")
+<code>population = read.csv("http://okumuralab.org/~okumura/stat/data/oecd_population.csv", comment.char="#")
 data = merge(pharma, population)
 </code></pre>
 

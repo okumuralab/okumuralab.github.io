@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/sexratio.html">
 <meta charset="UTF-8">
 <title>出生性比</title>
 <link rel="stylesheet" href="style.css">
@@ -217,7 +218,7 @@ points(年, 出生性比, type="o", pch=16)
 
 <pre>
 <code>library(data.table)
-data = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/iitate_birth.csv")
+data = fread("http://okumuralab.org/~okumura/stat/data/iitate_birth.csv")
 data[,d:=as.Date(paste(年月,"/15",sep=""))]
 data[,m:=cumsum(飯舘男)]
 data[,f:=cumsum(飯舘女)]

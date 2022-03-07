@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/kamagayamap.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>鎌ケ谷市のハリネズミ地図</title>
 <meta name="keywords" content="鎌ケ谷市, 鎌ヶ谷市, 放射線, 放射能, 地図, ハリネズミ, はりねずみ, 針鼠" />
 <link rel="stylesheet" href="style.css">
@@ -44,9 +45,9 @@
 パッケージをインストールしておいてください。</p>
 
 <pre>
-<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/111107kamagaya.csv")
+<code>data = read.csv("http://okumuralab.org/~okumura/stat/data/111107kamagaya.csv")
 library(RgoogleMaps)
-source("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/GetMap.R")
+source("http://okumuralab.org/~okumura/stat/data/GetMap.R")
 KamagayaMap = GetMap(c(35.77279,139.9979), destfile="kamagaya.png",
                      zoom=14, sensor="false", hl="ja", maptype="roadmap")
 tmp = PlotOnStaticMap(KamagayaMap, lat=data[,1], lon=data[,2],

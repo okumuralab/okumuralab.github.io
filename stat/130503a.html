@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/130503a.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>グラフの例：都道府県別・男女別高卒進学率</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -19,7 +20,7 @@
 <p><a href="http://www.stat.go.jp/data/nihon/22.htm">統計局ホームページ/日本の統計－第22章　教育</a>の22-18<a href="http://www.stat.go.jp/data/nihon/zuhyou/n2201800.xls">都道府県別進学率と就職率（エクセル：30KB）</a>というファイル，いささか紛らわしいが，「高等学校」の「進学率（%）」は高校進学率ではなく高校卒業者の（大学等への）進学率である。この列名を適宜書き直し，「全国」を省いて47都道府県だけにしたデータ<a href="data/n2201800.csv">n2201800.csv</a>（シフトJIS，CRLF）を置いておく。これをプロットしてみよう。</p>
 
 <pre>
-<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/n2201800.csv",
+<code>data = read.csv("http://okumuralab.org/~okumura/stat/data/n2201800.csv",
                 fileEncoding="CP932")
 r = range(data$高卒男進学率, data$高卒女進学率)
 </code></pre>

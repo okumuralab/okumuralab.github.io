@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/timeseries.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>時系列データ</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -243,7 +244,7 @@ axis.POSIXct(1, at=seq(r[1],r[2],by="4 hours"), format="%d日%H時")
 <p>日時なら <code>as.POSIXct()</code>，日だけなら <code>as.Date()</code> で扱うのが基本であるが，月ごとのデータや曜日に意味がある日ごとのデータは，<code>ts()</code> で時系列オブジェクトに変換すると便利なことがある。例えば<a href="leukemia2.html">グラフの例：白血病による死亡率の推移</a>のデータの場合，</p>
 
 <pre>
-<code class="prom">leu = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/leukemia2.csv")</code>
+<code class="prom">leu = read.csv("https://okumuralab.org/~okumura/stat/data/leukemia2.csv")</code>
 <code class="prom">x = ts(leu$rate, start=c(2001,1), frequency=12)</code>
 <code class="prom">x</code>
 <code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</code>

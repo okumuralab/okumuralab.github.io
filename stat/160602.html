@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/160602.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>テレビ普及率と平均寿命</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -34,7 +35,7 @@
 <p>これを手抜きプロットしたものが次の図である：</p>
 
 <pre>
-<code>TV = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/TV.csv", fileEncoding="SJIS")
+<code>TV = read.csv("http://okumuralab.org/~okumura/stat/data/TV.csv", fileEncoding="SJIS")
 matplot(TV[,1], TV[,3:6], xlab="", ylab="保有数量（100世帯あたり）", pch=c("白","カ","ブ","薄"))
 matplot(TV[,1], TV[,7:12], xlab="", ylab="普及率（%）", pch=c("白","カ","大","小","ブ","薄"))
 </code></pre>
@@ -50,7 +51,7 @@ matplot(TV[,1], TV[,7:12], xlab="", ylab="普及率（%）", pch=c("白","カ","
 <p>これも手抜きプロットしておく：</p>
 
 <pre>
-<code>life = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/life2014.csv", fileEncoding="SJIS")
+<code>life = read.csv("http://okumuralab.org/~okumura/stat/data/life2014.csv", fileEncoding="SJIS")
 matplot(life[,1], life[,c(2,8)], xlab="", ylab="平均寿命", pch=c("男","女"))
 </code></pre>
 

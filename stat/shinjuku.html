@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/shinjuku.html">
 <meta charset="UTF-8">
 <title>Webスクレイピングの例：新宿の放射線</title>
 <link rel="stylesheet" href="style.css">
@@ -17,7 +18,7 @@
 
 <h2>はじめに</h2>
 
-<p>東京都健康安全研究センターの<a href="http://monitoring.tokyo-eiken.go.jp/">環境放射線測定結果</a>サイトで毎時間の空間放射線の測定値が公開されています。私の<a href="http://oku.edu.mie-u.ac.jp/rad/#tokyo">放射線関連グラフ</a>でもグラフを自動表示しています。</p>
+<p>東京都健康安全研究センターの<a href="http://monitoring.tokyo-eiken.go.jp/">環境放射線測定結果</a>サイトで毎時間の空間放射線の測定値が公開されています。私の<a href="http://okumuralab.org/rad/#tokyo">放射線関連グラフ</a>でもグラフを自動表示しています。</p>
 
 <p>特に，新宿区百人町の健康安全研究センター屋上のモニタリングポスト（地上約18m）では，東日本大震災前から精密な値を測っています。2011年3月以降の値を当サイトの <a href="data/shinjuku.csv">shinjuku.csv</a> というCSVファイルに収めてあります。</p>
 
@@ -131,7 +132,7 @@ end
 <pre>
 <code>library(data.table)
 library(fasttime)
-shinjuku = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/shinjuku.csv")
+shinjuku = fread("http://okumuralab.org/~okumura/stat/data/shinjuku.csv")
 shinjuku$datetime = fastPOSIXct(shinjuku$datetime) - 9*3600
 
 s = subset(shinjuku, datetime &lt; as.POSIXct("2011/03/11"))

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/internet_growth.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>インターネットの規模の拡大</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -29,7 +30,7 @@
 <a href="data/hosts.csv">hosts.csv</a>に収めた。</p>
 
 <pre>
-<code>hosts = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/hosts.csv",
+<code>hosts = read.csv("http://okumuralab.org/~okumura/stat/data/hosts.csv",
                  comment.char="#", as.is=TRUE)
 t = as.POSIXct(paste(hosts[,1],"/01",sep=""))
 par(mgp=c(2,0.8,0))

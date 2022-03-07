@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/170922.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>人口ピラミッドと男女比</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -25,7 +26,7 @@
 <p>そこでRで描いてみよう。まずデータをe-Statからいただいてくる。どのような方法が楽なのかわからないが，ここでは統計名「平成27年国勢調査 人口等基本集計（男女・年齢・配偶関係，世帯の構成，住居の状態など）」（表番号00310）からe-Statのデータベース機能を使って全域・全国籍の男女・年齢で分けた人口を取得する。整形したものを <a href="data/pop2015.csv">pop2015.csv</a> として置いておく。年齢階級「110」は110歳以上を意味し，さらに下の最後の年齢階級「NA」は「年齢「不詳」」を意味する。</p>
 
 <pre>
-<code>pop2015 = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/pop2015.csv")
+<code>pop2015 = read.csv("https://okumuralab.org/~okumura/stat/data/pop2015.csv")
 </code></pre>
 
 <p>「年齢「不詳」」は使わないので，削除する：</p>

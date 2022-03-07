@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/121005.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LB2045の校正</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -40,7 +41,7 @@
 <p>まずRでデータを読み込む：</p>
 
 <pre>
-<code>sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/121005rice.txt",
+<code>sp = scan("http://okumuralab.org/~okumura/stat/data/121005rice.txt",
           skip=41, nlines=1024, comment.char=";")
 </code></pre>
 
@@ -61,7 +62,7 @@ plot(ch, sp, type="l", xlab="Channel", ylab="Counts", xlim=c(0,400), col="#f3980
 <p>ついでにバックグラウンドも読み込み，青で重ね書きする：</p>
 
 <pre>
-<code>bg = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/121005BaseData.txt",
+<code>bg = scan("http://okumuralab.org/~okumura/stat/data/121005BaseData.txt",
           skip=36, nlines=1024, comment.char=";")
 bg = floor(bg * 10801 + 0.5)
 points(ch, bg*(10755/10801), type="l", col="#0068b7")

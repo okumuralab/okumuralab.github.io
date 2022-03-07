@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/abortion.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>都道府県ごとの人工中絶実施率の推移</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -20,7 +21,7 @@
 
 <pre>
 <code>par(mgp=c(2,0.8,0), las=1)  # ←好みでパラメータをいじっているが，なくてもよい
-data = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/abortion.csv", fileEncoding="UTF-8")
+data = read.csv("https://okumuralab.org/~okumura/stat/data/abortion.csv", fileEncoding="UTF-8")
 matplot(2009:2017, t(data[ ,2:10]), type="o", pch=16, lty=1, col="#66ccff",
         xlab="年度", ylab="人工妊娠中絶実施率（女子1000人あたり）")
 points(2009:2017, data[7,2:10], type="o", pch=16, col="#ff2800")

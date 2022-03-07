@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/110903.html">
 <meta charset="UTF-8">
 <title>放射線量等分布マップ</title>
 <link rel="stylesheet" href="style.css">
@@ -17,7 +18,7 @@
 
 <h2>はじめに</h2>
 
-<p>文科省の<a href="http://www.mext.go.jp/b_menu/shingi/chousa/gijyutu/017/shiryo/1310688.htm">放射線量等分布マップの作成等に係る検討会（第7回）配付資料</a>のページに<a href="http://www.mext.go.jp/b_menu/shingi/chousa/gijyutu/017/shiryo/__icsFiles/afieldfile/2011/09/02/1310688_1.pdf">資料第7-1号：土壌の核種分析結果（セシウム134、137）について（PDF:315KB）</a>というデータが掲載されました。これはPDFファイルですが，CSV（Excelで開けるようにSJIS・CRLF）にした<a href="http://oku.edu.mie-u.ac.jp/~okumura/stat/data/1310688_1.csv">1310688_1.csv</a>を置いておきます。ここではこれをRで解析してみます。</p>
+<p>文科省の<a href="http://www.mext.go.jp/b_menu/shingi/chousa/gijyutu/017/shiryo/1310688.htm">放射線量等分布マップの作成等に係る検討会（第7回）配付資料</a>のページに<a href="http://www.mext.go.jp/b_menu/shingi/chousa/gijyutu/017/shiryo/__icsFiles/afieldfile/2011/09/02/1310688_1.pdf">資料第7-1号：土壌の核種分析結果（セシウム134、137）について（PDF:315KB）</a>というデータが掲載されました。これはPDFファイルですが，CSV（Excelで開けるようにSJIS・CRLF）にした<a href="http://okumuralab.org/~okumura/stat/data/1310688_1.csv">1310688_1.csv</a>を置いておきます。ここではこれをRで解析してみます。</p>
 
 <p>なお，<a href="http://twitter.com/#!/nnistar">@nnistar</a> さんのつぶやき（<a href="http://twitter.com/nnistar/status/110177893388255232">これ</a>，<a href="http://twitter.com/nnistar/status/110177979069501440">これ</a>）によれば，以下の9点は怪しいかもしれません：
 008S048, 008N024, 010N028, 030S042, 068N028, 070N028, 072N028, 072N030, 076N034
@@ -28,7 +29,7 @@
 <p>Rで次のように打ち込んでデータを <code>data</code> というオブジェクトに読み込みます。</p>
 
 <pre>
-<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/1310688_1.csv",
+<code>data = read.csv("http://okumuralab.org/~okumura/stat/data/1310688_1.csv",
                 as.is=TRUE, fileEncoding="SJIS", na.strings="-")
 </code></pre>
 
@@ -177,7 +178,7 @@ install.packages("RColorBrewer")
 <pre>
 <code>library(RgoogleMaps)
 library(RColorBrewer)
-source("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/GetMap.R") # バグフィックス
+source("http://okumuralab.org/~okumura/stat/data/GetMap.R") # バグフィックス
 FukushimaMap = GetMap(c(37.38,140.2), destfile="fukushima.png",
                       zoom=9, sensor="false", hl="ja")
 </code></pre>

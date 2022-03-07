@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/tochiji2014.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>2014年の都知事選</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/">
@@ -19,7 +20,7 @@
 <p>とりあえず<a href="http://sokuho.h26tochijisen.metro.tokyo.jp/">東京都-H26東京都知事選挙投開票速報</a>のデータをCSVにした：<a href="data/tochiji2014.csv">tochiji2014.csv</a>。</p>
 
 <pre>
-<code>x = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tochiji2014.csv")
+<code>x = fread("http://okumuralab.org/~okumura/stat/data/tochiji2014.csv")
 par(mgp=c(2,0.8,0))  # 好み
 plot(x$投票率_平均, x$ますぞえ/x$投票者数_計, pch=16,
      cex=sqrt(x$選挙当日有権者数_計)/300,

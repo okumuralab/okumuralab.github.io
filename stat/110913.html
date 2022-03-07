@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/110913.html">
 <meta charset="UTF-8">
 <title>福島原発事故後の米国北西部の乳幼児死亡数</title>
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -144,7 +145,7 @@ plot(data$Week, data$Total, type="o", pch=16, col=cols,
 <p>Rでこのグラフを描くには次のようにします：</p>
 
 <pre>
-<code>data = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/CDC-deaths.csv",
+<code>data = read.csv("http://okumuralab.org/~okumura/stat/data/CDC-deaths.csv",
                 comment.char="#", as.is=TRUE)
 deaths = numeric(2011)  # 面倒なので2011要素の配列を作ってしまう
 for (i in 2000:2011)

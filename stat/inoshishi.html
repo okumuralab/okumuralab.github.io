@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/inoshishi.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>イノシシはロングテール？</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/">
@@ -18,11 +19,11 @@
 
 <p>ロングテールといっても，本物の尻尾の長さではなく，分布の裾の長さのことです。</p>
 
-<p>厚労省の「食品中の放射性物質の検査結果について」（日報）をデータベース化している私の<a href="http://oku.edu.mie-u.ac.jp/food/">食品の放射能データ検索</a>でイノシシの放射性セシウム（Cs）のBq/kg値を調べてみましょう。ND（不検出）以外のデータを調べるには，Cs-134・Cs-137合計値の欄を「1 Bq/kg以上」にして検索するのが簡単です。2013年8月14日までのデータでは873件あります。</p>
+<p>厚労省の「食品中の放射性物質の検査結果について」（日報）をデータベース化している私の<a href="http://okumuralab.org/food/">食品の放射能データ検索</a>でイノシシの放射性セシウム（Cs）のBq/kg値を調べてみましょう。ND（不検出）以外のデータを調べるには，Cs-134・Cs-137合計値の欄を「1 Bq/kg以上」にして検索するのが簡単です。2013年8月14日までのデータでは873件あります。</p>
 
 <p>この分布を調べてみましょう。Webの検索結果をそのまま使ってもいいのですが，ここではすべてR（またはExcel）でやってみましょう。</p>
 
-<p>まず，全データを取得します。<a href="http://oku.edu.mie-u.ac.jp/~okumura/stat/data/mhlw/">http://oku.edu.mie-u.ac.jp/~okumura/stat/data/mhlw/</a>
+<p>まず，全データを取得します。<a href="http://okumuralab.org/~okumura/stat/data/mhlw/">http://okumuralab.org/~okumura/stat/data/mhlw/</a>
 にある「merged.csv.gz」という圧縮ファイルをダウンロードして展開するのが簡単でしょう。</p>
 
 <p>展開したファイル「merged.csv」をRで読み込むには次のようにします。</p>

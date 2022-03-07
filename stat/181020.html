@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/181020.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>地域の大人に勉強を教えてもらうと成績が下がる？</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -34,7 +35,7 @@ library(readxl)
 f = function(n) unlist(read_excel(n, 1, col_names=FALSE, range="C81:N81"))
 x = sapply(names, f)  # x[1,1:47]をざっと見て項目のズレがないことを確認
 y = sapply(1:47, function(i) sum(as.numeric(x[9:12,i])*(4:1))/sum(as.numeric(x[9:12,i])))
-a = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/atest2018.csv", fileEncoding="UTF-8")
+a = read.csv("https://okumuralab.org/~okumura/stat/data/atest2018.csv", fileEncoding="UTF-8")
 cor(y, a$中国A)  # -0.02080954
 cor(y, a$中国B)  #  0.02718476
 cor(y, a$中数A)  # -0.1501752

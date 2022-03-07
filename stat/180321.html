@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/180321.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>福島県で胃がんが急増？</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -71,17 +72,17 @@ mtext("胃がん死亡率の推移（赤は福島県）", line=-1.5, cex=1.5)
 として置いておくので，間違いがないかPDFと比較していただければ助かる。これらをまずRで読み込む：</p>
 
 <pre>
-<code>m05 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2005_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
-m06 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2006_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
-m07 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2007_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
-m08 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2008_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
-m09 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2009_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
-m10 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2010_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
-m11 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2011_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
-m12 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2012_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
-m13 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2013_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
-m14 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2014_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
-m15 = read.table("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/mcij2015_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+<code>m05 = read.table("https://okumuralab.org/~okumura/stat/data/mcij2005_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m06 = read.table("https://okumuralab.org/~okumura/stat/data/mcij2006_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m07 = read.table("https://okumuralab.org/~okumura/stat/data/mcij2007_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m08 = read.table("https://okumuralab.org/~okumura/stat/data/mcij2008_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m09 = read.table("https://okumuralab.org/~okumura/stat/data/mcij2009_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m10 = read.table("https://okumuralab.org/~okumura/stat/data/mcij2010_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m11 = read.table("https://okumuralab.org/~okumura/stat/data/mcij2011_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m12 = read.table("https://okumuralab.org/~okumura/stat/data/mcij2012_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m13 = read.table("https://okumuralab.org/~okumura/stat/data/mcij2013_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m14 = read.table("https://okumuralab.org/~okumura/stat/data/mcij2014_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
+m15 = read.table("https://okumuralab.org/~okumura/stat/data/mcij2015_C16.txt", fileEncoding="UTF-8", as.is=TRUE, fill=TRUE)
 </code></pre>
 
 <p>これらは次の項目から成る：</p>

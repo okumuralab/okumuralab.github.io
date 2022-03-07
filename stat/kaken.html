@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/kaken.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>グラフの例：科研費予算額の推移</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -20,7 +21,7 @@
 <p>日本学術振興会の<a href="https://www.jsps.go.jp/j-grantsinaid/index.html">科学研究費助成事業</a>のメニューの「科研費データ」をクリックする。「予算額の推移」というPDFファイルがあるので，テキスト化してデータを抽出する。結果を <a href="data/kaken.csv">kaken.csv</a> として置いておく。</p>
 
 <pre>
-<code>kaken = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/kaken.csv", fileEncoding="UTF-8")
+<code>kaken = read.csv("https://okumuralab.org/~okumura/stat/data/kaken.csv", fileEncoding="UTF-8")
 par(mgp=c(2,0.8,0))
 t = barplot(kaken[[2]], names.arg=kaken[[1]], las=1)
 text(t+0.2, kaken[[2]], kaken[[2]], pos=3, padj=-1, offset=1, srt=90, cex=0.8, xpd=TRUE)
