@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/180305.html">
 <meta charset="UTF-8">
 <title>グラフの例：国立の教員養成大学・学部（教員養成課程）の就職状況</title>
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -24,7 +25,7 @@
 <figure><img src="img/180305a.png" alt="国立の教員養成大学・学部（教員養成課程）の就職状況"></figure>
 
 <pre>
-<code>x = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/kyoin.csv", fileEncoding="UTF-8")
+<code>x = read.csv("http://okumuralab.org/~okumura/stat/data/kyoin.csv", fileEncoding="UTF-8")
 # par(mgp=c(2,0.8,0))
 t = barplot(rbind(x[,3],x[,4],x[,2]-x[,3]-x[,4]), names.arg=x[,1], las=1)
 n = length(t)

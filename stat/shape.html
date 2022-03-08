@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/shape.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>シェープファイルを読む</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -203,10 +204,10 @@ names(japan) = c("code","pref","geometry")
 <code>st_write(japan, "japan.geojson")
 </code></pre>
 
-<p>できた <a href="https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan.geojson">japan.geojson</a> は公開しておく。次のように読む：</p>
+<p>できた <a href="https://okumuralab.org/~okumura/stat/data/japan.geojson">japan.geojson</a> は公開しておく。次のように読む：</p>
 
 <pre>
-<code>japan = read_sf("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan.geojson")
+<code>japan = read_sf("https://okumuralab.org/~okumura/stat/data/japan.geojson")
 </code></pre>
 
 <p>確認には <code>plot(st_geometry(japan))</code> としてみればよいが，ここでは投影法の確認も兼ねて，緯度・経度の線（graticule）や軸（axes）も描きこんでみよう：</p>
@@ -237,7 +238,7 @@ text(142+(0:2)*2.5, 30, c("0%","50%","100%"), pos=1)
 -->
 
 <pre>
-<code>x = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/aircon_shochu.csv", fileEncoding="UTF-8")
+<code>x = read.csv("https://okumuralab.org/~okumura/stat/data/aircon_shochu.csv", fileEncoding="UTF-8")
 cols = colorRamp(c("#ff2800","white","#0041ff"))
 pal = rgb(cols((0:101)/101)/255)
 j = st_transform(japan, "+proj=utm +zone=54 +datum=WGS84 +units=km") # 52:九州 53:西日本 54:東日本
@@ -304,10 +305,10 @@ japan3 = rbind(japan3a,japan3b,japan3c)
 st_write(japan3, "japan2.geojson")
 </code></pre>
 
-<p>できた <a href="https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan2.geojson">japan2.geojson</a> は公開しておく。次のように読む：</p>
+<p>できた <a href="https://okumuralab.org/~okumura/stat/data/japan2.geojson">japan2.geojson</a> は公開しておく。次のように読む：</p>
 
 <pre>
-<code>japan2 = read_sf("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan2.geojson", stringsAsFactors=FALSE)
+<code>japan2 = read_sf("https://okumuralab.org/~okumura/stat/data/japan2.geojson", stringsAsFactors=FALSE)
 </code></pre>
 
 <p>これを使って三重県の白地図を描こう：</p>
@@ -327,8 +328,8 @@ text(st_coordinates(c), mie$N03_004)
 <pre>
 <code>library(sf)
 library(RColorBrewer)
-japan = st_read("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/japan2.geojson", stringsAsFactors=FALSE)
-fukushima = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/fukushima.csv", as.is=TRUE)
+japan = st_read("https://okumuralab.org/~okumura/stat/data/japan2.geojson", stringsAsFactors=FALSE)
+fukushima = read.csv("https://okumuralab.org/~okumura/stat/data/fukushima.csv", as.is=TRUE)
 t = as.POSIXct(fukushima$datetime)
 o = order(t)
 cols=c("white",brewer.pal(9, "YlOrRd"),rep("black",100))

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/plotly.html">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plotly</title>
@@ -89,7 +90,7 @@ fig.write_html("fig.html", include_plotlyjs=False, full_html=False,
 import pandas as pd
 import plotly.express as px
 
-df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/python/data/height.csv")
+df = pd.read_csv("https://okumuralab.org/~okumura/python/data/height.csv")
 fig = px.line(df, x='年度', y=["男17歳", "男16歳", "男15歳"], markers=True)
 fig.write_html("fig.html", include_plotlyjs=False, full_html=False,
                default_width=800, default_height=600)
@@ -145,13 +146,15 @@ if m:
 
 <p>標準出力に出力される2行だけをHTMLにコピペし，ファイルとして出力されるJavaScriptコードを <code>js/</code> サブディレクトリに入れる。最終的にこのページはそのようにして作った。</p>
 
+<p>なお，<code>style="height:600px; width:800px;"</code> の代わりに <code>style="max-width:100%"</code> とするとブラウザの幅になる。<a href="suicide.html">自殺統計</a>の図はそのようにした。どちらが使いやすいであろうか。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-19 21:10:47</time>
+Last modified: <time>2022-02-28 13:56:25</time>
 <!-- hhmts end -->
 </p>
 </body>

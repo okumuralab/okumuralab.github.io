@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/pisa.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PISAデータを読む</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -243,9 +244,9 @@ text(100*pc, 100*ph, tcnt[names(ph)])
 <figure><img src="img/150924a.png" alt="PISA数学2009と2012の散布図"></figure>
 
 <pre>
-<code>p2009 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/pisa2009summary.csv")
-p2012 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/pisa2012summary.csv")
-cnt = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/countries.csv")
+<code>p2009 = read.csv("http://okumuralab.org/~okumura/stat/data/pisa2009summary.csv")
+p2012 = read.csv("http://okumuralab.org/~okumura/stat/data/pisa2012summary.csv")
+cnt = read.csv("http://okumuralab.org/~okumura/stat/data/countries.csv")
 p = merge(p2009, p2012)
 p = merge(p, cnt, by.x="CNT", by.y="三字")
 with(p, plot(math, math_mean, type="n", xlab="PISA 2009", ylab="PISA 2012", asp=1))

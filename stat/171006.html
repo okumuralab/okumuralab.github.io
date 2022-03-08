@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/171006.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>日教組と学力</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -44,7 +45,7 @@ H26日教組率 = c(30, 1, 47, 6, 30, 29, 19, 42, 0, 6, 1, 35, 7, 51, 51,
 "奈良", "和歌山", "鳥取", "島根", "岡山", "広島", "山口",
 "徳島", "香川", "愛媛", "高知", "福岡", "佐賀", "長崎",
 "熊本", "大分", "宮崎", "鹿児島", "沖縄")
-正答率 = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/atest2017.csv")
+正答率 = read.csv("https://okumuralab.org/~okumura/stat/data/atest2017.csv")
 日教組率 = (H26日教組率 + H27日教組率) / 2
 plot(日教組率, rowMeans(正答率[,2:9]), type="n", xlab="日教組率（%）", ylab="正答率平均（%）")
 text(日教組率, rowMeans(正答率[,2:9]), 都道府県名)

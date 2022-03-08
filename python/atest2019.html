@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/atest2019.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>全国学力テストの都道府県別正答率（2019年版）</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -150,7 +151,7 @@ kenmei = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島
           "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡",
           "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄"]
 
-df = pd.read_csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/python/</span>data/atest2019.csv")
+df = pd.read_csv("<span id="dirurl">https://okumuralab.org/~okumura/python/</span>data/atest2019.csv")
 
 pca = PCA(n_components=2)
 y = pca.fit_transform(df)

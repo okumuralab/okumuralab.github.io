@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/pisa2018.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PISA 2018データを読む</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -126,7 +127,7 @@ window.onload = function() {
 <p>3文字国名の表 <a href="data/countries.csv">countries.csv</a>（UTF-8）を使って日本語にしてみよう：</p>
 
 <pre>
-<code>cnt = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/countries.csv",
+<code>cnt = read.csv("<span id="dirurl">https://okumuralab.org/~okumura/stat/</span>data/countries.csv",
                fileEncoding="UTF-8")
 tcnt = cnt$国名
 names(tcnt) = cnt$三字

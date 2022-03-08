@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/111114.html">
 <meta charset="UTF-8">
 <title>グラフの例：Twitterのフォロワー数</title>
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -26,7 +27,7 @@
 <p>データは <a href="data/h_okumura.csv">h_okumura.csv</a> というCSVファイルに収めました。</p>
 
 <pre>
-<code>x = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/h_okumura.csv", as.is=TRUE)
+<code>x = read.csv("http://okumuralab.org/~okumura/stat/data/h_okumura.csv", as.is=TRUE)
 t = as.POSIXct(x$date)
 f = x$followers
 par(mgp=c(2,0.8,0))  

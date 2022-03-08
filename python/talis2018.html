@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/talis2018.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TALIS 2018</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -82,7 +83,7 @@ plt.xlim(1, 4)
 <p>国名を日本語にするには，次のようにすればよい：</p>
 
 <pre>
-<code>co = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/countries.csv")
+<code>co = pd.read_csv("https://okumuralab.org/~okumura/stat/data/countries.csv")
 dic = { r['三字']: r['国名'] for i,r in co.iterrows() }
 cj = [ dic[x] for x in s.index ]
 

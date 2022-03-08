@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/abo.html">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ABO血液型</title>
@@ -57,7 +58,7 @@ MathJax = {
 <pre>
 <code>import pandas as pd
 
-df = pd.read_excel("<span class="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/abo.xlsx")
+df = pd.read_excel("<span class="dirurl1">https://okumuralab.org/~okumura/</span>stat/data/abo.xlsx")
 </code></pre>
 
 <p>これで読めたはずだが，合計が合わない：</p>
@@ -97,7 +98,7 @@ df1 = pd.merge(pref, df, left_on="都道府県名", right_on="府県名").drop(c
 <p>こちらも，JIS X 0401順に並べ替えるには，次のようにする：</p>
 
 <pre>
-<code>df2 = pd.read_excel("<span class="dirurl1">https://oku.edu.mie-u.ac.jp/~okumura/</span>stat/data/abo2010.xlsx")
+<code>df2 = pd.read_excel("<span class="dirurl1">https://okumuralab.org/~okumura/</span>stat/data/abo2010.xlsx")
 df2 = pd.merge(pref, df2, on="都道府県名")
 </code></pre>
 

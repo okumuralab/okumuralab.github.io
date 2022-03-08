@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/japan.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>日本地図</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -46,7 +47,7 @@ plt.imshow(jp.picture())
 <pre>
 <code>import pandas as pd
 
-df = pd.read_csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/gansokuhou2016.csv")
+df = pd.read_csv("https://okumuralab.org/~okumura/stat/data/gansokuhou2016.csv")
 x = df['年齢調整罹患率日本総数'][1:48]
 x = (x - min(x)) / (max(x) - min(x))
 cmap = plt.get_cmap('bwr')  # or 'coolwarm' or 'cividis_r' etc...

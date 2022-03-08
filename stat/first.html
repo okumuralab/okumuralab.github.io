@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/first.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rの初歩</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -499,7 +500,7 @@ atest2018 = read_excel("atest2018.xlsx")
 <div class="note">
 <p>実は，ダウンロードもRから行うことができます：</p>
 <pre>
-<code>download.file("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>data/atest2018.xlsx", "atest2018.xlsx")
+<code>download.file("<span id="dirurl">https://okumuralab.org/~okumura/stat/</span>data/atest2018.xlsx", "atest2018.xlsx")
 atest2018 = read_excel("atest2018.xlsx")
 </code></pre>
 <p>これが一番簡単です。</p>
@@ -760,7 +761,7 @@ biplot(r)    # または biplot(r, xlabs=x[,1])
 <div class="note">
 <p>ファイル名のかわりにURLを指定することもできます：</p>
 <pre>
-<code>data1 = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/life_expectancy_Japan.csv",
+<code>data1 = read.csv("http://okumuralab.org/~okumura/stat/data/life_expectancy_Japan.csv",
                  comment.char="#",
                  fileEncoding="UTF-8")
 </code></pre>

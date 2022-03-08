@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/111121.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>グラフの例：迷惑メールの数</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -27,7 +28,7 @@
 <pre>
 <code>par(las=1)           # 縦軸の文字を横向きにしない
 par(mgp=c(2,0.8,0))  # 目盛の位置の微調整
-chainletters = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/chainletters.csv",
+chainletters = read.csv("http://okumuralab.org/~okumura/stat/data/chainletters.csv",
                         as.is=TRUE, fileEncoding="SJIS", comment.char="#")
 t = as.POSIXct(chainletters$期間)
 plot(t + 3.5*24*60*60, chainletters$件数, type="h",

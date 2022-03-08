@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/tokyo_snow.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>東京の雪</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -35,7 +36,7 @@ td { text-align: left }
 <p>これをRで読み込む。<a href="datatable.html">data.table</a> を使う。</p>
 
 <pre>
-<code>yuki = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_snow.csv")
+<code>yuki = fread("http://okumuralab.org/~okumura/stat/data/tokyo_snow.csv")
 ooyuki = subset(yuki, 最深積雪cm >= 5)
 dim(ooyuki)
 t = as.Date(ooyuki$年月日)
@@ -66,7 +67,7 @@ table(weekdays(t))
 <p>中澤先生から「積雪だと大雪の次の日も残るので、大雪が土日祝日に多いかどうか調べるには、日最深積雪よりも降雪量合計の方が適しているように思います。参照された記事は少し一貫してなくて、大雪の基準を降雪5cmとしながら、その後は「5cm以上の積雪」と書いていますが。」という天の声をいただいたので，降雪量合計のデータも取ってみた。整形したものを <a href="data/tokyo_snow2.csv">tokyo_snow2.csv</a> とする。</p>
 
 <pre>
-<code>yuki2 = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_snow2.csv")
+<code>yuki2 = fread("http://okumuralab.org/~okumura/stat/data/tokyo_snow2.csv")
 ooyuki2 = subset(yuki2, 降雪量合計cm >= 5)
 dim(ooyuki2)
 t = as.Date(ooyuki2$年月日)
@@ -98,7 +99,7 @@ table(weekdays(t))
 <p>坂本さんからは「大雪が28日あったうち16日が土日なので実際多いのですが、土日気温が低めなのか？とかの関連データも気になります。」（2014年2月9日までのデータの時点）というご意見をいただいた。<a href="data/tokyo_temp.csv">tokyo_temp.csv</a> に整形したものを置く。</p>
 
 <pre>
-<code>temp = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_temp.csv")
+<code>temp = fread("http://okumuralab.org/~okumura/stat/data/tokyo_temp.csv")
 t = as.Date(temp$年月日)
 w = weekdays(t)
 we = subset(temp, w == "日曜日" | w == "土曜日")
@@ -122,7 +123,7 @@ t.test(wd$平均気温, we$平均気温)
 
 <pre>
 <code>library(data.table)
-temp = fread("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/tokyo_temp.csv")
+temp = fread("http://okumuralab.org/~okumura/stat/data/tokyo_temp.csv")
 t = as.Date(temp$年月日)
 temp[,y:=year(t)]  # 年
 temp[,m:=month(t)] # 月 (1..12)

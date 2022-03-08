@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/120615.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LB2045</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -37,7 +38,7 @@
 <p>上のグラフを描くには次のようにする：</p>
 
 <pre>
-<code>sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120615155505.TXT",
+<code>sp = scan("http://okumuralab.org/~okumura/stat/data/120615155505.TXT",
           skip=39, nlines=1024, comment.char=";") # スペクトルを読む
 sp = floor(sp * 601 + 0.5) # cpsからカウント（整数）に変換。601は秒数
 ch = 0:1023  # チャンネル番号
@@ -122,7 +123,7 @@ sum(a['e']*dnorm((ch-a['m'])/a['s']))
 <p>データは <a href="data/120615162546.TXT">120615162546.TXT</a> である。</p>
 
 <pre>
-<code>sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120615162546.TXT",
+<code>sp = scan("http://okumuralab.org/~okumura/stat/data/120615162546.TXT",
           skip=39, nlines=1024, comment.char=";")
 sp = floor(sp * 600 + 0.5)
 data = data.frame(ch=ch, sp=sp)
@@ -169,7 +170,7 @@ sum(a['e3']*dnorm((data$ch-a['m3'])/a['s3']))
 <p>データは <a href="data/120615162546.TXT">120615162546.TXT</a> である。</p>
 
 <pre>
-<code>sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120615162546.TXT",
+<code>sp = scan("http://okumuralab.org/~okumura/stat/data/120615162546.TXT",
           skip=39, nlines=1024, comment.char=";")
 sp = floor(sp * 600 + 0.5)
 ch = 0:1023
@@ -238,7 +239,7 @@ sum(a['e2']*0.851*dnorm((ch[r]-a['m2'])/a['s'])/a['s']*(ch[r]/350)^a['u']) / 600
 <code>a['e1']/a['e2']
 </code></pre>
 
-<p>で 0.7030798 となり，<a href="http://oku.edu.mie-u.ac.jp/rad/correction.html">Cs-137校正のベクレルメータの補正</a>でも計算できるように，2012-06-15（大量放出から1.25年）の値として妥当である。</p>
+<p>で 0.7030798 となり，<a href="http://okumuralab.org/rad/correction.html">Cs-137校正のベクレルメータの補正</a>でも計算できるように，2012-06-15（大量放出から1.25年）の値として妥当である。</p>
 
 <p>フィッティングの詳細は</p>
 
@@ -291,7 +292,7 @@ sqrt(v['e1','e1'] + 2*v['e1','e2'] + v['e2','e2'])
 <p>データは <a href="data/120704151211.TXT">120704151211.TXT</a> である。これは上の例に比べて汚染も少ないので効率曲線はエネルギーの -1.2 乗に固定して計算した。</p>
 
 <pre>
-<code>sp = scan("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/120704151211.TXT",
+<code>sp = scan("http://okumuralab.org/~okumura/stat/data/120704151211.TXT",
           skip=38, nlines=1024, comment.char=";")
 sp = floor(sp * 601 + 0.5)
 data = data.frame(ch=ch, sp=sp)

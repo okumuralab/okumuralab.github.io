@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/130203.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>データ作法</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -82,7 +83,7 @@
   <li>経済産業省：<a href="http://www.meti.go.jp/policy/mono_info_service/joho/other/2011/0330.html">東北地方太平洋沖地震等に係る情報提供のデータ形式について</a></li>
 </ul>
 
-<p>この後日談など話せば尽きない。例えば，現時点でも厚労省は「食品中の放射性物質の検査結果について（第ＸＸＸ報）」というPDFを毎日掲載しており，私が毎日CSV化して<a href="http://oku.edu.mie-u.ac.jp/~okumura/stat/data/mhlw/">ここ</a>に置き，<a href="http://oku.edu.mie-u.ac.jp/food/">食品の放射能データ検索</a>で検索できるようにしている［←2012〜2013年の話。現在は厚労省の委託により国立保健医療科学院が<a href="http://www.radioactivity-db.info">食品中の放射性物質検査データ</a>サイトを運営している］。</p>
+<p>この後日談など話せば尽きない。例えば，現時点でも厚労省は「食品中の放射性物質の検査結果について（第ＸＸＸ報）」というPDFを毎日掲載しており，私が毎日CSV化して<a href="http://okumuralab.org/~okumura/stat/data/mhlw/">ここ</a>に置き，<a href="http://okumuralab.org/food/">食品の放射能データ検索</a>で検索できるようにしている［←2012〜2013年の話。現在は厚労省の委託により国立保健医療科学院が<a href="http://www.radioactivity-db.info">食品中の放射性物質検査データ</a>サイトを運営している］。</p>
 
 <h2>ケーススタディ</h2>
 
@@ -236,7 +237,7 @@ Age,Male,Female
 
 <pre>
 <code>library(pyramid)
-data = read.csv("<span id="dirurl">https://oku.edu.mie-u.ac.jp/~okumura/stat/</span>h24nenreibetsudanjobetsu.csv",
+data = read.csv("<span id="dirurl">https://okumuralab.org/~okumura/stat/</span>h24nenreibetsudanjobetsu.csv",
                 fileEncoding="CP932", comment.char="#")
 pyramids(data$Male, data$Female, data$Age, Cstep=10)
 </code></pre>

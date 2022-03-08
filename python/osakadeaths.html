@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/osakadeaths.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>大阪市の超過死亡？</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -24,7 +25,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/osakadeaths.csv')
+df = pd.read_csv('https://okumuralab.org/~okumura/python/data/osakadeaths.csv')
 
 def days(year, month):
     m = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]

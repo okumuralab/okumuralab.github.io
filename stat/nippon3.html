@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/nippon3.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>日本地図: 普通教室のエアコン設置率</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -21,7 +22,7 @@
 <pre>
 <code># install.packages("NipponMap")
 library(NipponMap)
-x = read.csv("https://oku.edu.mie-u.ac.jp/~okumura/stat/data/aircon_shochu.csv", fileEncoding="UTF-8")
+x = read.csv("https://okumuralab.org/~okumura/stat/data/aircon_shochu.csv", fileEncoding="UTF-8")
 c = x[,4] / 100   # 範囲 [0,1]
 cols = colorRamp(c("#ff2800","white","#0041ff"))
 JapanPrefMap(col=rgb(cols(c)/255))

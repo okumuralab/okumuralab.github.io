@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/150603.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>福島県の線量計の感度</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -368,7 +369,7 @@ points(1:(n-4320), sapply(1:(n-4320), bar, 4320), pch=16, type="l", col="#0041ff
 <p>感度の分布を見てみよう：</p>
 
 <pre>
-<code>rad = read.csv("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/iitate20160316.csv",
+<code>rad = read.csv("http://okumuralab.org/~okumura/stat/data/iitate20160316.csv",
                fileEncoding="CP932", as.is=TRUE)
 id = unique(sort(rad$機器ID))
 f = function(i, plot=FALSE) {

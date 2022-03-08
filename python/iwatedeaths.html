@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/iwatedeaths.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>岩手県の超過死亡？</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -26,7 +27,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/iwatedeaths.csv')
+df = pd.read_csv('https://okumuralab.org/~okumura/python/data/iwatedeaths.csv')
 </code></pre>
 
 <p>単純に月ごとにプロットすると，大の月・小の月の影響で凸凹する。しかも，2020年のようなうるう年の2月は平年に比べて 3.6% もの「超過死亡」になってしまう。そこで，1日あたりの死者数に直してからプロットする。</p>

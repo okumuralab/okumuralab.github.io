@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/japandeaths.html">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>日本の超過死亡？</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -42,7 +43,7 @@ def days(year, month):
     return m[month - 1] + ((month == 2) and
                            ((year % 4 == 0) and (year % 100 != 0) or (year % 400 == 0)))
 
-df = pd.read_csv('https://oku.edu.mie-u.ac.jp/~okumura/python/data/japandeaths.csv')
+df = pd.read_csv('https://okumuralab.org/~okumura/python/data/japandeaths.csv')
 t = [datetime.datetime(int(x['年']), int(x['月']), 1) for i, x in df.iterrows()]
 
 perday1 = np.array([r[2] / days(r[0], r[1]) for i, r in df.iterrows()]) # 確定数
