@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/CI/">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>信頼区間</title>
 <link rel="stylesheet" href="../style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    processEscapes: true
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
   },
-  CommonHTML: { matchFontHeight: false }
-});
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
 </script>
-<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
 </head>
 <body>
 
@@ -26,7 +30,7 @@ MathJax.Hub.Config({
 
 <h1>信頼区間</h1>
 
-<p>[2019-12-02] これは 2014-12-14 17:11:49 に書いたものですが，MathJax 読み込み部分だけ修正しました。</p>
+<p>[2022-03-13] これは 2014-12-14 17:11:49 に書いたものですが，MathJax 読み込み部分と細かな HTML 書法だけ修正しました。</p>
 
 <p>図のRソースは <code>.png</code> を <code>.R</code> に変えたものです。</p>
 
@@ -224,7 +228,7 @@ event rate
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-12-02 20:19:06</time>
+Last modified: <time>2022-03-13 22:31:00</time>
 <!-- hhmts end -->
 </p>
 </body>
