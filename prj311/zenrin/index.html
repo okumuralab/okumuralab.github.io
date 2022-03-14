@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/prj311/zenrin/">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ゼンリン混雑度データ</title>
 <link rel="stylesheet" href="style.css">
 <script type="text/javascript">
@@ -88,13 +89,13 @@ end
 </pre>
 
 <p>Rで上のような地図を描くには
-<a href="/~okumura/stat/rgooglemaps.html">RgoogleMaps</a>
+<a href="../stat/rgooglemaps.html">RgoogleMaps</a>
 を使って例えば次のようにする。</p>
 
 <pre>
 library(RgoogleMaps)
 library(RColorBrewer)
-source("http://oku.edu.mie-u.ac.jp/~okumura/stat/data/GetMap.R") # パッチ
+source("http://okumuralab.org/~okumura/stat/data/GetMap.R") # パッチ
 FukushimaMap = GetMap(c(37.4,140.7), destfile="fukushima.png", zoom=10, sensor="false", hl="ja")
 cols=c("white",brewer.pal(9, "YlOrRd"),rep("black",100))
 data = read.csv("上のRubyコードで出力したCSV", header=FALSE)
