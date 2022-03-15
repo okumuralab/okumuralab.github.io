@@ -143,15 +143,15 @@ export PATH
 
 <p>アンインストールするには /Library/Frameworks/Python.framework および ~/Library/Python を消します。/usr/local/bin にできたシンボリックリンクも消します。~/.bash_profile に追加した PATH も消します。</p>
 
-<h3>macOS Big Sur の Python</h3>
+<h3>macOS の Python</h3>
 
-<p>macOS Big Sur では，ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールすると，universal binary の Python 3.8.2 が入ります。まずは</p>
+<p>macOS では，ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールすると，universal binary の /usr/bin/python3 が入ります（macOS Monterey 12.3 時点では Python 3.8.9）。まずは</p>
 
 <pre>
 <code>/usr/bin/pip3 install --user --upgrade pip
 </code></pre>
 
-<p>で pip を更新します。新しい pip コマンド等が ~/Library/Python/3.8/bin に入りますので，そちらにパスを通しておきます。あとは本家のものと同じように使えそうです。</p>
+<p>で pip を更新します。新しい pip コマンド等が ~/Library/Python/3.8/bin に入りますので，そちらにパスを通しておきます。あとは本家のものと同じように使えそうです。なお，Python 2 系列の /usr/bin/python はなくなりました。</p>
 
 <hr>
 
@@ -363,7 +363,7 @@ apk add python3 py3-pip
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-03-11 08:25:18</time>
+Last modified: <time>2022-03-15 13:07:06</time>
 <!-- hhmts end -->
 </p>
 </footer>
