@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/script.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plotly</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="/js/plotly-2.9.0.min.js"></script>
+<script>
+function plot(data) {
+  let year = [], m15 = [], m16 = [], m17 = [];
+  for (const row of data.split("\n")) {
+    const r = row.split(',');
+    if (r.length == 27) {
+      year.push(r[0]);
+      m15.push(r[11]);
+      m16.push(r[12]);
+      m17.push(r[13]);
+    }
+  }
+  Plotly.newPlot("out1", [
+    {"name":"男17歳", "x":year, "y":m17, "type":"scatter", "mode":"lines+markers"},
+    {"name":"男16歳", "x":year, "y":m16, "type":"scatter", "mode":"lines+markers"},
+    {"name":"男15歳", "x":year, "y":m15, "type":"scatter", "mode":"lines+markers"}
+  ], {"xaxis":{"title":{"text":"年度"}}, "yaxis":{"title":{"text":"身長"}}});
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  fetch('../python/data/height.csv')
+    .then(response => response.text())
+    .then(data => plot(data));
+});
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<h1>Plotly</h1>
+
+<p><a href="https://plotly.com/graphing-libraries/">Plotly</a> はJavaScriptの対話型視覚化ライブラリです。</p>
+
+<p><a href="../python/220217.html">平均身長の推移</a>のデータをPlotlyで描いてみます。サイズは800×600ピクセルに指定しましたが，無指定では幅いっぱいになります。。</p>
+
+<div id="out1" style="width:800px;height:600px"></div>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-03-16 22:28:02</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
