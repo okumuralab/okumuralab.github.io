@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/contextmenu.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>右クリック禁止</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+document.oncontextmenu = function() { alert("右クリック禁止"); return false; }
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<h1>右クリック禁止</h1>
+
+<p>このページは右クリック禁止です。やってみてください。</p>
+
+<p>仕組みは簡単です。ヘッダ部（でなくてもどこでもいい）に</p>
+
+<pre>
+&lt;script&gt;
+document.oncontextmenu = function() { alert("右クリック禁止"); return false; }
+&lt;/script&gt;
+</pre>
+
+<p>と書き込んであるだけです。</p>
+
+<p>こういうページで右クリックをするためには，JavaScriptコンソールを出して，</p>
+
+<pre>
+document.oncontextmenu = null;
+</pre>
+
+<p>と打ち込むだけで，禁止が解除されます。コンソールの出し方はブラウザによって違います。MacのSafariなら option + command + C で出るはずです。</p>
+
+<p>右クリック禁止ページでも Firefox なら「shift + 右クリック」で大丈夫でした。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:11:19</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

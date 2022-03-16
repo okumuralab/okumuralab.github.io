@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/gameoflife.html">
+<meta charset="UTF-8">
+<title>ライフゲーム</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+
+let g = 0, a = [], b = [], k;
+
+function draw() {
+  let s = '';
+  for (let i = 1; i <= 25; i++) {
+    for (let j = 1; j <= 40; j++) {
+      let k = i * 41 + j;
+      if (a[k])
+        s += '●';
+      else
+        s += '　';
+    }
+    s += '\n';
+  }
+  s += "Generation: " + g;
+  document.getElementById("board").textContent = s;
+}
+function update() {
+  g++;
+  for (let i = 1; i <= 25; i++) {
+    for (let j = 1; j <= 40; j++) {
+      let k = i * 41 + j;
+      if (a[k]) {
+        b[k-42]++;  b[k-41]++;  b[k-40]++;
+        b[k- 1]++;              b[k+ 1]++;
+        b[k+40]++;  b[k+41]++;  b[k+42]++;
+      }
+    }
+  }
+  for (let k = 0; k < 26 * 40 + 42; k++) {
+    if (b[k] != 2) a[k] = (b[k] == 3);
+    b[k] = 0;
+  }
+  draw();
+}
+for (let k = 0; k < 26 * 40 + 42; k++) {
+  a[k] = false;  b[k] = 0;
+}
+a[13*41+25] = true;
+a[12*41+25] = true;
+a[14*41+25] = true;
+a[13*41+24] = true;
+a[12*41+26] = true;
+setInterval(update, 500);
+window.onload = draw;
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>ライフゲーム</h2>
+
+<pre id="board"></pre>
+
+<p>J. H. Conwayのライフ・ゲーム（Game of Life）をMartin GardnerがScientific American誌に紹介したのは1970年のことでした。それからかなりの間，世界中のパソコンやコンピュータ端末でこれが大流行します。</p>
+
+<p>碁盤の目の上に，いくつかの生命体があります。どの場所も縦・横・斜めに8個の場所と隣り合っていますが，もしある場所が空いていて，しかもその場所と隣り合うちょうど3個の場所に生命体が存在するならば，次の世代にはその空いた場所に新しい生命体が誕生します。一方，すでに存在する生命体については，隣り合う場所に住む生命体が1個以下または4個以上になると，過疎または過密のため, 次の世代には死んでしまいます。この生命体の生々流転を見て楽しむ——というだけの単純な一人ゲームですが，驚くほど変化に富み，見ていて飽きません。</p>
+
+<p>上の例では「ペントミノ」の形の初期条件を与えました。いろいろな初期条件でやってみてください。また，ルールを変えるとどうなるでしょうか。</p>
+
+<p>こういったものを一般にセル・オートマトン（cellular automaton，複数形 automata）といいます。automaton は自動羊ではありません！
+セル・オートマトンは von Neumann が考えました。</p>
+
+<p>プログラミング志向の方は，もっとグラフィカルに，あるいは初期条件をマウスで与えられるように，改良してください。</p>
+</article>
+
+<hr>
+
+<footer>
+<a href="../" rel="author">奥村 晴彦</a>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:10:30</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

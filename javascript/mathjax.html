@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/mathjax.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MathJaxによる数式表示</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<h1>MathJaxによる数式表示</h1>
+
+<p><a href="http://www.mathjax.org/">MathJax</a> は $\mathrm{\LaTeX}$ 並みの数式表示能力をJavaScriptで実現したライブラリです。</p>
+
+<p>MathJaxの読み込み方はいろいろありますが，<code>&lt;head&gt;</code> … <code>&lt;/head&gt;</code> の中のどこかに例えば次のように書いておきます（以前は <code>tex-chtml.js</code> を使っていましたが，大きい記号がうまくいかないので，こちらに変えました）：</p>
+
+<pre>
+<code>&lt;script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
+&lt;/script&gt;</code>
+</pre>
+
+<div class="note">
+<p>もしIE11にも対応させたいなら，上のコードの前に次を挿入します：</p>
+<pre>
+<code>&lt;script src="https://polyfill.io/v3/polyfill.min.js?features=es6"&gt;&lt;/script&gt;
+</code></pre>
+<p>今となっては必要ないでしょう。</p>
+</div>
+
+<p>デフォルトでは周囲の環境と英小文字の高さ（x-height）を自動的に合わせますが，日本語環境ではうまくいかないこともあるので，このサイトではその機能を次のようにして切っています：</p>
+
+<pre>
+<code>&lt;script&gt;
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  }
+};
+&lt;/script&gt;
+&lt;script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
+&lt;/script&gt;</code>
+</pre>
+
+<p>数式の書き方はほぼLaTeX + amsmathのスタイル通りです。ただ，本文中の数式はデフォルトでは
+<code>$ ... $</code>
+ではなく
+<code>\( ... \)</code>
+で指定します。これが面倒なら，頭の部分を</p>
+
+<pre>
+<code>&lt;script&gt;
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+&lt;/script&gt;
+&lt;script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
+&lt;/script&gt;</code>
+</pre>
+
+<p>のようにすれば <code>$ ... $</code> になります。ただの <span>$</span> を使いたい場合には <code>&lt;span&gt;$&lt;/span&gt;</code> と書きます（<code>\$</code> のようにエスケープしてもいいはずですが，うまくいかないことがあるようです。バグ？）。なお，<code>&lt;pre&gt; ... &lt;/pre&gt;</code> や <code>&lt;code&gt; ... &lt;/code&gt;</code> の中ではエスケープは不要です。</p>
+
+<p>例：</p>
+
+<pre>
+<code>エネルギーと質量には $E = mc^2$ の関係がある。</code>
+</pre>
+
+<blockquote>
+<p>エネルギーと質量には $E = mc^2$ の関係がある。</p>
+</blockquote>
+
+<p>HTMLだけで書いた <span lang="en"><i>E</i> = <i>mc</i><sup>2</sup></span>（<code>&lt;span lang="en"&gt;&lt;i&gt;E&lt;/i&gt; = &lt;i&gt;mc&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/span&gt;</code>）と比較してください。</p>
+
+<p>別行の数式は <code>\[ ... \]</code> です。</p>
+
+<pre>
+<code>\[
+  \frac{\pi}{2} =
+  \left( \int_{0}^{\infty} \frac{\sin x}{\sqrt{x}} dx \right)^2 =
+  \sum_{k=0}^{\infty} \frac{(2k)!}{2^{2k}(k!)^2} \frac{1}{2k+1} =
+  \prod_{k=1}^{\infty} \frac{4k^2}{4k^2 - 1}
+\]</code>
+</pre>
+
+\[
+  \frac{\pi}{2} =
+  \left( \int_{0}^{\infty} \frac{\sin x}{\sqrt{x}} dx \right)^2 =
+  \sum_{k=0}^{\infty} \frac{(2k)!}{2^{2k}(k!)^2} \frac{1}{2k+1} =
+  \prod_{k=1}^{\infty} \frac{4k^2}{4k^2 - 1}
+\]
+
+<p>注意として，<code>$a&lt;b$</code> のようにスペースなしで不等号を書くと，ブラウザが <code>&lt;</code> をタグの一部と解釈してしまって，うまくいかないようです。<code>$a &lt; b$</code> のようにスペースを空ければうまくいくはずです。あるいは，<code>$a &amp;lt; b$</code> のように書くか，<code>$a \lt b$</code> のようなマクロを使います。</p>
+
+<div class="note">
+<p>MathJaxの <code>\lt</code> というマクロは，標準のLaTeXでは定義されていません。<code>\newcommand{\lt}{&lt;}</code> のように定義しておく必要があります。</p>
+</div>
+
+<div class="note">
+<p><code>&lt;meta name="viewport" content="width=device-width"&gt;</code> と書いているところは <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code> としないとページ幅がおかしくなることがあるようです。</p>
+</div>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-02-10 13:40:58</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

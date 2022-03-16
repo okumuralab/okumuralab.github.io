@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/if2.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>もし……</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+  "use strict";
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>もし……</h1>
+
+<h2>復習</h2>
+
+<p>1から10までの数を並べてみましょう。文字列中に <code>`文字列 ${数式} 文字列`</code> のようにして数式の値を出力する <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">template literals</a> という方法を使っています。</p>
+
+<blockquote>
+  <p id="out1"></p>
+</blockquote>
+
+<script>
+  let s1 = "";
+  for (let i = 1; i <= 10; i++) {
+    s1 += `${i}<br>`;
+  }
+  document.getElementById("out1").innerHTML = s1;
+</script>
+
+<pre>
+&lt;p id="out1"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  let s1 = "";
+  for (let i = 1; i &lt;= 10; i++) {
+    s1 += `${i}&lt;br&gt;`;
+  }
+  document.getElementById("out1").innerHTML = s1;
+&lt;/script&gt;
+</pre>
+
+<h2>偶数か奇数か</h2>
+
+<p>1から10までの数を並べ，偶数か奇数かも出力します。</p>
+
+<blockquote>
+  <p id="out2"></p>
+</blockquote>
+
+<script>
+  let s2 = "";
+  for (let i = 1; i <= 10; i++) {
+    if (i % 2 == 0) {
+      s2 += `${i} は偶数<br>`;
+    } else {
+      s2 += `${i} は奇数<br>`;
+    }
+  }
+  document.getElementById("out2").innerHTML = s2;
+</script>
+
+<pre>
+&lt;p id="out2"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  let s2 = "";
+  for (let i = 1; i &lt;= 10; i++) {
+    if (i % 2 == 0) {
+      s2 += `${i} は偶数&lt;br&gt;`;
+    } else {
+      s2 += `${i} は奇数&lt;br&gt;`;
+    }
+  }
+  document.getElementById("out2").innerHTML = s2;
+&lt;/script&gt;
+</pre>
+
+<p><code>i % 2</code> は <code>i</code> を2で割った余りです。等しいことの判断は <code>==</code> です。ここでは使っていませんが，等しくないことの判断は <code>!=</code> です。</p>
+
+<p>細かいことになりますが，JavaScriptには，より厳密に等しい・等しくないを判断する <code>===</code>，<code>!==</code> があります。例えば <code>0 == ""</code> も <code>0 == "0"</code> も真ですが，<code>===</code> を使えば偽になります。文字列と数値を区別するときは <code>===</code> を使いましょう。</p>
+
+<h2>より複雑な判断</h2>
+
+<p>1から10までの数を並べ，偶数か奇数かも出力します。</p>
+
+<blockquote>
+  <p id="out3"></p>
+</blockquote>
+
+<script>
+  let s3 = "";
+  for (let i = 1; i <= 10; i++) {
+    if (i % 2 == 0) {
+      s3 += `${i} は偶数<br>`;
+    } else if (i % 3 == 0) {
+      s3 += `${i} は3の倍数<br>`;
+    } else {
+      s3 += `${i} はどちらでもない<br>`;
+    }
+  }
+  document.getElementById("out3").innerHTML = s3;
+</script>
+
+<pre>
+&lt;p id="out3"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  let s3 = "";
+  for (let i = 1; i &lt;= 10; i++) {
+    if (i % 2 == 0) {
+      s3 += `${i} は偶数&lt;br&gt;`;
+    } else if (i % 3 == 0) {
+      s3 += `${i} は3の倍数&lt;br&gt;`;
+    } else {
+      s3 += `${i} はどちらでもない&lt;br&gt;`;
+    }
+  }
+  document.getElementById("out3").innerHTML = s3;
+&lt;/script&gt;
+</pre>
+
+<h2>FizzBuzz問題</h2>
+
+<p>1から100までの数を並べてください。ただし3の倍数なら数の代わりにFizz，5の倍数なら数の代わりにBuzz，両方の倍数なら数の代わりにFizzBuzzと出力してください。</p>
+
+<blockquote>
+<p>
+1<br>
+2<br>
+Fizz<br>
+4<br>
+Buzz<br>
+Fizz<br>
+……<br>
+14<br>
+FizzBuzz<br>
+16<br>
+……
+</p>
+</blockquote>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-12 10:24:40</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

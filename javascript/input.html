@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/input.html">
+<meta charset="UTF-8">
+<title>テキストボックス</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+function foo() {
+  const x = document.getElementById("input").value;
+  document.getElementById("output").textContent = "こんにちは，" + x + "さん！";
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>テキストボックス</h1>
+
+<h2>例</h2>
+
+<p><label>お名前：<input id="input" onchange="foo()"></label></p>
+
+<p id="output">出力欄：</p>
+
+<h2>解説</h2>
+
+<p>名前を入力すると出力欄にあいさつが出力されます。この部分は次のようになっています。</p>
+
+<pre>
+&lt;p&gt;&lt;label&gt;お名前：&lt;input id="input" onchange="foo()"&gt;&lt;/label&gt;&lt;/p&gt;
+
+&lt;p id="output"&gt;出力欄：&lt;/p&gt;
+</pre>
+
+<p>ここで呼び出している関数 <code>foo()</code> は次のように定義しています：</p>
+
+<pre>
+function foo() {
+  const x = document.getElementById("input").value;
+  document.getElementById("output").textContent = "こんにちは，" + x + "さん！";
+}
+</pre>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:08:06</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

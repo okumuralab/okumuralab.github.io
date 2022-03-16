@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/rollover.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>絵の切り替え</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+  "use strict";
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>絵の切り替え</h1>
+
+<h2>基本</h2>
+
+<p>次の図の上にマウスを持っていくと画像が替わります。</p>
+
+<!-- prefetch -->
+<script>
+var img = new Image();
+img.src = "photo2.jpg";
+</script>
+
+<p>
+<img src="photo1.jpg" width="450" height="300"
+     onmouseover="this.src='photo2.jpg'"
+     onmouseout="this.src='photo1.jpg'"
+     onmousedown="alert('ガオー！！')"
+     alt="Click me!" title="Click me!">
+</p>
+
+<p>この仕組みを説明しましょう。</p>
+
+<p>まず，普通の画像を表示するには，たとえば次のようにします。</p>
+
+<pre>
+&lt;img src="photo1.jpg" alt="Click me!"&gt;
+</pre>
+
+<p>もう一つの画像 <code>photo2.jpg</code>
+を用意し，マウスを上に持っていくとそちらに切り替わるようにします。</p>
+
+<pre>
+&lt;img src="photo1.jpg" alt="Click me!"
+     onmouseover="this.src='photo2.jpg'"&gt;
+</pre>
+
+<p><code>onmouseover</code>
+は「マウスが上に来たならば」という意味です。<code>this.src='photo2.jpg'</code>
+が JavaScript の命令で，<code>this</code>（それ自身）の <code>src</code>
+という属性を <code>photo2.jpg</code> にすることを意味します。</p>
+
+<p>これではマウスが去った後も替わったままなので，実際には次のようにします。</p>
+
+<pre>
+&lt;img src="photo1.jpg" alt="Click me!"
+     onmouseover="this.src='photo2.jpg'"
+     onmouseout="this.src='photo1.jpg'"&gt;
+</pre>
+
+<p><code>onmouseout</code> は「マウスが去ったならば」という意味です。</p>
+
+<h2>応用</h2>
+
+<p>クリックすると「ガオー！！」と表示するようにしてみましょう。</p>
+
+<pre>
+&lt;img src="photo1.jpg" alt="Click me!"
+     onmouseover="this.src='photo2.jpg'"
+     onmouseout="this.src='photo1.jpg'"
+     onmousedown="alert('ガオー！！')"&gt;
+</pre>
+
+<p><code>onmouseover</code> の類を<a href="http://www.w3schools.com/jsref/dom_obj_event.asp">DOMイベント</a>といいます。DOMはDocument Object Modelのことで，HTMLの画像などの要素を扱う仕組みのことを指します。</p>
+
+<h2>細かいこと</h2>
+
+<p>画像には <code>&lt;img src="photo1.jpg" width="450" height="300" ...&gt;</code>
+のように幅（width）と高さ（height）を指定しておくと，表示が少し速くなります。</p>
+
+<p>マウスが乗ったときに画像を切り替える際に，次のようにあらかじめ2番目の画像を先読み（プリフェッチ，prefetch）しておくと滑らかに切り替えられるかもしれません。</p>
+
+<pre>
+&lt;script&gt;
+var img = new Image();
+img.src = "photo2.jpg";
+&lt;/script&gt;
+
+&lt;img src="photo1.jpg" width="450" height="300"
+     onmouseover="this.src='photo2.jpg'"
+     onmouseout="this.src='photo1.jpg'"
+     onmousedown="alert('ガオー！！')"
+     alt="Click me!" title="Click me!"&gt;
+</pre>
+
+<p>なお，<code>&lt;img ... title="Click me!"&gt;</code>
+と書くと，マウスを近づけると「Click me!」という吹き出しが現れます。</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 18:59:10</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

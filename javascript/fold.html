@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/fold.html">
+<meta charset="UTF-8">
+<title>折りたたみ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+function fold(x) {
+  let y = x.nextElementSibling;
+  if (y.style.display == 'none') {
+    y.style.display = '';
+  } else {
+    y.style.display = 'none';
+  }
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>折りたたみ</h1>
+
+<h2>例</h2>
+
+<p id="out"></p>
+
+<p>光学ディスクには次のものがあります。クリックすると説明が現れます。</p>
+
+<dl>
+  <dt onclick="fold(this)">CD</dt>
+  <dd style="display:none">容量は540M〜700Mで，書き換えできないCD-Rと，書き換え可能なCD-RWがあります。</dd>
+  <dt onclick="fold(this)">DVD</dt>
+  <dd style="display:none">容量は1層で470Gで，書き換えできないDVD-R，DVD+Rと，書き換え可能なDVD-RW，DVD-RAM，DVD+RWがあります。</dd>
+  <dt onclick="fold(this)">BD</dt>
+  <dd style="display:none">Blu-ray Discの略です。容量は1層で25Gです。</dd>
+</dl>
+
+<h2>ソース</h2>
+
+<p>まず <code>head</code> の中あたりで次のような関数を定義しておきます。</p>
+
+<pre>
+&lt;script&gt;
+function fold(x) {
+  let y = x.nextElementSibling;
+  if (y.style.display == 'none') {
+    y.style.display = '';
+  } else {
+    y.style.display = 'none';
+  }
+}
+&lt;/script&gt;
+</pre>
+
+<p>これを使って折りたたみできるリストを作ります。</p>
+
+<pre>
+&lt;dl&gt;
+  &lt;dt onclick="fold(this)"&gt;CD&lt;/dt&gt;
+  &lt;dd style="display:none"&gt;容量は540M〜700Mで，書き換えできないCD-Rと，書き換え可能なCD-RWがあります。&lt;/dd&gt;
+  &lt;dt onclick="fold(this)"&gt;DVD&lt;/dt&gt;
+  &lt;dd style="display:none"&gt;容量は1層で470Gで，書き換えできないDVD-R，DVD+Rと，書き換え可能なDVD-RW，DVD-RAM，DVD+RWがあります。&lt;/dd&gt;
+  &lt;dt onclick="fold(this)"&gt;BD&lt;/dt&gt;
+  &lt;dd style="display:none"&gt;Blu-ray Discの略です。容量は1層で25Gです。&lt;/dd&gt;
+&lt;/dl&gt;
+</pre>
+
+<!-- <p>クリックされやすいように，どこにも飛ばないリンク <code>&lt;a href="javascript:void(0)"&gt;...&lt;/a&gt;</code> を設定しておくこともあります。</p> -->
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:01:11</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

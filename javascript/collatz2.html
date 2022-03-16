@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/collatz2.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collatzの問題（BigInt版）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+function collatz() {
+  let x = BigInt(document.getElementById("input").value);
+  let s = "";
+  while (x > 1n) {
+    s += x + " → ";
+    if (x % 2n == 0n) {
+      x = x / 2n;
+    } else {
+      x = 3n * x + 1n;
+    }
+  }
+  s += x + " 終了";
+  document.getElementById("output").textContent = s;
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>Collatzの問題（BigInt版）</h1>
+
+<p><label>大きな正の整数を入れてください：<input id="input" onchange="collatz()"></label>（例：19638399）</p>
+
+<p id="output">出力欄：</p>
+
+<p><a href="collatz.html">Collatzの問題</a>のBigInt（大きな整数）版です。どんな大きな整数でも正確に表せます。数値を直接書くときは <code>123n</code> のように <code>n</code> を付けます。</p>
+
+<pre>
+function collatz() {
+  let x = BigInt(document.getElementById("input").value);
+  let s = "";
+  while (x &gt; 1n) {
+    s += x + " → ";
+    if (x % 2n == 0n) {
+      x = x / 2n;
+    } else {
+      x = 3n * x + 1n;
+    }
+  }
+  s += x + " 終了";
+  document.getElementById("output").textContent = s;
+}
+</pre>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-02-03 14:37:12</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/mkpasswd.html">
+<meta charset="UTF-8">
+<title>パスワード生成</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+let pw = "";
+function gen(x) {
+  const s = document.getElementById("char").value;
+  const n = document.getElementById("len").value;
+  const u = new Uint32Array(n);
+  window.crypto.getRandomValues(u);
+  const a = Array.from(u);
+  pw = a.map(function(x) { return s[Math.floor(x / 4294967296 * s.length)]; }).join("");
+  document.getElementById("pw").textContent = pw;
+}
+function copy() {
+  navigator.clipboard.writeText(pw);
+}
+window.onload = gen;
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<h1>パスワード生成</h1>
+
+<p>利用文字（変更できます）: <input id="char" size="80" value="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"></p>
+
+<p>長さ（変更できます）: <input style="font-size:120%" id="len" size="3" value="12"></p>
+
+<p>パスワード: <span style="font-size:200%" id="pw"></span> <button type="button" onclick="copy()">copy</button></p>
+
+<p><button type="button" style="font-size:150%" onclick="gen()">再生成</button></p>
+
+<hr>
+
+<p>ブラウザ内で動作するJavaScriptだけを使っていますので，生成したパスワードは外部に送信されません。</p>
+
+<p>サイトによっては「秘密の質問と答え」を設定させられ，しかも全角文字しか使えないことがあります。そんなときは，利用文字を例えば「あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわん」にしてください。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-12 15:35:51</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

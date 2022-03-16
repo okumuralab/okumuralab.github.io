@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/changesize.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文字サイズ変更</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+  "use strict";
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>文字サイズ変更</h1>
+
+<h2>全体の変更</h2>
+
+<p>ページ全体を変更します。</p>
+
+<script>
+let x = 100;
+function larger()  { x *= 1.2; document.body.style.fontSize = x + '%'; }
+function smaller() { x /= 1.2; document.body.style.fontSize = x + '%'; }
+</script>
+
+<button type="button" onclick="smaller()">小さく</button>
+<button type="button" onclick="larger()">大きく</button>
+
+<pre>
+&lt;script&gt;
+let x = 100;
+function larger()  { x *= 1.2; document.body.style.fontSize = x + '%'; }
+function smaller() { x /= 1.2; document.body.style.fontSize = x + '%'; }
+&lt;/script&gt;
+
+&lt;button type="button" onclick="smaller()"&gt;小さく&lt;/button&gt;
+&lt;button type="button" onclick="larger()"&gt;大きく&lt;/button&gt;
+</pre>
+
+<h2>部分的な変更</h2>
+
+<p>特定の部分だけ文字サイズを変更します。</p>
+
+<script>
+let y = 100;
+function larger1()  { y *= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
+function smaller1() { y /= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
+</script>
+
+<button type="button" onclick="smaller1()">小さく</button>
+<button type="button" onclick="larger1()">大きく</button>
+
+<p id="resizable">ほげほげほげ</p>
+
+<pre>
+&lt;script&gt;
+let y = 100;
+function larger()  { y *= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
+function smaller() { y /= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
+&lt;/script&gt;
+
+&lt;button type="button" onclick="smaller()"&gt;小さく&lt;/button&gt;
+&lt;button type="button" onclick="larger()"&gt;大きく&lt;/button&gt;
+
+&lt;p id="resizable"&gt;ほげほげほげ&lt;/p&gt;
+</pre>
+
+<h2>（蛇足）文字サイズ変更ボタンを付けるべきか</h2>
+
+<p>最近のブラウザには自由に文字サイズを変えられる機能がありますので，文字サイズ変更ボタンの意味はあまりありません。むしろ，ブラウザで文字サイズを変えたときに文字どうしが重なって読めなくならないように注意するほうが意味があるでしょう。同様なことが，ページを声で読み上げる仕組みについても言えます。</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:01:48</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

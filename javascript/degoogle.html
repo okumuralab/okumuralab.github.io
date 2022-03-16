@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/degoogle.html">
+<meta charset="UTF-8">
+<title>Googleのリンクを普通のリンクにする</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script>
+function foo() {
+  var x, u, v;
+  x = document.getElementById("input").value;
+  x = x.replace(/^.*?&url=/, "");
+  x = x.replace(/&ei=.*?$/, "");
+  x = x.replace(/%3A/g, ":");
+  x = x.replace(/%2F/g, "/");
+  x = x.replace(/%25/g, "%");
+  u = document.getElementById("output");
+  u.value = x;
+  if (x.match(/^https?:\/\//)) {
+    x = x.replace(/&/g, "&amp;");
+    v = document.getElementById("link");
+    v.href = x;
+    v.innerText = x;
+  }
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>Googleのリンクを普通のリンクにする</h1>
+
+<p><label>入力：<input id="input" size="80" onchange="foo()"></label></p>
+
+<p>出力：<input id="output" size="80"></p>
+
+<p>テスト用リンク：<br><a id="link" href="" target="_blank" rel="nofollow"></a><br>（別窓または別タブを開きます）</p>
+
+<p>入力した内容は（テスト用リンクをクリックしない限り）外部には一切送られません。</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2018-07-02 14:33:33</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

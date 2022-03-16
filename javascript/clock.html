@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/clock.html">
+<meta charset="UTF-8">
+<title>時計</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+let count = 60
+function clock() {
+  const t = new Date().toLocaleTimeString([], {hour12:false})
+  document.getElementById('out1').value = t;
+  document.getElementById('out2').textContent = t;
+  if (count > 0) {
+    document.getElementById('out3').value = count + "秒前";
+    count = count - 1;
+  } else {
+    document.getElementById('out3').value = "ドカーン！";
+  }
+}
+setInterval(clock, 1000);
+window.onload = clock;
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>時計</h1>
+
+<h2>例1</h2>
+
+<p>文字が秒ごとに変わるデジタル時計を作ってみましょう。</p>
+
+<p><input id="out1"></p>
+
+<p>上のソースはこれだけです。</p>
+
+<pre>
+&lt;p&gt;&lt;input id="out1"&gt;&lt;/p&gt;
+</pre>
+
+<p>実際に文字を書くJavaScriptの部分は後で挙げます。</p>
+
+<h2>例2</h2>
+
+<p>普通の文章の中にも <span id="out2"></span> のように埋め込めます。</p>
+
+<pre>
+&lt;p&gt;普通の文章の中にも &lt;span id="out2"&gt;&lt;/span&gt; のように埋め込めます。&lt;/p&gt;
+</pre>
+
+<p>実際に文字を書くJavaScriptの部分は後で挙げます。</p>
+
+<h2>JavaScript部分</h2>
+
+<p>head部分には次のように定義しています。</p>
+
+<pre>
+&lt;script&gt;
+function clock() {
+  const t = new Date().toLocaleTimeString([], {hour12:false})
+  document.getElementById('out1').value = t;    // 例1
+  document.getElementById('out2').textContent = t; // 例2
+}
+setInterval(clock, 1000);
+window.onload = clock;
+&lt;/script&gt;
+</pre>
+
+<p><code>window.onload = clock;</code> は，本文が読み込まれたすぐ後で <code>clock()</code>
+を実行するためのものです。</p>
+
+<p>これがなくても，<code>setInterval(clock, 1000);</code> と書いてありますので，1000ミリ秒（1秒）たてば時計の実行が開始されます。</p>
+
+<h2>応用</h2>
+
+<p>時計をちょっと変えれば，ロケット発射のカウントダウンになります。</p>
+
+<p><input id="out3"></p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-12 10:47:49</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

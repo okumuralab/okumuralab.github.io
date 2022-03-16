@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/changetext.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文字の置き換え</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+  "use strict";
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>文字の置き換え</h1>
+
+<h2>textContentによる例</h2>
+
+<p onclick="this.textContent='ありがとう！'">クリックしてね。</p>
+
+<pre>
+&lt;p onclick="this.textContent='ありがとう！'"&gt;クリックしてね。&lt;/p&gt;
+</pre>
+
+<p>この <code>onclick</code> を <code>onmouseover</code> などと書き換えればいろいろできそうです。</p>
+
+<h2>innerHTMLによる例</h2>
+
+<p>HTMLタグを含ませるには <code>innerHTML</code> を使います。</p>
+
+<p onclick="this.innerHTML='<b>ありがとう！</b>'">クリックしてね。</p>
+
+<pre>
+&lt;p onclick="this.innerHTML='&lt;b&gt;ありがとう！&lt;/b&gt;'"&gt;クリックしてね。&lt;/p&gt;
+</pre>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:00:00</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

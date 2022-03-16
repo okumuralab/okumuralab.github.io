@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/">
+<meta charset="UTF-8">
+<title>JavaScript講座</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+  "use strict";
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+</nav>
+
+<article>
+<h1>JavaScript講座</h1>
+
+<noscript>
+お使いのブラウザではJavaScriptが無効になっているようです。有効にしてください。
+</noscript>
+
+<h2>JavaScriptとは</h2>
+
+<p>次の図の上にマウスを持っていくと画像が変わります。</p>
+
+<script>
+  (new Image(450,300)).src = "photo2.jpg";
+</script>
+
+<p>
+<img src="photo1.jpg" width="450" height="300"
+     onmouseover="this.src='photo2.jpg'"
+     onmouseout="this.src='photo1.jpg'"
+     onmousedown="alert('ガオー！！')"
+     alt="Click me!" title="Click me!">
+</p>
+
+<p>また，画像をクリックすると，（たぶん）何かメッセージが現れます。</p>
+
+<p>このようなことをする仕組みが<mark>JavaScript</mark>（ジャバスクリプト）です。</p>
+
+<p>JavaScriptは今はなきNetscape社が開発した言語です。今ではほとんどすべてのWebブラウザに実装されています。<a href="http://www.ecma-international.org/">ECMA</a>によってECMAScript（エクマスクリプト）として標準化されています。ECMAScriptは日本でもJIS X 3060として標準化されています。</p>
+
+<p>JavaScriptはJavaとはまったく違うものです。「Javaスクリプト」と書くのは誤りです。JavaScriptは一つの単語です。「Java&nbsp;Script」のように二つの単語に分けて書くのは間違いです。</p>
+
+<h2>Webで使うJavaScript</h2>
+
+<ul>
+  <li><a href="intro.html">（三重大学用）授業での実習のしかた</a></li>
+  <li><a href="rollover.html">絵の切り替え</a></li>
+  <li><a href="changetext.html">文字の置き換え</a></li>
+  <li><a href="script.html">scriptタグ</a></li>
+  <li><a href="if2.html">もし……</a></li>
+  <li><a href="fold.html">折りたたみ</a></li>
+  <li><a href="changesize.html">文字サイズ変更</a></li>
+  <li><a href="clock.html">時計</a></li>
+  <li><a href="animation1.html">アニメーション1</a> /
+      <a href="animation2.html">アニメーション2</a> /
+      <a href="random.html">乱数</a></li>
+  <li><a href="graph-canvas.html">グラフを描く</a></li>
+  <li><a href="circles.html">ランダムな円</a></li>
+  <li><a href="interactive-plot.html">対話型プロット</a></li>
+  <li>入力：<a href="prompt.html">プロンプト</a> /
+      <a href="input.html">テキストボックス</a> /
+      <a href="encodeURI.html">日本語URLのエンコード</a> /
+      <!-- <a href="degoogle.html">Googleのリンクを普通のリンクにする</a> / -->
+      <a href="numeric.html">数値入力</a></li>
+  <li><a href="collatz.html">Collatzの問題</a> /
+      <a href="collatz2.html">Collatzの問題（BigInt版）</a></li>
+  <li><a href="gameoflife.html">ライフゲーム</a></li>
+  <li><a href="mathjax.html">MathJaxによる数式表示</a></li>
+  <!-- <li><a href="googlemaps.html">Google Maps</a></li> -->
+  <li><a href="mynumber.html">マイナンバーのチェックディジット計算</a></li>
+  <li><a href="contextmenu.html">右クリック禁止</a> /
+      <a href="alertloop.html">無限アラート</a>（例のやつです。アクセス注意）</li>
+  <li><a href="jisx0208check.html">JIS X 0208チェック</a></li>
+  <li><a href="mkpasswd.html">パスワード生成</a></li>
+</ul>
+
+<h2>参考サイト</h2>
+
+<ul>
+  <li><a href="https://developer.mozilla.org/ja/docs/Web/JavaScript">MDN の JavaScript</a></li>
+</ul>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-03-16 19:39:41</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

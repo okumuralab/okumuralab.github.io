@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/prompt.html">
+<meta charset="UTF-8">
+<title>プロンプト</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+  "use strict";
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>プロンプト</h1>
+
+<h2>例</h2>
+
+<p id="greet"></p>
+
+<script>
+let s = prompt('お名前は？');
+if (s != null && s != '') {
+  document.getElementById('greet').textContent = 'こんにちは，' + s + 'さん！';
+}
+</script>
+
+<p>上の例は次のように書きました。</p>
+
+<pre>
+&lt;p id="greet"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+let s = prompt('お名前は？');
+if (s != null &amp;&amp; s != '') {
+  document.getElementById('greet').textContent = 'こんにちは，' + s + 'さん！';
+}
+&lt;/script&gt;
+</pre>
+
+<p>ここで <code>textContent</code> を <code>innerHTML</code>
+にすればタグも解釈するようになります（危険です）。</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:06:47</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

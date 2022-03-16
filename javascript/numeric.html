@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/numeric.html">
+<meta charset="UTF-8">
+<title>数値の入力</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+function conv(x) {
+  document.getElementById("fahrenheit").value = 1.8 * Number(x.value) + 32;
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>数値の入力</h1>
+
+<h2>例</h2>
+
+<p><label>セ氏温度：<input id="celsius" onchange="conv(this)"></label></p>
+
+<p>カ氏温度： <input id="fahrenheit" readonly></p>
+
+<pre>
+&lt;script&gt;
+function conv(x) {
+  document.getElementById("fahrenheit").value = 1.8 * Number(x.value) + 32;
+}
+&lt;/script&gt;
+</pre>
+
+<pre>
+&lt;p&gt;セ氏温度：&lt;input id="celsius" onchange="conv(this)"&gt;&lt;/p&gt;
+
+&lt;p&gt;カ氏温度：&lt;input id="fahrenheit" readonly&gt;&lt;/p&gt;
+</pre>
+
+<h2>解説</h2>
+
+<p>数値を入力するには，いったん文字列を入力して，その中から数値を取り出すことになります。</p>
+
+<p>文字列 <code>s</code> を数値に変換するには <code>Number(s)</code> を使います。数値と解釈できない場合は，Not a Number を意味する <code>NaN</code> という値を返します。</p>
+
+<div class="note">
+<p><code>Number(s)</code> 以外に，整数に変換する <code>parseInt(s)</code>，浮動小数点の数値に変換する <code>parseFloat(s)</code> もあります。それぞれ整数の英語 integer，浮動小数点の英語 floating point に因む名前です。これらは文字列を先頭から読んでいって，数値と解釈できるところまでを解釈します。<code>parseFloat(s)</code> より <code>Number(s)</code> を使いましょう。</p>
+</div>
+
+<p>上の例ではカ氏温度欄を <code>readonly</code> にしていますが，これを外すとカ氏温度欄も入力できるようになります。カ氏温度を入力するとセ氏温度が求まるように直してみましょう。</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-02-03 13:59:50</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

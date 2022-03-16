@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/interactive-plot.html">
+<meta charset="UTF-8">
+<title>対話型プロット</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+const data = [
+  [                 "Algeria", 83, 387 ],
+  [                 "Armenia", 55, 499 ],
+  [               "Australia", 34, 496 ],
+  [                 "Bahrain", 59, 398 ],
+  [  "Bosnia and Herzegovina", 41, 456 ],
+  [                "Botswana", 78, 364 ],
+  [                "Bulgaria", 46, 464 ],
+  [          "Chinese Taipei", 37, 598 ],
+  [                "Colombia", 69, 380 ],
+  [                  "Cyprus", 44, 465 ],
+  [          "Czech Republic", 31, 504 ],
+  [                   "Egypt", 78, 391 ],
+  [             "El Salvador", 68, 340 ],
+  [                 "England", 40, 513 ],
+  [                 "Georgia", 58, 410 ],
+  [                   "Ghana", 70, 309 ],
+  [           "Hong Kong SAR", 47, 572 ],
+  [                 "Hungary", 30, 517 ],
+  [               "Indonesia", 72, 397 ],
+  [   "Iran, Islamic Rep. of", 64, 403 ],
+  [                  "Israel", 49, 463 ],
+  [                   "Italy", 38, 480 ],
+  [                   "Japan", 30, 570 ],
+  [                  "Jordan", 72, 427 ],
+  [          "Korea, Rep. of", 33, 597 ],
+  [                  "Kuwait", 57, 354 ],
+  [                 "Lebanon", 63, 449 ],
+  [               "Lithuania", 38, 506 ],
+  [                "Malaysia", 73, 474 ],
+  [                   "Malta", 42, 488 ],
+  [                  "Norway", 37, 469 ],
+  [                    "Oman", 78, 372 ],
+  [ "Palestinian Nat'l Auth.", 56, 367 ],
+  [                   "Qatar", 57, 307 ],
+  [                 "Romania", 47, 461 ],
+  [      "Russian Federation", 53, 512 ],
+  [            "Saudi Arabia", 54, 329 ],
+  [                "Scotland", 33, 487 ],
+  [                  "Serbia", 35, 486 ],
+  [               "Singapore", 60, 593 ],
+  [                "Slovenia", 25, 501 ],
+  [                  "Sweden", 39, 491 ],
+  [    "Syrian Arab Republic", 70, 395 ],
+  [                "Thailand", 57, 441 ],
+  [                 "Tunisia", 73, 420 ],
+  [                  "Turkey", 71, 432 ],
+  [                 "Ukraine", 54, 462 ],
+  [           "United States", 41, 508 ]];
+function puttext(text, x, y, size) {
+  const p = document.createElement('div');
+  p.style.position = 'absolute';
+  p.style.left = x + 'px';
+  p.style.top  = y + 'px';
+  p.style.fontSize = size;
+  document.body.appendChild(p);
+  p.appendChild(document.createTextNode(text));
+}
+let canvas = null;
+function draw() {
+  canvas = document.getElementById('MyCanvas');
+  const context = canvas.getContext('2d');
+  context.fillStyle = '#ccccff';
+  for (let i = 1; i < 350; i += 50)
+    for (let j = 1; j < 300; j += 50)
+      context.fillRect(i, j, 48, 48);
+  context.fillStyle = '#000000';
+  for (const i in data)
+    context.fillRect((data[i][1]-20)*5-2, 600-data[i][2]-2, 5, 5);
+  if (canvas.addEventListener)
+    canvas.addEventListener('mousemove', foo, false);
+  else
+    canvas.attachEvent('onmousemove', foo);
+  for (let i = 0; i < 4; i++)
+    puttext(600-100*i, canvas.offsetLeft-20, canvas.offsetTop-8+100*i, '10px');
+  for (let i = 0; i < 4; i++)
+    puttext(20+20*i, canvas.offsetLeft+44+100*i, canvas.offsetTop+300, '10px');
+}
+function foo(e) {
+  const x = e.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft) - canvas.offsetLeft;
+  const y = e.clientY + (document.body.scrollTop  || document.documentElement.scrollTop)  - canvas.offsetTop;
+  let z = '';
+  for (let i in data)
+    if (Math.abs((data[i][1]-20)*5 - x) < 4 && Math.abs(600-data[i][2] - y) < 4)
+      z += data[i][0] + ' (' + data[i][1] + ',' + data[i][2] + ') ';
+  document.getElementById('myinput').value = z;
+}
+window.onload=draw;
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>対話型プロット</h1>
+
+<canvas id="MyCanvas" width="352" height="302"></canvas>
+
+<p><input id="myinput" size="40"></p>
+
+<p>上の散布図は，いろいろな国について，数学が好きな中学2年生の割合（%）を横軸に，数学の成績を縦軸にプロットしたものです。数学が好きな生徒が多い国ほど成績が低いことがわかります。マウスを点の上に乗せると，その国の名前と座標が表示されます。日本は左上の近くにあります（探してみてください）。データの出典と，Rという統計ソフトを使ったプロットの描き方については，<a href="../stat/090517.html">こちら</a>をご覧ください。</p>
+
+<p>ここではJavaScriptとHTML 5のcanvas要素を使っています。ソースを見て仕組みを調べてください。</p>
+
+<p>こういったグラフを簡単に描くためのJavaScriptのライブラリもいくつか開発されています。</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:06:03</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

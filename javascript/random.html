@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/random.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>乱数</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+#board {
+  width: 600px;
+  height: 400px;
+}
+</style>
+<script>
+  "use strict";
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>乱数</h1>
+
+<p>JavaScriptの乱数は <code>Math.random()</code> で作ります。0以上1未満の実数になりますので，適当に変換して使います。適当な絵文字を乱数で動かしてみましょう。</p>
+
+<div id="board"></div>
+
+<script>
+let a = [], x = [], y = [], i, k, N = 20, timer;
+let board = document.getElementById("board");
+for (i = 1; i <= N; i++) {
+  x[i] = Math.floor(Math.random() * 600);
+  y[i] = Math.floor(Math.random() * 400);
+  a[i] = document.createElement("span");
+  a[i].appendChild(document.createTextNode("😃"));
+  board.appendChild(a[i]);
+  a[i].style.position = 'relative';
+  a[i].style.fontSize = '300%';
+  a[i].style.left = x[i] + 'px';
+  a[i].style.top  = y[i] + 'px';
+}
+
+timer = setInterval(move, 100);  // 100msごとにmove()を呼ぶ
+
+function move() {
+  for (i = 1; i <= N; i++) {
+    x[i] += Math.floor(Math.random() * 20 - 9.5);
+    y[i] += Math.floor(Math.random() * 20 - 9.5);
+    if (x[i] < 0) x[i] = 0;
+    if (x[i] > 600) x[i] = 600;
+    if (y[i] < 0) y[i] = 0;
+    if (y[i] > 400) y[i] = 400;
+    a[i].style.left = x[i] + 'px';
+    a[i].style.top  = y[i] + 'px';
+  }
+}
+</script>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:04:22</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/graph-canvas.html">
+<meta charset="UTF-8">
+<title>グラフを描く</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+function draw() {
+  const canvas = document.getElementById('MyCanvas');
+  const context = canvas.getContext('2d');
+  context.strokeRect(1, 1, 628, 200);
+  context.beginPath();
+  context.moveTo(1, 101);
+  context.lineTo(629, 101);
+  context.stroke();
+  context.beginPath();
+  context.lineWidth=2;
+  context.moveTo(1, 101);
+  for (let i = 4; i <= 628; i += 4) {
+    context.lineTo(i + 1, 101 - 100 * Math.sin(0.01 * i));
+  }
+  context.stroke();
+}
+</script>
+</head>
+<body onload="draw()">
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>グラフを描く</h1>
+
+<h2>例</h2>
+
+<p><span lang="en"><i>y</i> = sin <i>x</i></span> のグラフです。仕組みはソースを見てください。</p>
+
+<canvas id="MyCanvas" width="630" height="202"></canvas>
+
+<h2>canvasとは</h2>
+
+<p>canvas要素は<a href="../html5/">HTML 5</a>で描画するための新しい仕組みです。座標は左上隅が原点で，右が <span lang="en"><i>x</i></span>，下が <span lang="en"><i>y</i></span> の向きです。</p>
+
+<h2>canvasの使い方</h2>
+
+<p>このページの例は次のようにしています。</p>
+
+<pre>
+&lt;head&gt;
+...(略)...
+&lt;script&gt;
+function draw() {
+  const canvas = document.getElementById('MyCanvas');
+  const context = canvas.getContext('2d');
+  context.strokeRect(1, 1, 628, 200);
+  context.beginPath();
+  context.moveTo(1, 101);
+  context.lineTo(629, 101);
+  context.stroke();
+  context.beginPath();
+  context.lineWidth=2;
+  context.moveTo(1, 101);
+  for (let i = 4; i &lt;= 628; i += 4) {
+    context.lineTo(i + 1, 101 - 100 * Math.sin(0.01 * i));
+  }
+  context.stroke();
+}
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body onload="draw()"&gt;
+...(略)...
+&lt;canvas id="MyCanvas" width="630" height="202"&gt;&lt;/canvas&gt;
+...(略)...
+&lt;/body&gt;
+</pre>
+
+<h2>描画の方法</h2>
+
+<p><code>draw() { ... }</code> の中でcanvas要素のcontextを取得し，それに対して実際の描画を行います。</p>
+
+<pre>
+function draw() {
+  const canvas = document.getElementById('MyCanvas');
+  const context = canvas.getContext('2d');
+  // このcontextに対して描画する
+}
+</pre>
+
+<p>例えば線分と円を描くには次のようにします。</p>
+
+<pre>
+  context.beginPath();     // パスを開始
+  context.moveTo(20, 190); // ペンを紙に付けずに移動
+  context.lineTo(580, 10); // ペンを紙に付けて移動
+  context.stroke();        // パスに沿ってインクを流し込む（デフォルトでは1ピクセル幅）
+  context.beginPath();
+  context.arc(300, 100, 90, 0, Math.PI * 2, true);  // 円
+  context.strokeStyle = "#6699CC";
+  context.lineWidth=2;
+  context.stroke();
+</pre>
+
+<canvas id="MyCanvas2" width="600" height="200"></canvas>
+
+<script type="text/javascript">
+  const cvs = document.getElementById('MyCanvas2');
+  const ctx = cvs.getContext('2d');
+  ctx.beginPath();
+  ctx.moveTo(20, 190);
+  ctx.lineTo(580, 10);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(300, 100, 90, 0, Math.PI * 2, true);
+  ctx.strokeStyle = "#6699CC";
+  ctx.lineWidth=2;
+  ctx.stroke();
+</script>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:05:03</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

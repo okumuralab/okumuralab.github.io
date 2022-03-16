@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/intro.html">
+<meta charset="UTF-8">
+<title>授業での実習のしかた</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>授業での実習のしかた</h1>
+
+<p><a href="../html5/">HTML5</a>の実習で public_html というディレクトリ（フォルダ）を使いました。ここでは，このディレクトリの中に例えば js（別の名前でもかまいません）というサブディレクトリ（サブフォルダ）を作って，その中でJavaScriptの実習をしましょう。</p>
+
+<p>js というサブディレクトリを作ったら，その中にJavaScript実習で作った作品のお品書き（インデックス）のページを index.html という名前で作成します。内容は次のような感じです：</p>
+
+<pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;title&gt;JavaScript実習&lt;/title&gt;
+&lt;meta name="viewport" content="width=device-width"&gt;
+&lt;link rel="stylesheet" href="../style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;h1&gt;JavaScript実習&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="hitsuji.html"&gt;ひつじを数える&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>style.css へのリンクが <code>../style.css</code> となっていることに注意してください。<code>../</code> は「一つ上のフォルダの中」という意味です。</p>
+
+<p>この index.html は hitsuji.html へのリンクを含みます。hitsuji.html もさっそく作ってみましょう。そのほかの練習も，同様にこのお品書きページからリンクします。</p>
+
+<p>トップの index.html のどこかに <code>&lt;a href="js/"&gt;JavaScript実習&lt;/a&gt;</code> などと書き込めば，トップからJavaScriptのお品書きのページにリンクできます。</p>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-07 17:38:25</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

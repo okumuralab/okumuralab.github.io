@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/circles.html">
+<meta charset="UTF-8">
+<title>ランダムな円</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<script>
+"use strict";
+function draw() {
+  const canvas = document.getElementById('MyCanvas');
+  const context = canvas.getContext('2d');
+  for (let i = 0; i < 100; i++) {
+    const x = 300 * Math.random();
+    const y = 200 * Math.random();
+    const r = 40 * Math.random() + 10;
+    const c1 = Math.floor(256 * Math.random());
+    const c2 = Math.floor(256 * Math.random());
+    const c3 = Math.floor(256 * Math.random());
+    context.beginPath();
+    context.arc(x, y, r, 0, 2 * Math.PI);
+    context.fillStyle = "rgb(" + c1 + "," + c2 + "," + c3 + ")"
+    context.fill();
+  }
+}
+window.onload = draw;
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>ランダムな円</h1>
+
+<canvas id="MyCanvas" width="300" height="200">
+お使いのブラウザはHTML5のcanvasに対応していないようです。
+</canvas>
+
+<button type="button" onclick="draw()">再描画</button>
+
+<p>大昔，Javaという言語（JavaScriptではありません）が現れたとき，最初に作ったApplet（Webブラウザ上で動作するJavaのプログラム）が上のようなランダムな円でした。当時のパソコンは遅いので，パラパラパラと円がアニメーションのように現れました。この懐かしい例題も，今ではJavaScriptで簡単に作ることができます。今のパソコンは速いので，瞬間に描き終わってしまいます。</p>
+
+<pre>
+function draw() {
+  const canvas = document.getElementById('MyCanvas');
+  const context = canvas.getContext('2d');
+  for (let i = 0; i &lt; 100; i++) {
+    const x = 300 * Math.random();
+    const y = 200 * Math.random();
+    const r = 40 * Math.random() + 10;
+    const c1 = Math.floor(256 * Math.random());
+    const c2 = Math.floor(256 * Math.random());
+    const c3 = Math.floor(256 * Math.random());
+    context.beginPath();
+    context.arc(x, y, r, 0, 2 * Math.PI);
+    context.fillStyle = "rgb(" + c1 + "," + c2 + "," + c3 + ")"
+    context.fill();
+  }
+}
+</pre>
+
+<p>詳しくはこのページのソースをご覧ください。</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-12 11:03:17</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

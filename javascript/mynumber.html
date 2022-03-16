@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/mynumber.html">
+<meta charset="UTF-8">
+<title>マイナンバーのチェックディジット計算</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>マイナンバーのチェックディジット計算</h1>
+
+<p><em>[2018-08-07 おことわり]</em> JavaScriptで書かれたマイナンバーのチェックディジット計算プログラムを公開していましたが，<a href="https://www.ppc.go.jp">個人情報保護委員会</a>様から，入力されたものがネットに流れないことはソースで確認したが，マイナンバー収集を誤認するようなページは好ましくないのではないかというご意見をいただきました。確かにもっともなことですので，ソースコードを示すだけにとどめることにしました。このソースを打ち込めば確認できますので，ご自分でお試しください。</p>
+
+<pre>
+&lt;p&gt;&lt;label&gt;マイナンバーの先頭11桁：&lt;input id="input" size="13" onchange="check()"&gt;&lt;/label&gt;&lt;/p&gt;
+
+&lt;p&gt;マイナンバーの最後の桁（チェックディジット）：&lt;input id="output" size="5" readonly&gt;&lt;/p&gt;
+
+&lt;script&gt;
+function check() {
+  let r = "Error";
+  const x = document.getElementById("input").value;
+  if (x.length == 11) {
+    let s = 0;
+    for (let n = 1; n &lt;= 11; n++) {
+      let p = x[11-n];
+      let q = (n &lt;= 6) ? n+1 : n-5;
+      s += p * q;
+    }
+    s %= 11;
+    r = (s &lt;= 1) ? 0 : 11 - s;
+  }
+  document.getElementById("output").value = r;
+}
+&lt;/script&gt;
+</pre>
+
+<p>参考：<a href="http://www.soumu.go.jp/main_content/000327387.pdf">総務省令第八十五号</a>第五条</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-12 15:29:16</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

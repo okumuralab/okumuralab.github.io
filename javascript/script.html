@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/script.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scriptタグ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+  "use strict";
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>scriptタグ</h1>
+
+<h2>例</h2>
+
+<p>眠れない夜は羊を数えてみましょう。</p>
+
+<blockquote>
+  <p id="out1"></p>
+</blockquote>
+
+<script>
+  let s1 = "";
+  for (let i = 1; i <= 100; i++) {
+    s1 += "羊が" + i + "匹，";
+  }
+  s1 += "ぐぅ";
+  document.getElementById("out1").textContent = s1;
+</script>
+
+<pre>
+&lt;p id="out1"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  let s1 = "";
+  for (let i = 1; i &lt;= 100; i++) {
+    s1 += "羊が" + i + "匹，";
+  }
+  s1 += "ぐぅ";
+  document.getElementById("out1").textContent = s1;
+&lt;/script&gt;
+</pre>
+
+<p><code>textContent</code> ではプレインテキストしか出力できません。HTMLを出力するには <code>innerHTML</code> を使います。</p>
+
+<blockquote>
+  <p id="out2"></p>
+</blockquote>
+
+<script>
+  let s2 = "";
+  for (let i = 1; i <= 100; i++) {
+    s2 +=  "羊が" + i + "匹<br>";
+  }
+  s2 += "ぐぅ";
+  document.getElementById("out2").innerHTML = s2;
+</script>
+
+<pre>
+&lt;p id="out2"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  let s2 = "";
+  for (let i = 1; i &lt;= 100; i++) {
+    s2 +=  "羊が" + i + "匹&lt;br&gt;";
+  }
+  s2 += "ぐぅ";
+  document.getElementById("out2").innerHTML = s2;
+&lt;/script&gt;
+</pre>
+
+<h2>細かなこと</h2>
+
+<p>昔は次のように <code>document.write()</code> を使っていましたが，今は非推奨です。</p>
+
+<pre>
+&lt;p&gt;
+&lt;script&gt;
+  for (let i = 1; i &lt;= 100; i++) {
+    document.write("羊が" + i + "匹，");
+  }
+  document.write("ぐぅ");
+&lt;/script&gt;
+&lt;/p&gt;
+</pre>
+
+<p><code>&lt;script&gt;</code> の代わりに</p>
+
+<pre>
+&lt;script type="text/javascript"&gt;
+</pre>
+
+<p>と書いてもかまいません。今のHTMLでは <code>type="text/javascript"</code> は省略できます。なお，昔は</p>
+
+<pre>
+&lt;script language="javascript"&gt;
+</pre>
+
+<p>と書きました。</p>
+
+<p>JavaScriptの機能を切っているブラウザのためのメッセージを <code>noscript</code>
+というタグで表示することができます。</p>
+
+<pre>
+&lt;p id="out1"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  let s1 = "";
+  for (let i = 1; i &lt;= 100; i++) {
+    s1 += "羊が" + i + "匹，";
+  }
+  s1 += "ぐぅ";
+  document.getElementById("out1").textContent = s1;
+&lt;/script&gt;
+
+&lt;noscript&gt;
+  &lt;p&gt;あなたのブラウザはJavaScriptをサポートしていません。&lt;/p&gt;
+&lt;/noscript&gt;
+</pre>
+
+<p>昔は変数を宣言するのに <code>var</code> を使いましたが，今は <code>let</code> を使う書き方が推奨されています。両者は「スコープ」（変数の存在範囲）が違います。<code>var</code> で宣言した変数は全体（関数の中なら関数全体）がスコープになりますが，<code>let</code> ではブロック（<code>{ ... }</code> で囲まれた範囲）がスコープになります（ブロックがなければ <code>let</code> 以降全体）。<code>let</code> では，例えば</p>
+
+<pre>
+  let s1 = "";
+  s1 += "羊が" + i + "匹，";  // エラー！
+  for (let i = 1; i &lt;= 10; i++) {
+    s1 += "羊が" + i + "匹，";
+  }
+  s1 += "羊が" + i + "匹，";  // エラー！
+  document.getElementById("out1").textContent = s1;
+</pre>
+
+<p>は2箇所でエラーになりますが，<code>var</code> では</p>
+
+<pre>
+  let s1 = "";
+  s1 += "羊が" + i + "匹，";  // 「羊がundefined匹」と表示される
+  for (var i = 1; i &lt;= 10; i++) {
+    s1 += "羊が" + i + "匹，";
+  }
+  s1 += "羊が" + i + "匹，";  // 「羊が11匹」と表示される
+  document.getElementById("out1").textContent = s1;
+</pre>
+
+<p>のように，<code>for</code> ループの前後でも <code>i</code> が使えてしまいます（ただし最初は何も入っていないので undefined となる）。</p>
+
+<p><code>let</code> に似たブロックスコープのもので <code>const</code> というものもあります。こちらはconstant（定数）を宣言するのに使います。値を変えようとするとエラーになります。</p>
+
+<p>ただ，過去のしがらみで，<code>var</code> も <code>let</code> も <code>const</code> も使わないで変数を使ってしまうこともできてしまいます。これを避けるためには，コードの先頭に <code>"use strict";</code> と書いておきます。こうすることによって「strict モード」になり，エラーチェックを厳密にしてくれます。</p>
+
+<pre>
+  "use strict";
+  s1 = "";      // エラー！
+</pre>
+
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 18:57:11</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/alertloop.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>無限アラート</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+function alertloop() {
+    while (true) alert("無限アラート！（タブを閉じれば止まります）")
+}
+window.onload = function() {
+    setTimeout(alertloop, 1000);
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<h1>無限アラート</h1>
+
+<p>[2019-03-05] 作成。</p>
+
+<p>[2019-03-07] 1秒後にアラートが出るように手直ししました。</p>
+
+<p>このページの頭には次のように書いてあります：</p>
+
+<pre>
+&lt;script&gt;
+function alertloop() {
+    while (true) alert("無限アラート！（タブを閉じれば止まります）")
+}
+window.onload = function() {
+    setTimeout(alertloop, 1000);
+}
+&lt;/script&gt;
+</pre>
+
+<p><code>while (true)</code> は <code>while (1)</code> でも <code>for ( ; ; )</code> でも同じで，無限ループを作る構文です。いずれにしても，単にタブ（またはウィンドウ）を閉じるだけで止まります。iPhoneのSafariなら左下の「＜」（戻る）または右下の2重の□を押してから「×」で止まります。iPhoneのTwitter公式アプリのブラウザなら左上の「完了」で止まります。</p>
+
+<div class="note">
+<p>Internet Explorer ではタブが閉じられないというご指摘をいただきました。その際は Ctrl + Alt + Delete でタスクマネージャーを出してプロセス「iexplore.exe」を終了してください。というか，今さらIEなんか使うな！とMicrosoftも言っています（<a href="https://techcommunity.microsoft.com/t5/Windows-IT-Pro-Blog/The-perils-of-using-Internet-Explorer-as-your-default-browser/ba-p/331732">The perils of using Internet Explorer as your default browser</a>）。</p>
+</div>
+
+<p>これはいわゆる「ブラクラ」（ブラウザクラッシャー）ではありません。有名なブラクラとして，上の <code>alert("...")</code> を <code>window.open()</code> で置き換えて窓を無限に生成するものがあります。もっとも，現代のブラウザはこんなもので操作不能にならないはずです。試してみたいかたは<a href="browsercrasher.html">ここ</a>をクリックしてみてください。</p>
+
+<p>同趣向のページ：<a href="https://github.com/hamukazu/lets-get-arrested">Lets-get-arrested project</a></p>
+
+<p>参考： <a href="https://piyolog.hatenadiary.jp/entry/2019/03/05/060955">for文無限ループURL投稿で補導された件についてまとめてみた</a></p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:11:47</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

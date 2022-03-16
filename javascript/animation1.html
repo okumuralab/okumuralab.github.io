@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/animation1.html">
+<meta charset="UTF-8">
+<title>アニメーション1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+#duke {
+  position: relative;
+  left: 0px;
+}
+</style>
+<script>
+"use strict";
+let duke, x, timer;
+function move() {
+  x += 10;
+  duke.style.left = x + 'px';
+  if (x > 500) clearInterval(timer);
+}
+window.onload = function() {
+  x = 0;
+  duke = document.getElementById('duke');
+  timer = setInterval(move, 100);  // 100msごとにmove()を呼ぶ
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>アニメーション1</h1>
+
+<img id="duke" src="duke.gif" alt="Duke">
+
+<p>Duke（Javaのマスコット）を動かしてみましょう。</p>
+
+<pre>
+&lt;style&gt;
+#duke {
+  position: relative;
+  left: 0px;
+}
+&lt;/style&gt;
+</pre>
+
+<pre>
+&lt;script&gt;
+let duke, x, timer;
+function move() {
+  x += 10;
+  duke.style.left = x + 'px';
+  if (x &gt; 500) clearInterval(timer);
+}
+window.onload = function() {
+  x = 0;
+  duke = document.getElementById('duke');
+  timer = setInterval(move, 100);  // 100msごとにmove()を呼ぶ
+}
+&lt;/script&gt;
+</pre>
+
+<pre>
+&lt;img id="duke" src="duke.gif" alt="Duke"&gt;
+</pre>
+
+<p>必要なCSSは次のものです：</p>
+
+<ul>
+  <li><code>position: relative;</code> 相対座標</li>
+  <li><code>position: absolute;</code> 絶対座標</li>
+  <li><code>left: 距離;</code> 左からの距離</li>
+  <li><code>right: 距離;</code> 右からの距離</li>
+  <li><code>top: 距離;</code> 上からの距離</li>
+  <li><code>bottom: 距離;</code> 下からの距離</li>
+</ul>
+
+<p>必要なJavaScriptの関数は次のものです：</p>
+
+<ul>
+  <li><code>setInterval(関数, 時間間隔);</code> 時間間隔（単位：ミリ秒）ごとに関数を実行</li>
+</ul>
+
+<p>解除する必要があるときは次のように <code>setInterval()</code>
+の戻り値を保存しておきます。</p>
+
+<ul>
+  <li><code>timer = setInterval(関数, 時間間隔);</code> 時間間隔（単位：ミリ秒）ごとに関数を実行</li>
+  <li><code>clearInterval(timer);</code> 上の設定を解除</li>
+</ul>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-12 10:53:45</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

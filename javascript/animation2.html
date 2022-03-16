@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/animation2.html">
+<meta charset="UTF-8">
+<title>アニメーション2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+#duke {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+</style>
+<script>
+"use strict";
+let duke, x, y, dx, dy, timer;
+function move() {
+  if (x < 0 || x > innerWidth - 10 - 83) dx = -dx;
+  if (y < 0 || y > innerHeight - 10 - 100) dy = -dy;
+  x += dx;  y += dy;
+  duke.style.left = x + 'px';
+  duke.style.top = y + 'px';
+}
+window.onload = function() {
+  x = 0;  y = 0;  dx = 10;  dy = 10;
+  duke = document.getElementById('duke');
+  timer = setInterval(move, 100);  // 100msごとにmove()を呼ぶ
+  document.getElementById("size").textContent = innerWidth + '×' + innerHeight;
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>アニメーション2</h1>
+
+<p><img id="duke" src="duke.gif" alt="Duke"></p>
+
+<p>この画面のサイズは<span id="size"></span>です。この中を83×100のDuke君が飛び回っています。</p>
+
+<p>仕組みはソースをご覧ください。</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-12 10:57:13</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

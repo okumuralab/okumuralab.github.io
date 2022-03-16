@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/encodeURI.html">
+<meta charset="UTF-8">
+<title>非ASCII文字を含むURLのエンコード</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+"use strict";
+function foo() {
+  let x, t, u, v;
+  x = document.getElementById("input").value;
+  x = decodeURI(x);  // 念のため
+  t = encodeURI(x);
+  t = t.replace(/\(/g, "%28");
+  t = t.replace(/\)/g, "%29");
+  t = t.replace(/'/g, "%27");
+  t = t.replace(/@/g, "%40");
+  t = t.replace(/\.$/, "%2E");  // 最後のピリオド
+  u = document.getElementById("output");
+  u.value = t;
+  navigator.clipboard.writeText(t);
+  if (t.match(/^https?:\/\//)) {
+    v = document.getElementById("link");
+    v.href = t;
+    v.innerText = t;
+  }
+}
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>非ASCII文字を含むURLのエンコード</h1>
+
+<p><label>入力：<input id="input" size="80" onchange="foo()"></label></p>
+
+<p>出力：<input id="output" size="80">（クリップボードにコピーされます）</p>
+
+<p>テスト用リンク：<br><a id="link" href="" target="_blank" rel="nofollow"></a><br>（別窓または別タブを開きます）</p>
+
+<p>入力した内容は（テスト用リンクをクリックしない限り）外部には一切送られません。</p>
+
+<hr>
+
+<p>非ASCII文字（日本語の全角文字など）を含むURLをツイッターやメールに書き込むと，リンクが切れることがあります。これを防ぐために短縮URLサービスを使う人もおられるかもしれません。しかし，短縮URLは見ただけではどこに飛ぶかわからないので，セキュリティの観点からは好ましくありません。このページは，URLをツイッターやメールに貼り付けても切れない形に変換します。</p>
+
+<p>半角括弧 <code>( )</code> や最後の <code>.</code> もURLが切れるとのことですので，これもエンコードの対象に含めました。</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-01-10 19:08:49</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
