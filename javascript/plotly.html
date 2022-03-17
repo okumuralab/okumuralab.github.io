@@ -43,11 +43,124 @@ window.addEventListener('DOMContentLoaded', function() {
 
 <h1>Plotly</h1>
 
-<p><a href="https://plotly.com/graphing-libraries/">Plotly</a> はJavaScriptの対話型視覚化ライブラリです。</p>
+<h2>簡単な例</h2>
 
-<p><a href="../python/220217.html">平均身長の推移</a>のデータをPlotlyで描いてみます。サイズは800×600ピクセルに指定しましたが，無指定では幅いっぱいになります。。</p>
+<p><a href="https://plotly.com/graphing-libraries/">Plotly</a>はJavaScriptの対話型視覚化ライブラリです。</p>
+
+<p>Plotlyを使うには，<code>&lt;head&gt;</code> ... <code>&lt;/head&gt;</code> の中に</p>
+
+<pre>
+&lt;script src="https://cdn.plot.ly/plotly-2.9.0.min.js"&gt;&lt;/script&gt;
+</pre>
+
+<p>と書き込んでおきます（あるいは上記ファイルをダウンロードして自サイトに設置し，それを上と同様に読み込みます）。</p>
+
+<p>そして，グラフを入れたいところに，例えば次のような空の div を作ります。</p>
+
+<pre>
+&lt;div id="out"&gt;&lt;/div&gt;
+</pre>
+
+<p>その下の適当なところに，グラフを描くスクリプトを例えば次のように入れます。</p>
+
+<pre>
+&lt;script&gt;
+  Plotly.newPlot("out", [{
+    x: [1, 2, 3, 4, 5],
+    y: [1, 2, 4, 8, 16]
+  }]);
+&lt;/script&gt;
+</pre>
+
+<p>すると，次のようになります。</p>
+
+<div id="out"></div>
+
+<script>
+  Plotly.newPlot("out", [{
+      x: [1, 2, 3, 4, 5],
+      y: [1, 2, 4, 8, 16]
+  }]);
+</script>
+
+<p>マウスで範囲指定すると，その部分が拡大されます。軸ラベルの上でドラッグすると，グラフが平行移動します。グラフの上でダブルクリックすると，最初の状態に戻ります。グラフの上にマウスを乗せると，グラフの右上にコントロール（ボタン類）が現れます。この🏠ボタンをクリックすると，最初の状態に戻ります。</p>
+
+<p>グラフの種類などはオプションで指定できます。グラフの幅はブラウザの幅になります。幅と高さを設定するには，例えば次のようにします。</p>
+
+<pre>
+&lt;div id="out" style="width:640px;height:480px"&gt;&lt;/div&gt;
+</pre>
+
+<p>データの欠測値は <code>null</code> または <code>NaN</code> で表します。</p>
+
+<h2>データファイルを読んでグラフを描く</h2>
+
+<p>データは，上の例ではHTMLファイルに直接書き込みましたが，JSONやCSVなどの形式で別にしておくほうが楽です。例えば上の例で，データを</p>
+
+<pre>
+[{
+  x: [1, 2, 3, 4, 5],
+  y: [1, 2, 4, 8, 16]
+}]
+</pre>
+
+<p>のようなJSONファイルにしておけば，JavaScript部分は</p>
+
+<pre>
+fetch('test.json')
+  .then(response =&gt; response.json())
+  .then(data =&gt; {
+    Plotly.newPlot("out", data);
+  });
+</pre>
+
+<p>のようにできます。</p>
+
+<div class="note">
+  <p>データは同じサーバに置いておきます。JavaScriptのセキュリティ制約のため，別のサーバに置いたデータを読むことはできません。別のサイトでも活用してほしいオープンデータを提供するサイトは，この制約をなくすため，httpd.conf の <code>&lt;Directory /&gt;</code> と <code>&lt;/Directory&gt;</code> の中などに <code>Header set Access-Control-Allow-Origin '*'</code> と書いておきます。</p>
+</div>
+
+<p>CSVファイルはJavaScriptでパースして配列にする必要があります。</p>
+
+<p><a href="../python/">Python</a>のところで，<a href="../python/220217.html">平均身長の推移</a>を<a href="../python/plotly.html">PythonのPlotly</a>で描きました。同じデータをJavaScriptだけで描いてみましょう。</p>
+
+<p>このデータは <a href="../python/data/height.csv">height.csv</a> というCSVファイルに収められています。欠測値は空文字列で表しています。これを読んでグラフにするために，このファイルのheadの中には，次のように書き込んであります：</p>
+
+<pre>
+&lt;script&gt;
+function plot(data) {
+  let year = [], m15 = [], m16 = [], m17 = [];
+  for (const row of data.split("\n")) {
+    const r = row.split(',');
+    if (r.length == 27) {
+      year.push(r[0]);
+      m15.push(r[11]);
+      m16.push(r[12]);
+      m17.push(r[13]);
+    }
+  }
+  Plotly.newPlot("out1", [
+    {"name":"男17歳", "x":year, "y":m17, "type":"scatter", "mode":"lines+markers"},
+    {"name":"男16歳", "x":year, "y":m16, "type":"scatter", "mode":"lines+markers"},
+    {"name":"男15歳", "x":year, "y":m15, "type":"scatter", "mode":"lines+markers"}
+  ], {"xaxis":{"title":{"text":"年度"}}, "yaxis":{"title":{"text":"身長"}}});
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  fetch('../python/data/height.csv')
+    .then(response =&gt; response.text())
+    .then(data =&gt; plot(data));
+});
+&lt;/script&gt;
+</pre>
+
+<p>下の <code>&lt;div id="out1" style="width:800px;height:600px"&gt;&lt;/div&gt;</code> の中に出力されます：</p>
 
 <div id="out1" style="width:800px;height:600px"></div>
+
+<div class="note">
+  <p>CSVの仕様はけっこう難しく，JavaScriptにもCSVをパースするライブラリがいくつもあるのですが，ここでは単に改行とコンマで切り分け，中身を文字列としてそのままpushしています。この部分で数値に変換することもできますが，<code>Number()</code> で変換すると，空文字列が 0 に変換されてしまいます。<code>parseFloat()</code> なら NaN になり，Plotlyで欠測値と解釈されます。</p>
+</div>
 
 <hr>
 
@@ -55,7 +168,7 @@ window.addEventListener('DOMContentLoaded', function() {
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-03-17 09:23:13</time>
+Last modified: <time>2022-03-17 13:11:09</time>
 <!-- hhmts end -->
 </p>
 </footer>

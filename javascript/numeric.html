@@ -48,10 +48,10 @@ function conv(x) {
 
 <p>数値を入力するには，いったん文字列を入力して，その中から数値を取り出すことになります。</p>
 
-<p>文字列 <code>s</code> を数値に変換するには <code>Number(s)</code> を使います。数値と解釈できない場合は，Not a Number を意味する <code>NaN</code> という値を返します。</p>
+<p>文字列 <code>s</code> を数値に変換するには <code>Number(s)</code> を使います。数値と解釈できない場合は，Not a Number を意味する NaN という特別な値を返します。ただし，<code>Number("")</code> は 0 と解釈されますので，注意を要します。</p>
 
 <div class="note">
-<p><code>Number(s)</code> 以外に，整数に変換する <code>parseInt(s)</code>，浮動小数点の数値に変換する <code>parseFloat(s)</code> もあります。それぞれ整数の英語 integer，浮動小数点の英語 floating point に因む名前です。これらは文字列を先頭から読んでいって，数値と解釈できるところまでを解釈します。<code>parseFloat(s)</code> より <code>Number(s)</code> を使いましょう。</p>
+<p><code>Number(s)</code> 以外に，整数に変換する <code>parseInt(s)</code>，浮動小数点の数値に変換する <code>parseFloat(s)</code> もあります。それぞれ整数の英語 integer，浮動小数点の英語 floating point に因む名前です。これらは文字列を先頭から読んでいって，数値と解釈できるところまでを解釈します。<code>Number("")</code> は 0 になりますが，<code>parseFloat("")</code> は NaN になります。</p>
 </div>
 
 <p>上の例ではカ氏温度欄を <code>readonly</code> にしていますが，これを外すとカ氏温度欄も入力できるようになります。カ氏温度を入力するとセ氏温度が求まるように直してみましょう。</p>
@@ -63,7 +63,7 @@ function conv(x) {
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-03 13:59:50</time>
+Last modified: <time>2022-03-17 12:15:48</time>
 <!-- hhmts end -->
 </p>
 </footer>
