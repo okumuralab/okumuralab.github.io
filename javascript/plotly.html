@@ -21,10 +21,10 @@ function plot(data) {
     }
   }
   Plotly.newPlot("out1", [
-    {"name":"男17歳", "x":year, "y":m17, "type":"scatter", "mode":"lines+markers"},
-    {"name":"男16歳", "x":year, "y":m16, "type":"scatter", "mode":"lines+markers"},
-    {"name":"男15歳", "x":year, "y":m15, "type":"scatter", "mode":"lines+markers"}
-  ], {"xaxis":{"title":{"text":"年度"}}, "yaxis":{"title":{"text":"身長"}}});
+    {name:"男17歳", x:year, y:m17, type:"scatter", mode:"lines+markers"},
+    {name:"男16歳", x:year, y:m16, type:"scatter", mode:"lines+markers"},
+    {name:"男15歳", x:year, y:m15, type:"scatter", mode:"lines+markers"}
+  ], {xaxis:{title:{text:"年度"}}, yaxis:{title:{text:"身長"}}});
 }
 
 window.addEventListener('DOMContentLoaded', function() {
@@ -99,8 +99,8 @@ window.addEventListener('DOMContentLoaded', function() {
 
 <pre>
 [{
-  x: [1, 2, 3, 4, 5],
-  y: [1, 2, 4, 8, 16]
+  "x": [1, 2, 3, 4, 5],
+  "y": [1, 2, 4, 8, 16]
 }]
 </pre>
 
