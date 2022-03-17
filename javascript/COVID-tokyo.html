@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/COVID-tokyo.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>東京の新型コロナ感染者数の推移（Plotly棒グラフ）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="/js/plotly-2.9.0.min.js"></script>
+<script src="/js/plotly-locale-ja-latest.js"></script>
+<script>
+function plot(data) {
+  let date = [], confirmed = [];
+  for (const row of data.split("\n")) {
+    const r = row.split(',');
+    if (r.length == 2) {
+      date.push(r[0]);
+      confirmed.push(r[1]);
+    }
+  }
+  Plotly.newPlot("out", [
+    {x:date, y:confirmed, type:"bar", width:86400000}
+  ], {}, {locale:"ja"});
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  fetch('../python/data/COVID-tokyo.csv')
+    .then(response => response.text())
+    .then(data => plot(data));
+});
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<h1>東京の新型コロナ感染者数の推移（Plotly棒グラフ）</h1>
+
+<div id="out"></div>
+
+<p>このHTMLファイルのheadの中には次のように書き込んであります：</p>
+
+<pre>
+&lt;script src="https://cdn.plot.ly/plotly-2.9.0.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://cdn.plot.ly/plotly-locale-ja-latest.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+function plot(data) {
+  let date = [], confirmed = [];
+  for (const row of data.split("\n")) {
+    const r = row.split(',');
+    if (r.length == 2) {
+      date.push(r[0]);
+      confirmed.push(r[1]);
+    }
+  }
+  Plotly.newPlot("out", [
+    {x:date, y:confirmed, type:"bar", width:86400000}
+  ], {}, {locale:"ja"});
+}
+window.addEventListener('DOMContentLoaded', function() {
+  fetch('../python/data/COVID-tokyo.csv')
+    .then(response =&gt; response.text())
+    .then(data =&gt; plot(data));
+});
+&lt;/script&gt;
+</pre>
+
+<p>グラフを出力する部分には次のように書いてあります：</p>
+
+<pre>
+&lt;div id="out"&gt;&lt;/div&gt;
+</pre>
+
+<p>月の名前が Jan, Feb, ... ではなく1月，2月，…と日本語化されています。こうするために，<code>plotly-locale-ja-latest.js</code> を読み込み，<code>Plotly.newPlot()</code> の第4引数に <code>{locale:"ja"}</code> を指定しています。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-03-17 21:15</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
