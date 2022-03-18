@@ -19,7 +19,7 @@
 
 <p>Webスクレイピングの基本は，標準ライブラリ <a href="https://docs.python.org/3/library/urllib.request.html">urllib.request</a> または <a href="https://requests.readthedocs.io">Requests</a>（<code>pip install requests</code> でインストール）と，正規表現 <a href="https://docs.python.org/3/library/re.html">re</a> とである。より高レベルのライブラリとして <a href="https://www.crummy.com/software/BeautifulSoup/">Beautiful Soup</a>（<code>pip install beautifulsoup4</code> でインストール）がある。詳しくは<a href="https://vaaaaaanquish.hatenablog.com/entry/2017/06/25/202924">PythonでWebスクレイピングする時の知見をまとめておく</a>が参考になる。</p>
 
-<p>例えば，このサイトにどれだけリンクがあるかを調べてみよう。まず urllib.request による方法：</p>
+<p>例えば，このサイトにどれだけリンクがあるかを調べてみよう。まず，古い urllib.request による方法：</p>
 
 <pre>
 <code>import urllib.request

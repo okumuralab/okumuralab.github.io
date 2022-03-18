@@ -25,7 +25,7 @@ function plot(data) {
 }
 
 window.addEventListener('DOMContentLoaded', function() {
-  fetch('../python/data/COVID-tokyo.csv')
+  fetch('https://okumuralab.org/~okumura/python/data/COVID-tokyo.csv')
     .then(response => response.text())
     .then(data => plot(data));
 });
@@ -40,9 +40,11 @@ window.addEventListener('DOMContentLoaded', function() {
 
 <h1>東京の新型コロナ感染者数の推移（Plotly棒グラフ）</h1>
 
+<p>東京都の情報は毎日16:45に<a href="https://www.fukushihoken.metro.tokyo.lg.jp">東京都福祉保健局</a>からPDFで発表されます。これをスクレープして <a href="../python/data/COVID-tokyo.csv">COVID-tokyo.csv</a> を作成しています。それをPlotlyで棒グラフにしたものです：</p>
+
 <div id="out"></div>
 
-<p>このHTMLファイルのheadの中には次のように書き込んであります：</p>
+<p>このHTMLファイルのheadの中には（だいたい）次のように書き込んであります：</p>
 
 <pre>
 &lt;script src="https://cdn.plot.ly/plotly-2.9.0.min.js"&gt;&lt;/script&gt;
@@ -62,7 +64,7 @@ function plot(data) {
   ], {}, {locale:"ja"});
 }
 window.addEventListener('DOMContentLoaded', function() {
-  fetch('../python/data/COVID-tokyo.csv')
+  fetch('https://okumuralab.org/~okumura/python/data/COVID-tokyo.csv')
     .then(response =&gt; response.text())
     .then(data =&gt; plot(data));
 });
@@ -74,6 +76,8 @@ window.addEventListener('DOMContentLoaded', function() {
 <pre>
 &lt;div id="out"&gt;&lt;/div&gt;
 </pre>
+
+<p><code>type:"bar"</code> で棒グラフを指定しています。<code>width:86400000</code> でミリ秒単位の1日を棒の幅に設定し，棒どうしの隙間をなくしています（ヒストグラムのようにしています）。</p>
 
 <p>月の名前が Jan, Feb, ... ではなく1月，2月，…と日本語化されています。こうするために，<code>plotly-locale-ja-latest.js</code> を読み込み，<code>Plotly.newPlot()</code> の第4引数に <code>{locale:"ja"}</code> を指定しています。</p>
 
