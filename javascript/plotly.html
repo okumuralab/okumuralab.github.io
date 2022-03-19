@@ -25,7 +25,9 @@ function plot(data) {
     {name: "男16歳", x: year, y: m16, type: "scatter", mode: "lines+markers"},
     {name: "男15歳", x: year, y: m15, type: "scatter", mode: "lines+markers"}
   ],
-		 {xaxis: {title: {text: "年度"}}, yaxis: {title: {text: "身長"}}},
+		 {xaxis: {title: {text: "年度"}},
+		  yaxis: {title: {text: "身長"}},
+		  legend: {x: 0.8, y: 0}},
 		 {responsive: true});
 }
 
@@ -95,6 +97,21 @@ window.addEventListener('DOMContentLoaded', function() {
 
 <p>データの欠測値は <code>null</code> または <code>NaN</code> で表します。</p>
 
+<p>背景を灰色，グリッドを白にし，ゼロ線を特別扱いしない設定：</p>
+
+<pre>
+&lt;script&gt;
+  Plotly.newPlot("out", [{
+    x: [1, 2, 3, 4, 5],
+    y: [1, 2, 4, 8, 16]
+  }], {
+    plot_bgcolor: "#DDD",
+    xaxis: {gridcolor: "white", zeroline: false},
+    yaxis: {gridcolor: "white", zeroline: false}
+  }, {responsive: true});
+&lt;/script&gt;
+</pre>
+
 <h2>データファイルを読んでグラフを描く</h2>
 
 <p>データは，上の例ではHTMLファイルに直接書き込みましたが，JSONやCSVなどの形式で別にしておくほうが楽です。例えば上の例で，データを</p>
@@ -146,7 +163,9 @@ function plot(data) {
     {name: "男16歳", x: year, y: m16, type: "scatter", mode: "lines+markers"},
     {name: "男15歳", x: year, y: m15, type: "scatter", mode: "lines+markers"}
   ],
-		 {xaxis: {title: {text: "年度"}}, yaxis: {title: {text: "身長"}}},
+		 {xaxis: {title: {text: "年度"}},
+		  yaxis: {title: {text: "身長"}},
+		  legend: {x: 0.8, y: 0}},
 		 {responsive: true});
 }
 
@@ -169,6 +188,6 @@ window.addEventListener('DOMContentLoaded', function() {
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-03-19 17:19:25 JST</time></p>
+<p>Last modified: <time>2022-03-19 22:33:26 JST</time></p>
 </body>
 </html>

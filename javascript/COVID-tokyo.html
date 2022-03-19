@@ -81,11 +81,36 @@ window.addEventListener('DOMContentLoaded', function() {
 
 <p>月の名前が Jan, Feb, ... ではなく1月，2月，…と日本語化されています。こうするために，<code>plotly-locale-ja-latest.js</code> を読み込み，<code>Plotly.newPlot()</code> の第4引数に <code>{locale: "ja"}</code> を指定しています。</p>
 
+<p>土日だけ色を変えたい場合は，積み重ね棒グラフ（<code>{barmode: 'stack'}</code>）にするのが簡単です。</p>
+
+<pre>
+function plot(data) {
+  let date = [], wday = [], wend = [];
+  for (const row of data.split("\n")) {
+    const r = row.split(',');
+    if (r.length == 2) {
+      date.push(r[0]);
+      d = (new Date(r[0])).getDay();
+      if (d == 0 || d == 6) {
+        wday.push(0);  wend.push(r[1]);
+      } else {
+        wday.push(r[1]);  wend.push(0);
+      }
+    }
+  }
+  Plotly.newPlot("out", [
+    {name: "平日", x: date, y: wday, type: "bar"},
+    {name: "土日", x: date, y: wend, type: "bar"}
+  ], {barmode: 'stack', legend: {x: 0, y: 1}}},
+                 {responsive: true, locale: "ja"});
+}
+</pre>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-03-19 16:16:30 JST</time></p>
+<p>Last modified: <time>2022-03-19 20:37:23 JST</time></p>
 </footer>
 </body>
 </html>
