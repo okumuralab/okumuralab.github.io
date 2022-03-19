@@ -20,8 +20,8 @@ function plot(data) {
     }
   }
   Plotly.newPlot("out", [
-    {x:date, y:confirmed, type:"bar", width:86400000}
-  ], {}, {locale:"ja"});
+    {x: date, y: confirmed, type: "bar", width: 86400000}
+  ], {}, {responsive: true, locale: "ja"});
 }
 
 window.addEventListener('DOMContentLoaded', function() {
@@ -60,8 +60,8 @@ function plot(data) {
     }
   }
   Plotly.newPlot("out", [
-    {x:date, y:confirmed, type:"bar", width:86400000}
-  ], {}, {locale:"ja"});
+    {x: date, y: confirmed, type: "bar", width: 86400000}
+  ], {}, {responsive: true, locale: "ja"});
 }
 window.addEventListener('DOMContentLoaded', function() {
   fetch('https://okumuralab.org/~okumura/python/data/COVID-tokyo.csv')
@@ -79,17 +79,13 @@ window.addEventListener('DOMContentLoaded', function() {
 
 <p><code>type:"bar"</code> で棒グラフを指定しています。<code>width:86400000</code> でミリ秒単位の1日を棒の幅に設定し，棒どうしの隙間をなくしています（ヒストグラムのようにしています）。</p>
 
-<p>月の名前が Jan, Feb, ... ではなく1月，2月，…と日本語化されています。こうするために，<code>plotly-locale-ja-latest.js</code> を読み込み，<code>Plotly.newPlot()</code> の第4引数に <code>{locale:"ja"}</code> を指定しています。</p>
+<p>月の名前が Jan, Feb, ... ではなく1月，2月，…と日本語化されています。こうするために，<code>plotly-locale-ja-latest.js</code> を読み込み，<code>Plotly.newPlot()</code> の第4引数に <code>{locale: "ja"}</code> を指定しています。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-03-17 21:15</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-03-19 16:16:30 JST</time></p>
 </footer>
 </body>
 </html>

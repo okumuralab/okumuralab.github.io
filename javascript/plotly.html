@@ -21,10 +21,12 @@ function plot(data) {
     }
   }
   Plotly.newPlot("out1", [
-    {name:"男17歳", x:year, y:m17, type:"scatter", mode:"lines+markers"},
-    {name:"男16歳", x:year, y:m16, type:"scatter", mode:"lines+markers"},
-    {name:"男15歳", x:year, y:m15, type:"scatter", mode:"lines+markers"}
-  ], {xaxis:{title:{text:"年度"}}, yaxis:{title:{text:"身長"}}});
+    {name: "男17歳", x: year, y: m17, type: "scatter", mode: "lines+markers"},
+    {name: "男16歳", x: year, y: m16, type: "scatter", mode: "lines+markers"},
+    {name: "男15歳", x: year, y: m15, type: "scatter", mode: "lines+markers"}
+  ],
+		 {xaxis: {title: {text: "年度"}}, yaxis: {title: {text: "身長"}}},
+		 {responsive: true});
 }
 
 window.addEventListener('DOMContentLoaded', function() {
@@ -68,7 +70,7 @@ window.addEventListener('DOMContentLoaded', function() {
   Plotly.newPlot("out", [{
     x: [1, 2, 3, 4, 5],
     y: [1, 2, 4, 8, 16]
-  }]);
+  }], {}, {responsive: true});
 &lt;/script&gt;
 </pre>
 
@@ -80,15 +82,15 @@ window.addEventListener('DOMContentLoaded', function() {
   Plotly.newPlot("out", [{
       x: [1, 2, 3, 4, 5],
       y: [1, 2, 4, 8, 16]
-  }]);
+  }], {}, {responsive: true});
 </script>
 
 <p>マウスで範囲指定すると，その部分が拡大されます。軸ラベルの上でドラッグすると，グラフが平行移動します。グラフの上でダブルクリックすると，最初の状態に戻ります。グラフの上にマウスを乗せると，グラフの右上にコントロール（ボタン類）が現れます。この🏠ボタンをクリックすると，最初の状態に戻ります。</p>
 
-<p>グラフの種類などはオプションで指定できます。グラフの幅はブラウザの幅になります。幅と高さを設定するには，例えば次のようにします。</p>
+<p>グラフの種類などはオプションで指定できます。グラフの幅はブラウザの幅になります。<code>Plotly.newPlot()</code> の第4引数に <code>{responsive: true}</code> を指定すると，リスポンシブ（ブラウザの幅に追従するデザイン）になります。小さなスマホでは幅が狭く感じられると思いますので，画面を横にしてみてください。逆に，幅と高さを明示的に設定するには，例えば次のようにします。</p>
 
 <pre>
-&lt;div id="out" style="width:640px;height:480px"&gt;&lt;/div&gt;
+&lt;div id="out" style="width: 640px; height: 480px"&gt;&lt;/div&gt;
 </pre>
 
 <p>データの欠測値は <code>null</code> または <code>NaN</code> で表します。</p>
@@ -140,10 +142,12 @@ function plot(data) {
     }
   }
   Plotly.newPlot("out1", [
-    {"name":"男17歳", "x":year, "y":m17, "type":"scatter", "mode":"lines+markers"},
-    {"name":"男16歳", "x":year, "y":m16, "type":"scatter", "mode":"lines+markers"},
-    {"name":"男15歳", "x":year, "y":m15, "type":"scatter", "mode":"lines+markers"}
-  ], {"xaxis":{"title":{"text":"年度"}}, "yaxis":{"title":{"text":"身長"}}});
+    {name: "男17歳", x: year, y: m17, type: "scatter", mode: "lines+markers"},
+    {name: "男16歳", x: year, y: m16, type: "scatter", mode: "lines+markers"},
+    {name: "男15歳", x: year, y: m15, type: "scatter", mode: "lines+markers"}
+  ],
+		 {xaxis: {title: {text: "年度"}}, yaxis: {title: {text: "身長"}}},
+		 {responsive: true});
 }
 
 window.addEventListener('DOMContentLoaded', function() {
@@ -154,9 +158,9 @@ window.addEventListener('DOMContentLoaded', function() {
 &lt;/script&gt;
 </pre>
 
-<p>下の <code>&lt;div id="out1" style="width:800px;height:600px"&gt;&lt;/div&gt;</code> の中に出力されます：</p>
+<p>下の <code>&lt;div id="out1"&gt;&lt;/div&gt;</code> の中に出力されます：</p>
 
-<div id="out1" style="width:800px;height:600px"></div>
+<div id="out1"></div>
 
 <div class="note">
   <p>CSVの仕様はけっこう難しく，JavaScriptにもCSVをパースするライブラリがいくつもあるのですが，ここでは単に改行とコンマで切り分け，中身を文字列としてそのままpushしています。この部分で数値に変換することもできますが，<code>Number()</code> で変換すると，空文字列が 0 に変換されてしまいます。<code>parseFloat()</code> なら NaN になり，Plotlyで欠測値と解釈されます。</p>
@@ -164,13 +168,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 <hr>
 
-<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-03-17 13:11:09</time>
-<!-- hhmts end -->
-</p>
-</footer>
+<p>Last modified: <time>2022-03-19 17:19:25 JST</time></p>
 </body>
 </html>
