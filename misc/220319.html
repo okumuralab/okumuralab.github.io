@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/220210.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emacsで更新時刻を自動挿入</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>Emacsで更新時刻を自動挿入</h1>
+
+<p>今まで使っていた html-helper-mode では <code>&lt;!-- hhmts start --&gt;</code> と <code>&lt;!-- hhmts end --&gt;</code> の間に更新時刻が自動挿入される。時刻のフォーマットは次のように設定していた。</p>
+
+<pre>
+(add-hook 'html-helper-timestamp-hook
+          (function (lambda ()
+                      (insert "Last modified: "
+                              (format-time-string "<time>%Y-%m-%d %T</time>\n")))))
+</pre>
+
+<p>ところが，今の標準らしい mhtml-mode ではこのような機能がなさそうだ。そこで，Emacs の一般的な <a href="https://www.emacswiki.org/emacs/TimeStamp">Time Stamp</a> の方法を使って挿入する。最も簡単な方法としては，<code>~/.emacs.d/init.el</code> に次のように書き込んでおく。</p>
+
+<pre>
+(add-hook 'before-save-hook 'time-stamp)
+(setq time-stamp-pattern "-8/Last modified:[ \t]+&lt;time&gt;%:y-%02m-%02d %02H:%02M:%02S %Z&lt;/time&gt;")
+(setq time-stamp-time-zone nil) ;; localtime
+</pre>
+
+<p>これでページの最後あたりに <code>Last modified: &lt;time&gt;任意の文字列&lt;/time&gt;</code> と書き込んでおけば，保存時にタイムスタンプが自動挿入される。<code>-8</code> はファイル末尾から8行を探すという意味である。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-03-19 19:29:03 JST</time></p>
+</footer>
+</body>
+</html>
