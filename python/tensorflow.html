@@ -20,8 +20,8 @@
 <p><a href="https://www.tensorflow.org/">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。通常は</p>
 
 <pre>
-<code>pip install tensorflow
-</code></pre>
+pip install tensorflow
+</pre>
 
 <p>で入るはずである。M1 Macでの入れ方は<a href="../macosx/m1.html">こちら</a>参照。</p>
 
@@ -30,52 +30,60 @@
 <div class="note">
 <p>TensorFlow 2 で 1.x のコードを走らせるには</p>
 <pre>
-<code>import tensorflow.compat.v1 as tf
+import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
-</code></pre>
+</pre>
 <p>とする。</p>
 </div>
 
 <div class="note">
 <p>TensorFlow 1.x のコードを 2.x 用に変換するには</p>
 <pre>
-<code>tf_upgrade_v2 --intree dir/ --outtree dir2/ --reportfile report.txt
-</code></pre>
+tf_upgrade_v2 --intree dir/ --outtree dir2/ --reportfile report.txt
+</pre>
 <p>と打ち込む。<code>dir/</code> が元のディレクトリ，<code>dir2/</code> は新しく作られるディレクトリ（あらかじめ作成しておいてはいけない）。必ずしもうまくいくとは限らない。</p>
 </div>
 
 <p>インポートする：</p>
 
-<pre>
-<code>import tensorflow as tf
-</code></pre>
+<pre class="cell">
+import tensorflow as tf
+</pre>
 
 <p>バージョンを確認する：</p>
 
-<pre>
-<code>In [ ]: tf.__version__
-Out[ ]: '2.6.0'
+<pre class="cell">
+tf.__version__
+</pre>  
 
-In [ ]: tf.keras.__version__
-Out[ ]: '2.6.0'
-</code></pre>
+<pre>
+'2.8.0'
+</pre>
+
+<pre class="cell">
+tf.keras.__version__
+</pre>  
+
+<pre>
+'2.8.0'
+</pre>
 
 <p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="mnist.html">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
 
-<pre>
-<code>(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
-</code></pre>
+<pre class="cell">
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+</pre>
 
 <p>初回はネットからダウンロードするが次回からは ~/.keras 以下のキャッシュ（11Mバイトくらい）を使う。ピクセルは0〜255の整数値だが，0〜1の実数に変換する：</p>
 
-<pre>
-<code>x_train, x_test = x_train / 255.0, x_test / 255.0
-</code></pre>
+<pre class="cell">
+x_train, x_test = x_train / 255.0, x_test / 255.0
+</pre>
 
 <p>ごくごく簡単なモデルを定義する：</p>
 
-<pre>
-<code>model = tf.keras.models.Sequential([
+<pre class="cell">
+model = tf.keras.models.Sequential([
   tf.keras.layers.Flatten(input_shape=(28, 28)),
   tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Dropout(0.2),
@@ -87,38 +95,53 @@ loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 model.compile(optimizer='adam',
               loss=loss_fn,
               metrics=['accuracy'])
-</code></pre>
+</pre>
 
-<p>いよいよフィット（重い）：</p>
+<p>フィット：</p>
+
+<pre class="cell">
+model.fit(x_train, y_train, epochs=5)
+</pre>
+
+<p>経過の例：</p>
 
 <pre>
-<code>model.fit(x_train, y_train, epochs=5)
-</code></pre>
+Epoch 1/5
+1875/1875 [==============================] - 1s 521us/step - loss: 0.2924 - accuracy: 0.9151
+Epoch 2/5
+1875/1875 [==============================] - 1s 519us/step - loss: 0.1393 - accuracy: 0.9593
+Epoch 3/5
+1875/1875 [==============================] - 1s 516us/step - loss: 0.1051 - accuracy: 0.9687
+Epoch 4/5
+1875/1875 [==============================] - 1s 520us/step - loss: 0.0867 - accuracy: 0.9734
+Epoch 5/5
+1875/1875 [==============================] - 1s 522us/step - loss: 0.0726 - accuracy: 0.9770
+</pre>
 
 <p>最後に評価：</p>
 
-<pre>
-<code>model.evaluate(x_test, y_test)
-</code></pre>
+<pre class="cell">
+model.evaluate(x_test, y_test)
+</pre>
 
 <p>正解率 0.977 程度である。</p>
 
 <p>予測は次のようにして求められる：</p>
 
-<pre>
-<code>y_pred = tf.argmax(model.predict(x_test), axis=-1).numpy()
-</code></pre>
+<pre class="cell">
+y_pred = tf.argmax(model.predict(x_test), axis=-1).numpy()
+</pre>
 
 <p>混同行列を求める：</p>
 
-<pre>
-<code>tf.math.confusion_matrix(y_test, y_pred)
-</code></pre>
+<pre class="cell">
+tf.math.confusion_matrix(y_test, y_pred)
+</pre>
 
 <p>結果の例：</p>
 
 <pre>
-<code>&lt;tf.Tensor: shape=(10, 10), dtype=int32, numpy=
+&lt;tf.Tensor: shape=(10, 10), dtype=int32, numpy=
 array([[ 970,    0,    2,    0,    1,    0,    4,    1,    2,    0],
        [   0, 1127,    3,    1,    0,    0,    2,    0,    2,    0],
        [   6,    0, 1007,    4,    4,    0,    2,    2,    7,    0],
@@ -130,28 +153,25 @@ array([[ 970,    0,    2,    0,    1,    0,    4,    1,    2,    0],
        [   2,    2,    4,   12,    5,    5,    2,    3,  937,    2],
        [   2,    6,    0,    5,   14,    1,    0,    4,    0,  977]],
       dtype=int32)&gt;
-</code></pre>
+</pre>
 
 <p>学習済みのモデルをHDF5形式で保存する：</p>
 
-<pre>
-<code>model.save("mymodel.h5")
-</code></pre>
+<pre class="cell">
+model.save("mymodel.h5")
+</pre>
 
 <p>保存したモデルは次のようにして読み出す：</p>
 
-<pre>
-<code>model = tf.keras.models.load_model("mymodel.h5")
-</code></pre>
+<pre class="cell">
+model = tf.keras.models.load_model("mymodel.h5")
+</pre>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-06-23 15:10:01</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-03-20 17:22:06 JST</time></p>
+</footer>
 </body>
 </html>
