@@ -10,7 +10,9 @@
 <script src="/js/plotly-2.9.0.min.js"></script>
 <script src="/js/plotly-locale-ja-latest.js"></script>
 <script>
+let datasave = null;
 function plot(data) {
+  datasave = data;
   let date = [], confirmed = [];
   for (const row of data.split("\n")) {
     const r = row.split(',');
@@ -43,6 +45,33 @@ window.addEventListener('DOMContentLoaded', function() {
 <p>東京都の情報は毎日16:45に<a href="https://www.fukushihoken.metro.tokyo.lg.jp">東京都福祉保健局</a>からPDFで発表されます。これをスクレープして <a href="../python/data/COVID-tokyo.csv">COVID-tokyo.csv</a> を作成しています。それをPlotlyで棒グラフにしたものです：</p>
 
 <div id="out"></div>
+
+<script>
+function replot(data) {
+  let date = [], wday = [], wend = [];
+  for (const row of data.split("\n")) {
+    const r = row.split(',');
+    if (r.length == 2) {
+      date.push(r[0]);
+      d = (new Date(r[0])).getDay();
+      if (d == 0 || d == 6) {
+        wday.push(0);  wend.push(r[1]);
+      } else {
+        wday.push(r[1]);  wend.push(0);
+      }
+    }
+  }
+  Plotly.newPlot("out", [
+    {name: "平日", x: date, y: wday, type: "bar"},
+    {name: "土日", x: date, y: wend, type: "bar"}
+  ], {barmode: 'stack', legend: {x: 0, y: 1}},
+		 {responsive: true, locale: "ja"});
+}
+</script>
+
+<div>
+  <button type="button" onclick="replot(datasave)">土曜・日曜だけ色を変えてみる</button>
+</div>
 
 <p>このHTMLファイルのheadの中には（だいたい）次のように書き込んであります：</p>
 
@@ -101,7 +130,7 @@ function plot(data) {
   Plotly.newPlot("out", [
     {name: "平日", x: date, y: wday, type: "bar"},
     {name: "土日", x: date, y: wend, type: "bar"}
-  ], {barmode: 'stack', legend: {x: 0, y: 1}}},
+  ], {barmode: 'stack', legend: {x: 0, y: 1}},
                  {responsive: true, locale: "ja"});
 }
 </pre>
@@ -110,7 +139,7 @@ function plot(data) {
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-03-19 20:37:23 JST</time></p>
+<p>Last modified: <time>2022-03-20 13:32:14 JST</time></p>
 </footer>
 </body>
 </html>

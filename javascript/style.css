@@ -37,6 +37,12 @@ td, th { padding: 0.2em 0.7em }
 td { text-align: right }
 th { text-align: center }
 del { color: gray }
+button {
+  font-weight: bold;
+  padding: 0.5em 1em;
+  background-color: #EEE;
+  border-radius: 0.7em
+}
 .note {
   margin-left: 0em;
   padding-left: 1.5em;

@@ -26,23 +26,27 @@
 <p>ページ全体を変更します。</p>
 
 <script>
-let x = 100;
-function larger()  { x *= 1.2; document.body.style.fontSize = x + '%'; }
-function smaller() { x /= 1.2; document.body.style.fontSize = x + '%'; }
+  let x = 100;
+  function larger()  { x *= 1.2; document.body.style.fontSize = x + '%'; }
+  function smaller() { x /= 1.2; document.body.style.fontSize = x + '%'; }
 </script>
 
-<button type="button" onclick="smaller()">小さく</button>
-<button type="button" onclick="larger()">大きく</button>
+<div>
+  <button type="button" onclick="smaller()">小さく</button>
+  <button type="button" onclick="larger()">大きく</button>
+</div>
 
 <pre>
 &lt;script&gt;
-let x = 100;
-function larger()  { x *= 1.2; document.body.style.fontSize = x + '%'; }
-function smaller() { x /= 1.2; document.body.style.fontSize = x + '%'; }
+  let x = 100;
+  function larger()  { x *= 1.2; document.body.style.fontSize = x + '%'; }
+  function smaller() { x /= 1.2; document.body.style.fontSize = x + '%'; }
 &lt;/script&gt;
 
-&lt;button type="button" onclick="smaller()"&gt;小さく&lt;/button&gt;
-&lt;button type="button" onclick="larger()"&gt;大きく&lt;/button&gt;
+&lt;div&gt;
+  &lt;button type="button" onclick="smaller()"&gt;小さく&lt;/button&gt;
+  &lt;button type="button" onclick="larger()"&gt;大きく&lt;/button&gt;
+&lt;/div&gt;
 </pre>
 
 <h2>部分的な変更</h2>
@@ -50,27 +54,44 @@ function smaller() { x /= 1.2; document.body.style.fontSize = x + '%'; }
 <p>特定の部分だけ文字サイズを変更します。</p>
 
 <script>
-let y = 100;
-function larger1()  { y *= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
-function smaller1() { y /= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
+  let y = 100;
+  function larger1()  { y *= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
+  function smaller1() { y /= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
 </script>
 
-<button type="button" onclick="smaller1()">小さく</button>
-<button type="button" onclick="larger1()">大きく</button>
+<div>
+  <button type="button" onclick="smaller1()">小さく</button>
+  <button type="button" onclick="larger1()">大きく</button>
+</div>
 
 <p id="resizable">ほげほげほげ</p>
 
 <pre>
 &lt;script&gt;
-let y = 100;
-function larger()  { y *= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
-function smaller() { y /= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
+  let y = 100;
+  function larger()  { y *= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
+  function smaller() { y /= 1.2; document.getElementById('resizable').style.fontSize = y + '%'; }
 &lt;/script&gt;
 
-&lt;button type="button" onclick="smaller()"&gt;小さく&lt;/button&gt;
-&lt;button type="button" onclick="larger()"&gt;大きく&lt;/button&gt;
+&lt;div&gt;
+  &lt;button type="button" onclick="smaller()"&gt;小さく&lt;/button&gt;
+  &lt;button type="button" onclick="larger()"&gt;大きく&lt;/button&gt;
+&lt;/div&gt;
 
 &lt;p id="resizable"&gt;ほげほげほげ&lt;/p&gt;
+</pre>
+
+<h2>ボタンのデザイン</h2>
+
+<p>デフォルトのボタン（<code>&lt;button type="button"&gt;ボタン&lt;/button&gt;</code>）はボタンであることがわかりにくいデザインなので，CSSでデザインを工夫します。例：</p>
+
+<pre>
+button {
+  font-weight: bold;
+  padding: 0.5em 1em;
+  background-color: #EEE;
+  border-radius: 0.7em
+}
 </pre>
 
 <h2>（蛇足）文字サイズ変更ボタンを付けるべきか</h2>
@@ -84,7 +105,7 @@ function smaller() { y /= 1.2; document.getElementById('resizable').style.fontSi
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-10 19:01:48</time>
+Last modified: <time>2022-03-20 13:28:55 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

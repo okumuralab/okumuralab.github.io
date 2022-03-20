@@ -89,7 +89,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 <p>マウスで範囲指定すると，その部分が拡大されます。軸ラベルの上でドラッグすると，グラフが平行移動します。グラフの上でダブルクリックすると，最初の状態に戻ります。グラフの上にマウスを乗せると，グラフの右上にコントロール（ボタン類）が現れます。この🏠ボタンをクリックすると，最初の状態に戻ります。</p>
 
-<p>グラフの種類などはオプションで指定できます。グラフの幅はブラウザの幅になります。<code>Plotly.newPlot()</code> の第4引数に <code>{responsive: true}</code> を指定すると，リスポンシブ（ブラウザの幅に追従するデザイン）になります。小さなスマホでは幅が狭く感じられると思いますので，画面を横にしてみてください。逆に，幅と高さを明示的に設定するには，例えば次のようにします。</p>
+<p>グラフの種類などはオプションで指定できます。グラフの幅はブラウザの幅になります。<code>Plotly.newPlot()</code> の第4引数に <code>{responsive: true}</code> を指定すると，レスポンシブ（ブラウザの幅に追従するデザイン）になります。小さなスマホでは幅が狭く感じられると思いますので，画面を横にしてみてください。幅と高さを明示的に設定するには，例えば次のようにします。</p>
 
 <pre>
 &lt;div id="out" style="width: 640px; height: 480px"&gt;&lt;/div&gt;
@@ -111,6 +111,23 @@ window.addEventListener('DOMContentLoaded', function() {
   }, {responsive: true});
 &lt;/script&gt;
 </pre>
+
+<script>
+  function redraw() {
+      Plotly.newPlot("out", [{
+	  x: [1, 2, 3, 4, 5],
+	  y: [1, 2, 4, 8, 16]
+      }], {
+	  plot_bgcolor: "#DDD",
+	  xaxis: {gridcolor: "white", zeroline: false},
+	  yaxis: {gridcolor: "white", zeroline: false}
+      }, {responsive: true});
+  }
+</script>
+
+<div>
+  <button type="button" onclick="redraw()">上の設定を試してみる</button>
+</div>
 
 <h2>データファイルを読んでグラフを描く</h2>
 
@@ -136,7 +153,7 @@ fetch('test.json')
 <p>のようにできます。</p>
 
 <div class="note">
-  <p>データは同じサーバに置いておきます。JavaScriptのセキュリティ制約のため，別のサーバに置いたデータを読むことはできません。別のサイトでも活用してほしいオープンデータを提供するサイトは，この制約をなくすため，httpd.conf の <code>&lt;Directory /&gt;</code> と <code>&lt;/Directory&gt;</code> の中などに <code>Header set Access-Control-Allow-Origin '*'</code> と書いておきます。</p>
+  <p>データは同じサーバに置いておきます。JavaScriptのセキュリティ制約のため，別のサーバに置いたデータを読むことはできません。この制約をなくすためには，HTTPヘッダに <code>Access-Control-Allow-Origin '*'</code> を付けます（→ <a href="https://developer.mozilla.org/ja/docs/Glossary/CORS">CORS</a>）。GitHub（GitHub Pagesも含め）はこれが付いていますので，オープンデータとして公開したいデータはGitHubに置いておくのが楽です。Apacheで運用しているサイトなら，httpd.conf の例えば <code>&lt;Directory /&gt;</code> と <code>&lt;/Directory&gt;</code> の中に <code>Header set Access-Control-Allow-Origin '*'</code> と書いておきます。</p>
 </div>
 
 <p>CSVファイルはJavaScriptでパースして配列にする必要があります。</p>
@@ -188,6 +205,6 @@ window.addEventListener('DOMContentLoaded', function() {
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-03-19 22:33:26 JST</time></p>
+<p>Last modified: <time>2022-03-20 13:31:56 JST</time></p>
 </body>
 </html>
