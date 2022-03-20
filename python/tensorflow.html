@@ -103,7 +103,7 @@ model.compile(optimizer='adam',
 model.fit(x_train, y_train, epochs=5)
 </pre>
 
-<p>経過の例：</p>
+<p>経過の例（Mac mini (M1 2020) tensorflow-metal なし）：</p>
 
 <pre>
 Epoch 1/5
@@ -116,6 +116,21 @@ Epoch 4/5
 1875/1875 [==============================] - 1s 520us/step - loss: 0.0867 - accuracy: 0.9734
 Epoch 5/5
 1875/1875 [==============================] - 1s 522us/step - loss: 0.0726 - accuracy: 0.9770
+</pre>
+
+<p>経過の例（Mac mini (M1 2020) tensorflow-metal あり）：</p>
+
+<pre>
+Epoch 1/5
+1875/1875 [==============================] - 9s 4ms/step - loss: 0.2896 - accuracy: 0.9161
+Epoch 2/5
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.1378 - accuracy: 0.9590
+Epoch 3/5
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.1013 - accuracy: 0.9694
+Epoch 4/5
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.0813 - accuracy: 0.9751
+Epoch 5/5
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.0696 - accuracy: 0.9780
 </pre>
 
 <p>最後に評価：</p>
@@ -171,7 +186,7 @@ model = tf.keras.models.load_model("mymodel.h5")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-03-20 17:22:06 JST</time></p>
+<p>Last modified: <time>2022-03-20 21:07:23 JST</time></p>
 </footer>
 </body>
 </html>
