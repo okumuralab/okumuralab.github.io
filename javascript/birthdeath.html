@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/birthdeath.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>出生数と死亡数（GitHubのCSVデータをPlotlyで描画）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="/js/plotly-2.9.0.min.js"></script>
+<script>
+  function plot(data) {
+      let year = [], birth = [], death = [];
+      for (const row of data.split("\n")) {
+	  const r = row.split(',');
+	  if (r.length == 3) {
+	      year.push(r[0]);
+	      birth.push(r[1]);
+	      death.push(r[2]);
+	  }
+      }
+      Plotly.newPlot("out", [
+	  {name: "出生数", x: year, y: birth, type: "scatter", mode: "lines+markers"},
+	  {name: "死亡数", x: year, y: death, type: "scatter", mode: "lines+markers"},
+      ], {legend: {x: 0.8, y: 1}}, {responsive: true});
+  }
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<h1>出生数と死亡数（GitHubのCSVデータをPlotlyで描画）</h1>
+
+<p><a href="https://github.com/okumuralab/literacy4">『［改訂第4版］基礎からわかる情報リテラシー』サポートページ</a>にある<a href="https://github.com/okumuralab/literacy4/blob/master/data/birthdeath.csv">出生数と死亡数のデータ</a>をPlotlyで描画してみましょう。</p>
+
+<div id="out"></div>
+
+<script>
+  fetch('https://raw.githubusercontent.com/okumuralab/literacy4/master/data/birthdeath.csv')
+    .then(response => response.text())
+    .then(data => plot(data));
+</script>
+
+<pre>
+&lt;div id="out"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  fetch('https://raw.githubusercontent.com/okumuralab/literacy4/master/data/birthdeath.csv')
+    .then(response =&gt; response.text())
+    .then(data =&gt; plot(data));
+&lt;/script&gt;
+</pre>
+
+<p>関数 <code>plot()</code> はヘッダで次のように定義されています：</p>
+
+<pre>
+&lt;script&gt;
+  function plot(data) {
+      let year = [], birth = [], death = [];
+      for (const row of data.split("\n")) {
+	  const r = row.split(',');
+	  if (r.length == 3) {
+	      year.push(r[0]);
+	      birth.push(r[1]);
+	      death.push(r[2]);
+	  }
+      }
+      Plotly.newPlot("out", [
+	  {name: "出生数", x: year, y: birth, type: "scatter", mode: "lines+markers"},
+	  {name: "死亡数", x: year, y: death, type: "scatter", mode: "lines+markers"},
+      ], {legend: {x: 0.8, y: 1}}, {responsive: true});
+  }
+&lt;/script&gt;
+</pre>
+
+<p>注意点としては，<a href="https://github.com/okumuralab/literacy4/blob/master/data/birthdeath.csv">https://github.com/okumuralab/literacy4/blob/master/data/birthdeath.csv</a> ではなく，Raw と書かれたボタンのリンク先 <a href="https://github.com/okumuralab/literacy4/raw/master/data/birthdeath.csv">https://github.com/okumuralab/literacy4/raw/master/data/birthdeath.csv</a> でもなく，それをクリックしたときにリダイレクトされる先 <a href="https://raw.githubusercontent.com/okumuralab/literacy4/master/data/birthdeath.csv">https://raw.githubusercontent.com/okumuralab/literacy4/master/data/birthdeath.csv</a> をフェッチしなければならない点です。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-03-20 15:24:47 JST</time></p>
+</body>
+</html>
