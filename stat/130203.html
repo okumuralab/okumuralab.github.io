@@ -246,7 +246,7 @@ pyramids(data$Male, data$Female, data$Age, Cstep=10)
 
 <p>ところで，こういう毎年更新されるデータを提供するには，例えば https://example.jp/nagareyama/population/by_age/2012.csv のようにURLで年が指定できれば，年を入力すればその年の人口ピラミッドを描くアプリケーションが作りやすくなる。動的に生成する場合も，例えば ...data?city=nagareyama&amp;year=2012 のように引数を渡せばよい。年の代わりに new のような文字列を与えれば最新のデータにリダイレクトされるのもいいかもしれない。毎年予測不可能なURLで新データを提供するシステムが多いのは困ったものである（それ以前に古いデータのURLもしょっちゅう変わることがある）。</p>
 
-<h3>東電の電力データ</h3>
+<h3 id="tepco">東電の電力データ</h3>
 
 <p>東電は福島原発事故に伴う電力不足から<a href="http://www.tepco.co.jp/forecast/">でんき予報</a>を提供しているが，この<a href="http://www.tepco.co.jp/forecast/html/images/juyo-j.csv">CSVデータ</a>も提供し，他サイトやスマホのアプリでも逼迫状況がわかるようにしている。今日に至るまで同じURLで提供を続けているのはすばらしいことである。</p>
 
@@ -291,6 +291,8 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 <p>このおかげで，このデータを利用するサイトやアプリは大混乱した（<a href="../blog/node/2580">東電のCSV形式が突然変更された</a>）。</p>
 
 <p>オープンデータを提供するCSVファイルの形式はできるだけ変えず，もし変えるなら周知が必要である。</p>
+
+<p><em>[2022-03-23追記]</em> 東日本大震災から11年を経た2022-03-16の夜，再び宮城県や福島県で最大震度6強の揺れを観測する地震が起きた。東電の火力発電所が停止し，電力が逼迫した。東電の<a href="https://www.tepco.co.jp/forecast/">でんき予報</a>ページの<a href="https://www.tepco.co.jp/forecast/html/images/juyo-d-j.csv">CSVデータダウンロード</a>のファイル名は juyo-d-j.csv に変わっており，ファイル内容も若干変わっている。従来と同じ名前の <a href="https://www.tepco.co.jp/forecast/html/images/juyo-j.csv">juyo-j.csv</a> もリンクはされていないが提供が続いており，こちらのほうが2011-07-01の型式に近い。</p>
 
 <h3 id="KawauchiMP2">川内村診療所の放射線データ</h3>
 
@@ -346,7 +348,7 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 <p><a href="../" rel="author">奥村 晴彦</a> (<a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-08-23 14:08:00</time>
+Last modified: <time>2022-03-23 09:33:09 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
