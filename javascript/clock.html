@@ -8,21 +8,21 @@
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <script>
-"use strict";
-let count = 60
-function clock() {
-  const t = new Date().toLocaleTimeString([], {hour12:false})
-  document.getElementById('out1').value = t;
-  document.getElementById('out2').textContent = t;
-  if (count > 0) {
-    document.getElementById('out3').value = count + "秒前";
-    count = count - 1;
-  } else {
-    document.getElementById('out3').value = "ドカーン！";
+  "use strict";
+  let count = 60
+  function clock() {
+      const t = new Date().toLocaleTimeString([], {hour12: false})
+      document.getElementById('out1').value = t;
+      document.getElementById('out2').textContent = t;
+      if (count > 0) {
+          document.getElementById('out3').value = count + "秒前";
+          count = count - 1;
+      } else {
+          document.getElementById('out3').value = "ドカーン！";
+      }
   }
-}
-setInterval(clock, 1000);
-window.onload = clock;
+  setInterval(clock, 1000);
+  window.addEventListener('DOMContentLoaded', clock);
 </script>
 </head>
 <body>
@@ -39,12 +39,12 @@ window.onload = clock;
 
 <p>文字が秒ごとに変わるデジタル時計を作ってみましょう。</p>
 
-<p><input id="out1"></p>
+<div><input id="out1"></div>
 
 <p>上のソースはこれだけです。</p>
 
 <pre>
-&lt;p&gt;&lt;input id="out1"&gt;&lt;/p&gt;
+&lt;div&gt;&lt;input id="out1"&gt;&lt;/div&gt;
 </pre>
 
 <p>実際に文字を書くJavaScriptの部分は後で挙げます。</p>
@@ -66,19 +66,36 @@ window.onload = clock;
 <pre>
 &lt;script&gt;
 function clock() {
-  const t = new Date().toLocaleTimeString([], {hour12:false})
+  const t = new Date().toLocaleTimeString([], {hour12: false})
   document.getElementById('out1').value = t;    // 例1
   document.getElementById('out2').textContent = t; // 例2
 }
 setInterval(clock, 1000);
-window.onload = clock;
+window.addEventListener('DOMContentLoaded', clock);
 &lt;/script&gt;
 </pre>
 
-<p><code>window.onload = clock;</code> は，本文が読み込まれたすぐ後で <code>clock()</code>
-を実行するためのものです。</p>
+<p><code>window.addEventListener('DOMContentLoaded', clock)</code> 
+は，本文の骨格が読み込まれたすぐ後で <code>clock()</code> を実行するためのものです。</p>
 
-<p>これがなくても，<code>setInterval(clock, 1000);</code> と書いてありますので，1000ミリ秒（1秒）たてば時計の実行が開始されます。</p>
+<h2>細かなこと</h2>
+
+<p><code>window.addEventListener('load', clock);</code> とすると，ページの骨格だけでなく，画像やスタイルシートなどすべてが読み込まれてから <code>clock()</code> が呼び出されます。</p>
+
+<p>似た書き方として <code>window.onload = clock;</code> があります。こちらは，別の <code>window.onload = ...;</code> があると，最後のものだけが生きます。<code>window.addEventListener()</code> のほうは複数あっても全部が生きます。</p>
+
+<p><code>&lt;body onload="clock();"&gt;</code> のようにHTMLの要素に <code>onload</code> を書く方法もあります。</p>
+<p>こういった実行を遅らせる仕組みを使わなくても，<code>out1</code>，<code>out2</code> が現れた後に</p>
+
+<pre>
+&lt;script&gt;
+clock();
+&lt;/script&gt;
+</pre>
+
+<p>と書くだけでもかまいません。</p>
+
+<p>なお，<code>window.addEventListener('DOMContentLoaded', clock)</code> がなくても，<code>setInterval(clock, 1000);</code> は実行されますので，1000ミリ秒（1秒）たてば時計の実行が開始されます。</p>
 
 <h2>応用</h2>
 
@@ -93,7 +110,7 @@ window.onload = clock;
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-12 10:47:49</time>
+Last modified: <time>2022-03-24 21:03:14 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

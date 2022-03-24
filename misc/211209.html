@@ -49,13 +49,15 @@ The key's randomart image is:
 <p>これを書くきっかけは，パスワードの受け渡しはどうすればいいかというツイッターでの話題だった。DH 鍵交換すればいい。<a href="https://cryptotools.net/dhe">Diffie-Hellman Key Exchange</a> というページで JavaScript で計算できる（openssl を使うやりかたも載っている）。昔は /etc/shadow の行（ソルト＋ハッシュ）を送った。今なら id_rsa.pub を送ればいい。いや RSA はもう古い。という流れだ。</p>
 </div>
 
+<p>[追記] ~/.ssh のパーミッションは 700 にしておく。秘密鍵は 600 にする。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-12-11 17:41:08</time>
+Last modified: <time>2022-03-24 10:11:47 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
