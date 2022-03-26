@@ -17,70 +17,90 @@
 
 <h1>HTMLの表のスクレーピング</h1>
 
-<p>ここでは例として<a href="http://monitoring.tokyo-eiken.go.jp/report/shinjuku/mon_air_week_201112w.html">環境放射線測定結果</a>のような表をpandasで読み込む方法を説明する。</p>
+<p>ここでは例として<a href="http://monitoring.tokyo-eiken.go.jp/report/shinjuku/mon_air_week_201112w.html">大気中の放射線量/１時間単位 (新宿）2011/03/14 ～ 2011/03/20 ｜環境放射線測定結果</a>のような表をpandasで読み込む方法を説明する。</p>
 
 <p>注意すべき点は，表の見出しにセル結合が使ってあって，列見出しに階層構造があることである。</p>
 
 <p>表自体をスクレーピングするのは簡単である。あらかじめpandasとlxmlがインストールされているとする：</p>
 
-<pre>
-<code>import pandas as pd
+<pre class="cell">
+import pandas as pd
 
 tables = pd.read_html('http://monitoring.tokyo-eiken.go.jp/report/shinjuku/mon_air_week_201112w.html')
-len(tables)     # => 1
-df = tables[0]  # 最初の表を取り出す
-</code></pre>
+len(tables)
+</pre>
+
+<pre>
+1
+</pre>
+
+<p>最初の表を取り出す：</p>
+
+<pre class="cell">
+df = tables[0]
+</pre>
 
 <p>この <code>df</code> を表示すると，次のようになる（多少編集してある）：</p>
 
+<pre class="cell">
+df
+</pre>
+
 <pre>
-<code>     測定日時(Measurement time) 線量率 (dose rate)μGy/h (microgray per hour)
-     測定日時(Measurement time)              最大値(max) 最小値(min) 平均値(average)
-0    2011/03/20 23:00～23:59                0.0515   0.0465       0.0494
-1    2011/03/20 22:00～22:59                0.0524   0.0405       0.0478
-2    2011/03/20 21:00～21:59                0.0464   0.0416       0.0443
-3    2011/03/20 20:00～20:59                0.0470   0.0414       0.0443
-4    2011/03/20 19:00～19:59                0.0468   0.0425       0.0445
-..                      ...                   ...      ...          ...
+     測定日時(Measurement time) 線量率 (dose rate)μGy/h (microgray per hour)
+     測定日時(Measurement time) 最大値(max) 最小値(min) 平均値(average)
+0    2011/03/20 23:00～23:59     0.0515   0.0465       0.0494
+1    2011/03/20 22:00～22:59     0.0524   0.0405       0.0478
+2    2011/03/20 21:00～21:59     0.0464   0.0416       0.0443
+3    2011/03/20 20:00～20:59     0.0470   0.0414       0.0443
+4    2011/03/20 19:00～19:59     0.0468   0.0425       0.0445
+...                      ...        ...      ...          ...
 [168 rows x 4 columns]
-</code></pre>
+</pre>
 
 <p>列見出しに階層構造があることがわかる。列名を表示してみる：</p>
 
-<pre>
-<code>df.columns
-</code></pre>
+<pre class="cell">
+df.columns
+</pre>
 
 <p><code>MultiIndex([...],)</code> のように出力される。</p>
 
-<pre>
-<code>In [ ]: df.columns[0]
-Out[ ]: ('測定日時(Measurement time)', '測定日時(Measurement time)')
+<pre class="cell">
+df.columns[0]
+</pre>
 
-In [ ]: df.columns[3]
-Out[ ]: ('線量率 (dose rate)μGy/h (microgray per hour)', '平均値(average)')
-</code></pre>
+<pre>
+('測定日時(Measurement time)', '測定日時(Measurement time)')
+</pre>
+
+<pre class="cell">
+df.columns[3]
+</pre>
+
+<pre>
+('線量率 (dose rate)μGy/h (microgray per hour)', '平均値(average)')
+</pre>
 
 <p>このように，列名にあたる部分がtupleになっていることがわかる。したがって，一番右の列を取得するには</p>
 
-<pre>
-<code>df['線量率 (dose rate)μGy/h (microgray per hour)', '平均値(average)']
-</code></pre>
+<pre class="cell">
+df['線量率 (dose rate)μGy/h (microgray per hour)', '平均値(average)']
+</pre>
 
 <p>とすればよいが，番号で <code>df.iloc[:,3]</code> でもよい。手っ取り早くプロットしてみよう：</p>
 
-<pre>
-<code>import matplotlib.pyplot as plt
+<pre class="cell">
+import matplotlib.pyplot as plt
 
 df.iloc[:,0] = [pd.Timestamp(x[:16]) for x in df.iloc[:,0]]
 df.plot(0, 3)
 plt.legend(['線量率（μGy/h）'])
 plt.xlabel('')
 plt.ylabel('')
-plt.savefig('190929a.png', bbox_inches="tight")
-</code></pre>
+</pre>
 
-<figure><img src="img/190929a.png" alt="新宿の線量率"></figure>
+<figure><img src="img/190929a.svg" alt="新宿の線量率"></figure>
 
 <hr>
 
@@ -88,7 +108,7 @@ plt.savefig('190929a.png', bbox_inches="tight")
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-09-29 11:09:31</time>
+Last modified: <time>2022-03-26 14:29:06 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
