@@ -64,8 +64,6 @@ plt.plot(t, df.iloc[:, 2])
 
 <p>ただ，欠測値の個数で調べる方法は，データの中に最初の1列以外すべて欠測値の行があったらうまくいかない。</p>
 
-<p>コメントがスペースで始まっているので <code>pd.read_csv(..., comment=" ")</code> でいけるかと思ったら，1桁の月の前にもスペースがあるので，うまくいかない。そもそもコメントには頭に <code>#</code> を付けてほしい。</p>
-
 <p>もう一つ，良い手段を教えていただいた。<a href="https://stackoverflow.com/questions/47319418/split-pandas-dataframe-on-blank-rows">Split Pandas DataFrame on Blank rows</a> を使って空行でデータフレームを分割する：</p>
 
 <pre class="cell">
@@ -92,13 +90,24 @@ df = pd.read_csv(url, encoding="cp932", na_values=["--"])
 df = df[df["年"].str.isnumeric()]
 </pre>
 
+<p>よく見ると，コメントがスペースで始まっているので，<code>pd.read_csv(..., comment=" ")</code> でいけるかと思ったら，1桁の月の前にもスペースがあるので，うまくいかない。ところが，これも教えていただいたのだが，<code>skipinitialspace=True</code> とするとコンマの後のスペースだけ読み飛ばす（行頭のスペースは読み飛ばさない）ので，これらを組み合わせればうまくいく：</p>
+
+<pre class="cell">
+df = pd.read_csv(url, encoding="cp932", na_values=["--"],
+                 skipinitialspace=True, comment=" ")
+</pre>
+
+<p>しかも，この場合はコメントを読んでから捨てるのではなく最初から読まないので，「年」も「月」も型は自動で <code>int64</code> になる。</p>
+
+<p>（そもそもコメントには頭に <code>#</code> を付けてほしい。）</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-03-28 22:46:31 JST</time>
+Last modified: <time>2022-03-29 08:47:25 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
