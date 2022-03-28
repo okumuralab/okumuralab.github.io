@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/plot.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>気象庁の二酸化炭素濃度データ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>気象庁の二酸化炭素濃度データ</h1>
+
+<p><a href="an_wld.html">気象庁の「世界の年平均気温偏差」データ</a>がときどき読めなくなる（CSVファイルとしてまずくなる）話の関連である。</p>
+
+<p>気象庁の<a href="https://ds.data.jma.go.jp/ghg/kanshi/ghgp/co2_trend.html">二酸化炭素濃度の経年変化</a>のページでは，<a href="https://www.data.jma.go.jp/gmd/env/ghg_obs/station/station_ryori.html">岩手県大船渡市三陸町綾里（りょうり）</a>，<a href="https://www.data.jma.go.jp/gmd/env/ghg_obs/station/station_minamitorishima.html">東京都小笠原村南鳥島（みなみとりしま）</a>，<a href="https://www.data.jma.go.jp/gmd/env/ghg_obs/station/station_yonagunijima.html">与那国島（よなぐにじま）</a>（沖縄県八重山郡与那国町）で二酸化炭素濃度の観測をしている。</p>
+
+<ul>
+  <li>綾里：<a href="https://ds.data.jma.go.jp/ghg/kanshi/obs/co2_monthave_ryo.html">月平均値</a>（<a href="https://ds.data.jma.go.jp/ghg/kanshi/obs/co2_monthave_ryo.csv">CSV</a>）</li>
+  <li>南鳥島：<a href="https://ds.data.jma.go.jp/ghg/kanshi/obs/co2_monthave_mnm.html">月平均値</a>（<a href="https://ds.data.jma.go.jp/ghg/kanshi/obs/co2_monthave_mnm.csv">CSV</a>）</li>
+  <li>与那国島：<a href="https://ds.data.jma.go.jp/ghg/kanshi/obs/co2_monthave_yon.html">月平均値</a>（<a href="https://ds.data.jma.go.jp/ghg/kanshi/obs/co2_monthave_yon.csv">CSV</a>）</li>
+</ul>
+
+<p>例えば綾里のCSVは次のような形式である：</p>
+
+<pre>
+年,月,二酸化炭素濃度の月平均値(綾里)[ppm],
+1987, 1,353.2,
+1987, 2,354.0,
+1987, 3,354.8,
+（中略）
+2021, 4,424.3,)
+2021, 5,423.5,)
+2021, 6,416.7,)
+
+ --印は、機器の異常等による欠測を表しています。
+ ) が付いたデータは速報値です。
+
+ 気象庁ホームページのコンテンツのご利用については以下のWebサイトをご覧ください。
+ （https://www.jma.go.jp/jma/kishou/info/coment.html）
+</pre>
+
+<p>このように，データの後ろに不定行数のコメントが付いている。この部分を何とかしないとデータとして自動処理できない。</p>
+
+<p>この場合，4列のデータのうち「年」「月」は欠測値がないことを使えば次のようにして読める：</p>
+
+<pre class="cell">
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("co2_monthave_ryo.csv",
+                 encoding="cp932", na_values=["--"]).dropna(thresh=2)
+t = [pd.to_datetime(f"{x['年']}-{x['月']:02.0f}-01") for i, x in df.iterrows()]
+plt.plot(t, df.iloc[:, 2])
+</pre>
+
+<figure><img src="img/co2_monthave_ryo.svg" alt="綾里の二酸化炭素濃度"></figure>
+
+<p>ただ，欠測値の個数で調べる方法は，データの中に最初の1列以外すべて欠測値の行があったらうまくいかない。</p>
+
+<p>コメントがスペースで始まっているので <code>pd.read_csv(..., comment=" ")</code> でいけるかと思ったら，1桁の月の前にもスペースがあるので，うまくいかない。そもそもコメントには頭に <code>#</code> を付けてほしい。</p>
+
+<p>もう一つ，良い手段を教えていただいた。<a href="https://stackoverflow.com/questions/47319418/split-pandas-dataframe-on-blank-rows">Split Pandas DataFrame on Blank rows</a> を使って空行でデータフレームを分割する：</p>
+
+<pre class="cell">
+import numpy as np
+
+df = pd.read_csv("co2_monthave_ryo.csv",
+                 encoding="cp932", na_values=["--"], skip_blank_lines=False)
+df_list = np.split(df, df[df.isnull().all(1)].index)
+</pre>
+
+<p>これで <code>df_list[0]</code> にデータが入る。<code>df_list[1]</code> 以下には末尾のコメントが入る。</p>
+
+<p>さらに別の方法を教えていただいた：</p>
+
+<pre class="cell">
+df0 = pd.read_csv(url, encoding="cp932", dtype=str, na_values=["--"])
+df1 = df0[df0["年"].str.strip().str.isnumeric() &amp; df["月"].str.strip().str.isnumeric()]
+</pre>
+
+<p>この場合は次でもいいかも：</p>
+
+<pre class="cell">
+df = pd.read_csv(url, encoding="cp932", na_values=["--"])
+df = df[df["年"].str.isnumeric()]
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-03-28 22:46:31 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
