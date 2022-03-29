@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/plot.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>気象庁の二酸化炭素濃度データ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>気象庁の二酸化炭素濃度データ</h1>
+
+<p>Python版<a href="../python/co2_monthave.html">気象庁の二酸化炭素濃度データ</a>のR版である。</p>
+
+<p>Rではreadrパッケージで <code>col_types="iidc"</code> とすることにより，各列のデータ型をそれぞれinteger・integer・double・character（string）と指定すれば，これ以外の型の内容はすべて NA になる。NA は描画されないので特に取り除く必要はない。</p>
+
+<pre>
+library(readr)
+
+df = read_csv("co2_monthave_ryo.csv",
+              locale=locale(encoding="CP932"), col_types="iidc")
+t = as.POSIXct(ifelse(is.na(df[[1]]), NA, paste0(df[[1]], "-", df[[2]], "-01")))
+
+# svg("co2_monthave_ryo.svg", width=7, height=5)
+# par(mgp=c(2, 0.8, 0))
+plot(t, df[[3]], type="l", xlab="year", ylab=expression(paste(CO[2], " (ppm)")))
+# dev.off()
+</pre>
+
+<figure><img src="img/co2_monthave_ryo.svg" alt="綾里の二酸化炭素濃度"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-03-29 22:03:07 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
