@@ -56,7 +56,7 @@ import matplotlib.pyplot as plt
 
 df = pd.read_csv("co2_monthave_ryo.csv",
                  encoding="cp932", na_values=["--"]).dropna(thresh=2)
-t = [pd.to_datetime(f"{x['年']}-{x['月']:02.0f}-01") for i, x in df.iterrows()]
+t = [pd.to_datetime(f"{x['年']}-{x['月']:02.0f}-15") for i, x in df.iterrows()]
 plt.plot(t, df.iloc[:, 2])
 </pre>
 
@@ -109,7 +109,7 @@ df = pd.read_csv(url, encoding="cp932", na_values=["--"],
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-03-29 22:05:33 JST</time>
+Last modified: <time>2022-03-30 14:05:44 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
