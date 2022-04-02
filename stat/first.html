@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rの初歩</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -19,34 +19,30 @@
 
 <h2>Rのインストール</h2>
 
-<div style="width:485px; float:right; margin:1em 0 1em 2em">
-<img src="img/RStudio.png" alt="RStudio"><br>
-<span style="font-size:90%">RStudio。標準では4ペインに分かれている。左上がソースエディタ，左下がRコンソール，右上がデータ関係，右下がプロットやヘルプなど。</span>
-</div>
+<p><a href="https://www.r-project.org">R</a>（アール）は統計・データ解析・統計グラフ作成のためのオープンソースソフトです。<a href="https://cran.r-project.org">CRAN</a>（「シーラン」または「クラン」，Comprehensive R Archive Network）のミラーサイト（日本では統数研 <a href="https://cran.ism.ac.jp/">https://cran.ism.ac.jp/</a> など）からダウンロードし，インストールしてください。Windows用，Mac用，Linux用があります。</p>
 
-<p><a href="http://www.r-project.org">R</a>（アール）は統計・データ解析・統計グラフ作成のためのオープンソースソフトです。<a href="http://cran.r-project.org">CRAN</a>（「シーラン」または「クラン」，Comprehensive R Archive Network）のミラーサイト（日本では統数研 <a href="http://cran.ism.ac.jp/">http://cran.ism.ac.jp/</a> など）からダウンロードし，インストールしてください。Windows用，Mac用，Linux用があります。</p>
+<p>最近では下図のような <a href="https://www.rstudio.com/">RStudio</a>（アール・スタジオ，英語の発音により忠実に書けばアール・ステューディオまたはアール・ストゥーディオ）という統合開発環境（IDE）を介してRを使う人が増えています。<a href="https://www.rstudio.com/">RStudio</a> サイトからオープンソース版の RStudio Desktop をダウンロードしてインストールします。</p>
 
-<p>最近では右図のような <a href="http://www.rstudio.com/">RStudio</a>（アール・スタジオ，アール・ステューディオ，アール・ストゥーディオ）という統合開発環境（IDE）を介してRを使う人が増えています。<a href="http://www.rstudio.com/">RStudio</a> サイトからオープンソース版の RStudio Desktop をダウンロードしてインストールします。</p>
-
-<!--
-<div class="note">
-<p>Mac版R（RStudioを介さない場合）は，「R」メニューの「環境設定...」の「エディタ」で，Emacs派の人は外部エディタとして <code>/usr/bin/emacsclient</code> コマンドを指定しておくといいでしょう（Emacsの初期設定ファイルで <code>(server-start)</code> しておきます）。Emacsでの編集が終わったら <code>C-x #</code> します）。</p>
-</div>
--->
+<figure>
+  <img src="img/RStudio.png" alt="RStudio">
+  <figcaption style="margin: 0em 4em 0em 4em">RStudio。左上ペインがソースエディタ（この図では隠れている），左下がRコンソール，右上がグローバル環境のオブジェクト一覧，右下がファイル一覧やプロットやヘルプなど。</figcaption>
+</figure>
 
 <div class="note">
 <p>黄色い帯の部分は参考です。読み飛ばしてもかまいません。</p>
 </div>
 
 <div class="note">
-<p>UNIX系OSの端末では，<code>R</code> と打ち込んで起動します。カレントディレクトリがRの作業ディレクトリになります。</p>
+<p>UNIX系OSの端末では，単に <code>R</code> と打ち込んで起動することもできます。カレントディレクトリがRの作業ディレクトリになります。</p>
 </div>
 
 <div class="note">
-<p><a href="http://ess.r-project.org/">ESS - Emacs Speaks Statistics</a>
-を使えばEmacsの中からRを使うことができます。アンダースコア <code>_</code>
-が <code>&lt;-</code> に変換されたくない場合は <code>(ess-toggle-underscore nil)</code>
-をEmacs側（init.el等）で設定しておきます。</p>
+<p><a href="https://ess.r-project.org/">ESS - Emacs Speaks Statistics</a>
+を使えばEmacsの中からRを使うことができます。</p>
+</div>
+
+<div class="note">
+<p>VS CodeにもRを使うための拡張機能があります。</p>
 </div>
 
 <h2>簡単な計算</h2>
@@ -95,7 +91,7 @@
 </div>
 
 <div class="note">
-<p><code>x = 1/3</code> のようにスペースを空けなくても <code>x=1/3</code> のように詰めて書いてもまったく同じです。ただ，例えば <code>x &lt;- 1/3</code> を <code>x&lt;-1/3</code> のように書くと <code>x &lt; -1/3</code> と視覚的に紛らわしいので，見やすいように適宜余分なスペースを入れましょう。</p>
+<p><code>x = 1 / 3</code> のように半角スペースを入れて書いても，<code>x=1/3</code> のように詰めて書いても，どちらでもかまいません。ただ，例えば <code>x &lt;- 1/3</code> を <code>x&lt;-1/3</code> のように書くと <code>x &lt; -1/3</code> と視覚的に紛らわしいので，見やすいように適宜余分なスペースを入れましょう。全角スペースは使えません。</p>
 </div>
 
 <p>この <code>x</code> のようなものを一般に「変数」と呼びますが，Rでは「オブジェクト」と呼びます。オブジェクト名は，大文字と小文字を区別します。</p>
@@ -106,6 +102,8 @@
 &gt; X           # 大文字を打ち込むと
  エラー：  オブジェクト 'X' がありません
 </code></pre>
+
+<p>（英語環境では Error: object 'X' not found と表示されます。）</p>
 
 <p>いげた印 <code>#</code> より右側はコメント（説明のための注釈）です。以下では説明のためにコメントをいろいろ書いていますが，実際に打ち込むときはコメントは必要ありません。</p>
 
@@ -132,7 +130,7 @@ PI = Const("pi", prec=1000) # 1000ビット精度の円周率
 PI
 sin(PI / 2)
 </code></pre>
-<p>任意精度の整数なら <a href="https://CRAN.R-project.org/package=openssl">openssl</a> パッケージの <code>bignum()</code> が便利です。</p>
+<p>任意精度の整数なら <a href="https://CRAN.R-project.org/package=bignum">bignum</a> パッケージの <code>biginteger()</code> が便利です。</p>
 </div>
 
 <p>Rのコンソールへの入力は，ヒストリー（履歴）機能が使えます。［↑］キー，［↓］キーで履歴を前後できます（Emacsの中では <code>M-p</code>，<code>M-n</code>）。</p>
@@ -318,7 +316,7 @@ x
 
 <p>RStudioなら，本格的な作業を始める際に，まず「プロジェクト」というものを作ります。これは，特定の作業ディレクトリに関連づけられるものです（「ディレクトリ」は「フォルダ」と同じ意味です）。このフォルダの中に，作業に必要なデータや作業の成果物を全部置いておくと，ファイルの管理が楽です。Rのコンソールに打ち込んだコマンドの履歴も，このディレクトリの <code>.Rhistory</code> というファイルに入ります。</p>
 
-<p>RStudioのメニューで「File」→「New Project...」を選びます。もし「Save workspace image to ~/.RData?」などと聞いてきたなら通常は「Don't Save」と答えます。次に，新しく作業ディレクトリを作るなら「New Directory」，既存のディレクトリを使うなら「Existing Directory」を選びます。ここでは「New Directory」→「Empty Project」と選びます。すると，ディレクトリ名（Directory name）と，その親ディレクトリ（Create project as subdirectory of）を聞いてきます。親ディレクトリのデフォルトは <code>~</code>（波印，チルダ）となっていますが，これはWindowsでは「ドキュメント」（C:/Users/ユーザ名/Documents），Macでは「ホーム」（/Users/ユーザ名）という場所です（三重大学総情センターのPCでは Z:/）。親ディレクトリのほうは通常は変更する必要はないでしょう。ディレクトリ名のほうは，プロジェクト名にもなりますので，スペースや記号を含まない英数字で簡潔な名前にするのがいいでしょう。入力したら，「Create Project」ボタンを押してください。</p>
+<p>RStudioのメニューで「File」→「New Project...」を選びます。もし「Save workspace image to ~/.RData?」などと聞いてきたなら通常は「Don't Save」と答えます。次に，新しく作業ディレクトリを作るなら「New Directory」，既存のディレクトリを使うなら「Existing Directory」を選びます。ここでは「New Directory」→「Empty Project」と選びます。すると，ディレクトリ名（Directory name）と，その親ディレクトリ（Create project as subdirectory of）を聞いてきます。親ディレクトリのデフォルトは <code>~</code>（波印，チルダ）となっていますが，これはWindowsでは「ドキュメント」（C:/Users/ユーザ名/Documents），Macでは「ホーム」（/Users/ユーザ名）という場所です。親ディレクトリのほうは通常は変更する必要はないでしょう。ディレクトリ名のほうは，プロジェクト名にもなりますので，スペースや記号を含まない英数字で簡潔な名前にするのがいいでしょう。入力したら，「Create Project」ボタンを押してください。</p>
 
 <div class="note">
 <p>プロジェクトを作ると，ディレクトリ（フォルダ）が作られ，その中に <code>プロジェクト名.Rproj</code> というファイルと，<code>.Rproj.user</code> という隠しサブディレクトリができます。Rコンソールに <code>getwd()</code> と打ち込めば，作業ディレクトリの位置が確認できます。</p>
@@ -475,7 +473,7 @@ mtext(c("対照群","実験群"), side=2, at=1:2, line=0.5, las=1)
 
 <h2 id="readtabulardata">表形式データの読み込ませ方</h2>
 
-<p><a href="data/atest2018.xlsx">atest2018.xlsx</a> は2018年度（平成30年度）の全国学力・学習状況調査の都道府県別正答率を収めたものです。元データは<a href="http://www.nier.go.jp/">国立教育政策研究所</a>の<a href="http://www.nier.go.jp/18chousakekkahoukoku/index.html">平成30年度　全国学力・学習状況調査　報告書・調査結果資料</a>にあります。このデータをRに読み込んでみましょう。</p>
+<p><a href="data/atest2018.xlsx">atest2018.xlsx</a> は2018年度（平成30年度）の全国学力・学習状況調査の都道府県別正答率を収めたものです。元データは<a href="https://www.nier.go.jp/">国立教育政策研究所</a>の<a href="https://www.nier.go.jp/18chousakekkahoukoku/index.html">平成30年度　全国学力・学習状況調査　報告書・調査結果資料</a>にあります。このデータをRに読み込んでみましょう。</p>
 
 <p>まずは上述の <a href="data/atest2018.xlsx">atest2018.xlsx</a> をダウンロード（保存）しましょう。ブラウザによりますが，デフォルトでは多分ホームディレクトリ直下の「ダウンロード」という名前のフォルダに保存されます。このままでもいいですが，プロジェクトを作成している（特定のディレクトリで仕事をしている）場合は，もしやりかたがわかるなら，データはそのプロジェクトのフォルダに保存するほうが便利です。</p>
 
@@ -683,15 +681,11 @@ biplot(r)    # または biplot(r, xlabs=x[,1])
 </div>
 
 <div class="note">
-<p>上のデータフレーム <code>X</code> は，基本的には <code>X$名前</code>，<code>X$身長</code> などのベクトルの集まりです。ベクトルの要素はすべて同じ型を持つので，<code>X$名前</code> は文字列，<code>X$身長</code> は数値になりそうですが，実際にはデータフレーム化したときに <code>X$名前</code> は「因子」（factor，カテゴリカルデータ）として格納されます。文字列を文字列のままデータフレームに格納するには，あらかじめ</p>
-<pre>
-<code>options(stringsAsFactors=FALSE)
-</code></pre>
-<p>と打ち込んでおきます。</p>
+<p>上のデータフレーム <code>X</code> は，基本的には <code>X$名前</code>，<code>X$身長</code> などのベクトルの集まりです。ベクトルの要素はすべて同じ型を持ち，<code>X$名前</code> は文字列，<code>X$身長</code> は数値になるはずですが，R 4.x以前は，データフレーム化したときに <code>X$名前</code> は「ファクター」（factor，カテゴリカルデータ）として格納されました。文字列を文字列のままデータフレームに格納するには，あらかじめ <code>options(stringsAsFactors=FALSE)</code> と打ち込んでおく必要がありました。R 4.xになってからは，これがデフォルトになりました。</p>
 </div>
 
 <div class="note">
-<p>名前は文字列のほうがいいのですが，性別は名義尺度のカテゴリカルデータですので，最初からファクターとして扱うほうがいいでしょう：</p>
+<p>名前は文字列のほうがいいのですが，性別は名義尺度のカテゴリカルデータですので，ファクターとして扱うほうがいいでしょう：</p>
 <pre>
 <code>性別 = factor(c("M","M","F"))
 </code></pre>
@@ -755,21 +749,17 @@ biplot(r)    # または biplot(r, xlabs=x[,1])
 
 <div class="note">
 <p><code>data1 = read.csv("data1.csv", fileEncoding="UTF-8")</code>
-のように文字コード（<code>"UTF-8"</code>，<code>"CP932"</code> など）を指定する必要があるかもしれません。</p>
+のように文字コード（<code>"UTF-8"</code>，<code>"UTF-8-BOM"</code>，<code>"CP932"</code> など）を指定する必要があるかもしれません。</p>
 </div>
 
 <div class="note">
 <p>ファイル名のかわりにURLを指定することもできます：</p>
 <pre>
-<code>data1 = read.csv("http://okumuralab.org/~okumura/stat/data/life_expectancy_Japan.csv",
+<code>data1 = read.csv("https://okumuralab.org/~okumura/stat/data/life_expectancy_Japan.csv",
                  comment.char="#",
                  fileEncoding="UTF-8")
 </code></pre>
 <p>ここでは，<code>#</code> で始まる行はコメントとして読み飛ばすというオプションを与えています。オンラインで提供するCSVファイルには <code>#</code> で始まるコメントを入れておくことがあります。</p>
-</div>
-
-<div class="note">
-<p>ExcelでCSVかテキスト（タブ区切り）で保存すると，文字コードはシフトJIS（厳密にはCP932）になります。「Unicodeテキスト」で保存すると，UTF-16 little-endian になります。行末は，WindowsではCRLF，MacではCRになります。</p>
 </div>
 
 <div class="note">
@@ -1125,7 +1115,7 @@ b = 5 - 3
 </code></pre>
 
 <div class="note">
-<p>Rで <code>&lt;-</code> の代わりに <code>=</code> が使えるようになったのは<a href="http://developer.r-project.org/equalAssign.html">2001年から</a>のようです。Rの前身の<a href="http://cm.bell-labs.com/stat/S">S</a>については，1998年のVersion 4からで，John M. Chambers, <a href="http://books.google.co.jp/books?id=Km1IBFZCRPUC&amp;printsec=frontcover&amp;hl=ja&amp;source=gbs_ge_summary_r&amp;cad=0#v=onepage&amp;q&amp;f=false"><i>Programming with Data: A Guide to the S Language</i></a> (1998) では主に <code>=</code> が使われ，p.15で <code>&lt;-</code> も使えることが言及されています。<a href="http://google-styleguide.googlecode.com/svn/trunk/Rguide.xml#assignment">Google's R Style Guide</a> では <code>=</code> でなく <code>&lt;-</code> を使えと書いてあります。最終的には好みの問題でしょう（<a href="http://blog.revolutionanalytics.com/2008/12/use-equals-or-arrow-for-assignment.html">参考</a>）。</p>
+<p>Rで <code>&lt;-</code> の代わりに <code>=</code> が使えるようになったのは<a href="https://developer.r-project.org/equalAssign.html">2001年から</a>のようです。Rの前身のSについては，1998年のVersion 4からで，John M. Chambers, <a href="https://books.google.co.jp/books?id=Km1IBFZCRPUC&amp;printsec=frontcover&amp;hl=ja&amp;source=gbs_ge_summary_r&amp;cad=0#v=onepage&amp;q&amp;f=false"><i>Programming with Data: A Guide to the S Language</i></a> (1998) では主に <code>=</code> が使われ，p.15で <code>&lt;-</code> も使えることが言及されています。<a href="https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml#assignment">Google's R Style Guide</a> では <code>=</code> でなく <code>&lt;-</code> を使えと書いてあります。最終的には好みの問題でしょう（<a href="https://blog.revolutionanalytics.com/2008/12/use-equals-or-arrow-for-assignment.html">参考</a>）。</p>
 </div>
 
 <div class="note">
@@ -1154,12 +1144,14 @@ b = 5 - 3
 に 2 を代入するという意味になってしまいます。関数の引数リストの中で仮引数以外の変数に代入する際には注意が必要です。</p>
 </div>
 
+<!--
 <div class="note">
 <p>ESS（Emacsの中のR）で <code>_</code> を打つと <code>&lt;-</code>
 が入ります。2度続けて <code>_</code> を打つと <code>_</code>
 に戻ります。これがややこしければEmacsの初期設定ファイルに <code>(ess-toggle-underscore nil)</code>
 と書いておきます。</p>
 </div>
+-->
 
 <h2>ライブラリとサンプルデータ</h2>
 
@@ -1193,7 +1185,7 @@ b = 5 - 3
 でリストされるのはR標準のものだけです。これ以外に無数のパッケージがCRANサイトで公開されています。パッケージをインストールする前に，すでにインストールされているパッケージを念のため最新の状態に更新しておきましょう。次のコマンドは，統計数理研究所のCRANミラーを使ってパッケージを更新・インストールします（パッケージ名にはダブルクォートを付けます）。</p>
 
 <pre>
-<code>options(repos="http://cran.ism.ac.jp")
+<code>options(repos="https://cran.ism.ac.jp")
 update.packages()
 install.packages("パッケージ名")
 </code></pre>
@@ -1318,7 +1310,7 @@ character(0)       # すべて消えた
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-22 14:21:33</time>
+Last modified: <time>2022-04-02 15:33:04 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
