@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/plot.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>東京都のCOVID-19</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>東京都のCOVID-19</h1>
+
+<p>Python版<a href="../python/COVID-19.html">東京都のCOVID-19</a>のデータをとりあえずRで読み込み，2022年に限定してグラフを描く。</p>
+
+<pre>
+library(tidyverse)
+
+df = read_csv("https://okumuralab.org/~okumura/python/data/COVID-tokyo.csv")
+df1 = subset(df, date >= "2022-01-01")
+plot(df1$date, df1$confirmed, type="h", lwd=5, col="orange", lend=1)
+</pre>
+
+<p>データを周期7の時系列クラスに変換し，stl（Seasonal Decomposition of Time Series by Loess）で seasonal + trend + remainder に分解し，trend を折れ線グラフで描く：</p>
+
+<pre>
+x = ts(df1$confirmed, frequency=7)
+t = df1$date
+# svg("COVID-tokyo-stl.svg", width=7, height=5)
+# par(mgp=c(2, 0.8, 0))
+plot(t, x, type="h", lwd=5, col="orange", lend=1, xlab="date", ylab="confirmed")
+points(t, exp(stl(log(x), "periodic")$time.series[,2]), type="l")
+# dev.off()
+</pre>
+
+<figure><img src="img/COVID-tokyo-stl.svg" alt="東京都のCOVID-19"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-04-02 21:42:49 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
