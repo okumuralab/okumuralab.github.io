@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/qrcode.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QRコード名刺</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>QRコード名刺</h1>
+
+<p>紙の名刺を交換するのは面倒だ。なんとか電子的にできないか。</p>
+
+<p>名刺の電子化フォーマットとしては，<a href="https://datatracker.ietf.org/doc/html/rfc6350">RFC 6350</a> で定められた vCard という形式がある。iPhone の「連絡先」情報を交換するのにもこの形式が使われる。メールの添付ファイルとして「奥村晴彦.vcf」というファイル名で付けることができる。</p>
+
+<p><a href="https://ja.qr-code-generator.com">QR Code Generator</a> サイトで「vCard」を選んで必要事項を入力すると，vCard 形式をQRコードにしたものが出力できる。<a href="https://www.qrqrq.com">クルクル</a>というアプリを使えば連絡先からQRコードにできるそうである。このQRコードをスマホのカメラで読み取ってもらえば，名刺情報がそのまま「連絡先」に登録できる。</p>
+
+<p>ここでは自前でやってみた。まず，次のようなテキストファイルを作る。文字コードはUTF-8で，行末コードはRFC 6350によればCR LFである（LFだけでも大丈夫らしい）。</p>
+
+<pre>
+BEGIN:VCARD
+VERSION:3.0
+N:奥村;晴彦;;;
+FN:晴彦 奥村
+X-PHONETIC-FIRST-NAME:ハルヒコ
+X-PHONETIC-LAST-NAME:オクムラ
+TITLE:三重大学名誉教授
+EMAIL:okumura@okumuralab.org
+URL:https://okumuralab.org/~okumura/
+END:VCARD
+</pre>
+
+<p>これを <code>okumura.vcf</code> というファイル名で保存し，何らかのツールでQRコードにする。私は <a href="qrcode.html">QRコード</a> で紹介した Python ライブラリ（をインストールすると入るコマンドラインツール）を使った：</p>
+
+<pre>
+cat okumura.vcf | qr &gt; QR-okumura.png
+</pre>
+
+<figure><img src="img/QR-okumura.png" alt="奥村晴彦のvCard"></figure>
+
+<p>これを iPhone のカメラまたは Google レンズで読み取れば連絡先情報が読み取れる。</p>
+
+<p>本当は <a href="https://metacode.biz/openpgp/openpgp4fpr">openpgp4fpr URI scheme</a> にあるように PGP 公開鍵（のフィンガープリント）も含めたかったが，スマホのアプリが対応していないようだ。</p>
+
+<p>関連情報：</p>
+
+<ul>
+  <li><a href="https://www.itmedia.co.jp/news/articles/2112/28/news103.html">新時代の名刺交換だった「Poken」　プロフィール交換の課題と未来を考える</a></li>
+</ul>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-04-01 20:17:59 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
