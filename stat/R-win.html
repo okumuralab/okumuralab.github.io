@@ -3,7 +3,7 @@
 <head>
 <link rel="canonical" href="https://okumuralab.org/~okumura/stat/R-win.html">
 <meta charset="UTF-8">
-<title>Windows用Rガイド</title>
+<title>WindowsでのR/RStudioのインストール</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
@@ -15,95 +15,70 @@
 <a href="./">統計・データ解析</a> &gt;
 </nav>
 
-<h1>Windows用Rガイド</h1>
+<h1>WindowsでのR/RStudioのインストール</h1>
+
+<p>以下では <code>\</code> は Windows では <code>¥</code> と表示されるかもしれません。また，R の中では <code>/</code> で置き換えられることがあります。</p>
+
+<h2>準備</h2>
+
+<p>Mac と違って，日本語環境の Windows での R や RStudio のインストールには，いろいろ落とし穴があります。システムの文字コードが UTF-8 でなく Shift JIS（を拡張した CP932）であることがその元凶です。特に，ホームディレクトリのパスにいわゆる全角文字が含まれていたり OneDrive を使っていたりすると，よくトラブルが生じます。</p>
+
+<p>まず，自分の Windows 機のホームディレクトリがどこにあるか調べてみましょう。エクスプローラー（Internet Explorer ではなくアイコンがフォルダー 🗂 の形のツール）を立ち上げ，そのアドレスバーに <code>%HOMEPATH%</code> と打ち込んでみましょう（小文字でもかまいません）。アドレスバーが 🗂 &gt; Windows (C:) &gt; ユーザー &gt; 名前 &gt; になります。この「名前」の部分は自分の名前（通常は登録時に使ったメールアドレスの頭の部分だが全角の名前になることもある）が入ります。</p>
+
+<p>この「名前」がいわゆる半角文字の場合は，この場所を R の作業場所に設定しましょう。具体的には，作業場所の名前を <code>C:\Users\名前</code> とします。例えば私の「名前」は <code>okumu</code> ですので，作業場所は <code>C:\Users\okumu</code> です。</p>
+
+<p>また，「名前」が全角文字のときは，Windows (C:) まで戻って，そこに例えば <code>work</code> のような半角の名前のフォルダーを作り，<code>C:\work</code> を作業場所とします。</p>
+
+<p>作業場所が決まったら，スタート→設定⚙で「環境変数」と打ち込んで検索し，「環境変数を編集」を見つけて，ユーザー環境変数の「新規(N)...」を押し，変数名 <code>R_USER</code>，変数値として上で決めた作業場所を設定します。例えば私の場合は <code>C:\Users\okumu</code> を設定します。</p>
 
 <h2>Rのインストール</h2>
 
-<p>三重大学のコンピュータ教室のPCにはすでにRがインストールされていますので，以下を読む必要はありません。</p>
+<p>R は CRAN（Comprehensive R Archive Network，シーランまたはクランと読む）と呼ばれる世界中に分散した多数のサイトで公開されています。日本では統数研の <a href="https://cran.ism.ac.jp/">https://cran.ism.ac.jp/</a> が該当しますが，ときどき潰れているので，その場合は <a href="https://www.r-project.org">R Project</a> サイトの左の「CRAN」というリンクから適当なサイトを選びます。</p>
 
-<p>ご自分のWindows機にRをインストールするには，Rの配布元であるCRANサイト（日本のミラーは統数研 <a href="http://cran.ism.ac.jp/">http://cran.ism.ac.jp/</a> だが，ときどき潰れているので，その場合は <a href="https://www.r-project.org">R Project</a> サイトの左の「CRAN」というリンクから適当なミラーを選ぶ）にアクセスし，「Download R for Windows」→「base」とたどって，「Download R *.*.* for Windows」（* はバージョン番号）をクリックし，「保存」します。保存された R-*.*.*-win.exe というファイルを実行します。</p>
+<p>CRAN にアクセスし，「Download R for Windows」→「base」とたどって，「Download R *.*.* for Windows」（* はバージョン番号）をクリックし，「保存」します。デフォルトでは「ダウンロード」フォルダに保存されるはずです。保存された <code>R-*.*.*-win.exe</code> というファイルを実行します。</p>
 
-<p>インストーラがいろいろ聞いてきます。すべてデフォルトでもいいのですが，時間があれば，次の点を変更してください。</p>
+<p>ユーザーアカウント制御（UAC）の画面が「このアプリがデバイスに変更を加えることを許可しますか？」と聞いてくるので「はい」を選びます。セットアップに使用する言語の選択は「日本語」のまま「OK」します。ライセンス（GNU General Public License）の説明の英語が出ますので，「次へ」を選びます。インストール先の指定はデフォルト（<code>C:\Program Files\R\R-*.*.*</code>）のまま「次へ」を選びます。コンポーネントの選択では「32-bit Files」は不要なのでチェックを外してもかまいません。起動時オプションは，よくわからなければ「いいえ（デフォルトのまま）」でもかまいませんが，私は「はい（カスタマイズする）」を選んで，「次へ」で「MDI」ではなく「SDI」を選んでいます（RStudioから使う場合はこの設定は意味がありません）。それ以外はデフォルトのままでいいでしょう。インストールが始まり，しばらく待たされます。最後に「完了」を押してインストールを終了します。</p>
 
-<ul>
-  <li>「カスタムインストール」のところで，もし32ビット版が不要なら，「32-bit Files」のチェックを外します。</li>
-  <li>「起動時オプション」のところで，「はい（カスタマイズする）」を選び，次の「MDI」「SDI」の選択画面では「SDI」を選びます。RStudioから使う場合はこの設定は意味がありません。</li>
-</ul>
+<p>もしRをアンインストールしたいときは，他のソフトと同様，「設定」→「アプリ」→「インストールされているアプリ」で行います。</p>
 
-<p>Rをアンインストールするには，他のソフトと同様に「コントロールパネル」の「プログラムと機能」で行います。</p>
-
-<p>なお，デフォルトでRがインストールされる場所は C:\Program Files\R です。この中に R-3.6.1 のような番号付きのフォルダができ，さらにその中にある bin\i386 と bin\x64 にそれぞれ32ビット，64ビット用の実行ファイルが入ります（R.exe，Rscript.exe など）。また，C:\Users\ユーザ名\Documents\R\win-library\3.6 といったところに個人用ライブラリが入ります。</p>
+<p>Rがインストールされる場所はデフォルトでは <code>C:\Program Files\R</code> です。これ以外に <code>R_USER</code> フォルダ下の <code>R\win-library\*.*</code> 以下にユーザライブラリが入ります（<code>*.*</code> は R のバージョン）。</p>
 
 <h2>RStudioのインストール</h2>
 
-<p>三重大学のコンピュータ教室のPCにはすでにRStudioがインストールされていますので，以下を読む必要はありません。</p>
+<p>続いてRStudioのインストールをします。</p>
 
-<p>Rの実行に必要ではありませんが，かっこいいフロントエンド（IDE）としてRStudioの人気が高まっています。特にデータセットのインポートが楽になります。必ずRを先にインストールしてから，後でRStudioをインストールしてください。</p>
+<p><a href="https://www.rstudio.com/">RStudio</a>サイトの「DOWNLOAD FREE DESKTOP IDE」をクリックし，RStudio Desktopの下の「DOWNLOAD」をクリックし，「DOWNLOAD RSTUDIO DESKTOP FOR WINDOWS」をクリックすると，ダウンロードが始まります。ダウンロードが終わったら，実行し，Rの場合と同様にインストールします。今度はすべてデフォルトの設定で問題ありません。</p>
 
-<p><a href="https://www.rstudio.com/">RStudio</a>ホームページの「RStudio」の下の「Download」をクリックし，「RStudio Desktop」の「Open Source License」と書いてあるもののInstallerをダウンロードします。</p>
+<p>RStudio の実体は PC の Windows (C:) &gt; Program Files &gt; RStudio &gt; bin &gt; rstudio.exe です。必要に応じてタスクバーにピン留めまたはデスクトップにショートカットを作成しておくと便利です。</p>
 
-<!--
-<h2>Rの起動（生のRを使う場合）</h2>
+<h2>RStudioを起動する</h2>
 
-<p>デスクトップのR起動用アイコン（R x64 *.*.*またはR i386 *.*.*）をダブルクリックします。両方ある場合は，通常は64ビット版（x64）で大丈夫でしょう。デスクトップに見つからなければ「スタート」メニューなどから起動します。</p>
+<p>スタートメニューから RStudio を探し，起動します。エラーが出ないでしょうか。</p>
 
-<p>複数のRがインストールされている場合は，最も新しいもの（*.*.* の番号の大きいもの）を起動してください。</p>
-
-<p>起動したら，「編集」→「GUIプリファレンス...」で画面構成やフォントの設定を確認します。</p>
-
-<ul>
-  <li>一番上のMDI（multiple document interface）・SDI（single document interface）は，好みですが，私はSDIを選んでいます。</li>
-  <li>Fontとそのsizeを適当に選びます。デフォルトはCourierの10ポイントです。欧文フォントによっては，日本語文字列を含むデータを後述の「データエディタ」で扱うと文字化けします。</li>
-</ul>
-
-<p>フォント設定を適用するには「Apply」ボタンを押します。MDI・SDIの選択は「Apply」では適用されませんので，「Save...」ボタンを押してそのままの場所に「保存」し，Rをいったん終了します。</p>
-
-<p>終了時に「作業スペースを保存しますか？」と聞いてきたら，「いいえ」を選びます。</p>
-
-<div class="note">
-<p>設定ファイル Rconsole の保存場所は通常「ドキュメント」です。通常は最初に現れた場所に保存すればいいのですが，保存場所を移動してわからなくなった場合は，Rコンソールに <code>getwd()</code> と打ち込めば，標準の保存場所が例えば <code>C:/Users/hoge/Documents</code> のように表示されます。</p>
-</div>
--->
-
-<h2>RStudioの起動</h2>
-
-<p>デスクトップにRStudioのアイコンがあればそれをダブルクリックします。なければスタートボタンからRStudioを起動します。</p>
-
-<div class="note">
-<p>三重大学総情センターの端末室のPCではデスクトップの「統計解析」フォルダの中にRStudioがあります。</p>
-</div>
-
-<p>通常のRと同様に使えます。終了時に「Save workspace image to ~/.RData?」のように聞いてきたら，通常は「Don't Save」を選びます。</p>
-
-<h2>データファイルを読む（RStudioを使う場合）</h2>
-
-<p>データはExcelで入力しておくのが便利です。Rに読み込むには，右上ペインの「Import Dataset」から「From Excel...」を選びます（初回に使う際にライブラリreadxlとRcppがインストールされていなければインストールが行われます）。右上の「Browse...」からExcelファイルを選びます。例えばhoge.xlsxを選べば，次のRコマンドが自動で実行されます：</p>
+<p>コンソール（左下ペイン）に次のように打ち込んで，エラーが出たり文字化け（<code>??????</code>）したり OneDrive が含まれたりしないか確認してください。</p>
 
 <pre>
-<code>library(readxl)
-hoge = read_excel("~/hoge.xlsx")
+.libPaths()
+</pre>
+
+<p>簡単な計算をしたり，グラフを描いたりしてみてください。例えば</p>
+
+<pre>
+curve(sin(x), 0, 2*pi)
+</pre>
+
+<p>と打ち込んで，サインカーブが 0 から 2π まで描けるでしょうか。</p>
+
+<p>ちょっと難しいことをしてみましょう。適当なデータを Excel で用意します。RStudio の右上ペインの「Import Dataset」から「From Excel...」を選びます（初回に使う際にライブラリ readxl と Rcpp がインストールされていなければインストールが行われます）。右上の「Browse...」から Excel ファイルを選びます。データが読み込まれて左上ペインにデータが表示されます。</p>
+
+<div class="note">
+<p>上の作業は（例えば hoge.xlsx について）次の R コマンドを自動するのと等価です：</p>
+<pre>
+library(readxl)
+hoge = read_excel("hoge.xlsx")
 View(hoge)
-</code></pre>
-
-<p>左上ペインにデータが表示されます。</p>
-
-<!--
-<h2>Rコマンダーのインストール（生のRを使う場合）</h2>
-
-<p>RコマンダーはRをマウスだけで使うためのパッケージです。初心者には便利かもしれません。</p>
-
-<p>Rコンソールで「パッケージ」→「パッケージのインストール...」をクリックします。初回はCRANミラーサイトを聞いてきますので，日本のどこか（東京または筑波または…）を選びます。パッケージ一覧が現れますので，「Rcmdr」を選びます。</p>
-
-<p>次に，Rコンソールで「パッケージ」→「パッケージの読み込み...」をクリックし，一覧から「Rcmdr」を選び「OK」します。すると，「Rcmdrが利用する次のパッケージがありません…これらのパッケージをインストールしますか？」と聞いてきますので，「はい（Y）」を押します。何か聞いてきたら「OK」で進みます。</p>
--->
-
-<h2>雑多なこと</h2>
-
-<p>プログラムが止まらなくなった：WindowsではESCキーで止まります。</p>
-
-<p>長い綴りを打つのが面倒：TABキーで補完できます。補完候補が複数ある場合はTABキーを2回押すと候補の一覧が現れます。</p>
-
-<p>打ち間違えた：上向き矢印キーで戻って編集できます。</p>
+</pre>
+</div>
 
 <hr>
 
@@ -111,7 +86,7 @@ View(hoge)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-07-22 09:51:30</time>
+Last modified: <time>2022-04-03 21:26:17 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
