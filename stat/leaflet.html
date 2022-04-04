@@ -4,7 +4,7 @@
 <link rel="canonical" href="https://okumuralab.org/~okumura/stat/leaflet.html">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>leaflet</title>
+<title>Leaflet</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -21,17 +21,20 @@
 <a href="./">統計・データ解析</a> &gt;
 </nav>
 
-<h1>leaflet</h1>
+<h1>Leaflet</h1>
+
+<p>🇺🇦 <a href="https://leafletjs.com/">Leaflet</a> はウクライナ生まれのツールです。</p>
 
 <p><em>[2020-11-01]</em> Leaflet 1.7.1 に合わせて更新しました。</p>
 
-<h2>leafletとは</h2>
+<h2>Leafletとは</h2>
 
-<p><a href="https://leafletjs.com/">leaflet</a> は地図を描くためのJavaScriptライブラリです。いろいろな地図タイルが使えます。次の例は <a href="https://www.openstreetmap.org/">OpenStreetMap</a> です。</p>
+<p><a href="https://leafletjs.com/">Leaflet</a> は地図を描くためのJavaScriptライブラリです。いろいろな地図タイルが使えます。次の例は <a href="https://www.openstreetmap.org/">OpenStreetMap</a> です。</p>
 
 <div id="map" style="width:100%; height:300px"></div>
 <script>
-var map = L.map('map').setView([34.7468,136.5248], 15);
+"use strict";
+const map = L.map('map').setView([34.7468,136.5248], 15);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
@@ -56,7 +59,7 @@ L.marker([34.7468,136.5248]).addTo(map)
 <pre>
 <code>&lt;div id="map" style="width:100%; height:300px"&gt;&lt;/div&gt;
 &lt;script&gt;
-var map = L.map('map').setView([34.7468,136.5248], 15);
+const map = L.map('map').setView([34.7468,136.5248], 15);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/copyright"&gt;OpenStreetMap&lt;/a&gt; contributors'
 }).addTo(map);
@@ -72,7 +75,7 @@ L.marker([34.7468,136.5248]).addTo(map)
 
 <div id="map2" style="width:100%; height:300px"></div>
 <script>
-var map2 = L.map('map2').setView([34.7468,136.5248], 15);
+const map2 = L.map('map2').setView([34.7468,136.5248], 15);
 L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院</a>'
 }).addTo(map2);
@@ -86,7 +89,7 @@ L.marker([34.7468,136.5248]).addTo(map2)
 <pre>
 <code>&lt;div id="map2" style="width:100%; height:300px"&gt;&lt;/div&gt;
 &lt;script&gt;
-var map2 = L.map('map2').setView([34.7468,136.5248], 15);
+const map2 = L.map('map2').setView([34.7468,136.5248], 15);
 L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
     attribution: '&amp;copy; &lt;a href="https://maps.gsi.go.jp/development/ichiran.html"&gt;国土地理院&lt;/a&gt;'
 }).addTo(map2);
@@ -98,11 +101,11 @@ L.marker([34.7468,136.5248]).addTo(map2)
 
 <p>地理院地図にはいろいろな種類があります。詳しくは<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル一覧</a>をご覧ください。</p>
 
-<p>leafletでGoogle Mapを使うこともできます（ググってください）。</p>
+<p>LeafletでGoogle Mapを使うこともできます（ググってください）。</p>
 
-<h2>Rでleafletを使う</h2>
+<h2>RでLeafletを使う</h2>
 
-<p>Rの <a href="https://cran.r-project.org/web/packages/leaflet/index.html">leaflet</a> パッケージを使えばRから上のような地図を簡単に書けます。</p>
+<p>Rの <a href="https://cran.r-project.org/package=leaflet">leaflet</a> パッケージを使えばRから上のような地図を簡単に書けます。</p>
 
 <p>まず，CRANからパッケージをインストールし，読み込みます：</p>
 
@@ -166,7 +169,7 @@ m
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-01 16:02:50</time>
+Last modified: <time>2022-04-04 16:26:16 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
