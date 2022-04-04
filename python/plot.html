@@ -115,7 +115,7 @@ plt.plot([-1, 1])
 <code>backend: Qt5Agg
 </code></pre>
 
-<p>とします（うまくいかなければ <code>MacOSX Qt5Agg Qt4Agg Gtk3Agg GTK3Cairo TkAgg WxAgg Agg Cairo</code> の中から選んでください）。</p>
+<p>とします。うまくいかなければ <code>MacOSX Qt5Agg Qt4Agg Gtk3Agg GTK3Cairo TkAgg WxAgg Agg Cairo</code> の中から選んでください。M1 Mac に miniforge で入れた Python では MacOSX バックエンドがいまいちなので TkAgg あたりのほうがいいかもしれません。</p>
 
 <p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら，システムにインストールされている適当な TrueType または OpenType フォント名を matplotlibrc に書き加えます。Mac なら例えば</p>
 
@@ -469,7 +469,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-21 17:11:55</time>
+Last modified: <time>2022-04-04 21:07:07 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

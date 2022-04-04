@@ -35,7 +35,7 @@ t = df1$date
 # svg("COVID-tokyo-stl.svg", width=7, height=5)
 # par(mgp=c(2, 0.8, 0))
 plot(t, x, type="h", lwd=5, col="orange", lend=1, xlab="date", ylab="confirmed")
-points(t, exp(stl(log(x), "periodic")$time.series[,2]), type="l")
+points(t, exp(stl(log(x), "periodic")$time.series[,2]), type="l", lwd=2)
 # dev.off()
 </pre>
 
@@ -47,7 +47,7 @@ points(t, exp(stl(log(x), "periodic")$time.series[,2]), type="l")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-02 21:42:49 JST</time>
+Last modified: <time>2022-04-04 17:40:31 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
