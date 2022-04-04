@@ -7,8 +7,9 @@
 <title>2項分布の信頼区間の説明</title>
 <link rel="stylesheet" href="style.css">
 <script>
+"use strict";
 function choose(n, r) {
-  var c = 1;
+  let c = 1;
   while (r >= 1) {
     c *= n / r;  n--;  r--;
   }
@@ -17,29 +18,29 @@ function choose(n, r) {
 function dbinom(r, n, theta) {
   return choose(n, r) * Math.pow(theta, r) * Math.pow(1-theta, n-r);
 }
-var canvas;
+let canvas;
 function draw(e) {
-  var ctx = canvas.getContext('2d');
-  var mx = e ? (e.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft) - canvas.offsetLeft) : 250;
-  var my = e ? (e.clientY + (document.body.scrollTop  || document.documentElement.scrollTop)  - canvas.offsetTop) : 100;
-  theta = mx / 500;
+  const ctx = canvas.getContext('2d');
+  const mx = e ? (e.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft) - canvas.offsetLeft) : 250;
+  const my = e ? (e.clientY + (document.body.scrollTop  || document.documentElement.scrollTop)  - canvas.offsetTop) : 100;
+  let theta = mx / 500;
   if (theta > 1) theta = 1;
   if (theta < 0) theta = 0;
   if (my < 50) {
     if (theta < 0.5) theta = 0.06673951; else theta = 0.65245285;
   }
-  var pr = new Array(11);
-  for (var i = 0; i <= 10; i++) pr[i] = dbinom(i,10,theta);
-  var s = 0, t = 0;
-  for (var j = 0; j <= 3; j++) s += pr[j];
-  for (var j = 3; j <= 10; j++) t += pr[j];
-  ctx.clearRect(0,0,500,350);
+  const pr = new Array(11);
+  for (let i = 0; i <= 10; i++) pr[i] = dbinom(i,10,theta);
+  let s = 0, t = 0;
+  for (let j = 0; j <= 3; j++) s += pr[j];
+  for (let j = 3; j <= 10; j++) t += pr[j];
+  ctx.clearRect(0, 0, 500, 350);
   ctx.font = "normal 15px sans-serif";
-  for (var i = 0; i <= 10; i++) {
-    var x = 46 * i;
-    var y = 320;
-    var w = 40;
-    var h = -600 * pr[i];
+  for (let i = 0; i <= 10; i++) {
+    const x = 46 * i;
+    const y = 320;
+    const w = 40;
+    const h = -600 * pr[i];
     ctx.beginPath();
     ctx.rect(x, y, w, h);
     if (s < t) {
@@ -57,7 +58,7 @@ function draw(e) {
     }
     ctx.fill();
     ctx.fillStyle = "black";
-    ctx.fillText(i, x+((i<10)?15:10), 350);
+    ctx.fillText(i, x + ((i < 10) ? 15 : 10), 350);
   }
   ctx.font = "normal 40px sans-serif";
   // ctx.fillText("θ= " + Math.round(1000*theta)/1000, 150, 40);
@@ -95,7 +96,7 @@ window.onload = init;
 お使いのブラウザはHTML5のcanvasに対応していないようです。
 </canvas>
 
-<p>使い方：上の領域でマウスを動かす。左端でθ=0，右端でθ=1となる。マウスの位置をグラフの上のほう50ピクセル以内くらい（「θ=・・・」と書いてある高さ）にすると，θ=0.067またはθ=0.652に飛ぶ。</p>
+<p>使い方：上の領域でマウスを動かす。左端で θ = 0，右端で θ = 1 となる。マウスの位置をグラフの上のほう50ピクセル以内くらい（「θ = ・・・」と書いてある高さ）にすると，θ = 0.067 または θ = 0.652 に飛ぶ。</p>
 
 <hr>
 
@@ -103,7 +104,7 @@ window.onload = init;
 <p><a href="../" rel="author">奥村晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-09-25 15:32:00</time>
+Last modified: <time>2022-04-04 16:04:41 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

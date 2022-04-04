@@ -7,8 +7,9 @@
 <title>2項分布のp値の説明</title>
 <link rel="stylesheet" href="style.css">
 <script>
+"use strict";
 function choose(n, r) {
-  var c = 1;
+  let c = 1;
   while (r >= 1) {
     c *= n / r;  n--;  r--;
   }
@@ -17,30 +18,30 @@ function choose(n, r) {
 function dbinom(r, n, theta) {
   return choose(n, r) * Math.pow(theta, r) * Math.pow(1-theta, n-r);
 }
-var canvas;
+let canvas;
 function draw(e) {
-  var ctx = canvas.getContext('2d');
-  var mx = e ? (e.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft) - canvas.offsetLeft) : 46 * 2;
-  // var my = e ? (e.clientY + (document.body.scrollTop  || document.documentElement.scrollTop)  - canvas.offsetTop) : 0;
-  theta = document.getElementById('theta').value;
+  const ctx = canvas.getContext('2d');
+  const mx = e ? (e.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft) - canvas.offsetLeft) : 46 * 2;
+  // const my = e ? (e.clientY + (document.body.scrollTop  || document.documentElement.scrollTop)  - canvas.offsetTop) : 0;
+  let theta = document.getElementById('theta').value;
   if (theta > 1) theta = 1;
   if (theta < 0) theta = 0;
-  var r = Math.trunc(mx / 46);
+  let r = Math.trunc(mx / 46);
   if (r < 0) r = 0; else if (r > 10) r = 10;
   document.getElementById('r').textContent = r;
-  var pr = new Array(11);
-  for (var i = 0; i <= 10; i++) pr[i] = dbinom(i,10,theta);
-  ctx.clearRect(0,0,500,350);
+  const pr = new Array(11);
+  for (let i = 0; i <= 10; i++) pr[i] = dbinom(i,10,theta);
+  ctx.clearRect(0, 0, 500, 350);
   ctx.font = "normal 15px sans-serif";
-  p = 0;
-  for (var i = 0; i <= 10; i++) {
-    var x = 46 * i;
-    var y = 320;
-    var w = 40;
-    var h = -600 * pr[i];
+  let p = 0;
+  for (let i = 0; i <= 10; i++) {
+    const x = 46 * i;
+    const y = 320;
+    const w = 40;
+    const h = -600 * pr[i];
     ctx.beginPath();
     ctx.rect(x, y, w, h);
-    if (pr[i] <= pr[r]+0.000000001) {  // hack
+    if (pr[i] <= pr[r] + 0.000000001) {  // hack
       ctx.fillStyle = "#ff2800";
       p += pr[i];
     } else {
@@ -48,7 +49,7 @@ function draw(e) {
     }
     ctx.fill();
     ctx.fillStyle = "black";
-    ctx.fillText(i, x+((i<10)?15:10), 350);
+    ctx.fillText(i, x + ((i < 10) ? 15 : 10), 350);
   }
   document.getElementById('p').textContent = p.toFixed(3);
 }
@@ -74,7 +75,7 @@ window.onload = init;
 お使いのブラウザはHTML5のcanvasに対応していないようです。
 </canvas>
 
-<p>表が出る確率θ= <input id="theta" size="4"> の硬貨を10回投げて表が <span id="r">3</span> 回出た。<i>p</i> = <span id="p"></span></p>
+<p>表が出る確率 θ = <input id="theta" size="4"> の硬貨を10回投げて表が <span id="r">3</span> 回出た。<i>p</i> = <span id="p"></span></p>
 
 <p>（マウスで表の回数を選んでください。θの値も書き換え可能です）</p>
 
@@ -86,7 +87,7 @@ window.onload = init;
 <p><a href="../" rel="author">奥村晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-09-28 12:47:11</time>
+Last modified: <time>2022-04-04 16:00:56 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
