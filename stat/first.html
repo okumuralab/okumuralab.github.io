@@ -87,7 +87,7 @@
 </code></pre>
 
 <div class="note">
-<p>代入は <code>x = 1/3</code> のような書き方のほかに <code>x &lt;- 1/3</code> や <code>1/3 -&gt; x</code> のような書き方もできます。</p>
+<p>代入は <code>x = 1/3</code> のような書き方のほかに <code>x &lt;- 1/3</code> や <code>1/3 -&gt; x</code> のような書き方もできます。詳しくは下の方をご覧ください。</p>
 </div>
 
 <div class="note">
@@ -130,7 +130,7 @@ PI = Const("pi", prec=1000) # 1000ビット精度の円周率
 PI
 sin(PI / 2)
 </code></pre>
-<p>任意精度の整数なら <a href="https://CRAN.R-project.org/package=bignum">bignum</a> パッケージの <code>biginteger()</code> が便利です。</p>
+<p>任意精度の整数なら <a href="https://CRAN.R-project.org/package=bignum">bignum</a> パッケージの <code>biginteger()</code> が便利です。このパッケージには50桁精度の <code>bigfloat()</code> も含まれます。</p>
 </div>
 
 <p>Rのコンソールへの入力は，ヒストリー（履歴）機能が使えます。［↑］キー，［↓］キーで履歴を前後できます（Emacsの中では <code>M-p</code>，<code>M-n</code>）。</p>
@@ -147,7 +147,7 @@ sin(PI / 2)
 <p><code>pi</code> のような既存の名前と衝突するオブジェクトを作ることは，なるべく避けたほうがいいので，新しいオブジェクトを使いたいときには，Rコンソールに打ち込んでみて「オブジェクト …… がありません」というメッセージが現れるかどうか調べるといいでしょう。</p>
 
 <div class="note">
-<p>既存の1文字の名前としては <code>c q t C D F I T</code> があります。</p>
+<p>既存の1文字の名前としては <code>c q t C D F I T</code> があります。例えば <code>t()</code> は行列の転置（transpose）を求める関数です。もっとも，<code>t = 1/3</code> のように数値を代入しても，関数 <code>t()</code> は影響を受けませんので，あまり気にする必要はありません。私も <code>t</code> はよく変数として使います。</p>
 </div>
 
 <p><code>pi</code>（円周率 π = 3.14159...）は定義済みですが，<code>e</code>（自然対数の底 e = 2.718...）は定義されていません。</p>
@@ -171,7 +171,7 @@ sin(PI / 2)
 +
 </code></pre>
 
-<p>このように，続きの入力を促すプロンプト <code>+</code> が出ます。その右側に，入れ忘れた <code>)</code> を入力してEnterを押します。あるいは，わけがわからなくなったなら「Esc」（エスケープ）キーを押せば通常のプロンプト <code>&gt;</code> に戻ります。場合によっては Control+C で止まります（Emacs中では Control-C を2回）。</p>
+<p>このように，続きの入力を促すプロンプト <code>+</code> が出ます。その右側に，入れ忘れた <code>)</code> を入力してEnterを押します。あるいは，わけがわからなくなったなら「Esc」（エスケープ）キーを押せば通常のプロンプト <code>&gt;</code> に戻ります。Control+C でも止まります（Emacs中では Control-C を2回）。</p>
 
 <div class="note">
 <p>こういった書き間違いの修正は面倒です。複雑な入力の際には，Rのコンソールに直接入力するのではなく，RStudioの左上のペイン（ソースエディタ）に書き，実行したい行の中にカーソルがある状態，あるいは複数行を選択した状態で，「Run」ボタン（またはCtrl+Enter，Macでは⌘+Enterでもいい）を押すのが便利です。このソースエディタに書き込んだ内容は，RStudioを終了しても保持されますが，ファイルに保存しておけば安心です。ファイル名は <code>何々.R</code> のようにするのが習慣です。Rスクリプトの <code>#</code> から行末までは無視されますので，<code>#</code> を使って説明を書いておけば，後で見直すときに便利です。Emacs（ESS）の場合は，別ファイル（<code>*.R</code>）に書いたソースを1行ずつ実行するのは C-RET（つまりCtrl+Enter），選択範囲を実行するのは C-c C-r，バッファ（ファイル）全体を実行するのは C-c C-b です。</p>
@@ -255,7 +255,7 @@ sin(PI / 2)
 x
 1 2 3 4 5 
 2 3 4 3 2 
-&gt; t.test(x,y)  # t検定をする
+&gt; t.test(x, y) # t検定をする
 </code></pre>
 </div>
 
@@ -1310,7 +1310,7 @@ character(0)       # すべて消えた
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-02 15:33:04 JST</time>
+Last modified: <time>2022-04-04 10:53:00 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
