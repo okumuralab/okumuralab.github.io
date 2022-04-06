@@ -338,7 +338,7 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 
 <p>一方，自動処理のためのデータ形式はますますCSVやJSONに向かい，文字コードはもはやUTF-8以外は考えられなくなってきた。Windowsの「メモ帳」のデフォルトもBOMなしUTF-8になった。ExcelはBOM付きUTF-8のCSVを読み書きできるようになった（BOMなしCSVを開くと化けるのは何とかしてほしい）。</p>
 
-<p>独自にまとめたCSVデータを公開していたところ，Access-Control-Allow-Originを設定してほしいという話があったので，httpd.confに <code>Header set Access-Control-Allow-Origin '*'</code> と追記した。こうすることで他サイトのJavaScriptでデータを利用できる。これも時代の流れであろう。</p>
+<p>2020年8月16日からは，oku.edu.mie-u.ac.jpとokumuralab.orgの/etc/httpd/conf/httpd.confの <code>&lt;Directory /&gt;</code> と <code>&lt;/Directory&gt;</code> の間に <code>Header set Access-Control-Allow-Origin '*'</code> を追記した。こうすることで他サイトのコンテンツ中のJavaScriptから当サイトのデータを自由に利用できるようになる。あるいは，公開データを入れたディレクトリに .htaccess を置き <code>Header append Access-Control-Allow-Origin '*'</code> と書いておくだけでもよい。GitHub（GitHub Pagesも含めて）ではサイト全体にわたってこのような設定になっているので，公開したいデータはGitHubに置くのでもよい。</p>
 
 <p>再利用しやすいデータについては <a href="https://www.jstatsoft.org/article/view/v059i10">tidy data</a>（整然データ）という呼称が広まった。The American Statistician の <a href="https://www.tandfonline.com/toc/utas20/72/1">Special Issue on Data Science</a> に含まれる <a href="https://doi.org/10.1080/00031305.2017.1375989">Data Organization in Spreadsheets</a> も参考になる。</p>
 
@@ -348,7 +348,7 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 <p><a href="../" rel="author">奥村 晴彦</a> (<a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-03-23 09:33:09 JST</time>
+Last modified: <time>2022-04-06 14:20:52 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
