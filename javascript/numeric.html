@@ -10,7 +10,7 @@
 <script>
 "use strict";
 function conv(x) {
-  document.getElementById("fahrenheit").value = 1.8 * Number(x.value) + 32;
+  document.getElementById("fahrenheit").value = 1.8 * parseFloat(x.value) + 32;
 }
 </script>
 </head>
@@ -21,41 +21,59 @@ function conv(x) {
 <a href="./">JavaScript講座</a> &gt;
 </nav>
 
-<article>
 <h1>数値の入力</h1>
 
 <h2>例</h2>
 
-<p><label>セ氏温度：<input id="celsius" onchange="conv(this)"></label></p>
+<p>セ氏温度: <input id="celsius" type="number" onchange="conv(this)"></p>
 
-<p>カ氏温度： <input id="fahrenheit" readonly></p>
+<p>カ氏温度: <input id="fahrenheit" readonly></p>
 
 <pre>
 &lt;script&gt;
 function conv(x) {
-  document.getElementById("fahrenheit").value = 1.8 * Number(x.value) + 32;
+  document.getElementById("fahrenheit").value = 1.8 * parseFloat(x.value) + 32;
 }
 &lt;/script&gt;
 </pre>
 
 <pre>
-&lt;p&gt;セ氏温度：&lt;input id="celsius" onchange="conv(this)"&gt;&lt;/p&gt;
+&lt;p&gt;セ氏温度: &lt;input id="celsius" type="number" onchange="conv(this)"&gt;&lt;/p&gt;
 
-&lt;p&gt;カ氏温度：&lt;input id="fahrenheit" readonly&gt;&lt;/p&gt;
+&lt;p&gt;カ氏温度: &lt;input id="fahrenheit" readonly&gt;&lt;/p&gt;
 </pre>
 
 <h2>解説</h2>
 
 <p>数値を入力するには，いったん文字列を入力して，その中から数値を取り出すことになります。</p>
 
-<p>文字列 <code>s</code> を数値に変換するには <code>Number(s)</code> を使います。数値と解釈できない場合は，Not a Number を意味する NaN という特別な値を返します。ただし，<code>Number("")</code> は 0 と解釈されますので，注意を要します。</p>
+<p>文字列 <code>s</code> を数値に変換する関数はいくつかあります。そのうち <code>Number(s)</code> は，数値と解釈できない場合は，Not a Number を意味する NaN という特別な値を返します。ただし，<code>Number("")</code> は 0 と解釈されますので，注意を要します。</p>
 
-<div class="note">
-<p><code>Number(s)</code> 以外に，整数に変換する <code>parseInt(s)</code>，浮動小数点の数値に変換する <code>parseFloat(s)</code> もあります。それぞれ整数の英語 integer，浮動小数点の英語 floating point に因む名前です。これらは文字列を先頭から読んでいって，数値と解釈できるところまでを解釈します。<code>Number("")</code> は 0 になりますが，<code>parseFloat("")</code> は NaN になります。</p>
-</div>
+<p><code>Number(s)</code> 以外に，整数に変換する <code>parseInt(s)</code>，浮動小数点の数値に変換する <code>parseFloat(s)</code> があります。それぞれ整数の英語 integer，浮動小数点の英語 floating point に因む名前です。これらは文字列を先頭から読んでいって，数値と解釈できるところまでを解釈します。<code>Number("")</code> は 0 になりますが，<code>parseFloat("")</code> は NaN になります。</p>
 
-<p>上の例ではカ氏温度欄を <code>readonly</code> にしていますが，これを外すとカ氏温度欄も入力できるようになります。カ氏温度を入力するとセ氏温度が求まるように直してみましょう。</p>
-</article>
+<p>上の例では，最初の <code>input</code> は <code>type="number"</code> を指定して数値入力に限定しています。また，次の <code>input</code> は出力専用の <code>readonly</code> にしています。</p>
+
+<p>次のように書くこともできます：</p>
+
+<pre>
+&lt;p&gt;
+  &lt;label&gt;セ氏温度:
+    &lt;input id="C" type="number"
+	   oninput="F.value = Math.round(180 * C.valueAsNumber + 3200) / 100;"&gt;
+  &lt;/label&gt;
+&lt;/p&gt;
+
+&lt;p&gt;カ氏温度: &lt;output id="F"&gt;&lt;/output&gt;&lt;/p&gt;
+</pre>
+
+<p>
+  <label>セ氏温度:
+    <input id="C" type="number"
+	   oninput="F.value = Math.round(180 * C.valueAsNumber + 3200) / 100;">
+  </label>
+</p>
+
+<p>カ氏温度: <output id="F"></output></p>
 
 <hr>
 
@@ -63,7 +81,7 @@ function conv(x) {
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-03-17 12:15:48</time>
+Last modified: <time>2022-04-09 20:15:32 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

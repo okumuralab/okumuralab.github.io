@@ -26,7 +26,6 @@ function fold(x) {
 <a href="./">JavaScript講座</a> &gt;
 </nav>
 
-<article>
 <h1>折りたたみ</h1>
 
 <h2>例</h2>
@@ -74,8 +73,39 @@ function fold(x) {
 &lt;/dl&gt;
 </pre>
 
-<!-- <p>クリックされやすいように，どこにも飛ばないリンク <code>&lt;a href="javascript:void(0)"&gt;...&lt;/a&gt;</code> を設定しておくこともあります。</p> -->
-</article>
+<p>なお，今では次のようにHTMLだけでも同じ機能が実現できます：</p>
+
+<pre>
+&lt;details&gt;
+  &lt;summary&gt;CD&lt;/summary&gt;
+  容量は540M〜700Mで，書き換えできないCD-Rと，書き換え可能なCD-RWがあります。
+&lt;/details&gt;
+
+&lt;details&gt;
+  &lt;summary&gt;DVD&lt;/summary&gt;
+  容量は1層で470Gで，書き換えできないDVD-R，DVD+Rと，書き換え可能なDVD-RW，DVD-RAM，DVD+RWがあります。
+&lt;/details&gt;
+
+&lt;details&gt;
+  &lt;summary&gt;BD&lt;/summary&gt;
+  Blu-ray Discの略です。容量は1層で25Gです。
+&lt;/details&gt;
+</pre>
+
+<details>
+  <summary>CD</summary>
+  容量は540M〜700Mで，書き換えできないCD-Rと，書き換え可能なCD-RWがあります。
+</details>
+
+<details>
+  <summary>DVD</summary>
+  容量は1層で470Gで，書き換えできないDVD-R，DVD+Rと，書き換え可能なDVD-RW，DVD-RAM，DVD+RWがあります。
+</details>
+
+<details>
+  <summary>BD</summary>
+  Blu-ray Discの略です。容量は1層で25Gです。
+</details>
 
 <hr>
 
@@ -83,7 +113,7 @@ function fold(x) {
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-10 19:01:11</time>
+Last modified: <time>2022-04-09 20:28:06 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
