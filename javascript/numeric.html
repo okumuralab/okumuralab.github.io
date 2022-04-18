@@ -53,7 +53,7 @@ function conv(x) {
 
 <p>上の例では，最初の <code>input</code> は <code>type="number"</code> を指定して数値入力に限定しています。また，次の <code>input</code> は出力専用の <code>readonly</code> にしています。</p>
 
-<p>次のように書くこともできます：</p>
+<p>次の例では四捨五入して小数第2位に丸めています：</p>
 
 <pre>
 &lt;p&gt;
@@ -75,13 +75,15 @@ function conv(x) {
 
 <p>カ氏温度: <output id="F"></output></p>
 
+<p>丸め表示するには <code>toFixed()</code> や <code>toPrecision()</code> というメソッドもあります。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-09 20:15:32 JST</time>
+Last modified: <time>2022-04-18 11:13:50 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
