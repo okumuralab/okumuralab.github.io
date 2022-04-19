@@ -53,13 +53,13 @@ function conv(x) {
 
 <p>上の例では，最初の <code>input</code> は <code>type="number"</code> を指定して数値入力に限定しています。また，次の <code>input</code> は出力専用の <code>readonly</code> にしています。</p>
 
-<p>次の例では四捨五入して小数第2位に丸めています：</p>
+<p>次の例では小数第1位に丸めています：</p>
 
 <pre>
 &lt;p&gt;
   &lt;label&gt;セ氏温度:
     &lt;input id="C" type="number"
-	   oninput="F.value = Math.round(180 * C.valueAsNumber + 3200) / 100;"&gt;
+	   oninput="F.value = (1.8 * C.valueAsNumber + 32).toFixed(1);"&gt;
   &lt;/label&gt;
 &lt;/p&gt;
 
@@ -69,13 +69,15 @@ function conv(x) {
 <p>
   <label>セ氏温度:
     <input id="C" type="number"
-	   oninput="F.value = Math.round(180 * C.valueAsNumber + 3200) / 100;">
+	   oninput="F.value = (1.8 * C.valueAsNumber + 32).toFixed(1);">
   </label>
 </p>
 
 <p>カ氏温度: <output id="F"></output></p>
 
-<p>丸め表示するには <code>toFixed()</code> や <code>toPrecision()</code> というメソッドもあります。</p>
+<p><code>toFixed()</code> は小数部分の桁数を指定します。<code>toPrecision()</code> は有効桁数を指定します。</p>
+
+<p>この例のように，<code>document.getElementById("F")</code> は単に <code>F</code> または <code>window.F</code> と書くこともできます。もっとも，HTML Living Standard の <a href="https://html.spec.whatwg.org/multipage/window-object.html#named-access-on-the-window-object">7.3.3 Named access on the Window object</a> にもあるように，<code>document.getElementById()</code> や <code>document.querySelector()</code> を使うほうが安全です。</p>
 
 <hr>
 
@@ -83,7 +85,7 @@ function conv(x) {
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-18 11:13:50 JST</time>
+Last modified: <time>2022-04-19 18:13:03 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

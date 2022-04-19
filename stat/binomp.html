@@ -7,59 +7,54 @@
 <title>2項分布のp値の説明</title>
 <link rel="stylesheet" href="style.css">
 <script>
-"use strict";
-function choose(n, r) {
-  let c = 1;
-  while (r >= 1) {
-    c *= n / r;  n--;  r--;
+  "use strict";
+  function choose(n, r) {
+      let c = 1;
+      while (r >= 1) {
+	  c *= n / r;  n--;  r--;
+      }
+      return c;
   }
-  return c;
-}
-function dbinom(r, n, theta) {
-  return choose(n, r) * Math.pow(theta, r) * Math.pow(1-theta, n-r);
-}
-let canvas;
-function draw(e) {
-  const ctx = canvas.getContext('2d');
-  const mx = e ? (e.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft) - canvas.offsetLeft) : 46 * 2;
-  // const my = e ? (e.clientY + (document.body.scrollTop  || document.documentElement.scrollTop)  - canvas.offsetTop) : 0;
-  let theta = document.getElementById('theta').value;
-  if (theta > 1) theta = 1;
-  if (theta < 0) theta = 0;
-  let r = Math.trunc(mx / 46);
-  if (r < 0) r = 0; else if (r > 10) r = 10;
-  document.getElementById('r').textContent = r;
-  const pr = new Array(11);
-  for (let i = 0; i <= 10; i++) pr[i] = dbinom(i,10,theta);
-  ctx.clearRect(0, 0, 500, 350);
-  ctx.font = "normal 15px sans-serif";
-  let p = 0;
-  for (let i = 0; i <= 10; i++) {
-    const x = 46 * i;
-    const y = 320;
-    const w = 40;
-    const h = -600 * pr[i];
-    ctx.beginPath();
-    ctx.rect(x, y, w, h);
-    if (pr[i] <= pr[r] + 0.000000001) {  // hack
-      ctx.fillStyle = "#ff2800";
-      p += pr[i];
-    } else {
-      ctx.fillStyle = "#66ccff";
-    }
-    ctx.fill();
-    ctx.fillStyle = "black";
-    ctx.fillText(i, x + ((i < 10) ? 15 : 10), 350);
+  function dbinom(r, n, theta) {
+      return choose(n, r) * Math.pow(theta, r) * Math.pow(1-theta, n-r);
   }
-  document.getElementById('p').textContent = p.toFixed(3);
-}
-function init() {
-  canvas = document.getElementById('MyCanvas');
-  canvas.addEventListener('mousemove', draw, false);
-  document.getElementById('theta').value = 0.5;
-  draw(null);
-}
-window.onload = init;
+  let canvas, mx = 46 * 3;
+  function draw(e) {
+      if (e) mx = e.pageX - canvas.offsetLeft;
+      const theta = document.getElementById('theta').valueAsNumber;
+      let r = Math.trunc(mx / 46);
+      if (r < 0) r = 0; else if (r > 10) r = 10;
+      document.getElementById('r').textContent = r;
+      const pr = new Array(11);
+      for (let i = 0; i <= 10; i++) pr[i] = dbinom(i, 10, theta);
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 500, 350);
+      ctx.font = "normal 15px sans-serif";
+      let pvalue = 0;
+      for (let i = 0; i <= 10; i++) {
+	  const x = 46 * i;
+	  const y = 320;
+	  const w = 40;
+	  const h = -600 * pr[i];
+	  ctx.beginPath();
+	  ctx.rect(x, y, w, h);
+	  if (pr[i] <= pr[r] + 0.000000001) {  // hack
+	      ctx.fillStyle = "#ff2800";
+	      pvalue += pr[i];
+	  } else {
+	      ctx.fillStyle = "#66ccff";
+	  }
+	  ctx.fill();
+	  ctx.fillStyle = "black";
+	  ctx.fillText(i, x + ((i < 10) ? 15 : 10), 350);
+      }
+      document.getElementById('p').textContent = pvalue.toFixed(3);
+  }
+  window.addEventListener('DOMContentLoaded', () => {
+      canvas = document.getElementById('MyCanvas');
+      canvas.addEventListener('mousemove', draw, false);
+      draw();
+  });
 </script>
 </head>
 <body>
@@ -69,17 +64,17 @@ window.onload = init;
 <a href="./">統計</a> &gt;
 </nav>
 
-<h1>2項分布のp値の説明</h1>
+<h1>2項分布の <i>p</i> 値の説明</h1>
 
 <canvas id="MyCanvas" width="500" height="350">
-お使いのブラウザはHTML5のcanvasに対応していないようです。
+お使いのブラウザはcanvasに対応していないようです。
 </canvas>
 
-<p>表が出る確率 θ = <input id="theta" size="4"> の硬貨を10回投げて表が <span id="r">3</span> 回出た。<i>p</i> = <span id="p"></span></p>
+<p>表が出る確率 θ = <input id="theta" type="number" min="0.0" max="1.0" step="0.1" value="0.5" onchange="draw()"> の硬貨を10回投げて表が <output id="r"></output> 回出ました。<i>p</i> = <output id="p"></output></p>
 
 <p>（マウスで表の回数を選んでください。θの値も書き換え可能です）</p>
 
-<p>→ <a href="binom.html">2項分布の信頼区間の説明</a>に続く</p>
+<p><a href="binom.html">2項分布の信頼区間の説明</a>もご覧ください。</p>
 
 <hr>
 
@@ -87,7 +82,7 @@ window.onload = init;
 <p><a href="../" rel="author">奥村晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-04 16:00:56 JST</time>
+Last modified: <time>2022-04-19 14:15:55 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

@@ -18,23 +18,27 @@
   function dbinom(r, n, theta) {
       return choose(n, r) * Math.pow(theta, r) * Math.pow(1-theta, n-r);
   }
-  let canvas;
+  let canvas, mx = 249, r = 3;
   function draw(e) {
-      const ctx = canvas.getContext('2d');
-      const mx = e ? (e.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft) - canvas.offsetLeft) : 250;
-      // const my = e ? (e.clientY + (document.body.scrollTop  || document.documentElement.scrollTop)  - canvas.offsetTop) : 100;
-      let theta = mx / 500;
+      // const rect = canvas.getBoundingClientRect();
+      // const mx = e ? (e.clientX - rect.left) : 249;
+      // const my = e ? (e.clientY - rect.top) : 100;
+      if (e) mx = e.pageX - canvas.offsetLeft;
+      // my = e ? (e.pageY - canvas.offsetTop) : 100;
+      let theta = mx / 498;
       if (theta > 1) theta = 1;
       if (theta < 0) theta = 0;
-      const omote = parseInt(document.getElementById('omote').value);
-      const radio = document.getElementsByName('type');
-      let type = radio[0].value;
-      if (radio[1].checked) type = radio[1].value;
-      if (radio[2].checked) type = radio[2].value;
+      let alternative = 'two.sided';  // default
+      for (const i of document.getElementsByName('radio'))
+	  if (i.checked) alternative = i.value;
       const pr = new Array(11);
       for (let i = 0; i <= 10; i++) pr[i] = dbinom(i, 10, theta);
+      const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, 500, 350);
       ctx.font = "normal 15px sans-serif";
+      // ctx.fillText("mx = " + mx, 0, 15);
+      // ctx.fillText("my = " + my, 0, 30);
+      // ctx.fillText("alternative = " + alternative, 0, 45);
       let pvalue = 0;
       for (let i = 0; i <= 10; i++) {
 	  const x = 46 * i;
@@ -43,22 +47,22 @@
 	  const h = -600 * pr[i];
 	  ctx.beginPath();
 	  ctx.rect(x, y, w, h);
-	  if (type == 'two.sided') {
-	      if (pr[i] <= pr[omote]) {
+	  if (alternative == 'two.sided') {
+	      if (pr[i] <= pr[r] + 0.000000001) {
 		  ctx.fillStyle = "#ff2800";
 		  pvalue += pr[i];
 	      } else {
 		  ctx.fillStyle = "#66ccff";
 	      }
-	  } else if (type == 'less') {
-	      if (i <= omote) {
+	  } else if (alternative == 'less') {
+	      if (i <= r) {
 		  ctx.fillStyle = "#ff2800";
 		  pvalue += pr[i];
 	      } else {
 		  ctx.fillStyle = "#66ccff";
 	      }
 	  } else {
-	      if (i >= omote) {
+	      if (i >= r) {
 		  ctx.fillStyle = "#ff2800";
 		  pvalue += pr[i];
 	      } else {
@@ -74,12 +78,16 @@
       ctx.fillStyle = "#ff2800";
       ctx.fillText("p = " + pvalue.toFixed(3), 150, 80);
   }
-  function init() {
+  function rchange() {
+      r = parseInt(document.getElementById('r').value);
+      document.getElementById('rout').innerText = r;
+      draw();
+  }
+  window.addEventListener('DOMContentLoaded', () => {
       canvas = document.getElementById('MyCanvas');
       canvas.addEventListener('mousemove', draw, false);
-      draw(null);
-  }
-  window.addEventListener('DOMContentLoaded', init);
+      draw();
+  });
 </script>
 </head>
 <body>
@@ -91,19 +99,25 @@
 
 <h1>2項分布の信頼区間の説明</h1>
 
-<p>硬貨を10回投げて表が <input id="omote" type="number" min="0" max="10" step="1" value="3" onchange="draw(null)"> 回出た。表の出る回数を2項分布 Binom(10, θ) とするとき，θの95%信頼区間を求めたい。</p>
+<p>硬貨を10回投げて表が <input id="r" type="number" min="0" max="10" step="1" value="3" onchange="rchange()"> 回出ました。表の出る回数は2項分布 Binom(10, θ) に従うとします。θはマウスの横位置で指定します。このとき，<i>p</i> 値は図の赤い部分の面積の割合です。</p>
 
 <canvas id="MyCanvas" width="500" height="350">
-お使いのブラウザはHTML5のcanvasに対応していないようです。
+お使いのブラウザはcanvasに対応していないようです。
 </canvas>
 
 <div>
-  <label><input type="radio" name="type" value="two.sided" checked onchange="draw(null)"> 両側</label>
-  <label><input type="radio" name="type" value="less" onchange="draw(null)"> 左側</label>
-  <label><input type="radio" name="type" value="greater" onchange="draw(null)"> 右側</label>
+  <label><input type="radio" name="radio" value="two.sided" checked onchange="draw()">両側</label>
+  <label><input type="radio" name="radio" value="less" onchange="draw()">左側</label>
+  <label><input type="radio" name="radio" value="greater" onchange="draw()">右側</label>
 </div>
 
-<p>θの95%信頼区間の一般的な定義は，片側（左右で小さい側）の <i>p</i> 値が2.5%以上になるようなθの範囲である（「両側 <i>p</i> 値が5%以上」でなく「片側 <i>p</i> 値が2.5%以上」を使うのは，離散分布の場合は両側 <i>p</i> 値がθの連続関数でないからである）。上のグラフでわかるように，そのようなθの範囲は 0.067 から 0.652 までである。</p>
+<p>θの95%信頼区間は，両側 <i>p</i> 値が 0.05 以上になるようなθの範囲，または片側（左右で小さい側） <i>p</i> 値が 0.025 以上になるようなθの範囲です。R の <code>binom.test()</code> では後者（片側 <i>p</i> 値が 0.025 以上）が使われます。その理由は，両側 <i>p</i> 値はθの連続関数ではないからだと思われます。</p>
+
+<pre>
+binom.test(<span id="rout">3</span>, 10)
+</pre>
+
+<p>と打ち込んだ結果と図を比較してください。</p>
 
 <hr>
 
@@ -111,7 +125,7 @@
 <p><a href="../" rel="author">奥村晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-18 12:58:05 JST</time>
+Last modified: <time>2022-04-19 14:16:08 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
