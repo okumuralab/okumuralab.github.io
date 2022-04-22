@@ -26,7 +26,7 @@ window.onload = function() {
 
 <h1>自殺統計</h1>
 
-<p>自殺統計はe-Statには新しいものが見つからなかったが，警察庁の<a href="https://www.npa.go.jp/publications/statistics/safetylife/jisatsu.html">自殺者数</a>ページにデータ（といってもPDF）があった。CSVにして <a href="data/suicide.csv">suicide.csv</a> として置いておく（2021年は暫定値）。</p>
+<p>自殺統計はe-Statには新しいものが見つからなかったが，警察庁の<a href="https://www.npa.go.jp/publications/statistics/safetylife/jisatsu.html">自殺者数</a>ページにデータ（といってもPDF）があった。CSVにして <a href="data/suicide.csv">suicide.csv</a> として置いておく（[追記] 2021年の暫定値を確定値に更新した）。</p>
 
 <pre class="cell">
 import pandas as pd
@@ -43,13 +43,15 @@ fig.show()
 
 <p>1998年に不況のため特に男性の自殺が急増した（<a href="https://www.e-healthnet.mhlw.go.jp/information/heart/k-07-002.html">自殺の実態</a>）。2020〜2021年は女性の自殺がおそらくコロナの影響で増えたが，男性はあまり変わらない。そういえば2011年の東日本大震災でも女性は微増したが男性はむしろ減少傾向が続いている。</p>
 
+<p>横浜市立大学附属病院の堀田信之先生たちによる論文 <a href="https://doi.org/10.1001/jamanetworkopen.2022.4739">Trends in Suicide in Japan Following the 2019 Coronavirus Pandemic</a> に詳しい解析がある。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-28 13:53:50</time>
+Last modified: <time>2022-04-22 10:51:11 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
