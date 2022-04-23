@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/install.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ゼロ除算</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ゼロ除算</h1>
+
+<p>Rで <code>1 / 0</code> と打ち込むと <code>Inf</code> と返ってくる。<code>0 / 0</code> は <code>NaN</code>（Not a Number）になる。</p>
+
+<p>Rubyでは <code>1 / 0</code> や <code>0 / 0</code> は ZeroDivisionError になるが <code>1.0 / 0.0</code> は <code>Infinity</code>，<code>0 / 0</code> は <code>NaN</code> になる。C言語などもそうなる。</p>
+
+<p>ところがPythonでは <code>0</code> で割っても <code>0.0</code> で割っても ZeroDivisionError になり，そこで実行が止まってしまう。これでは不便である。もちろん</p>
+
+<pre>
+try:
+    x = a / b
+except ZeroDivisionError:
+    if a == 0:
+        x = float("nan")
+    else:
+        x = float("inf")
+</pre>
+
+<p>のようなことはできるが面倒である。</p>
+
+<p>そこで，</p>
+
+<pre>
+import numpy as np
+</pre>
+
+<p>とすれば，<code>1 / np.float64(0)</code> は <code>inf</code> になり，<code>0 / np.float64(0)</code> は <code>nan</code> になる。ただし RuntimeWarning が出る。<code>np.float64(0)</code> の代わりに <code>np.array(0)</code> を使っても同様である。</p>
+
+<p>RuntimeWarning を出したくなければ，あらかじめ</p>
+
+<pre>
+np.seterr(divide="ignore", invalid="ignore")
+</pre>
+
+<p>と打ち込んでおけばよい（invalid とは 0/0 のこと）。元に戻すには</p>
+
+<pre>
+np.seterr(divide="warn", invalid="warn")
+</pre>
+
+<p>とする。詳しくは <code>np.seterr</code> のヘルプ参照。</p>
+
+<p>特定の割り算だけ warn しないようにするには</p>
+
+<pre>
+with np.errstate(divide="ignore", invalid="ignore"):
+    x = a / b
+</pre>
+
+<p>のようにする。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-04-13 21:47:20 JST</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
