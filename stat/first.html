@@ -728,7 +728,7 @@ biplot(r)    # または biplot(r, xlabs=x[,1])
 <p>読み込むと，RStudioの左上ペインにデータのプレビューが現れます。このとき，Windows版RStudioでは日本語の部分が文字化けしますが，データとしては正しく読まれています。左下のRコンソールに <code>data1</code> と打ち込んで正しく表示されることを確認してください。</p>
 
 <div class="note">
-<p>R・RStudioのデフォルトの文字コードは，WindowsではシフトJIS（厳密にはシフトJISをMicrosoftが拡張したCP932），MacではUTF-8（BOMなし）です。RStudioの文字コードはTools→Global Options...→General→Default text encodingでも変更できます。</p>
+<p>Rのデフォルトの文字コードは，以前はWindowsではシフトJIS（厳密にはシフトJISをMicrosoftが拡張したCP932）でしたが，R 4.2.0からはWindowsもMacもUTF-8で統一されました（BOMなしだがBOMありも読める）。</p>
 </div>
 
 <p>Rを（RStudioを介さず）使っているなら，</p>
@@ -748,8 +748,7 @@ biplot(r)    # または biplot(r, xlabs=x[,1])
 </div>
 
 <div class="note">
-<p><code>data1 = read.csv("data1.csv", fileEncoding="UTF-8")</code>
-のように文字コード（<code>"UTF-8"</code>，<code>"UTF-8-BOM"</code>，<code>"CP932"</code> など）を指定する必要があるかもしれません。</p>
+<p>文字コードが Shift JIS（CP932）の場合は <code>data1 = read.csv("data1.csv", fileEncoding="CP932")</code> のように文字コードを指定します。R 4.2.0 からは Windows でも <code>"UTF-8"</code> がデフォルトになりましたので <code>"UTF-8"</code>，<code>"UTF-8-BOM"</code> を指定する機会はなくなりました。</p>
 </div>
 
 <div class="note">
@@ -1310,7 +1309,7 @@ character(0)       # すべて消えた
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-04 10:53:00 JST</time>
+Last modified: <time>2022-04-24 19:19:25 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

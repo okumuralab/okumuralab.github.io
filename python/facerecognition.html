@@ -17,7 +17,12 @@
 
 <h1>顔認識</h1>
 
-<p>顔検出・認識ライブラリ <a href="https://github.com/ageitgey/face_recognition">face_recognition</a> を使って簡単な顔認識を行う。あらかじめ <code>pip install face-recognition</code> でインストールしておく。モジュール face-recognition，face-recognition-models，<a href="http://dlib.net">dlib</a>，click がインストールされる。face_detection，face_recognition という二つのコマンドライン版のツールもインストールされるので，わざわざ Python でプログラムを書かなくてもいろいろ遊べる。詳しくは<a href="https://github.com/ageitgey/face_recognition">こちら</a>に解説がある。</p>
+<p>顔検出・認識ライブラリ <a href="https://github.com/ageitgey/face_recognition">face_recognition</a> を使って簡単な顔認識を行う。</p>
+
+<p>以下の引用部分は2019年12月にIntel Macにインストールしたときのメモ：</p>
+
+<blockquote>
+<p>あらかじめ <code>pip install face-recognition</code> でインストールしておく。モジュール face-recognition，face-recognition-models，<a href="http://dlib.net">dlib</a>，click がインストールされる。face_detection，face_recognition という二つのコマンドライン版のツールもインストールされるので，わざわざ Python でプログラムを書かなくてもいろいろ遊べる。詳しくは<a href="https://github.com/ageitgey/face_recognition">こちら</a>に解説がある。</p>
 
 <p>Mac でインストールするには CMake が必要（<code>brew install cmake</code>）。</p>
 
@@ -27,6 +32,9 @@
 <code>!pip install --upgrade -v --install-option="--no" --install-option="DLIB_USE_CUDA" dlib
 !pip install face-recognition
 </code></pre>
+</blockquote>
+
+<p>M1 Mac では <code>conda install face_recognition</code> でインストールできた。dlib も入る。</p>
 
 <p>以下では <code>faces_me</code> というディレクトリに私の顔写真が10枚，弟の顔写真が1枚入っているとする。私の顔写真は，メガネをしていなかったころの比較的若いころのものから現在のものまで入っている。</p>
 
@@ -119,7 +127,7 @@ for i in range(1, len(names)):
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-06-14 10:35:24</time>
+Last modified: <time>2022-04-24 08:25:57 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
