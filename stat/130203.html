@@ -150,6 +150,10 @@
 </div>
 
 <div class="note">
+<p><em>[2022-04-25]</em> R 4.2.0からWindows版もMac版と同様にUTF-8がデフォルトになった。もう <code>read.csv("...", fileEncoding="UTF-8")</code> や <code>read.csv("...", fileEncoding="UTF-8-BOM")</code> という指定は不要（SJISのときだけ <code>read.csv("...", fileEncoding="CP932")</code> が必要）。</p>
+</div>
+
+<div class="note">
 <p>Pythonのpandasでの<a href="../python/read.html">データの読み書き</a>は，MacでもWindowsでもデフォルトUTF-8で，読む際にBOMは無視され，書く際には <code>encoding="utf_8_sig", line_terminator="\r\n"</code> のようにBOM付きやCRLFを指定できる。</p>
 </div>
 
@@ -348,7 +352,7 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 <p><a href="../" rel="author">奥村 晴彦</a> (<a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-06 14:20:52 JST</time>
+Last modified: <time>2022-04-25 09:45:02 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
