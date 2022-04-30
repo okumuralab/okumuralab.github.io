@@ -21,11 +21,7 @@ td, th { border: 1px solid; }
 
 <h1>日本の超過死亡？</h1>
 
-<p><em>[2021-12-03]</em> 2021年9月の速報を追加した。</p>
-
-<p><em>[2021-10-26]</em> 2021年8月の速報を追加した。</p>
-
-<p><em>[2021-10-16]</em> CSVファイルを見直し，2005年から2020年までの確定数，2021年5月までの概数，7月までの速報を追加した。</p>
+<p><em>[2022-04-30]</em> データを更新した。</p>
 
 <p>厚労省<a href="https://www.mhlw.go.jp/toukei/list/81-1a.html">人口動態調査</a>から，人口動態統計（確定数），人口動態統計月報（概数），人口動態統計速報がリンクされている。確定数は翌年9月ごろにならないと出ない。概数はほぼ5ヶ月後，速報はほぼ2ヶ月後に出る。</p>
 
@@ -54,7 +50,7 @@ plt.plot(t, perday1, 'o-')
 plt.plot(t, perday2, 's-')
 plt.plot(t, perday3, '*-')
 plt.ylabel('1日あたり死亡数')
-plt.legend(['概数', '速報値'])
+plt.legend(['確定数', '概数', '速報値'])
 plt.savefig('japandeaths1.svg', bbox_inches="tight")
 </code></pre>
 
@@ -84,7 +80,7 @@ plt.savefig('japandeaths3.svg', bbox_inches="tight")
 
 <figure><img src="img/japandeaths3.svg" alt="Deaths in Japan"></figure>
 
-<p>ちなみに<a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">厚労省オープンデータ</a>による月ごとの1日あたりのCOVID-19による死亡数はおよそ次の通りである。</p>
+<p>ちなみに<a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">厚労省オープンデータ</a>による月ごとの1日あたりのCOVID-19による死亡数はおよそ次の通りである（元データが2021/12/15で止まっている）。</p>
 
 <table>
   <thead>
@@ -111,13 +107,25 @@ plt.savefig('japandeaths3.svg', bbox_inches="tight")
   </tbody>
 </table>
 
+<pre>
+df = pd.read_csv("deaths_cumulative_daily.csv", parse_dates=['Date'])
+a = np.arange(np.datetime64("2020-06"), np.datetime64("2021-12"))
+da = pd.to_datetime(a)
+da1 = da - np.timedelta64(1,"D")
+da1s = pd.Series(da1, name='Date')
+df2 = pd.merge(da1s, df).diff()
+x = df2.ALL / (df2.Date / np.timedelta64(1,"D"))
+for i in range(1, 18):
+    print(f"{a[i-1]},{x[i]:3.1f}")
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-12-16 14:31:08</time>
+Last modified: <time>2022-04-30 14:50:59 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
