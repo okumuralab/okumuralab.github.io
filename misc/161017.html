@@ -28,15 +28,7 @@ git init --bare # または git init --bare --shared
 git clone ssh://example.org/var/git/hoge.git
 </pre>
 
-<p>サーバ側のユーザ名と違うならホスト名の前に <code>ユーザ名@</code> を付ける。パスワードを聞かれるのが面倒であれば，クライアント側マシン（サーバでないほう）の公開鍵 ~/.ssh/id_rsa.pub の内容をサーバの ~/.ssh/authorized_keys に書き込んでおく（パーミッションは600）。~/.ssh/id_rsa.pub がなければ <code>ssh-keygen -t rsa -C "自分のメアド"</code> で作る。同時にできる秘密鍵 ~/.ssh/id_rsa はパーミッション400にしておく。これらは git に限らず一般的にやっておくべきことである。</p>
-
-<p>[追記] macOS Sierra 10.12.2 から仕様が変わったみたいで，上の設定だけではパスフレーズを毎回聞いてくる。~/.ssh/config というファイルを作って，そこに次のように書いておくと，起動後一回だけで済むようになる：</p>
-
-<pre>
-Host *
-        IdentityFile ~/.ssh/id_rsa
-        AddKeysToAgent yes
-</pre>
+<p>サーバ側のユーザ名と違うならホスト名の前に <code>ユーザ名@</code> を付ける。パスワードを聞かれるのが面倒であれば，<del>クライアント側マシン（サーバでないほう）の公開鍵 ~/.ssh/id_rsa.pub の内容をサーバの ~/.ssh/authorized_keys に書き込んでおく（パーミッションは600）。~/.ssh/id_rsa.pub がなければ <code>ssh-keygen -t rsa -C "自分のメアド"</code> で作る。同時にできる秘密鍵 ~/.ssh/id_rsa はパーミッション400にしておく。</del><a href="211209.html">パスワードなしのログイン</a>に書いた作業をしておく。これらは git に限らず一般的にやっておくべきことである。</p>
 
 <p>clone の際に “warning: You appear to have cloned an empty repository.” のような警告が出て，hoge という（管理用ディレクトリ .git 以外は空の）ディレクトリが作られる。その中に入って，とりあえず README.md と .gitignore というファイルを作ってサーバ側に送ってみよう。.gitignore にはサーバに送らないファイル名を列挙する。RとLaTeXで作業をするなら例えば</p>
 
@@ -73,7 +65,7 @@ git push
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2016-12-27 21:38:06</time>
+Last modified: <time>2022-05-04 21:20:53 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
