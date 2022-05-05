@@ -17,11 +17,13 @@
 
 <h1>Git/GitHubまとめ</h1>
 
-<p><a href="https://git-scm.com">Git</a> についての詳細は <a href="https://git-scm.com/book/">Pro Git</a> というオンライン本にまとめられている。<a href="https://git-scm.com/book/ja/">日本語版</a>もある。</p>
+<p><a href="https://git-scm.com">Git</a> のサイトに詳しいマニュアルがある。また，<a href="https://git-scm.com/book/">Pro Git</a> というオンライン本が公開されている。<a href="https://git-scm.com/book/ja/">日本語版</a>もある。2014年の本で，Git 2.8.0 というやや古いバージョンを使っている。</p>
 
-<p>MacにはGitが入っている：</p>
+<p>MacのコマンドラインツールにはGitが入っている：</p>
 
 <pre>
+% which git
+/usr/bin/git
 % git --version
 git version 2.32.0 (Apple Git-132)
 </pre>
@@ -34,6 +36,8 @@ git version 2.32.0 (Apple Git-132)
 % git --version
 git version 2.36.0
 </pre>
+
+<p>LinuxにはGitが入っているか簡単に入れられる。WindowsにはGit Bashなどのツールがある。</p>
 
 <p>自分でGitサーバを立てる方法は <a href="161017.html">gitサーバ構築</a> を参照。</p>
 
@@ -56,7 +60,7 @@ git config --global init.defaultBranch main # Git 2.28以降
 
 <p>GitHub でも <a href="https://github.blog/changelog/2020-10-01-the-default-branch-for-newly-created-repositories-is-now-main/">2020-10-01 からデフォルトが変更された</a>。<a href="https://github.com/github/renaming">Renaming the default branch from master</a> も参照。</p>
 
-<p>すでに GitHub で <code>master</code> という名前を使っていたら，Web 上で <code>main</code> に変更できる。変更したら，ローカルのリポジトリで次のように再設定する必要がある：</p>
+<p>すでに GitHub で <code>master</code> という名前を使っていたら，Web 上で <code>master</code> という表示をクリックし，View all branches をクリックして，<code>master</code> の右側の🖋️をクリックし，<code>main</code> に変更できる。変更したら，ローカルのリポジトリで次のように再設定する必要がある：</p>
 
 <pre>
 git branch -m master main
@@ -64,6 +68,8 @@ git fetch origin
 git branch -u origin/main main
 git remote set-head origin -a
 </pre>
+
+<p>GitHub Pages の場合，ブランチ名を変えると unpublish されるが，何かを commit すれば再構築される。</p>
 </div>
 
 <p>GitHub でリポジトリを作る（空でもいい）。それを適当なディレクトリにクローンする：</p>
@@ -72,7 +78,7 @@ git remote set-head origin -a
 git clone https://github.com/<i>username</i>/<i>repositoryname</i>.git
 </pre>
 
-<p>これで <code><i>repositoryname</i></code> というディレクトリが作られ，リモートリポジトリの内容がコピーされるので，その中に入って作業する。このディレクトリの中には <code>.git</code> という隠しディレクトリがあるが，その中は（よくわかっていないうちは）直接編集しない。それ以外の場所（ワーキングツリー）で作業する。</p>
+<p>これで <code><i>repositoryname</i></code> というディレクトリが作られ，リモートリポジトリの内容がコピーされるので，その中に入って作業する。このディレクトリの中には <code>.git</code> という隠しディレクトリがあるが，その中は（よくわかっていないうちは）直接編集しない。それ以外の場所（ワーキングツリー，ワーキングディレクトリ）で作業する。</p>
 
 <p>ワーキングツリーに新規作成したファイルあるいは編集したファイルは，まず</p>
 
@@ -80,19 +86,19 @@ git clone https://github.com/<i>username</i>/<i>repositoryname</i>.git
 git add ファイル名またはディレクトリ名
 </pre>
 
-<p>でステージングエリア（インデックスエリア）に移す。変更がある程度まとまった時点で</p>
+<p>でステージングエリア（インデックス）に移す。変更がある程度まとまった時点で</p>
 
 <pre>
 git commit -m "ログメッセージ"
 </pre>
 
-<p>でローカルリポジトリ（<code>.git</code> 以下）にコミットする。あるいは</p>
+<p>で（ローカル）リポジトリ（<code>.git</code> 以下）にコミットする。あるいは</p>
 
 <pre>
 git commit
 </pre>
 
-<p>とだけ打ち込めばテキストエディタが立ち上がってログメッセージが入れられる。メッセージは英語の場合 <code>README.md: add repository description</code> のように，小文字動詞現在形で始め，ピリオドは付けないのが一般的。1行メッセージの後に空行をはさんで詳しい説明を書いてもよい。書き方については <a href="https://github.com/gitster/git/blob/master/Documentation/SubmittingPatches">Submitting Patches</a> の [[describe-changes]] 以下が参考になる。間違えたら</p>
+<p>とだけ打ち込めばテキストエディタが立ち上がってログメッセージが編集できる。メッセージは英語の場合 <code>README.md: add repository description</code> のように，小文字動詞現在形で始め，ピリオドは付けないのが一般的。1行メッセージの後に空行をはさんで詳しい説明を書いてもよい。書き方については <a href="https://github.com/gitster/git/blob/master/Documentation/SubmittingPatches">Submitting Patches</a> の [[describe-changes]] 以下が参考になる。間違えたら</p>
 
 <pre>
 git commit --amend
@@ -100,26 +106,58 @@ git commit --amend
 
 <p>でやり直せる。</p>
 
-<p>この段階ではまだリモートには送られていない。ローカルリポジトリをリモートに送るには，まず現在のブランチ名を把握する。</p>
+<p><code>add</code> して <code>commit</code> するのが面倒であれば，</p>
+
+<pre>
+git commit -am "message"
+</pre>
+
+<p>とすれば，追跡状態の（tracked な）ファイルで変更されたものを一括コミットできる。</p>
+
+<pre>
+git status
+</pre>
+
+<p>で状態が確認できる。追跡しない（untracked な）状態のままにして <code>git status</code> にも表示したくないなら，<code>.gitignore</code> というファイルの各行にファイル名を列挙しておけば，そのディレクトリ以下で同名のファイルは無視される。</p>
+
+<p>不用意にファイルを変更してしまったら</p>
+
+<pre>
+git restore ファイル名
+</pre>
+
+<p>で取り消せる。</p>
+
+<p>この段階ではまだリモートには送られていない。ローカルリポジトリをリモートの <code>main</code> ブランチに送るには，まず現在のブランチ名を把握する。</p>
 
 <pre>
 git branch           # ブランチ名を表示
-git branch -m main   # 現在のブランチ名をmainに変更
+git branch -m main   # 現在のブランチ名がmasterであればmainに変更
 git push origin main # リモートのmainブランチに送る
 </pre>
 
 <p>あるいは</p>
 
 <pre>
-git push -u origin main # リモートのブランチを設定（-u は --set-upstream の略）
-git push                # 上の設定があればこれだけでいい
+git push -u origin main # リモートのブランチをmainに設定（-u は --set-upstream の略）
+git push                # 上で設定したリモートのブランチに送る
 </pre>
+
+<p>新しいブランチを作る：</p>
+
+<pre>
+git branch develop  # developというブランチを作る
+git branch          # 確認
+git switch develop  # ブランチ移動
+</pre>
+
+<p>ブランチ移動は，以前は <code>git checkout</code> を流用したが，Git 2.23 で <code>git switch</code> コマンドが新設された。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-05-05 10:43:57 JST</time></p>
+<p>Last modified: <time>2022-05-05 14:17:25 JST</time></p>
 </footer>
 </body>
 </html>
