@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/220210.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git/GitHubまとめ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>Git/GitHubまとめ</h1>
+
+<p><a href="https://git-scm.com">Git</a> についての詳細は <a href="https://git-scm.com/book/">Pro Git</a> というオンライン本にまとめられている。<a href="https://git-scm.com/book/ja/">日本語版</a>もある。</p>
+
+<p>MacにはGitが入っている：</p>
+
+<pre>
+% git --version
+git version 2.32.0 (Apple Git-132)
+</pre>
+
+<p>あるいはHomebrewで最新のものを入れる：</p>
+
+<pre>
+% brew install git
+% hash -r
+% git --version
+git version 2.36.0
+</pre>
+
+<p>自分でGitサーバを立てる方法は <a href="161017.html">gitサーバ構築</a> を参照。</p>
+
+<p>そうでない場合は，まず <a href="https://github.com">GitHub</a> にサインアップする（アカウントを作る）。</p>
+
+<p>自分のPC（ここではMac）での設定：</p>
+
+<pre>
+git config --global user.name okumuralab # GitHub のユーザ名
+git config --global user.email okumura@okumuralab.org # 同メアド
+git config --global pull.rebase false
+git config --global core.editor emacsclient # 自分の好きなエディタを指定
+git config --global init.defaultBranch main # Git 2.28以降
+</pre>
+
+<p>これらの設定は <code>~/.gitconfig</code> に入るだけなので，そちらを編集してもよい。</p>
+
+<div class="note">
+<p>上の最後の設定について補足説明しておく。リポジトリはいくつかのブランチに区切ることができる。デフォルトのブランチ名は昔は <code>master</code> であったが，この名前は政治的に正しくないということで，<a href="https://github.blog/2020-07-27-highlights-from-git-2-28/">Git 2.28</a> からデフォルトを設定できるようになった。今では <code>main</code> に設定するのが一般的である。</p>
+
+<p>GitHub でも <a href="https://github.blog/changelog/2020-10-01-the-default-branch-for-newly-created-repositories-is-now-main/">2020-10-01 からデフォルトが変更された</a>。<a href="https://github.com/github/renaming">Renaming the default branch from master</a> も参照。</p>
+
+<p>すでに GitHub で <code>master</code> という名前を使っていたら，Web 上で <code>main</code> に変更できる。変更したら，ローカルのリポジトリで次のように再設定する必要がある：</p>
+
+<pre>
+git branch -m master main
+git fetch origin
+git branch -u origin/main main
+git remote set-head origin -a
+</pre>
+</div>
+
+<p>GitHub でリポジトリを作る（空でもいい）。それを適当なディレクトリにクローンする：</p>
+
+<pre>
+git clone https://github.com/<i>username</i>/<i>repositoryname</i>.git
+</pre>
+
+<p>これで <code><i>repositoryname</i></code> というディレクトリが作られ，リモートリポジトリの内容がコピーされるので，その中に入って作業する。このディレクトリの中には <code>.git</code> という隠しディレクトリがあるが，その中は（よくわかっていないうちは）直接編集しない。それ以外の場所（ワーキングツリー）で作業する。</p>
+
+<p>ワーキングツリーに新規作成したファイルあるいは編集したファイルは，まず</p>
+
+<pre>
+git add ファイル名またはディレクトリ名
+</pre>
+
+<p>でステージングエリア（インデックスエリア）に移す。変更がある程度まとまった時点で</p>
+
+<pre>
+git commit -m "ログメッセージ"
+</pre>
+
+<p>でローカルリポジトリ（<code>.git</code> 以下）にコミットする。あるいは</p>
+
+<pre>
+git commit
+</pre>
+
+<p>とだけ打ち込めばテキストエディタが立ち上がってログメッセージが入れられる。メッセージは英語の場合 <code>README.md: add repository description</code> のように，小文字動詞現在形で始め，ピリオドは付けないのが一般的。1行メッセージの後に空行をはさんで詳しい説明を書いてもよい。書き方については <a href="https://github.com/gitster/git/blob/master/Documentation/SubmittingPatches">Submitting Patches</a> の [[describe-changes]] 以下が参考になる。間違えたら</p>
+
+<pre>
+git commit --amend
+</pre>
+
+<p>でやり直せる。</p>
+
+<p>この段階ではまだリモートには送られていない。ローカルリポジトリをリモートに送るには，まず現在のブランチ名を把握する。</p>
+
+<pre>
+git branch           # ブランチ名を表示
+git branch -m main   # 現在のブランチ名をmainに変更
+git push origin main # リモートのmainブランチに送る
+</pre>
+
+<p>あるいは</p>
+
+<pre>
+git push -u origin main # リモートのブランチを設定（-u は --set-upstream の略）
+git push                # 上の設定があればこれだけでいい
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-05-05 10:43:57 JST</time></p>
+</footer>
+</body>
+</html>
