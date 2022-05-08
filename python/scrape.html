@@ -17,7 +17,7 @@
 
 <h1>スクレイピング</h1>
 
-<p>Webスクレイピングの基本は，標準ライブラリ <a href="https://docs.python.org/3/library/urllib.request.html">urllib.request</a> または <a href="https://requests.readthedocs.io">Requests</a>（<code>pip install requests</code> でインストール）と，正規表現 <a href="https://docs.python.org/3/library/re.html">re</a> とである。より高レベルのライブラリとして <a href="https://www.crummy.com/software/BeautifulSoup/">Beautiful Soup</a>（<code>pip install beautifulsoup4</code> でインストール）がある。詳しくは<a href="https://vaaaaaanquish.hatenablog.com/entry/2017/06/25/202924">PythonでWebスクレイピングする時の知見をまとめておく</a>が参考になる。</p>
+<p>Webスクレイピングの基本は，標準ライブラリ <a href="https://docs.python.org/3/library/urllib.request.html">urllib.request</a> または <a href="https://requests.readthedocs.io">Requests</a>（<code>pip install requests</code> または <code>conda install requests</code> でインストール）と，正規表現 <a href="https://docs.python.org/3/library/re.html">re</a> とである。より高レベルのライブラリとして <a href="https://www.crummy.com/software/BeautifulSoup/">Beautiful Soup</a>（<code>pip install beautifulsoup4</code> または <code>conda install beautifulsoup4</code> でインストール）がある。詳しくは<a href="https://vaaaaaanquish.hatenablog.com/entry/2017/06/25/202924">PythonでWebスクレイピングする時の知見をまとめておく</a>が参考になる。</p>
 
 <p>例えば，このサイトにどれだけリンクがあるかを調べてみよう。まず，古い urllib.request による方法：</p>
 
@@ -25,7 +25,7 @@
 <code>import urllib.request
 import re
 
-with urllib.request.urlopen('http://example.jp/') as f:
+with urllib.request.urlopen('https://okumuralab.org/~okumura/python/') as f:
     s = f.read().decode('utf-8')
     a = re.findall('&lt;a href="(.*?)"', s)
 </code></pre>
@@ -36,17 +36,17 @@ with urllib.request.urlopen('http://example.jp/') as f:
 <code>import requests
 import re
 
-r = requests.get('http://example.jp/')
+r = requests.get('https://okumuralab.org/~okumura/python/')
 r.raise_for_status()  # エラーチェック
-r.encoding = 'UTF-8'  # 'ISO-8859-1' に間違えられることがある
+r.encoding = 'UTF-8'  # 念のため
 a = re.findall('&lt;a href="(.*?)"', r.text)
 </code></pre>
 
-<p>これで <code>a</code> には <code>['../', '../stat/', 'install.html', ...]</code> という配列が入る。</p>
+<p>これで <code>a</code> には <code>['../', '../stat/', 'zero.html', ...]</code> という配列が入る。</p>
 
 <div class="note">
 <ul>
-  <li><code>r.encoding</code> のデフォルトは ISO-8859-1 であり HTML の <code>&lt;meta charset="UTF-8"&gt;</code> を見てくれない。自動で UTF-8 と判断してほしければサーバ側で <code>AddDefaultCharset UTF-8</code> と設定しなければならない。</li>
+  <li><code>&lt;meta charset="UTF-8"&gt;</code> と書いてあっても <code>r.encoding</code> が ISO-8859-1 になることがある。自動で UTF-8 と判断してほしければサーバ側で <code>AddDefaultCharset UTF-8</code> と設定しなければならない。</li>
   <li>エラーチェックには <code>r.raise_for_status()</code> を呼び出す方法以外に <code>r.status_code</code> が200（正常）かどうか確かめる方法もある。</li>
 </ul>
 </div>
@@ -57,16 +57,18 @@ a = re.findall('&lt;a href="(.*?)"', r.text)
 <code>import requests
 from bs4 import BeautifulSoup
 
-r = requests.get('http://example.jp/')
+r = requests.get('https://okumuralab.org/~okumura/python/')
 r.raise_for_status()  # エラーチェック
 r.encoding = 'utf-8'
-s = BeautifulSoup(r.text)
-s                                       # HTML全体
-s.select('a')                           # &lt;a ...&gt; タグ
-[x.get('href') for x in s.select('a')]  # &lt;a ...&gt; タグの中のhref
+s = BeautifulSoup(r.text, "html.parser") # or "lxml" or "html5lib"
+s                                        # HTML全体
+s.select('a')                            # &lt;a ...&gt; タグ
+[x.get('href') for x in s.select('a')]   # &lt;a ...&gt; タグの中のhref
 </code></pre>
 
 <p>一般に正規表現は想定外の HTML の書き方に対応できないので Beautiful Soup のような高レベルの方法が良いとされる。</p>
+
+<p><code>BeautifulSoup()</code> の第1引数はエンコード指定前の生のバイト列 <code>r.content</code> でもよい。エンコーディングは自動判断してくれる。第2引数はパーサで，省略可能だが，再現性のためには省略しないほうがよいとされる。<code>"html.parser"</code> はPython標準のもの。より速い <code>"lxml"</code> か，よりブラウザに近い <code>"html5lib"</code> が推奨。ただし <code>pip</code> か <code>conda</code> で <code>lxml</code> か <code>html5lib</code> をインストールする必要がある。</p>
 
 <p>バイナリファイルのダウンロードは例えば次のようにする：</p>
 
@@ -74,20 +76,20 @@ s.select('a')                           # &lt;a ...&gt; タグ
 <code>import requests
 import pathlib
 
-r = requests.get('http://example.jp/hoge.png')
-pathlib.Path("hoge.png").write_bytes(r.content)
+r = requests.get('https://okumuralab.org/~okumura/python/img/iris.png')
+pathlib.Path("iris.png").write_bytes(r.content)
 </code></pre>
 
 <p>ほか，例えば <code>r.headers['Last-Modified']</code> で更新日時がわかるので，<code>os.utime()</code> でファイルのタイムスタンプを変えるといったことも可能であろう。</p>
 
-<p>User Agent（ブラウザの種類）は <code>"python-requests/2.22.0"</code> のような感じで先方のログに残る。これが嫌なら適当に変えられる：</p>
+<p>User Agent（ブラウザの種類）は <code>"python-requests/2.27.1"</code> のような感じで先方のログに残る。これが嫌なら適当に変えられる：</p>
 
 <pre>
-<code>r = requests.get('http://example.jp/',
-    headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15'})
+<code>r = requests.get('https://okumuralab.org/~okumura/python/',
+                 headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15'})
 </code></pre>
 
-<p>最後に，いらすとやさんから「科学」ジャンルの画像のサムネール（256x256）をスクレイプする簡単なコード例を挙げておく。カレントディレクトリ下に <code>irasutoya</code> というサブディレクトリがあるとする。</p>
+<p>[以下は 2019-09-05 に試した] 最後に，いらすとやさんから「科学」ジャンルの画像のサムネール（256x256）をスクレイプする簡単なコード例を挙げておく。カレントディレクトリ下に <code>irasutoya</code> というサブディレクトリがあるとする。</p>
 
 <pre>
 <code>import requests
@@ -178,7 +180,7 @@ for u in urls:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-12-15 14:59:22</time>
+Last modified: <time>2022-05-08 15:38:14 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
