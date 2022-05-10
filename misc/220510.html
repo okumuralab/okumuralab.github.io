@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/220210.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Google Cloud Platform</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>Google Cloud Platform</h1>
+
+<p><a href="https://cloud.google.com">Google Cloud Platform</a> (GCP) は Google のクラウドサービス。仮想マシンを時間借りできるなど，さまざまなサービスが用意されている。</p>
+
+<p>無料で始められるので，Google アカウントで登録する。クレジットカードの登録が必要。300 ドルの無料枠があるが，それを超えて勝手に課金されることはない。</p>
+
+<p>登録したら，<a href="https://console.cloud.google.com">コンソール</a> から Compute Engine に行き，VM インスタンス（仮想マシン）を作ってみよう。上端の <tt style="padding: 0.1em 0.3em; background-color:black; color:white">&gt;_</tt> のボタンでブラウザ上にターミナルが作れるが，反応が遅くてキー入力を取りこぼすので，普通のターミナルを使うほうがよい。そのためには <a href="https://cloud.google.com/sdk/docs/install">Installing the gcloud CLI</a> に従って gcloud CLI をインストールするか，Mac (M1 を含む) であれば <code>brew install google-cloud-sdk</code> で cask 版が入る。画面の表示に従って，ターミナル（zsh）に</p>
+
+<pre>
+source /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
+source /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc
+</pre>
+
+<p>と打ち込む（あるいは <code>~/.zshrc</code> に上の2行を書き込んで <code>source ~/.zshrc</code> と打ち込む）。<code>gcloud</code> コマンドが使えるようになるので，まず</p>
+
+<pre>
+gcloud auth login
+</pre>
+
+<p>と打ち込むと，ブラウザが立ち上がり，認証が行われる。</p>
+
+<pre>
+gcloud compute instances list
+</pre>
+
+<p>で VM のインスタンスのリストが表示されるので確認する。この左端に表示されているインスタンス名で VM にログインできる：</p>
+
+<pre>
+gcloud compute ssh インスタンス名
+</pre>
+
+<p>その場で仮の SSH キーが生成され，ログインできる。あるいは SSH 公開キーを VM に登録して通常の <code>ssh</code> コマンドでログインすることもできる。</p>
+
+<p>使い終わったら VM を停止または削除しておけば課金が進まない。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-05-10 21:29:13 JST</time></p>
+</footer>
+</body>
+</html>
