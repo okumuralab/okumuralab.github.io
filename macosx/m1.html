@@ -23,7 +23,7 @@
 
 <p>2020-11-20 に生協に注文した Mac mini 16G/256G は 2021-01-12 に届いた。</p>
 
-<p>どちらもメモリ16Gにしたが，通常の用途には8Gで十分かも。SSDは満タンの半分程度で使うつもりで選ぶほうが安心らしいので，据置き用には外付けSSD/HDDをAPFSフォーマットしてつなぎ，データ類はそちらに逃す。</p>
+<p>どちらもメモリ16Gにしたが，通常の用途には8Gで十分かも。SSDは満タンの半分程度で使うつもりで選ぶほうが安心らしいので，据置き用にはHDDをつないでいたが，4TのSSDを2台（Sandisk，Crucial）入手したので，APFSフォーマット（暗号化）してつなぎ，データ用とTime Machine用にした。高速・まったく無音で，快適。</p>
 
 <h2>セットアップと一般的な設定</h2>
 
@@ -31,7 +31,7 @@
 
 <p>まずは「システム環境設定」→「ソフトウェアアップデート」でOSをアップデート。「セキュリティとプライバシー」で FileVault（暗号化）をオンにする。ドライブを暗号化しておけば，盗まれても安心だし，廃棄する際にも鍵を捨てるだけで復号不能になる。パフォーマンス低下は無視できるはず。</p>
 
-<p>コンピュータ名が長ったらしいものになったのでシステム環境設定の「共有」で直す。ついでに「リモートログイン」を許可しておく（ssh でログインするため）。いずれにしてもパスワードは十分複雑なものにしておく。ちなみにパスワードは大文字小文字数字記号を混在させる必要はない。その分，長くすれば，問題ない。</p>
+<p>コンピュータ名が長ったらしいものになったのでシステム環境設定の「共有」で直す。据え置き用は「リモートログイン」を許可しておく（ssh でログインするため）。いずれにしてもパスワードは十分複雑なものにしておく。ちなみにパスワードは大文字小文字数字記号を混在させる必要はない。その分，長くすれば，問題ない。</p>
 
 <p>Finder の環境設定→詳細で「すべてのファイル名拡張子を表示」をオンにする。Safari の環境設定「一般」で「ダウンロード後、“安全な”ファイルを開く」をオフにする。</p>
 
@@ -43,10 +43,12 @@
 
 <p>「システム環境設定」→「ディスプレイ」で正しい解像度が選べない場合は Option キーを押しながら「変更」をクリック（→ <a href="https://www.eizo.co.jp/support/compati/pc/mac/apple-m1/">Apple M1チップ搭載MacとEIZOモニターの互換性</a>）。</p>
 
-<p>（これは好みだが）システム環境設定でディスプレイの色温度を自分好みに設定する。あるいは1日中 Night Shift に設定するのが簡単。</p>
+<p>Mac miniには複数のディスプレイをつないでいるが，輝度最小にして明るさが一致しないので，<a href="https://github.com/MonitorControl/MonitorControl">MonitorControl</a> というツールで調節する。</p>
+
+<p>色温度はディスプレイ側で低めに設定する（あるいはMac側で1日中Night Shiftに設定する）。</p>
 
 <div class="note">
-<p>以上以外に，私は非常に慎重を期すためにいつも自分を管理者から外している。具体的には，システム環境設定の「ユーザとグループ」で自分（奥村）以外に管理者（名前は例えば admin とする）を一人作成し，その管理者（Apple ID には紐付けない）でログインし直して奥村を一般ユーザに格下げする。これで何か重要なことをする際には管理者の名前とパスワードを聞いてくるのでうっかり危ないコマンドを実行する危険性が減る。Unix 的には sudoers から外したことに相当する。コマンドでシステム領域に触れたいときは <code>su admin</code> してから <code>sudo 何々</code> する。ただ，macOS はデフォルトでずいぶん安全になったので，今はここまでする必要はないかもしれない。Big Sur から Monterey に更新する際には admin でログインし直す必要があった。</p>
+<p>以上以外に，私は非常に慎重を期すためにいつも自分を管理者から外している。具体的には，システム環境設定の「ユーザとグループ」で自分（奥村）以外に管理者（名前は例えば admin とする）を一人作成し，その管理者（Apple ID には紐付けない）でログインし直して奥村を一般ユーザに格下げする。これで何か重要なことをする際には管理者の名前とパスワードを聞いてくるのでうっかり危ないコマンドを実行する危険性が減る。Unix 的には自分を sudoers から外したことに相当する。コマンドでシステム領域に触れたいときは <code>su admin</code> してから <code>sudo 何々</code> する。ただ，macOS はデフォルトでずいぶん安全になったので，今はここまでする必要はないかもしれない。Big Sur から Monterey に更新する際には admin でログインし直す必要があった。</p>
 </div>
 
 <p>初期の M1 Mac にあった問題（おそらく改善されたはず）：</p>
@@ -61,12 +63,15 @@
 
 <ul>
   <li>iPhone に Bluetooth で接続できなくなった（M1 も Intel も）。</li>
-  <li>外付けカメラが一晩置くと使えなくなる。<code>lsof | grep VDC</code> で調べても何かのプロセスがカメラを抱えているわけでもなく，<code>sudo killall VDCAssistant</code> しても直らない。OS 再起動で直る。</li>
+  <li>特定の外付けカメラが一晩置くと使えなくなる。<code>lsof | grep VDC</code> で調べても何かのプロセスがカメラを抱えているわけでもなく，<code>sudo killall VDCAssistant</code> しても直らない。OS 再起動で直る。</li>
 </ul>
 
 <h2>ターミナル</h2>
 
-<p>ターミナルを開き，試しに <code>uname -m</code> と打ち込むと arm64 と表示される。いったんターミナルを閉じて，Finder でターミナルを選択して「情報を見る」で「Rosettaを使用して開く」にチェックを付けると Rosetta がインストールされる（一般には任意の x86_64 なアプリを最初に起動したときに Rosetta がインストールされるのであろう。コマンド <code>softwareupdate --install-rosetta</code> でもインストールできる）。Rosetta で開かれたターミナルに <code>uname -m</code> と打ち込むと x86_64 と表示される。今度は「Rosettaを使用して開く」をオフにしてターミナルを開き直して <code>uname -m</code> するとまた arm64 になるが，Rosetta がインストールされたので</p>
+<p>もう Rosetta を使う機会はほとんどないので以下は不要。</p>
+
+<div class="note">
+<p>ターミナルを開き，試しに <code>uname -m</code> と打ち込むと arm64 と表示される。いったんターミナルを閉じて，Finder でターミナルを選択して「情報を見る」で「Rosettaを使用して開く」にチェックを付けると Rosetta がインストールされる（一般には任意の x86_64 なアプリを最初に起動したときに Rosetta がインストールされる。コマンド <code>softwareupdate --install-rosetta</code> でもインストールできる）。Rosetta で開かれたターミナルに <code>uname -m</code> と打ち込むと x86_64 と表示される。今度は「Rosettaを使用して開く」をオフにしてターミナルを開き直して <code>uname -m</code> するとまた arm64 になるが，Rosetta がインストールされたので</p>
 
 <pre>
 arch -x86_64 uname -m
@@ -79,10 +84,14 @@ arch -x86_64 zsh
 </pre>
 
 <p>とすれば Rosetta で zsh が立ち上がる。x86_64 のコードを実行するにはこの状態で行う。.zshrc に <code>alias x86='arch -x86_64 zsh'</code> のようにエイリアスを作っておけば <code>x86</code> と入力するだけでこの状態になる。</p>
+</div>
 
 <h2>シェル</h2>
 
-<p>今まで bash を使っていたが，クリーンセットアップしたので zsh になった。とりあえずプロンプトを見やすくするために <code>~/.zshrc</code> に <code>PROMPT='%m:%~%# '</code> と書き込む。あるいは Rosetta 状態かどうかをプロンプトに含めてもよい：</p>
+<p>今まで bash を使っていたが，クリーンセットアップしたので zsh になった。とりあえずプロンプトを見やすくするために <code>~/.zshrc</code> に <code>PROMPT='%m:%~%# '</code> と書き込む。</p>
+
+<div class="note">
+<p>あるいは Rosetta 状態かどうかをプロンプトに含めてもよい：</p>
 
 <pre>
 ARCH=`uname -m`
@@ -99,6 +108,7 @@ else
     PROMPT="[x] %m:%~%# "
 fi
 </pre>
+</div>
 
 <p>ほかに例えば次のようなオプションを設定しておく：</p>
 
@@ -123,6 +133,7 @@ setopt NO_GLOBAL_RCS
 export PATH=... # bashと同様
 </pre>
 
+<div class="note">
 <p>PATH は場合分けして設定できる。例えば</p>
 
 <pre>
@@ -141,6 +152,7 @@ else
 fi
 export PATH
 </pre>
+</div>
 
 <h2>Command Line Tools</h2>
 
@@ -160,11 +172,13 @@ cd /opt
 curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
 </pre>
 
-<p>Rosetta で実行する Intel 版は通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを <code>uname -m</code> が x86_64 なターミナルに打ち込めばインストールできる。</p>
+<div class="note">
+<p>もう不要だが，Rosetta で実行する Intel 版は通常通り <a href="https://brew.sh">Homebrew</a> の最初に書いてあるコマンドを <code>uname -m</code> が x86_64 なターミナルに打ち込めばインストールできる。</p>
+</div>
 
-<h2>Emacs 27</h2>
+<h2>Emacs</h2>
 
-<p><a href="https://emacsformacosx.com">Emacs for Mac OS X</a> にある 27.2-2 は arm64 対応のユニバーサルバイナリである。下の自分でビルドしたものと比べて，日本語入力中に画面表示がちらつくことがあるが，許容範囲内であろう。</p>
+<p><a href="https://emacsformacosx.com">Emacs for Mac OS X</a> にあるものは arm64 対応のユニバーサルバイナリである。下の自分でビルドしたものと比べて，日本語入力中に画面表示がちらつくことがあるが，許容範囲内であろう。</p>
 
 <p>初回の起動は右クリックして「開く」。そのままではディスクにアクセスできないので，システム環境設定の「セキュリティとプライバシー」の「プライバシー」で「フルディスクアクセス」を許可する必要がある。私の場合，なぜかフルディスクアクセスを許可しても外付けHDDにアクセスできなかったが，ターミナルから一度 <code>open -a Emacs /Volumes/opt</code> と打ち込んで強制的にアクセスさせたら，以後は問題なくなった。</p>
 
@@ -196,39 +210,28 @@ make install
 
 <h3>コマンドラインツールのPython</h3>
 
-<p>Apple のコマンドラインツールに入っている /usr/bin/python，/usr/bin/python3 は universal binary である：</p>
+<p>Python 2.7系の /usr/bin/python は消えた。コマンドラインツールをインストールすると入る /usr/bin/python3 は universal binary である：</p>
 
 <pre>
-% file /usr/bin/python
-/usr/bin/python: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64e:Mach-O 64-bit executable arm64e]
-/usr/bin/python (for architecture x86_64):	Mach-O 64-bit executable x86_64
-/usr/bin/python (for architecture arm64e):	Mach-O 64-bit executable arm64e
-% /usr/bin/python --version
-Python 2.7.18
-
 % file /usr/bin/python3
-/usr/bin/python3: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64e:Mach-O 64-bit executable arm64e]
+/usr/bin/python3: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64
+- Mach-O 64-bit executable x86_64] [arm64e:Mach-O 64-bit executable arm64e
+- Mach-O 64-bit executable arm64e]
 /usr/bin/python3 (for architecture x86_64):	Mach-O 64-bit executable x86_64
 /usr/bin/python3 (for architecture arm64e):	Mach-O 64-bit executable arm64e
 % /usr/bin/python3 --version
 Python 3.8.9
 </pre>
 
-<p>この arm64e 側を使うことは可能だが，現状では pip でバイナリが提供されているライブラリは少ない。</p>
+<h3>本家のPython</h3>
 
-<h3>本家のPython 3.9</h3>
+<p>本家 <a href="https://www.python.org">python.org</a> の Python は universal バイナリになった。ライブラリも Apple Silicon 対応が徐々に進んでいるようだが，まだ完全ではない。</p>
 
-<p>本家 <a href="https://www.python.org">python.org</a> の Python が 3.9.1 から universal バイナリも experimental という括弧書きで提供されるようになった。ただし現状では pip で簡単にパッケージを追加できる状況にないので，混乱しないためには通常の macOS 64-bit Intel installer でインストールし，Rosetta で使うのが簡単である。インストールすると zsh を使っている場合は <code>.zprofile</code> に PATH が追記されるので適宜修正する。</p>
+<h3>miniforgeのPython</h3>
 
-<p>numpy の Apple Silicon 対応バイナリが出た。pandas や matplotlib はソースからビルドすることになるが，基本的なことであれば universal バイナリを arm64 環境で使うことができる。まだ scipy や scikit-learn や tensorflow-macos はうまくインストールできない。</p>
+<p><a href="https://github.com/conda-forge/miniforge">miniforge</a> を使えば主要ライブラリを含めて arm64 版がインストールできる。これがお薦め。</p>
 
-<h3>miniforgeのPython 3.9</h3>
-
-<p><a href="https://github.com/conda-forge/miniforge">miniforge</a> を使えば主要ライブラリを含めて arm64 版がインストールできる。</p>
-
-<!-- <p>（<a href="https://qiita.com/syoyo/items/6ad890c8a902d02d8c5a">こちら</a>参照）。うまくすれば Apple の TensorFlow と組み合わせることもできる（<a href="https://towardsdatascience.com/tensorflow-2-4-on-apple-silicon-m1-installation-under-conda-environment-ba6de962b3b8">TensorFlow 2.4 on Apple Silicon M1: installation under Conda environment</a> および <a href="https://towardsdatascience.com/benchmark-m1-vs-xeon-vs-core-i5-vs-k80-and-t4-e3802f27421c">Benchmark M1 vs Xeon vs Core i5 vs K80 and T4</a> 参照）。</p> -->
-
-<p>上記サイトから Miniforge3-MacOSX-arm64.sh をダウンロードし，<code>sh Miniforge3-MacOSX-arm64.sh</code> とすると miniforge のインストールが始まる。</p>
+<p>上記サイトから Miniforge3-MacOSX-arm64.sh をダウンロードし，ターミナルに <code>sh Miniforge3-MacOSX-arm64.sh</code> と打ち込むと，miniforge のインストールが始まる。</p>
 
 <pre style="color:black">
 Welcome to Miniforge3 ......
@@ -268,19 +271,19 @@ conda config --set auto_activate_base false
 Thank you for installing Miniforge3!
 </pre>
 
-<p><code>.zshrc</code> が書き変わるのでzshを再起動するか <code>. ~/.zshrc</code> と打ち込む。プロンプトの先頭に <code>(base)</code> が付くようになる。</p>
+<p><code>.zshrc</code> が書き変わるのでターミナルをいったん閉じる（あるいは <code>. ~/.zshrc</code> と打ち込む）。プロンプトの先頭に <code>(base)</code> が付くようになる。</p>
 
 <p>ときどき <code>conda update --all</code> で更新する。ほかに <code>conda list</code>，<code>conda install ...</code> を覚えておけばよい。</p>
 
-<p>（別の方法として，miniforge を Homebrew で入れるには <code>/opt/homebrew/bin/brew install miniforge</code> とすればよい。/opt/homebrew/Caskroom/miniforge 以下に入るので /opt/homebrew/Caskroom/miniforge/base/bin をPATHに加える。パッケージは /opt/homebrew/Caskroom/miniforge/base/lib/python3.9/site-packages に入る。）</p>
-
 <p>Tensorflow は <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> に従ってインストールできる。しかし，なぜか tensorflow-metal が遅いので，<code>pip uninstall tensorflow-metal</code> してしまった。</p>
 
-<p><a href="https://pytorch.org">PyTorch</a> は miniforge の Python 3.9 に普通にインストールできるようだ。次の TensorFlow と同様の Apple Silicon への最適化の<a href="https://github.com/pytorch/pytorch/issues/47702">要望</a>については，2021-11-11の時点では取り組み中だが，4ヶ月以内にパブリックアルファを出すのは難しそうとのこと。</p>
+<p><a href="https://pytorch.org">PyTorch</a> は miniforge の conda で普通にインストールできるようだ。</p>
 
 <pre>
 conda install pytorch torchvision  # torchaudio はまだダメ
 </pre>
+
+<p>Apple Silicon 対応の最適化の<a href="https://github.com/pytorch/pytorch/issues/47702">要望</a>はあるようである。</p>
 
 <!--
 <h3>miniforgeのPython 3.8とAppleのTensorFlow（古）</h3>
@@ -337,13 +340,15 @@ In [3]: quit
 tar xvzf install-tl-unx.tar.gz
 </pre>
 
-<p>とすると <code>install-tl-2021XXXX</code> のような名前のディレクトリにインストーラが展開されるので，その中に入り，<code>./install-tl</code> で起動する。GUIが嫌なら <code>./install-tl --no-gui</code> とする。特定の（近場の）リポジトリを指定したいなら例えば</p>
+<p>とすると <code>install-tl-YYYYMMDD</code> のような名前のディレクトリにインストーラが展開されるので，その中に入り，<code>./install-tl</code> で起動する。GUIが嫌なら <code>./install-tl --no-gui</code> とする。特定の（近場の）リポジトリを指定したいなら例えば</p>
 
 <pre>
 ./install-tl --no-gui --repository http://ftp.jaist.ac.jp/pub/CTAN/systems/texlive/tlnet/
 </pre>
 
-<p>のような感じで指定する。次のようなメニューが出る：</p>
+<p>のような感じで指定する。</p>
+
+<p>以下の実行例は TeX Live 2021 についてである。今は 2022 が最新。</p>
 
 <pre>
 ======================&gt; TeX Live installation procedure &lt;=====================
@@ -451,7 +456,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-12-14 13:39:07</time>
+Last modified: <time>2022-05-11 10:36:29 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
