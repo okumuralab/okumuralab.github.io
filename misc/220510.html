@@ -19,16 +19,16 @@
 
 <p><a href="https://cloud.google.com">Google Cloud Platform</a> (GCP) は Google のクラウドサービス。仮想マシンを時間借りできるなど，さまざまなサービスが用意されている。</p>
 
-<p>無料で始められるので，Google アカウントで登録する。クレジットカードの登録が必要。300 ドルの無料枠があるが，それを超えて勝手に課金されることはない。</p>
+<p>無料で始められるので，Google アカウントで登録する。無料でもクレジットカードの登録が必要。300 ドルの無料枠があるが，それを超えて勝手に課金されることはない。ただ，無料ユーザでは GPU が使えないなどの制限があるので，私は結局有料ユーザにアップグレードしてしまった（いずれにしても 300 ドルは無料になる）。GPU を使っても時間数十円なので，自分でマシンを買うより安い。</p>
 
-<p>登録したら，<a href="https://console.cloud.google.com">コンソール</a> から Compute Engine に行き，VM インスタンス（仮想マシン）を作ってみよう。上端の <tt style="padding: 0.1em 0.3em; background-color:black; color:white">&gt;_</tt> のボタンでブラウザ上にターミナルが作れるが，反応が遅くてキー入力を取りこぼすので，普通のターミナルを使うほうがよい。そのためには <a href="https://cloud.google.com/sdk/docs/install">Installing the gcloud CLI</a> に従って gcloud CLI をインストールするか，Mac (M1 を含む) であれば <code>brew install google-cloud-sdk</code> で cask 版が入る。画面の表示に従って，ターミナル（zsh）に</p>
+<p>登録したら，<a href="https://console.cloud.google.com">コンソール</a> から Compute Engine に行き，VM インスタンス（仮想マシン）を作ってみよう。上端の <tt style="padding: 0.1em 0.3em; background-color:black; color:white">&gt;_</tt> のボタンでブラウザ上のターミナルから操作できるが，反応が遅くてキー入力を取りこぼすので，普通のターミナルを使うほうがよい。そのためには <a href="https://cloud.google.com/sdk/docs/install">Installing the gcloud CLI</a> に従って gcloud CLI をインストールするか，Mac (M1 を含む) であれば <code>brew install google-cloud-sdk</code> で cask 版を入れる。画面の表示に従って， <code>~/.zshrc</code> に</p>
 
 <pre>
 source /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
 source /opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc
 </pre>
 
-<p>と打ち込む（あるいは <code>~/.zshrc</code> に上の2行を書き込んで <code>source ~/.zshrc</code> と打ち込む）。<code>gcloud</code> コマンドが使えるようになるので，まず</p>
+<p>と書き込んで <code>source ~/.zshrc</code> するのが推奨らしいが，私はそうせずに単に <code>~/.zshenv</code> で <code>/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/bin</code> にパスを通した。これで <code>gcloud</code> コマンドが使えるようになるので，まず</p>
 
 <pre>
 gcloud auth login
@@ -40,21 +40,40 @@ gcloud auth login
 gcloud compute instances list
 </pre>
 
-<p>で VM のインスタンスのリストが表示されるので確認する。この左端に表示されているインスタンス名で VM にログインできる：</p>
+<p>で VM のインスタンスのリストが表示されるので確認する。この左端に表示されるインスタンス名で VM にログインできる：</p>
 
 <pre>
 gcloud compute ssh インスタンス名
 </pre>
 
-<p>その場で仮の SSH キーが生成され，ログインできる。あるいは SSH 公開キーを VM に登録して通常の <code>ssh</code> コマンドでログインすることもできる。</p>
+<p>その場で仮の SSH キーが生成され，ログインできる。あるいは SSH 公開キー（<code>id_ed25519.pub</code> とか）を登録して通常の <code>ssh</code> コマンドで IP アドレス指定でログインすることもできる。</p>
 
 <p>使い終わったら VM を停止または削除しておけば課金が進まない。</p>
+
+<p>GPU を使った VM を作ろうとすると Operation type [insert] failed with message "Quota 'GPUS_ALL_REGIONS' exceeded. Limit: 0.0 globally." というエラーが出る。GPU を使うには申請が必要だった。<a href="https://blog.hiroshiba.jp/gcp-low-cost-deeplearning/">GCPでできるだけ安くディープラーニング</a>が参考になる。設定は <a href="https://console.cloud.google.com/iam-admin/quotas">IAM の quota</a> から行う。「フィルタ」の右側に「GPUs (all regions)」と打ち込み，上限が 0 になっていたら，左端にチェックを付けて「割り当てを編集」で設定する。上限 1 で申請したら，即 OK され，15分程度で反映された。</p>
+
+<p>試しに <a href="https://github.com/ndl-lab/ndlocr_cli">NDLOCR</a>（国会図書館の OCR）を実行してみる。中村覚先生の <a href="https://zenn.dev/nakamura196/articles/1313a746826c36">Google Cloud PlatformのCompute Engineを用いたNDLOCRアプリの実行</a> の通りにすればよい。この構成で，237.39ドル/月（0.33ドル/時間）。なお，<code>sh ./docker/run_docker.sh</code> の代わりに次のようにした：</p>
+
+<pre>
+docker container run --gpus all -it --rm --mount type=bind,src=$(pwd),dst=/work ocr-cli-py37:latest bash
+</pre>
+
+<p>これは <code>docker</code> コマンドを打ち込んだ場所（<code>$(pwd)</code>）とコンテナ内の <code>/work</code> ディレクトリをマップするという意味である（ディレクトリは適宜変更する）。</p>
+
+<p>これで</p>
+
+<pre>
+wget https://www.dl.ndl.go.jp/api/iiif/3437686/R0000004/full/full/0/default.jpg -P /work/sample_data/img/
+python main.py infer /work/sample_data /work/output_dir -x
+</pre>
+
+<p>とすれば，完了して <code>exit</code> してコンテナが消えた後でも入力や出力にアクセスできる。結果は <code>rsync</code> などでローカルマシンにダウンロードしてから，忘れずに VM を停止する（停止している間は課金されない）。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-05-10 21:29:13 JST</time></p>
+<p>Last modified: <time>2022-05-13 17:36:17 JST</time></p>
 </footer>
 </body>
 </html>
