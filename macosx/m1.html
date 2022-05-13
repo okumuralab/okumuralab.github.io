@@ -275,7 +275,12 @@ Thank you for installing Miniforge3!
 
 <p>ときどき <code>conda update --all</code> で更新する。ほかに <code>conda list</code>，<code>conda install ...</code> を覚えておけばよい。</p>
 
-<p>Tensorflow は <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> に従ってインストールできる。しかし，なぜか tensorflow-metal が遅いので，<code>pip uninstall tensorflow-metal</code> してしまった。</p>
+<p>Tensorflow は <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> に従ってインストールできる。しかし，なぜか tensorflow-metal が遅いので，<code>pip uninstall tensorflow-metal</code> してしまった。要するに miniconda なら次のようにすればよさそう：</p>
+
+<pre>
+conda install -c apple tensorflow-deps
+pip install tensorflow-macos
+</pre>
 
 <p><a href="https://pytorch.org">PyTorch</a> は miniforge の conda で普通にインストールできるようだ。</p>
 
@@ -456,7 +461,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-05-11 10:36:29 JST</time>
+Last modified: <time>2022-05-11 11:00:09 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
