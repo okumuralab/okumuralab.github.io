@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/install.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docker</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Docker</h1>
+
+<p>Docker はコンテナを管理するツールである。コンテナは見かけ上 Linux 仮想マシン（VM）のように振る舞うが，カーネルやファイルシステムは親マシンに依存している点が仮想マシンとの違いである。このため，仮想マシンより軽量で，ほぼ瞬時に起動できる。</p>
+
+<p>まずは <a href="https://hub.docker.com">Docker Hub</a> に登録する。</p>
+
+<p>私のマシンは M1 Mac なので，<a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a> の Mac with Apple Chip 用をダウンロードする。インストールして起動したら Sign In をクリックして Docker Hub にサインインする。</p>
+
+<p>Docker のディスクイメージファイルは Mac ではデフォルト <code>~/Library/Containers/com.docker.docker/Data/vms/0/data/Docker.raw</code> のような名前である。非常に大きくなるので，メインディスクが逼迫していれば，Docker Desktop の Preferences &gt; Resources &gt; Advanced &gt; Disk image location で別の場所を指定して Apply &amp; Restart する。私は <code>/Volumes/(外付けSSD)/var/lib/docker</code> というフォルダを作って指定した。この中に <code>DockerDesktop/Docker.raw</code> という巨大なファイルができる。ついでに Preferences &gt; Experimental Features では実験的な仕様をオンにできる。試しにオンにしてみた。</p>
+
+<p>Docker Desktop アプリを立ち上げれば Docker デーモンが起動するので，あとは閉じてしまってもかまわない。試しに最新の Python の入ったイメージをダウンロードして走らせてみよう。Docker のコマンド体系には新・旧があるが，ここでは新しい方を使う。ターミナルに</p>
+
+<pre>
+docker container run -it --rm python:latest bash
+</pre>
+
+<p>と打ち込めば，<code>'python:latest'</code> という Docker イメージをダウンロードしてコンテナを起動し，Linux のシェルが立ち上がる。その中で <code>python</code> と打ち込めば Python が起動する。シェルを <code>exit</code> で抜ければコンテナが終了する。<code>-it</code> は <code>--interactive --tty</code> の略で，対話モードでコンテナを起動する。<code>--rm</code> はコンテナを抜けるとコンテナを削除する（イメージは消えない）。</p>
+
+<p>物理マシンを立ち上げ直したときは Docker デーモンを起動するために Docker Desktop を起動する。毎日 Docker を使うなら Preferences &gt; General &gt; Start Docker Desktop when you log in で自動起動を設定しておくと便利。</p>
+
+<p>すべてのイメージを表示するには</p>
+
+<pre>
+docker image ls
+</pre>
+
+<p>イメージを削除するには</p>
+
+<pre>
+docker image rm イメージ名またはID
+</pre>
+
+<p>すべてのコンテナを表示するには</p>
+
+<pre>
+docker container ls -a
+</pre>
+
+<p>コンテナを停止・削除するにはそれぞれ</p>
+
+<pre>
+docker container stop コンテナID
+docker container rm コンテナID
+</pre>
+
+<p>コンテナの <code>/work</code> を実マシンのカレントディレクトリにマップするには</p>
+
+<pre>
+docker container run -it --rm --mount type=bind,src=$(pwd),dst=/work python:latest bash
+</pre>
+
+<p>コンテナ実行中に pip でライブラリを入れることもできるが，コンテナを削除すると消えてしまう。これでは面倒なので，ライブラリも含めた自分用のイメージを作ってみよう。適当なディレクトリに <code>Dockerfile</code> というファイルを作り，例えば次のように書き込む：</p>
+
+<pre>
+FROM python:latest
+WORKDIR /work
+COPY requirements.txt ${PWD}
+RUN pip install -r requirements.txt
+EXPOSE 8888
+</pre>
+
+<p>同じディレクトリの <code>requirements.txt</code> には Python で使うライブラリを列記する。例えば</p>
+
+<pre>
+numpy
+matplotlib
+pandas
+requests
+jupyter
+</pre>
+
+<p><code>numpy == 1.22.3</code> のようにバージョンも指定するとそのバージョンが使われる。</p>
+
+<p>このディレクトリの中で <code>docker image build -t mypython:latest .</code> と打ち込めば <code>mypython:latest</code> というイメージができる。<code>docker image ls</code> で確かめる。実行は例えば</p>
+
+<pre>
+docker container run -it --rm -p 8888:8888 --mount type=bind,src=$(pwd),dst=/work mypython:latest bash
+</pre>
+
+<p>のようにする。起動したら通常通り <code>python</code> コマンドで Python を実行できる。あるいは</p>
+
+<pre>
+jupyter notebook --ip=0.0.0.0 --allow-root --no-browser --port=8888 &amp;
+</pre>
+
+<p>で Jupyter Notebook が起動するので，ホストマシンのブラウザで <code>http://127.0.0.1:8888?token=...</code> を開いて使える。</p>
+
+<pre>
+jupyter notebook stop
+</pre>
+
+<p>で止まる。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-05-14 10:14:25 JST</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
