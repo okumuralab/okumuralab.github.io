@@ -67,7 +67,7 @@ wget https://www.dl.ndl.go.jp/api/iiif/3437686/R0000004/full/full/0/default.jpg 
 python main.py infer /work/sample_data /work/output_dir -x
 </pre>
 
-<p>とすれば，完了して <code>exit</code> してコンテナが消えた後でも入力や出力にアクセスできる。結果は <code>rsync</code> などでローカルマシンにダウンロードしてから，忘れずに VM を停止する（停止している間は課金されない）。</p>
+<p>とすれば，完了して <code>exit</code> してコンテナが消えた後でも入力や出力にアクセスできる。結果は <code>rsync</code> などでローカルマシンにダウンロードしてから，忘れずに VM を停止する（停止している間<del>は課金されない</del><ins>もほんの少し課金されるようなので，長時間使わないなら削除する</ins>）。</p>
 
 <p>[追記] こちらも便利: NDLOCR の <a href="https://github.com/blue0620/simple_reading_order/blob/main/NDLOCR_googlecolabversion_reading_order.ipynb">読み順ソート機能</a></p>
 
@@ -75,7 +75,7 @@ python main.py infer /work/sample_data /work/output_dir -x
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-05-14 14:36:37 JST</time></p>
+<p>Last modified: <time>2022-05-15 10:17:38 JST</time></p>
 </footer>
 </body>
 </html>
