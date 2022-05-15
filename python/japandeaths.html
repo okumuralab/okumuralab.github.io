@@ -21,8 +21,6 @@ td, th { border: 1px solid; }
 
 <h1>日本の超過死亡？</h1>
 
-<p><em>[2022-04-30]</em> データを更新した。</p>
-
 <p>厚労省<a href="https://www.mhlw.go.jp/toukei/list/81-1a.html">人口動態調査</a>から，人口動態統計（確定数），人口動態統計月報（概数），人口動態統計速報がリンクされている。確定数は翌年9月ごろにならないと出ない。概数はほぼ5ヶ月後，速報はほぼ2ヶ月後に出る。</p>
 
 <p>データはe-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&amp;toukei=00450011&amp;tstat=000001028897">人口動態調査</a>で公開されている。ここから集めた確定数・概数・速報データを <a href="data/japandeaths.csv">japandeaths.csv</a> というファイルに収めた。確定数は上記ページから確定数→死亡→年次→2020年とたどって，5-4「死亡月別にみた年次別死亡数及び死亡率（人口千対）」を選ぶ。このCSVファイルは整然としていないので<a href="211016.html">データの整然化の例</a>のようにして整然化する。</p>
@@ -80,7 +78,18 @@ plt.savefig('japandeaths3.svg', bbox_inches="tight")
 
 <figure><img src="img/japandeaths3.svg" alt="Deaths in Japan"></figure>
 
-<p>ちなみに<a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">厚労省オープンデータ</a>による月ごとの1日あたりのCOVID-19による死亡数はおよそ次の通りである（元データが2021/12/15で止まっている）。</p>
+<pre><code>df['死亡数'] = np.array([n3 if np.isnan(n1) and np.isnan(n2) else n2 if np.isnan(n1) else n1 for n1, n2, n3 in zip(df['確定数'], df['概数'], df['速報値'])])
+df1 = df.groupby('年')['死亡数'].sum()
+x = [n / 366 if y % 4 == 0 else n / 365 for y, n in zip(df1.index, df1)]
+plt.plot(df1.index, x, "o-")
+plt.xlabel('年')
+plt.ylabel('1日あたり死亡数')
+plt.savefig('japandeaths4.svg', bbox_inches="tight")
+</code></pre>
+
+<figure><img src="img/japandeaths4.svg" alt="Deaths in Japan"></figure>
+
+<p>ちなみに<a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">厚労省オープンデータ</a>による月ごとの1日あたりのCOVID-19による死亡数はおよそ次の通りである。</p>
 
 <table>
   <thead>
@@ -104,18 +113,24 @@ plt.savefig('japandeaths3.svg', bbox_inches="tight")
   <tr><td>2021-08</td><td>27.4</td></tr>
   <tr><td>2021-09</td><td>53.6</td></tr>
   <tr><td>2021-10</td><td>20.0</td></tr>
+  <tr><td>2021-11</td><td>3.1</td></tr>
+  <tr><td>2021-12</td><td>1.1</td></tr>
+  <tr><td>2022-01</td><td>12.9</td></tr>
+  <tr><td>2022-02</td><td>172.9</td></tr>
+  <tr><td>2022-03</td><td>144.0</td></tr>
+  <tr><td>2022-04</td><td>49.1</td></tr>
   </tbody>
 </table>
 
 <pre>
 df = pd.read_csv("deaths_cumulative_daily.csv", parse_dates=['Date'])
-a = np.arange(np.datetime64("2020-06"), np.datetime64("2021-12"))
+a = np.arange(np.datetime64("2020-06"), np.datetime64("2022-06"))
 da = pd.to_datetime(a)
 da1 = da - np.timedelta64(1,"D")
 da1s = pd.Series(da1, name='Date')
 df2 = pd.merge(da1s, df).diff()
 x = df2.ALL / (df2.Date / np.timedelta64(1,"D"))
-for i in range(1, 18):
+for i in range(1, len(x)):
     print(f"{a[i-1]},{x[i]:3.1f}")
 </pre>
 
@@ -125,7 +140,7 @@ for i in range(1, 18):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-30 14:50:59 JST</time>
+Last modified: <time>2022-05-15 11:41:27 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
