@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/210324.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>雨の多い曜日</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>雨の多い曜日</h1>
+
+<p>Aさんは，金曜日は雨ばかりだとこぼしている。本当に特定の曜日に雨が多いのか。</p>
+
+<p>そこで，気象庁の<a href="https://www.data.jma.go.jp/gmd/risk/obsdl/index.php">過去の気象データ・ダウンロード</a>から曜日ごとの雨量を調べてみた。</p>
+
+<p>「地点を選ぶ」で「東京」，「項目を選ぶ」で「日別値」「降水量の日合計」，「期間を選ぶ」で2000年1月1日から2021年12月31日まで，「表示オプションを選ぶ」で「日付に曜日を表示」と設定した。</p>
+
+<p>CSVファイルをダウンロードすると，次のような data.csv というファイルが得られた。</p>
+
+<pre>
+ダウンロードした時刻：2022/05/17 11:01:59
+
+,,東京,東京,東京,東京
+年月日,曜日,降水量の合計(mm),降水量の合計(mm),降水量の合計(mm),降水量の合計(mm)
+,,,現象なし情報,品質情報,均質番号
+2000/1/1,土,0,1,8,1
+2000/1/2,日,0.0,0,8,1
+2000/1/3,月,0.5,0,8,1
+（中略）
+2021/12/30,木,0.0,0,8,1
+2021/12/31,金,0,1,8,1
+</pre>
+
+<p>これをRで読む：</p>
+
+<pre>
+df = read.csv("data.csv", fileEncoding="CP932", header=FALSE, skip=5)
+</pre>
+
+<p>曜日（<code>df$V2</code>）ごとの降水量（<code>df$V3</code>）の違いを検定してみる：</p>
+
+<pre>
+oneway.test(df$V3 ~ df$V2)
+</pre>
+
+<p><i>p</i> 値は 0.1982 となり，統計的に有意な違いはない。</p>
+
+<p>箱ひげ図を描いてみる。</p>
+
+<pre>
+boxplot(df$V3 ~ df$V2, ylim=c(0, 7))
+</pre>
+
+<p>では曜日順に並ばないので，</p>
+
+<pre>
+w = factor(df$V2, c("月", "火", "水", "木", "金", "土", "日"))
+boxplot(df$V3 ~ w, ylim=c(0, 7))
+</pre>
+
+<p>のようにする。どの曜日も中央値は 0 である。</p>
+
+<p>平均値を比べるには</p>
+
+<pre>
+a = aggregate(df$V3, list(w), mean)
+barplot(a[,2], names.arg=a[,1])
+</pre>
+
+<p>とする。95%信頼区間のエラーバーを付けてみよう：</p>
+
+<pre>
+ci = aggregate(df$V3, list(w), function(x) t.test(x)$conf.int)
+par(mgp=c(2,0.8,0))
+plot(a[,2], pch=16, ylim=range(ci[,2]), xlab="曜日", ylab="降水量 (mm)", xaxt="n")
+axis(1, at=1:7, labels=c("月","火","水","木","金","土","日"))
+arrows(1:7, ci[,2][,1], 1:7, ci[,2][,2], length=0.05, angle=90, code=3)
+</pre>
+
+<figure><img src="img/220517.png" alt="東京の曜日ごとの降水量"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-05-17 19:56:26 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
