@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/220217.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>人口ピラミッドと男女比（2020年版）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>人口ピラミッドと男女比（2020年版）</h1>
+
+<p>Rで描いた<a href="../stat/170922.html">人口ピラミッドと男女比</a>の2020年版。</p>
+
+<p>e-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00200521&tstat=000001136464&cycle=0&tclass1=000001136466&tclass2val=0">令和２年国勢調査</a>の2-1「男女，年齢（各歳），国籍総数か日本人別人口，平均年齢及び年齢中位数－全国，都道府県，21大都市，特別区，人口50万以上の市」Excelファイル（ファイル名b02_01.xlsx）をダウンロードし，全国の各歳の男女別人口を抜き出す。CSVファイルにしたものを <a href="data/pop2020.csv">pop2020.csv</a> として置いておく。最後の行（AgeがNAになっている）は年齢不詳の人数。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import pandas as pd
+
+df = pd.read_csv("https://okumuralab.org/~okumura/python/data/pop2020.csv")
+
+fig, (ax1, ax2) = plt.subplots(1, 2) # sharey=True
+ax1.barh(df['Age'], df['Male'] / 10000, height=1, align="edge")
+ax1.set_xlim([110, 0])
+ax1.set_ylim([0, 111])
+ax1.yaxis.tick_right()
+ax1.set_yticklabels([])
+ax2.barh(df['Age'], df['Female'] / 10000, height=1, align="edge", color="C1")
+ax2.set_xlim([0, 110])
+ax2.set_ylim([0, 111])
+ax1.text(100, 103, "男", horizontalalignment="center")
+ax2.text(100, 103, "女", horizontalalignment="center")
+ax2.text(-12, 103, "歳")
+ax2.text(95, -10, "万人")
+ax1.spines['left'].set_visible(False)
+ax1.spines['top'].set_visible(False)
+ax2.spines['right'].set_visible(False)
+ax2.spines['top'].set_visible(False)
+</pre>
+
+<figure><img src="img/220517a.svg" alt="2020年の日本の人口ピラミッド"></figure>
+
+<p>ピラミッドにこだわらなければもっと簡単にできる：</p>
+
+<pre class="cell">
+plt.close("all")
+plt.figure(figsize=(10, 4))
+plt.plot(df["Age"], df["Male"] / 10000, "o-", label="男")
+plt.plot(df["Age"], df["Female"] / 10000, "o-", label="女")
+plt.xlabel("年齢")
+plt.ylabel("人口（万人）")
+plt.legend()
+</pre>
+
+<figure><img src="img/220517b.svg" alt="2020年の日本の人口構成"></figure>
+
+<p>男女比：</p>
+
+<pre class="cell">
+plt.close("all")
+plt.figure(figsize=(10, 4))
+plt.plot(df["Age"], df["Male"] / df["Female"], "o-")
+plt.xlabel("年齢")
+plt.ylabel("男女比")
+plt.grid()
+</pre>
+
+<figure><img src="img/220517c.svg" alt="2020年の日本の男女比"></figure>
+
+<p>県ごとにやってみるとおもしろい。福島県（安東量子さんの<a href="https://note.com/ando_ryoko/n/n3429a148d3d1">福島県の２０代女性転出超過数が全国的にも多いこと</a>参照）：</p>
+
+<figure><img src="img/220517d.svg" alt="2020年の福島県の男女比"></figure>
+
+<p>東京都：</p>
+
+<figure><img src="img/220517e.svg" alt="2020年の東京都の男女比"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-05-18 10:36:10 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
