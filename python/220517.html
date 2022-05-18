@@ -51,7 +51,6 @@ ax2.spines['top'].set_visible(False)
 <p>ピラミッドにこだわらなければもっと簡単にできる：</p>
 
 <pre class="cell">
-plt.close("all")
 plt.figure(figsize=(10, 4))
 plt.plot(df["Age"], df["Male"] / 10000, "o-", label="男")
 plt.plot(df["Age"], df["Female"] / 10000, "o-", label="女")
@@ -65,7 +64,6 @@ plt.legend()
 <p>男女比：</p>
 
 <pre class="cell">
-plt.close("all")
 plt.figure(figsize=(10, 4))
 plt.plot(df["Age"], df["Male"] / df["Female"], "o-")
 plt.xlabel("年齢")
@@ -89,7 +87,7 @@ plt.grid()
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-05-18 10:36:10 JST</time>
+Last modified: <time>2022-05-18 10:44:27 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
