@@ -49,7 +49,6 @@ plt.plot(t, perday2, 's-')
 plt.plot(t, perday3, '*-')
 plt.ylabel('1日あたり死亡数')
 plt.legend(['確定数', '概数', '速報値'])
-plt.savefig('japandeaths1.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/japandeaths1.svg" alt="Deaths in Japan"></figure>
@@ -64,7 +63,6 @@ plt.plot(df[df['年'] == 2021]['月'], perday3[df['年'] == 2021],
 plt.xlabel('月')
 plt.ylabel('1日あたり死亡数')
 plt.legend(loc=(0.45,0.48))
-plt.savefig('japandeaths2.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/japandeaths2.svg" alt="Deaths in Japan"></figure>
@@ -73,7 +71,6 @@ plt.savefig('japandeaths2.svg', bbox_inches="tight")
 for m in range(1, 13):
     plt.plot(df[df['月'] == m]['年'], perday[df['月'] == m], marker=f'${m}$')
 plt.ylabel('1日あたり死亡数')
-plt.savefig('japandeaths3.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/japandeaths3.svg" alt="Deaths in Japan"></figure>
@@ -81,15 +78,37 @@ plt.savefig('japandeaths3.svg', bbox_inches="tight")
 <pre><code>df['死亡数'] = np.array([n3 if np.isnan(n1) and np.isnan(n2) else n2 if np.isnan(n1) else n1 for n1, n2, n3 in zip(df['確定数'], df['概数'], df['速報値'])])
 df1 = df.groupby('年')['死亡数'].sum()
 x = [n / 366 if y % 4 == 0 else n / 365 for y, n in zip(df1.index, df1)]
-plt.plot(df1.index, x, "o-")
+y = df1.index.values
+plt.plot(y, x, "o-")
 plt.xlabel('年')
 plt.ylabel('1日あたり死亡数')
-plt.savefig('japandeaths4.svg', bbox_inches="tight")
 </code></pre>
 
 <figure><img src="img/japandeaths4.svg" alt="Deaths in Japan"></figure>
 
-<p>ちなみに<a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">厚労省オープンデータ</a>による月ごとの1日あたりのCOVID-19による死亡数はおよそ次の通りである。</p>
+<p>非常に大雑把に2020〜2021年の超過死亡数を求めてみよう。2011年は東日本大地震で死亡数が増えたと考えられるので，ベースラインを2012〜2019年に設定して，最小2乗法で直線をフィットし，そこからの外れを調べよう。</p>
+
+<pre>
+<code>u = (2012 <= y) & (y <= 2019)
+slope, intercept = np.polyfit(y[u], x[u], 1)
+plt.clf()
+plt.plot(y, x - (slope * y + intercept), "o-")
+plt.axhline(linewidth=0.5, color="black")
+plt.xlabel('年')
+plt.ylabel('1日あたり超過死亡数')
+</code></pre>
+
+<p><a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">厚労省オープンデータ</a>によれば，COVID-19による2020年12月31日までの累積死亡数は3459人，2021年12月31日までの累積死亡数は18385人である。これをオレンジ色で描き足す。</p>
+
+<pre>
+<code>plt.plot([2020, 2021], [3459 / 366, (18385 - 3459) / 365], "o-")
+</code></pre>
+
+<figure><img src="img/japandeaths5.svg" alt="Excess Deaths in Japan"></figure>
+
+<p>このように，2020年の死亡数は予想よりかなり少ない（-68.6人/日）。その反動か，2021年には予想よりかなり多く（+69.3人/日），報告された死亡数（40.9人/日）よりも多い（1.7倍，+28.4人/日）。一部で騒がれた「報告数の6倍」はどう考えてもありえないし，増分（+28.4人/日）は2012〜2019年のゆらぎと同程度なので，何ともいえない。</p>
+
+<p>ちなみに月ごとの1日あたりのCOVID-19による死亡数は次の通りである。</p>
 
 <table>
   <thead>
@@ -140,7 +159,7 @@ for i in range(1, len(x)):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-05-15 11:41:27 JST</time>
+Last modified: <time>2022-05-22 13:27:56 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
