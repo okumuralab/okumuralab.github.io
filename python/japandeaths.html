@@ -89,7 +89,7 @@ plt.ylabel('1日あたり死亡数')
 <p>非常に大雑把に2020〜2021年の超過死亡数を求めてみよう。2011年は東日本大地震で死亡数が増えたと考えられるので，ベースラインを2012〜2019年に設定して，最小2乗法で直線をフィットし，そこからの外れを調べよう。</p>
 
 <pre>
-<code>u = (2012 <= y) & (y <= 2019)
+<code>u = (2012 &lt;= y) &amp; (y &lt;= 2019)
 slope, intercept = np.polyfit(y[u], x[u], 1)
 plt.clf()
 plt.plot(y, x - (slope * y + intercept), "o-")
@@ -159,7 +159,7 @@ for i in range(1, len(x)):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-05-22 13:27:56 JST</time>
+Last modified: <time>2022-05-22 13:35:50 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
