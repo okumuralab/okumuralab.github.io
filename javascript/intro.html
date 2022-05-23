@@ -3,7 +3,7 @@
 <head>
 <link rel="canonical" href="https://okumuralab.org/~okumura/javascript/intro.html">
 <meta charset="UTF-8">
-<title>授業での実習のしかた</title>
+<title>プロジェクトごとにフォルダを分けよう</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
@@ -15,10 +15,29 @@
 <a href="./">JavaScript講座</a> &gt;
 </nav>
 
-<article>
-<h1>授業での実習のしかた</h1>
+<h1>プロジェクトごとにフォルダを分けよう</h1>
 
-<p><a href="../html5/">HTML5</a>の実習で public_html というディレクトリ（フォルダ）を使いました。ここでは，このディレクトリの中に例えば js（別の名前でもかまいません）というサブディレクトリ（サブフォルダ）を作って，その中でJavaScriptの実習をしましょう。</p>
+<p><a href="../html5/">HTML</a>の実習で public_html というディレクトリ（フォルダ）を使いました。このディレクトリの直下にすべてのファイルを置いてもいいのですが，一般には，プロジェクトごとにディレクトリを分けます。ここでは，JavaScriptの演習をするために，public_html の中に例えば js というサブディレクトリ（サブフォルダ）を作って，その中でJavaScriptの実習をしましょう。</p>
+
+<fieldset>
+  <legend>public_html</legend>
+  <p>index.html<br>
+    aaa.html<br>
+    bbb.html<br>
+    style.css</p>
+  <fieldset>
+    <legend>js</legend>
+    <p>index.html<br>
+      rollover.html<br>
+      changetext.html<br>
+      …….html</p>
+  </fieldset>
+  <fieldset>
+    <legend>other</legend>
+    <p>index.html<br>
+      …….html</p>
+  </fieldset>
+</fieldset>
 
 <p>js というサブディレクトリを作ったら，その中にJavaScript実習で作った作品のお品書き（インデックス）のページを index.html という名前で作成します。内容は次のような感じです：</p>
 
@@ -28,7 +47,7 @@
 &lt;head&gt;
 &lt;meta charset="UTF-8"&gt;
 &lt;title&gt;JavaScript実習&lt;/title&gt;
-&lt;meta name="viewport" content="width=device-width"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
 &lt;link rel="stylesheet" href="../style.css"&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -36,7 +55,8 @@
 &lt;h1&gt;JavaScript実習&lt;/h1&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="hitsuji.html"&gt;ひつじを数える&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="rollover.html"&gt;絵の切り替え&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="changetext.html"&gt;文字の置き換え&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;/body&gt;
@@ -45,11 +65,11 @@
 
 <p>style.css へのリンクが <code>../style.css</code> となっていることに注意してください。<code>../</code> は「一つ上のフォルダの中」という意味です。</p>
 
-<p>この index.html は hitsuji.html へのリンクを含みます。hitsuji.html もさっそく作ってみましょう。そのほかの練習も，同様にこのお品書きページからリンクします。</p>
-
 <p>トップの index.html のどこかに <code>&lt;a href="js/"&gt;JavaScript実習&lt;/a&gt;</code> などと書き込めば，トップからJavaScriptのお品書きのページにリンクできます。</p>
 
-</article>
+<p>逆に，JavaScriptのプロジェクト内から，一つ上の階層の「ホーム」にリンクするには，<code>&lt;a href="../"&gt;ホーム&lt;/a&gt;</code> のようにします。</p>
+
+<p>また，同じ階層の index.html にリンクするには，<code>&lt;a href="./"&gt;お品書き&lt;/a&gt;</code> のようにします。このように，デフォルトのファイル名 index.html を省略すれば，URLが短くできます。</p>
 
 <hr>
 
@@ -57,7 +77,7 @@
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-07 17:38:25</time>
+Last modified: <time>2022-05-23 09:50:35 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
