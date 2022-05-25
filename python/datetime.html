@@ -196,6 +196,15 @@ t.year                 #==> 2020
 t.month                #==> 5
 t.day                  #==> 6
 t.dayofweek            #==> 2  # 水曜日
+t + pd.Timedelta(1, "D") #==> Timestamp('2020-05-07 00:00:00')
+
+pd.to_datetime("2263-01-01") #==> TypeError OutOfBoundsDatetime
+pd.to_datetime("2263-01-01", errors="coerce")  #==> NaT
+
+a = pd.date_range("2020-01-01", "2020-01-03")
+a    #==> DatetimeIndex(['2020-01-01', '2020-01-02', '2020-01-03'],
+                        dtype='datetime64[ns]', freq='D')
+np.max(a)              #==> Timestamp('2020-01-03 00:00:00', freq='D')
 </code></pre>
 
 <p>format の形式については <a href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes">strftime() and strptime() Format Codes</a> 参照。</p>
@@ -217,7 +226,7 @@ print(f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}')
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-14 14:07:58</time>
+Last modified: <time>2022-05-25 22:02:50 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
