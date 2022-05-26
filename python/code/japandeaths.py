@@ -47,3 +47,24 @@ for m in range(1, 13):
     plt.plot(df[df['月'] == m]['年'], perday[df['月'] == m], marker=f'${m}$')
 plt.ylabel('1日あたり死亡数')
 plt.savefig('../img/japandeaths3.svg', bbox_inches="tight")
+
+df['死亡数'] = np.array([n3 if np.isnan(n1) and np.isnan(n2) else n2 if np.isnan(n1) else n1 for n1, n2, n3 in zip(df['確定数'], df['概数'], df['速報値'])])
+df1 = df.groupby('年')['死亡数'].sum()
+x = np.array([n / 366 if y % 4 == 0 else n / 365 for y, n in zip(df1.index, df1)])
+y = df1.index.values
+
+plt.clf()
+plt.plot(y, x, "o-")
+plt.xlabel('年')
+plt.ylabel('1日あたり死亡数')
+plt.savefig('../img/japandeaths4.svg', bbox_inches="tight")
+
+u = (2012 <= y) & (y <= 2019)
+slope, intercept = np.polyfit(y[u], x[u], 1)
+plt.close("all")
+plt.plot(y, x - (slope * y + intercept), "o-")
+plt.axhline(linewidth=0.5, color="black")
+plt.xlabel('年')
+plt.ylabel('1日あたり超過死亡数')
+plt.plot([2020, 2021], [3459 / 366, (18385 - 3459) / 365], "o-")
+plt.savefig('../img/japandeaths5.svg', bbox_inches="tight")
