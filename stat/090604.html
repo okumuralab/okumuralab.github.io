@@ -18,7 +18,7 @@
 
 <h1>グラフの例：出生率</h1>
 
-<p>[News] 厚生労働省の<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai20/index.html">令和２年(2020)人口動態統計月報年計（概数）の概況</a>が出ています。2020年の合計特殊出生率概数値は1.34でした。下の表を更新しました。</p>
+<p>[News] 厚生労働省の<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai21/index.html">令和３年(2021)人口動態統計月報年計（概数）の概況</a>が出ています。2021年の合計特殊出生率概数値は1.30でした。下の表を更新しました。</p>
 
 <hr>
 
@@ -76,7 +76,8 @@
 2017  946146           1.43
 2018  918400           1.42
 2019  865239           1.36
-2020  840832           1.34
+2020  840835           1.33
+2021  811604           1.30
 </pre>
 
 <p>これをクリップボードにコピーし，次のように読み込む：</p>
@@ -86,7 +87,7 @@
 X = read.table("clipboard", header=TRUE)     # Windows
 </code></pre>
 
-<p>とりあえず合計特殊出生率だけ折れ線グラフにしてみる：</p>
+<p>とりあえず合計特殊出生率だけ折れ線グラフにしてみる（最新のデータを反映していません）：</p>
 
 <!-- # quartz(width=8.267717,height=5.826772) # Mac -->
 <!-- par(family="Helvetica") # Mac -->
@@ -137,7 +138,7 @@ title("合計特殊出生率", line=0.5)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-06-05 10:01:54</time>
+Last modified: <time>2022-06-03 16:55:57 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
