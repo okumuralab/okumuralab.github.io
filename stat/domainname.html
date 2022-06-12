@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/domainname.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ドメイン名の抽選</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</div>
+
+<h1>ドメイン名の抽選</h1>
+
+<p><a href="https://jprs.jp">株式会社日本レジストリサービス（JPRS）</a>の2001年の<a href="https://jprs.jp/related-info/history/jpdomain/20010827.pdf">汎用JPドメイン名の導入経緯とその評価</a>（PDF）という歴史的な文書のp.22には、1つのドメイン名に複数の申請があった場合の抽選方法として、日経平均株価を用いたと記されている。また、これとは若干違うようであるが、<a href="https://jprs.jp/about/jp-dom/school_name.html">初等中等教育機関などの名称の登録について</a>や<a href="https://jprs.jp/about/jp-dom/prefecture.html">都道府県型JPドメイン名について</a>に、やはり日経平均株価を用いる方法が書かれている。</p>
+
+<p>後者2つの方法は、まず、「事前に予測できない数字」と、当該ドメイン名に割り振られた「ドメイン名番号」の和を「鍵番号」とする。「事前に予測できない数字」は「基準日の翌日に東京都千代田区内に配達される、日本経済新聞朝刊に記載された日経平均株価の終値を100倍した数字」である。申請者には1から始まる抽選番号が割り振られる。「鍵番号」を競合数（最大の抽選番号）で割った余りに1を加えた抽選番号が当選する。</p>
+
+<p>例えばドメイン名番号が1、日経平均株価の終値が27824.29円だとすると、鍵番号は 1 + 2782429 = 2782430 である。申請者が3人（抽選番号が1〜3）ならば、2782430 を 3 で割った余り 2 に 1 を加えた 3 の抽選番号が当選する。</p>
+
+<p>日経平均株価終値の末尾は十分ランダムか、調べてみよう。</p>
+
+<p><a href="https://indexes.nikkei.co.jp/nkave/index?type=download">日経平均プロファイルの指数一覧のダウンロードセンター</a>から、日経平均株価の<a href="https://indexes.nikkei.co.jp/nkave/historical/nikkei_stock_average_daily_jp.csv">日時データ</a>（CSV）が得られる。</p>
+
+<p>以下は宿題。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-06-13 07:38:41 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
