@@ -24,7 +24,7 @@ Beom Jun Kim, Dong Myeong Lee, Sung Hun Lee, Wan-Suk Gim, ``Blood-type distribut
 <p>292組の夫婦のABO血液型を尋ねました：</p>
 
 <table border="1">
-<tr><th></th><th>女A </th><th>女B </th><th>女AB</th><th>女O </th></tr>
+<tr><th></th><th>女A</th><th>女B</th><th>女AB</th><th>女O</th></tr>
 <tr><th>男A </th><td>27</td><td>26</td><td> 9</td><td>17</td></tr>
 <tr><th>男B </th><td>28</td><td>23</td><td> 6</td><td>31</td></tr>
 <tr><th>男AB</th><td> 9</td><td>10</td><td> 1</td><td>16</td></tr>
@@ -34,14 +34,14 @@ Beom Jun Kim, Dong Myeong Lee, Sung Hun Lee, Wan-Suk Gim, ``Blood-type distribut
 <p>血液型の組合せはランダムでしょうか。これを調べるにはカイ2乗検定を使います。</p>
 
 <pre>
-<code>x = matrix(c(27,26,9,17,28,23,6,31,9,10,1,16,31,22,11,25),nrow=4,byrow=TRUE)
+<code>x = matrix(c(27,26,9,17,28,23,6,31,9,10,1,16,31,22,11,25), nrow=4, byrow=TRUE)
 chisq.test(x)
 </code></pre>
 
 <p><i>p</i> 値は 0.2964 で，統計的に有意な血液型による相性はなかったようです。</p>
 
 <div class="note">
-<p>時間がかかってもいいなら，<a href="fishertest.html">Fisherの正確検定</a>のほうが正確です。</p>
+<p><a href="fishertest.html">Fisherの正確検定</a>も<code>workspace</code>を増やせばできます。</p>
 <pre>
 <code>fisher.test(x, workspace=8000000)
 </code></pre>
@@ -70,10 +70,10 @@ chisq.test(x)
 <p>これ以外の結果も含め，Rで書くと次のようになります：</p>
 
 <pre>
-<code>IE = matrix(c(195,123,61,144,102,82,38,107),nrow=4)
-SN = matrix(c(200,111,63,178,97,94,36,73),nrow=4)
-TF = matrix(c(181,121,67,149,116,84,32,102),nrow=4)
-JP = matrix(c(140,75,42,109,157,130,57,142),nrow=4)
+<code>IE = matrix(c(195,123,61,144,102,82,38,107), nrow=4)
+SN = matrix(c(200,111,63,178,97,94,36,73), nrow=4)
+TF = matrix(c(181,121,67,149,116,84,32,102), nrow=4)
+JP = matrix(c(140,75,42,109,157,130,57,142), nrow=4)
 </code></pre>
 
 <p>これらを
@@ -84,8 +84,8 @@ JP = matrix(c(140,75,42,109,157,130,57,142),nrow=4)
 <p>SNをさらに男女別に見てみると，次のようになります：</p>
 
 <pre>
-<code>SNM = matrix(c(146,70,49,125,72,67,27,57),nrow=4)
-SNF = matrix(c(54,41,14,53,25,27,9,16),nrow=4)
+<code>SNM = matrix(c(146,70,49,125,72,67,27,57), nrow=4)
+SNF = matrix(c(54,41,14,53,25,27,9,16), nrow=4)
 </code></pre>
 
 <p>すると，男だけ有意です（<i>p</i> = 0.007）。</p>
@@ -93,7 +93,7 @@ SNF = matrix(c(54,41,14,53,25,27,9,16),nrow=4)
 <p>さらに各血液型を見ていくと，B型とそれ以外で分けたときだけ有意になります：</p>
 
 <pre>
-<code>fisher.test(matrix(c(70,67,390-70,223-67),nrow=2))
+<code>fisher.test(matrix(c(70,67,390-70,223-67), nrow=2))
 </code></pre>
 
 <p>この <i>p</i> = 0.000837 です。B型の男は感覚派（五感に基づいて行動する現実派）より直感派（空想派？）が多いということです。</p>
@@ -112,7 +112,7 @@ SNF = matrix(c(54,41,14,53,25,27,9,16),nrow=4)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-09 10:31:12</time>
+Last modified: <time>2022-06-06 10:21:57 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

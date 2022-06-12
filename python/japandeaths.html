@@ -30,8 +30,8 @@ import pandas as pd
 import numpy as np
 import datetime
 
-df = pd.read_csv('https://okumuralab.org/~okumura/python/data/japandeaths.csv')
-t = [datetime.datetime(int(x['年']), int(x['月']), 1) for i, x in df.iterrows()]
+df = pd.read_csv("https://okumuralab.org/~okumura/python/data/japandeaths.csv")
+t = [datetime.datetime(int(x["年"]), int(x["月"]), 1) for i, x in df.iterrows()]
 
 def days(year, month=None):
     year = int(year)
@@ -46,44 +46,48 @@ def days(year, month=None):
 perday1 = np.array([r[2] / days(r[0], r[1]) for i, r in df.iterrows()]) # 確定数
 perday2 = np.array([r[3] / days(r[0], r[1]) for i, r in df.iterrows()]) # 概数
 perday3 = np.array([r[4] / days(r[0], r[1]) for i, r in df.iterrows()]) # 速報値
-perday = np.array([p3 if np.isnan(p1) and np.isnan(p2) else p2 if np.isnan(p1) else p1
-                   for p1, p2, p3 in zip(perday1, perday2, perday3)])
 
-plt.plot(t, perday1, 'o-')
-plt.plot(t, perday2, 's-')
-plt.plot(t, perday3, '*-')
-plt.ylabel('1日あたり死亡数')
-plt.legend(['確定数', '概数', '速報値'])
+plt.plot(t, perday1, "o-")
+plt.plot(t, perday2, "s-")
+plt.plot(t, perday3, "*-")
+plt.ylabel("1日あたり死亡数")
+plt.legend(["確定数", "概数", "速報値"])
 </code></pre>
 
 <figure><img src="img/japandeaths1.svg" alt="Deaths in Japan"></figure>
 
-<pre><code>for y in sorted(set(df['年'])):
-    plt.plot(df[df['年'] == y]['月'], perday[df['年'] == y],
-             alpha=0.5, marker=f'${y % 10}$', label=y)
-plt.xlabel('月')
-plt.ylabel('1日あたり死亡数')
+<pre><code>df["死亡数"] = [n3 if np.isnan(n1) and np.isnan(n2) else n2 if np.isnan(n1) else n1
+                for n1, n2, n3 in zip(df["確定数"], df["概数"], df["速報値"])]
+df["日数"] = [days(year, month) for year, month in zip(df["年"], df["月"])]
+
+for y in sorted(set(df["年"])):
+    df1 = df[df["年"] == y]
+    plt.plot(df1["月"], df1["死亡数"] / df1["日数"],
+             alpha=0.5, marker=f"${y % 10}$", label=y)
+plt.xlabel("月")
+plt.ylabel("1日あたり死亡数")
 plt.legend(loc=(0.38, 0.60), labelspacing=0.1)
 </code></pre>
 
 <figure><img src="img/japandeaths2.svg" alt="Deaths in Japan"></figure>
 
 <pre><code>for m in range(1, 13):
-    plt.plot(df[df['月'] == m]['年'], perday[df['月'] == m], marker=f'${m}$')
-plt.ylabel('1日あたり死亡数')
+    df1 = df[df["月"] == m]
+    plt.plot(df1["年"], df1["死亡数"] / df1["日数"], marker=f"${m}$")
+plt.ylabel("1日あたり死亡数")
+plt.xticks(sorted(set(df["年"] // 2 * 2).intersection(set(df["年"]))))
 </code></pre>
 
 <figure><img src="img/japandeaths3.svg" alt="Deaths in Japan"></figure>
 
-<pre><code>df['死亡数'] = np.array([n3 if np.isnan(n1) and np.isnan(n2) else n2 if np.isnan(n1) else n1
-                         for n1, n2, n3 in zip(df['確定数'], df['概数'], df['速報値'])])
-df1 = df.groupby('年')['死亡数'].sum()
-df1 = df1[df1.index != 2022]
-y = df1.index.values
-x = np.array([n /  days(i) for i, n in zip(y, df1.values)])
+<pre><code>df1 = df.groupby("年")[["死亡数", "日数"]].sum()
+df2 = df1[df1.index != 2022]
+y = df2.index
+x = df2["死亡数"] / df2["日数"]
+
 plt.plot(y, x, "o-")
-plt.xlabel('年')
-plt.ylabel('1日あたり死亡数')
+plt.xlabel("年")
+plt.ylabel("1日あたり死亡数")
 </code></pre>
 
 <figure><img src="img/japandeaths4.svg" alt="Deaths in Japan"></figure>
@@ -96,8 +100,8 @@ slope, intercept = np.polyfit(y[u], x[u], 1)
 plt.clf()
 plt.plot(y, x - (slope * y + intercept), "o-")
 plt.axhline(linewidth=0.5, color="black")
-plt.xlabel('年')
-plt.ylabel('1日あたり超過死亡数')
+plt.xlabel("年")
+plt.ylabel("1日あたり超過死亡数")
 </code></pre>
 
 <p><a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">厚労省オープンデータ</a>によれば，COVID-19による2020年12月31日までの累積死亡数は3459人，2021年12月31日までの累積死亡数は18385人である。これをオレンジ色で描き足す。</p>
@@ -161,7 +165,7 @@ for i in range(1, len(x)):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-05-31 19:32:16 JST</time>
+Last modified: <time>2022-06-12 11:15:52 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
