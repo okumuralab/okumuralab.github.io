@@ -17,6 +17,33 @@
 
 <h1>COCOAデータを読む</h1>
 
+<p>COCOA 2.0.0 になって、MatchCount がログに記録されないようになりました。</p>
+
+<p>COCOA 2.0.1 になって、COCOA アプリの「陽性登録者との接触結果を確認」→「情報を保存」で exposure_data.json という詳細ログが保存できるようになりました。これを見れば接触日などがわかります。一例です：</p>
+
+<pre>
+import json
+import pandas as pd
+
+with open("exposure_data.json") as f:
+    exposure = json.load(f)
+
+print("Date Infectiousness  TypicalAttenuationDb MinAttenuationDb SecondsSinceLastScan")
+for x in exposure["exposure_windows"]:
+    t = pd.Timestamp(x['DateMillisSinceEpoch'], unit='ms')
+    print(str(t)[:10], x["Infectiousness"], end="")
+    for y in x["ScanInstances"]:
+        print(" ", y["TypicalAttenuationDb"], y["MinAttenuationDb"],
+              y["SecondsSinceLastScan"], end="")
+    print()
+</pre>
+
+<p>表示される日付の9:00から丸一日の間に接触があったことがわかります。日付以外の項目の意味は <a href="https://developers.google.com/android/exposure-notifications/exposure-notifications-api">Google のドキュメント</a> に説明されています（いまいちよくわからない説明ですが）。</p>
+
+<hr>
+
+<p>以下は古い記述です。</p>
+
 <h2>接触チェックの記録</h2>
 
 <p>iPhoneに<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/cocoa_00138.html">COCOA</a>をインストールしている。接触チェックの記録は，「設定」→「接触通知」→「接触のログ記録の状況」→「接触チェックの記録」→「接触チェックの記録を書き出す」でAirDropなどの手段で書き出すことができる。書き出されるのは ExposureChecks-YYYY-MM-DD.json のようなJSONファイルである。これを読んでみよう。</p>
@@ -132,7 +159,7 @@ for arg in sys.argv[1:]:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-02 09:41:24 JST</time>
+Last modified: <time>2022-06-17 11:02:08 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
