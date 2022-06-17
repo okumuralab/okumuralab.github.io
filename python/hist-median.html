@@ -20,6 +20,43 @@ MathJax = {
 <script id="MathJax-script" async
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
 </script>
+<script>
+  "use strict";
+  let canvas;
+  function draw(e) {
+      const p = parseFloat(document.getElementById('pin').value);
+      const q = parseFloat(document.getElementById('qin').value);
+      const r = parseFloat(document.getElementById('rin').value);
+      document.getElementById('pout').textContent = p;
+      document.getElementById('qout').textContent = q;
+      document.getElementById('rout').textContent = r;
+      const a = ((r + p) / 2 - q) / 8;
+      const b = (r - p) / 8;
+      const c = q / 2 - a / 3;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 600, 600);
+      ctx.fillStyle = '#ccccff';
+      ctx.fillRect(151, 600, 98, -60 * p);
+      ctx.fillRect(251, 600, 98, -60 * q);
+      ctx.fillRect(351, 600, 98, -60 * r);
+      ctx.beginPath();
+      ctx.lineWidth=3;
+      for (let i = 0; i <= 60; i++) {
+	  const x = i / 5 - 6;
+	  const y = (a * x + b) * x + c;
+	  if (i == 0) {
+	      ctx.moveTo(50 * x + 300, 600 - 120 * y);
+	  } else {
+	      ctx.lineTo(50 * x + 300, 600 - 120 * y);
+	  }
+      }
+      ctx.stroke();
+  }
+  window.addEventListener('DOMContentLoaded', () => {
+      canvas = document.getElementById('MyCanvas');
+      draw();
+  });
+</script>
 </head>
 <body>
 
@@ -329,13 +366,37 @@ plt.legend(["bootstrap", "binomial"])
 
 <figure><img src="img/220208a.svg" alt="ブートストラップと2項分布の比較"></figure>
 
+<h2>ヒストグラムの補間</h2>
+
+<p>次のグラフのように両隣まで各階級の面積が等しい放物線で中央のヒストグラムを補間してはどうだろうか。下のスライダーを動かして実験されたい。</p>
+
+<canvas id="MyCanvas" width="600" height="600"></canvas>
+
+<table>
+  <tr>
+    <td><code>count[i-1]</code></td>
+    <td><input type="range" id="pin" min="0" max="10" value="7" onchange="draw()"></td>
+    <td><span id="pout"></span></td>
+  </tr>
+  <tr>
+    <td><code>count[i]</code></td>
+    <td><input type="range" id="qin" min="0" max="10" value="8" onchange="draw()"></td>
+    <td><span id="qout"></span></td>
+  </tr>
+  <tr>
+    <td><code>count[i+1]</code></td>
+    <td><input type="range" id="rin" min="0" max="10" value="6" onchange="draw()"></td>
+    <td><span id="rout"></span></td>
+  </tr>
+</table>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-09 11:32:42</time>
+Last modified: <time>2022-06-17 21:54:59 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
