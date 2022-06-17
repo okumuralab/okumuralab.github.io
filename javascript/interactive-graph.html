@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/interactive-graph.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>動かせるグラフ</title>
+<link rel="stylesheet" href="style.css">
+<script>
+  "use strict";
+  let canvas;
+  function draw(e) {
+      const a = parseFloat(document.getElementById('ain').value);
+      const b = parseFloat(document.getElementById('bin').value);
+      const c = parseFloat(document.getElementById('cin').value);
+      document.getElementById('aout').textContent = a.toFixed(2);
+      document.getElementById('bout').textContent = b.toFixed(2);
+      document.getElementById('cout').textContent = c.toFixed(2);
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 600, 600);
+      ctx.beginPath();
+      ctx.lineWidth=1;
+      for (let i = 0; i <= 600; i += 300) {
+	  ctx.moveTo(0, i);
+	  ctx.lineTo(600, i);
+	  ctx.moveTo(i, 0);
+	  ctx.lineTo(i, 600);
+      }
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.lineWidth=3;
+      for (let i = 0; i <= 60; i++) {
+	  const x = i / 30 - 1;
+	  const y = (a * x + b) * x + c;
+	  if (i == 0) {
+	      ctx.moveTo(300 * x + 300, 300 - 300 * y);
+	  } else {
+	      ctx.lineTo(300 * x + 300, 300 - 300 * y);
+	  }
+      }
+      ctx.stroke();
+      ctx.font = "normal 20px serif";
+      ctx.fillText("O", 280, 320);
+      ctx.fillText("1", 580, 320);
+      ctx.fillText("1", 280, 20);
+  }
+  window.addEventListener('DOMContentLoaded', () => {
+      canvas = document.getElementById('MyCanvas');
+      draw();
+  });
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<h1>動かせるグラフ</h1>
+
+<p><span lang="en"><i>y</i> = <i>ax</i><sup>2</sup> + <i>bx</i> + <i>c</i></span> のグラフです。係数の値は下のスライダーで変えられます。</p>
+
+<canvas id="MyCanvas" width="600" height="600"></canvas>
+
+<div lang="en">
+  <i>a</i>
+  <input type="range" id="ain" min="-1" max="1" step="0.01" value="1" onchange="draw()">
+  <span id="aout"></span><br>
+  <i>b</i>
+  <input type="range" id="bin" min="-1" max="1" step="0.01" value="0" onchange="draw()">
+  <span id="bout"></span><br>
+  <i>c</i>
+  <input type="range" id="cin" min="-1" max="1" step="0.01" value="0" onchange="draw()">
+  <span id="cout"></span><br>
+</div>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-06-17 20:24:26 JST</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
