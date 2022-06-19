@@ -7,7 +7,7 @@ import time
 
 def readcsv(url):
     try:
-        df = pd.read_csv(url, parse_dates=[0])
+        df = pd.read_csv(url, parse_dates=[0], thousands=",")
         print('utf-8:', url)
     except UnicodeDecodeError:
         df = pd.read_csv(url, parse_dates=[0], encoding='cp932')

@@ -122,6 +122,8 @@ df = pd.read_csv("test.csv", na_values="-", keep_default_na=False)
 
 <p>では空文字列ではなくスペースになるので欠測値になりません。</p>
 
+<p>最初のうちは値が小さかったけれども，そのうちに1000以上になって，<code>"1,234"</code> のようにコンマが入ってエラーになることがあります。<code>thousands=","</code> というオプションを付けておけば大丈夫です。</p>
+
 <h2>Excel で CSV ファイルを扱う場合の注意</h2>
 
 <p>CSV ファイルは，Excel でデータを作成し，保存時に「CSV UTF-8 (コンマ区切り)」を指定するのが簡単です。この場合，文字コードは BOM 付きの UTF-8 になります。「CSV (コンマ区切り)」にすれば文字コードは CP932（拡張 Shift JIS）になります。</p>
@@ -189,7 +191,7 @@ AddType text/csv;charset=Shift_JIS csv
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-10 20:38:01 JST</time>
+Last modified: <time>2022-06-19 21:42:59 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

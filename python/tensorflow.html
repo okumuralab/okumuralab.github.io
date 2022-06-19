@@ -23,7 +23,13 @@
 pip install tensorflow
 </pre>
 
-<p>で入るはずである。M1 Macでの入れ方は<a href="../macosx/m1.html">こちら</a>参照。</p>
+<p>または</p>
+
+<pre>
+pip install tensorflow-macos
+</pre>
+
+<p>で入るはずである。Apple Silicon での別の入れ方は <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> 参照。</p>
 
 <p><code>tf.keras</code> を使う上では TensorFlow 1 系 と 2 系で見かけ上の違いはほぼない。</p>
 
@@ -57,7 +63,7 @@ tf.__version__
 </pre>  
 
 <pre>
-'2.8.0'
+'2.9.2'
 </pre>
 
 <pre class="cell">
@@ -65,7 +71,7 @@ tf.keras.__version__
 </pre>  
 
 <pre>
-'2.8.0'
+'2.9.0'
 </pre>
 
 <p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="mnist.html">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
@@ -107,30 +113,15 @@ model.fit(x_train, y_train, epochs=5)
 
 <pre>
 Epoch 1/5
-1875/1875 [==============================] - 1s 521us/step - loss: 0.2924 - accuracy: 0.9151
+1875/1875 [==============================] - 1s 562us/step - loss: 0.2940 - accuracy: 0.9140
 Epoch 2/5
-1875/1875 [==============================] - 1s 519us/step - loss: 0.1393 - accuracy: 0.9593
+1875/1875 [==============================] - 1s 551us/step - loss: 0.1427 - accuracy: 0.9573
 Epoch 3/5
-1875/1875 [==============================] - 1s 516us/step - loss: 0.1051 - accuracy: 0.9687
+1875/1875 [==============================] - 1s 551us/step - loss: 0.1086 - accuracy: 0.9675
 Epoch 4/5
-1875/1875 [==============================] - 1s 520us/step - loss: 0.0867 - accuracy: 0.9734
+1875/1875 [==============================] - 1s 549us/step - loss: 0.0888 - accuracy: 0.9728
 Epoch 5/5
-1875/1875 [==============================] - 1s 522us/step - loss: 0.0726 - accuracy: 0.9770
-</pre>
-
-<p>経過の例（Mac mini (M1 2020) tensorflow-metal あり）：</p>
-
-<pre>
-Epoch 1/5
-1875/1875 [==============================] - 9s 4ms/step - loss: 0.2896 - accuracy: 0.9161
-Epoch 2/5
-1875/1875 [==============================] - 7s 4ms/step - loss: 0.1378 - accuracy: 0.9590
-Epoch 3/5
-1875/1875 [==============================] - 7s 4ms/step - loss: 0.1013 - accuracy: 0.9694
-Epoch 4/5
-1875/1875 [==============================] - 7s 4ms/step - loss: 0.0813 - accuracy: 0.9751
-Epoch 5/5
-1875/1875 [==============================] - 7s 4ms/step - loss: 0.0696 - accuracy: 0.9780
+1875/1875 [==============================] - 1s 545us/step - loss: 0.0773 - accuracy: 0.9759
 </pre>
 
 <p>最後に評価：</p>
@@ -186,7 +177,7 @@ model = tf.keras.models.load_model("mymodel.h5")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-03-20 21:07:23 JST</time></p>
+<p>Last modified: <time>2022-06-19 20:11:28 JST</time></p>
 </footer>
 </body>
 </html>

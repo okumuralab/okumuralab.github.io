@@ -79,6 +79,14 @@ display.set_matplotlib_formats('svg')
 
 <p>このほうが画像がくっきり表示されますが，ドラッグ＆ドロップで画像だけをダウンロードすることはできなくなるようです。</p>
 
+<div class="note">
+<p>昔は<p>
+<pre>
+%matplotlib inline
+</pre>
+<p>と打ち込む必要がありましたが，今は必要なさそうです。</p>
+</div>
+
 <h3>自分のマシンでの利用</h3>
 
 <p>対話型の環境なら</p>
@@ -95,18 +103,25 @@ plt.plot([-1, 1])
 <code>plt.show()
 </code></pre>
 
-<p>を補ってください。Jupyter Notebook の環境でうまく出ないなら，まず<p>
+<p>を補ってください。うまく対話型にならない場合は</p>
 
 <pre>
-<code>%matplotlib inline
+<code>plt.ion()
 </code></pre>
 
-<p>を打ち込んでからプロットしてください。</p>
+<p>と打ち込んで interactive mode を on にします。</p>
+
 
 <p>エラーになるなら，設定ファイル matplotlibrc（Mac と Windows では <code>~/.matplotlib/matplotlibrc</code>，Linux では <code>~/.config/matplotlib/matplotlibrc</code>）を作成し，<a href="https://matplotlib.org/faq/usage_faq.html#what-is-a-backend">バックエンド</a>の指定を書き込みます。Mac の場合は</p>
 
 <pre>
 <code>backend: MacOSX
+</code></pre>
+
+<p>または</p>
+
+<pre>
+<code>backend: TkAgg
 </code></pre>
 
 <p>または <code>pip install PyQt5</code> して</p>
@@ -115,7 +130,7 @@ plt.plot([-1, 1])
 <code>backend: Qt5Agg
 </code></pre>
 
-<p>とします。うまくいかなければ <code>MacOSX Qt5Agg Qt4Agg Gtk3Agg GTK3Cairo TkAgg WxAgg Agg Cairo</code> の中から選んでください。M1 Mac に miniforge で入れた Python では MacOSX バックエンドがいまいちなので TkAgg あたりのほうがいいかもしれません。</p>
+<p>とします。うまくいかなければ <code>MacOSX Qt5Agg Qt4Agg Gtk3Agg GTK3Cairo TkAgg WxAgg Agg Cairo</code> の中から選んでください。</p>
 
 <p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら，システムにインストールされている適当な TrueType または OpenType フォント名を matplotlibrc に書き加えます。Mac なら例えば</p>
 
@@ -167,13 +182,7 @@ plt.savefig('filename.svg', bbox_inches="tight")
 <p>で変換できます。この場合，文字はアウトライン化され，文字情報はなくなります。<code>plt.rcParams['svg.fonttype'] = 'none'</code> としておけば，SVG，PDF とも文字情報が保たれます（デフォルトは <code>'path'</code>）。文字情報を保って PDF にする別の方法として，後述の PGF 経由で出力する方法があります。</p>
 </div>
 
-<p>簡単なプロットで試してみましょう。ターミナルで IPython を使うなら <code>ipython --matplotlib</code> として起動します（<code>--matplotlib</code> はデフォルトでオンになっている環境もあります）。Jupyter Notebook の環境なら</p>
-
-<pre>
-<code>%matplotlib inline
-</code></pre>
-
-<p>という1行をまず打ち込みます。そして，次のように打ち込みます：</p>
+<p>簡単なプロットで試してみましょう。ターミナルで IPython を使うなら <code>ipython --matplotlib</code> として起動します（<code>--matplotlib</code> はデフォルトでオンになっている環境もあります）。そして，次のように打ち込みます：</p>
 
 <pre>
 <code>import matplotlib.pyplot as plt
@@ -469,7 +478,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-04 21:07:07 JST</time>
+Last modified: <time>2022-06-19 22:27:48 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

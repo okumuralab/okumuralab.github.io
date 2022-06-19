@@ -15,177 +15,192 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<p><a href="../macosx/m1.html">M1 Mac</a> のページもご参照ください。</p>
-
 <h1>Python 3 インストール</h1>
 
-<p>macOS や Linux の <code>/usr/bin/python</code> コマンドは Python 2.7 です。<a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。これからも python コマンドは 2.7 止まりで，新しい Python 3.x のコマンド名は <code>python3</code> となります（Windows 以外）。ただ，OS 付属の Python 3.x はバージョンがやや古い場合があるので，より新しいものを別途インストールしたいかもしれません。Windows には Python が入っていませんので別途インストールが必要です。ここでは Python 3 のいろいろなインストールの方法を紹介します。</p>
+<div class="note">
+<p><a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。</p>
+</div>
 
-<p>最新のものは Python 3.9 です。そろそろほとんどのライブラリが 3.9 に対応したので，3.9 に乗り換えてほぼ大丈夫だと思います。もっとも，3.6 や 3.7 が動いていれば，それでもかまいません。Google Colaboratory はまだ 3.6 です。</p>
+<p>Python 3 のいろいろなインストールの方法を紹介します。</p>
 
-<p>このサイトで使うライブラリで Python 3.9 に未対応なもの：TensorFlow，<del>japanmap</del>（ほかにもあるかもしれません）</p>
+<p>最新のものは Python 3.10 です。</p>
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
+<!--
 <div class="note">
-<p>pip については <a href="https://github.com/pypa/pip/issues/5599">ImportError in system pip wrappers after an upgrade #5599</a> が参考になります。つまり，pip がおかしくなったら python3 -m pip を使いましょう。</p>
-<p>Mac ではよく "ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to (null)" というメッセージが出ます。無害ですが，ターミナルに次のように打ち込めば消えてくれます：</p>
-<pre><code>defaults write org.python.python ApplePersistenceIgnoreState NO</code></pre>
+<p>pip については <a href="https://github.com/pypa/pip/issues/5599">ImportError in system pip wrappers after an upgrade #5599</a> が参考になります。つまり、pip がおかしくなったら python3 -m pip を使いましょう。</p>
+<p>Mac ではよく "ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to (null)" というメッセージが出ます。無害ですが、ターミナルに次のように打ち込めば消えてくれます：</p>
+<pre>
+defaults write org.python.python ApplePersistenceIgnoreState NO
+</pre>
+</div>
+-->
+
+<h2>公式サイト Python.org からのインストール（Windows）</h2>
+
+<p>まず、初心者のかたで、今までどこかで Python をインストールしたけれどうまく設定できていないという場合は、［スタートボタン］→［⚙設定］→［アプリ］で、それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
+
+<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが、ここでは Python 3.10.x の x が一番大きいものの64ビット版 Windows x86-64 executable installer を使います（32ビット版でもかまいません）。初心者のかたは、インストーラの最初の画面で「Add Python 3.10 to PATH」にチェックを付けてから「Install Now」をクリックします。ユーザーアカウント制御「このアプリがデバイスに変更を加えることを許可しますか？」が出ますので「はい」をクリックするとインストールが始まります。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
+
+<div class="note">
+<p>ユーザ名に全角文字を使っていると問題が生じることがあるようです。Windowsのユーザ名はなるべくスペースを含まない半角英数字だけにしましょう（例：<code>okumura</code>）。なお、ユーザ名に全角文字を含んでも、次のようにすれば全角文字を含まないインストール場所が指定できます。インストーラが起動した画面で「Customize installation」をクリックし、「Next」をクリックし、「Customize install location」で <code>C:\Users\奥村 晴彦\AppData\Local\Programs\Python\...</code> のような全角フォルダ名が出た際、その右の「Browse」をクリックし、「PC」→「C:」を選び、「新しいフォルダーの作成」で例えば <code>Python</code> というフォルダを作り、それをインストール場所に設定します。このあたりは実験が不十分なので、情報があれば教えてください。</p>
 </div>
 
-<h3>公式サイト Python.org からのインストール（Windows）</h3>
-
-<p>まず，初心者のかたで，今までどこかで Python をインストールしたけれどうまく設定できていないという場合は，［スタートボタン］→［⚙設定］→［アプリ］で，それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
-
-<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが，ここでは Python 3.9.x の x が一番大きいものの64ビット版 Windows x86-64 executable installer を使います（32ビット版でもかまいません）。初心者のかたは，インストーラの最初の画面で必ず「Add Python 3.9 to PATH」にチェックを付けてから「Install Now」をクリックします。ユーザーアカウント制御「このアプリがデバイスに変更を加えることを許可しますか？」が出ますので「はい」をクリックするとインストールが始まります。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
-
-<div class="note">
-<p>ユーザ名に全角文字を使っていると問題が生じることがあるようです。Windowsのユーザ名はなるべくスペースを含まない半角英数字だけにしましょう（例：<code>okumura</code>）。なお，ユーザ名に全角文字を含んでも，次のようにすれば全角文字を含まないインストール場所が指定できます。インストーラが起動した画面で「Customize installation」をクリックし，「Next」をクリックし，「Customize install location」で <code>C:\Users\奥村 晴彦\AppData\Local\Programs\Python\...</code> のような全角フォルダ名が出た際，その右の「Browse」をクリックし，「PC」→「C:」を選び，「新しいフォルダーの作成」で例えば <code>Python</code> というフォルダを作り，それをインストール場所に設定します。このあたりは実験が不十分なので，情報があれば教えてください。</p>
-</div>
-
-<p>確認として，Windows PowerShell（あるいは VS Code のターミナル，またはコマンドプロンプト）を立ち上げ，</p>
+<p>確認として、Windows PowerShell（あるいは VS Code のターミナル、またはコマンドプロンプト）を立ち上げ、</p>
 
 <pre>
-<code>where.exe python
-</code></pre>
+where.exe python
+</pre>
 
-<p>と打ち込んで，正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell ではうまくいかないようです）。うまくいっていれば</p>
+<p>と打ち込んで、正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell ではうまくいかないようです）。うまくいっていれば</p>
 
 <pre>
-<code>C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38\python.exe
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python**\python.exe
 C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
-</code></pre>
+</pre>
 
-<p>と出ます（2行目はもともと入っている <code>python</code> コマンドで，後述のように，ストアアプリをダウンロードする画面を開くだけの機能しかありません）。</p>
+<p>と出ます（2行目はもともと入っている <code>python</code> コマンドで、後述のように、ストアアプリをダウンロードする画面を開くだけの機能しかありません）。</p>
 
 <p>同様に <code>pip</code> も確認します。</p>
 
 <pre>
-<code>C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38\Scripts\pip.exe
-</code></pre>
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python**\Scripts\pip.exe
+</pre>
 
-<p>ほかに <a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされますが，ここでは使いません。</p>
+<p>ほかに <a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされますが、ここでは使いません。</p>
 
 <p>いろいろなパッケージのインストールは <code>pip</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
 
-<p>まずは，アップデートの必要なパッケージを，次のコマンドで調べます：</p>
+<p>まずは、アップデートの必要なパッケージを、次のコマンドで調べます：</p>
 
 <pre>
-<code>pip list --outdated
-</code></pre>
+pip list --outdated
+</pre>
 
-<p>最初は pip そのものが古いはずですので，まずこれを</p>
-
-<pre>
-<code>python -m pip install --upgrade pip
-</code></pre>
-
-<p>としてアップグレードします。これ以外に必要なパッケージは，その都度インストールします。例：</p>
+<p>最初は pip そのものが古いはずですので、まずこれを</p>
 
 <pre>
-<code>pip install numpy matplotlib pandas jupyter
-</code></pre>
+python -m pip install --upgrade pip
+</pre>
 
-<p>念のため，Windows PowerShell でパスを確認するには <code>$env:path</code> と打ち込みます。コマンドプロンプトなら <code>path</code> と打ち込みます。</p>
+<p>としてアップグレードします。これ以外に必要なパッケージは、その都度インストールします。例：</p>
+
+<pre>
+pip install numpy matplotlib pandas jupyter
+</pre>
+
+<p>念のため、Windows PowerShell でパスを確認するには <code>$env:path</code> と打ち込みます。コマンドプロンプトなら <code>path</code> と打ち込みます。</p>
 
 <p>追記：ウイルスバスターが入っていると Jupyter Notebook がうまく立ち上がらないようです。ウイルスバスターは外して Windows Defender を使う設定にしましょう。</p>
 
-<p>なお，python のパスが設定されていない場合でも使えるように，py.exe というランチャー（起動用プログラム）が C:\Windows の中にインストールされます。こちらを使ってもかまいません。この場合，pip コマンドの代わりに <code>py -m pip</code> のように打ち込みます。</p>
+<p>なお、python のパスが設定されていない場合でも使えるように、py.exe というランチャー（起動用プログラム）が C:\Windows の中にインストールされます。こちらを使ってもかまいません。この場合、pip コマンドの代わりに <code>py -m pip</code> のように打ち込みます。</p>
 
-<h3>公式サイト Python.org からのインストール（Mac）</h3>
+<h2>公式サイト Python.org からのインストール（Mac）</h2>
 
-<p><a href="https://www.python.org/download/">Download Python</a> からインストーラをダウンロードし，インストールします。/Library/Frameworks/Python.framework/Versions/3.9/bin に <code>python3</code> などのバイナリが入ります。</p>
+<p><a href="https://www.python.org/download/">Download Python</a> からインストーラをダウンロードし、インストールします。Universal バイナリですので、Intel でも Apple Silicon でも使えます。<code>/Library/Frameworks/Python.framework/Versions/3.10/bin</code> に <code>python3</code> などのバイナリが入ります。また、<code>/usr/local/bin</code> に
+<code>2to3</code>,
+<code>2to3-3.10</code>,
+<code>idle3</code>,
+<code>idle3.10</code>,
+<code>pip3</code>,
+<code>pip3.10</code>,
+<code>pydoc3</code>,
+<code>pydoc3.10</code>,
+<code>python3</code>,
+<code>python3-config</code>,
+<code>python3-intel64</code>,
+<code>python3.10</code>,
+<code>python3.10-config</code>,
+<code>python3.10-intel64</code>
+というシンボリックリンクができます。</p>
 
-<p>インストールすると，Mac では（bash を使っていれば）<code>~/.bash_profile</code> または（zsh を使っていれば）<code>~/.zprofile</code> の最後にパスが付け加えられます：</p>
+<p>インストールすると、Mac では（bash を使っていれば）<code>~/.bash_profile</code> または（zsh を使っていれば）<code>~/.zprofile</code> の最後にパスが付け加えられます：</p>
 
 <pre>
-<code>PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
+PATH="/Library/Frameworks/Python.framework/Versions/3.10/bin:${PATH}"
 export PATH
-</code></pre>
+</pre>
 
-<p>これらを更新したらターミナルに（bash なら）<code>. ~/.bash_profile</code>，（zsh なら）<code>source ~/.zprofile</code> と打ち込みます。<code>python3</code> コマンドのほか，<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
+<p>これらを更新したらターミナルに（bash なら）<code>. ~/.bash_profile</code>、（zsh なら）<code>source ~/.zprofile</code> と打ち込みます。<code>python3</code> コマンドのほか、<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
 
 <p>いろいろなパッケージのインストールは <code>pip3</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
 
-<p>まずは，アップデートの必要なパッケージを，次のコマンドで調べます：</p>
+<p>まずは、アップデートの必要なパッケージを、次のコマンドで調べます：</p>
 
 <pre>
-<code>pip3 list --outdated
-</code></pre>
+pip3 list --outdated
+</pre>
 
-<p>最初は pip そのものが古いはずですので，まずこれをアップデートしましょう。単に <code>pip3 install --upgrade pip</code> とすれば Permission denied のエラーになると思いますので，次のようにターミナルに打ち込みます：</p>
-
-<pre>
-<code>pip3 install --user --upgrade pip
-</code></pre>
-
-<p>このように <code>--user</code> を付けると，ユーザ権限で書き込める場所（<code>~/Library/Python/*</code> または <code>C:\Users\ユーザ名\AppData\Python</code> 以下）にインストールされます（次からはシステム側に書き込めないと自動的にユーザ側に書き込んでくれるようになるようです）。新しい実行ファイルもそちらに入りますので，必要に応じてパスを設定します。Mac なら <code>~/.bash_profile</code> または <code>source ~/.zprofile</code> にさきほど追加されたものを</p>
+<p>最初は pip そのものが古いはずですので、まずこれをアップデートしましょう：</p>
 
 <pre>
-<code>PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
-PATH="${HOME}/Library/Python/3.9/bin:${PATH}"
+pip3 install --upgrade pip
+</pre>
+
+<p>すると、Defaulting to user installation because normal site-packages is not writeable などのメッセージが出て、<code>~/Library/Python/3.10/bin</code> にインストールされますので、こちらにもパスを通しておきます。具体的には <code>~/.bash_profile</code> または <code>~/.zprofile</code> にさきほど追加されたものを</p>
+
+<pre>
+PATH="/Library/Frameworks/Python.framework/Versions/3.10/bin:${PATH}"
+PATH="${HOME}/Library/Python/3.10/bin:${PATH}"
 export PATH
-</code></pre>
+</pre>
 
-<p>と編集すればいいでしょう（私は <code>~/.zshenv</code> に環境変数を書いているのでそちらに移動しました）。これ以外に必要なパッケージは，その都度インストールします。例：</p>
+<p>と編集すればいいでしょう（私は <code>~/.zshenv</code> に環境変数を書いているのでそちらに移動しました）。これ以外に必要なパッケージは、その都度インストールします。例：</p>
 
 <pre>
-<code>pip3 install --user ipython numpy matplotlib pandas jupyter certifi
-</code></pre>
+pip3 install --user numpy matplotlib pandas jupyter
+</pre>
 
-<p>ソースでしか提供されていないパッケージには，ビルドに gfortran が必要な場合もあります。Homebrew なら brew install gcc で入ります（巨大なのであまり乗り気しませんが）。</p>
+<div class="note">
+<p>ソースでしか提供されていないパッケージには、ビルドに gfortran が必要な場合もあります。Homebrew なら brew install gcc で入ります（巨大なのであまり乗り気しませんが）。</p>
+</div>
 
 <p>https サイトのスクレイピングで証明書エラーになる場合は次のコマンドの管理者権限での実行が必要になるようです：</p>
 
 <pre>
-<code>sudo /Applications/Python\ 3.9/Install\ Certificates.command
-</code></pre>
+sudo /Applications/Python\ 3.10/Install\ Certificates.command
+</pre>
 
-<p>アンインストールするには /Library/Frameworks/Python.framework および ~/Library/Python を消します。/usr/local/bin にできたシンボリックリンクも消します。~/.bash_profile に追加した PATH も消します。</p>
+<p>Python をアンインストールするには <code>/Library/Frameworks/Python.framework</code> および <code>~/Library/Python</code> を消します。<code>/usr/local/bin</code> にできたシンボリックリンクも消します。<code>~/.bash_profile</code> の類に追加した PATH も消します。</p>
 
-<h3>macOS の Python</h3>
+<h2>macOS に最初から入っている Python</h2>
 
-<p>macOS では，ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールすると，universal binary の /usr/bin/python3 が入ります（macOS Monterey 12.3 時点では Python 3.8.9）。まずは</p>
-
-<pre>
-<code>/usr/bin/pip3 install --user --upgrade pip
-</code></pre>
-
-<p>で pip を更新します。新しい pip コマンド等が ~/Library/Python/3.8/bin に入りますので，そちらにパスを通しておきます。あとは本家のものと同じように使えそうです。なお，Python 2 系列の /usr/bin/python はなくなりました。</p>
+<p>macOS では、ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールすると、universal binary の /usr/bin/python3 が入ります（macOS Monterey 12.4 時点では Python 3.8.9）。公式サイトの Python と同様に使えるはずです。</p>
 
 <hr>
 
-<p>これ以降はあまり更新できていませんので，最新の情報でない可能性があります。</p>
+<p>これ以降はあまり更新できていませんので、最新の情報でない可能性があります。</p>
 
 <hr>
 
-<h3>Microsoft Store 版 Python</h3>
+<h2>Microsoft Store 版 Python</h2>
 
-<p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら，PowerShell かコマンドプロンプトで「python」と打ち込むと，「ストア」が立ち上がって「Python」をインストールする画面が出てきます。インストール場所は C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps です。</p>
+<p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら、PowerShell かコマンドプロンプトで「python」と打ち込むと、「ストア」が立ち上がって「Python」をインストールする画面が出てきます。インストール場所は C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps です。</p>
 
-<p>コマンドは 3 を付けても付けなくても同じです（python3 = python，pip3 = pip）。</p>
+<p>コマンドは 3 を付けても付けなくても同じです（python3 = python、pip3 = pip）。</p>
 
-<h3>Anaconda によるインストール</h3>
+<h2>Anaconda によるインストール</h2>
 
-<p><a href="https://www.anaconda.com/distribution/">Anaconda Distribution</a> からご自分の環境に合った最新のインストーラをダウンロードし，インストールします。全部入りなので，たいへん大きいパッケージです。最小限のインストールから始めて少しずつ足していくほうが好みの人は，下にある Miniconda を使うほうがいいでしょう。</p>
+<p><a href="https://www.anaconda.com/distribution/">Anaconda Distribution</a> からご自分の環境に合った最新のインストーラをダウンロードし、インストールします。全部入りなので、たいへん大きいパッケージです。最小限のインストールから始めて少しずつ足していくほうが好みの人は、下にある Miniconda を使うほうがいいでしょう。</p>
 
-<p>アップデートは <code>conda</code> コマンドで行います。具体的な方法は，下の Miniconda のところをご覧ください。</p>
+<p>アップデートは <code>conda</code> コマンドで行います。具体的な方法は、下の Miniconda のところをご覧ください。</p>
 
-<p>Windows版はユーザ名に全角文字が含まれているとインストールできない（できてもまともに動かない）ようです。どうしてもAnacondaを使わなければならない場合には，ユーザ名を変更する方法をググってお調べください。</p>
+<p>Windows版はユーザ名に全角文字が含まれているとインストールできない（できてもまともに動かない）ようです。どうしてもAnacondaを使わなければならない場合には、ユーザ名を変更する方法をググってお調べください。</p>
 
-<h3>Homebrew によるインストール（Mac）</h3>
+<h2>Homebrew によるインストール（Mac）</h2>
 
-<p>巨大な Xcode はたいていの場合に不要ですが，ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は，Mac を使っている開発者にとって必需品です。さらに，<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合，ターミナルに <code>brew install python3</code> と打ち込めば，簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等ですがまったく同じではありません（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。</p>
+<p>巨大な Xcode はたいていの場合に不要ですが、ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は、Mac を使っている開発者にとって必需品です。さらに、<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合、ターミナルに <code>brew install python3</code> と打ち込めば、簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等ですがまったく同じではありません（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。</p>
 
-<p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンドが入ります。また，<code>/usr/local/opt/python@3.9/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
+<p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンドが入ります。また、<code>/usr/local/opt/python@3.9/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
 
-<p><code>/usr/local/bin</code> のシンボリックリンクは python.org のものをインストールしたら上書きされてしまいますので，Homebrew のものを主に使う場合は <code>brew link --overwrite python3</code> と打ち込みます。さらにわけがわからなくなったら <code>brew reinstall python3</code> で再インストールできます。</p>
+<p><code>/usr/local/bin</code> のシンボリックリンクは python.org のものをインストールしたら上書きされてしまいますので、Homebrew のものを主に使う場合は <code>brew link --overwrite python3</code> と打ち込みます。さらにわけがわからなくなったら <code>brew reinstall python3</code> で再インストールできます。</p>
 
 <p>この時点での pip は <code>/usr/local/bin/pip3</code> です。まず pip 自身の更新をします：</p>
 
 <pre>
-<code>pip3 install --upgrade pip
-</code></pre>
+pip3 install --upgrade pip
+</pre>
 
 <p>インストールしたパッケージは <code>/usr/local/lib/python3.9/site-packages</code> に入ります。</p>
 
@@ -193,36 +208,36 @@ export PATH
 <p>ApplePersistenceIgnoreState という警告を消すにはターミナルに <code>defaults write org.python.python ApplePersistenceIgnoreState NO</code> と打てばよいみたいです（<a href="https://github.com/Homebrew/homebrew-core/issues/24424">参照</a>）。</p>
 </div>
 
-<h3>Homebrew による pyenv 経由のインストール（Mac）</h3>
+<h2>Homebrew による pyenv 経由のインストール（Mac）</h2>
 
 <p><code>brew install pyenv</code> でまず pyenv を入れてから pyenv 経由で各種 Python を入れる方法です。</p>
 
 <p>まず <code>~/.bash_profile</code> に次を書き込みます：</p>
 
 <pre>
-<code>PYENV_ROOT="$HOME/.pyenv"
+PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
-</code></pre>
+</pre>
 
 <p>次のコマンドでインストール可能なバージョンを確認します：</p>
 
 <pre>
-<code>pyenv install --list
-</code></pre>
+pyenv install --list
+</pre>
 
 <p>例えば Python 3.7.3 をインストールしたいなら</p>
 
 <pre>
-<code>pyenv install 3.7.3
-</code></pre>
+pyenv install 3.7.3
+</pre>
 
-<p>と打ち込みます。<code>pyenv versions</code> でバージョンを確認します。おそらく <code>system</code> と <code>3.7.3</code> があり，デフォルトでは前者になっているので，新しいほうに替えます：</p>
+<p>と打ち込みます。<code>pyenv versions</code> でバージョンを確認します。おそらく <code>system</code> と <code>3.7.3</code> があり、デフォルトでは前者になっているので、新しいほうに替えます：</p>
 
 <pre>
-<code>pyenv global 3.7.3
+pyenv global 3.7.3
 pyenv rehash
-</code></pre>
+</pre>
 
 <p><code>python --version</code> でバージョンを確認します。</p>
 
@@ -231,51 +246,51 @@ pyenv rehash
 <p>あとは pip で更新・追加インストールします。例：</p>
 
 <pre>
-<code>pip list --outdated
+pip list --outdated
 pip install --upgrade pip
 pip install ipython numpy scipy matplotlib pandas jupyter
-</code></pre>
+</pre>
 
-<h3>Miniconda によるインストール</h3>
+<h2>Miniconda によるインストール</h2>
 
-<p><a href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a> から最新の Python 3.x 版インストーラをダウンロードし，実行します。</p>
+<p><a href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a> から最新の Python 3.x 版インストーラをダウンロードし、実行します。</p>
 
-<p>Windows の exe 形式のインストーラは，デフォルトの「Just Me（自分だけ）」設定なら管理者権限不要でインストールできます。スタートメニューの「Anaconda」の中に「Anaconda Powershell Prompt」「Anaconda Prompt」が入るので，好きな方を使います。</p>
+<p>Windows の exe 形式のインストーラは、デフォルトの「Just Me（自分だけ）」設定なら管理者権限不要でインストールできます。スタートメニューの「Anaconda」の中に「Anaconda Powershell Prompt」「Anaconda Prompt」が入るので、好きな方を使います。</p>
 
-<p>Mac にも pkg 形式のインストーラがありますが，私は Mac や CentOS で bash installer を使いました：</p>
+<p>Mac にも pkg 形式のインストーラがありますが、私は Mac や CentOS で bash installer を使いました：</p>
 
 <pre>
-<code>bash Miniconda3-latest-*-x86_64.sh
-</code></pre>
+bash Miniconda3-latest-*-x86_64.sh
+</pre>
 
-<p>まずは ENTER を押せと言ってきます。Enter を押すと，ライセンスを表示して，アクセプトするかと聞いてくるので，<code>yes</code> と答えます。次に，インストールの場所は <code>~/miniconda3</code> で良いかと聞いてくるので，それで良ければ Enter を，別の場所（例えば <code>/usr/local/miniconda3</code>）に変えたければその場所を打ち込みます。最後に <code>conda init</code> を実行するかと聞いてくるので，<code>yes</code> と打つと，Mac では <code>~/.bash_profile</code> の最後に，Linux では <code>~/.bashrc</code> の最後に，コードが追加されます。シェルを開き直すか <code>~/.bash何々</code> を再読み込みすると，Mac なら自動でプロンプトの最初に <code>(base)</code> が出て，基本設定の Miniconda 環境が使えるようになります。Linux では安全のため毎回 <code>conda activate</code> と打たないと Miniconda 環境になりません。元の環境（システムの <code>/usr/bin/python</code> を使う）に戻すには <code>conda deactivate</code> します。Mac でも自動アクティベートをオフにしたければ <code>conda config --set auto_activate_base false</code> と打ち込みます（<code>~/.condarc</code> に <code>auto_activate_base: false</code> と書き込まれます）。</p>
+<p>まずは ENTER を押せと言ってきます。Enter を押すと、ライセンスを表示して、アクセプトするかと聞いてくるので、<code>yes</code> と答えます。次に、インストールの場所は <code>~/miniconda3</code> で良いかと聞いてくるので、それで良ければ Enter を、別の場所（例えば <code>/usr/local/miniconda3</code>）に変えたければその場所を打ち込みます。最後に <code>conda init</code> を実行するかと聞いてくるので、<code>yes</code> と打つと、Mac では <code>~/.bash_profile</code> の最後に、Linux では <code>~/.bashrc</code> の最後に、コードが追加されます。シェルを開き直すか <code>~/.bash何々</code> を再読み込みすると、Mac なら自動でプロンプトの最初に <code>(base)</code> が出て、基本設定の Miniconda 環境が使えるようになります。Linux では安全のため毎回 <code>conda activate</code> と打たないと Miniconda 環境になりません。元の環境（システムの <code>/usr/bin/python</code> を使う）に戻すには <code>conda deactivate</code> します。Mac でも自動アクティベートをオフにしたければ <code>conda config --set auto_activate_base false</code> と打ち込みます（<code>~/.condarc</code> に <code>auto_activate_base: false</code> と書き込まれます）。</p>
 
 <p>パッケージ管理は <code>conda</code> コマンドで行います：</p>
 
 <pre>
-<code>conda update --all
+conda update --all
 conda list
 conda install ipython numpy scipy matplotlib pandas scikit-learn
-</code></pre>
+</pre>
 
-<h3>（Windows）WSLのLinuxへのインストール</h3>
+<h2>（Windows）WSLのLinuxへのインストール</h2>
 
 <p><a href="https://news.mynavi.jp/article/liunx_win-28/">Visual Studio CodeとWSLでPython開発に挑戦してみよう</a>参照。要は WSL の Ubuntu に apt で python3 と python3-pip を入れる。グラフィックスは多分面倒（Jupyter NotebookならOK）。</p>
 
-<h3>CentOS でのインストール</h3>
+<h2>CentOS でのインストール</h2>
 
-<p>CentOS 7 の標準の python コマンドは 2.7.x ですが，<code>yum install python3</code> で /usr/bin/python3 や /usr/bin/pip3 が入ります（3.6.x）。</p>
+<p>CentOS 7 の標準の python コマンドは 2.7.x ですが、<code>yum install python3</code> で /usr/bin/python3 や /usr/bin/pip3 が入ります（3.6.x）。</p>
 
-<p>CentOS 8 では /usr/bin/python3，/usr/bin/pip3 のほうが標準です。もし入っていなければ <code>dnf install python36</code> で入ります（3.6.x）。</p>
+<p>CentOS 8 では /usr/bin/python3、/usr/bin/pip3 のほうが標準です。もし入っていなければ <code>dnf install python36</code> で入ります（3.6.x）。</p>
 
-<h3>ソースからのインストール</h3>
+<h2>ソースからのインストール</h2>
 
 <p>CentOS 7 なら <code>yum install libffi-devel sqlite-devel</code> しておきます。</p>
 
-<p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し，ビルドします。次は3.7.7の場合です：</p>
+<p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し、ビルドします。次は3.7.7の場合です：</p>
 
 <pre>
-<code>wget wget -N https://www.python.org/ftp/python/3.9.2/Python-3.9.2.tar.xz
+wget wget -N https://www.python.org/ftp/python/3.9.2/Python-3.9.2.tar.xz
 tar xvJf Python-3.9.2.tar.xz
 cd Python-3.9.2
 ./configure --enable-optimizations
@@ -284,64 +299,64 @@ make install
 
 python3 --version  # 3.9.2であることを確認
 python3 -m pip install --upgrade pip
-</code></pre>
+</pre>
 
-<p>実行ファイル <code>python3</code>，<code>pip</code> などが（デフォルトでは）<code>/usr/local/bin</code> に入りますので，そこにパスを通しておきます。Linux では <code>python</code> コマンドで Python 2 が動くことが想定されていることがあるので，<code>python3</code> という名前はそのままにしておくほうがよさそうです。</p>
+<p>実行ファイル <code>python3</code>、<code>pip</code> などが（デフォルトでは）<code>/usr/local/bin</code> に入りますので、そこにパスを通しておきます。Linux では <code>python</code> コマンドで Python 2 が動くことが想定されていることがあるので、<code>python3</code> という名前はそのままにしておくほうがよさそうです。</p>
 
-<h3>Google Colab を使う</h3>
+<h2>Google Colab を使う</h2>
 
 <p>Google Colaboratory については<a href="run.html">実行</a>のページに移しました。</p>
 
-<h3>Azure Notebooks を使う</h3>
+<h2>Azure Notebooks を使う</h2>
 
 <p><a href="https://notebooks.azure.com">https://notebooks.azure.com</a> は Google Colab と同じようなサービスです。</p>
 
-<h3>Kaggle の notebook (kernel) を使う</h3>
+<h2>Kaggle の notebook (kernel) を使う</h2>
 
 <p>Jupyter Notebook が使えます。</p>
 
-<h3>Google Colab のようなサーバを立ち上げる</h3>
+<h2>Google Colab のようなサーバを立ち上げる</h2>
 
-<p>サーバ側に Python をインストールし，jupyter 等を入れておきます。サーバ側で <code>jupyter notebook --generate-config</code> を実行し，生成された <code>~/.jupyter/jupyter_notebook_config.py</code> を編集してリモートからの接続を許可します。</p>
+<p>サーバ側に Python をインストールし、jupyter 等を入れておきます。サーバ側で <code>jupyter notebook --generate-config</code> を実行し、生成された <code>~/.jupyter/jupyter_notebook_config.py</code> を編集してリモートからの接続を許可します。</p>
 
 <pre>
-<code>c.NotebookApp.allow_remote_access = True
+c.NotebookApp.allow_remote_access = True
 c.NotebookApp.ip = '*'
 c.NotebookApp.open_browser = False
 c.NotebookApp.port = 8888
-</code></pre>
+</pre>
 
-<p>パスワードを設定するには，Python で <code>from notebook.auth import passwd; passwd()</code> を実行し，パスワードを打ち込み，表示されるパスワードのハッシュを <code>~/.jupyter/jupyter_notebook_config.py</code> に記入します：</p>
+<p>パスワードを設定するには、Python で <code>from notebook.auth import passwd; passwd()</code> を実行し、パスワードを打ち込み、表示されるパスワードのハッシュを <code>~/.jupyter/jupyter_notebook_config.py</code> に記入します：</p>
 
 <pre>
-<code>c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea58f8d'
-</code></pre>
+c.NotebookApp.password = 'sha1:0eced8e273ef:1ef78265e258e76cc0d01e60afcc8df50ea58f8d'
+</pre>
 
-<p>これで，サーバ側で，重要なものの入っていないディレクトリの中で <code>nohup jupyter notebook &amp;</code> を実行し，リモートのブラウザで <code>http://ホスト名:8888</code> をアクセスします。</p>
+<p>これで、サーバ側で、重要なものの入っていないディレクトリの中で <code>nohup jupyter notebook &amp;</code> を実行し、リモートのブラウザで <code>http://ホスト名:8888</code> をアクセスします。</p>
 
-<p>パスワードを設定しない場合は，jupyter 起動時に出るトークンを含んだ URL にアクセスします。</p>
+<p>パスワードを設定しない場合は、jupyter 起動時に出るトークンを含んだ URL にアクセスします。</p>
 
-<p>このままではローカルユーザの権限ですべてのファイルにアクセスできてしまいますので，不特定多数の人に使ってもらう際には要注意です。</p>
+<p>このままではローカルユーザの権限ですべてのファイルにアクセスできてしまいますので、不特定多数の人に使ってもらう際には要注意です。</p>
 
 <p>もっと本格的にやるには <a href="https://jupyterhub.readthedocs.io/">JupyterHub</a> を立ち上げましょう。</p>
 
-<h3>Brython</h3>
+<h2>Brython</h2>
 
 <p><a href="https://github.com/brython-dev/brython">Brython</a>（Browser Python）はWebブラウザの中で動くPython（つまりJavaScriptで実装したPython）です。自分のWebページ内で動かすことができます。<a href="https://github.com/brython-dev/brython">こちら</a>で試せます。</p>
 
 <p>東京書籍の <a href="https://tosho.high.proguru.jp">EduTown プログラミング</a> で使っているのも brython です。</p>
 
-<h3>その他の学習用環境</h3>
+<h2>その他の学習用環境</h2>
 
-<p><a href="https://jupyter.org">Jupyter</a> のサイトで Try it in your browser のボタンをクリックすることでも Jupyter Notebook が試せます。ほかにも，オンラインで種々の言語の実行環境を提供するサービスがいくつかあるようです。<a href="https://cocalc.com">CoCalc</a> とか <a href="https://repl.it">repl.it</a> とか <a href="http://codepad.org">codepad</a> とか <a href="https://ideone.com">ideone</a> とか。</p>
+<p><a href="https://jupyter.org">Jupyter</a> のサイトで Try it in your browser のボタンをクリックすることでも Jupyter Notebook が試せます。ほかにも、オンラインで種々の言語の実行環境を提供するサービスがいくつかあるようです。<a href="https://cocalc.com">CoCalc</a> とか <a href="https://repl.it">repl.it</a> とか <a href="http://codepad.org">codepad</a> とか <a href="https://ideone.com">ideone</a> とか。</p>
 
-<p>初心者の学習用に作られた<a href="https://bitarrow.eplang.jp">オンラインプログラミング環境　ビットアロー（Bit Arrow）</a>では，ブラウザ上で JavaScript，ドリトル，簡易C，DNCL，Python が使えます。Python はブラウザの JavaScript で実行することも，サーバ側の Python 3 を実行することもできます。後者の場合は <code>matplotlib</code> の最小限の機能も使えます。日本語 Python <a href="https://watayan.net/prog/PyPEN/">PyPEN</a> も実験中。</p>
+<p>初心者の学習用に作られた<a href="https://bitarrow.eplang.jp">オンラインプログラミング環境　ビットアロー（Bit Arrow）</a>では、ブラウザ上で JavaScript、ドリトル、簡易C、DNCL、Python が使えます。Python はブラウザの JavaScript で実行することも、サーバ側の Python 3 を実行することもできます。後者の場合は <code>matplotlib</code> の最小限の機能も使えます。日本語 Python <a href="https://watayan.net/prog/PyPEN/">PyPEN</a> も実験中。</p>
 
-<p><a href="http://pypy.org">PyPy</a> という JavaScript の JIT コンパイラがあり，ブラウザ上で実行できます（お試しサイト <a href="https://pypyjs.org">pypyjs.org</a>）。グラフィックスはできないようです。</p>
+<p><a href="http://pypy.org">PyPy</a> という JavaScript の JIT コンパイラがあり、ブラウザ上で実行できます（お試しサイト <a href="https://pypyjs.org">pypyjs.org</a>）。グラフィックスはできないようです。</p>
 
 <p>QGIS（オープンソースのGISソフトウェア）にもPythonが含まれています。</p>
 
-<h3>スマホや電卓でPython</h3>
+<h2>スマホや電卓でPython</h2>
 
 <p>iOS/iPadOS に <a href="https://ish.app">iSH</a> という無料のアプリ（中身は Alpine Linux）を入れて</p>
 
@@ -349,11 +364,11 @@ c.NotebookApp.port = 8888
 apk add python3 py3-pip
 </pre>
 
-<p>と入力すると python3 コマンドや pip コマンドが使えるようになります。最初はOSが許可を求めてきますので許可を与えます。その間に apk コマンドのほうはタイムアウトしてしまうことが多いため，エラーになったら上記コマンドを再度投入します（矢印キーを上にスワイプすると一つ前のコマンドに戻ります）。うまくいったら python3 と打ち込むと Python が起動します。たいへん便利です。残念ながら日本語は表示できません。</p>
+<p>と入力すると python3 コマンドや pip コマンドが使えるようになります。最初はOSが許可を求めてきますので許可を与えます。その間に apk コマンドのほうはタイムアウトしてしまうことが多いため、エラーになったら上記コマンドを再度投入します（矢印キーを上にスワイプすると一つ前のコマンドに戻ります）。うまくいったら python3 と打ち込むと Python が起動します。たいへん便利です。残念ながら日本語は表示できません。</p>
 
-<p>ほかに，iOS用の <a href="https://apps.apple.com/jp/app/pythonista-3/id1085978097">Pythonista 3</a> というアプリ（有料）でPythonが使えます。</p>
+<p>ほかに、iOS用の <a href="https://apps.apple.com/jp/app/pythonista-3/id1085978097">Pythonista 3</a> というアプリ（有料）でPythonが使えます。</p>
 
-<p><a href="https://apps.apple.com/jp/app/carnets-jupyter/id1450994949">Carnets - Jupyter</a> というアプリ（無料）は iOS・iPadOS で動く Jupyter notebook 環境です。Python インタープリタも入っており，Numpy，Sympy，Matplotlib，Pandas などが含まれ，なんと <a href="https://twitter.com/hirax/status/1472530251712704524">OpenCV も使える</a> そうです。</p>
+<p><a href="https://apps.apple.com/jp/app/carnets-jupyter/id1450994949">Carnets - Jupyter</a> というアプリ（無料）は iOS・iPadOS で動く Jupyter notebook 環境です。Python インタープリタも入っており、Numpy、Sympy、Matplotlib、Pandas などが含まれ、なんと <a href="https://twitter.com/hirax/status/1472530251712704524">OpenCV も使える</a> そうです。</p>
 
 <p>カシオの電卓 <a href="https://web.casio.jp/dentaku/fxcg50/">fx-CG50</a> などで MicroPython という Python のサブセットが使えるようです。</p>
 
@@ -363,7 +378,7 @@ apk add python3 py3-pip
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-03-15 13:07:06</time>
+Last modified: <time>2022-06-19 19:31:17 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

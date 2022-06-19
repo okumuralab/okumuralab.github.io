@@ -17,7 +17,7 @@
 
 <h1>Numba</h1>
 
-<p><a href="https://numba.pydata.org">Numba</a>（ナンバ）はPythonのJIT（Just In Time）コンパイラです。簡単にいえば，Pythonの自前の関数を高速にする仕組みです。</p>
+<p><a href="https://numba.pydata.org">Numba</a>（ナンバ）はPythonのJIT（Just In Time）コンパイラです。簡単にいえば，Pythonの自前の関数を高速にする仕組みです。以下は M1 Mac mini 上の Python 3.10.5 で実行しました。</p>
 
 <p>速さ比べのため，まずは100万個の乱数を用意します：</p>
 
@@ -37,10 +37,10 @@ a = rng.random(1000000)
 <p>結果：</p>
 
 <pre>
-<code>99.9 ms ± 460 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<code>35.6 ms ± 46.3 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </code></pre>
 
-<p>約100ミリ秒（0.1秒）です。次は，自前の関数を作って，時間を計測します：</p>
+<p>次は，自前の関数を作って，時間を計測します：</p>
 
 <pre>
 <code>def sum1(a):
@@ -55,10 +55,10 @@ a = rng.random(1000000)
 <p>結果：</p>
 
 <pre>
-<code>122 ms ± 287 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<code>43.4 ms ± 805 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </code></pre>
 
-<p>やはり100ミリ秒少々です。次はNumbaを使ってみましょう。<code>pip install numba</code> などとしてインストールしてから，次を実行します：</p>
+<p>次はNumbaを使ってみましょう。<code>pip install numba</code> などとしてインストールしてから，次を実行します：</p>
 
 <pre>
 <code>from numba import jit
@@ -76,10 +76,10 @@ def sum2(a):
 <p>結果：</p>
 
 <pre>
-<code>1.01 ms ± 5.1 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+<code>1.2 ms ± 50.4 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </code></pre>
 
-<p>約1ミリ秒です。100倍速くなりました。最後にNumPyの <code>np.sum()</code> も試します：</p>
+<p>約1ミリ秒です。数十倍速くなりました。最後にNumPyの <code>np.sum()</code> も試します：</p>
 
 <pre>
 <code>%timeit np.sum(a)
@@ -88,10 +88,10 @@ def sum2(a):
 <p>結果：</p>
 
 <pre>
-<code>505 µs ± 3.12 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)
+<code>187 µs ± 865 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
 </code></pre>
 
-<p>Numbaで高速化したものより2倍高速です。</p>
+<p>Numbaで高速化したものよりさらに高速です。</p>
 
 <p>つまり，ループを含むようなPythonのコードはたいていNumbaで高速化できますが，同じ機能のNumPy関数があるなら，そちらを使いましょう。</p>
 
@@ -101,7 +101,7 @@ def sum2(a):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-11-24 20:22:20</time>
+Last modified: <time>2022-06-19 20:46:14 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
