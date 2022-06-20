@@ -41,10 +41,10 @@ defaults write org.python.python ApplePersistenceIgnoreState NO
 
 <p>まず、初心者のかたで、今までどこかで Python をインストールしたけれどうまく設定できていないという場合は、［スタートボタン］→［⚙設定］→［アプリ］で、それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
 
-<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> からダウンロードします。いくつかありますが、ここでは Python 3.10.x の x が一番大きいものの64ビット版 Windows x86-64 executable installer を使います（32ビット版でもかまいません）。初心者のかたは、インストーラの最初の画面で「Add Python 3.10 to PATH」にチェックを付けてから「Install Now」をクリックします。ユーザーアカウント制御「このアプリがデバイスに変更を加えることを許可しますか？」が出ますので「はい」をクリックするとインストールが始まります。デフォルトで C:\Users\ユーザ名\AppData\Local\Programs\Python\Python38 以下（<code>pip</code> などはさらにその下の Scripts の中）に入ります。</p>
+<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> から最新版をダウンロードし、開きます。「Install Now」をクリックする前に、特に初心者のかたは、インストーラの最初の画面で「Add Python 3.10 to PATH」にチェックを付けるほうが楽だと思います。また、「Install Now」のすぐ下に、インストールされるパスが表示されます。私の場合、<code>C:\Users\okumu\AppData\Local\Programs\Python\Python310</code> と表示されました。ここが全角だったり文字化けしていたりする場合は、下の説明を見てください。問題なければ「Install Now」をクリックします。ユーザーアカウント制御「このアプリがデバイスに変更を加えることを許可しますか？」が出ますので「はい」をクリックするとインストールが始まります。インストールが無事終われば「Close」をクリックします。</p>
 
 <div class="note">
-<p>ユーザ名に全角文字を使っていると問題が生じることがあるようです。Windowsのユーザ名はなるべくスペースを含まない半角英数字だけにしましょう（例：<code>okumura</code>）。なお、ユーザ名に全角文字を含んでも、次のようにすれば全角文字を含まないインストール場所が指定できます。インストーラが起動した画面で「Customize installation」をクリックし、「Next」をクリックし、「Customize install location」で <code>C:\Users\奥村 晴彦\AppData\Local\Programs\Python\...</code> のような全角フォルダ名が出た際、その右の「Browse」をクリックし、「PC」→「C:」を選び、「新しいフォルダーの作成」で例えば <code>Python</code> というフォルダを作り、それをインストール場所に設定します。このあたりは実験が不十分なので、情報があれば教えてください。</p>
+<p>インストールされるパスが全角だったり文字化していたりする場合は、インストーラが起動した画面で「Customize installation」をクリックし、「Next」をクリックし、「Customize install location」の右の「Browse」をクリックし、「PC」→「C:」を選び、「新しいフォルダーの作成」で例えば <code>Python</code> というフォルダを作り、それをインストール場所に設定します。このあたりは実験が不十分なので、情報があれば教えてください。</p>
 </div>
 
 <p>確認として、Windows PowerShell（あるいは VS Code のターミナル、またはコマンドプロンプト）を立ち上げ、</p>
@@ -56,16 +56,16 @@ where.exe python
 <p>と打ち込んで、正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell ではうまくいかないようです）。うまくいっていれば</p>
 
 <pre>
-C:\Users\ユーザ名\AppData\Local\Programs\Python\Python**\python.exe
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python310\python.exe
 C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 </pre>
 
-<p>と出ます（2行目はもともと入っている <code>python</code> コマンドで、後述のように、ストアアプリをダウンロードする画面を開くだけの機能しかありません）。</p>
+<p>と出ます（2行目はもともと入っている <code>python</code> コマンドで、後述のように、ストアアプリをダウンロードする画面を開くだけの機能しかありません）。これ以外の <code>python.exe</code> が出ても、それが最初の行でなければ、問題ありません。</p>
 
 <p>同様に <code>pip</code> も確認します。</p>
 
 <pre>
-C:\Users\ユーザ名\AppData\Local\Programs\Python\Python**\Scripts\pip.exe
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python310\Scripts\pip.exe
 </pre>
 
 <p>ほかに <a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされますが、ここでは使いません。</p>
@@ -81,7 +81,7 @@ pip list --outdated
 <p>最初は pip そのものが古いはずですので、まずこれを</p>
 
 <pre>
-python -m pip install --upgrade pip
+pip install --upgrade pip setuptools
 </pre>
 
 <p>としてアップグレードします。これ以外に必要なパッケージは、その都度インストールします。例：</p>
@@ -135,7 +135,7 @@ pip3 list --outdated
 <p>最初は pip そのものが古いはずですので、まずこれをアップデートしましょう：</p>
 
 <pre>
-pip3 install --upgrade pip
+pip3 install --upgrade pip setuptools
 </pre>
 
 <p>すると、Defaulting to user installation because normal site-packages is not writeable などのメッセージが出て、<code>~/Library/Python/3.10/bin</code> にインストールされますので、こちらにもパスを通しておきます。具体的には <code>~/.bash_profile</code> または <code>~/.zprofile</code> にさきほど追加されたものを</p>
@@ -149,7 +149,7 @@ export PATH
 <p>と編集すればいいでしょう（私は <code>~/.zshenv</code> に環境変数を書いているのでそちらに移動しました）。これ以外に必要なパッケージは、その都度インストールします。例：</p>
 
 <pre>
-pip3 install --user numpy matplotlib pandas jupyter
+pip3 install numpy matplotlib pandas jupyter
 </pre>
 
 <div class="note">
@@ -378,7 +378,7 @@ apk add python3 py3-pip
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-06-19 19:31:17 JST</time>
+Last modified: <time>2022-06-20 10:53:30 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
