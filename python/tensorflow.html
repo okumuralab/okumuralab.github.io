@@ -124,6 +124,8 @@ Epoch 5/5
 1875/1875 [==============================] - 1s 545us/step - loss: 0.0773 - accuracy: 0.9759
 </pre>
 
+<p>（<code>pip install tensorflow-metal</code> すると GPU が使えるはずだが、かえって遅くなってしまったので、<code>pip uninstall tensorflow-metal</code> した。）</p>
+
 <p>最後に評価：</p>
 
 <pre class="cell">
@@ -177,7 +179,7 @@ model = tf.keras.models.load_model("mymodel.h5")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-06-19 20:11:28 JST</time></p>
+<p>Last modified: <time>2022-06-22 16:06:29 JST</time></p>
 </footer>
 </body>
 </html>

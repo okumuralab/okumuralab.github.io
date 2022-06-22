@@ -10,7 +10,7 @@ df = df.groupby('date', as_index=False).sum()
 # df['students'].sum() # 65
 # df['others'].sum()   #  4
 
-fig, ax = plt.subplots(figsize=(10, 3))
+fig, ax = plt.subplots(figsize=(12, 3))
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)
 
@@ -20,7 +20,8 @@ ax.xaxis.set_major_formatter(formatter)
 bottom = 0
 for x in ['others', 'students']:
     ax.bar(df['date'], df[x], width=1, bottom=bottom,
-           align='edge', edgecolor="black", linewidth=0.5,
+           # align='edge', edgecolor="black", linewidth=0.5,
+           align='edge', linewidth=0.5,
            label=x + ' (' + str(df[x].sum()) + ')')
     bottom += df[x]
 ax.legend()

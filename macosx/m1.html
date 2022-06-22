@@ -227,6 +227,14 @@ Python 3.8.9
 
 <p>本家 <a href="https://www.python.org">python.org</a> の Python は universal バイナリになった。ライブラリも Apple Silicon 対応が進んだ。普通に<a href="../python/install.html">インストール</a>すればよい。</p>
 
+<p>TensorFlow や PyTorch も今や pip で簡単にインストールできる：</p>
+
+<pre>
+pip3 install tensorflow-macos
+
+pip3 install torch torchvision torchaudio
+</pre>
+
 <h3>miniforgeのPython</h3>
 
 <p><a href="https://github.com/conda-forge/miniforge">miniforge</a> を使えば主要ライブラリを含めて arm64 版がインストールできる。これがお薦め。</p>
@@ -275,7 +283,7 @@ Thank you for installing Miniforge3!
 
 <p>ときどき <code>conda update --all</code> で更新する。ほかに <code>conda list</code>，<code>conda install ...</code> を覚えておけばよい。</p>
 
-<p>Tensorflow は <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> に従ってインストールできる。しかし，なぜか tensorflow-metal が遅いので，<code>pip uninstall tensorflow-metal</code> してしまった。要するに miniconda なら次のようにすればよさそう：</p>
+<p>TensorFlow は <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> に従ってインストールできる。しかし，なぜか tensorflow-metal が遅いので，<code>pip uninstall tensorflow-metal</code> してしまった。要するに miniconda なら次のようにすればよさそう：</p>
 
 <pre>
 conda install -c apple tensorflow-deps
@@ -465,7 +473,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-06-20 09:57:54 JST</time>
+Last modified: <time>2022-06-21 10:17:02 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
