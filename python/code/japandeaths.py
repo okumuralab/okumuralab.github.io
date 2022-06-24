@@ -78,14 +78,14 @@ plt.plot([2020, 2021], [3459 / 366, (18385 - 3459) / 365], "o-")
 plt.show()
 plt.savefig("../img/japandeaths5.svg", bbox_inches="tight")
 
-df3 = df.query("月 < 4").groupby("年")[["死亡数", "日数"]].sum()
+df3 = df.query("月 <= 4").groupby("年")[["死亡数", "日数"]].sum()
 y = df3.index
 x = df3["死亡数"] / df3["日数"]
 
 plt.clf()
 plt.plot(y, x, "o-")
 plt.xlabel("年")
-plt.ylabel("1〜3月の1日あたり死亡数")
+plt.ylabel("1〜4月の1日あたり死亡数")
 plt.xticks(sorted(set(y // 2 * 2).intersection(set(y))))  # 2年ごと
 plt.show()
 plt.savefig("../img/japandeaths6.svg", bbox_inches="tight")
