@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/longevity_maritalstatus.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>寿命と配偶関係</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>寿命と配偶関係</h1>
+
+<p>未婚の男は短命、未婚の女は長寿、と言われている。本当か？</p>
+
+<p>e-Statの<a href="https://www.e-stat.go.jp/stat-search/files?toukei=00450011">人口動態調査</a>の確定数→死亡→年次で、本稿執筆時点で一番新しい2020年の「中巻」→「15歳以上の死亡数，年齢（５歳階級）・性・配偶関係別」の「CSV」をクリックすると、c070000.csv というCSVファイルが落ちてくる。これは、15〜19歳、20〜24歳、……、95〜99歳、100歳以上の18階級について、男女・配偶関係（配偶・未婚・死別・離別）ごとに、死亡数を並べたものである。まずこれを読み込む：</p>
+
+<pre class="cell">
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("c070000.csv", encoding="CP932", skiprows=5, header=None,
+                 na_values="-",
+                 names=["階級","総数",
+                        "男総数","男有配偶","男未婚","男死別","男離別","男不詳",
+                        "女総数","女有配偶","女未婚","女死別","女離別","女不詳"])
+
+df.fillna(0, inplace=True)
+</pre>
+
+<p>とりあえずグラフを描いてみる。男女でスケールを同じにする。</p>
+
+<pre class="cell">
+for s, m in zip(["男有配偶","男未婚","男死別","男離別"], ["o-","s-","^-","v-"]):
+    plt.plot(range(15, 105, 5), df[s], m, label=s)
+plt.ylim(0, 135000)
+plt.legend(loc="upper left")
+</pre>
+
+<br>
+
+<pre class="cell">
+for s, m in zip(["女有配偶","女未婚","女死別","女離別"], ["o-","s-","^-","v-"]):
+    plt.plot(range(15, 105, 5), df[s], m, label=s)
+plt.ylim(0, 135000)
+plt.legend(loc="upper left")
+</pre>
+
+<figure>
+  <img src="img/220626a.svg" alt="配偶関係別死亡数（男）">
+  <img src="img/220626b.svg" alt="配偶関係別死亡数（女）">
+</figure>
+
+<p>男より女の死別がはるかに多いことがわかる。これは男女の寿命の違いが原因である。</p>
+
+<p>当然ながら、死別者の死亡年齢は高い。配偶者と死別したから寿命が延びたわけではなく、配偶者より長寿だったから死別したのである。生存バイアスの一種である。</p>
+
+<p>グラフの下のほうに注目しよう：</p>
+
+<pre class="cell">
+plt.ylim(0, 14000)
+</pre>
+
+<figure>
+  <img src="img/220626c.svg" alt="配偶関係別死亡数（男）">
+  <img src="img/220626d.svg" alt="配偶関係別死亡数（女）">
+</figure>
+
+<p>未婚・離別の男の死亡ピークはいずれも70〜74歳だが、未婚・離別の女の死亡ピークはそれぞれ90〜94歳・85〜89歳で、ピーク位置がかなりずれている。男は配偶者がいないと早く死に、女は配偶者がいないと長生きするのだろうか？ ほかに解釈はないか？</p>
+
+<hr>
+
+<p>→ <a href="../stat/longevity_maritalstatus.html">R版</a></p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-06-26 15:20:32 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

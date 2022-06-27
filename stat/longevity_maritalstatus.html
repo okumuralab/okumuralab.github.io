@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/longevity_maritalstatus.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>寿命と配偶関係</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>寿命と配偶関係</h1>
+
+<p>Pythonの<a href="../python/longevity_maritalstatus.html">寿命と配偶関係</a>のR版。</p>
+
+<pre>
+df = read.csv("c070000.csv", fileEncoding="CP932", skip=5, header=FALSE,
+              na.strings="-",
+              col.names=c("階級","総数",
+                          "男総数","男有配偶","男未婚","男死別","男離別","男不詳",
+                          "女総数","女有配偶","女未婚","女死別","女離別","女不詳"))
+
+df[is.na(df)] = 0
+
+matplot(seq(15,100,5), df[c("男有配偶","男未婚","男死別","男離別")],
+        type="o", pch=15:18, xlab="死亡年齢", ylab="死亡数", lty=1, col=1:4)
+legend("topleft", c("男有配偶","男未婚","男死別","男離別"), pch=15:18, col=1:4, lty=1)
+</pre>
+
+<p>縦軸の範囲を設定するには <code>matplot()</code> に <code>ylim=c(0,135000)</code> のようなオプションを付ける。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-06-26 15:18:04 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
