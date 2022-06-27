@@ -74,13 +74,81 @@ tokyo = read.csv("https://okumuralab.org/~okumura/stat/data/tokyo-weather-2003-2
 <p>プロットは例えば次のようになる。</p>
 
 <pre>
-<code>plot(tokyo[,3], icecream[,3]/days(icecream$年,icecream$月),
-     pch=16, xlab="平均最高気温（℃）", ylab="アイスクリーム購入額（円）")
-</code></pre>
+x = tokyo[,3]
+y = icecream[,3]/days(icecream$年,icecream$月)
+plot(x, y, pch=16, xlab="平均最高気温（℃）", ylab="アイスクリーム購入額（円）")
+</pre>
 
 <figure><img src="img/160126b.png" alt="平均最高気温・アイスクリーム購入額"></figure>
 
-<p>ダウンロードしたファイルをRで直接読むこともできる。これが本来は望ましい（手作業が入らないので）。おおよそ次のようにすればよい（ファイル名はご自分のものに直してください）。<code>fileEncoding="SJIS"</code> はWindowsではデフォルトなので省略可。</p>
+<p>これらの点を最小2乗法でまず1次式でフィットしてみよう。</p>
+
+<pre>
+&gt; r1 = lm(y ~ x)
+&gt; summary(r1)
+
+Call:
+lm(formula = y ~ x)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.7978 -2.8211  0.0065  2.6202 11.6664 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -3.77290    1.07910  -3.496 0.000666 ***
+x            1.16158    0.04999  23.236  &lt; 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 4.064 on 118 degrees of freedom
+Multiple R-squared:  0.8206,	Adjusted R-squared:  0.8191 
+F-statistic: 539.9 on 1 and 118 DF,  p-value: &lt; 2.2e-16
+</pre>
+
+<p>実際に直線を描き込むには <code>abline(r1)</code> と打ち込む。</p>
+
+<p>2次式でフィットしてみよう。</p>
+
+<pre>
+&gt; r2 = lm(y ~ x + I(x^2))
+&gt; summary(r2)
+
+Call:
+lm(formula = y ~ x + I(x^2))
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.7083 -1.6025  0.1931  1.8113  5.3939 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 20.664368   1.981857  10.427  &lt; 2e-16 ***
+x           -1.596552   0.212165  -7.525 1.19e-11 ***
+I(x^2)       0.067540   0.005136  13.149  &lt; 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.593 on 117 degrees of freedom
+Multiple R-squared:  0.9276,	Adjusted R-squared:  0.9264 
+F-statistic: 749.7 on 2 and 117 DF,  p-value: &lt; 2.2e-16
+
+&gt; curve(0.067540 * x^2 - 1.596552 * x + 20.664368, add=TRUE)
+</pre>
+
+<p>同様に3次式以上でもフィットしてみよう。何次式が一番適切か。</p>
+
+<pre>
+&gt; r3 = lm(y ~ x + I(x^2) + I(x^3))
+&gt; AIC(r1, r2, r3)
+   df      AIC
+r1  3 681.0563
+r2  4 574.1705
+r3  5 570.2895
+</pre>
+
+<div class="note">
+<p>ダウンロードしたファイルをRで直接読むこともできる。これが本来は望ましい（手作業が入らないので）。おおよそ次のようにすればよい（ファイル名はご自分のものに直してください）。<del><code>fileEncoding="SJIS"</code> はWindowsではデフォルトなので省略可。</del><ins>R 4.2からWindowsでもUTF-8がデフォルトになったので要注意。</ins></p>
 
 <pre>
 <code>x = read.csv("気象.csv", header=FALSE, fileEncoding="SJIS", skip=7)
@@ -93,6 +161,7 @@ z = merge(x, y, by.x="V1", by.y="V3")
 z$年 = gsub("/.*", "", z$V1)
 z$月 = gsub(".*/", "", z$V1)
 </code></pre>
+</div>
 
 <hr>
 
@@ -101,7 +170,7 @@ z$月 = gsub(".*/", "", z$V1)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-04-29 22:46:29</time>
+Last modified: <time>2022-06-27 10:37:38 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

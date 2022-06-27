@@ -90,13 +90,23 @@ for line in sys.stdin:
 
 <p><code>f.read()</code> は <code>"1行目\n2行目\n..."</code> のような長い一つの文字列，<code>f.readlines()</code> は <code>["1行目\n", "2行目\n", ...]</code> のような行のリストを返す。</p>
 
+<p>コマンドラインで指定するファイルそれぞれについて上の処理を行うには次のようにすればよい：</p>
+
+<pre>
+import sys
+
+for filename in sys.argv[1:]:
+    with open(filename) as f:
+        ...
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-04-22 13:26:15</time>
+Last modified: <time>2022-06-25 10:42:42 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

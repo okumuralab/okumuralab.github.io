@@ -17,23 +17,23 @@
 
 <h1>実行</h1>
 
-<p>Python 3 を実行するには，いろいろな方法があります。初心者はまず Google Colab で実行してみましょう。</p>
+<p>Python 3 を実行するには、いろいろな方法があります。初心者はまず Google Colab で実行してみましょう。</p>
 
 <h2>Google Colab を使う</h2>
 
-<p>Google Colaboratory（略称 Google Colab）を使えば Web 上で Python が使えます。ただし，Google のアカウントが必要です。無料です（<a href="https://colab.research.google.com/signup">有料版</a>もあります）。古いブラウザでは使えなかったり Shift + Enter がうまくいかなかったりするようです。</p>
+<p>Google Colaboratory（略称 Google Colab）を使えば Web 上で Python が使えます。ただし、Google のアカウントが必要です。無料です（<a href="https://colab.research.google.com/signup">有料版</a>もあります）。古いブラウザでは使えなかったり Shift + Enter がうまくいかなかったりするようです。</p>
 
-<p><a href="https://colab.research.google.com/">Google Colaboratory</a> にアクセスしてください。上にオレンジ色の帯のあるポップアップが出れば，一番下の「ノートブックを新規作成」をクリックします。ポップアップが出なかったら，上の「ファイル」メニューから「ノートブックを新規作成」を選びます。</p>
+<p><a href="https://colab.research.google.com/">Google Colaboratory</a> にアクセスしてください。上にオレンジ色の帯のあるポップアップが出れば、一番下の「ノートブックを新規作成」をクリックします。ポップアップが出なかったら、上の「ファイル」メニューから「ノートブックを新規作成」を選びます。</p>
 
 <p>コードセル（カーソルの点滅しているところ）に何か計算式を入れてみましょう。例えば</p>
 
 <pre>
-<code>2+3
-</code></pre>
+2+3
+</pre>
 
-<p>と打ち込んで，Shift + Enter します。答え（上の計算の場合は 5）が現れ，その下に新しいコードセルが出ます。</p>
+<p>と打ち込んで、Shift + Enter します。答え（上の計算の場合は 5）が現れ、その下に新しいコードセルが出ます。</p>
 
-<p>ブラウザによっては Shift + Enter がうまく効かないことがあるようです。その場合は ● ▷ のボタンをクリックすれば実行されます。ただ，新しいコードセルが出ませんので，「+ コード」ボタンを押してコードセルを追加します。</p>
+<p>ブラウザによっては Shift + Enter がうまく効かないことがあるようです。その場合は ● ▷ のボタンをクリックすれば実行されます。ただ、新しいコードセルが出ませんので、「+ コード」ボタンを押してコードセルを追加します。</p>
 
 <p>あとは<a href="first.html">Pythonの初歩</a>を見ながらいろいろ試してください。</p>
 
@@ -41,30 +41,30 @@
 
 <p>以下ではパソコンに Python 3 が<a href="install.html">インストール</a>されていることを前提に説明します。Python 3 を起動するコマンドは <code>python3</code> だと仮定します（環境によっては <code>python</code> でよいかもしれません）。</p>
 
-<p>念のため，<code>python</code> あるいは <code>python3</code> で起動する Python のバージョンを確認しておきましょう：</p>
+<p>念のため、<code>python</code> あるいは <code>python3</code> で起動する Python のバージョンを確認しておきましょう：</p>
 
 <pre>
-<code>python --version
+python --version
 python3 --version
-</code></pre>
+</pre>
 
 <p>ターミナル（Windows であれば PowerShell など）に</p>
 
 <pre>
-<code>python3
-</code></pre>
+python3
+</pre>
 
-<p>とだけ打ち込むと，<code>&gt;&gt;&gt;</code> というプロンプトが現れますので，その右側に Python の命令を打ち込みます。例えば</p>
+<p>とだけ打ち込むと、<code>&gt;&gt;&gt;</code> というプロンプトが現れますので、その右側に Python の命令を打ち込みます。例えば</p>
 
 <pre>
-<code>2+3
-</code></pre>
+2+3
+</pre>
 
-<p>と打ち込んで Enter すれば，答え「5」が現れます。</p>
+<p>と打ち込んで Enter すれば、答え「5」が現れます。</p>
 
 <p>あとは<a href="first.html">Pythonの初歩</a>を見ながらいろいろ試してください。</p>
 
-<p>ターミナルに戻るには，<code>quit()</code> または <code>exit()</code> と打ち込みます。</p>
+<p>ターミナルに戻るには、<code>quit()</code> または <code>exit()</code> と打ち込みます。</p>
 
 <div class="note">
 <p>REPL（Read-Eval-Print Loop）は対話的にコードを実行することを指す語です。</p>
@@ -72,128 +72,128 @@ python3 --version
 
 <h2>IDLE</h2>
 
-<p>オマケに付いている IDLE という IDE（統合開発環境）を起動すれば，上記「python コマンド」と同じように使えます。あまり使いやすくないかもしれません。</p>
+<p>オマケに付いている IDLE という IDE（統合開発環境）を起動すれば、上記「python コマンド」と同じように使えます。あまり使いやすくないかもしれません。</p>
 
 <h2>IPython</h2>
 
-<p>IPython なら，もう少し対話的に（interactive に）Python を使えます。ターミナル（Windows であれば PowerShell など）に</p>
+<p>IPython なら、もう少し対話的に（interactive に）Python を使えます。ターミナル（Windows であれば PowerShell など）に</p>
 
 <pre>
-<code>ipython
-</code></pre>
+ipython
+</pre>
 
 <p>と打ち込みます（もし古い Python 2 が出てくるようなら <code>ipython3</code> としてみてください）。</p>
 
-<p>実際には，いくつかオプションを付けて起動することが多いと思います。例えば，matplotlib を使い，文字に色を付けたくないなら</p>
+<p>実際には、いくつかオプションを付けて起動することが多いと思います。例えば、matplotlib を使い、文字に色を付けたくないなら</p>
 
 <pre>
-<code>ipython --matplotlib --colors=NoColor
-</code></pre>
+ipython --matplotlib --colors=NoColor
+</pre>
 
 <p>とします。</p>
 
 <div class="note">
-<p>Emacs の <code>M-x shell</code> 内で使うなら，おそらく <code>--simple-prompt</code> オプションが必要です。</p>
+<p>Emacs の <code>M-x shell</code> 内で使うなら、おそらく <code>--simple-prompt</code> オプションが必要です。</p>
 </div>
 
-<p>ヘルプを見るには，例えば <code>?print</code> のように打ち込みます（このヘルプの終了は <code>q</code>）。</p>
+<p>ヘルプを見るには、例えば <code>?print</code> のように打ち込みます（このヘルプの終了は <code>q</code>）。</p>
 
 <p><code>quit</code> または <code>exit</code> と打ち込めば終了します。</p>
 
 <h2>スクリプト</h2>
 
-<p>Python プログラム，例えば</p>
+<p>Python プログラム、例えば</p>
 
 <pre>
-<code>for i in range(3):
+for i in range(3):
     print("大事なので3回言います")
-</code></pre>
+</pre>
 
-<p>は，テキストファイルとして保存してから実行することができます。テキストファイルとして保存した実行可能なプログラムを「スクリプト」と呼びます。テキストファイルですから，Windows の「メモ帳」や Mac の「テキストエディット」などの標準テキストエディタで作成できますが，本格的にプログラミングをするなら，<a href="https://atom.io">Atom</a> や <a href="https://code.visualstudio.com">Visual Studio Code</a> や Emacs や Vim のようなプログラミング専用テキストエディタが便利です。</p>
+<p>は、テキストファイルとして保存してから実行することができます。テキストファイルとして保存した実行可能なプログラムを「スクリプト」と呼びます。テキストファイルですから、Windows の「メモ帳」や Mac の「テキストエディット」などの標準テキストエディタで作成できますが、本格的にプログラミングをするなら、<a href="https://atom.io">Atom</a> や <a href="https://code.visualstudio.com">Visual Studio Code</a> や Emacs や Vim のようなプログラミング専用テキストエディタが便利です。</p>
 
-<p>Python スクリプトのファイル名は <code>test.py</code> のように拡張子を <code>py</code> にします。保存の際の文字コードは UTF-8 にします。実行するには，ターミナル（Windows ならコマンドプロンプトか PowerShell）で（スクリプトを保存したディレクトリに移動してから）</p>
-
-<pre>
-<code>python3 test.py
-</code></pre>
-
-<p>と打ち込みます。文字化けする場合は，文字コードが UTF-8 になっているか確認してください。</p>
-
-<p>Linux や Mac などの UNIX 環境で実行可能なスクリプトにするには，先頭に <code>#! /usr/bin/env python3</code> を付けます（複数の <code>python3</code> があって具体的に指定したい場合は <code>#! /usr/local/bin/python3</code> などのようにします）：</p>
+<p>Python スクリプトのファイル名は <code>test.py</code> のように拡張子を <code>py</code> にします。保存の際の文字コードは UTF-8 にします。実行するには、ターミナル（Windows ならコマンドプロンプトか PowerShell）で（スクリプトを保存したディレクトリに移動してから）</p>
 
 <pre>
-<code>#! /usr/bin/env python3
+python3 test.py
+</pre>
+
+<p>と打ち込みます。文字化けする場合は、文字コードが UTF-8 になっているか確認してください。</p>
+
+<p>Linux や Mac などの UNIX 環境で実行可能なスクリプトにするには、先頭に <code>#! /usr/bin/env python3</code> を付けます（複数の <code>python3</code> があって具体的に指定したい場合は <code>#! /usr/local/bin/python3</code> などのようにします）：</p>
+
+<pre>
+#! /usr/bin/env python3
 
 for i in range(3):
     print("大事なので3回言います")
-</code></pre>
+</pre>
 
-<p>この場合も文字コードは UTF-8 ですが，特に <code>#!</code> で始まる場合は BOM を付けないように注意する必要があります。実行可能にするには，ターミナルで</p>
-
-<pre>
-<code>chmod 755 test.py
-</code></pre>
-
-<p>のように打ち込みます。これで，ターミナルに</p>
+<p>この場合も文字コードは UTF-8 ですが、特に <code>#!</code> で始まる場合は BOM を付けないように注意する必要があります。実行可能にするには、ターミナルで</p>
 
 <pre>
-<code>./test.py
-</code></pre>
+chmod 755 test.py
+</pre>
 
-<p>と打ち込めば実行されます。便利なスクリプトなら，拡張子を付けないで <code>/usr/local/bin</code> のようなパスの通った場所に置いておくといいかもしれません。</p>
-
-<p>もしどうしても別の文字コード，例えば Shift JIS にしたいなら，</p>
+<p>のように打ち込みます。これで、ターミナルに</p>
 
 <pre>
-<code>#! /usr/bin/env python3
+./test.py
+</pre>
+
+<p>と打ち込めば実行されます。便利なスクリプトなら、拡張子を付けないで <code>/usr/local/bin</code> のようなパスの通った場所に置いておくといいかもしれません。その際、自前のコマンドであることをわかりやすくするために、ファイル名の先頭にコンマ（<code>,</code>）を付けると便利かもしれません（<a href="https://rhodesmill.org/brandon/2009/commands-with-comma/">Start all of your commands with a comma</a>）。</p>
+
+<p>もしどうしても別の文字コード、例えば Shift JIS にしたいなら、</p>
+
+<pre>
+#! /usr/bin/env python3
 # -*- coding: shift_jis -*-
 
 for i in range(3):
     print("大事なので3回言います")
-</code></pre>
+</pre>
 
 <p>のようにします。</p>
 
-<p>スクリプトとして実行する場合は，コマンドライン引数が <code>sys.argv</code> というリストに入ります。次のような簡単なスクリプトで実験できます：</p>
+<p>スクリプトとして実行する場合は、コマンドライン引数が <code>sys.argv</code> というリストに入ります。次のような簡単なスクリプトで実験できます：</p>
 
 <pre>
-<code>#! /usr/bin/env python3
+#! /usr/bin/env python3
 
 import sys
 
 print(sys.argv)
-</code></pre>
+</pre>
 
-<p>もし Python 2 で書かれたスクリプト <code>filename.py</code> があれば，コマンド <code>2to3 -w filename.py</code> で Python 3 の文法に書き直してくれます。オリジナルは <code>filename.py.bak</code> にリネームされます。詳しくはマニュアルの <a href="https://docs.python.org/3/library/2to3.html">2to3</a> 参照。</p>
+<p>もし Python 2 で書かれたスクリプト <code>filename.py</code> があれば、コマンド <code>2to3 -w filename.py</code> で Python 3 の文法に書き直してくれます。オリジナルは <code>filename.py.bak</code> にリネームされます。詳しくはマニュアルの <a href="https://docs.python.org/3/library/2to3.html">2to3</a> 参照。</p>
 
 <h2>One-Liner</h2>
 
 <p>ターミナルで1行だけの Python スクリプトを実行できます：</p>
 
 <pre>
-<code>$ python3 -c 'x=2;y=32;print(x**y)'
+$ python3 -c 'x=2;y=32;print(x**y)'
 4294967296
-</code></pre>
+</pre>
 
 <h2>Jupyter Notebook</h2>
 
-<p><a href="https://jupyter.org">Jupyter Notebook</a>（ジュピター・ノートブック）はブラウザ上で使える Mathematica Notebook のような環境です。もともと Julia，Python，R などをサポートするということで Jupyter という名前になったようですが，今は40以上の言語に対応しています。もしインストールされていなかったなら，<code>pip install jupyter</code> でインストールできます。</p>
+<p><a href="https://jupyter.org">Jupyter Notebook</a>（ジュピター・ノートブック）はブラウザ上で使える Mathematica Notebook のような環境です。もともと Julia、Python、R などをサポートするということで Jupyter という名前になったようですが、今は40以上の言語に対応しています。もしインストールされていなかったなら、<code>pip install jupyter</code> でインストールできます。</p>
 
 <p>ターミナルに</p>
 
 <pre>
-<code>jupyter notebook
-</code></pre>
+jupyter notebook
+</pre>
 
-<p>と打ち込むと，Web ブラウザが立ち上がって，カレントディレクトリのファイル名一覧が表示されます（Mac や Linux なら <code>jupyter notebook &amp;</code> と打ち込めばバックグラウンド動作になります）。もし拡張子が ipynb のファイルがあれば，それを開けば前回の続きの計算ができます。新しいノートブックを開くには，この画面で [New ▼] ボタンを押し Python 3 を選びます。一番上の Untitled をクリックすると，ノートブックの名前が変えられます。ちなみに，拡張子 ipynb は，Jupyter Notebook が IPython Notebook と呼ばれていたころの名残りです。</p>
+<p>と打ち込むと、Web ブラウザが立ち上がって、カレントディレクトリのファイル名一覧が表示されます（Mac や Linux なら <code>jupyter notebook &amp;</code> と打ち込めばバックグラウンド動作になります）。もし拡張子が ipynb のファイルがあれば、それを開けば前回の続きの計算ができます。新しいノートブックを開くには、この画面で [New ▼] ボタンを押し Python 3 を選びます。一番上の Untitled をクリックすると、ノートブックの名前が変えられます。ちなみに、拡張子 ipynb は、Jupyter Notebook が IPython Notebook と呼ばれていたころの名残りです。</p>
 
-<p>In [ ]: の右の箱に Python のプログラムを打ち込みます。何行かまとめて入れることもできます。最後の行の値が（<code>print()</code> を使わないでも）表示されます。Shift + Enter で，実行し次の箱に移動します（または Ctrl + Enter で，実行し次の箱に移動しません）。</p>
+<p>In [ ]: の右の箱に Python のプログラムを打ち込みます。何行かまとめて入れることもできます。最後の行の値が（<code>print()</code> を使わないでも）表示されます。Shift + Enter で、実行し次の箱に移動します（または Ctrl + Enter で、実行し次の箱に移動しません）。</p>
 
-<p>[Code ↕︎] ボタンを [Markdown ↕︎] に切り替えれば，Markdown 形式で説明が書けます。<code>$E = mc^2$</code> のように <code>$</code> で挟んで数式を書くこともできます。</p>
+<p>[Code ↕︎] ボタンを [Markdown ↕︎] に切り替えれば、Markdown 形式で説明が書けます。<code>$E = mc^2$</code> のように <code>$</code> で挟んで数式を書くこともできます。</p>
 
 <p>終了は File → Close and Halt です。右上の [Quit] で Web サーバが終了します。</p>
 
-<p>拡張子 ipynb のファイルを GitHub にプッシュすれば，ドキュメントとコードと実行結果が公開できます。この方法によるドキュメント作成は GitHub 上で数式を表示するための便利な方法でもあります（Markdown 形式では数式はうまく表示できません）。</p>
+<p>拡張子 ipynb のファイルを GitHub にプッシュすれば、ドキュメントとコードと実行結果が公開できます。この方法によるドキュメント作成は GitHub 上で数式を表示するための便利な方法でもあります（Markdown 形式では数式はうまく表示できません）。</p>
 
 <p>次のようにいろいろなオプションを指定できます：</p>
 
@@ -210,8 +210,8 @@ jupyter notebook stop
 <p>Jupyter Notebook の新しい顔です。<code>pip install jupyterlab</code> で入ります。ターミナルに</p>
 
 <pre>
-<code>jupyter lab
-</code></pre>
+jupyter lab
+</pre>
 
 <p>と打てば立ち上がります。使い方は Jupyter Notebook と同様です。</p>
 
@@ -219,38 +219,38 @@ jupyter notebook stop
 
 <p><a href="https://www.spyder-ide.org">Spyder</a> は Anaconda に付いている IDE（統合開発環境）です。R の RStudio に似ています。</p>
 
-<p>Anaconda を入れなくても <code>pip install spyder</code> でインストールすることができます（詳しくは<a href="https://docs.spyder-ide.org/installation.html">こちら</a>参照）。Homebrew 環境なら /usr/local/bin/spyder3 という実行ファイルができますので，ターミナルで spyder3 と打ち込めば立ち上がります。</p>
+<p>Anaconda を入れなくても <code>pip install spyder</code> でインストールすることができます（詳しくは<a href="https://docs.spyder-ide.org/installation.html">こちら</a>参照）。Homebrew 環境なら /usr/local/bin/spyder3 という実行ファイルができますので、ターミナルで spyder3 と打ち込めば立ち上がります。</p>
 
 <h2>VS Code</h2>
 
-<p><a href="https://code.visualstudio.com">Visual Studio Code</a>（VS Code）を使う場合，まず最初に Extension ボタン（正方形が3+1個）をクリックして「Japanese」と入れ，Japanese Language Pack for ... を Install し，「Restart Now」のボタンを押して VS Code を再起動すると，メニューが日本語になります。「基本設定」→「配色テーマ」で自分好みの配色を選びます。</p>
+<p><a href="https://code.visualstudio.com">Visual Studio Code</a>（VS Code）を使う場合、まず最初に Extension ボタン（正方形が3+1個）をクリックして「Japanese」と入れ、Japanese Language Pack for ... を Install し、「Restart Now」のボタンを押して VS Code を再起動すると、メニューが日本語になります。「基本設定」→「配色テーマ」で自分好みの配色を選びます。</p>
 
 <p>Extensions ボタンをクリックして「Python」というエクステンション（拡張機能）をインストールします（→ <a href="https://code.visualstudio.com/docs/python/python-tutorial">Getting Started with Python in VS Code</a>）。</p>
 
-<p>VS Codeのエクスプローラーで作業用のフォルダを開き，フォルダ名のすぐ右にある「新しいファイル」をクリックしてファイル名として例えば <code>test.py</code> を入力します。Python のプログラムを入力し，保存します。右上の ▷ をクリックすると実行されます。</p>
+<p>VS Codeのエクスプローラーで作業用のフォルダを開き、フォルダ名のすぐ右にある「新しいファイル」をクリックしてファイル名として例えば <code>test.py</code> を入力します。Python のプログラムを入力し、保存します。右上の ▷ をクリックすると実行されます。</p>
 
 <div class="note">
-<p>「Linter pylint is not installed」と言ってくるなら，念のためインストールしておきます。pylint（パイリント）は Python の文法チェックツールです。</p>
+<p>「Linter pylint is not installed」と言ってくるなら、念のためインストールしておきます。pylint（パイリント）は Python の文法チェックツールです。</p>
 </div>
 
-<p>拡張子 <code>ipynb</code> のファイルを開く（新規作成する）と，裏で Jupyter サーバが立ち上がり，Jupyter Notebook になります。<code>%matplotlib</code> と書かなくても matplotlib がインラインで使えます。</p>
+<p>拡張子 <code>ipynb</code> のファイルを開く（新規作成する）と、裏で Jupyter サーバが立ち上がり、Jupyter Notebook になります。<code>%matplotlib</code> と書かなくても matplotlib がインラインで使えます。</p>
 
 <div class="note">
-<p>上記以外のVS Codeの拡張機能では，Markdown Preview Enhanced，LaTeX Workshopがお薦めです。</p>
+<p>上記以外のVS Codeの拡張機能では、Markdown Preview Enhanced、LaTeX Workshopがお薦めです。</p>
 </div>
 
 <h2>Emacs 内で IPython を動かす</h2>
 
-<p>いろいろな方法があるようですが（<a href="https://www.emacswiki.org/emacs/PythonProgrammingInEmacs">Python Programming In Emacs</a> 参照），デフォルトの python.el で提供される Python モードでの方法を説明します。</p>
+<p>いろいろな方法があるようですが（<a href="https://www.emacswiki.org/emacs/PythonProgrammingInEmacs">Python Programming In Emacs</a> 参照）、デフォルトの python.el で提供される Python モードでの方法を説明します。</p>
 
 <p><code>~/.emacs.d/init.el</code> には例えば次のように書いておきます：</p>
 
 <pre>
-<code>(setq python-shell-interpreter "ipython"
+(setq python-shell-interpreter "ipython"
       python-shell-interpreter-args "--simple-prompt --matplotlib --no-automagic -i")
-</code></pre>
+</pre>
 
-<p>拡張子 <code>py</code> のファイルを開くと，自動的に Python モードになります。まずは C-c C-p (run-python) で IPython プロセスを起動します（拡張子 <code>py</code> のファイルを開かなくても直接 M-x run-python でも起動できます）。バッファ全体を実行するには C-c C-c (python-shell-send-buffer)，選択したリージョンを実行するには C-c C-r (python-shell-send-region) とします。詳しくは，M-x help の次に m と打つと，モードのヘルプが現れます。</p>
+<p>拡張子 <code>py</code> のファイルを開くと、自動的に Python モードになります。まずは C-c C-p (run-python) で IPython プロセスを起動します（拡張子 <code>py</code> のファイルを開かなくても直接 M-x run-python でも起動できます）。バッファ全体を実行するには C-c C-c (python-shell-send-buffer)、選択したリージョンを実行するには C-c C-r (python-shell-send-region) とします。詳しくは、M-x help の次に m と打つと、モードのヘルプが現れます。</p>
 
 <h2>Emacs で EIN（アイン）を動かす</h2>
 
@@ -262,7 +262,7 @@ jupyter notebook stop
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-07-09 16:26:25</time>
+Last modified: <time>2022-06-25 17:50:35 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
