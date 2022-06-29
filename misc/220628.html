@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/220628.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GnuPGを使おう</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>GnuPGを使おう</h1>
+
+<h2>GnuPGとは</h2>
+
+<p>平文（ひらぶん）を暗号文にすることを暗号化といいます。暗号文を平文に戻すことを復号といいます。</p>
+
+<p>暗号化の鍵と復号の鍵とが同じ暗号を、共通鍵暗号または対称鍵暗号といいます。両方の鍵が異なる暗号で、暗号化の鍵から復号の鍵を導けないものを、公開鍵暗号といいます。公開鍵暗号なら、暗号化の鍵を公開しても、復号の鍵を持っている人にしか復号できないので、安心です。</p>
+
+<p><a href="https://gnupg.org">GnuPG</a>（グヌー・ピー・ジー、GNU Privacy Guard）は、オープンソースの暗号化ツールです。共通鍵暗号にも公開鍵暗号にも対応しています。Windows、Mac、Linuxなどで使えます。</p>
+
+<p>その昔、<a href="https://ja.wikipedia.org/wiki/Pretty_Good_Privacy">PGP</a>（Pretty Good Privacy）という有名な暗号化ツールがありました。これに基づいて <a href="https://www.openpgp.org">OpenPGP</a> という標準が作られます。GnuPGはこれを実装したものです。GnuPGのコマンド名は <code>gpg</code> で、PGPをもじって作られた名前であることがわかります。</p>
+
+<h2>GnuPGのインストール</h2>
+
+<p><a href="https://gnupg.org">GnuPG</a> サイトの <a href="https://gnupg.org/download/">Download</a> の GnuPG binary releases という表から、自分のOSに合ったものをダウンロードするのが基本です。</p>
+
+<p>WindowsのWSLでUbuntuなどを使っている人は、その中のものを使うのが手っ取り早いでしょう。<code>gpg</code> と打ち込んでみて、GnuPGが起動したなら、Control-C で止めます。もし入っていないようなら、例えばUbuntuなら <code>apt install gnupg</code> と打ち込んでインストールします。</p>
+
+<p>生のWindowsでは、<a href="https://gpg4win.org">Gpg4win</a> が簡単そうです。Download ボタンをクリックすると、寄付するように求められますが、「$0」を選ぶと無料でダウンロードできます。ダウンロードしたインストーラを実行すると、GnuPG以外の関連ツールもインストールしようとしますので、ここではGnuPG以外のチェックを外してインストールします。デフォルトでは <code>C:\Program Files (x86)</code> 以下に <code>Gpg4win</code>、<code>GnuPG</code> というフォルダが作られ、<code>C:\Program Files (x86)\GnuPG\bin</code> にパスが追加され、<code>gpg</code> コマンドが実行できるようになります。</p>
+
+<p>Macなら <a href="https://brew.sh/index_ja">Homebrew</a> などのパッケージマネージャでインストールするのが楽でしょう。Homebrew なら <code>brew install gnupg</code> でできます。</p>
+
+<h2><code>gpg</code> コマンドを試してみる</h2>
+
+<p>試しに <code>gpg</code> と打ち込むと、英語環境なら</p>
+
+<pre>
+gpg: WARNING: no command supplied.  Trying to guess what you mean ...
+gpg: Go ahead and type your message ...
+</pre>
+
+<p>日本語環境なら</p>
+
+<pre>
+gpg: *警告*: コマンドが指定されていません。なにを意味しているのか当ててみます ...
+gpg: 開始します。メッセージを打ってください ...
+</pre>
+
+<p>のような機械翻訳っぽい日本語メッセージが表示されますので、Control-C で止めます。</p>
+
+<p>もし</p>
+
+<pre>
+gpg: WARNING: unsafe permissions on homedir '/home/okumura/.gnupg'
+</pre>
+
+<p>または</p>
+
+<pre>
+gpg: *警告*: homedir '/Users/okumura/.gnupg'の安全でない許可
+</pre>
+
+<p>のような警告が出たら、該当のディレクトリを他人に読めない設定にしてください（上の例なら <code>chmod 700 /Users/okumura/.gnupg</code>）。</p>
+
+<p>なお、機械翻訳っぽい日本語メッセージが嫌なら、<code>LANG=en_US.UTF-8 gpg</code> のようにコマンドの頭に言語指定を付けてください。</p>
+
+<h2>共通鍵暗号</h2>
+
+<p>まずは、簡単な共通鍵方式で試してみましょう。デフォルトでは AES256 という共通鍵暗号方式が使われます。</p>
+
+<p>カレントディレクトリに適当なファイル、例えば <code>hoge.txt</code> を作成します。</p>
+
+<pre>
+gpg -c hoge.txt
+</pre>
+
+<p>と打ち込みます。すると、「Enter passphrase」または「パスフレーズを入力」のように聞かれますので，パスフレーズを2回入力します。パスフレーズはパスワードと同じ意味ですが、パスワードというと一つの単語を思い浮かべてしまうかもしれないので、単語をいくつか並べたフレーズでもいいという意味合いを込めて、ここではパスフレーズと呼んでいます。お遊びで暗号化するなら例えば <code>hoge</code> のような簡単な文字列をパスフレーズにしてもいいのですが、本格的に暗号化するなら、<a href="../javascript/mkpasswd.html">ランダムな文字列</a>または単語をいくつか並べたフレーズを使い、忘れないように記録しておきましょう。</p>
+
+<p>パスフレーズ2回の打ち込みがうまくいけば、同じディレクトリに <code>hoge.txt.gpg</code> というファイルができます。これが暗号化されたファイルです。</p>
+
+<p>うまくいっているか確認するために、元のファイル <code>hoge.txt</code> を削除してから、<code>hoge.txt.gpg</code> を復号（暗号化したものを元に戻すこと）してみましょう。</p>
+
+<pre>
+gpg hoge.txt.gpg
+</pre>
+
+<p>さきほどのパスフレーズを打ち込むと、元のファイルが復元されます。</p>
+
+<p>なお、<code>hoge.txt.gpg</code> はバイナリファイルです。テキスト（ASCII）ファイルにしたい場合は、</p>
+
+<pre>
+gpg -ca hoge.txt
+</pre>
+
+<p>のようにします。できたファイル <code>hoge.txt.asc</code> はテキスト（ASCII）ファイルですので、メール本文にコピペすることもできますが、ファイルサイズはバイナリファイルより大きくなります。</p>
+
+<h2>公開鍵暗号</h2>
+
+<p>まずは、自分の鍵ペア（秘密鍵・共通鍵）を生成しましょう。次のように打ち込みます。</p>
+
+<pre>
+gpg --gen-key
+</pre>
+
+<p>すると，例えば次のようにいろいろ聞いてきます。<kbd>赤</kbd>で書いた部分が入力例です。</p>
+
+<pre>
+gpg (GnuPG) 2.3.6; Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+注意: 全機能の鍵生成には "gpg --full-generate-key" を使います。
+
+GnuPGはあなたの鍵を識別するためにユーザIDを構成する必要があります。
+
+本名: <kbd>Haruhiko Okumura</kbd>
+電子メール・アドレス: <kbd>okumura@okumuralab.org</kbd>
+次のユーザIDを選択しました:
+    "Haruhiko Okumura &lt;okumura@okumuralab.org&gt;"
+
+名前(N)、電子メール(E)の変更、またはOK(O)か終了(Q)? <kbd>O</kbd>
+たくさんのランダム・バイトの生成が必要です。キーボードを打つ、マウスを動か
+す、ディスクにアクセスするなどの他の操作を素数生成の間に行うことで、乱数生
+成器に十分なエントロピーを供給する機会を与えることができます。
+</pre>
+
+<p>ここでパスフレーズの入力を促されます。Windowsでは画面に gpg: AllowSetForegroundWindow(....) failed: のようなエラーメッセージが表示されるようですが、無視してください。</p>
+
+<pre>
+たくさんのランダム・バイトの生成が必要です。キーボードを打つ、マウスを動か
+す、ディスクにアクセスするなどの他の操作を素数生成の間に行うことで、乱数生
+成器に十分なエントロピーを供給する機会を与えることができます。
+gpg: C:\\Users\\okumu\\AppData\\Roaming\\gnupg\\trustdb.gpg: 信用データベースができました
+gpg: ディレクトリ'C:\\Users\\okumu\\AppData\\Roaming\\gnupg\\openpgp-revocs.d'が作成されました
+gpg: 失効証明書を 'C:\\Users\\okumu\\AppData\\Roaming\\gnupg\\openpgp-revocs.d\\D958C0F261D9A15EBAC7001D9F111BFA5D37D00A.rev' に保管しました。
+公開鍵と秘密鍵を作成し、署名しました。
+
+pub   ed25519 2022-06-29 [SC] [有効期限: 2024-06-28]
+      6B993E71B219138FD0901308BDFF7C7348C6D481
+uid                      Haruhiko Okumura &lt;okumura@okumuralab.org&gt;
+sub   cv25519 2022-06-29 [E] [有効期限: 2024-06-28]
+</pre>
+
+<p>このように、Windowsでは <code>C:\Users\自分の名前\AppData\Roaming\gnupg</code> の下に、それ以外では <code>~/.gnupg</code> の下に、信用データベース <code>trustdb.gpg</code>、鍵束 <code>pubring.gpg</code>、秘密鍵 <code>private-keys-v1.d/*</code>、失効証明書 <code>openpgp-revocs.d/*</code> が生成されます。</p>
+
+<p>できたキーの一覧を見てみましょう。</p>
+
+<pre>
+gpg --list-keys
+</pre>
+
+<p>次のように画面に出ます。</p>
+
+<pre>
+gpg: 信用データベースの検査
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: 深さ: 0  有効性:   2  署名:   0  信用: 0-, 0q, 0n, 0m, 0f, 2u
+gpg: 次回の信用データベース検査は、2024-06-27です
+C:\Users\okumu\AppData\Roaming\gnupg\pubring.kbx
+------------------------------------------------
+pub   ed25519 2022-06-29 [SC] [有効期限: 2024-06-28]
+      6B993E71B219138FD0901308BDFF7C7348C6D481
+uid           [  究極  ] Haruhiko Okumura &lt;okumura@okumuralab.org&gt;
+sub   cv25519 2022-06-29 [E] [有効期限: 2024-06-28]
+</pre>
+
+<p>このように、今は EdDSA (ed25519) / ECDH (cv25519) という方式の鍵が使われるようです。</p>
+
+<p>ここまでのステップでしくじったなら、MacやLinuxでは <code>~/.gnupg</code> 以下、Windowsでは <code>C:\Users\自分の名前\AppData\Roaming\gnupg</code> 以下を消せばやりなおせます。</p>
+
+<p>自分の公開鍵を表示してみましょう。</p>
+
+<pre>
+gpg -a --export
+</pre>
+
+<p>複数のキーを登録しているなら、次のように、名前の一部、または公開鍵の「電子指紋」（fingerprint）と呼ばれる文字列（上の例では <code>DB3F...</code>）を与えます。</p>
+
+<pre>
+gpg -a --export okumura
+</pre>
+
+<p>すると，たとえば次のように画面（標準出力）に出ます。</p>
+
+<pre>
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mDMEYrum+xYJKwYBBAHaRw8BAQdAOOosMJxpPRArdsgj0i4k+cEjpB+1aBvRdiGH
+U+YKCOW0KUhhcnVoaWtvIE9rdW11cmEgPG9rdW11cmFAb2t1bXVyYWxhYi5vcmc+
+iJkEExYKAEEWIQRrmT5xshkTj9CQEwi9/3xzSMbUgQUCYrum+wIbAwUJA8JnAAUL
+CQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRC9/3xzSMbUgX4mAQCFLJhANxpB
+xqJLgT2030MxDXNkrfBYKO89E7d9QNTYyAD8DwFaNKR/PJPMFniqutmqI3fXmqgG
+cmd2x+Fyrukc7gq4OARiu6b7EgorBgEEAZdVAQUBAQdAJJdg7dOiA62DrLdJDIkE
+3avENkBnGiTEwWXt3W+shjcDAQgHiH4EGBYKACYWIQRrmT5xshkTj9CQEwi9/3xz
+SMbUgQUCYrum+wIbDAUJA8JnAAAKCRC9/3xzSMbUgX26AP0W90RO3gaaZXu4tCE7
+j+pAXaMbIiNsnT66Z5WIXfaxVwD/dCfNFESpjjyI9/nMEB0SrSIk9sNjdHnwLdMS
+SbYQJgU=
+=/YnU
+-----END PGP PUBLIC KEY BLOCK-----
+</pre>
+
+<p>この公開鍵は自分のサイトで公開しておくと便利です。例えば私の公開鍵は<a href="https://okumuralab.org/~okumura/">私のサイト</a>で公開しています。さらに、<a href="https://pgp.mit.edu">MIT PGP Public Key Server</a> などの公開鍵サーバにも登録しておくとよいかもしれません。</p>
+
+<p>公開鍵を特定するために、公開鍵の電子指紋（fingerprint）がよく使われます。例えば上の公開鍵の電子指紋は</p>
+
+<pre>
+6B99 3E71 B219 138F D090 1308 BDFF 7C73 48C6 D481
+</pre>
+
+<p>です。これは公開鍵を16進40桁、つまり160ビットに要約したものです。メールの署名に入れたり、名刺に印刷したりすることもあります。公開鍵を使ってメッセージを送るときは、その公開鍵が正しいことを、本人から直接もらった電子指紋で確認することができます。</p>
+
+<h2>公開鍵でメッセージをやりとりする</h2>
+
+<p>まず、メッセージを送りたい友人（たとえば奥村氏）の公開鍵をもらってきて、自分の「鍵束」（keyring）に登録します。</p>
+
+<p>奥村氏の公開鍵（上のようなテキスト形式のもの）が <code>okumura.asc</code> というファイルに入っているとしましょう。</p>
+
+<pre>
+gpg --import okumura.asc
+</pre>
+
+<p>これで奥村氏の公開鍵が自分の鍵束に登録できました。<code>gpg --list-keys</code> で確認してください。</p>
+
+<p>ファイル <code>himitsu.txt</code> を奥村氏だけに読めるように暗号化してみましょう。</p>
+
+<pre>
+gpg -ea himitsu.txt
+</pre>
+
+<p>すると、次のように聞いてきます。</p>
+
+<pre>
+ユーザIDを指定していません ("-r"を使いましょう) 。
+
+今の受取人:
+
+ユーザIDを入力。空行で終了: <kbd>okumura@okumuralab.org</kbd>
+gpg: 5447F9C086ECA10E: この鍵が本当に本人のものである、という兆候が、ありません
+
+sub  cv25519/5447F9C086ECA10E 2022-06-29 Haruhiko Okumura <okumura@okumuralab.org>
+  主鍵フィンガープリント: 6B99 3E71 B219 138F D090  1308 BDFF 7C73 48C6 D481
+  副鍵フィンガープリント: 63F4 C38F 39C1 A9FB 8077  D923 5447 F9C0 86EC A10E
+
+この鍵は、このユーザIDをなのる本人のものかどうか確信でき
+ません。今から行うことを＊本当に＊理解していない場合には、
+次の質問にはnoと答えてください。
+
+それでもこの鍵を使いますか? (y/N) <kbd>y</kbd>
+
+今の受取人:
+cv25519/5447F9C086ECA10E 2022-06-29 "Haruhiko Okumura <okumura@okumuralab.org>"
+
+ユーザIDを入力。空行で終了:
+</pre>
+
+<p>ここで Enter だけ入力すれば終了し、<code>himitsu.txt.asc</code> というファイルができますので，それを送ります。</p>
+
+<p>奥村氏は、受け取ったファイルを復号するには，単に次のように打ち込みます。</p>
+
+<pre>
+gpg himitsu.txt.asc
+</pre>
+
+<p>自分の秘密鍵のパスフレーズを入力すると、復号して、標準出力（画面）に出力されます。</p>
+
+<p>次のように <code>-o</code> オプションで出力ファイル名を指定することもできます。</p>
+
+<pre>
+gpg -o himitsu.txt himitsu.txt.asc
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-06-29 22:34:10 JST</time></p>
+</footer>
+</body>
+</html>

@@ -22,6 +22,7 @@ pre {
   overflow: auto;
 }
 code, tt { font-family: Menlo, "Courier New", Consolas, monospace; color: maroon }
+kbd { font-family: Menlo, "Courier New", Consolas, monospace; color: #F30 }
 em { font-style: normal; color: #F30 }
 a:hover, a:focus, a:active { color: red }
 a[name]:hover, a[name]:focus, a[name]:active { color: black }
