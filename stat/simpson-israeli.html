@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/simpson-israeli.html">
+<meta charset="UTF-8">
+<title>イスラエルのCOVID-19データとSimpsonのパラドックス</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<style>
+th { text-align: center; }
+td { text-align: right; }
+td, th { padding: 0.2em 0.7em }
+table { border: 3px solid; }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>イスラエルのCOVID-19データとSimpsonのパラドックス</h1>
+
+<p>以下は Jeffrey Morris 氏による <time>2021-08-18</time> の <a href="https://www.covid-datascience.com/post/israeli-data-how-can-efficacy-vs-severe-disease-be-strong-when-60-of-hospitalized-are-vaccinated">Israeli data: How can efficacy vs. severe disease be strong when 60% of hospitalized are vaccinated?</a> という記事の要約である。</p>
+
+<p><a href="https://datadashboard.health.gov.il/COVID-19/general">イスラエルのCOVID-19ダッシュボード</a>のある時点のデータ：</p>
+
+<table>
+  <tbody>
+    <tr><th>年齢</th><th>未接種人数 a</th><th>接種人数 b</th><th>未接種重症 c</th><th>接種重症 d</th><th>有効性 1-(d/b)/(c/a)</th></tr>
+    <tr><td>全年齢</td><td>1302912</td><td>5634634</td><td>214</td><td>301</td><td>67.5%</td></tr>
+  </tbody>
+</table>
+
+<p>これを年齢層で分けてみる：</p>
+
+<table>
+  <tbody>
+    <tr><th>年齢</th><th>未接種人数 a</th><th>接種人数 b</th><th>未接種重症 c</th><th>接種重症 d</th><th>有効性 1-(d/b)/(c/a)</th></tr>
+    <tr><td>50以上</td><td>1116834</td><td>3501118</td><td>43</td><td>11</td><td>91.8%</td></tr>
+    <tr><td>50未満</td><td>186078</td><td>2133516</td><td>171</td><td>290</td><td>85.2%</td></tr>
+  </tbody>
+</table>
+
+<p>どちらの年齢層でもワクチン有効性が高くなった。原文にはさらに細かく分けた計算結果も載っている。</p>
+
+<p>これは、分割することにより傾向が著しくなる一種のSimpsonのパラドックスといえる。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-07-03 20:19:06 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
