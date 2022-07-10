@@ -65,7 +65,7 @@ x, y = np.meshgrid(np.linspace(-1, 2.2, 640), np.linspace(-1.2, 1.2, 480))
 z = vmandel(x + y * 1j)
 
 plt.pcolormesh(x, y, z, cmap='RdGy', vmin=0, vmax=M)
-plt.axis('equal')
+plt.axis('scaled')
 plt.show()
 </pre>
 
@@ -133,7 +133,7 @@ mandel(0.52 + 0.52j)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-10 09:46:58 JST</time>
+Last modified: <time>2022-07-10 11:34:16 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
