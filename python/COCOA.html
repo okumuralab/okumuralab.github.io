@@ -45,6 +45,8 @@ for x in exposure["exposure_windows"]:
 2022-03-31 2  91 91 60
 2022-04-01 2  93 93 60
 2022-04-14 2  93 88 60
+2022-07-04 2  91 87 60
+2022-07-04 2  91 91 60
 </pre>
 
 <p>表示される日付の9:00から丸一日の間に接触があったことがわかります。日付以外の項目の意味は <a href="https://developers.google.com/android/exposure-notifications/exposure-notifications-api">Google のドキュメント</a> に説明されています（いまいちよくわからない説明ですが）。</p>
@@ -53,7 +55,7 @@ for x in exposure["exposure_windows"]:
 
 <figure><img src="img/matchcount.png" alt="一致したキーの数"></figure>
 
-<p>上のグラフの変化のあったところだけを書き出すと次のようになります：</p>
+<p>このあとずっと 0 でしたが、2022-07-08 に 1 に転じました。変化のあったところだけを書き出すと次のようになります：</p>
 
 <pre>
 2022-03-30 15:38,1
@@ -63,9 +65,10 @@ for x in exposure["exposure_windows"]:
 2022-04-17 00:28,0
 2022-04-18 16:08,1
 2022-05-14 15:54,0
+2022-07-08 14:37,1
 </pre>
 
-<p>どうやらこの「一致したキーの数」は積算値で、何かのタイミングでリセットされるようですが、詳細はわかりません。変化した日と上記 exposure_data.json との対応もよくわかりません。</p>
+<p>どうやらこの「一致したキーの数」は積算値で、何かのタイミングでリセットされるようですが、詳細はわかりません。おそらく「一致したキーの数」が変化したタイミングで exposure_data.json も書き変わるのだと思います。</p>
 
 <hr>
 
@@ -186,7 +189,7 @@ for arg in sys.argv[1:]:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-06-18 16:38:30 JST</time>
+Last modified: <time>2022-07-08 16:21:06 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
