@@ -264,11 +264,66 @@ gpg himitsu.txt.asc
 gpg -o himitsu.txt himitsu.txt.asc
 </pre>
 
+<h2>メールの署名を検証する</h2>
+
+<p>メールが本物か、改ざんされていないかを検証するために、PGP署名が付いていることがあります。例えば Apple の Apple Product Security メールには<a href="https://support.apple.com/en-us/HT201214">この公開鍵</a>で検証できる署名が付いていますし、JPCERT からのメールは<a href="https://www.jpcert.or.jp/jpcert-pgp.html">この公開鍵</a>で検証できる署名が付いています。</p>
+
+<p>こういったメールを検証するには、あらかじめ公開鍵を <code>gpg --import ファイル名</code> でインポートしておき、メッセージを Apple のメールなら（base64を展開した）UTF-8、JPCERT のメールなら ISO-2022-JP で保存し、<code>gpg --verify ファイル名</code> で検証します。改行コードは CR LF を仮定しますが、テキストモードで署名された場合は LF でもかまわないようです。内容が正しければ</p>
+
+<pre>
+gpg: 火  5/17 08:00:14 2022 JSTに施された署名
+gpg:                RSA鍵78F88B5B532B323C35F57CE8782F6A283D69AE18を使用
+gpg: "Apple Product Security &lt;product-security@apple.com&gt;"からの正しい署名 [不明の]
+gpg: *警告*: この鍵は信用できる署名で証明されていません!
+gpg:       この署名が所有者のものかどうかの検証手段がありません。
+ 主鍵フィンガープリント: 78F8 8B5B 532B 323C 35F5  7CE8 782F 6A28 3D69 AE18
+</pre>
+
+<p>改ざんがされていれば</p>
+
+<pre>
+gpg: 火  5/17 08:00:14 2022 JSTに施された署名
+gpg:                RSA鍵78F88B5B532B323C35F57CE8782F6A283D69AE18を使用
+gpg: "Apple Product Security <product-security@apple.com>"からの*不正な*署名 [不明の]
+</pre>
+
+<p>のようなメッセージが出力されます。「この鍵は信用できる署名で証明されていません」という警告が出ますが、この場合はしかたがありません（ネットから得た公開鍵を信頼できるものとして自分で署名すれば警告が出なくなりますが、特に必要はないでしょう）。</p>
+
+<h2>メールに署名する</h2>
+
+<p>あらかじめメールの内容をテキストファイルとして作成します。例：</p>
+
+<pre>
+This is a test.
+
+これはテストです。
+</pre>
+
+<p>文字コードはあらかじめ同意しておく必要があります（伝統的に日本語はISO-2022-JPにしていましたが、今後はUTF-8に統一されるでしょう）。行末は何でもかまいません。<code>gpg --clearsign ファイル名</code> と打ち込みます。拡張子 <code>.asc</code> の付いたファイルが生成されます。例：</p>
+
+<pre>
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+This is a test.
+
+これはテストです。
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQRrmT5xshkTj9CQEwi9/3xzSMbUgQUCYskSVgAKCRC9/3xzSMbU
+gWzeAP9uB4TG3bAzsgWziZM26I3UIeDERe8W1yHVRI8qxVLm/wD+KrfxGLaapzuf
+QtK1YoMmR8B5KIF3D5jaiiFX63QRLwU=
+=mWlV
+-----END PGP SIGNATURE-----
+</pre>
+
+<p>これをメール本文にして送ります。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-07-01 11:21:58 JST</time></p>
+<p>Last modified: <time>2022-07-09 14:49:31 JST</time></p>
 </footer>
 </body>
 </html>
