@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/mpmath.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mpmath</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>mpmath</h1>
+
+<h2>はじめに</h2>
+
+<p><a href="https://pypi.org/project/mpmath/">mpmath</a>（<a href="https://mpmath.org">mpmath.org</a>）は Python の任意精度浮動小数点演算パッケージです。</p>
+
+<p><code>pip install mpmath</code> でインストールできます。</p>
+
+<p>デフォルトでは Python の整数演算を使います：</p>
+
+<pre class="cell">
+import mpmath.libmp
+mpmath.libmp.BACKEND
+</pre>
+
+<pre>
+'python'
+</pre>
+
+<p>可能なら、多倍長演算パッケージ <a href="https://pypi.org/project/gmpy2/">gmpy2</a>（<a href="https://gmpy2.readthedocs.io/en/latest/">ドキュメント</a>）をインストールすると、高速な計算ができます：</p>
+
+<pre>
+pip install gmpy2
+</pre>
+
+<p>mpmath のバックエンドが変わったか確かめます：</p>
+
+<pre class="cell">
+import mpmath.libmp
+mpmath.libmp.BACKEND
+</pre>
+
+<pre>
+'gmpy'
+</pre>
+
+<p>計算の準備と精度の確認：</p>
+
+<pre class="cell">
+from mpmath import mp
+
+print(mp)
+</pre>
+
+<pre>
+Mpmath settings:
+  mp.prec = 53                [default: 53]
+  mp.dps = 15                 [default: 15]
+  mp.trap_complex = False     [default: False]
+</pre>
+
+<p><code>mp.prec</code> は2進精度、<code>mp.dps</code> は10進精度（decimal places）です。10進50桁精度に変えてみましょう：</p>
+
+<pre class="cell">
+mp.dps = 50
+  
+print(mp)
+</pre>
+
+<pre>
+Mpmath settings:
+  mp.prec = 169               [default: 53]
+  mp.dps = 50                 [default: 15]
+  mp.trap_complex = False     [default: False]
+</pre>
+
+<p>簡単な例として $\int_{-\infty}^{\infty} \exp(-x^2) dx = \sqrt{\pi}$ を使って円周率を求めてみましょう：</p>
+
+<pre class="cell">
+mp.pretty = True
+
+mp.quad(lambda x: mp.exp(-x**2), [-mp.inf, mp.inf]) ** 2
+</pre>
+
+<pre>
+3.1415926535897932384626433832795028841971693993751
+</pre>
+
+<p>デフォルト <code>mp.pretty = False</code> では <code>print()</code> を付けないときれいな数値表現になりません。<code>mp.pretty = True</code> にしておくほうが便利です。</p>
+
+<h2>Riemann のゼータ関数</h2>
+
+<p>mpmath を調べ始めた動機は、NHK特集<a href="https://www.nhk.jp/p/pcafe/ts/LR4X1K4WV7/episode/te/4QZ2KW7MQ5/">リーマン予想</a>を見て、リーマンのゼータ関数のゼロ点を Python で簡単にプロットできないかと思ったからでした。
+
+<p>Python では SciPy にも<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.zeta.html">ゼータ関数</a>はありますが、実数だけです。mpmath には<a href="https://mpmath.org/doc/current/functions/zeta.html">複素数のゼータ関数</a>が含まれています。</p>
+
+<p>うまくゼロ点を見せる方法があればいいのですけれど、とりあえず：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+from mpmath import zeta
+
+def logzeta(z):
+    return np.log10(float(abs(zeta(z))))
+
+vlogzeta = np.vectorize(logzeta)
+
+x, y = np.meshgrid(np.linspace(-30, 30, 600), np.linspace(-30, 30, 600))
+z = vlogzeta(x + y * 1j)
+
+plt.figure(figsize=(6, 6))
+plt.pcolormesh(x, y, z, cmap='gray', vmin=-3, vmax=3)
+plt.axis('scaled')
+</pre>
+
+<figure><img src="img/zeta.png" alt="Riemann zeta"></figure>
+
+<p>横に並んでいるのが自明なゼロ点、縦に並んでいるのが非自明なゼロ点です。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-07-10 16:10:58 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
