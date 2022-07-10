@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/mandelbrot.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mandelbrot集合</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Mandelbrot集合</h1>
+
+<p>Python では複素数の演算が簡単にできます。例えば複素数 $3 + 4i$ は Python では <code>3 + 4j</code> と書きます。虚数単位を $i$ ではなく $j$ とするのは工学系の慣習です。</p>
+
+<pre class="cell">
+z = 3 + 4j
+abs(z)
+</pre>
+
+<pre>
+5.0
+</pre>
+
+<p>さて、複素数 $c$ が与えられたとき、$z_0 = 0$ から初めて $z_{k+1} = z_k^2 - c$ という漸化式を適用してできる数列で $\{|z_k|\}$ が有界のときの $c$ の集合を Mandelbrot（マンデルブロー、マンデルブロート）集合といいます（$c$ の前の符号は $+$ でも $-$ でもかまいません）。この集合はフラクタルの例として知られています。</p>
+
+<p>これを Python で描いてみましょう。結果をうまく表すため、$M$ を十分大きい整数として、$z_k \geq 2$ になる最小の $k \leq M$ によって $c$ の領域を色分けすることにします。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+
+M = 100
+
+def mandel(c):
+    k = 0
+    z = 0
+    while k &lt; M and abs(z) &lt; 2:
+        z = z ** 2 - c
+        k += 1
+    return k
+
+vmandel = np.vectorize(mandel)
+
+x, y = np.meshgrid(np.linspace(-1, 2.2, 640), np.linspace(-1.2, 1.2, 480))
+z = vmandel(x + y * 1j)
+
+plt.pcolormesh(x, y, z, cmap='RdGy', vmin=0, vmax=M)
+plt.axis('equal')
+plt.show()
+</pre>
+
+<figure><img src="img/mandel.png" alt="Mandelbrot set"></figure>
+
+<p>この黒い部分が本来の Mandelbrot 集合です。</p>
+
+<p><code>cmap='RdGy'</code> の部分を <a href="https://matplotlib.org/stable/tutorials/colors/colormaps.html">Choosing Colormaps in Matplotlib</a> を参照にして変えれば（あるいは <a href="https://matplotlib.org/stable/tutorials/colors/colormap-manipulation.html">Creating Colormaps in Matplotlib</a> を参考にして新しいカラーマップを定義すれば）、色が変わります。</p>
+
+<p>これで十分高速に実行できると思いますが、さらに高速にするために、<a href="numba.html">Numba</a> を使ってみましょう。変更部分は</p>
+
+<pre>
+from numba import jit
+
+@jit(nopython=True)
+def mandel(c):
+    (以下同じ)
+</pre>
+
+<p>だけです。数倍速くなると思います。</p>
+
+<div class="note">
+<p>たまたま Numba の対応する NumPy のバージョンより新しい NumPy をインストールしてしまったので <code>from numba import jit</code> でエラーになりました。この場合は <code>pip install --upgrade numba</code> を再実行すれば、NumPy のバージョンを落としてくれました。</p>
+</div>
+
+<hr>
+
+<p>「有界」というところをもうちょっと説明しておきます。</p>
+
+<p>例えば $c = 0.5 + 0.5i$ のとき、数列 $\{z_i\}$ を複素平面でプロットしてみると、次のようになります。</p>
+
+<pre>
+import matplotlib.pyplot as plt
+
+def mandel(c):
+    z = 0
+    x = [0]
+    y = [0]
+    for i in range(100):
+        z = z ** 2 - c
+        if abs(z) > 100:
+            break
+        x.append(z.real)
+        y.append(z.imag)
+    plt.clf()
+    plt.plot(x, y, "o-")
+    plt.axis('equal')
+
+mandel(0.5 + 0.5j)
+</pre>
+
+<figure><img src="img/mandel1.svg" alt="Mandelbrot sequence, an example"></figure>
+
+<p>ある点に収束していくようで、$\{|z_k|\}$ は有界です。ところが</p>
+
+<pre>
+mandel(0.52 + 0.52j)
+</pre>
+
+<p>では急速に発散します。この境目が Mandelbrot 集合の境界です。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-07-10 09:46:58 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
