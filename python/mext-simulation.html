@@ -37,7 +37,7 @@ print(ransuu)
 <pre><code>rng = np.random.default_rng(12345)
 </code></pre>
 
-<p>授業の課題では各自の学籍番号・出席番号をタネとして使わせてもよかろう。</p>
+<p>授業の課題では各自の学籍番号・出席番号をタネとして使わせてもよかろう。一方，パスワード生成などには<a href="secrets.html">安全な乱数</a>を使うべきである。</p>
 
 <p>次はさいころを100回振るプログラムである：</p>
 
@@ -58,7 +58,7 @@ print("出現数:", deme)
 
 <p><code>np.count_nonzero()</code> は，<code>np.sum()</code> や，単なる <code>sum()</code> でもよいが，この場合は <code>np.count_nonzero()</code> が最も速く，次に <code>np.sum()</code> が速い。</p>
 
-<p>最後の4行は次のようにできる：</p>
+<p><code>deme = []</code> から始まる3行は次のようにもできる：</p>
 
 <pre><code>deme = [np.count_nonzero(saikoro == i + 1) for i in range(6)]
 </code></pre>
@@ -84,7 +84,7 @@ plt.bar(x, deme)
 <pre><code>plt.bar(range(1, 7), deme)
 </code></pre>
 
-<p><a href="https://note.com/evjunior/n/ndce84b6d5eea">E.V.ジュニアさんのnote</a>では次の賢い方法が使われている：</p>
+<p><a href="https://note.com/evjunior/n/ndce84b6d5eea">E.V.ジュニアさん（現在のペンネームはクリヤキンさん）のnote</a>では次の賢い方法が使われている：</p>
 
 <pre><code>plt.hist(saikoro, bins=np.arange(0.5, 7.5), rwidth=0.8)
 </code></pre>
@@ -170,7 +170,7 @@ plt.scatter(x[np.logical_not(c)], y[np.logical_not(c)], color="blue")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-06 13:38:47</time>
+Last modified: <time>2022-07-11 11:35:46 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

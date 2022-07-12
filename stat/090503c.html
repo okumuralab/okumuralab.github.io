@@ -95,11 +95,31 @@ legend("topleft", legend=c("北半球","南半球"), pch=c(16,15), col=c("#66ccf
 
 <hr>
 
+<p>2022年になったので2021年までのデータで描き直し、1〜3次の曲線でフィットしてみる。</p>
+
+<pre>
+df = read.csv("http://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv",
+              fileEncoding="CP932")
+with(df, plot(年, 世界全体, type="o", pch=16))
+r1 = lm(世界全体 ~ 年, data=df)
+abline(r1, col="gray", lwd=2)
+r2 = lm(世界全体 ~ 年 + I(年^2), data=df)
+curve(r2$coefficients[1] + r2$coefficients[2] * x + r2$coefficients[3] * x^2,
+      col="#66ccff", lwd=2, add=TRUE)
+r3 = lm(世界全体 ~ 年 + I(年^2) + I(年^3), data=df)
+curve(r3$coefficients[1] + r3$coefficients[2] * x + r3$coefficients[3] * x^2 +
+      r3$coefficients[4] * x^3, col="#ff9900", lwd=2, add=TRUE)
+</pre>
+
+<figure><img src="img/220711a.png" alt="地球の平均気温の変化"></figure>
+
+<hr>
+
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-21 22:19:48</time>
+Last modified: <time>2022-07-11 10:09:16 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
