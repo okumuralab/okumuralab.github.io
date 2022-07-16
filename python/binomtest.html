@@ -61,7 +61,11 @@ math.factorial(10) // (math.factorial(3) * math.factorial(7))
 <p>ここで <code>//</code> は整数の除算を意味します。ただ、この除算は割り切れますので、<code>/</code> だけでも同じです（後者では出力が <code>120.0</code> となります）。</p>
 
 <div class="note">
-<p>Python 3.8 以降では <code>math.comb(10, 3)</code> でも求められます。こちらのほうが高速です。ただ、Coogle Colaboratory がまだ Python 3.7 のようです。</p>
+<p>Python 3.8 以降では <code>math.comb(10, 3)</code> でも求められます。こちらのほうが高速です。ただ、Coogle Colaboratory がまだ Python 3.7 のようです。3.7 以前では次のようにして定義すると便利です。</p>
+<pre>
+def comb(n, r):
+    return math.factorial(n) // (math.factorial(r) * math.factorial(n - r))
+</pre>
 </div>
 
 <p>投げると確率 0.4 で表が出る硬貨を10回投げて表が3回出る確率 $_{10}C_3 \cdot 0.4^3 \cdot 0.6^7$ は</p>
@@ -88,7 +92,7 @@ binom.pmf(3, 10, 0.4)
 0.21499084799999982
 </pre>
 
-<p><code>binom.pmf()</code> は binomial probability mass function の意味です。</p>
+<p><code>binom.pmf()</code> は <span lang="en">binomial probability mass function</span> の意味です。</p>
 
 <p>投げると確率 0.5 で表が出る硬貨を10回投げて表が0〜10回出る確率を全部出力するには次のようにします。</p>
 
@@ -122,7 +126,7 @@ sum(binom.pmf(range(11), 10, 0.5))
 1.0000000000000004
 </pre>
 
-<p>ちなみに、<code>binom.pmf()</code> の累積を求める <code>binom.cdf()</code> という関数もあります。<code>cdf</code> は cumulative distribution function の意味です。</p>
+<p>ちなみに、<code>binom.pmf()</code> の累積を求める <code>binom.cdf()</code> という関数もあります。<code>cdf</code> は <span lang="en">cumulative distribution function</span> の意味です。</p>
 
 <pre class="cell">
 binom.cdf(range(11), 10, 0.5)
@@ -181,7 +185,7 @@ binom.cdf(2, 10, 0.5) * 2
 0.109375
 </pre>
 
-<p>でも求められます。また、後で詳しく述べますが、次のようにすれば、このような計算（2項検定）が簡単にできます。</p>
+<p>でも求められます。また、次のようにすれば、このような計算（2項検定）が簡単にできます。</p>
 
 <pre class="cell">
 from scipy.stats import binomtest
@@ -194,7 +198,7 @@ binomtest(2, 10, 0.5).pvalue
 </pre>
 
 <div class="note">
-<p>PythonではSciPyに，<i>p</i>値を返すだけの古い <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom_test.html">scipy.stats.binom_test</a> と，2021-06-20の <a href="https://scipy.github.io/devdocs/release.1.7.0.html">SciPy 1.7.0</a> で新しく追加された <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html">scipy.stats.binomtest</a> とがあります。計算量は，前者は O(n)，後者は2分探索を使うので O(log n) だそうです。古い方は次のように使います。</p>
+<p>Python では SciPy に，$p$ 値を返すだけの古い <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom_test.html">scipy.stats.binom_test</a> と，2021-06-20 の <a href="https://scipy.github.io/devdocs/release.1.7.0.html">SciPy 1.7.0</a> で新しく追加された <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html">scipy.stats.binomtest</a> とがあります。計算量は，前者は $O(n)$，後者は2分探索を使うので $O(\log n)$ だそうです。古い方は次のように使います。</p>
 <pre>  
 from scipy.stats import binom_test
 binom_test(2, 10, 0.5)
@@ -220,7 +224,7 @@ binom_test(2, 10, 0.5)
 <p>なお、高校「数学B」では、2項分布 $B(n, \theta)$ の平均が $n\theta$、分散が $n\theta(1-\theta)$ であることから、同じ平均と分散を持つ正規分布で近似して扱うことが多いと思います（中心極限定理から $n \to \infty$ で正規分布になります）。</p>
 </div>
 
-<p>10回投げて2回表が出たとき、表が出る確率の95%信頼区間は次のようにして求めます。これは正規分布近似ではなく Clopper-Pearson の正確な方法を使っています。</p>
+<p>10回投げて2回表が出たとき、表が出る確率の95%信頼区間は次のようにして求めます。これは正規分布近似ではなく <span lang="en">Clopper-Pearson</span> の正確な方法を使っています。</p>
 
 <pre class="cell">
 binomtest(2, 10).proportion_ci()
@@ -268,7 +272,7 @@ proportion_confint(2, 10, method="beta")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-15 21:45:40 JST</time>
+Last modified: <time>2022-07-16 11:10:07 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
