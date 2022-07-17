@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/rpy2.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pythonからrpy2でRを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Pythonからrpy2でRを使う</h1>
+
+<p>Python から R を使うには、古くは <a href="pyper.html">PypeR</a>（パイパー）というライブラリがありましたが、開発が止まっているようです。ここでは <a href="https://pypi.org/project/rpy2/">rpy2</a> を使う方法を説明します。rpy2 は <code>pip install rpy2</code> でインストールできます。</p>
+
+<pre class="cell">
+from rpy2 import robjects  # Rを起動
+
+print(robjects.r("x = 123"))
+</pre>
+
+<pre>
+[1] 123
+</pre>
+
+<pre class="cell">
+print(robjects.r("x * 2"))
+</pre>
+
+<pre>
+[1] 246
+</pre>
+
+<pre class="cell">
+res = robjects.r("binom.test(2, 10)")
+print(res)
+</pre>
+
+<pre>
+
+	Exact binomial test
+
+data:  2 and 10
+number of successes = 2, number of trials = 10, p-value = 0.1094
+alternative hypothesis: true probability of success is not equal to 0.5
+95 percent confidence interval:
+ 0.02521073 0.55609546
+sample estimates:
+probability of success 
+                   0.2 
+</pre>
+
+<p>個々の正確な値は <code>res</code> の要素として取り出せます：</p>
+
+<pre class="cell">
+res[2][0]
+</pre>
+
+<pre>
+0.10937499999999994
+</pre>
+
+<pre class="cell">
+res[3][0], res[3][1]
+</pre>
+
+<pre>
+(0.025210726326833365, 0.5560954623076414)
+</pre>
+
+<p>関数オブジェクトを Python のオブジェクトに代入することもできます：</p>
+
+<pre class="cell">
+rbinomtest = robjects.r["binom.test"]
+print(rbinomtest(2, 10))
+</pre>
+
+<pre>
+
+	Exact binomial test
+
+data:  2L and 10L
+number of successes = 2, number of trials = 10, p-value = 0.1094
+alternative hypothesis: true probability of success is not equal to 0.5
+95 percent confidence interval:
+ 0.02521073 0.55609546
+sample estimates:
+probability of success 
+                   0.2 
+</pre>
+
+<p>行列を R に送る例です：</p>
+
+<pre class="cell">
+v = robjects.FloatVector([3, 1, 2, 4])
+m = robjects.r["matrix"](v, nrow=2)
+robjects.globalenv["m"] = m
+res = robjects.r("fisher.test(m)")
+# 前2行は res = robjects.r["fisher.test"](m) でもよい
+print(res)
+</pre>
+
+<pre>
+
+	Fisher's Exact Test for Count Data
+
+data:  m
+p-value = 0.5238
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+   0.218046 390.562917
+sample estimates:
+odds ratio 
+  4.918388 
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-07-17 15:19:33 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
