@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/hash.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ハッシュ関数</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ハッシュ関数</h1>
+
+<p>☞ <a href="../cs/hash.html">ハッシュ関数</a></p>
+
+<p>データを切り刻んで混ぜ、一定の長さ（例えば256ビット）のデータに変換する関数を、ハッシュ関数といいます。ハッシュ関数の値をハッシュ値または単にハッシュといいます。256ビットに変換するハッシュ関数ではSHA-256（シャー256）がよく使われます。</p>
+
+<p>例えば "The quick brown fox jumps over the lazy dog." という44バイトの文字列のSHA-256を求めてみましょう：</p>
+
+<pre class="cell">
+import hashlib
+
+hashlib.sha256("The quick brown fox jumps over the lazy dog.".encode()).hexdigest()
+</pre>
+
+<pre>
+'ef537f25c895bfa782526529a9b63d97aa631564d5d789c2b765448c8635fb6c'
+</pre>
+
+<p>長さ64の文字列が出力されましたが、これは16進法で表した256ビットの数です。</p>
+
+<p>ここで、データ "The quick brown fox ..." をほんの少し改ざんしてみましょう。どこが変わったかわかるでしょうか。</p>
+
+<pre class="cell">
+hashlib.sha256("The quick brown fox jumps over the lazy dоg.".encode()).hexdigest()
+</pre>
+
+<pre>
+'dcdfe505588cb616e6cbf8a3aeea22f14cf5242ff06f0e1887d6af7b7c188b88'
+</pre>
+
+<p>微妙な改ざんなので気づかないかもしれませんが、SHA-256の値は確かに変わっています。このように、ハッシュはデータのほんのちょっとの変化でも確実に捉えます。</p>
+
+<p>ハッシュの計算時間を調べてみましょう。</p>
+
+<pre class="cell">
+%timeit hashlib.sha256("The quick brown fox jumps over the lazy dog.".encode()).hexdigest()
+</pre>
+
+<p>私の Mac mini (M1, 2020) の結果：</p>
+
+<pre>
+387 ns ± 0.874 ns per loop (mean ± std. dev. of 7 runs, 1,000,000 loops each)
+</pre>
+
+<p>1回あたり 387 ナノ秒 = 387×10<sup>-9</sup> 秒ですので、260 MH/s（メガハッシュ毎秒）ほどです。</p>
+
+<p>→ Bitcoin Wiki: <a href="https://en.bitcoin.it/wiki/Block_hashing_algorithm">Block hashing algorithm</a></p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-07-18 15:57:32 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
