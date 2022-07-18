@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/readfile.html">
+<meta charset="UTF-8">
+<title>ファイルを読む</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<h1>ファイルを読む</h1>
+
+<p>JavaScriptでファイルを読んでみます。</p>
+
+<form>
+  <input type="file" id="in">
+</form>
+
+<pre id="out">
+</pre>
+
+<script>
+  "use strict";
+  const input = document.getElementById('in');
+  const reader = new FileReader();
+  input.addEventListener('change', () => {
+      document.getElementById("out").textContent += "File read."
+      for (const file of input.files) {
+          reader.readAsText(file);
+          reader.onload = () => {
+              document.getElementById("out").textContent += reader.result;
+          }
+      }
+  });
+</script>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-07-18 12:03:31 JST</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
