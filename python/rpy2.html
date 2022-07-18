@@ -17,7 +17,7 @@
 
 <h1>Pythonからrpy2でRを使う</h1>
 
-<p>Python から R を使うには、古くは <a href="pyper.html">PypeR</a>（パイパー）というライブラリがありましたが、開発が止まっているようです。ここでは <a href="https://pypi.org/project/rpy2/">rpy2</a> を使う方法を説明します。rpy2 は <code>pip install rpy2</code> でインストールできます。</p>
+<p>Python から R を使うには、古くは <a href="pyper.html">PypeR</a>（パイパー）というライブラリがありましたが、開発が止まっているようです。ここでは <a href="https://pypi.org/project/rpy2/">rpy2</a> を使う方法を説明します。rpy2 は <code>pip install rpy2</code> でインストールできます。詳しい使い方は<a href="https://rpy2.github.io/doc/v3.5.x/html/index.html">ドキュメント</a>を見ればいいのですが、以下に簡単な使い方をまとめておきます。</p>
 
 <pre class="cell">
 from rpy2 import robjects  # Rを起動
@@ -36,6 +36,21 @@ print(robjects.r("x * 2"))
 <pre>
 [1] 246
 </pre>
+
+<p>複数行からなるプログラムは次のように打ち込みます：</p>
+
+<pre class="cell">
+print(robjects.r('''
+x = 123
+x * 2
+'''))
+</pre>
+
+<pre>
+[1] 246
+</pre>
+
+<p>Python で <code>print()</code> する前のオブジェクトを保存しておくと便利です：</p>
 
 <pre class="cell">
 res = robjects.r("binom.test(2, 10)")
@@ -74,7 +89,7 @@ res[3][0], res[3][1]
 (0.025210726326833365, 0.5560954623076414)
 </pre>
 
-<p>関数オブジェクトを Python のオブジェクトに代入することもできます：</p>
+<p>R の関数オブジェクトを Python 側に持ってくることもできます：</p>
 
 <pre class="cell">
 rbinomtest = robjects.r["binom.test"]
@@ -126,7 +141,7 @@ odds ratio
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-17 15:19:33 JST</time>
+Last modified: <time>2022-07-18 20:02:24 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
