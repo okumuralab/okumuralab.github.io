@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/hash.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ハッシュ関数</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ハッシュ関数</h1>
+
+<p>データを切り刻んで混ぜ、一定の長さ（例えば256ビット）のデータに変換する関数を、ハッシュ関数といいます。ハッシュ関数の値をハッシュ値または単にハッシュといいます。256ビットに変換するハッシュ関数ではSHA-256（シャー256）がよく使われます。</p>
+
+<ul>
+  <li><a href="../misc/220629.html">ハッシュ関数</a>（コマンドで求める方法）</li>
+  <li><a href="../python/hash.html">ハッシュ関数</a>（Pythonで求める方法）</li>
+</ul>
+
+<p>ハッシュは至るところで使われています。例えばビットコインのブロックチェーンの改ざん防止にも使われていて、ハッシュの計算量に応じて新たなビットコインが貰えるというので、全世界で大量のハッシュの計算が行われています。<a href="https://www.blockchain.com/en/charts/hash-rate">ブロックチェーンの全ハッシュレートのグラフ</a>を見れば、現在だいたい 200 million TH/s (terahashes per second) 程度、つまり 200 エクサハッシュ/秒（エクサは 10<sup>18</sup>）程度です。</p>
+
+<p>電力消費量も半端ではありません。<a href="https://ccaf.io/cbeci/index">Bitcoin network power demand</a> というサイトで現在の電力消費量の推定値が公開されています。これも上がり下がりがありますが、<a href="https://news.climate.columbia.edu/2022/05/04/cryptocurrency-energy/">Cryptocurrency's Dirty Secret: Energy Consumption</a> という記事は年間 150 TWh（テラワット時）と推定しています。<a href="https://yearbook.enerdata.jp/electricity/electricity-domestic-consumption-data.html">国内の電力消費量</a>によれば、2021年の日本の年間電力消費量は 916 TWh です。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-07-18 15:12:33 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
