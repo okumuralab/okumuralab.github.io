@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/220719.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>パスワードをクラックする</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>パスワードをクラックする</h1>
+
+<p>Pythonによる<a href="../python/zipcrack.html">Zipファイルのクラック</a>についてはすでに書いた。ここではZip暗号化よりずっと強いGnuPGの対称鍵暗号AES256で暗号化したファイルをクラックしてみる（<a href="220628.html">GnuPGを使おう</a>参照）。</p>
+
+<p>パスワードのクラックといえば <a href="https://www.openwall.com/john/">John the Ripper</a> であろう。MacならHomebrewでもインストールできるが、ここではCentOSサーバで動かすため、上記サイトの Download the latest John the Ripper jumbo release と書いてあるところにある sources in tar.xz をいただいてくる。</p>
+
+<pre>
+tar xvJf john-1.9.0-jumbo-1.tar.xz  
+cd john-1.9.0-jumbo-1/src
+./configure
+make -s clean &amp;&amp; make -sj4
+make install
+</pre>
+
+<p>これでバイナリが <code>john-1.9.0-jumbo-1/run</code> に入る。まずはLinuxのパスワードをクラックしてみる：</p>
+
+<pre>
+cd ../run
+sudo ./unshadow /etc/passwd /etc/shadow &gt; passwdfile
+./john --single passwdfile                # まずは単純な方法
+./john --wordlist=password.lst passwdfile # 3546個のリストから探す
+./john --incremental passwdfile           # しらみつぶし（途中で諦める）
+</pre>
+
+<p>もし見つかったら <code>./john --show passwdfile</code> で結果が表示される。<code>passwdfile</code> は後で消しておくのを忘れないように。</p>
+
+<p>いよいよGnuPGで暗号化したファイルをクラックしてみる。CentOSのGnuPGではなくMacに入れた最新のGnuPGを使う：</p>
+
+<pre>
+echo hogehoge &gt; hoge.txt
+gpg -c hoge.txt  # パスフレーズとして abc123 を使う
+</pre>
+
+<p>できた <code>hoge.txt.gpg</code> をCentOSサーバに送る。以下はCentOSでの実行：</p>
+
+<pre>
+./gpg2john hoge.txt.gpg &gt; hash
+./john --wordlist=password.lst hash
+</pre>
+
+<p><code>abc123</code> は <code>password.lst</code> の最初のほうにあるのですぐに見つかるが、それ以外の候補を探すために最後まで実行する。5分くらいかかった。結局 <code>abc123</code> しか見つからなかった。</p>
+
+<pre>
+./john --show hash
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-07-19 18:22:46 JST</time></p>
+</footer>
+</body>
+</html>
