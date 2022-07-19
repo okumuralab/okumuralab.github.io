@@ -27,7 +27,34 @@
 
 <p><a href="https://indexes.nikkei.co.jp/nkave/index?type=download">日経平均プロファイルの指数一覧のダウンロードセンター</a>から、日経平均株価の<a href="https://indexes.nikkei.co.jp/nkave/historical/nikkei_stock_average_daily_jp.csv">日時データ</a>（CSV）が得られる。</p>
 
-<p>以下は宿題。</p>
+<pre>
+df = read.csv("https://indexes.nikkei.co.jp/nkave/historical/nikkei_stock_average_daily_jp.csv",
+              fileEncoding="CP932")
+x = round(na.exclude(df[["終値"]]) * 100)
+</pre>
+
+<p>まず偶数と奇数を比べるテスト：</p>
+
+<pre>
+binom.test(sum(x %% 2), length(x))
+</pre>
+
+<p>あるいはカイ2乗検定：</p>
+
+<pre>
+chisq.test(table(x %% 2))
+chisq.test(table(x %% 3))
+chisq.test(table(x %% 5))
+chisq.test(table(x %% 7))
+</pre>
+
+<p>[2022-07-19 追記] <a href="https://twitter.com/potetoichiro/status/1548911505449811968">1回で決着がつくジャンケンを考えて下さい！</a> というツイートに対して <a href="https://twitter.com/yamabunmath/status/1548934958214836224">参加者数をnとする。参加者が0~n-1本のうち好きな本数だけ指を出す。指の合計をnで割ったときの余りで勝者を決める。</a> という解答があった。これは賢い。ドメイン名の抽選も、これでいいのではないか：</p>
+
+<blockquote>
+<p>参加者数を <i lang="en">n</i> とする。参加者に 0 以上 <i lang="en">n</i> 未満の整数の番号を振っておく。各参加者は 0 以上 <i lang="en">n</i> 未満の整数を紙に書いて提出する。その合計を <i lang="en">n</i> で割った番号の参加者が当選する。</p>
+</blockquote>
+
+<p>ただし、じゃんけんと同様、参加者が結託すれば、特定の参加者を当選させることができる。それが問題であれば、日経平均株価のようなものを使うほうがよい。</p>
 
 <hr>
 
@@ -35,7 +62,7 @@
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-06-13 07:38:41 JST</time>
+Last modified: <time>2022-07-19 14:46:57 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
