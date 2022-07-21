@@ -22,7 +22,7 @@
 <p>パスワードのクラックといえば <a href="https://www.openwall.com/john/">John the Ripper</a> であろう。MacならHomebrewでもインストールできるが、ここではCentOSサーバで動かすため、上記サイトの Download the latest John the Ripper jumbo release と書いてあるところにある sources in tar.xz をいただいてくる。</p>
 
 <pre>
-tar xvJf john-1.9.0-jumbo-1.tar.xz  
+tar xvJf john-1.9.0-jumbo-1.tar.xz
 cd john-1.9.0-jumbo-1/src
 ./configure
 make -s clean &amp;&amp; make -sj4
@@ -55,7 +55,7 @@ gpg -c hoge.txt  # パスフレーズとして abc123 を使う
 ./john --wordlist=password.lst hash
 </pre>
 
-<p><code>abc123</code> は <code>password.lst</code> の最初のほうにあるのですぐに見つかるが、それ以外の候補を探すために最後まで実行する。5分くらいかかった。結局 <code>abc123</code> しか見つからなかった。</p>
+<p><code>abc123</code> は <code>password.lst</code> の最初のほうにあるのですぐに見つかるが、それ以外の候補を探すために最後まで実行する。5分くらいかかった。1秒あたり10パスワードを試すくらいのスピードか。結局 <code>abc123</code> しか見つからなかった。</p>
 
 <pre>
 ./john --show hash
@@ -65,7 +65,7 @@ gpg -c hoge.txt  # パスフレーズとして abc123 を使う
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-07-19 18:22:46 JST</time></p>
+<p>Last modified: <time>2022-07-19 22:07:59 JST</time></p>
 </footer>
 </body>
 </html>
