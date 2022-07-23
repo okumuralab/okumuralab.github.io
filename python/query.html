@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/query.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pandasによるクエリ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>pandasによるクエリ</h1>
+
+<p>ここでは <a href="https://colab.research.google.com">Google Colab</a> で Python を使って、データベースのクエリ（query、問合せ）の練習をしてみましょう。</p>
+
+<p>まず、データを操作するための pandas（パンダズ）というライブラリを <code>pd</code> という省略名でインポートする決まり文句です：</p>
+
+<pre class="cell">
+import pandas as pd
+</pre>
+
+<p>この <code>pd</code> で定義されている <code>read_csv()</code> という関数でデータを読みます。データはネット（Web）で公開されている CSV ファイルを URL で指定します。このように Web で機械可読なデータをもらってくる仕組みを一般に Web API といいます。読み込んだデータを <code>df</code> という名前の変数（データフレーム）に格納し、<code>df</code> を表示しています：</p>
+
+<pre class="cell">
+df = pd.read_csv("https://okumuralab.org/~okumura/stat/data/population.csv")
+df
+</pre>
+
+<p>Google Colab での表示は次のようになります：</p>
+
+<figure><img src="img/colab-interactive-table2.png" alt="Google Colab Interactive Table"></figure>
+
+<p>右の鉛筆マークをクリックすると、interactive table（マウスで操作できるテーブル）になります。</p>
+
+<p>ここでクエリを投げてみましょう。SQL なら <code>select * from df where 都道府県='東京';</code> と打つべきところを、Python では次のようにします：</p>
+
+<pre class="cell">
+df.query("都道府県 == '東京'")
+</pre>
+
+<p>東京の行だけが表示されました。</p>
+
+<p>次に、男が少ない都道府県、例えば性比（男/女）が 90% 未満のデータを抽出しましょう：</p>
+
+<pre class="cell">
+df.query("性比 < 90")
+</pre>
+
+<p>抽出されたものは、元の順番（都道府県コード順）に並んでいます。これを性比の昇順（小さい順）に並べ替えてみます：</p>
+
+<pre class="cell">
+df.query("性比 < 90").sort_values(by="性比")
+</pre>
+
+<p>降順（大きい順）にするには <code>ascending=False</code> というオプションを付けます：</p>
+
+<pre class="cell">
+df.query("性比 < 90").sort_values(by="性比", ascending=False)
+</pre>
+
+<p>データ全体を総人口でソートし、大きい順に並び替えて、頭の3行を表示しましょう：</p>
+
+<pre class="cell">
+df.sort_values(by="総人口_千人", ascending=False).head(3)
+</pre>
+
+<p>もう一つデータを読み込んでみます。こちらは各都道府県の面積です：</p>
+
+<pre class="cell">
+df2 = pd.read_csv("https://okumuralab.org/~okumura/stat/data/area.csv")
+df2
+</pre>
+
+<p><code>df</code> に <code>df2</code> をマージ（結合）したものを <code>df</code> に代入します：</p>
+
+<pre class="cell">
+df = df.merge(df2)
+df
+</pre>
+
+<p>人口密度を求めてみましょう：</p>
+
+<pre class="cell">
+df["人口密度"] = df["総人口_千人"] / df["面積_km2"]
+df
+</pre>
+
+<p>問題：人口密度の大きい順に並べて、上位10件（<code>.head(10)</code>）、下位10件（<code>.tail(10)</code>）を表示してください。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-07-23 15:00:34 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

@@ -46,7 +46,7 @@ window.onload = function() {
 
 <p>Excelならxlsではなくxlsx形式にすべきことや，パーマリンクを付けてほしいことを，意見照会では書いたが，反映されなかった。なお，CSVの文字コードは現在はShift JISが多いが，今後は国際化を考えてUTF-8にするべきである。本来ならBOMなしUTF-8が望ましいが，日本語環境のExcelはBOMなしUTF-8で文字化けするので，当面はBOM付きUTF-8を許容する。なお，JSONはBOMなしUTF-8にしなければならない。</p>
 
-<p>[追記] パーマリンクについては，e-Statで<a href="https://www.e-stat.go.jp/mypage/user/preregister">ユーザ登録</a>してログインした状態でダウンロードしたデータは<a href="https://www.e-stat.go.jp/mypage/view/dashboard">ダッシュボード</a>の「ダウンロード履歴」に表示されるが，そのURLを（データのランディングページの）パーマリンクと考えてよいということを教えていただいた。例えば2020年の「人口動態調査 / 人口動態統計 確定数 出生」は <a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000032118527">https://www.e-stat.go.jp/stat-search/files?stat_infid=000032118527</a> がパーマリンクになる。そこからリンクされたCSVファイルは <a href="https://www.e-stat.go.jp/stat-search/file-download?statInfId=000032118527&fileKind=1">https://www.e-stat.go.jp/stat-search/file-download?statInfId=000032118527&fileKind=1</a> のようなURLになる。fileKind=0 がExcel、fileKind=1 がCSV、fileKind=2 がPDF、fileKind=3 がXML、fileKind=4 がExcel閲覧用（ネ申Excel）ということらしいので、ファイルのURLからパーマリンクを見つけることもできそうである。残念ながら，パーマリンクから前年や翌年のデータを見つける簡単な方法はなさそうである。</p>
+<p>[追記] パーマリンクについては，e-Statで<a href="https://www.e-stat.go.jp/mypage/user/preregister">ユーザ登録</a>してログインした状態でダウンロードしたデータは<a href="https://www.e-stat.go.jp/mypage/view/dashboard">ダッシュボード</a>の「ダウンロード履歴」に表示されるが，そのURLを（データのランディングページの）パーマリンクと考えてよいということを教えていただいた。詳しくは <a href="../cs/e-stat.html">e-Stat</a> 参照。</p>
 
 <h2>第2節 Excelファイルによる統計表のレイアウト</h2>
 
@@ -316,7 +316,7 @@ tables[4]
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-22 21:42:11 JST</time>
+Last modified: <time>2022-07-23 19:53:18 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

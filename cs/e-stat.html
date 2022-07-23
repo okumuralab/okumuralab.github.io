@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/tables.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>e-Stat</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+td, th { text-align: left }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>e-Stat</h1>
+
+<p><a href="https://www.e-stat.go.jp">e-Stat</a> は、日本の統計が閲覧できる政府統計ポータルサイトです。</p>
+
+<p>ここで公開されているデータは、だれでも自由に使えるオープンデータです。利用ルールは、政府標準利用規約（第2.0版）に準拠し、Creative Commons の「表示」ライセンス（CC BY）と互換性があります。</p>
+
+<p>登録なしで使えますが、右上の「新規登録」でユーザ登録して、ログインして使うと、<a href="https://www.e-stat.go.jp/mypage/view/dashboard">ダッシュボード</a>で自分のダウンロード履歴をたどれるので、便利です。</p>
+
+<p>例えば都道府県別の人口を知りたいとします。キーワードで検索してもいいのですが、「分野」→「人口・世帯」→「人口推計」のようにたどることもできます。「データベース」と「ファイル」がありますが、概して「ファイル」のほうが詳しいことがあるので、ここでは「ファイル」を選ぶことにします。「月次」が新しいのですが、ここでは都道府県別が載っている「年次」を選びます。最新の2021年を選びます。</p>
+
+<p>都道府県別は、4「都道府県，男女別人口及び人口性比－総人口，日本人人口(2021年10月1日現在)」がそれらしいので、Excelファイルをダウンロードして眺めてみます。その際に、ダウンロードしたURLを記録しておきます：</p>
+
+<blockquote>
+  <code><a href="https://www.e-stat.go.jp/stat-search/file-download?statInfId=000032191045&fileKind=0">https://www.e-stat.go.jp/stat-search/file-download?statInfId=000032191045&fileKind=0</a>
+  </code>
+</blockquote>
+
+<p>この <code>000032191045</code> がデータ番号です。このURLを変形して</p>
+
+<blockquote>
+  <code><a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000032191045">https://www.e-stat.go.jp/stat-search/files?stat_infid=000032191045</a>
+  </code>
+</blockquote>
+
+<p>としたものが、このファイルの説明にあたるページになります。データのURLを示す際には、ファイルをダウンロードするURLよりも、こちらのURLのほうが適切です。登録ユーザのダウンロード履歴に出るURLもこれです。このページから、該当のExcelファイル以外に、閲覧用Excelファイル（いわゆるネ申Excel）、DB（データベース）にも飛ぶことができますし、「政府統計名」＞「提供統計名」＞「提供分類」というナビゲーション（パンくずリスト）もたどれます。</p>
+
+<p><code>fileKind</code> は次の表のようにファイルの種別を表すようです：</p>
+
+<table>
+  <tbody>
+    <tr><td><code>fileKind=0</code></td><td>Excel</td></tr>
+    <tr><td><code>fileKind=1</code></td><td>CSV</td></tr>
+    <tr><td><code>fileKind=2</code></td><td>PDF</td></tr>
+    <tr><td><code>fileKind=3</code></td><td>XML</td></tr>
+    <tr><td><code>fileKind=4</code></td><td>Excel閲覧用</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-07-23 20:45:48 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
