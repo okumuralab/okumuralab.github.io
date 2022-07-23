@@ -47,6 +47,7 @@ for x in exposure["exposure_windows"]:
 2022-04-14 2  93 88 60
 2022-07-04 2  91 87 60
 2022-07-04 2  91 91 60
+2022-07-22 2  91 91 60
 </pre>
 
 <p>表示される日付の9:00から丸一日の間に接触があったことがわかります。日付以外の項目の意味は <a href="https://developers.google.com/android/exposure-notifications/exposure-notifications-api">Google のドキュメント</a> に説明されています（いまいちよくわからない説明ですが）。</p>
@@ -66,6 +67,8 @@ for x in exposure["exposure_windows"]:
 2022-04-18 16:08,1
 2022-05-14 15:54,0
 2022-07-08 14:37,1
+2022-07-21 02:54,0
+2022-07-23 00:20,1
 </pre>
 
 <p>どうやらこの「一致したキーの数」は積算値で、何かのタイミングでリセットされるようですが、詳細はわかりません。おそらく「一致したキーの数」が変化したタイミングで exposure_data.json も書き変わるのだと思います。</p>
@@ -189,7 +192,7 @@ for arg in sys.argv[1:]:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-08 16:21:06 JST</time>
+Last modified: <time>2022-07-23 08:42:34 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
