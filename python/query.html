@@ -52,10 +52,23 @@ df.query("都道府県 == '東京'")
 df.query("性比 < 90")
 </pre>
 
+<p><code>and</code> や <code>or</code> も使えます。</p>
+
+<pre class="cell">
+df.query("性比 < 90 and 総人口_千人 > 5000")
+</pre>
+
 <p>抽出されたものは、元の順番（都道府県コード順）に並んでいます。これを性比の昇順（小さい順）に並べ替えてみます：</p>
 
 <pre class="cell">
 df.query("性比 < 90").sort_values(by="性比")
+</pre>
+
+<p>これは次のように分けて書いてもかまいません：</p>
+
+<pre class="cell">
+df1 = df.query("性比 < 90")
+df1.sort_values(by="性比")
 </pre>
 
 <p>降順（大きい順）にするには <code>ascending=False</code> というオプションを付けます：</p>
@@ -93,13 +106,22 @@ df
 
 <p>問題：人口密度の大きい順に並べて、上位10件（<code>.head(10)</code>）、下位10件（<code>.tail(10)</code>）を表示してください。</p>
 
+<p>おまけ：水平棒グラフ（horizontal bar plot）を描いてみましょう：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+
+df3 = df.sort_values(by="人口密度")
+plt.barh(df3["都道府県"], df3["人口密度"])
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-23 15:00:34 JST</time>
+Last modified: <time>2022-07-24 17:54:58 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
