@@ -56,7 +56,7 @@ plt.show()
 plt.savefig("../img/japandeaths3.svg", bbox_inches="tight")
 
 df1 = df.groupby("年")[["死亡数", "日数"]].sum()
-df2 = df1[df1.index != 2022]
+df2 = df1[df1.index < 2022]
 y = df2.index
 x = df2["死亡数"] / df2["日数"]
 

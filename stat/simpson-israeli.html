@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <title>イスラエルのCOVID-19データとSimpsonのパラドックス</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no">
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
 <style>
@@ -12,6 +13,11 @@ th { text-align: center; }
 td { text-align: right; }
 td, th { padding: 0.2em 0.7em }
 table { border: 3px solid; }
+.b {
+    border: 0.15em solid;
+    border-radius: 0.5em;
+    padding: 0.5em;
+}
 </style>
 </head>
 <body>
@@ -29,7 +35,7 @@ table { border: 3px solid; }
 
 <table>
   <tbody>
-    <tr><th>年齢</th><th>未接種人数 a</th><th>接種人数 b</th><th>未接種重症 c</th><th>接種重症 d</th><th>有効性 1-(d/b)/(c/a)</th></tr>
+    <tr><th>年齢</th><th>未接種人数 <i lang="en">a</i></th><th>接種人数 <i lang="en">b</i></th><th>未接種重症 <i lang="en">c</i></th><th>接種重症 <i lang="en">d</i></th><th>有効性 1-(<i lang="en">d</i>/<i lang="en">b</i>)/(<i lang="en">c</i>/<i lang="en">a</i>)</th></tr>
     <tr><td>全年齢</td><td>1302912</td><td>5634634</td><td>214</td><td>301</td><td>67.5%</td></tr>
   </tbody>
 </table>
@@ -38,7 +44,7 @@ table { border: 3px solid; }
 
 <table>
   <tbody>
-    <tr><th>年齢</th><th>未接種人数 a</th><th>接種人数 b</th><th>未接種重症 c</th><th>接種重症 d</th><th>有効性 1-(d/b)/(c/a)</th></tr>
+    <tr><th>年齢</th><th>未接種人数 <i lang="en">a</i></th><th>接種人数 <i lang="en">b</i></th><th>未接種重症 <i lang="en">c</i></th><th>接種重症 <i lang="en">d</i></th><th>有効性 1-(<i lang="en">d</i>/<i lang="en">b</i>)/(<i lang="en">c</i>/<i lang="en">a</i>)</th></tr>
     <tr><td>50以上</td><td>1116834</td><td>3501118</td><td>43</td><td>11</td><td>91.8%</td></tr>
     <tr><td>50未満</td><td>186078</td><td>2133516</td><td>171</td><td>290</td><td>85.2%</td></tr>
   </tbody>
@@ -48,18 +54,20 @@ table { border: 3px solid; }
 
 <p>これは、分割することにより傾向が著しくなる一種のSimpsonのパラドックスといえる。つまり、</p>
 
-<div style="text-align: center">ワクチンを打つ → 重症化しにくい</div>
+<div style="text-indent: 2em">
+  <span class="b">接種</span> —⊖→ <span class="b">重症化</span>
+</div>
 
 <p>という関係が、年齢によって層別化しないと、年齢の交絡によって</p>
 
-<div style="text-align: center">
-  高齢<br>
-  ↙︎　↘︎<br>
-  ワクチンを打つ ←→ 重症化しやすい<br>
-  偽の相関
+<div style="margin:0 2em">
+  <span style="position:relative; left:3.5em"><span class="b">高齢</span></span><br>
+  <span style="position:relative; left:2em">⊕↙︎</span>
+  <span style="position:relative; left:4em">↘︎⊕</span><br>
+  <span class="b">接種</span> ←⊕→ <span class="b">重症化</span>
 </div>
 
-<p>のような逆方向の偽の相関が現れ、効果が低く見えてしまう。</p>
+<p>のような逆方向の偽の相関に相殺されて、効果が低く見えてしまう。</p>
 
 <hr>
 
@@ -67,7 +75,7 @@ table { border: 3px solid; }
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-03 22:08:57 JST</time>
+Last modified: <time>2022-07-27 13:38:10 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

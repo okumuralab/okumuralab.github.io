@@ -81,7 +81,7 @@ plt.xticks(sorted(set(df["年"] // 2 * 2).intersection(set(df["年"]))))
 <figure><img src="img/japandeaths3.svg" alt="Deaths in Japan"></figure>
 
 <pre><code>df1 = df.groupby("年")[["死亡数", "日数"]].sum()
-df2 = df1[df1.index != 2022]
+df2 = df1[df1.index < 2022]
 y = df2.index
 x = df2["死亡数"] / df2["日数"]
 
@@ -165,7 +165,7 @@ for i in range(1, len(x)):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-12 13:53:24 JST</time>
+Last modified: <time>2022-07-27 14:59:21 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
