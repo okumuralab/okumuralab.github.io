@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/spuriouscorrelation.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>疑似相関</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+.b {
+    border: 0.15em solid;
+    border-radius: 0.5em;
+    padding: 0.5em;
+}
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>疑似相関</h1>
+
+<p>相関（correlation）とは、散布図を描くと何らかのパターンが見えることです。もうちょっと具体的にいうと、変数 <i lang="en">x</i> の値に応じて <i lang="en">y</i> の分布が変わることです。これは、変数 <i lang="en">y</i> の値に応じて <i lang="en">x</i> の分布が変わることと同じです。つまり、相関は双方向の関係です。</p>
+
+<p>相関は、直線的な関係でない U 字形の関係でもかまいません。通常の（Pearson の）相関係数は直線的な関係しか表さないので、相関係数が 0 でも、相関があることがあります。</p>
+
+<p>変数 <i lang="en">x</i> と <i lang="en">y</i> に相関があっても、<i lang="en">x</i> が原因で <i lang="en">y</i> が変化したとか、<i lang="en">y</i> が原因で <i lang="en">x</i> が変化したとかは、必ずしもいえません。つまり、<i lang="en">x</i> と <i lang="en">y</i> の間に因果関係（原因・結果の関係）があるとはいえません。</p>
+
+<p>直接の因果関係がないのに相関関係がある場合、疑似相関（spurious correlation）ということがあります。<a href="https://www.tylervigen.com/spurious-correlations">Spurious correlations</a> というサイトがそういう例をたくさん集めています（主に時系列の例のようですが）。</p>
+
+<p>相関関係があるかどうかは散布図から簡単にわかりますが、因果関係があるかどうかは簡単にはわかりません。</p>
+
+<p>例えば、朝食を食べてこない子どもは成績が悪いというデータがあったとします。</p>
+
+<div style="text-indent: 2em">
+  <span class="b">朝食を食べない</span> ←相関関係→ <span class="b">成績が悪い</span>
+</div>
+
+<p>このデータからわかるのは、相関関係だけです。朝食を食べないのが原因で、その結果として成績が悪くなったのであれば、無理矢理でも朝食を食べさえれば、成績が伸びるはずです。でもそういう実験は簡単ではありません。</p>
+
+<p>なぜ朝食をとらないと成績が悪くなるのでしょうか？ もしかしたら</p>
+
+<div style="text-indent: 2em">
+  <span class="b">朝食を食べない</span> → <span class="b">空腹で集中力が落ちる</span> → <span class="b">成績が悪い</span>
+</div>
+
+<p>という関係があるのかもしれません。このような中間に介在する因子を媒介因子（mediator）といいます。こういう自明な媒介因子が介在していても、朝食と成績の関係を疑似相関とは言わないように思います。</p>
+
+<p>もっと自明でない媒介因子が介在していたらどうでしょうか。例えば</p>
+
+<div style="text-indent: 2em">
+  <span class="b">成績が悪い</span> → <span class="b">朝勉強する</span> → <span class="b">朝の時間が足りない</span> → <span class="b">朝食を食べない</span>
+</div>
+
+<p>のような場合は微妙です。</p>
+
+<p>もっと疑似相関っぽいのは</p>
+
+<div style="margin:0 2em">
+  <span style="position:relative; left:6.5em"><span class="b">家庭環境</span></span><br>
+  <span style="position:relative; left:7em">↙︎</span>
+  <span style="position:relative; left:9em">↘︎</span><br>
+  <span class="b">朝食を食べない</span>　　<span class="b">成績が悪い</span>
+</div>
+
+<p>のように第3の因子が両方に影響している場合です。このような因子を交絡因子（confounder）といいます。この場合、家庭環境が交絡しているといいます。これなら、疑似相関と言っても大丈夫そうです。</p>
+
+<p>別の例として、</p>
+
+<div style="margin:0 2em">
+  <span class="b">A</span><span style="position:relative; left:3em"><span class="b">B</span></span><br>
+  <span style="position:relative; left:1.7em">↘︎</span>
+  <span style="position:relative; left:3em">↙︎</span><br>
+  <span style="position:relative; left:2.5em"><span class="b">C</span></span>
+</div>
+
+<p>のような因果関係があり、サンプリングが C に依存する場合、A と B は直接の因果関係がないのに相関関係が現れます。C をコライダー（collider）といいます。例えば入試の得点（A）と内申点（B）を合計したもの（C）で入学選抜する場合、A と B は一般に正の相関をしているのに、合格者の中ではほとんど相関していなかったり、場合によっては負の相関になることがあります。これはコライダーを使ったサンプリングによるバイアスです。元の相関を疑似相関が打ち消す形になります。</p>
+
+<p>なお、因果関係があっても、必ずしも相関関係があるとは言えません。交絡などがからむと、本来の因果関係による相関と疑似相関とが相殺される可能性があるからです（すぐ上の段落の例もそうです）。</p>
+
+<p>このように、疑似相関の意味はあまりはっきりしないところがあります（そもそも因果関係がよくわからないケースもあります）。あまりこの言葉にこだわらないようにするのがいいかもしれません。</p>
+
+<div class="note">
+<p>1897年に出版された Karl Pearson の <a href="https://doi.org/10.1098/rspl.1896.0076">Mathematical Contributions to the Theory of Evolution. — On a Form of Spurious Correlation which may arise when Indices are used in the Measurement of Organs.</a> という論文が spurious correlation という言葉の最初の使用例らしいのですが、これは <span lang="en"><i>x</i><sub>1</sub></span>, <span lang="en"><i>x</i><sub>2</sub></span>, <span lang="en"><i>x</i><sub>3</sub></span> が独立なのに <span lang="en"><i>x</i><sub>1</sub>/<i>x</i><sub>3</sub></span>, <span lang="en"><i>x</i><sub>2</sub>/<i>x</i><sub>3</sub></span> は相関があるという現象を論じたものでした。両方に <span lang="en"><i>x</i><sub>3</sub></span> が入っているので相関があるのは当然ですが、Pearson はどれくらい相関があるかを計算で示したのでした。ちなみに論文のタイトルは On a Form of Spurious Correlation ... ですので、この例だけを Pearson が spurious correlation と呼んだわけではなく、単なる一例として出したのでしょう。</p>
+</div>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-07-28 18:18:39 JST</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
