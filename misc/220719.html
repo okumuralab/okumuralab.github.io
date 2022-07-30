@@ -61,11 +61,23 @@ gpg -c hoge.txt  # パスフレーズとして abc123 を使う
 ./john --show hash
 </pre>
 
+<p>[2022-07-30追記] 再度同じ <code>hoge.txt</code> を、今度は <code>password.lst</code> の最後に近い <code>notused</code> というパスワードで暗号化し、<code>time</code> コマンドで実行時間を測定してみた。結果は</p>
+
+<pre>
+real	5m53.130s
+user	20m8.057s
+sys	0m0.313s
+</pre>
+
+<p>で、実時間5分53秒かかった（4スレッド）。毎秒10パスワードほどである。</p>
+
+<p>同じことをWindows 11マシン（16G, SSD 256G, i7-7700HQ, GeForce GTX 1060）でやってみたら、8スレッド、35パスワード毎秒だった。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-07-19 22:07:59 JST</time></p>
+<p>Last modified: <time>2022-07-30 13:05:08 JST</time></p>
 </footer>
 </body>
 </html>
