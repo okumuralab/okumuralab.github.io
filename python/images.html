@@ -17,7 +17,20 @@
 
 <h1>画像テストページ</h1>
 
-<pre><code>import matplotlib.pyplot as plt
+<p>テスト環境：Mac mini (M1, 2020) macOS Monterey 12.5</p>
+
+<p>~/.matplitlib/matplotlibrc：</p>
+
+<pre>
+backend: MacOSX
+font.family: Hiragino Sans
+font.weight: 400
+</pre>
+
+<p>テストコード：</p>
+
+<pre>
+import matplotlib.pyplot as plt
 
 plt.plot([-1,1])
 plt.title('日本語タイトル')
@@ -27,39 +40,45 @@ plt.savefig('filename.jpg', bbox_inches="tight")
 plt.savefig('filename.pdf', bbox_inches="tight")
 plt.savefig('filename.svg', bbox_inches="tight")
 plt.savefig('filename.svgz', bbox_inches="tight")
-</code></pre>
+</pre>
 
-<p>filename.png (21929バイト)</p>
+<p>filename.png (24616バイト)</p>
 
 <figure><img src="img/filename.png" alt="png"></figure>
 
-<p>filename.jpg (28254バイト)</p>
+<p>filename.jpg (17292バイト)</p>
 
 <figure><img src="img/filename.jpg" alt="jpg"></figure>
 
-<p>filename.pdf (8838バイト)</p>
+<p>filename.pdf (10880バイト)</p>
 
 <figure><img src="img/filename.pdf" alt="pdf"></figure>
 
-<p>filename.svg (20227バイト)</p>
+<p>filename.svg (23122バイト)</p>
 
 <figure><img src="img/filename.svg" alt="svg"></figure>
 
-<p>filename.svgz (4168バイト)</p>
+<p>filename.svgz (6316バイト)</p>
 
 <figure><img src="img/filename.svgz" alt="svgz"></figure>
 
-<p>拡張子 svgz のファイルは，単に svg を gzip で圧縮しただけのものである。これをファイルとして開いて表示できるブラウザは残念ながらなさそうである。ただ，不思議なことにネット越しなら，svg を表示できるブラウザは svgz も表示できる。ただし，そのためにはまず，Webサーバの /etc/mime.types に</p>
+<p>拡張子 svgz のファイルは，単に svg を gzip で圧縮しただけのものである。これをファイルとして開いて表示できるブラウザは残念ながらなさそうである。ネット越しなら，svg を表示できるブラウザは svgz も表示できる。ただし，そのためにはまず，Webサーバの /etc/mime.types に</p>
 
-<pre><code>image/svg+xml svg svgz</code></pre>
+<pre>
+image/svg+xml svg svgz
+</pre>
 
 <p>という行が必要である。なければ httpd.conf (/etc/httpd/conf あたりに入っている) に</p>
 
-<pre><code>AddType image/svg+xml svg svgz</code></pre>
+<pre>
+AddType image/svg+xml svg svgz
+</pre>
 
 <p>と書き込んでおけばよい。これに加えて，httpd.conf には</p>
 
-<pre><code>AddEncoding gzip svgz</code></pre>
+<pre>
+AddEncoding gzip svgz
+</pre>
 
 <p>という行も必要である。httpd.conf の編集が難しい場合は，画像と同じディレクトリ（または親ディレクトリ）に .htaccess というファイルを作って，httpd.conf に書き込むべきことを書き込んでおく。</p>
 
@@ -71,7 +90,7 @@ plt.savefig('filename.svgz', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-02-19 17:51:17</time>
+Last modified: <time>2022-07-31 16:08:05 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
