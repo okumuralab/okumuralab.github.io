@@ -128,7 +128,7 @@ export PATH
 
 <p>いろいろなパッケージのインストールは <code>pip3</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
 
-<p>まずは、アップデートの必要なパッケージを、次のコマンドで調べます：</p>
+<p>まずは、アップデートの必要なパッケージを、次のコマンドで調べます（この時点で <code>pip3</code> は <code>/Library/Frameworks/Python.framework/Versions/3.10/bin</code> にあるものです）：</p>
 
 <pre>
 pip3 list --outdated
@@ -148,10 +148,14 @@ PATH="${HOME}/Library/Python/3.10/bin:${PATH}"
 export PATH
 </pre>
 
-<p>と編集すればいいでしょう（私は <code>~/.zshenv</code> に環境変数を書いているのでそちらに移動しました）。これ以外に必要なパッケージは、その都度インストールします。例：</p>
+<p>と編集すればいいでしょう（私は <code>~/.zshenv</code> に環境変数を書いているのでそちらに移動しました）。</p>
+
+<p>ここまでうまくいけば、次からは <code>~/Library/Python/3.10/bin</code> にある <code>pip3</code> またはそれと同等な <code>pip</code> を使うことになります。</p>
+
+<p>これ以外に必要なパッケージは、その都度インストールします。例：</p>
 
 <pre>
-pip3 install numpy matplotlib pandas jupyter
+pip install numpy matplotlib pandas jupyter
 </pre>
 
 <div class="note">
@@ -380,7 +384,7 @@ apk add python3 py3-pip
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-06-21 09:58:04 JST</time>
+Last modified: <time>2022-07-31 16:58:26 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
