@@ -85,10 +85,21 @@ td, th { padding: 0.2em 0.7em }
 
 <p>なお、因果関係があっても、必ずしも相関関係があるとは言えません。交絡などがからむと、本来の因果関係による相関と疑似相関とが相殺される可能性があるからです（すぐ上の段落の例もそうです）。</p>
 
-<p>このように、疑似相関の意味はあまりはっきりしないところがあります（そもそも因果関係がよくわからないケースもあります）。あまりこの言葉にこだわらないようにするのがいいかもしれません。</p>
+<p>もう一つ、疑似相関が因果関係による相関を打ち消して、因果関係があっても相関関係がほとんどなくなってしまう例を挙げておきます。新型コロナのワクチン接種をすると重症化が防げるはずです。しかし、高齢者ほど接種をしますし、高齢者ほど重症化しやすいので、高齢が交絡因子となって、接種と重症化に正の疑似相関が現れ、本来の因果関係から生じるはずの負の相関を打ち消してしまうことがありえます（<a href="simpson-israeli.html">イスラエルのCOVID-19データとSimpsonのパラドックス</a>参照）：</p>
+
+<div style="margin:0 2em">
+  <span style="position:relative; left:3.5em"><span class="b">高齢</span></span><br>
+  <span style="position:relative; left:2em">⊕↙︎</span>
+  <span style="position:relative; left:4em">↘︎⊕</span><br>
+  <span class="b">接種</span> ←⊕→ <span class="b">重症化</span>
+</div>
+
+<p>以上、いろいろな例を挙げましたが、疑似相関の定義は必ずしもはっきりしていないところがあります（そもそも因果関係がよくわからないケースもあります）。あまりこの言葉にこだわらないようにするのがいいかもしれません。</p>
 
 <div class="note">
-<p>1897年に出版された Karl Pearson の <a href="https://doi.org/10.1098/rspl.1896.0076">Mathematical Contributions to the Theory of Evolution. — On a Form of Spurious Correlation which may arise when Indices are used in the Measurement of Organs.</a> という論文が spurious correlation という言葉の最初の使用例らしいのですが、これは <span lang="en"><i>x</i><sub>1</sub></span>, <span lang="en"><i>x</i><sub>2</sub></span>, <span lang="en"><i>x</i><sub>3</sub></span> が独立なのに <span lang="en"><i>x</i><sub>1</sub>/<i>x</i><sub>3</sub></span>, <span lang="en"><i>x</i><sub>2</sub>/<i>x</i><sub>3</sub></span> は相関があるという現象を論じたものでした。両方に <span lang="en"><i>x</i><sub>3</sub></span> が入っているので相関があるのは当然ですが、Pearson はどれくらい相関があるかを計算で示したのでした。ちなみに論文のタイトルは On a Form of Spurious Correlation ... ですので、この例だけを Pearson が spurious correlation と呼んだわけではなく、単なる一例として出したのでしょう。</p>
+  <p>1897年に出版された Karl Pearson（カール・ピアソン）の <a href="https://doi.org/10.1098/rspl.1896.0076">Mathematical Contributions to the Theory of Evolution. — On a Form of Spurious Correlation which may arise when Indices are used in the Measurement of Organs.</a> という論文が spurious correlation という言葉の最初の使用例らしいのですが、これは <span lang="en"><i>x</i><sub>1</sub></span>, <span lang="en"><i>x</i><sub>2</sub></span>, <span lang="en"><i>x</i><sub>3</sub></span> が独立なのに <span lang="en"><i>x</i><sub>1</sub>/<i>x</i><sub>3</sub></span>, <span lang="en"><i>x</i><sub>2</sub>/<i>x</i><sub>3</sub></span> は相関があるという現象を論じたものでした。両方に <span lang="en"><i>x</i><sub>3</sub></span> が入っているので相関があるのは当然ですが、Pearson はどれくらい相関があるかを計算で示したのでした。</p>
+  <p>例えば、共同埋葬地の骨を個人ごとにグルーピングして並べ、正しくグルーピングされたかどうか調べるために、大腿骨/上腕骨の長さの比と、脛骨/上腕骨の長さの比との相関係数を求める例を Pearson は論じています。仮にグルーピングがランダムで、大腿骨・脛骨・上腕骨の長さが互いにまったく相関がなくても、比をとると疑似相関が現れるので、注意しないといけません。</p>
+  <p>ちなみに論文のタイトルは On a Form of Spurious Correlation ... ですし、この例だけを Pearson が spurious correlation と呼んだわけではなく、単なる一例として出したのでしょう。ですから、「spurious correlation の元来の意味は……」のように Pearson の例を挙げるのは🤔です。</p>
 </div>
 
 <hr>
@@ -97,7 +108,7 @@ td, th { padding: 0.2em 0.7em }
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-28 18:18:39 JST</time>
+Last modified: <time>2022-08-01 10:09:15 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

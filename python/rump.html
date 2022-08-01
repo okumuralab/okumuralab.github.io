@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/rump.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rumpの例題</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Rumpの例題</h1>
+
+<p>Rumpの例題とは、</p>
+
+\[ f = 333.75b^6 + a^2(11a^2b^2 - b^6 - 121b^4 - 2) + 5.5b^8 + \frac{a}{2b} \]
+
+<p>を $a = 77617$、$b = 33096$ のときに計算する問題です（<a href="https://doi.org/10.1023/A:1015569431383">Rump's Example Revisited</a>）。</p>
+
+<p>とりあえずやってみます：</p>
+
+<pre class="cell">
+def f(a, b):
+    return (333.75 * b**6 + a**2 * (11 * a**2 * b**2 - b**6 - 121 * b**4 - 2)
+            + 5.5 * b**8 + a / (2 * b))
+
+f(77617, 33096)
+</pre>
+
+<pre>
+1.1805916207174113e+21
+</pre>
+
+<pre class="cell">
+f(77617.0, 33096.0)
+</pre>
+
+<pre>
+-1.1805916207174113e+21
+</pre>
+
+<p>とんでもなく大きな値で、しかも引数を整数で与えたときと浮動小数点数で与えたときで正負が逆になってしまいました。どうやらとても難しい計算のようです。ちなみに正解は</p>
+
+\[ f = -0.827396059946821368141165095479816\ldots \]
+
+<p>です。</p>
+
+<p>多倍長演算ライブラリを使おうかと思ったのですが、Python は整数の計算は正しいので、4倍して4で割る変形をすると、</p>
+
+<pre class="cell">
+def f(a, b):
+    return (1335 * b**6 + 4 * a**2 * (11 * a**2 * b**2 - b**6 - 121 * b**4 - 2)
+            + 22 * b**8 + 2 * a / b) / 4
+
+f(77617, 33096)
+</pre>
+
+<pre>
+-0.8273960599468213
+</pre>
+
+<p>完全に正しい答えがえられました。</p>
+
+<p>実は、割り算 <code>/</code> だけは浮動小数点演算になるのですが、最後の <code>/ 4</code> は全体を割るので精度に影響しませんし、これを除けば小数点以下が出るのは <code>2 * a / b</code> だけですので、これが桁落ちを生じるような大きな値でないので、うまくいったのです。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-08-01 14:33:00 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
