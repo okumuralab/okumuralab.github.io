@@ -31,9 +31,9 @@ td, th { padding: 0.2em 0.7em }
 
 <p>相関は、直線的な関係でない U 字形の関係でもかまいません。通常の（Pearson の）相関係数は直線的な関係しか表さないので、相関係数が 0 でも、相関があることがあります。</p>
 
-<p>変数 <i lang="en">x</i> と <i lang="en">y</i> に相関があっても、<i lang="en">x</i> が原因で <i lang="en">y</i> が変化したとか、<i lang="en">y</i> が原因で <i lang="en">x</i> が変化したとかは、必ずしもいえません。つまり、<i lang="en">x</i> と <i lang="en">y</i> の間に因果関係（原因・結果の関係）があるとはいえません。</p>
+<p>変数 <i lang="en">x</i> と <i lang="en">y</i> に相関があっても、<i lang="en">x</i> が原因で <i lang="en">y</i> が変化したとか、<i lang="en">y</i> が原因で <i lang="en">x</i> が変化したとかは、必ずしもいえません。つまり、<i lang="en">x</i> と <i lang="en">y</i> の間に因果関係（原因・結果の関係）があるとはいえません。よく言われる「相関関係は因果関係ではない」という話です。</p>
 
-<p>直接の因果関係がないのに相関関係がある場合、疑似相関（spurious correlation）ということがあります。<a href="https://www.tylervigen.com/spurious-correlations">Spurious correlations</a> というサイトがそういう例をたくさん集めています（主に時系列の例のようですが）。</p>
+<p>直接の因果関係がないのに相関関係がある場合、疑似相関（spurious correlation）ということがあります。</p>
 
 <p>相関関係があるかどうかは散布図から簡単にわかりますが、因果関係があるかどうかは簡単にはわかりません。</p>
 
@@ -53,13 +53,13 @@ td, th { padding: 0.2em 0.7em }
 
 <p>という関係があるのかもしれません。このような中間に介在する因子を媒介因子（mediator）といいます。こういう自明な媒介因子が介在していても、朝食と成績の関係を疑似相関とは言わないように思います。</p>
 
-<p>もっと自明でない媒介因子が介在していたらどうでしょうか。例えば</p>
+<p>もっと自明でない媒介因子が介在していたらどうでしょうか。例えば、上とは逆の因果関係</p>
 
 <div style="text-indent: 2em">
   <span class="b">成績が悪い</span> → <span class="b">朝勉強する</span> → <span class="b">朝の時間が足りない</span> → <span class="b">朝食を食べない</span>
 </div>
 
-<p>のような場合は微妙です。</p>
+<p>も考えられますが、これも疑似相関とは言わないように思います。</p>
 
 <p>もっと疑似相関っぽいのは</p>
 
@@ -81,7 +81,7 @@ td, th { padding: 0.2em 0.7em }
   <span style="position:relative; left:2.5em"><span class="b">C</span></span>
 </div>
 
-<p>のような因果関係があり、サンプリングが C に依存する場合、A と B は直接の因果関係がないのに相関関係が現れます。C をコライダー（collider）といいます。例えば入試の得点（A）と内申点（B）を合計したもの（C）で入学選抜する場合、A と B は一般に正の相関をしているのに、合格者の中ではほとんど相関していなかったり、場合によっては負の相関になることがあります。これはコライダーを使ったサンプリングによるバイアスです。元の相関を疑似相関が打ち消す形になります。</p>
+<p>のような因果関係があり、サンプリングが C に依存する場合、A と B は直接の因果関係がないのに相関関係が現れます。C をコライダー（collider）といいます。例えば入試の得点（A）と内申点（B）を合計したもの（C）で入学選抜する場合、A と B は一般に正の相関をしているのに、合格者の中ではほとんど相関していなかったり、場合によっては負の相関になったりすることがあります。これはコライダーによるサンプリングのバイアスです。元の相関を疑似相関が打ち消す形になります。</p>
 
 <p>なお、因果関係があっても、必ずしも相関関係があるとは言えません。交絡などがからむと、本来の因果関係による相関と疑似相関とが相殺される可能性があるからです（すぐ上の段落の例もそうです）。</p>
 
@@ -100,6 +100,11 @@ td, th { padding: 0.2em 0.7em }
   <p>1897年に出版された Karl Pearson（カール・ピアソン）の <a href="https://doi.org/10.1098/rspl.1896.0076">Mathematical Contributions to the Theory of Evolution. — On a Form of Spurious Correlation which may arise when Indices are used in the Measurement of Organs.</a> という論文が spurious correlation という言葉の最初の使用例らしいのですが、これは <span lang="en"><i>x</i><sub>1</sub></span>, <span lang="en"><i>x</i><sub>2</sub></span>, <span lang="en"><i>x</i><sub>3</sub></span> が独立なのに <span lang="en"><i>x</i><sub>1</sub>/<i>x</i><sub>3</sub></span>, <span lang="en"><i>x</i><sub>2</sub>/<i>x</i><sub>3</sub></span> は相関があるという現象を論じたものでした。両方に <span lang="en"><i>x</i><sub>3</sub></span> が入っているので相関があるのは当然ですが、Pearson はどれくらい相関があるかを計算で示したのでした。</p>
   <p>例えば、共同埋葬地の骨を個人ごとにグルーピングして並べ、正しくグルーピングされたかどうか調べるために、大腿骨/上腕骨の長さの比と、脛骨/上腕骨の長さの比との相関係数を求める例を Pearson は論じています。仮にグルーピングがランダムで、大腿骨・脛骨・上腕骨の長さが互いにまったく相関がなくても、比をとると疑似相関が現れるので、注意しないといけません。</p>
   <p>ちなみに論文のタイトルは On a Form of Spurious Correlation ... ですし、この例だけを Pearson が spurious correlation と呼んだわけではなく、単なる一例として出したのでしょう。ですから、「spurious correlation の元来の意味は……」のように Pearson の例を挙げるのは🤔です。</p>
+  <p>Pearson の spurious correlation については <span lang="en"><i>Kendall’s Advanced Theory of Statistics</i>, 6th ed., Vol. 2A, p.506</span> に解説がありますが、<span lang="en">“He called <i>ρ</i> a ‘spurious’ correlation because the original <i>x<sub>i</sub></i> are uncorrelated, but the term is inapt if one is fundamentally interested in the ratios.”</span> と書かれています。元の変数に相関がなくても比には相関があるんだから「疑似」相関と呼ぶのは不適切だ、ということでしょう。</p>
+</div>
+
+<div class="note">
+  <p><a href="https://www.tylervigen.com/spurious-correlations">Spurious correlations</a> という英語のサイトには、二つの時系列データが偶然に相関する例がいろいろ集められています。これらは上に挙げた疑似相関とはちょっと意味が違いますが、因果関係のない相関という点では共通しています。なお、<a href="150209.html">時系列データの相関</a>のところでも述べたように、時系列データは、自己相関があるので、もともと偶然の相関が生じやすいものです。同様の理由で、地理データも、やや相関が生じやすいといえます。</p>
 </div>
 
 <hr>
@@ -108,7 +113,7 @@ td, th { padding: 0.2em 0.7em }
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-01 10:09:15 JST</time>
+Last modified: <time>2022-08-02 17:52:14 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
