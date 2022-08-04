@@ -17,14 +17,56 @@
 
 <h1>配列</h1>
 
-<p>Pythonの「配列」は，通常は「リスト」（list）を使う。数値計算にはNumPyの array を使う。いずれもインデックスは 0 から始まる。</p>
+<p>Python に標準で備わっている仕組みの中で、他の言語でいう「配列」に一番近いものは、「リスト」（list）です。数値計算によく使う NumPy というライブラリには array（配列）が定義されています。いずれも添字（インデックス）は 0 から始まります。</p>
 
 <h2>リスト</h2>
 
-<p>3個の要素からなるリストを作ってみる：</p>
+<p>3個の要素からなるリストを作ってみましょう：</p>
 
 <pre class="cell">
 a = [3, 5, 7]
+
+a[0]
+</pre>
+
+<pre>
+3
+</pre>
+
+<pre class="cell">
+a[1]
+</pre>
+
+<pre>
+5
+</pre>
+
+<pre class="cell">
+a[2]
+</pre>
+
+<pre>
+7
+</pre>
+
+<p>範囲外の要素、例えば <code>a[3]</code> にアクセスすると、エラーになります：</p>
+
+<pre class="cell">
+a[3]
+</pre>
+
+<pre>
+---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+Input In [ ], in &lt;cell line: 1&gt;()
+----&gt; 1 a[3]
+
+IndexError: list index out of range
+</pre>
+
+<p>インデックスのループで各要素にアクセスする方法：</p>
+
+<pre class="cell">
 for i in range(3):
     print(a[i])
 </pre>
@@ -35,9 +77,20 @@ for i in range(3):
 7
 </pre>
 
-<p>範囲外の要素，例えば <code>a[3]</code> にアクセスすると，IndexError: list index out of range というエラーになる。</p>
+<p>ただし、Python では次のようにするのが一般的です：</p>
 
-<p>同じ要素のリストなら次のようにして作るのが簡単：</p>
+<pre class="cell">
+for x in a:
+    print(x)
+</pre>
+
+<pre>
+3
+5
+7
+</pre>
+
+<p>同じ要素のリストなら次のようにして作るのが簡単です：</p>
 
 <pre class="cell">
 a = [5] * 10   # 5が10個
@@ -48,11 +101,11 @@ a
 [5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
 </pre>
 
-<p>アペンドを繰り返して作ることもできる：</p>
+<p>アペンドを繰り返して作ることもできます：</p>
 
 <pre class="cell">
 a = []
-for i in range(3, 8, 2):  # 3から始まり8未満2ずつ増える
+for i in range(3, 8, 2):  # 3から始まり8未満2ずつ増やす
     a.append(i)
 a
 </pre>
@@ -61,7 +114,7 @@ a
 [3, 5, 7]
 </pre>
 
-<p>上と同じことは次のようにも書ける（リスト内包表記，list comprehension）：</p>
+<p>上と同じことは次のようにも書けます（リスト内包表記、list comprehension）：</p>
 
 <pre class="cell">
 a = [i for i in range(3, 8, 2)]
@@ -72,9 +125,21 @@ a
 [3, 5, 7]
 </pre>
 
-<p>リストの要素は同じ型でなくてもよい。<code>[3, 5, 'seven']</code> のようなリストも可能である。</p>
+<p>リストの要素は同じ型でなくてもかまいません。数値や文字列が混じったリストも可能です。</p>
 
-<p>行列はリストのリストとして作れる：</p>
+<pre class="cell">
+a = [3, 5.0, "seven"]
+for x in a:
+    print(x, type(x))
+</pre>
+
+<pre>
+3 &lt;class 'int'&gt;
+5.0 &lt;class 'float'&gt;
+seven &lt;class 'str'&gt;
+</pre>
+
+<p>行列はリストのリストとして作れます：</p>
 
 <pre class="cell">
 a = [[2, 9, 4], [7, 5, 3], [6, 1, 8]]
@@ -87,7 +152,7 @@ a[1][2]
 
 <h2>NumPy の array</h2>
 
-<p>ベクトル・行列などの数値計算をより高速に行うにはNumPyの array を使う。</p>
+<p>ベクトル・行列などの数値計算をより高速に行うには NumPy の array を使います。</p>
 
 <pre class="cell">
 import numpy as np
@@ -116,7 +181,7 @@ a.dtype
 dtype('int64')
 </pre>
 
-<p>一つでも浮動小数点数にすると，全部が浮動小数点数になる。</p>
+<p>一つでも浮動小数点数にすると、全部が浮動小数点数になります。</p>
 
 <pre class="cell">
 a = np.array([3, 5, 7.])
@@ -135,7 +200,7 @@ a.dtype
 dtype('float64')
 </pre>
 
-<p>データ型を指定することもできる：</p>
+<p>データ型を指定することもできます：</p>
 
 <pre class="cell">
 a = np.array([3, 5, 7], dtype="int8")  # 8ビット整数型
@@ -146,7 +211,7 @@ a
 array([3, 5, 7], dtype=int8)
 </pre>
 
-<p>0 に初期化された長さ <code>n</code> の配列を作るには <code>np.zeros(n)</code> とする。同様に，1 に初期化された長さ <code>n</code> の配列は <code>np.ones(n)</code> である。初期化の必要がなければ <code>np.empty(n)</code> とする。行列は，<code>n</code> のところを例えば <code>(m, n)</code> のように <code>(行数, 列数)</code> とする。同様に任意次元の配列が作れる。</p>
+<p>0 に初期化された長さ <code>n</code> の配列を作るには <code>np.zeros(n)</code> とします。同様に、1 に初期化された長さ <code>n</code> の配列は <code>np.ones(n)</code> です。初期化の必要がなければ <code>np.empty(n)</code> とします。行列は、<code>n</code> のところを例えば <code>(m, n)</code> のように <code>(行数, 列数)</code> とします。同様に任意次元の配列が作れます。</p>
 
 <pre class="cell">
 a = np.ones((2, 3))
@@ -158,7 +223,22 @@ array([[1., 1., 1.],
        [1., 1., 1.]])
 </pre>
 
-<p>各要素にアクセスするには <code>a[i, j]</code> でも <code>a[i][j]</code> でも（通常は）同じ意味であるが <code>a[i, j]</code> のほうが倍ほど速い：</p>
+<pre class="cell">
+a = np.ones((2, 3, 4))
+a
+</pre>
+
+<pre>
+array([[[1., 1., 1., 1.],
+        [1., 1., 1., 1.],
+        [1., 1., 1., 1.]],
+
+       [[1., 1., 1., 1.],
+        [1., 1., 1., 1.],
+        [1., 1., 1., 1.]]])
+</pre>
+
+<p>各要素にアクセスするには <code>a[i, j]</code> でも <code>a[i][j]</code> でも（通常は）同じ意味ですが、<code>a[i, j]</code> のほうが倍ほど速いようです：</p>
 
 <pre class="cell">
 a = np.empty((1000, 1000))
@@ -167,11 +247,9 @@ a = np.empty((1000, 1000))
 %timeit a[123, 456]
 </pre>
 
-<p>Intel Mac mini で <code>a[123][456]</code> は 204ns，<code>a[123, 456]</code> は 108ns であった。M1 Mac mini ではそれぞれ 109ns，58ns であった。</p>
+<p><code>a</code>、<code>b</code> が array なら、例えば <code>a + b</code> は要素ごとの和になります。つまり、ベクトルや行列の要素ごとの演算はループしなくても高速にできます。</p>
 
-<p><code>a</code>，<code>b</code> が array なら，例えば <code>a + b</code> は要素ごとの和になる。つまり，ベクトルや行列の演算はループしなくても高速にできる。</p>
-
-<p><code>a = a + b</code> は <code>a + b</code> を計算してそれに <code>a</code> という名前を付ける（古い <code>a</code> はアクセスできなくなる）。一方で，<code>a += b</code> は <code>a</code> に <code>b</code> をその場で加える。大きな array の計算はこの方がメモリを節約できるし，速い：</p>
+<p><code>a = a + b</code> は <code>a + b</code> を計算してそれに <code>a</code> という名前を付けます（古い <code>a</code> はアクセスできなくなります）。一方で、<code>a += b</code> は <code>a</code> に <code>b</code> をその場で加えます。大きな array の計算はこの方がメモリを節約でき、速くなります：</p>
 
 <pre class="cell">
 a = np.empty((1000, 1000))
@@ -182,9 +260,7 @@ global a, b
 a = a + b  # または a += b
 </pre>
 
-<p>M1 Mac mini で <code>a = a + b</code> は 724µs，<code>a += b</code> は 331µs であった。</p>
-
-<p>ベクトル・行列の生成は他に <code>np.arange()</code>（arange = array range）も使える：</p>
+<p>ベクトル・行列の生成は他に <code>np.arange()</code>（arange = array range）が便利です：</p>
 
 <pre class="cell">
 np.arange(6)
@@ -203,17 +279,17 @@ array([[0, 1, 2],
        [3, 4, 5]])
 </pre>
 
-<p><code>np.arange(3)</code> は <code>array([0, 1, 2])</code> だが <code>np.arange(3.)</code> は浮動小数点の <code>array([0., 1., 2.])</code> になる。</p>
+<p><code>np.arange(3)</code> は <code>array([0, 1, 2])</code> ですが <code>np.arange(3.)</code> は浮動小数点の <code>array([0., 1., 2.])</code> になります。</p>
 
-<p><code>np.empty(n, dtype="int8")</code> などのようにデータ型を指定することができる。</p>
+<p><code>np.empty(n, dtype="int8")</code> などのようにデータ型を指定することもできます。</p>
 
-<p>乱数のベクトルの生成は<a href="random.html">乱数</a>を参照のこと。</p>
+<p>乱数のベクトルの生成は<a href="random.html">乱数</a>を参照してください。</p>
 
 <h2>PyTorch や Tensorflow のテンソル</h2>
 
-<p>PyTorch や Tensorflow などの機械学習ライブラリでは「テンソル」（tensor）というものを使う。これも要するに配列である。</p>
+<p>PyTorch や Tensorflow などの機械学習ライブラリでは「テンソル」（tensor）というものをよく使いますが、これも一種の配列です。</p>
 
-<p>PyTorch なら <code>import torch</code> して，<code>np.array()</code> の代わりに <code>torch.tensor()</code> を，<code>np.ones()</code> の代わりに <code>torch.ones()</code> を使うなどとすればよい。</p>
+<p>PyTorch なら <code>import torch</code> して、<code>np.array()</code> の代わりに <code>torch.tensor()</code>、<code>np.ones()</code> の代わりに <code>torch.ones()</code> とします。</p>
 
 <hr>
 
@@ -221,7 +297,7 @@ array([[0, 1, 2],
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-03-21 19:42:12</time>
+Last modified: <time>2022-08-04 15:21:36 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

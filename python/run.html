@@ -21,7 +21,7 @@
 
 <h2>Google Colab を使う</h2>
 
-<p>Google Colaboratory（略称 Google Colab）を使えば Web 上で Python が使えます。ただし、Google のアカウントが必要です。無料です（<a href="https://colab.research.google.com/signup">有料版</a>もあります）。古いブラウザでは使えなかったり Shift + Enter がうまくいかなかったりするようです。</p>
+<p>Google Colaboratory（グーグル・コラボラトリー、略称 Google Colab（コラブ））を使えば Web 上で Python が使えます。ただし、Google のアカウントが必要です。無料です（<a href="https://colab.research.google.com/signup">有料版</a>もあります）。古いブラウザでは使えなかったり <span class="keytop">Shift</span> + <span class="keytop">Enter</span> がうまくいかなかったりするようです。</p>
 
 <p><a href="https://colab.research.google.com/">Google Colaboratory</a> にアクセスしてください。上にオレンジ色の帯のあるポップアップが出れば、一番下の「ノートブックを新規作成」をクリックします。ポップアップが出なかったら、上の「ファイル」メニューから「ノートブックを新規作成」を選びます。</p>
 
@@ -31,9 +31,11 @@
 2+3
 </pre>
 
-<p>と打ち込んで、Shift + Enter します。答え（上の計算の場合は 5）が現れ、その下に新しいコードセルが出ます。</p>
+<p>と打ち込んで、<span class="keytop">Shift</span> + <span class="keytop">Enter</span> します。答え（上の計算の場合は 5）が現れ、その下に新しいコードセルが出ます。</p>
 
-<p>ブラウザによっては Shift + Enter がうまく効かないことがあるようです。その場合は ● ▷ のボタンをクリックすれば実行されます。ただ、新しいコードセルが出ませんので、「+ コード」ボタンを押してコードセルを追加します。</p>
+<div class="note">
+<p>ブラウザによっては <span class="keytop">Shift</span> + <span class="keytop">Enter</span> がうまく効かないことがあるようです。その場合は ● ▷ のボタンをクリックすれば実行されます。ただ、新しいコードセルが出ませんので、「+ コード」ボタンを押してコードセルを追加します。</p>
+</div>
 
 <p>あとは<a href="first.html">Pythonの初歩</a>を見ながらいろいろ試してください。</p>
 
@@ -71,7 +73,7 @@ python3
 2+3
 </pre>
 
-<p>と打ち込んで Enter すれば、答え「5」が現れます。</p>
+<p>と打ち込んで <span class="keytop">Enter</span> すれば、答え「5」が現れます。</p>
 
 <p>あとは<a href="first.html">Pythonの初歩</a>を見ながらいろいろ試してください。</p>
 
@@ -87,7 +89,7 @@ python3
 
 <h2>IPython</h2>
 
-<p>IPython なら、もう少し対話的に（interactive に）Python を使えます。ターミナル（Windows であれば PowerShell など）に</p>
+<p>IPython なら、もう少し対話的に（interactive に）Python を使えます。ターミナル（Windows ならコマンドプロンプトか PowerShell）に</p>
 
 <pre>
 ipython
@@ -120,7 +122,7 @@ for i in range(3):
     print("大事なので3回言います")
 </pre>
 
-<p>は、テキストファイルとして保存してから実行することができます。テキストファイルとして保存した実行可能なプログラムを「スクリプト」と呼びます。テキストファイルですから、Windows の「メモ帳」や Mac の「テキストエディット」などの標準テキストエディタで作成できますが、本格的にプログラミングをするなら、<a href="https://atom.io">Atom</a> や <a href="https://code.visualstudio.com">Visual Studio Code</a> や Emacs や Vim のようなプログラミング専用テキストエディタが便利です。</p>
+<p>は、テキストファイルとして保存してから実行することができます。テキストファイルとして保存した実行可能なプログラムを「スクリプト」と呼びます。テキストファイルですから、Windows の「メモ帳」や Mac の「テキストエディット」などの標準テキストエディタで作成できますが、本格的にプログラミングをするなら、<a href="https://code.visualstudio.com">Visual Studio Code</a> や Emacs や Vim のようなプログラミング専用テキストエディタが便利です。</p>
 
 <p>Python スクリプトのファイル名は <code>test.py</code> のように拡張子を <code>py</code> にします。保存の際の文字コードは UTF-8 にします。実行するには、ターミナル（Windows ならコマンドプロンプトか PowerShell）で（スクリプトを保存したディレクトリに移動してから）</p>
 
@@ -196,15 +198,21 @@ $ python3 -c 'x=2;y=32;print(x**y)'
 jupyter notebook
 </pre>
 
-<p>と打ち込むと、Web ブラウザが立ち上がって、カレントディレクトリのファイル名一覧が表示されます（Mac や Linux なら <code>jupyter notebook &amp;</code> と打ち込めばバックグラウンド動作になります）。もし拡張子が ipynb のファイルがあれば、それを開けば前回の続きの計算ができます。新しいノートブックを開くには、この画面で [New ▼] ボタンを押し Python 3 を選びます。一番上の Untitled をクリックすると、ノートブックの名前が変えられます。ちなみに、拡張子 ipynb は、Jupyter Notebook が IPython Notebook と呼ばれていたころの名残りです。</p>
+<p>と打ち込むと、Web ブラウザが立ち上がって、カレントディレクトリのファイル名一覧が表示されます（Mac や Linux なら <code>jupyter notebook &amp;</code> と打ち込めばバックグラウンド動作になります）。もし拡張子が ipynb のファイルがあれば、それを開けば前回の続きの計算ができます。新しいノートブックを開くには、この画面で [New ▼] ボタンを押し Python 3 を選びます。一番上の Untitled をクリックすると、ノートブックの名前が変えられます。最初からノートブックのファイル名がわかっていれば</p>
 
-<p>In [ ]: の右の箱に Python のプログラムを打ち込みます。何行かまとめて入れることもできます。最後の行の値が（<code>print()</code> を使わないでも）表示されます。Shift + Enter で、実行し次の箱に移動します（または Ctrl + Enter で、実行し次の箱に移動しません）。</p>
+<pre>
+jupyter notebook ファイル名
+</pre>
+
+<p>と打ち込むほうが楽です。ちなみに、拡張子 ipynb は、Jupyter Notebook が IPython Notebook と呼ばれていたころの名残りです。</p>
+
+<p>In [ ]: の右の箱に Python のプログラムを打ち込みます。何行かまとめて入れることもできます。最後の行の値が（<code>print()</code> を使わないでも）表示されます。<span class="keytop">Shift</span> + <span class="keytop">Enter</span> で、実行し次の箱に移動します（または <span class="keytop">Ctrl</span> + <span class="keytop">Enter</span> で、実行し次の箱に移動しません）。</p>
 
 <p>[Code ↕︎] ボタンを [Markdown ↕︎] に切り替えれば、Markdown 形式で説明が書けます。<code>$E = mc^2$</code> のように <code>$</code> で挟んで数式を書くこともできます。</p>
 
 <p>終了は File → Close and Halt です。右上の [Quit] で Web サーバが終了します。</p>
 
-<p>拡張子 ipynb のファイルを GitHub にプッシュすれば、ドキュメントとコードと実行結果が公開できます。この方法によるドキュメント作成は GitHub 上で数式を表示するための便利な方法でもあります（Markdown 形式では数式はうまく表示できません）。</p>
+<p>拡張子 ipynb のファイルを GitHub にプッシュすれば、ドキュメントとコードと実行結果が公開できます。この方法によるドキュメント作成は GitHub 上で数式を表示するための便利な方法でもあります（最近は GitHub の Markdown でも数式がサポートされるようになりました。ただ、地の文ではうまくいくのですが、箇条書きの中などではうまく表示できないようです）。</p>
 
 <p>次のようにいろいろなオプションを指定できます：</p>
 
@@ -230,7 +238,7 @@ jupyter lab
 
 <p><a href="https://www.spyder-ide.org">Spyder</a> は Anaconda に付いている IDE（統合開発環境）です。R の RStudio に似ています。</p>
 
-<p>Anaconda を入れなくても <code>pip install spyder</code> でインストールすることができます（詳しくは<a href="https://docs.spyder-ide.org/installation.html">こちら</a>参照）。Homebrew 環境なら /usr/local/bin/spyder3 という実行ファイルができますので、ターミナルで spyder3 と打ち込めば立ち上がります。</p>
+<p>Anaconda を入れなくても <code>pip install spyder</code> でインストールすることができます（詳しくは<a href="https://docs.spyder-ide.org/installation.html">こちら</a>参照）。</p>
 
 <h2>VS Code</h2>
 
@@ -273,7 +281,7 @@ jupyter lab
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-15 15:53:59 JST</time>
+Last modified: <time>2022-08-04 10:01:04 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

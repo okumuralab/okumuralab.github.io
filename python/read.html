@@ -24,20 +24,30 @@ window.onload = function() {
 
 <h1>データの読み書き</h1>
 
-<h2>データの読み込み</h2>
+<h2>はじめに</h2>
 
-<p>Python でデータを読み込むときは <a href="https://pandas.pydata.org/">pandas</a>（パンダズ）というライブラリを使います。pandas の名前は panel data が<a href="https://conference.scipy.org/proceedings/scipy2010/mckinney.html">由来</a>だそうですが，パンダ 🐼 とかけているのでしょう。</p>
+<p>Python でデータを読み書きするときは <a href="https://pandas.pydata.org/">pandas</a>（パンダズ）というライブラリを使うのが基本です。pandas の名前は panel data が<a href="https://conference.scipy.org/proceedings/scipy2010/mckinney.html">由来</a>だそうですが、パンダ 🐼 とかけているのでしょう。</p>
 
 <h3>CSV ファイルの読み込み</h3>
 
 <p>ファイル名または URL を指定して CSV ファイルを読み込みます：</p>
 
 <pre class="cell">
-<code>import pandas as pd
+import pandas as pd
 
 df = pd.read_csv("filename.csv")
-df   # 最初と最後だけ表示
-</code></pre>
+df   # 長い場合は最初と最後だけ表示してくれる
+</pre>
+
+<p>具体的に<a href="an_wld.html">気象庁の「世界の年平均気温偏差」データ</a>を読み込んでみましょう。デフォルトの文字コードは UTF-8 ですが、これは Shift JIS ですので、オプションが必要です：</p>
+
+<pre class="cell">
+import pandas as pd
+
+df = pd.read_csv("https://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv",
+                 encoding="sjis")
+df
+</pre>
 
 <p>Google Colaboratory なら対話型テーブルにして眺めることもできます：</p>
 
@@ -50,10 +60,10 @@ type(df)
 </pre>
 
 <pre>
-<code>pandas.core.frame.DataFrame
-</code></pre>
+pandas.core.frame.DataFrame
+</pre>
 
-<p>最大表示行数・列数を調べたり変えたりしたいときは <code>pd.options.display.max_rows</code>，<code>pd.options.display.max_columns</code> を見たり代入したりします。</p>
+<p>最大表示行数・列数を調べたり変えたりしたいときは <code>pd.options.display.max_rows</code>、<code>pd.options.display.max_columns</code> を見たり代入したりします。</p>
 
 <p>表示精度を変えたいときは <code>pd.options.display.precision</code>（デフォルト6）に桁数の目標値を代入します（IPython の <code>%precision</code> には影響を受けないようです）。</p>
 
@@ -61,54 +71,54 @@ type(df)
 
 <ul>
   <li><code>header=None</code>: ヘッダ行なし</li>
-  <li><code>encoding="cp932"</code>: Shift JIS（<code>"shift_jis"</code>，<code>"sjis"</code> もほぼ同じ）</li>
+  <li><code>encoding="cp932"</code>: Shift JIS（<code>"shift_jis"</code>、<code>"sjis"</code> もほぼ同じ）</li>
   <li><code>comment="#"</code>: <code>#</code> 以下をコメントと解釈する</li>
 </ul>
 
 <p>デフォルトでは次の文字列が欠測値（<code>NaN</code>）と判断されます：</p>
 
 <pre>
-<code>'', '#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan',
+'', '#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan',
 '1.#IND', '1.#QNAN', '<NA>', 'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null'
-</code></pre>
+</pre>
 
-<p>空文字列と <code>#N/A</code> はExcelでも欠測値と解釈されますが，<code>#</code> をコメント開始文字と設定している場合（<code>comment="#"</code>）には <code>"#N/A"</code> のようにダブルクォートで囲む必要があります。</p>
+<p>空文字列と <code>#N/A</code> はExcelでも欠測値と解釈されますが、<code>#</code> をコメント開始文字と設定している場合（<code>comment="#"</code>）には <code>"#N/A"</code> のようにダブルクォートで囲む必要があります。</p>
 
 <p>これ以外の欠測値用文字列が必要なときは <code>na_values</code> と <code>keep_default_na</code>（デフォルトは <code>True</code>）で指定できます。空欄だけを欠測値としたい場合は次のようにします：</p>
 
 <pre>
-<code>df = pd.read_csv("finename.csv", na_values="", keep_default_na=False)
-</code></pre>
+df = pd.read_csv("finename.csv", na_values="", keep_default_na=False)
+</pre>
 
 <p>10進で切りの良い値なのに微妙な誤差が入ることがあります。例：</p>
 
 <pre>
-<code>from io import StringIO
+from io import StringIO
 data = ("A\n1258.477\n")
 df = pd.read_csv(StringIO(data))
 df.A[0] - 1258.477    # -2.2737367544323206e-13
-</code></pre>
+</pre>
 
 <p>これを避けるには <code>float_precision="high"</code> または <code>float_precision="round_trip"</code> というオプションを与えます。</p>
 
 <h3>Excel ファイルの読み込み</h3>
 
-<p>pandas の <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.html">read_excel()</a> を使うのが簡単です<del>が，<a href="201212.html">xlrd パッケージが xlsx 非対応になった</a>ため，注意が必要です</del>。あらかじめ xlrd と openpyxl パッケージを <code>pip install xlrd openpyxl</code> などとしてインストールしておきます。</p>
+<p>pandas の <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.html">read_excel()</a> を使うのが簡単です<del>が、<a href="201212.html">xlrd パッケージが xlsx 非対応になった</a>ため、注意が必要です</del>。あらかじめ xlrd と openpyxl パッケージを <code>pip install xlrd openpyxl</code> などとしてインストールしておきます。</p>
 
 <pre>
-<code>df = pd.read_excel("filename.xlsx") # xlsも読める
-</code></pre>
+df = pd.read_excel("filename.xlsx") # xlsも読める
+</pre>
 
 <p>pandas によるファイル読み込みの全般については <a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html">pandas の IO Tools</a> のページをご覧ください。</p>
 
-<p>xlsx の読み込みは，ほかに <a href="https://github.com/PydPiper/pylightxl">pylightxl</a> という軽量なライブラリがあります。</p>
+<p>xlsx の読み込みは、ほかに <a href="https://github.com/PydPiper/pylightxl">pylightxl</a> という軽量なライブラリがあります。</p>
 
 <h2>DataFrame の操作</h2>
 
 <p>pandas の DataFrame は R のデータフレームとほぼ同じです。簡単な解説が <a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/10min.html">10 Minutes to pandas</a> にあります。</p>
 
 <pre>
-<code>df          # 全体を表示
+df          # 全体を表示
 df.head()   # 頭の5行だけ表示
 df.tail()   # 末尾の5行だけ表示
 df.shape    # 行数・列数
@@ -121,27 +131,27 @@ df1 = df.dropna() # 欠測値のある行を外す
 df1 = df.fillna(0) # 欠測値を0で置き換える
 df1 = df.fillna(method="ffill") # 欠測値を直前の行で置き換える
 df["A"] = df["A"].apply(float)  # 列の各要素に関数（ここでは <code>float()</code>）を適用
-</code></pre>
+</pre>
 
-<p>データの（0から数えて）例えば2行目から4行目を選択するには <code>df[2:5]</code> のようにします。データの一部の列を選択するには <code>df.列名</code> あるいは <code>df['列名']</code> あるいは <code>df[['列名1','列名2']]</code> のようにします。行列のように行名・列名で選ぶには <code>df.loc['行名','列名']</code>，行番号・列番号で選ぶには <code>df.iloc[行番号,列番号]</code> とします。複数与えるには <code>[2,3,4]</code> のようにリストにするか，<code>2:5</code> のように範囲で表します（Pythonでは番号は0から数え，<code>2:5</code> のような範囲は最後の5を含まないことに注意）。</p>
+<p>データの（0から数えて）例えば2行目から4行目を選択するには <code>df[2:5]</code> のようにします。データの一部の列を選択するには <code>df.列名</code> あるいは <code>df['列名']</code> あるいは <code>df[['列名1','列名2']]</code> のようにします。行列のように行名・列名で選ぶには <code>df.loc['行名','列名']</code>、行番号・列番号で選ぶには <code>df.iloc[行番号,列番号]</code> とします。複数与えるには <code>[2,3,4]</code> のようにリストにするか、<code>2:5</code> のように範囲で表します（Pythonでは番号は0から数え、<code>2:5</code> のような範囲は最後の5を含まないことに注意）。</p>
 
 <p><code>df['列名']</code> はSeries（1列だけのDataFrame）という型のものです。普通のベクトル（ndarray）に直すには <code>df['列名'].values</code> とします。</p>
 
 <pre>
-<code>df['列名'].value_counts(sort=False)  # 列の度数分布表
+df['列名'].value_counts(sort=False)  # 列の度数分布表
 df['列名'].mean()  # 列の平均（median(), var(), std() なども同様）
 df.groupby('列名1')['列名2'].mean() # 列名1でグループ化した列名2の平均
 pd.crosstab(df['列名1'], df['列名2']) # クロス集計
-</code></pre>
+</pre>
 
 <h2>データ型の指定</h2>
 
-<p>この節については，いしおさんのブログ<a href="https://ishitonton.hatenablog.com/entry/2019/01/04/190748">DataFrameのメモリサイズを節約する</a>が参考になります。</p>
+<p>この節については、いしおさんのブログ<a href="https://ishitonton.hatenablog.com/entry/2019/01/04/190748">DataFrameのメモリサイズを節約する</a>が参考になります。</p>
 
 <p>例えば <a href="../stat/data/shinjuku.csv">shinjuku.csv</a> というCSVファイルを読み込むとしましょう。</p>
 
 <pre>
-<code>import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 import sys
 
@@ -149,166 +159,166 @@ url = "<span class="dirurl">https://okumuralab.org/~okumura/</span>stat/data/shi
 df1 = pd.read_csv(url)
 df1.shape           # (25705, 4)
 sys.getsizeof(df1)  # 2493489
-</code></pre>
+</pre>
 
 <p><code>df1.head()</code> の結果は次のようになります：</p>
 
 <pre>
-<code>           datetime     max     min     avg
+           datetime     max     min     avg
 0  2011/03/01 00:00  0.0370  0.0316  0.0338
 1  2011/03/01 01:00  0.0368  0.0324  0.0342
 2  2011/03/01 02:00  0.0357  0.0325  0.0340
 3  2011/03/01 03:00  0.0371  0.0322  0.0343
 4  2011/03/01 04:00  0.0363  0.0321  0.0342
-</code></pre>
+</pre>
 
-<p>まず，日付はインデックスに移動してみましょう：</p>
+<p>まず、日付はインデックスに移動してみましょう：</p>
 
 <pre>
-<code>df2 = pd.read_csv(url, index_col='datetime')
+df2 = pd.read_csv(url, index_col='datetime')
 df2.shape           # (25705, 3)
 sys.getsizeof(df2)  # 2493409
-</code></pre>
+</pre>
 
 <p>サイズの節約にはなりませんでした。<code>df2.head()</code> は次のようになります：</p>
 
 <pre>
-<code>                     max     min     avg
+                     max     min     avg
 datetime                                
 2011/03/01 00:00  0.0370  0.0316  0.0338
 2011/03/01 01:00  0.0368  0.0324  0.0342
 2011/03/01 02:00  0.0357  0.0325  0.0340
 2011/03/01 03:00  0.0371  0.0322  0.0343
 2011/03/01 04:00  0.0363  0.0321  0.0342
-</code></pre>
+</pre>
 
-<p>日付が文字列で読み込まれてしまうのがサイズを大きくする原因です。日時データは <code>parse_dates</code> に指定して，pandasの64ビットの「Timestamp」型にします。この型は1970年元旦を起点としたナノ秒単位の整数で，1677年から2262年まで使えます（<code>pd.Timestamp.min</code>，<code>pd.Timestamp.max</code>）。残りの列は特に何もする必要はないのですが，ここではメモリが逼迫していると仮定して，32ビットの浮動小数点型にしてみます：</p>
+<p>日付が文字列で読み込まれてしまうのがサイズを大きくする原因です。日時データは <code>parse_dates</code> に指定して、pandasの64ビットの「Timestamp」型にします。この型は1970年元旦を起点としたナノ秒単位の整数で、1677年から2262年まで使えます（<code>pd.Timestamp.min</code>、<code>pd.Timestamp.max</code>）。残りの列は特に何もする必要はないのですが、ここではメモリが逼迫していると仮定して、32ビットの浮動小数点型にしてみます：</p>
 
 <pre>
-<code>df3 = pd.read_csv(url, index_col='datetime', parse_dates=['datetime'],
+df3 = pd.read_csv(url, index_col='datetime', parse_dates=['datetime'],
                   dtype={'max':'float32', 'min':'float32', 'avg':'float32'})
 sys.getsizeof(df3)  # 514124
-</code></pre>
+</pre>
 
 <p>列指定は番号でもかまいません：</p>
 
 <pre>
-<code>df4 = pd.read_csv(url, index_col=0, parse_dates=[0],
+df4 = pd.read_csv(url, index_col=0, parse_dates=[0],
                   dtype={1:'float32', 2:'float32', 3:'float32'})
 sys.getsizeof(df4)  # 514124
-</code></pre>
+</pre>
 
-<p>インデックス以外の列指定が同じなら，次のようにしてもかまいません：</p>
+<p>インデックス以外の列指定が同じなら、次のようにしてもかまいません：</p>
 
 <pre>
-<code>df5 = pd.read_csv(url, index_col=0, parse_dates=[0], dtype='float32')
+df5 = pd.read_csv(url, index_col=0, parse_dates=[0], dtype='float32')
 sys.getsizeof(df5)  # 514124
-</code></pre>
+</pre>
 
-<p>データ型としては，符号付き整数 <code>'int8'</code>，<code>'int16'</code>，<code>'int32'</code>，<code>'int64'</code>，符号なし整数 <code>'uint8'</code>，<code>'uint16'</code>，<code>'uint32'</code>，<code>'uint64'</code>，浮動小数点型 <code>'float16'</code>，<code>'float32'</code>，<code>'float64'</code>，<code>'float128'</code>，論理型 <code>'bool'</code>（<code>True</code> または <code>False</code>）などが使えるはずです。次のような簡単なプログラムで確認できます：</p>
+<p>データ型としては、符号付き整数 <code>'int8'</code>、<code>'int16'</code>、<code>'int32'</code>、<code>'int64'</code>、符号なし整数 <code>'uint8'</code>、<code>'uint16'</code>、<code>'uint32'</code>、<code>'uint64'</code>、浮動小数点型 <code>'float16'</code>、<code>'float32'</code>、<code>'float64'</code>、<code>'float128'</code>、論理型 <code>'bool'</code>（<code>True</code> または <code>False</code>）などが使えるはずです。次のような簡単なプログラムで確認できます：</p>
 
 <pre>
-<code>from io import StringIO
+from io import StringIO
 data = ("A,B\n1,1.5\n2,2.5")
 df = pd.read_csv(StringIO(data), dtype={0:'int8', 1:'float16'})
 sys.getsizeof(df)
 df.head()
-</code></pre>
+</pre>
 
-<p>データ型を指定しないと自動判断しようとしますが，うまくいかないと「Columns ... have mixed types」のような警告を出します。<code>low_memory=False</code> オプションで，より丁寧に自動判断してくれます。</p>
+<p>データ型を指定しないと自動判断しようとしますが、うまくいかないと「Columns ... have mixed types」のような警告を出します。<code>low_memory=False</code> オプションで、より丁寧に自動判断してくれます。</p>
 
-<p>真偽値の文字列は <code>True</code>，<code>False</code> がデフォルトですが，<code>true_values=['Yes'], false_values=['No']</code> のようなオプションで指定できます。</p>
+<p>真偽値の文字列は <code>True</code>、<code>False</code> がデフォルトですが、<code>true_values=['Yes'], false_values=['No']</code> のようなオプションで指定できます。</p>
 
-<p>「Timestamp」型の欠測値（空文字列，<code>NA</code> など）は NaN でなく NaT（Not-a-Time）になります（<code>pd.NaT</code>）。</p>
+<p>「Timestamp」型の欠測値（空文字列、<code>NA</code> など）は NaN でなく NaT（Not-a-Time）になります（<code>pd.NaT</code>）。</p>
 
 <p>日時のデータ型については<a href="datetime.html">日時</a>もご参照ください。</p>
 
 <h2>データの書き出し</h2>
 
-<p>データフレームのCSV形式での書き出しは <code>pandas.DataFrame.to_csv()</code> を使います。デフォルトはUTF-8ですが，Excel互換のBOM付きUTF-8（行末CRLF）でインデックスを付けずに保存するには次のようにします：</p>
+<p>データフレームのCSV形式での書き出しは <code>pandas.DataFrame.to_csv()</code> を使います。デフォルトはUTF-8ですが、Excel互換のBOM付きUTF-8（行末CRLF）でインデックスを付けずに保存するには次のようにします：</p>
 
 <pre>
-<code>df.to_csv("filename.csv", index=False, encoding="utf_8_sig", line_terminator="\r\n")
-</code></pre>
+df.to_csv("filename.csv", index=False, encoding="utf_8_sig", line_terminator="\r\n")
+</pre>
 
-<p>データが10進で切りの良い値でも，微妙な誤差が入ることがあります。例えばオプション <code>float_format="%.14g"</code> を付けて，わざと精度を落として書き込むといった対策がありそうです。</p>
+<p>データが10進で切りの良い値でも、微妙な誤差が入ることがあります。例えばオプション <code>float_format="%.14g"</code> を付けて、わざと精度を落として書き込むといった対策がありそうです。</p>
 
 <p>Excel形式での書き出しは <code>pandas.DataFrame.to_excel()</code> です。エンジンは openpyxl または xlsxwriter が指定できます。前者のほうが多機能のようです。あらかじめ <code>pip install openpyxl</code> などと打ち込んでインストールしておきます。</p>
 
 <pre>
-<code>df.to_excel("filename.xlsx")
-</code></pre>
+df.to_excel("filename.xlsx")
+</pre>
 
-<p>JSON形式への変換・出力は <code>to_json()</code> です。<code>lines=True</code> で改行区切りJSON（<a href="https://jsonlines.org">JSONL</a> = JSON Lines，<a href="http://ndjson.org">NDJSON</a> = Newline Delimited JSON，<a href="https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON">LDJSON</a> = Line Delimited JSON）になります：</p>
+<p>JSON形式への変換・出力は <code>to_json()</code> です。<code>lines=True</code> で改行区切りJSON（<a href="https://jsonlines.org">JSONL</a> = JSON Lines、<a href="http://ndjson.org">NDJSON</a> = Newline Delimited JSON、<a href="https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON">LDJSON</a> = Line Delimited JSON）になります：</p>
 
 <pre>
-<code>df = pd.DataFrame({"A":[1,2],"B":[1.5,2.5]})
+df = pd.DataFrame({"A":[1,2],"B":[1.5,2.5]})
 df.to_json()  #==&gt; '{"A":{"0":1,"1":2},"B":{"0":1.5,"1":2.5}}'
 df.to_json(orient="records")
 #==&gt; '[{"A":1,"B":1.5},{"A":2,"B":2.5}]'
 df.to_json(orient="records", lines=True)
 #==&gt; '{"A":1,"B":1.5}\n{"A":2,"B":2.5}'
 df.to_json('hoge.jsonl', orient="records", lines=True) # ファイルに出力
-</code></pre>
+</pre>
 
 <p>JSONL形式の読み込み：</p>
 
 <pre>
-<code>df = pd.read_json('hoge.jsonl', orient='records', lines=True)
-</code></pre>
+df = pd.read_json('hoge.jsonl', orient='records', lines=True)
+</pre>
 
-<p>ちなみに，JSONファイルの操作には <a href="https://stedolan.github.io/jq/">jq</a> が便利です（MacならHomebrewで入れられます）。</p>
+<p>ちなみに、JSONファイルの操作には <a href="https://stedolan.github.io/jq/">jq</a> が便利です（MacならHomebrewで入れられます）。</p>
 
 <p>DataFrame を dict 形式にするには：</p>
 
 <pre>
-<code>import json
+import json
 
 json.dumps(df.to_dict(orient="list"))
 #==&gt; '{"A": [1, 2], "B": [1.5, 2.5]}'
 json.dumps(df.to_dict(orient="list"), separators=(',', ':'))
 #==&gt; '{"A":[1,2],"B":[1.5,2.5]}'
-</code></pre>
+</pre>
 
-<p>いったん dict 形式になれば，JSON ファイルへの書き出し・読み込みは次のようにできます：</p>
+<p>いったん dict 形式になれば、JSON ファイルへの書き出し・読み込みは次のようにできます：</p>
 
 <pre>
-<code>with open('hoge.json', 'w') as f:
+with open('hoge.json', 'w') as f:
     json.dump(hoge, f)
 
 with open('hoge.json') as f:
     hoge = json.load(f)
-</code></pre>
+</pre>
 
 <h2>全部メモリに入れないで処理する</h2>
 
-<p>全体を DataFrame に読み込まず行単位で操作するには，標準ライブラリ <code>csv</code> の <code>csv.reader()</code>，<code>csv.writer()</code> を使います。例：</p>
+<p>全体を DataFrame に読み込まず行単位で操作するには、標準ライブラリ <code>csv</code> の <code>csv.reader()</code>、<code>csv.writer()</code> を使います。例：</p>
 
 <pre>
-<code>import csv
+import csv
 
 with open('file.csv') as f:
     reader = csv.reader(f)
     for row in reader:
         print(row)
-</code></pre>
+</pre>
 
-<p>別の方法として，次のように少しずつ読み込む方法があります。次の例では1000行ずつ読み込んでいます。この場合 <code>df</code> は DataFrame を読み込むためのイテレータになります。</p>
+<p>別の方法として、次のように少しずつ読み込む方法があります。次の例では1000行ずつ読み込んでいます。この場合 <code>df</code> は DataFrame を読み込むためのイテレータになります。</p>
 
 <pre>
-<code>df = pd.read_csv('file.csv', chunksize=1000)
+df = pd.read_csv('file.csv', chunksize=1000)
 
 for chunk in df:
     print(chunk.head())
-</code></pre>
+</pre>
 
 <h2>並列処理</h2>
 
-<p><a href="https://modin.readthedocs.io">Modin</a> を使えば，<code>import pandas as pd</code> を <code>import modin.pandas as pd</code> と書き換えるだけで pandas が高速になります。</p>
+<p><a href="https://modin.readthedocs.io">Modin</a> を使えば、<code>import pandas as pd</code> を <code>import modin.pandas as pd</code> と書き換えるだけで pandas が高速になります。</p>
 
 <h2>キャッシュ</h2>
 
-<p>他サイトから何度も読むデータについては，キャッシュすることが推奨されます。カレントディレクトリに <code>.web_cache</code> というディレクトリができ，その中にキャッシュが保存されます。サイトへのアクセスは毎回しますが，前回から変わってない（ステータスコードが200ではなく304）場合はキャッシュから読みます。</p>
+<p>他サイトから何度も読むデータについては、キャッシュすることが推奨されます。カレントディレクトリに <code>.web_cache</code> というディレクトリができ、その中にキャッシュが保存されます。サイトへのアクセスは毎回しますが、前回から変わってない（ステータスコードが200ではなく304）場合はキャッシュから読みます。</p>
 
 <pre><code>import pandas as pd
 from io import StringIO
@@ -323,16 +333,17 @@ sess = CacheControl(requests.Session(), cache)
 r = sess.get(URL)
 r.encoding = "UTF-8"  # または "Shift_JIS"
 df = pd.read_csv(StringIO(r.text))
-</code></pre>
+</pre>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-13 16:05:48</time>
+Last modified: <time>2022-08-04 21:54:20 JST</time>
 <!-- hhmts end -->
 </p>
+</footer>
 </body>
 </html>

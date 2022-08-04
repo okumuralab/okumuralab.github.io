@@ -17,50 +17,51 @@
 
 <h1>seabornによるプロット</h1>
 
-<p>R では ggplot2 というライブラリが人気ですが，Python では <a href="https://seaborn.pydata.org/">seaborn</a>（シーボーン）というデータ視覚化ライブラリが人気です。<code>pip install seaborn</code> または <code>conda install seaborn</code> などとしてインストールしておきましょう。seaborn は matplotlib の上で動いているので，いずれにしても matplotlib の設定は必要です。seaborn については Kaggle で <a href="https://www.kaggle.com/learn/data-visualization-from-non-coder-to-coder">Data Visualization: from Non-Coder to Coder</a> という初心者向けの無料講座があるようです。</p>
+<p>R では ggplot2 というライブラリが人気ですが、Python では <a href="https://seaborn.pydata.org/">seaborn</a>（シーボーン）というデータ視覚化ライブラリが人気です。<code>pip install seaborn</code> または <code>conda install seaborn</code> などとしてインストールしておきましょう。seaborn は matplotlib の上で動いているので、いずれにしても matplotlib の設定は必要です。seaborn については Kaggle で <a href="https://www.kaggle.com/learn/data-visualization">Data Visualization</a> という初心者向けの無料講座があるようです。</p>
 
 <p>seaborn 用に用意されているサンプルデータの一覧を見てみましょう：</p>
 
 <pre>
-<code>import seaborn as sns
+import seaborn as sns
 
 sns.get_dataset_names()
-</code></pre>
+</pre>
 
 <div class="note">
-<p>seaborn や sns という短縮名は，どうやら <a href="https://en.wikipedia.org/wiki/Sam_Seaborn">Samuel Norman Seaborn</a> から来ているようです（<a href="https://github.com/mwaskom/seaborn/issues/229">Import seaborn as ??</a>，<a href="https://stackoverflow.com/questions/41499857">Seaborn - Why import as sns?</a>）。</p>
+<p>seaborn や sns という短縮名は、どうやら <a href="https://en.wikipedia.org/wiki/Sam_Seaborn">Samuel Norman Seaborn</a> から来ているようです（<a href="https://github.com/mwaskom/seaborn/issues/229">Import seaborn as ??</a>、<a href="https://stackoverflow.com/questions/41499857">Seaborn - Why import as sns?</a>）。</p>
 </div>
 
-<p>現時点で18通りのデータがあります。これらは <a href="https://github.com/mwaskom/seaborn-data">seaborn-data</a> レポジトリからオンデマンドで取ってきて ~/seaborn-data にキャッシュされます。試しに iris データセットを取ってきてみましょう。</p>
+<p>現時点で19通りのデータがあります。これらは <a href="https://github.com/mwaskom/seaborn-data">seaborn-data</a> レポジトリからオンデマンドで取ってきて ~/seaborn-data にキャッシュされます。試しに iris データセットを取ってきてみましょう。</p>
 
 <pre>
-<code>iris = sns.load_dataset("iris")
-</code></pre>
+iris = sns.load_dataset("iris")
+</pre>
 
-<p>Seaborn の命令一覧は <a href="http://seaborn.pydata.org/api.html">API reference</a> にあります。ペアプロットを描いてみましょう。</p>
+<p>Seaborn の命令一覧は <a href="https://seaborn.pydata.org/api.html">API reference</a> にあります。ペアプロットを描いてみましょう。</p>
 
 <pre>
-<code>sns.pairplot(iris)
-</code></pre>
+sns.pairplot(iris)
+</pre>
 
 <figure><img src="img/seaborn_iris.svg" alt="Iris"></figure>
 
 <p>スタイルの設定は次のようにします：</p>
 
 <pre>
-<code>sns.set_style("darkgrid")
-</code></pre>
+sns.set_style("darkgrid")
+</pre>
 
-<p>スタイルは <code>white</code>，<code>dark</code>，<code>whitegrid</code>，<code>darkgrid</code>，<code>ticks</code> から選びます。</p>
+<p>スタイルは <code>white</code>、<code>dark</code>、<code>whitegrid</code>、<code>darkgrid</code>、<code>ticks</code> から選びます。</p>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-08-01 12:56:31</time>
+Last modified: <time>2022-08-04 21:32:00 JST</time>
 <!-- hhmts end -->
 </p>
+</footer>
 </body>
 </html>

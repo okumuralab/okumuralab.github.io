@@ -8,13 +8,6 @@
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <style>
-.cell {
-    padding: 0.5em 1em;
-    margin: 0 0;
-    background: #f4f4f4;
-    border-left: solid 1em #cccccc;
-    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
-}
 table { border-collapse: collapse; }
 td { border: 1px solid; text-align: left; }
 </style>
@@ -30,9 +23,9 @@ td { border: 1px solid; text-align: left; }
 
 <h2>簡単な計算</h2>
 
-<p>Python に慣れるため，当分の間は電卓がわりに Python を使ってみましょう。<a href="run.html">実行</a>を見て，お好きな方法で Python を起動してください。</p>
+<p>Python に慣れるため、当分の間は電卓がわりに Python を使ってみましょう。<a href="run.html">実行</a>を見て、お好きな方法で Python を起動してください。</p>
 
-<p>まず足し算です。生の Python（<code>python</code> または <code>python3</code> コマンド）ならプロンプト <code>&gt;&gt;&gt;</code> の右側に，IPython（<code>ipython</code> または <code>ipython3</code> コマンド）ならプロンプト <code>In [1]:</code> の右側に <code>123 + 456</code> と打ち込んで Enter キーを打ちます。Jupyter Notebook（Google Colaboratory を含む）なら最初の枠内に <code>123 + 456</code> と打ち込んで Shift + Enter です。次の行に答えが出ます。以下では Jupyter Notebook 風に表示しています。</p>
+<p>まず足し算です。生の Python（<code>python</code> または <code>python3</code> コマンド）ならプロンプト <code>&gt;&gt;&gt;</code> の右側に、IPython（<code>ipython</code> または <code>ipython3</code> コマンド）ならプロンプト <code>In [1]:</code> の右側に <code>123 + 456</code> と打ち込んで <span class="keytop">Enter</span> キーを打ちます。Jupyter Notebook（Google Colaboratory を含む）なら最初の枠内に <code>123 + 456</code> と打ち込んで <span class="keytop">Shift</span> + <span class="keytop">Enter</span> です。次の行に答えが出ます。以下では Jupyter Notebook 風に表示しています。</p>
 
 <pre class="cell">
 123 + 456
@@ -41,9 +34,9 @@ td { border: 1px solid; text-align: left; }
 579
 </pre>
 
-<p><code>123+456</code> のように詰めて書いてもいいのですが，ここでは見やすいように半角スペースを入れています。</p>
+<p><code>123+456</code> のように詰めて書いてもいいのですが、ここでは見やすいように半角スペースを入れています。</p>
 
-<p>掛け算は <code>*</code>，割り算は <code>/</code>，累乗は <code>**</code> です（<code>^</code> は累乗ではなくビットごとの排他的論理和です）。計算の順序は，通常の数式と同様，累乗が一番先で，その次が掛け算・割り算，最後が足し算・引き算です。</p>
+<p>掛け算は <code>*</code>、割り算は <code>/</code>、累乗は <code>**</code> です（<code>^</code> は累乗ではなくビットごとの排他的論理和です）。計算の順序は、通常の数式と同様、累乗が一番先で、その次が掛け算・割り算、最後が足し算・引き算です。</p>
 
 <pre class="cell">
 23 - 4 * 5
@@ -73,14 +66,14 @@ td { border: 1px solid; text-align: left; }
 6.019999999999999e+23
 </pre>
 
-<p>最後の <code>e+23</code> は「×10<sup>23</sup>」の意味です。実数（浮動小数点数）の表示は上に示すように微妙に誤差が出ますが，これはコンピュータが内部で10進法ではなく2進法を使っているためです。</p>
+<p>最後の <code>e+23</code> は「×10<sup>23</sup>」の意味です。実数（浮動小数点数）の表示は上に示すように微妙に誤差が出ますが、これはコンピュータが内部で10進法ではなく2進法を使っているためです。</p>
 
-<p>Python 2 では，C言語などと同様に，整数の割り算は整数に切り捨てましたが，Python 3 では <code>/</code> は実数（浮動小数点数）の範囲で計算します。整数の除算には <code>//</code> を使います。除算の余りは <code>%</code> です。例えば <code>7 // 3</code> は 2 になり，<code>7 % 3</code> は 1 になります。</p>
+<p>Python 2 では、C言語などと同様に、整数の割り算は整数に切り捨てましたが、Python 3 では <code>/</code> は実数（浮動小数点数）の範囲で計算します。整数の除算には <code>//</code> を使います。除算の余りは <code>%</code> です。例えば <code>7 // 3</code> は 2 になり、<code>7 % 3</code> は 1 になります。</p>
 
-<p>おもしろいことに，文字列を足し算，掛け算することもできます（以下では入力の行番号は省略します）：</p>
+<p>おもしろいことに、文字列を足し算、掛け算することもできます。文字列はダブルクオート <code>"</code> またはシングルクオート <code>'</code> で囲んで表します：</p>
 
 <pre class="cell">
-"ほげ" + "げほ"
+"ほげ" + 'げほ'
 </pre>
 <pre>
 'ほげげほ'
@@ -103,7 +96,7 @@ x * 3
 1.0
 </pre>
 
-<p>この <code>x</code> のようなものを「変数」と呼びます。変数名は，大文字と小文字を区別します。</p>
+<p>この <code>x</code> のようなものを「変数」と呼びます。変数名は、大文字と小文字を区別します。</p>
 
 <pre class="cell">
 x
@@ -126,7 +119,7 @@ NameError: name 'X' is not defined
 
 <p>この <code>NameError</code> は変数名などを間違えたときに出ます。</p>
 
-<p>対話型の環境では，一つ前の出力結果が，特別な変数 <code>_</code> に入ります：</p>
+<p>対話型の環境では、一つ前の出力結果が、特別な変数 <code>_</code> に入ります：</p>
 
 <pre class="cell">
 2 ** 16
@@ -142,11 +135,11 @@ _ ** 2      # この場合 65536 ** 2 と同じ
 4294967296
 </pre>
 
-<p>上の例では <code>_ ** 2</code> は <code>65536 ** 2</code> と同じです。IPython では <code>__</code> が二つ前，<code>___</code> が三つ前です（四つ前はありません）。</p>
+<p>上の例では <code>_ ** 2</code> は <code>65536 ** 2</code> と同じです。IPython では <code>__</code> が二つ前、<code>___</code> が三つ前です（四つ前はありません）。</p>
 
 <p>いげた印 <code>#</code> より右側はコメント（説明のための注釈）です。実際に打ち込むときはコメントは必要ありません。</p>
 
-<p>対話型の環境なら，これまでの例で示したように，式を打ち込めばそのまま答えが表示されますが，対話型でないプログラム中では <code>print()</code> 関数を使わないと出力されません：</p>
+<p>対話型の環境なら、これまでの例で示したように、式を打ち込めばそのまま答えが表示されますが、対話型でないプログラム中では <code>print()</code> 関数を使わないと出力されません：</p>
 
 <pre class="cell">
 print("Hello")
@@ -155,7 +148,7 @@ print("Hello")
 Hello
 </pre>
 
-<p>関数は <code>print()</code> 以外に，数値のリストの和を求める <code>sum()</code>，最大値や最小値を求める <code>max()</code> や <code>min()</code> などが定義されています。念のため組み込み関数のリストを挙げておきますが，覚える必要はありません。</p>
+<p>関数は <code>print()</code> 以外に、数値のリストの和を求める <code>sum()</code>、最大値や最小値を求める <code>max()</code> や <code>min()</code> などが定義されています。念のため組み込み関数のリストを挙げておきますが、覚える必要はありません。</p>
 
 <table>
 <tbody>
@@ -199,7 +192,7 @@ sum = 123
 print(sum)
 </pre>
 
-<p>特に何も文句を言われませんね。でも本来の使い方をしようとすると，</p>
+<p>特に何も文句を言われませんね。でも本来の使い方をしようとすると、</p>
 
 <pre class="cell">
 sum([1, 2, 3, 4, 5])
@@ -208,7 +201,7 @@ sum([1, 2, 3, 4, 5])
 TypeError: 'int' object is not callable
 </pre>
 
-<p>あらら！ 元に戻すには，自分の作った <code>sum</code> を削除します：</p>
+<p>あらら！ 元に戻すには、自分の作った <code>sum</code> を削除します：</p>
 
 <pre class="cell">
 del sum
@@ -227,74 +220,80 @@ sin(pi / 2)
 NameError: name 'sin' is not defined
 </pre>
 
-<p>駄目ですね。数学関数はいくつかのライブラリで定義されています（標準数学ライブラリ <code>math</code>，<a href="https://www.numpy.org">NumPy</a>，<a href="https://www.scipy.org">SciPy</a>）。ここでは後で必要になる NumPy（ナムパイ）のものを使います（まだインストールされていなければ pip などでインストールが必要です）。次のようにインポートします：</p>
+<p>駄目ですね。</p>
+
+<p>数学関数はいくつかのライブラリで定義されています（標準数学ライブラリ <code>math</code>、<a href="https://www.numpy.org">NumPy</a>、<a href="https://www.scipy.org">SciPy</a>）。ライブラリ（library）とは図書館のことですが、コンピュータのライブラリは、いろいろな関数などが定義されている場所を意味します。ここでは Python の標準ライブラリ <code>math</code> を使います。そのためには、まず、次のように打ち込みます：</p>
 
 <pre class="cell">
-import numpy as np
+import math
 </pre>
 
-<p>これは <code>numpy</code> というライブラリを <code>np</code> という省略名で読み込む（インポートする）ことを意味します。よく使うライブラリには<a href="https://import-as.github.io">伝統的な省略名がある</a>ので，それに従いましょう。</p>
-
-<p>これで <code>np.</code> で始まる数学用のあれこれが使えるようになります：</p>
+<p>これは <code>math</code> というライブラリを読み込む（インポートする）ことを意味します。これで <code>math.</code> で始まる数学用のあれこれが使えるようになります：</p>
 
 <pre class="cell">
-np.pi   # 円周率
+math.pi   # 円周率
 </pre>
+
 <pre>
 3.141592653589793
 </pre>
 
 <pre class="cell">
-np.e    # 自然対数の底
+math.e    # 自然対数の底
 </pre>
+
 <pre>
 2.718281828459045
 </pre>
 
-<p>IPython や Jupyter Notebook での浮動小数点表示の精度は，例えば <code>%precision 4</code> と打ち込めば小数第4位までの表示になります。 <code>%precision</code> だけ打てばデフォルトに戻ります。より一般的には，<code>print()</code> の中で <code>f"{式:.桁数f}"</code> のような方法で表示を制御します：</p>
+<p>IPython や Jupyter Notebook での浮動小数点表示の精度は、例えば <code>%precision 4</code> と打ち込めば小数第4位までの表示になります。 <code>%precision</code> だけ打てばデフォルトに戻ります。より一般的には、<code>print()</code> の中で <code>f"{式:.桁数f}"</code> のような方法で表示を制御します：</p>
 
 <pre class="cell">
-print(f"{np.pi:.4f}")
+print(f"{math.pi:.4f}")
 </pre>
+
 <pre>
 3.1416
 </pre>
 
-<p><code>np.sin()</code> で正弦が計算できます。引数はラジアン単位です。</p>
+<p><code>math.sin()</code> で正弦が計算できます。引数はラジアン単位です。</p>
 
 <pre class="cell">
-np.sin(np.pi / 2)
+math.sin(math.pi / 2)
 </pre>
+
 <pre>
 1.0
 </pre>
 
 <pre class="cell">
-np.sin(np.pi)
+math.sin(math.pi)
 </pre>
+
 <pre>
 1.2246467991473532e-16
 </pre>
 
-<p>数値計算の誤差のため sin(π) は 0 にならず，1.22 × 10<sup>-16</sup> という小さな値になりました。</p>
+<p>数値計算の誤差のため sin(π) は 0 にならず、1.22 × 10<sup>-16</sup> という小さな値になりました。</p>
 
 <div class="note">
-<p>IPython 限定の話ですが，関数の括弧を閉じないとどうなるでしょうか。</p>
+<p>IPython 限定の話ですが、関数の括弧を閉じないとどうなるでしょうか。</p>
 <pre>
-In [ ]: np.sin(np.pi / 2
+In [ ]: math.sin(math.pi / 2
    ...: )
 Out[ ]: 1.0
 </pre>
-<p>このように，続きの入力を促すプロンプト <code>...</code> が出ますので，入れ忘れた <code>)</code> を入力してEnterを押します。あるいは，わけがわからなくなったなら Control+C で止まります（Emacs中では Control+C を2回）。</p>
+<p>このように、続きの入力を促すプロンプト <code>...</code> が出ますので、入れ忘れた <code>)</code> を入力して <span class="keytop">Enter</span> を押します。あるいは、わけがわからなくなったなら <span class="keytop">Ctrl</span> + <span class="keytop">C</span> で止まります（Emacs中では <span class="keytop">Ctrl</span> + <span class="keytop">C</span> を2回）。</p>
 </div>
 
 <h2>ヘルプを読む</h2>
 
-<p>例えば <code>print()</code> という関数のヘルプを読むには，生の Python では <code>help(print)</code> としますが，IPython や Jupyter Notebook では <code>?print</code> または <code>print?</code> と打ち込みます（うまくいかない場合は <code>help(print)</code> も試してください）：</p>
+<p>例えば <code>print()</code> という関数のヘルプを読むには、生の Python では <code>help(print)</code> としますが、IPython や Jupyter Notebook では <code>?print</code> または <code>print?</code> と打ち込みます（うまくいかない場合は <code>help(print)</code> も試してください）：</p>
 
 <pre class="cell">
 ?print
 </pre>
+
 <pre>
 Docstring:
 print(value, ..., sep=' ', end='\n', file=sys.stdout, flush=False)
@@ -314,16 +313,18 @@ Type:      builtin_function_or_method
 print("Hello", end="")
 print(" World")
 </pre>
+
 <pre>
 Hello World
 </pre>
 
-<p><code>?</code> または <code>??</code> を前置または後置することでヘルプが表示される IPython の機能は，自分の作ったオブジェクト等にも適用されます：</p>
+<p><code>?</code> または <code>??</code> を前置または後置することでヘルプが表示される IPython の機能は、自分の作ったオブジェクト等にも適用されます：</p>
 
 <pre class="cell">
 x = [2, 3, 4, 5]
 ?x
 </pre>
+
 <pre>
 Type:        list
 String form: [2, 3, 4, 5]
@@ -335,7 +336,7 @@ If no argument is given, the constructor creates a new empty list.
 The argument must be an iterable if specified.
 </pre>
 
-<p>このほか，Tab キーによる補完，<code>%pwd</code> や <code>%cd 何々</code> によるディレクトリ表示や移動，環境変数を表示する <code>%env</code>，Python ファイルをその場で実行する <code>%run -i ファイル名</code>，実行時間を計測する <code>%timeit 何々</code>，シェルでコマンドを実行する <code>!<i>command</i></code> など，豊富な命令が使えます。詳しくは，<code>?</code> だけ打ち込むと出てくる IPython のヘルプ，<code>%magic</code> と打ち込むと出てくるマジックコマンドのヘルプをご覧ください。なお，デフォルトでは <code>%</code> を省略できてしまうので要注意です。省略できないようにするには <code>%automagic off</code> と打ち込みます。</p>
+<p>このほか、Tab キーによる補完、<code>%pwd</code> や <code>%cd 何々</code> によるディレクトリ表示や移動、環境変数を表示する <code>%env</code>、Python ファイルをその場で実行する <code>%run -i ファイル名</code>、実行時間を計測する <code>%timeit 何々</code>、シェルでコマンドを実行する <code>!<i>command</i></code> など、豊富な命令が使えます。詳しくは、<code>?</code> だけ打ち込むと出てくる IPython のヘルプ、<code>%magic</code> と打ち込むと出てくるマジックコマンドのヘルプをご覧ください。なお、デフォルトでは <code>%</code> を省略できてしまうので要注意です。省略できないようにするには <code>%automagic off</code> と打ち込みます。</p>
 
 <h2>終了のしかた</h2>
 
@@ -343,14 +344,14 @@ The argument must be an iterable if specified.
 
 <h2>ひつじがnひき</h2>
 
-<p>眠れない夜は，ひつじを数えてみましょう🐑🐑🐑🐑🐑🐑🐑🐑🐑🐑。</p>
+<p>眠れない夜は、ひつじを数えてみましょう🐑🐑🐑🐑🐑🐑🐑🐑🐑🐑。</p>
 
 <pre class="cell">
 for i in range(1, 11):
     print("ひつじが", i, "ひき")
 </pre>
 
-<p><code>range(1, 11)</code> は 1 以上 11 未満の整数を表します。Pythonはインデント（字下げ）でブロック構造を表しますので，必ず上の2行目は（半角の）スペースかタブでインデントします。多くの Python プログラマは（半角の）スペース4個でインデントする（そうなるようにテキストエディタを設定している）と思います。</p>
+<p><code>range(1, 11)</code> は 1 以上 11 未満の整数を表します。Pythonはインデント（字下げ）でブロック構造を表しますので、必ず上の2行目は（半角の）スペースかタブでインデントします。多くの Python プログラマは（半角の）スペース4個でインデントする（そうなるようにテキストエディタを設定している）と思います。</p>
 
 <pre>
 ひつじが 1 ひき
@@ -365,9 +366,9 @@ for i in range(1, 11):
 ひつじが 10 ひき
 </pre>
 
-<p>もしもプログラムを間違えて止まらなくなったら，Ctrl + C を入力します（Emacs 環境なら Ctrl + C を2回入力します）。</p>
+<p>もしもプログラムを間違えて止まらなくなったら、Ctrl + C を入力します（Emacs 環境なら Ctrl + C を2回入力します）。</p>
 
-<p>眠れない夜がまだまだ続くときは，ひつじを数える関数を作りましょう。</p>
+<p>眠れない夜がまだまだ続くときは、ひつじを数える関数を作りましょう。</p>
 
 <pre class="cell">
 def hitsuji(n):
@@ -375,7 +376,7 @@ def hitsuji(n):
         print("ひつじが", i, "ひき")
 </pre>
 
-<p>これで <code>hitsuji(100)</code> と打てば，ひつじが100ひき数えられます。</p>
+<p>これで <code>hitsuji(100)</code> と打てば、ひつじが100ひき数えられます。</p>
 
 <div class="note">
 <p>文字列に値を割り込ませる方法はいろいろあります。例えば</p>
@@ -383,7 +384,7 @@ def hitsuji(n):
 for i in range(1, 11):
     print(f"ひつじが {i} ひき")
 </pre>
-<p>という方法もあります。この方法なら，いろいろな<a href="https://docs.python.org/3/library/string.html#formatstrings">書式指定</a>ができます。例えば2桁右詰めなら</p>
+<p>という方法もあります。この方法なら、いろいろな<a href="https://docs.python.org/3/library/string.html#formatstrings">書式指定</a>ができます。例えば2桁右詰めなら</p>
 <pre>
 for i in range(1, 11):
     print(f"ひつじが {i:2d} ひき")
@@ -393,7 +394,7 @@ for i in range(1, 11):
 
 <h2>フィボナッチ数列</h2>
 
-<p>Python では複数の代入を並行して行うことができます。このことを使えば，フィボナッチ数列の生成が次のように少しだけ簡単に書けます：</p>
+<p>Python では複数の代入を並行して行うことができます。このことを使えば、フィボナッチ数列の生成が次のように少しだけ簡単に書けます：</p>
 
 <pre class="cell">
 a, b = 1, 1
@@ -428,7 +429,7 @@ Type:      function
 </pre>
 
 <div class="note">
-<p><code>"""..."""</code> または <code>'''...'''</code> は途中で改行が入ることを許す文字列です。説明（docstring）は途中で改行が入ることが多いので，一般に <code>"""..."""</code> が使われます。ただ，上の例のように1行だけの場合は，<code>"..."</code> でもかまいません。</p>
+<p><code>"""..."""</code> または <code>'''...'''</code> は途中で改行が入ることを許す文字列です。説明（docstring）は途中で改行が入ることが多いので、一般に <code>"""..."""</code> が使われます。ただ、上の例のように1行だけの場合は、<code>"..."</code> でもかまいません。</p>
 </div>
 
 <p>実行してみます：</p>
@@ -460,14 +461,18 @@ def fibn(n):
 </pre>
 
 <div class="note">
-<p>他の言語のように，最初に一定の長さの配列を宣言しておきたい場合は，次のように，あらかじめ（例えば）<code>0</code> を100個並べたものを作っておくことができます：</p>
+<p>他の言語のように、最初に一定の長さの配列を宣言しておきたい場合は、次のように、あらかじめ（例えば）<code>0</code> を100個並べたものを作っておくことができます：</p>
 <pre>
 a = [0] * 100
 a[0] = a[1] = 1
 for i in range(2, 100):
     a[i] = a[i-2] + a[i-1]
 </pre>
-<p><code>0</code> の代わりに，未定義であることを示す <code>None</code> を使うほうがいいかもしれません。ただ，この方法は遅いので，高速な数値計算には NumPy を使い，例えば 0 で初期化した長さ 100 の浮動小数点数の配列なら <code>a = np.zeros(100)</code>，同じく整数の配列なら <code>a = np.zeros(3, dtype=int)</code> のようにして作ります。</p>
+<p><code>0</code> の代わりに、未定義であることを示す <code>None</code> を使うほうがいいかもしれません。</p>
+</div>
+
+<div class="note">
+<p>高速な数値計算には <a href="https://www.numpy.org">NumPy</a>（ナムパイ）というライブラリを使います（<code>pip install numpy</code> でインストールします）。NumPy は <code>import numpy as np</code> のようにして省略名 <code>np</code> でインポートします。よく使うライブラリには<a href="https://import-as.github.io">伝統的な省略名がある</a>ので，それに従いましょう。NumPy を使えば、例えば 0 で初期化した長さ 100 の浮動小数点数の配列なら <code>a = np.zeros(100)</code>、同じく整数の配列なら <code>a = np.zeros(3, dtype=int)</code> のようにして作成・初期化できます。</p>
 </div>
 
 <hr>
@@ -476,7 +481,7 @@ for i in range(2, 100):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-09 13:24:50</time>
+Last modified: <time>2022-08-04 22:03:16 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

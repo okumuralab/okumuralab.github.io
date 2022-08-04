@@ -1,18 +1,21 @@
-body { background: white; margin: 5% }
+body {
+  background: white;
+  margin: 5%;
+}
 h2 {
   font-size: 1.2em;
-  margin: 2em 0em 0em 0em;
+  margin: 2em 0 0 0;
   padding: 0.2em 0.5em;
   border-style: solid;
-  border-width: 0em 0em 0em 2em;
+  border-width: 0 0 0 2em;
   border-color: #99F;
   clear: both;
 }
 h3 {
-  margin: 1em 0em 0em 0em;
+  margin: 1em 0 0 0;
   padding: 0.2em 0.5em;
   border-style: solid;
-  border-width: 0px 0px 0px 20px;
+  border-width: 0 0 0 2em;
   border-color: #99F;
 }
 pre {
@@ -35,15 +38,21 @@ del { color: gray }
   margin: 0 0;
   background: #f4f4f4;
   border-left: solid 1em #cccccc;
-  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0.2em 0.3em rgba(0, 0, 0, 0.3);
 }
 .note {
-  margin-left: 0em;
+  margin-left: 0;
   padding-left: 1.5em;
   border-left: #FC3 solid 0.5em;
 }
-.left { float: left; margin: 0em 1em 1em 0em; border-style: none }
-.right { float: right; margin: 0em 0em 1em 1em; border-style: none }
+.keytop {
+  font-family: sans-serif;
+  border: 0.05em solid;
+  border-radius: 0.3em;
+  padding: 0.2em;
+}
+.left { float: left; margin: 0 1em 1em 0; border-style: none }
+.right { float: right; margin: 0 0 1em 1em; border-style: none }
 .old { background: #FFC; }
 .me { text-decoration: underline; }
 #breadcrumbs { font-size: 90% }
@@ -52,26 +61,11 @@ del { color: gray }
 div.math { margin-left: 2em }
 hr { clear: both }
 blockquote > p { margin: 0 }
-figure { margin-left: 0em; margin-right: 0em }
+figure { margin-left: 0; margin-right: 0 }
 img { max-width: 100%; height: auto }
 
 @media print {
-  body { margin: 0%; }
-  h2 {
-    font-size: 1.5em;
-    padding: 0;
-    background-color: white;
-  }
-  h3 {
-    padding: 0;
-    border-width: 0;
-  }
-  a:link, a:visited { color: black; }
-  a:link:after, a:visited:after {
-    font-size: 50%;
-    content: " (" attr(href) ") ";
-  }
-  code, pre { color: black; }
-  pre { overflow: visible; }
-  em { font-style:italic; color: black }
+  body { margin: 0 }
+  a:link, a:visited { color: #0000EE }
+  pre { overflow: visible }
 }

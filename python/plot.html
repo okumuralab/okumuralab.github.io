@@ -7,13 +7,6 @@
 <title>プロット</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
-<style>
-.keytop {
-    border: 0.05em solid;
-    border-radius: 0.3em;
-    padding: 0.2em;
-}
-</style>
 </head>
 <body>
 
@@ -24,13 +17,13 @@
 
 <h1>プロット</h1>
 
-<h2>matplotlibの基本</h2>
+<h2>はじめに</h2>
 
-<p>プロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a>（マットプロットリブ）という MATLAB ライクなライブラリを使います。</p>
+<p>Python によるプロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a>（マットプロットリブ）というライブラリを使うのが基本です。より高レベルのライブラリとして <a href="https://seaborn.pydata.org/">seaborn</a> がありますが、これは <a href="seaborn.html">seabornによるプロット</a> のページで説明します。</p>
 
 <h3>Google Colaboratory での利用</h3>
 
-<p><a href="https://colab.research.google.com">Google Colaboratory</a> でノートブックを新規作成してください。まずはセルに次のように打ち込んで <span class="keytop">Shift</span> <span class="keytop">Enter</span> し、matplotlib を読み込みます：</p>
+<p><a href="https://colab.research.google.com">Google Colaboratory</a> でノートブックを新規作成してください。まずはセルに次のように打ち込んで <span class="keytop">Shift</span> + <span class="keytop">Enter</span> し、matplotlib を読み込みます：</p>
 
 <pre class="cell">
 import matplotlib.pyplot as plt
@@ -88,7 +81,7 @@ plt.ylabel("縦軸")
 plt.show()
 </pre>
 
-<p>の最後にカーソルを持っていき、<span class="keytop">Shift</span> <span class="keytop">Enter</span> します。ちゃんと「横軸」「縦軸」の文字が出たでしょうか。</p>
+<p>の中にカーソルを持っていき、<span class="keytop">Shift</span> + <span class="keytop">Enter</span> します。ちゃんと「横軸」「縦軸」の文字が出たでしょうか。</p>
 
 <p>これで当分の間は <code>!pip install japanize-matplotlib</code> は不要で、ライブラリをインポートする際に</p>
 
@@ -99,10 +92,10 @@ import japanize_matplotlib
 
 <p>のようにすれば、日本語が使えるはずです（エラーになったら <code>!pip install japanize-matplotlib</code> を再実行してください）。</p>
 
-<p>図の大きさを変えるには次のようにします。指定するのは横・縦のサイズで、単位はインチです。</p>
+<p>図の大きさのデフォルトは 6.4 × 4.8 インチで、dpi 値（dots per inch）は 100 なので、ピクセル数にすれば 640 × 480 です。これを変えるには次のように横・縦のインチ数で指定します。</p>
 
 <pre class="cell">
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(8, 6))  # デフォルト (6.4, 4.8)
 plt.plot([-1, 1])
 </pre>
 
@@ -142,15 +135,9 @@ plt.ion()
 
 <p>と打ち込んで interactive mode を on にします。</p>
 
-<p>エラーになるなら、設定ファイル matplotlibrc（Mac と Windows では <code>~/.matplotlib/matplotlibrc</code>、Linux では <code>~/.config/matplotlib/matplotlibrc</code>）を作成し、<a href="https://matplotlib.org/stable/users/explain/backends.html">バックエンド</a>の指定を書き込みます。Mac の場合は</p>
+<p>うまくいかない場合は、設定ファイル matplotlibrc（Mac と Windows では <code>~/.matplotlib/matplotlibrc</code>、Linux では <code>~/.config/matplotlib/matplotlibrc</code>）をチェックします。このファイルがないか、あっても <code>backend:</code> という設定がなければ、自動で<a href="https://matplotlib.org/stable/users/explain/backends.html">バックエンド</a>が選ばれるはずですが、もし間違えた指定になっていたら、<code>backend:</code> の行を消してください（その場合、Mac なら <code>MacOSX QtAgg Gtk4Agg Gtk3Agg TkAgg WxAgg Agg</code> の中からうまくいく最初のものが選ばれるはずです）。</p>
 
-<pre>
-backend: MacOSX
-</pre>
-
-<p>でいいはずですが、うまくいかなければ <code>MacOSX Qt5Agg Qt4Agg Gtk3Agg GTK3Cairo TkAgg WxAgg Agg Cairo</code> の中から選んでください。</p>
-
-<p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら、システムにインストールされている適当な TrueType または OpenType フォント名を matplotlibrc に書き加えます。Mac なら</p>
+<p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら、システムにインストールされている適当な TrueType または OpenType フォント名を上記設定ファイル matplotlibrc に書き加えます。Mac なら</p>
 
 <pre>
 font.family: Hiragino Sans
@@ -171,7 +158,7 @@ font.family: IPAexGothic
 
 <p>Source Han Sans の類も使えます。</p>
 
-<p>新しいフォントをインストールしたら、フォント名のキャッシュ（Mac と Windows では <code>~/.matplotlib/fontlist-*.json</code>、Linux では <code>~/.cache/matplotlib/fontlist-*.json</code>）を削除します（次回 matplotlib 使用の際に自動生成されます）。</p>
+<p>新しいフォントをシステムにインストールしたら、フォント名のキャッシュ（Mac と Windows では <code>~/.matplotlib/fontlist-*.json</code>、Linux では <code>~/.cache/matplotlib/fontlist-*.json</code>）をいったん削除します。次回 matplotlib 使用の際に自動生成されます。</p>
 
 <p>なお、<code>font.family</code> のデフォルト値は <code>sans-serif</code> で、DejaVu Sans が使われます。<code>serif</code> と指定すれば DejaVu Serif になります。DejaVu は Bitstream Vera ベースの良質なフォントです。</p>
 
@@ -188,7 +175,7 @@ python3 -c "import matplotlib; print(matplotlib.matplotlib_fname())"
 </div>
 
 <div class="note">
-<p>SVG 形式に保存してから、<code>rsvg-convert</code> コマンド（Mac では <code>brew install librsvg</code>、CentOS 7 では <code>yum install librsvg2-tools</code> で入る）を使ってターミナルで</p>
+<p>SVG 形式で保存してから、<code>rsvg-convert</code> コマンド（Mac では <code>brew install librsvg</code>、CentOS 7 では <code>yum install librsvg2-tools</code> で入る）を使って、ターミナルで</p>
 <pre>
 rsvg-convert --format=pdf --output=filename.pdf filename.svg
 </pre>
@@ -200,7 +187,7 @@ rsvg-convert --format=pdf --output=filename.pdf filename.svg
 <pre>
 import matplotlib.pyplot as plt
 
-plt.plot([-1,1])
+plt.plot([-1, 1])
 plt.title('日本語タイトル')
 </pre>
 
@@ -342,7 +329,7 @@ plt.rcParams['text.latex.preamble'] = r'\usepackage{tgtermes},\usepackage{newtxm
 <p>図の大きさを指定する：</p>
 
 <pre>
-plt.figure(figsize=[6.4, 4.8])  # デフォルトは6.4×4.8インチ
+plt.figure(figsize=(6.4, 4.8))  # デフォルトは6.4×4.8インチ
 </pre>
 
 <p>あるいはデフォルトを変更する：</p>
@@ -374,7 +361,7 @@ plt.axis([xの最小値, xの最大値, yの最小値, yの最大値])
 <p>軸の目盛位置と目盛ラベルを指定する：</p>
 
 <pre>
-plt.xticks([-np.pi,0,np.pi], [r'$-\pi$','$0$',r'$\pi$'])
+plt.xticks([-np.pi, 0, np.pi], [r'$-\pi$', '$0$', r'$\pi$'])
 </pre>
 
 <p>対数目盛：</p>
@@ -434,7 +421,7 @@ fig, ax = plt.subplots()
 <p>あるいは次のようにサイズを指定することもできます：</p>
 
 <pre>
-fig, ax = plt.subplots(figsize=[6.4, 4.8])
+fig, ax = plt.subplots(figsize=(6.4, 4.8))
 </pre>
 
 <p>この流儀のほうがいろいろ細かいことがしやすくなります。例えば時系列の軸ラベルの設定：</p>
@@ -485,7 +472,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-31 19:13:44 JST</time>
+Last modified: <time>2022-08-04 18:22:37 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -17,11 +17,13 @@
 
 <h1>ゼロ除算</h1>
 
-<p>Rで <code>1 / 0</code> と打ち込むと <code>Inf</code> と返ってくる。<code>0 / 0</code> は <code>NaN</code>（Not a Number）になる。</p>
+<p>ゼロで割るとどうなるかは言語によります。</p>
 
-<p>Rubyでは <code>1 / 0</code> や <code>0 / 0</code> は ZeroDivisionError になるが <code>1.0 / 0.0</code> は <code>Infinity</code>，<code>0 / 0</code> は <code>NaN</code> になる。C言語などもそうなる。</p>
+<p>R で <code>1 / 0</code> と打ち込むと <code>Inf</code> と返ってきます。<code>0 / 0</code> は <code>NaN</code>（Not a Number）になります。</p>
 
-<p>ところがPythonでは <code>0</code> で割っても <code>0.0</code> で割っても ZeroDivisionError になり，そこで実行が止まってしまう。これでは不便である。もちろん</p>
+<p>Ruby では <code>1 / 0</code> や <code>0 / 0</code> は ZeroDivisionError になりますが <code>1.0 / 0.0</code> は <code>Infinity</code>、<code>0.0 / 0.0</code> は <code>NaN</code> になります。C言語でも同じです。</p>
+
+<p>ところが Python では <code>0</code> で割っても <code>0.0</code> で割っても ZeroDivisionError になり、そこで実行が止まってしまいます。これでは不便です。もちろん</p>
 
 <pre>
 try:
@@ -33,29 +35,40 @@ except ZeroDivisionError:
         x = float("inf")
 </pre>
 
-<p>のようなことはできるが面倒である。</p>
+<p>のようなことはできますが、面倒です。</p>
 
-<p>そこで，</p>
+<p>NumPy の数値（array の要素など）であれば大丈夫です：</p>
 
-<pre>
+<pre class="cell">
 import numpy as np
+
+a = np.array([1, 0, 0])
+print(a[0] / a[1])
+print(a[1] / a[2])
 </pre>
 
-<p>とすれば，<code>1 / np.float64(0)</code> は <code>inf</code> になり，<code>0 / np.float64(0)</code> は <code>nan</code> になる。ただし RuntimeWarning が出る。<code>np.float64(0)</code> の代わりに <code>np.array(0)</code> を使っても同様である。</p>
+<pre>
+inf
+nan
+</pre>
 
-<p>RuntimeWarning を出したくなければ，あらかじめ</p>
+<div class="note">
+<p>配列の要素でない数の場合は <code>np.float64(0)</code> のようにします。<code>np.array(0)</code> でもかまいません。</p>
+</div>
+
+<p>ただし、RuntimeWarning（実行時の警告）が出ます。RuntimeWarning を出したくなければ、あらかじめ</p>
 
 <pre>
 np.seterr(divide="ignore", invalid="ignore")
 </pre>
 
-<p>と打ち込んでおけばよい（invalid とは 0/0 のこと）。元に戻すには</p>
+<p>と打ち込んでおきます（invalid とは 0/0 のこと）。元に戻すには</p>
 
 <pre>
 np.seterr(divide="warn", invalid="warn")
 </pre>
 
-<p>とする。詳しくは <code>np.seterr</code> のヘルプ参照。</p>
+<p>とします（詳しくは <code>np.seterr</code> のヘルプ参照）。</p>
 
 <p>特定の割り算だけ warn しないようにするには</p>
 
@@ -64,7 +77,7 @@ with np.errstate(divide="ignore", invalid="ignore"):
     x = a / b
 </pre>
 
-<p>のようにする。</p>
+<p>のようにします。</p>
 
 <hr>
 
@@ -72,7 +85,7 @@ with np.errstate(divide="ignore", invalid="ignore"):
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-06-03 20:13:32 JST</time>
+Last modified: <time>2022-08-04 17:21:35 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
