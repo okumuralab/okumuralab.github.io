@@ -46,7 +46,11 @@ df
 df.query("都道府県 == '東京'")
 </pre>
 
-<p>東京の行だけが表示されました。</p>
+<p>東京の行だけが表示されました。東京の総人口と性比だけを表示させたいなら、SQL では <code>select 総人口_千人, 性比 from df where 都道府県='東京';</code> としますが、Python では次のように最後に <code>[[ ]]</code> で囲んで指定します：</p>
+
+<pre class="cell">
+df.query("都道府県 == '東京'")[["総人口_千人", "性比"]]
+</pre>
 
 <p>次に、男が少ない都道府県、例えば性比（男/女）が 90% 未満のデータを抽出しましょう：</p>
 
@@ -63,26 +67,26 @@ df.query("性比 < 90 and 総人口_千人 > 5000")
 <p>抽出されたものは、元の順番（都道府県コード順）に並んでいます。これを性比の昇順（小さい順）に並べ替えてみます：</p>
 
 <pre class="cell">
-df.query("性比 < 90").sort_values(by="性比")
+df.query("性比 < 90").sort_values("性比")
 </pre>
 
 <p>これは次のように分けて書いてもかまいません：</p>
 
 <pre class="cell">
 df1 = df.query("性比 < 90")
-df1.sort_values(by="性比")
+df1.sort_values("性比")
 </pre>
 
 <p>降順（大きい順）にするには <code>ascending=False</code> というオプションを付けます：</p>
 
 <pre class="cell">
-df.query("性比 < 90").sort_values(by="性比", ascending=False)
+df.query("性比 < 90").sort_values("性比", ascending=False)
 </pre>
 
 <p>データ全体を総人口でソートし、大きい順に並び替えて、頭の3行を表示しましょう：</p>
 
 <pre class="cell">
-df.sort_values(by="総人口_千人", ascending=False).head(3)
+df.sort_values("総人口_千人", ascending=False).head(3)
 </pre>
 
 <p>もう一つデータを読み込んでみます。こちらは各都道府県の面積です：</p>
@@ -92,10 +96,10 @@ df2 = pd.read_csv("https://okumuralab.org/~okumura/stat/data/area.csv")
 df2
 </pre>
 
-<p><code>df</code> に <code>df2</code> をマージ（結合）したものを <code>df</code> に代入します：</p>
+<p><code>df</code> と <code>df2</code> をマージ（結合、join）したものを <code>df</code> に代入します：</p>
 
 <pre class="cell">
-df = df.merge(df2)
+df = pd.merge(df, df2)
 df
 </pre>
 
@@ -106,6 +110,10 @@ df["人口密度"] = df["総人口_千人"] / df["面積_km2"]
 df
 </pre>
 
+<div class="note">
+<p><code>df = df.assign(人口密度 = df["総人口_千人"] / df["面積_km2"])</code> でも同じことができます。<code>df["人口密度"] = ...</code> は既存のデータフレームに列を直接追加し、<code>df.assign()</code> は列を追加した新しいデータフレームを作成します。</p>
+</div>
+
 <p>問題：人口密度の大きい順に並べて、上位10件（<code>.head(10)</code>）、下位10件（<code>.tail(10)</code>）を表示してください。</p>
 
 <p>おまけ：水平棒グラフ（horizontal bar plot）を描いてみましょう：</p>
@@ -113,18 +121,19 @@ df
 <pre class="cell">
 import matplotlib.pyplot as plt
 
-df3 = df.sort_values(by="人口密度")
+df3 = df.sort_values("人口密度")
 plt.barh(df3["都道府県"], df3["人口密度"])
 </pre>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-01 08:16:35 JST</time>
+Last modified: <time>2022-08-05 11:02:42 JST</time>
 <!-- hhmts end -->
 </p>
+</footer>
 </body>
 </html>

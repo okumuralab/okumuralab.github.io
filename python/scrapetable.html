@@ -4,9 +4,13 @@
 <link rel="canonical" href="https://okumuralab.org/~okumura/python/scrapetable.html">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HTMLの表のスクレーピング</title>
+<title>HTMLの表のスクレーピング・MultiIndex</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td, th { border: 1px solid; }
+</style>
 </head>
 <body>
 
@@ -15,18 +19,53 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>HTMLの表のスクレーピング</h1>
+<h1>HTMLの表のスクレーピング・MultiIndex</h1>
 
-<p>ここでは例として<a href="http://monitoring.tokyo-eiken.go.jp/report/shinjuku/mon_air_week_201112w.html">大気中の放射線量/１時間単位 (新宿）2011/03/14 ～ 2011/03/20 ｜環境放射線測定結果</a>のような表をpandasで読み込む方法を説明する。</p>
+<p>ここでは例として<a href="https://monitoring.tmiph.metro.tokyo.lg.jp/report/shinjuku/mon_air_week_201112w.html">大気中の放射線量/１時間単位 (新宿）2011/03/14 ～ 2011/03/20 ｜環境放射線測定結果</a>のような表をpandasで読み込む方法を説明します。</p>
 
-<p>注意すべき点は，表の見出しにセル結合が使ってあって，列見出しに階層構造があることである。</p>
+<p>注意すべき点は、表の見出しにセル結合が使ってあって、列見出しに階層構造があることです：</p>
 
-<p>表自体をスクレーピングするのは簡単である。あらかじめpandasとlxmlがインストールされているとする：</p>
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2" scope="col">測定日時<br>(Measurement time)</th>
+      <th colspan="3" scope="colgroup">線量率 (dose rate)<br>μGy/h (microgray per hour)</th>
+    </tr>
+    <tr>
+      <th scope="col">最大値<br>(max)</th>
+      <th scope="col">最小値<br>(min)</th>
+      <th scope="col">平均値<br>(average)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2011/03/20 23:00～23:59</td>
+      <td>0.0515</td>
+      <td>0.0465</td>
+      <td>0.0494</td>
+    </tr>
+    <tr>
+      <td>2011/03/20 22:00～22:59</td>
+      <td>0.0524</td>
+      <td>0.0405</td>
+      <td>0.0478</td>
+    </tr>
+    <tr>
+      <td>2011/03/20 21:00～21:59</td>
+      <td>0.0464</td>
+      <td>0.0416</td>
+      <td>0.0443</td>
+    </tr>
+    <tr><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+  </tbody>
+</table>
+
+<p>表自体をスクレーピングするのは簡単です。あらかじめpandasとlxmlがインストールされているとします（<code>pip install pandas</code>、<code>pip install lxml</code>）：</p>
 
 <pre class="cell">
 import pandas as pd
 
-tables = pd.read_html('http://monitoring.tokyo-eiken.go.jp/report/shinjuku/mon_air_week_201112w.html')
+tables = pd.read_html('https://monitoring.tmiph.metro.tokyo.lg.jp/report/shinjuku/mon_air_week_201112w.html')
 len(tables)
 </pre>
 
@@ -34,13 +73,13 @@ len(tables)
 1
 </pre>
 
-<p>最初の表を取り出す：</p>
+<p>最初の表を取り出します：</p>
 
 <pre class="cell">
 df = tables[0]
 </pre>
 
-<p>この <code>df</code> を表示すると，次のようになる（多少編集してある）：</p>
+<p>この <code>df</code> を表示すると、次のようになります（見やすいように余分なスペースを削除しました）：</p>
 
 <pre class="cell">
 df
@@ -58,13 +97,19 @@ df
 [168 rows x 4 columns]
 </pre>
 
-<p>列見出しに階層構造があることがわかる。列名を表示してみる：</p>
+<p>列見出しに階層構造があることがわかります。元の列名の途中にある改行（<code>&lt;br&gt;</code>）は消え、1列目の列名が二つに複製されました。列名を表示してみます：</p>
 
 <pre class="cell">
 df.columns
 </pre>
 
-<p><code>MultiIndex([...],)</code> のように出力される。</p>
+<pre>
+MultiIndex([(                   '測定日時(Measurement time)', ...),
+            ('線量率 (dose rate)μGy/h (microgray per hour)', ...),
+            ('線量率 (dose rate)μGy/h (microgray per hour)', ...),
+            ('線量率 (dose rate)μGy/h (microgray per hour)', ...)],
+           )
+</pre>
 
 <pre class="cell">
 df.columns[0]
@@ -75,6 +120,22 @@ df.columns[0]
 </pre>
 
 <pre class="cell">
+df.columns[1]
+</pre>
+
+<pre>
+('線量率 (dose rate)μGy/h (microgray per hour)', '最大値(max)')
+</pre>
+
+<pre class="cell">
+df.columns[2]
+</pre>
+
+<pre>
+('線量率 (dose rate)μGy/h (microgray per hour)', '最小値(min)')
+</pre>
+
+<pre class="cell">
 df.columns[3]
 </pre>
 
@@ -82,13 +143,13 @@ df.columns[3]
 ('線量率 (dose rate)μGy/h (microgray per hour)', '平均値(average)')
 </pre>
 
-<p>このように，列名にあたる部分がtupleになっていることがわかる。したがって，一番右の列を取得するには</p>
+<p>このように、列名にあたる部分がタプル（tuple）になっています。一番右の列を取得するには</p>
 
 <pre class="cell">
 df['線量率 (dose rate)μGy/h (microgray per hour)', '平均値(average)']
 </pre>
 
-<p>とすればよいが，番号で <code>df.iloc[:,3]</code> でもよい。手っ取り早くプロットしてみよう：</p>
+<p>とするか、または番号で <code>df.iloc[:,3]</code> とします。手っ取り早くプロットしてみます：</p>
 
 <pre class="cell">
 import matplotlib.pyplot as plt
@@ -108,7 +169,7 @@ plt.ylabel('')
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-03-26 14:29:06 JST</time>
+Last modified: <time>2022-08-05 21:51:38 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
