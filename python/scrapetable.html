@@ -146,7 +146,7 @@ df.columns[3]
 <p>このように、列名にあたる部分がタプル（tuple）になっています。一番右の列を取得するには</p>
 
 <pre class="cell">
-df['線量率 (dose rate)μGy/h (microgray per hour)', '平均値(average)']
+df[('線量率 (dose rate)μGy/h (microgray per hour)', '平均値(average)')]
 </pre>
 
 <p>とするか、または番号で <code>df.iloc[:,3]</code> とします。手っ取り早くプロットしてみます：</p>
@@ -169,7 +169,7 @@ plt.ylabel('')
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-05 21:51:38 JST</time>
+Last modified: <time>2022-08-06 19:53:26 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
