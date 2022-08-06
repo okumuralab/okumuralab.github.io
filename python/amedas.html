@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/amedas.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>気象庁のアメダスのデータ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>気象庁のアメダスのデータ</h1>
+
+<p>気象庁のアメダス（AMeDAS: Automated Meteorological Data Acquisition System 自動気象データ収集システム）のデータはWeb APIで提供されています。</p>
+
+<p>入口はいくつかありますが、例えば<a href="https://www.jma.go.jp/bosai/map.html#5/34.5/137/&elem=temp&contents=amedas&interval=60">地図</a>を拡大して自分の知りたい場所を探してクリックすると、一覧表（1時間ごと・10分ごと）やグラフを見ることができます。</p>
+
+<p>例えば私の住んでいる三重県津市をクリックすると、<a href="https://www.jma.go.jp/bosai/amedas/#area_type=offices&area_code=240000&amdno=53133&format=table1h&elems=53414">https://www.jma.go.jp/bosai/amedas/#area_type=offices&area_code=240000&amdno=53133&format=table1h&elems=53414</a> というページが現れます。この URL に含まれる <code>amdno=53133</code> により、津市のアメダスの番号が 53133 であることがわかります。</p>
+
+<p>今日の早朝は大雨でしたので、そのデータを調べてみましょう。53133 という地点の2022年8月6日3時以降のデータは <a href="https://www.jma.go.jp/bosai/amedas/data/point/53133/20220806_03.json">https://www.jma.go.jp/bosai/amedas/data/point/53133/20220806_03.json</a> というJSONファイルに含まれています。時刻部分は 00、03、06、……、21 のように3時間ごとになっており、一つのファイルに3時間分のデータが入っています。</p>
+
+<p>このデータを取得し、10分降水量のグラフを描いてみましょう：</p>
+
+<pre class="cell">
+import requests
+import pandas as pd
+import matplotlib.pyplot as plt
+
+url = "https://www.jma.go.jp/bosai/amedas/data/point/53133/20220806_03.json"
+data = requests.get(url).json()
+
+t = [pd.to_datetime(k) for k in data.keys()]
+x = [data[k]['precipitation10m'][0] for k in data.keys()]
+
+plt.plot(t, x, "o-")
+plt.xlabel("日時")
+plt.ylabel("10分降水量")
+</pre>
+
+<figure><img src="img/220806a.svg" alt="降水量グラフ"></figure>
+
+<p>参考：</p>
+
+<ul>
+  <li><a href="https://www.jma.go.jp/bosai/common/const/area.json">https://www.jma.go.jp/bosai/common/const/area.json</a> エリア一覧（JSON）</li>
+  <li><a href="https://www.jma.go.jp/bosai/common/const/contents.json">https://www.jma.go.jp/bosai/common/const/contents.json</a> コンテンツ一覧（JSON）</li>
+  <li><a href="https://www.jma.go.jp/bosai/amedas/const/amedastable.json">https://www.jma.go.jp/bosai/amedas/const/amedastable.json</a> アメダス地点一覧（JSON）</li>
+  <li><a href="https://www.jma.go.jp/bosai/amedas/const/amedas_explain.html">https://www.jma.go.jp/bosai/amedas/const/amedas_explain.html</a> アメダスの説明</li>
+  <li><a href="https://www.jma.go.jp/bosai/amedas/data/latest_time.txt">https://www.jma.go.jp/bosai/amedas/data/latest_time.txt</a> 10分ごとの最新時刻（例: 2022-08-06T10:10:00+09:00）</li>
+</ul>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2022-08-06 10:35:21 JST</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
