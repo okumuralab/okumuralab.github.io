@@ -19,7 +19,7 @@
 
 <p>COCOA 2.0.0 になって、MatchCount がログに記録されないようになりました。</p>
 
-<p>COCOA 2.0.1 になって、COCOA アプリの「陽性登録者との接触結果を確認」→「情報を保存」で exposure_data.json という詳細ログが保存できるようになりました。これを見れば接触日などがわかります。<a href="data/exposure_data.json">私の iPhone のデータ例</a>を置いておきます。中を見るための Python プログラムの一例です：</p>
+<p>COCOA 2.0.1 になって、COCOA アプリの「陽性登録者との接触結果を確認」→「情報を保存」で exposure_data.json という詳細ログが保存できるようになりました。これを見れば接触日などがわかります。<a href="data/exposure_data.json">私の iPhone のデータ例</a>を置いておきます。中を見るための Python プログラムの一例です（同様なことをするためのサイト <a href="https://cocoa-log-checker.com/#/beta">COCOAログチェッカー2.0 (β)</a> や <a href="https://cocoalog.jp">COCOAログ.jp</a> ができました）：</p>
 
 <pre>
 import json
@@ -54,9 +54,12 @@ for x in exposure["exposure_windows"]:
 2022-07-28 2  94 94 120  95 95 60
 2022-07-29 2  89 89 60
 2022-08-01 2  88 80 60
+2022-08-05 2  98 98 60  90 89 60  98 98 60
 </pre>
 
 <p>表示される日付の9:00から丸一日の間に接触があったことがわかります。日付以外の項目の意味は <a href="https://developers.google.com/android/exposure-notifications/exposure-notifications-api">Google のドキュメント</a> に説明されています（いまいちよくわからない説明ですが）。</p>
+
+<p>一つの exposure_windows の要素はたかだか30分で、これ以上の接触は2回と数えられます。ですから、上の例の 2022-07-04 は、2人に会ったか、1人に2回会ったか、1人に30分を超えて会ったか、ということのようです。TypicalAttenuationDb と MinAttenuationDb はそれぞれ BLE（Bluetooth Low Energy）電界強度の dB（デシベル）値の平均値・最小値です。dB 値が小さいほど電界強度が強いことになります。<a href="https://gist.github.com/daisuke-nogami/808dfc8935cf4649e4272eddc13cdaf9">この解説</a>によれば 5m 離れていれば 65〜75dB 程度のようです。SecondsSinceLastScan は秒数を 60 の倍数に丸めたものです。</p>
 
 <p>ちなみに、iPhone の「設定」→「接触通知」→「使用中」→「接触チェックの記録」に出る「一致したキーの数」は次のような不思議な変化をします：</p>
 
@@ -80,6 +83,8 @@ for x in exposure["exposure_windows"]:
 2022-07-25 16:31,4
 2022-08-04 02:53,5
 2022-08-05 22:00,4
+2022-08-06 17:43,5
+2022-08-07 10:50,4
 </pre>
 
 <p>どうやらこの「一致したキーの数」は積算値で、何かのタイミングでリセットされるようですが、詳細はわかりません。おそらく「一致したキーの数」が変化したタイミングで exposure_data.json も書き変わるのだと思います。</p>
@@ -203,7 +208,7 @@ for arg in sys.argv[1:]:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-06 07:45:48 JST</time>
+Last modified: <time>2022-08-07 22:38:18 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

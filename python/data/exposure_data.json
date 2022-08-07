@@ -1,6 +1,6 @@
 {
   "platform": "iOS",
-  "platform_version": "15.5",
+  "platform_version": "15.6",
   "model": "iPhone14,6",
   "device_type": "Physical",
   "app_version": "2.0.1",
@@ -70,6 +70,150 @@
       },
       "RecursiveSummary": null,
       "SelfReportedSummary": null
+    },
+    {
+      "DateMillisSinceEpoch": 1656892800000,
+      "DaySummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "ConfirmedClinicalDiagnosisSummary": null,
+      "ConfirmedTestSummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "RecursiveSummary": null,
+      "SelfReportedSummary": null
+    },
+    {
+      "DateMillisSinceEpoch": 1658102400000,
+      "DaySummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "ConfirmedClinicalDiagnosisSummary": null,
+      "ConfirmedTestSummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "RecursiveSummary": null,
+      "SelfReportedSummary": null
+    },
+    {
+      "DateMillisSinceEpoch": 1658188800000,
+      "DaySummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "ConfirmedClinicalDiagnosisSummary": null,
+      "ConfirmedTestSummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "RecursiveSummary": null,
+      "SelfReportedSummary": null
+    },
+    {
+      "DateMillisSinceEpoch": 1658448000000,
+      "DaySummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "ConfirmedClinicalDiagnosisSummary": null,
+      "ConfirmedTestSummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "RecursiveSummary": null,
+      "SelfReportedSummary": null
+    },
+    {
+      "DateMillisSinceEpoch": 1658534400000,
+      "DaySummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "ConfirmedClinicalDiagnosisSummary": null,
+      "ConfirmedTestSummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "RecursiveSummary": null,
+      "SelfReportedSummary": null
+    },
+    {
+      "DateMillisSinceEpoch": 1658966400000,
+      "DaySummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "ConfirmedClinicalDiagnosisSummary": null,
+      "ConfirmedTestSummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "RecursiveSummary": null,
+      "SelfReportedSummary": null
+    },
+    {
+      "DateMillisSinceEpoch": 1659052800000,
+      "DaySummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "ConfirmedClinicalDiagnosisSummary": null,
+      "ConfirmedTestSummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "RecursiveSummary": null,
+      "SelfReportedSummary": null
+    },
+    {
+      "DateMillisSinceEpoch": 1659312000000,
+      "DaySummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "ConfirmedClinicalDiagnosisSummary": null,
+      "ConfirmedTestSummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "RecursiveSummary": null,
+      "SelfReportedSummary": null
+    },
+    {
+      "DateMillisSinceEpoch": 1659657600000,
+      "DaySummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "ConfirmedClinicalDiagnosisSummary": null,
+      "ConfirmedTestSummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "RecursiveSummary": null,
+      "SelfReportedSummary": null
     }
   ],
   "exposure_windows": [
@@ -122,6 +266,161 @@
           "MinAttenuationDb": 88,
           "SecondsSinceLastScan": 60,
           "TypicalAttenuationDb": 93
+        }
+      ]
+    },
+    {
+      "CalibrationConfidence": 3,
+      "DateMillisSinceEpoch": 1656892800000,
+      "Infectiousness": 2,
+      "ReportType": 0,
+      "ScanInstances": [
+        {
+          "MinAttenuationDb": 87,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 91
+        }
+      ]
+    },
+    {
+      "CalibrationConfidence": 3,
+      "DateMillisSinceEpoch": 1656892800000,
+      "Infectiousness": 2,
+      "ReportType": 0,
+      "ScanInstances": [
+        {
+          "MinAttenuationDb": 91,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 91
+        }
+      ]
+    },
+    {
+      "CalibrationConfidence": 3,
+      "DateMillisSinceEpoch": 1658102400000,
+      "Infectiousness": 2,
+      "ReportType": 0,
+      "ScanInstances": [
+        {
+          "MinAttenuationDb": 84,
+          "SecondsSinceLastScan": 120,
+          "TypicalAttenuationDb": 91
+        },
+        {
+          "MinAttenuationDb": 90,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 90
+        }
+      ]
+    },
+    {
+      "CalibrationConfidence": 3,
+      "DateMillisSinceEpoch": 1658188800000,
+      "Infectiousness": 2,
+      "ReportType": 0,
+      "ScanInstances": [
+        {
+          "MinAttenuationDb": 89,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 89
+        }
+      ]
+    },
+    {
+      "CalibrationConfidence": 3,
+      "DateMillisSinceEpoch": 1658448000000,
+      "Infectiousness": 2,
+      "ReportType": 0,
+      "ScanInstances": [
+        {
+          "MinAttenuationDb": 91,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 91
+        }
+      ]
+    },
+    {
+      "CalibrationConfidence": 3,
+      "DateMillisSinceEpoch": 1658534400000,
+      "Infectiousness": 2,
+      "ReportType": 0,
+      "ScanInstances": [
+        {
+          "MinAttenuationDb": 87,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 87
+        },
+        {
+          "MinAttenuationDb": 78,
+          "SecondsSinceLastScan": 120,
+          "TypicalAttenuationDb": 84
+        }
+      ]
+    },
+    {
+      "CalibrationConfidence": 3,
+      "DateMillisSinceEpoch": 1658966400000,
+      "Infectiousness": 2,
+      "ReportType": 0,
+      "ScanInstances": [
+        {
+          "MinAttenuationDb": 94,
+          "SecondsSinceLastScan": 120,
+          "TypicalAttenuationDb": 94
+        },
+        {
+          "MinAttenuationDb": 95,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 95
+        }
+      ]
+    },
+    {
+      "CalibrationConfidence": 3,
+      "DateMillisSinceEpoch": 1659052800000,
+      "Infectiousness": 2,
+      "ReportType": 0,
+      "ScanInstances": [
+        {
+          "MinAttenuationDb": 89,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 89
+        }
+      ]
+    },
+    {
+      "CalibrationConfidence": 3,
+      "DateMillisSinceEpoch": 1659312000000,
+      "Infectiousness": 2,
+      "ReportType": 0,
+      "ScanInstances": [
+        {
+          "MinAttenuationDb": 80,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 88
+        }
+      ]
+    },
+    {
+      "CalibrationConfidence": 3,
+      "DateMillisSinceEpoch": 1659657600000,
+      "Infectiousness": 2,
+      "ReportType": 0,
+      "ScanInstances": [
+        {
+          "MinAttenuationDb": 98,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 98
+        },
+        {
+          "MinAttenuationDb": 89,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 90
+        },
+        {
+          "MinAttenuationDb": 98,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 98
         }
       ]
     }
