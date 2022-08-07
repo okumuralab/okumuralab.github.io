@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/220807.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ImageMagick</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>ImageMagick</h1>
+
+<p><a href="https://imagemagick.org">ImageMagick</a> はコマンドで使う画像編集ツールです。昔は animate、compare、composite、conjure、convert、display、identify、import、mogrify、montage、stream というコマンド群からなり、特に convert という変換コマンドがよく使われていましたが、Windows に元々ある convert.exe と混乱しやすいので、今は magick という名前に変更されました。Windows 以外では convert コマンドはまだ使えますが、それ以外のコマンドも含め、すべて magick へのシンボリックリンクになりました。さらに、magick-script という簡易言語のインタープリタも付きました。</p>
+
+<p>インストールは上記サイトの「Download」をご覧ください。私は Mac に Homebrew でインストールしています（<code>brew install imagemagick</code>）。</p>
+
+<p>例えばRGB画像をグレイスケールやCMYKに変換するには次のように打ち込みます：</p>
+
+<pre>
+magick foo.png -colorspace Gray foo-gray.png
+magick foo.png -colorspace Gray EPDF:foo-gray.pdf
+magick foo.png -colorspace CMYK EPDF:foo-cmyk.pdf
+</pre>
+
+<p>ここで EPDF はいわゆる Encapsulated PDF です。こういう処理を一括して行うには bash などのシェルで</p>
+
+<pre>
+for x in *.png
+do
+    magick $x -colorspace CMYK EPDF:${x%.png}-cmyk.pdf
+done
+</pre>
+
+<p>のようにします。</p>
+
+<p>その他の例：</p>
+
+<pre>
+magick foo.heic foo.jpg  # HEIC→JPG
+magick foo.heic -resize 50% foo.jpg   # 半分のサイズに
+magick *.jpg foo.pdf     # 全*.jpgを束ねてfoo.pdfにする
+mogrify -trim foo.png    # 余分なマージンを削除
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-08-07 09:58:05 JST</time></p>
+</footer>
+</body>
+</html>
