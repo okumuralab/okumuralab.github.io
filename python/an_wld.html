@@ -25,12 +25,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('https://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv',
-                 encoding='sjis')
+URL = 'https://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv'
+df = pd.read_csv(URL, encoding='cp932')
 plt.plot(df['年'], df['世界全体'], 'o-')
 </pre>
 
-<p>でよい。いつもPythonの演習に使っている。</p>
+<p>でよい（<code>cp932</code> は <code>sjis</code> でもよい）。いつもPythonの演習に使っている。</p>
 
 <p>ところが，あるとき上のコードが働かなくなった。調べてみると，2020-12-22に更新されたCSVファイルが</p>
 
@@ -43,23 +43,28 @@ plt.plot(df['年'], df['世界全体'], 'o-')
 2020,+0.47*,+0.70*,+0.25*
 </pre>
 
-<p>のように，2020年のデータに余計な <code>*</code> が付いているため，数値と解釈できなくなってしまっている。<a href="https://www.data.jma.go.jp/cpdinfo/temp/list/an_wld.html">世界の年平均気温偏差（℃）</a>によれば <code>*</code> は「1月から11月までの月平均気温の偏差をもとに算出した速報値」だそうである（余計なことを💢）。とりあえず</p>
+<p>のように，2020年のデータに余計な <code>*</code> が付いているため，数値と解釈できなくなってしまっている。<a href="https://www.data.jma.go.jp/cpdinfo/temp/list/an_wld.html">世界の年平均気温偏差（℃）</a>によれば <code>*</code> は「1月から11月までの月平均気温の偏差をもとに算出した速報値」だそうである（余計なことを💢）。対処法は</p>
 
 <pre class="cell">
-df['世界全体'] = df['世界全体'].str.replace('*', '', regex=False).astype(float)
+df = pd.read_csv('URL, encoding='cp932', skipfooter=1)
 </pre>
 
-<p>などのようにすれば数値に変換できる。別の方法として</p>
+<p>として最後の行を読まないようにするのが一番簡単である。あるいは，全部読んでから</p>
+
+<pre class="cell">
+df.replace(regex=r'\*', value='').astype(float)
+</pre>
+
+<p>のようにして <code>*</code> を削除して数値に変換する。さらに別の方法として</p>
 
 <pre class="cell">
 def foo(x):
     return float(x.replace('*', ''))
 
-df = pd.read_csv('.../an_wld.csv', encoding='cp932',
-                 converters={1:foo, 2:foo, 3:foo})
+df = pd.read_csv(URL, encoding='cp932', converters={1:foo, 2:foo, 3:foo})
 </pre>
 
-<p>のようにコンバータを使う手がある。</p>
+<p>のようにコンバータを使う手もある。</p>
 
 <p>なお，上記の余分な <code>*</code> はタイムスタンプ 2021-02-01 のCSVファイルでは消えた。2020年の数値も改訂されている：</p>
 
@@ -87,7 +92,7 @@ df = pd.read_csv('.../an_wld.csv', encoding='cp932',
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-04 21:51:08 JST</time>
+Last modified: <time>2022-08-08 21:31:46 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

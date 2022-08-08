@@ -57,9 +57,9 @@ for x in exposure["exposure_windows"]:
 2022-08-05 2  98 98 60  90 89 60  98 98 60
 </pre>
 
-<p>表示される日付の9:00から丸一日の間に接触があったことがわかります。日付以外の項目の意味は <a href="https://developers.google.com/android/exposure-notifications/exposure-notifications-api">Google のドキュメント</a> に説明されています（いまいちよくわからない説明ですが）。</p>
+<p>表示される日付の9:00から丸一日の間に接触があったことがわかります。日付以外の項目の意味は <a href="https://developers.google.com/android/exposure-notifications/exposure-notifications-api">Google のドキュメント</a> に説明されています（いまいちよくわからない説明ですが）。鈴木健治さんの<a href="https://note.com/kvaluation/n/n83ac9c1a0697">COCOAの接触時間が長い理由と、COCOAログチェッカー件数の意味</a>がたいへんわかりやすい解説です。</p>
 
-<p>一つの exposure_windows の要素はたかだか30分で、これ以上の接触は2回と数えられます。ですから、上の例の 2022-07-04 は、2人に会ったか、1人に2回会ったか、1人に30分を超えて会ったか、ということのようです。TypicalAttenuationDb と MinAttenuationDb はそれぞれ BLE（Bluetooth Low Energy）電界強度の dB（デシベル）値の平均値・最小値です。dB 値が小さいほど電界強度が強いことになります。<a href="https://gist.github.com/daisuke-nogami/808dfc8935cf4649e4272eddc13cdaf9">この解説</a>によれば 5m 離れていれば 65〜75dB 程度のようです。SecondsSinceLastScan は秒数を 60 の倍数に丸めたものです。</p>
+<p>一つの exposure_windows の要素はたかだか30分で、これ以上の接触は2回と数えられます。ですから、上の例の 2022-07-04 は、2人に会ったか、1人に2回会ったか、1人に30分を超えて会ったか、ということのようです。TypicalAttenuationDb と MinAttenuationDb はそれぞれ BLE（Bluetooth Low Energy）電界強度の dB（デシベル）値の平均値・最小値です。dB 値が小さいほど電界強度が強いことになります。<a href="https://gist.github.com/daisuke-nogami/808dfc8935cf4649e4272eddc13cdaf9">野上大介さんの解説</a>によれば 5m 離れていれば 65〜75dB 程度のようです。SecondsSinceLastScan は秒数を 60 の倍数に丸めたものです。</p>
 
 <p>ちなみに、iPhone の「設定」→「接触通知」→「使用中」→「接触チェックの記録」に出る「一致したキーの数」は次のような不思議な変化をします：</p>
 
@@ -208,7 +208,7 @@ for arg in sys.argv[1:]:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-07 22:38:18 JST</time>
+Last modified: <time>2022-08-08 09:15:21 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
