@@ -20,38 +20,38 @@
 <p>Python には <a href="https://docs.python.org/3/library/turtle.html">turtle</a> というタートルグラフィックスライブラリが標準で備わっています。対話型の環境で</p>
 
 <pre>
-<code>from turtle import *
-</code></pre>
+from turtle import *
+</pre>
 
-<p>とすると，まだ何も起こりません。続けて</p>
+<p>とすると、まだ何も起こりません。続けて</p>
 
 <pre>
-<code>for i in range(5):
+for i in range(5):
     forward(200)
     left(72)
-</code></pre>
+</pre>
 
-<p>と打ち込むと，Python Turtle Graphics という画面が開き，➤ のような「亀」が正五角形を描くはずです。</p>
+<p>と打ち込むと、Python Turtle Graphics という画面が開き、➤ のような「亀」が正五角形を描くはずです。</p>
 
-<p>次の例は，ペンカラーを黒，フィルカラーを黄色にして，塗りつぶします。</p>
+<figure><img src="img/turtle.png" alt="Python Turtle Graphics"></figure>
+
+<p>次の例は、ペンカラーを黒、フィルカラーを黄色にして、塗りつぶします。</p>
 
 <pre>
-<code>color("black", "yellow")
+color("black", "yellow")
+
 begin_fill()
 for i in range(5):
     forward(200)
     left(72)
 end_fill()
-</code></pre>
+</pre>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-02-24 09:41:09</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-09 22:38:18 JST</time></p>
+</footer>
 </body>
 </html>

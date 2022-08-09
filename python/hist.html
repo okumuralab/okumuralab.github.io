@@ -17,63 +17,80 @@
 
 <h1>ヒストグラム</h1>
 
-<p>Python の Matplotlib のデフォルトのヒストグラムは，かっこわるい。</p>
+<h2>Matplotlibのヒストグラム</h2>
 
-<pre>
-<code>import matplotlib.pyplot as plt
+<p>Python の Matplotlib のデフォルトのヒストグラムです：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
 import numpy as np
 
 rng = np.random.default_rng(12345)
 x = rng.random(1000)
 plt.hist(x)
-</code></pre>
+</pre>
+
+<pre>
+(array([ 94., 102., 109., 109., 112.,  94.,  97.,  99.,  85.,  99.]),
+ array([4.37086824e-04, 1.00314361e-01, 2.00191635e-01, 3.00068909e-01,
+        3.99946182e-01, 4.99823456e-01, 5.99700730e-01, 6.99578004e-01,
+        7.99455278e-01, 8.99332552e-01, 9.99209826e-01]),
+ <BarContainer object of 10 artists>)
+</pre>
 
 <figure><img src="img/hist1.svg" alt="ヒストグラム1"></figure>
 
-<p>オプション <code>density=True</code> で縦軸が個数でなく密度になる。<code>orientation='horizontal'</code> で横向きになる。</p>
+<p>これは区切りが見にくいだけでなく、0.0 から 1.0 までが10等分されたように見えて、実は最小値 4.37086824e-04 から最大値 9.99209826e-01 までの区間が10等分されたもので、区切り位置は [0, 0.1, 0.2, …, 1] になっていません。</p>
 
-<p>例えば <code>bins=50</code> で50分割になる。また，例えば <code>bins=[0,1,2,3,4]</code> のように分割点を指定できる（<code>bins=range(5)</code> と書いても同じ）。この場合，区間は左閉区間 [0,1)，[1,2)，[2,3)，[3,4] になる。一番右が閉区間となるのに注意。<code>bins=[0,0.2,0.4,0.6,0.8,1]</code> は <code>bins=np.arange(6)*0.2</code> とも書ける。</p>
+<p>正しく描くには、次のようにビン（階級）の指定を明確にする必要があります：</p>
 
-<div class="note">
-<p>左が閉じた区間になるのは，R のデフォルトとは逆で，R ではオプション <code>right=FALSE</code> を付けると <code>plt.hist()</code> と同じになる。ちなみに Excel の「グラフ」メニューに加わった「ヒストグラム」も左開区間にしかできないようで，悩ましい。</p>
-</div>
-
-<p>R 風に描くには，次のようにする：</p>
+<pre class="cell">
+plt.hist(x, color="lightgray", edgecolor="black", bins=np.arange(11)/10)
+</pre>
 
 <pre>
-<code>plt.hist(x, color="lightgray", edgecolor="black")
-</code></pre>
+(array([ 94., 102., 109., 110., 111.,  94.,  97.,  99.,  85.,  99.]),
+ array([0. , 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1. ]),
+ <BarContainer object of 10 artists>)
+</pre>
 
 <figure><img src="img/hist2.svg" alt="ヒストグラム2"></figure>
 
-<p>seaborn の darkgrid 風に描くには，次のようにする（seaborn がインストールされていれば import しなくてもよい）：</p>
+<p>最初のヒストグラムでは左から3番目と4番目が同じ高さでしたが、正しく描いたヒストグラムでは3番目より4番目が高くなっています。</p>
 
-<pre>
-<code>plt.style.use("seaborn-darkgrid")
-plt.hist(x)
-</code></pre>
+<p>ここで <code>np.arange(11)</code> は 0 から 10 まで11個の整数の配列を意味します。これを10で割って、0 から 1 まで 0.1 刻みの配列にしています。このように与えると、10個の左閉区間 [0, 0.1)、[0.1, 0.2)、…、[0.9, 1.0] がビンになります。最後のビンだけ両側閉区間となることにご注意ください。</p>
 
-<p>やや不完全なので，<a href="seaborn.html">seaborn</a> を import してやってみる：</p>
+<p>オプション <code>density=True</code> で縦軸が個数でなく密度になります。<code>orientation="horizontal"</code> で横向きになります。</p>
 
-<pre>
-<code>import seaborn as sns
+<div class="note">
+<p>左が閉じた区間になるのは、R のデフォルトとは逆で、R ではオプション <code>right=FALSE</code> を付けると <code>plt.hist()</code> と同じになります。ちなみに Excel の「グラフ」メニューに加わった「ヒストグラム」も左開区間にしかできないようです。</p>
+</div>
 
-sns.set_style("darkgrid")
-plt.hist(x)
-</code></pre>
+<h2>seabornのヒストグラム</h2>
 
-<figure><img src="img/hist3.svg" alt="ヒストグラム3"></figure>
+<p>seaborn では <code>sns.histplot()</code> を使います。デフォルトでは次のようになります：</p>
 
-<p>seaborn にも <code>sns.histplot()</code> という関数がある。</p>
+<pre class="cell">
+import seaborn as sns
+
+sns.histplot(x, bins=np.arange(11)/10)
+</pre>
+
+<figure><img src="img/hist4.svg" alt="ヒストグラム4"></figure>
+
+<p>オプションは <code>plt.hist()</code> とだいたい同じですが、便利なオプションとして <code>discrete=True</code> があります。これは整数値のヒストグラムを描く場合に便利です：</p>
+
+<pre class="cell">
+sns.histplot(np.floor(10 * x), discrete=True)
+</pre>
+
+<figure><img src="img/hist5.svg" alt="ヒストグラム5"></figure>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-10-26 15:43:56</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-09 20:58:01 JST</time></p>
+</footer>
 </body>
 </html>

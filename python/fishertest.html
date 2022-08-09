@@ -17,7 +17,7 @@
 
 <h1>Fisherの検定</h1>
 
-<p>RでFisherの検定をするには <code>fisher.test()</code> を使います。行列は縦に読んで，行数（または列数）を指定します：</p>
+<p>RでFisherの検定をするには <code>fisher.test()</code> を使います。行列は縦に読んで、行数（または列数）を指定します：</p>
 
 <pre>
 &gt; fisher.test(matrix(c(3, 1, 2, 4), nrow=2))
@@ -46,18 +46,15 @@ fisher_exact([[3, 2], [1, 4]])
 (6.0, 0.523809523809524)
 </pre>
 
-<p>返ってくるのはオッズ比と<i>p</i>値です。Rの <code>fisher.test()</code> と違って，こちらの <code>[[a, b], [c, d]]</code> のオッズ比は <code>(a/b)/(c/d)</code> と同じです。</p>
+<p>返ってくるのはオッズ比と<i>p</i>値です。Rの <code>fisher.test()</code> と違って、こちらの <code>[[a, b], [c, d]]</code> のオッズ比は <code>(a/b)/(c/d)</code> と同じです。</p>
 
-<p>残念ながら2×2行列しか扱えません。より大きな行列を扱うには <a href="https://pypi.org/project/FisherExact/">FisherExact</a> や <a href="https://github.com/boussoffara/fexact">fexact</a> があるようです。</p>
+<p>残念ながら2×2行列しか扱えません。より大きな行列を扱うには <a href="https://pypi.org/project/FisherExact/">FisherExact</a> や <a href="https://github.com/boussoffara/fexact">fexact</a> があるようですが、<a href="rpy2.html">rpy2</a> 等を使ってPythonからRを呼び出すのがいいかもしれません。</p>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-12-02 22:20:52</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-09 21:46:37 JST</time></p>
+</footer>
 </body>
 </html>
