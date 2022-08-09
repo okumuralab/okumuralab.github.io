@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/randomizedresponse.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>差分プライバシーとランダマイズド・レスポンス</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<div id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</div>
+
+<h1>差分プライバシーとランダマイズド・レスポンス</h1>
+
+<p>アップルは、2016年の開発者向け会議WWDC2016で、製品から利用情報をアップルに送る際に差分プライバシーを使うと発表して、注目を浴びました。この仕組みは、端末から情報を送る段階でランダムなノイズを加えるというもので、正確な情報はアップルにも伝わりませんが、全体の傾向は調べられます。アップルに続き、グーグル、メタ（フェイスブック）、ウーバーなど、IT企業が続々と差分プライバシーを導入しています。2020年の米国の国勢調査でも差分プライバシーが使われました。</p>
+
+<p>差分プライバシーと同様な考え方を使った「ランダマイズド・レスポンス」という方法は昔からありました。ここではその方法を試してみましょう。</p>
+
+<p>例えば40人のクラスでアンケートをするとします。そのとき、「彼氏・彼女がいますか？」のような微妙な質問だと、恥ずかしがって正しく答えてもらえません。そこで、ランダマイズド・レスポンスの登場です。</p>
+
+<p>コインを2回投げてください。表が出たか裏が出たかは他人に見えないようにします。1回目に表が出たなら、2回目のコインは無視して、正直に「はい」「いいえ」を答えてください。1回目に裏が出たなら、2回目のコインが表なら「はい」、裏なら「いいえ」と答えてください。</p>
+
+<p>これなら、回答を他人に見られても真実はわかりませんので、正直に答えてもらえそうです。</p>
+
+<p>何%が「はい」と答えたかを調べ、それを2倍して50%を引けば、だいたいの値がわかります。</p>
+
+<p>シミュレーションで試してみましょう。</p>
+
+<p>40人のクラスで、仮に16人（40%）に彼氏・彼女がいるとしましょう。</p>
+
+<pre class="cell">
+import numpy as np
+import seaborn as sns
+
+rng = np.random.default_rng()
+N = 40  # クラスの人数
+Y = 16  # 本当はYesの人数
+
+def response():
+    s = 0
+    for i in range(N):
+        r1 = rng.integers(2)     # 0か1かの乱数
+        r2 = rng.integers(2)     # 0か1かの乱数
+        if r1 == 1:
+            if i < Y:
+                s = s + 1
+        else:
+            s = s + r2
+    return s
+
+# 1万回のシミュレーション
+a = [2 * response() - N / 2 for i in range(10000)]
+print(np.mean(a))
+sns.histplot(a, discrete=True)
+</pre>
+
+<figure><img src="img/randomizedresponse.svg" alt="ランダマイズド・レスポンス"></figure>
+
+<p>だいたい正しい結果が出ますが、40人のような少人数では、誤差が大きいこともわかります。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村晴彦</a></p>
+<p>Last modified: <time>2022-08-09 16:19:37 JST</time></p>
+</footer>
+</body>
+</html>
