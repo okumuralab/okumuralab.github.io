@@ -200,6 +200,22 @@
       "SelfReportedSummary": null
     },
     {
+      "DateMillisSinceEpoch": 1659571200000,
+      "DaySummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "ConfirmedClinicalDiagnosisSummary": null,
+      "ConfirmedTestSummary": {
+        "MaximumScore": 60.0,
+        "ScoreSum": 60.0,
+        "WeightedDurationSum": 60.0
+      },
+      "RecursiveSummary": null,
+      "SelfReportedSummary": null
+    },
+    {
       "DateMillisSinceEpoch": 1659657600000,
       "DaySummary": {
         "MaximumScore": 60.0,
@@ -398,6 +414,19 @@
           "MinAttenuationDb": 80,
           "SecondsSinceLastScan": 60,
           "TypicalAttenuationDb": 88
+        }
+      ]
+    },
+    {
+      "CalibrationConfidence": 3,
+      "DateMillisSinceEpoch": 1659571200000,
+      "Infectiousness": 2,
+      "ReportType": 0,
+      "ScanInstances": [
+        {
+          "MinAttenuationDb": 100,
+          "SecondsSinceLastScan": 60,
+          "TypicalAttenuationDb": 100
         }
       ]
     },

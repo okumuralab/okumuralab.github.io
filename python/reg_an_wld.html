@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/reg_an_wld.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>気象庁の「世界の年平均気温偏差」データの回帰分析</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>気象庁の「世界の年平均気温偏差」データの回帰分析</h1>
+
+<h2>はじめに</h2>
+
+<p><a href="an_wld.html">気象庁の「世界の年平均気温偏差」データ</a>から、毎年どれくらい地球が温暖化しているかを調べてみましょう。</p>
+
+<pre class="cell">
+import pandas as pd
+import matplotlib.pyplot as plt
+
+URL = "https://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv"
+df = pd.read_csv(URL, encoding="cp932")
+plt.plot(df["年"], df["世界全体"], "o-")
+plt.xlabel("年")
+plt.ylabel("年平均気温偏差")
+</pre>
+
+<figure><img src="img/an_wld.svg" alt="世界の年平均気温偏差"></figure>
+
+<div class="note">
+<p>この気象庁のデータはときどきデータに注釈記号 <code>*</code> が付いてエラーになることがあります。そのときは<a href="an_wld.html">気象庁の「世界の年平均気温偏差」データ</a>に説明した方法で切り抜けてください。</p>
+</div>
+
+<p>よく見ると、いったん温暖化傾向が止まりますが、1980年からはほぼ直線的に増加しています。そこで、1980年以降だけを切り出して、よく調べてみましょう。</p>
+
+<pre class="cell">
+df1 = df.query("年 >= 1980")
+plt.plot(df1["年"], df1["世界全体"], "o-")
+plt.xlabel("年")
+plt.ylabel("年平均気温偏差")
+</pre>
+
+<figure><img src="img/an_wld1.svg" alt="世界の年平均気温偏差"></figure>
+
+<p>直線をあてはめて、その傾きを求めてみましょう。</p>
+
+<h2>NumPyを使う</h2>
+
+<p>NumPy の多項式をフィットする関数 <code>np.polyfit(x, y, 次数)</code> を使うのが一番簡単です。</p>
+
+<pre class="cell">
+import numpy as np
+
+slope, intercept = np.polyfit(df1["年"], df1["世界全体"], 1)
+print("傾き", slope, "y切片", intercept)
+</pre>
+
+<p>傾き 0.0184 くらいです。毎年 0.0184 度だけ温暖化しています。少ないようですが、100年たつと 1.84 度の上昇になります。</p>
+
+<p>さきほどのグラフに直線を追加してみましょう。</p>
+
+<pre class="cell">
+plt.plot(df1["年"], df1["世界全体"], "o-")
+plt.xlabel("年")
+plt.ylabel("年平均気温偏差")
+plt.plot(df1["年"], df1["年"] * slope + intercept)
+</pre>
+
+<figure><img src="img/an_wld2.svg" alt="世界の年平均気温偏差"></figure>
+
+<p>さらに <code>np.polyfit(df1["年"], df1["世界全体"], 2)</code> とすると、2次式であてはめて、2次の係数、1次の係数、定数項を出力します。何次式でも同様にできます（解が数値的に安定しているかは別問題です）。</p>
+
+<h2>statsmodelsを使う</h2>
+
+<p><a href="https://www.statsmodels.org">statsmodels</a> は R と近い統計解析の機能を Python に実装するライブラリです。あらかじめ <code>pip install statsmodels</code> と打ち込んでインストールしておきます。</p>
+
+<pre class="cell">
+import statsmodels.formula.api as smf
+
+res = smf.ols("世界全体 ~ 年", data=df1).fit()
+print(res.summary())
+</pre>
+
+<pre>
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   世界全体   R-squared:                       0.866
+Model:                            OLS   Adj. R-squared:                  0.863
+Method:                 Least Squares   F-statistic:                     258.3
+Date:                Tue, 09 Aug 2022   Prob (F-statistic):           4.76e-19
+Time:                        09:55:55   Log-Likelihood:                 42.584
+No. Observations:                  42   AIC:                            -81.17
+Df Residuals:                      40   BIC:                            -77.69
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept    -36.9090      2.291    -16.111      0.000     -41.539     -32.279
+年              0.0184      0.001     16.070      0.000       0.016       0.021
+==============================================================================
+Omnibus:                        2.657   Durbin-Watson:                   1.550
+Prob(Omnibus):                  0.265   Jarque-Bera (JB):                1.468
+Skew:                           0.114   Prob(JB):                        0.480
+Kurtosis:                       2.113   Cond. No.                     3.30e+05
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 3.3e+05. This might indicate that there are
+strong multicollinearity or other numerical problems.
+</pre>
+
+<p>2次式であてはめるには数式部分を <code>"世界全体 ~ 年 + I(年**2)"</code> とします。</p>
+
+<div class="note">
+<p>R で同じことをする方法：</p>
+<pre>
+URL = "https://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv"
+df = read.csv(URL, fileEncoding="cp932")
+df1 = subset(df, 年 >= 1980)
+with(df1, plot(年, 世界全体, type="o", pch=16))
+r = lm(世界全体 ~ 年, data=df1)
+abline(r)
+summary(r)
+</pre>
+<p>結果は次のように表示されます：</p>
+<pre>
+Call:
+lm(formula = 世界全体 ~ 年, data = df1)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.149183 -0.065294 -0.003765  0.067954  0.200055 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -36.909018   2.290916  -16.11   &lt;2e-16 ***
+年            0.018403   0.001145   16.07   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.08995 on 40 degrees of freedom
+Multiple R-squared:  0.8659,	Adjusted R-squared:  0.8625 
+F-statistic: 258.3 on 1 and 40 DF,  p-value: &lt; 2.2e-16
+</pre>
+<p>2次式にするには式の部分を <code>世界全体 ~ 年 + I(年^2)</code> とします。</p>
+</div>
+
+<h2>SciPyを使う</h2>
+
+<p><a href="https://scipy.org">SciPy</a> の <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html">scipy.stats.linregress</a> で単回帰ができます。</p>
+
+<pre class="cell">
+from scipy.stats import linregress
+res = linregress(df1["年"], df1["世界全体"])
+print(res.slope, res.intercept)
+</pre>
+
+<p>ほかに <i lang="en">p</i> 値なども結果に含まれます。</p>
+
+<h2>scikit-learnを使う</h2>
+
+<p><a href="https://scikit-learn.org">scikit-learn</a> は機械学習で標準的に使われているライブラリです。この中にも線形回帰モデルが入っています。</p>
+
+<pre class="cell">
+from sklearn import linear_model
+
+model = linear_model.LinearRegression()
+X = df1["年"].values.reshape(-1, 1)
+y = df1["世界全体"].values
+model.fit(X, y)
+print(model.coef_, model.intercept_)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-08-09 13:51:13 JST</time></p>
+</footer>
+</body>
+</html>

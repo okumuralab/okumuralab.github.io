@@ -30,7 +30,7 @@ df = pd.read_csv(URL, encoding='cp932')
 plt.plot(df['年'], df['世界全体'], 'o-')
 </pre>
 
-<p>でよい（<code>cp932</code> は <code>sjis</code> でもよい）。いつもPythonの演習に使っている。</p>
+<p>でよい（<code>cp932</code> は <code>sjis</code> でもよい）。いつもPythonの演習に使っている（<a href="reg_an_wld.html">気象庁の「世界の年平均気温偏差」データの回帰分析</a>など参照）。</p>
 
 <p>ところが，あるとき上のコードが働かなくなった。調べてみると，2020-12-22に更新されたCSVファイルが</p>
 
@@ -92,7 +92,7 @@ df = pd.read_csv(URL, encoding='cp932', converters={1:foo, 2:foo, 3:foo})
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-08 21:31:46 JST</time>
+Last modified: <time>2022-08-09 14:03:09 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <title>グラフの例：国立大学運営費交付金</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -17,65 +17,64 @@
 
 <h1>グラフの例：国立大学運営費交付金</h1>
 
-<p>このページを最初に作ったとき（2009年5月3日）に挙げた資料は一部リンク切れになっていますが，今なら例えば文科省の<a href="http://www.mext.go.jp/b_menu/shingi/chousa/koutou/059/gijiroku/__icsFiles/afieldfile/2016/01/21/1364968_06.pdf">この資料（PDF）</a>に，法人化の年（2004年度）から2015年度までの国立大学法人運営費交付金の推移（と2016年度の概算要求）が載っています。これに<a href="http://www.mext.go.jp/a_menu/kaikei/index.htm">このページ</a>に並んでいる各年度の予算の「主要事項」にある「運営費交付金等」の額を追加してグラフにしてみましょう。</p>
+<p>このページを最初に作ったとき（2009年5月3日）に挙げた資料は一部リンク切れになっていますが，今なら例えば文科省の<a href="https://www.mext.go.jp/b_menu/shingi/chousa/koutou/059/gijiroku/__icsFiles/afieldfile/2016/01/21/1364968_06.pdf">この資料（PDF）</a>に，法人化の年（2004年度）から2015年度までの国立大学法人運営費交付金の推移（と2016年度の概算要求）が載っています。これに<a href="https://www.mext.go.jp/a_menu/kaikei/index.htm">このページ</a>に並んでいる各年度の予算の「主要事項」にある「運営費交付金等」の額を追加してグラフにしてみましょう。</p>
 
 <p>通常はこのような変化を表すには折れ線グラフがいいのですが，どれくらいの割合で減っていくかを実感できるように，強いて棒グラフにしてみました。</p>
 
-<figure><img src="img/181224b.png" alt="国立大学運営費交付金"></figure>
+<figure><img src="img/220809a.png" alt="国立大学運営費交付金"></figure>
 
 <pre>
-<code>par(mgp=c(2,0.8,0))     # プロットマージン: 元 c(3,1,0)
+par(mgp=c(2, 0.8, 0))     # プロットマージン: 元 c(3,1,0)
 
-年 = 2004:2019
-運営費交付金 = c(12415, 12317, 12214, 12043, 11813, 11695, 11585, 11528, 11366, 10792, 11123, 10945, 10945, 10971, 10971, 10971)
+年 = 2004:2022
+運営費交付金 = c(12415, 12317, 12214, 12043, 11813, 11695, 11585,
+                 11528, 11366, 10792, 11123, 10945, 10945, 10971,
+                 10971, 10971, 10807, 10790, 10786)
 
 t = barplot(運営費交付金, names.arg=年, las=1)
 text(t, 運営費交付金, 運営費交付金, pos=3, cex=0.8, xpd=TRUE)
 axis(2, labels="億円", at=12000, padj=-1, las=1)
 mtext("国立大学法人運営費交付金", cex=1.4, line=1.5, family="HiraKakuProN-W6")
-</code></pre>
+</pre>
 
 <p>念のため，折れ線グラフです：</p>
 
-<figure><img src="img/181224c.png" alt="国立大学運営費交付金"></figure>
+<figure><img src="img/220809b.png" alt="国立大学運営費交付金"></figure>
 
 <pre>
-<code>plot(年, 運営費交付金, type="o", pch=16, xlab="", ylab="", las=1)
+plot(年, 運営費交付金, type="o", pch=16, xlab="", ylab="", las=1)
 axis(4, labels=FALSE)
 axis(2, labels="億円", at=12000, padj=-1, las=1, tick=FALSE)
 mtext("国立大学法人運営費交付金", cex=1.4, line=0.5, family="HiraKakuProN-W6")
-</code></pre>
+</pre>
 
 <p>折れ線グラフのほうが2013年の異常さが見やすくなります。この年と，減少が止まった20167年以降を省いて，単純に最小2乗法で直線をあてはめると（上図の橙色の直線），傾きは -133.6 で，法人化元年の2004年の 12415 の1%を超えています：</p>
 
 <pre>
 <code class="prom">x = c(2004:2012, 2014:2015)</code>
-<code class="prom">y = 運営費交付金[c(1:9,11:12)]</code>
+<code class="prom">y = 運営費交付金[c(1:9, 11:12)]</code>
 <code class="prom">r = lm(y ~ x)</code>
 <code class="prom">r</code>
 
-<code>Call:</code>
-<code>lm(formula = y ~ x)</code>
+Call:
+lm(formula = y ~ x)
 
-<code>Coefficients:</code>
-<code>(Intercept)            x  </code>
-<code>   280206.4       -133.6  </code>
+Coefficients:
+(Intercept)            x  
+   280206.4       -133.6  
 
 <code class="prom">abline(r, col="#ff9900", lwd=2)</code>
 </pre>
 
-<p>ちなみに，文科省の<a href="http://www.mext.go.jp/a_menu/koutou/houjin/1295896.htm">「国立大学法人化後の現状と課題について（中間まとめ）」について</a>の最初のPDFファイルの図は次のような0で始まらない悪い棒グラフの例となっています。</p>
+<p>ちなみに，文科省の<a href="https://www.mext.go.jp/a_menu/koutou/houjin/1295896.htm">「国立大学法人化後の現状と課題について（中間まとめ）」について</a>の最初のPDFファイルの図は次のような0で始まらない悪い棒グラフの例となっています。</p>
 
 <div><img src="img/101219a.png" alt="文科省作成の国立大学運営費交付金のグラフ"></div>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2018-12-24 22:16:33</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-09 14:44:45 JST</time></p>
+</footer>
 </body>
 </html>
