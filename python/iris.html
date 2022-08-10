@@ -19,26 +19,25 @@
 
 <h2>データの取得と簡単なプロット</h2>
 
-<p>Fisher の有名な「あやめ」のデータをプロットしてみます。まず，データをロードします：</p>
+<p>Fisher の有名な「あやめ」（iris、アイリス）のデータをプロットしてみます。データは <a href="seaborn.html">Seaborn</a> にも入っていますが、ここでは後で scikit-learn を使うので、そちらからロードします：</p>
 
-<pre>
-<code>from sklearn.datasets import load_iris
+<pre class="cell">
+from sklearn.datasets import load_iris
 
 iris = load_iris()
-</code></pre>
+</pre>
 
 <p>ざっとプロットしてみます：</p>
 
-<pre>
-<code>import matplotlib.pyplot as plt
+<pre class="cell">
+import matplotlib.pyplot as plt
 
 plt.scatter(iris.data[:,0], iris.data[:,1], c=iris.target)
-</code></pre>
+</pre>
 
 <p>もっと丁寧に：</p>
 
-<pre>
-<code>plt.clf()  # クリア
+<pre class="cell">
 markers = ['o', '^', 'v']
 for i in range(3):
     d = iris.data[iris.target == i, :]
@@ -46,7 +45,7 @@ for i in range(3):
 plt.xlabel('sepal length (cm)')
 plt.ylabel('sepal width (cm)')
 plt.legend(iris.target_names)
-</code></pre>
+</pre>
 
 <p>印刷用には <code>'o'</code> を <code>'ko'</code> にすれば黒になります。</p>
 
@@ -54,86 +53,89 @@ plt.legend(iris.target_names)
 
 <p>主成分分析（<a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA">PCA</a>）で2次元にしてからプロットしてみます：</p>
 
-<pre>
-<code>from sklearn.decomposition import PCA
+<pre class="cell">
+from sklearn.decomposition import PCA
 
 x = PCA(n_components=2).fit_transform(iris.data)
 
-plt.clf()
 for i in range(3):
     d = x[iris.target == i, :]
     plt.plot(d[:,0], d[:,1], 'o', fillstyle='none', marker=markers[i])
 plt.xlabel('1st')
 plt.ylabel('2nd')
 plt.legend(iris.target_names)
-</code></pre>
+</pre>
 
 <figure><img src="img/iris.png" alt="あやめ"></figure>
 
 <p>次のようにすれば主成分ごとの分散の割合がわかります：</p>
 
-<pre>
-<code>pca = PCA(n_components=2)
+<pre class="cell">
+pca = PCA(n_components=2)
 x = pca.fit_transform(iris.data)
 pca.explained_variance_ratio_
-</code></pre>
+</pre>
 
-<p>出力は <code>array([0.92461872, 0.05306648])</code> のようになります。第1主成分92%，第2主成分5%ほどの寄与があります。</p>
+<p>出力は <code>array([0.92461872, 0.05306648])</code> のようになります。第1主成分92%、第2主成分5%ほどの寄与があります。</p>
 
-<p>PCAする前に変数ごとに標準化するか，あるいは<a href="https://scikit-learn.org/stable/modules/preprocessing.html">ここ</a>の「Scaling vs Whitening」にあるように <code>PCA(n_components=2, whiten=True)</code> するといいかもしれません。標準化は次のようにします：</p>
+<p>PCAする前に変数ごとに標準化するか、あるいは<a href="https://scikit-learn.org/stable/modules/preprocessing.html">ここ</a>の「Scaling vs Whitening」にあるように <code>PCA(n_components=2, whiten=True)</code> するといいかもしれません。標準化は次のようにします：</p>
 
-<pre>
-<code>from sklearn import preprocessing
+<pre class="cell">
+from sklearn import preprocessing
 t = preprocessing.scale(iris.data)
 x = PCA(n_components=2).fit_transform(t)
-</code></pre>
+</pre>
 
 <p>3次元ならどうなるでしょうか：</p>
 
-<pre>
-<code>x = PCA(n_components=3).fit_transform(iris.data)
+<pre class="cell">
+x = PCA(n_components=3).fit_transform(iris.data)
 
-from mpl_toolkits.mplot3d import Axes3D
-
-fig = plt.figure(figsize=(8,6))
-ax = Axes3D(fig, elev=-150, azim=110)
+fig, ax = plt.subplots(figsize=(10,10), subplot_kw=dict(projection="3d"))
 ax.scatter(x[:,0], x[:,1], x[:,2], c=iris.target)
 ax.set_xlabel("1st")
 ax.set_ylabel("2nd")
 ax.set_zlabel("3rd")
-</code></pre>
+</pre>
 
-<p>マウスでぐりぐりできます。</p>
+<p>対話型の環境なら、マウスでぐりぐりできます。</p>
 
 <h2>決定木</h2>
 
-<pre>
-<code>from sklearn.tree import DecisionTreeClassifier, export_graphviz
+<pre class="cell">
+from sklearn.tree import DecisionTreeClassifier, export_graphviz
 
 model = DecisionTreeClassifier(max_depth=3)
 model.fit(iris.data, iris.target)
 export_graphviz(model, "tree.dot",
                 feature_names=iris.feature_names,
                 class_names=iris.target_names)
-</code></pre>
+</pre>
 
 <p>これで <code>tree.dot</code> というテキストファイルができます。これを画像に変換するには <a href="https://www.graphviz.org">Graphviz</a> を使います。Mac へのインストールは <code>brew install graphviz</code> でできます。Graphviz の dot コマンドを使っていろいろな画像に変換できます：</p>
 
 <pre>
-<code>dot -Tpng tree.dot -o tree.png
+dot -Tpng tree.dot -o tree.png
 dot -Tpdf tree.dot -o tree.pdf
 dot -Tsvg tree.dot -o tree.svg
-</code></pre>
+</pre>
 
 <figure><img src="img/iris-tree.svg" alt="あやめの分類木"></figure>
 
 <h2>pandas のデータフレームに変換する方法</h2>
 
-<pre>
-<code>import pandas as pd
+<p><a href="seaborn.html">Seaborn</a> の iris データはデータフレームの形になっていますが、scikit-learn のものをデータフレームにするには次のようにする必要があります：</p>
+
+<pre class="cell">
+import pandas as pd
 
 df = pd.DataFrame(iris.data, columns=iris.feature_names)
 df['species'] = iris.target  # または df['species'] = iris.target_names[iris.target]
+</pre>
+
+<p>次のようなことを試してみてください。</p>
+
+<pre>
 df.shape
 df.info()
 df.head()
@@ -141,16 +143,13 @@ df.describe()
 df.isnull().sum()  # 列ごとの欠測値の数を調べる
 df.groupby('species').size()
 df.corr()
-</code></pre>
+</pre>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-01-12 21:53:27</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-10 15:12:39 JST</time></p>
+</footer>
 </body>
 </html>

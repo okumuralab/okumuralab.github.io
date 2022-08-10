@@ -7,6 +7,9 @@
 <title>Web API</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+blockquote > p { text-indent:1em }
+</style>
 </head>
 <body>
 
@@ -24,9 +27,9 @@
 <p>2022年度から学年進行で施行される高等学校学習指導要領<a href="https://www.mext.go.jp/a_menu/shotou/new-cs/1407074.htm">解説</a>の「情報編」には，APIの利用について，次のような記述がある：</p>
 
 <blockquote>
-<p style="text-indent:1em">例えば，気象データや自治体が公開しているオープンデータなどを用いて数値の合計，平均，最大値，最小値を計算する単純なアルゴリズムや，探索や整列などの典型的なアルゴリズムを考えたり表現したりする活動を取り上げ，アルゴリズムの表現方法，アルゴリズムを正確に表現することの重要性，アルゴリズムによる効率の違いなどを扱うことが考えられる。その際，アルゴリズムを基に平易にプログラムを記述できるプログラミング言語を使用するとともに，アルゴリズムやプログラムの記述方法の習得が目的にならないよう取扱いに配慮する。</p>
-<p style="text-indent:1em">また，プログラミングによってコンピュータの能力を活用することを取り上げ，対象に応じた適切なプログラミング言語の選択，アルゴリズムをプログラムとして表現すること，プログラムから呼び出して使う標準ライブラリやオペレーティングシステム及びサーバなどが提供するライブラリ，API（Application Programming Interface）などの機能，プログラムの修正，関数を用いてプログラムをいくつかのまとまりに分割してそれぞれの関係を明確にして構造化することなどを扱うことが考えられる。その際，プログラミング言語ごとの固有の知識の習得が目的とならないように配慮する。</p>
-<p style="text-indent:1em">更に問題解決のためのプログラミングを取り上げ，プログラミングでワードプロセッサや表計算ソフトウェアのようなアプリケーションソフトウェアが持つ検索や置換及び並べ替えなどの機能の一部を実現したり，ツールやアプリケーションを開発したり，カメラやセンサ及びアクチュエータを利用したり，画像認識や音声認識及び人工知能などの既存のライブラリを組み込んだり，APIを用いたりすることなどが考えられる。その際，人に優しく使いやすいインタフェース，手順を分かりやすく表現するアルゴリズム，効率的で読みやすいプログラムなどのデザインについて触れる。</p>
+<p>例えば，気象データや自治体が公開しているオープンデータなどを用いて数値の合計，平均，最大値，最小値を計算する単純なアルゴリズムや，探索や整列などの典型的なアルゴリズムを考えたり表現したりする活動を取り上げ，アルゴリズムの表現方法，アルゴリズムを正確に表現することの重要性，アルゴリズムによる効率の違いなどを扱うことが考えられる。その際，アルゴリズムを基に平易にプログラムを記述できるプログラミング言語を使用するとともに，アルゴリズムやプログラムの記述方法の習得が目的にならないよう取扱いに配慮する。</p>
+<p>また，プログラミングによってコンピュータの能力を活用することを取り上げ，対象に応じた適切なプログラミング言語の選択，アルゴリズムをプログラムとして表現すること，プログラムから呼び出して使う標準ライブラリやオペレーティングシステム及びサーバなどが提供するライブラリ，API（Application Programming Interface）などの機能，プログラムの修正，関数を用いてプログラムをいくつかのまとまりに分割してそれぞれの関係を明確にして構造化することなどを扱うことが考えられる。その際，プログラミング言語ごとの固有の知識の習得が目的とならないように配慮する。</p>
+<p>更に問題解決のためのプログラミングを取り上げ，プログラミングでワードプロセッサや表計算ソフトウェアのようなアプリケーションソフトウェアが持つ検索や置換及び並べ替えなどの機能の一部を実現したり，ツールやアプリケーションを開発したり，カメラやセンサ及びアクチュエータを利用したり，画像認識や音声認識及び人工知能などの既存のライブラリを組み込んだり，APIを用いたりすることなどが考えられる。その際，人に優しく使いやすいインタフェース，手順を分かりやすく表現するアルゴリズム，効率的で読みやすいプログラムなどのデザインについて触れる。</p>
 </blockquote>
 
 <p>オープンデータをAPIで取得するプログラムを作れと言っているようにも読める。実際，2019年5月に出た文科省<a href="http://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">高等学校情報科「情報Ⅰ」教員研修用教材</a>には，第3章に郵便番号検索APIをPythonで叩く例が載っている。</p>
@@ -39,8 +42,8 @@
 
 <p><a href="https://www.ibsnet.co.jp">株式会社アイビス</a>が提供している<a href="https://zipcloud.ibsnet.co.jp/doc/api">郵便番号検索API</a>。</p>
 
-<pre>
-<code>import requests
+<pre class="cell">
+import requests
 
 url = "https://zipcloud.ibsnet.co.jp/api/search"
 param = {"zipcode": "5140007"}
@@ -52,12 +55,12 @@ data = requests.get(url, param).json()
 
 address = data["results"][0]
 print(address["address1"], address["address2"], address["address3"])
-</code></pre>
+</pre>
 
 <p>入力を含むプログラム：</p>
 
 <pre>
-<code>#! /usr/bin/env python3
+#! /usr/bin/env python3
 
 import requests
 
@@ -71,18 +74,20 @@ while True:
     data = requests.get(url, param).json()
     address = data["results"][0]
     print(address["address1"], address["address2"], address["address3"])
-</code></pre>
+</pre>
 
 <h3>気象庁API</h3>
 
 <p>2021-02-24 13:00:00 のリニューアルによってさまざまなAPI（とは気象庁は言っていない）が使えるようになったようだ。例：</p>
 
-<pre>
-<code>url = "https://www.jma.go.jp/bosai/forecast/data/overview_forecast/240000.json"
+<pre class="cell">
+url = "https://www.jma.go.jp/bosai/forecast/data/overview_forecast/240000.json"
 data = requests.get(url).json()
 print(data['headlineText'])
 print(data['text'])
-</code></pre>
+</pre>
+
+<p>別の例：<a href="amedas.html">気象庁のアメダスのデータ</a></p>
 
 <p>（参考）アシアル岡本さんの<a href="https://anko.education/apps/weather_api">気象庁の天気予報JSONファイルをWebAPI的に利用したサンプルアプリ</a>，加納靖之先生の<a href="https://note.com/ykano/n/n93ec73290e25">気象庁の新しい地震情報をみてみた</a></p>
 
@@ -93,33 +98,33 @@ print(data['text'])
 <p><a href="http://www.livedoor.com">livedoor</a>（LINE Corporation）の提供する<a href="http://weather.livedoor.com/weather_hacks/">Weather Hacks</a>は，場所を指定すると天気予報が取得できる。詳細は<a href="http://weather.livedoor.com/weather_hacks/webservice">Webサービス仕様</a>参照。</p>
 
 <pre>
-<code>url = "http://weather.livedoor.com/forecast/webservice/json/v1"
+url = "http://weather.livedoor.com/forecast/webservice/json/v1"
 param = {"city": "240010"} # 三重県津市
 data = requests.get(url, param).json()
 for x in data["forecasts"]:
     print(f'{x["dateLabel"]}の天気: {x["telop"]}')
-</code></pre>
+</pre>
 
 <h3>openBD</h3>
 
 <p><a href="https://calil.jp">カーリル</a>・<a href="https://www.hanmoto.com">版元ドットコム</a>の<a href="https://openbd.jp">openBD</a>は書誌情報・書影を提供する。</p>
 
-<pre>
-<code>url = "https://api.openbd.jp/v1/get"
+<pre class="cell">
+url = "https://api.openbd.jp/v1/get"
 param = {"isbn": "978-4-7741-9690-9"}
 data = requests.get(url, param).json()
 print("著者名:", data[0]["summary"]["author"])
 print("書名:", data[0]["summary"]["title"])
 print("出版社名:", data[0]["summary"]["publisher"])
 print("出版年月:", data[0]["summary"]["pubdate"])
-</code></pre>
+</pre>
 
 <h3>HeartRails Express</h3>
 
-<p><a href="https://www.heartrails.com">ハートレイルズ</a>の<a href="http://express.heartrails.com">HeartRails Express</a>は路線／駅名データ等の地理情報を提供する。</p>
+<p><a href="https://www.heartrails.com">ハートレイルズ</a>の<a href="https://express.heartrails.com">HeartRails Express</a>は路線／駅名データ等の地理情報を提供する。</p>
 
-<pre>
-<code>url = "http://express.heartrails.com/api/json"
+<pre class="cell">
+url = "https://express.heartrails.com/api/json"
 
 param = {"method": "getLines", "prefecture": "三重県" }
 data = requests.get(url, param).json()
@@ -132,20 +137,20 @@ data = requests.get(url, param).json()
 print("駅と経度・緯度:")
 for i in data["response"]["station"]:
     print(i["name"], i["x"], i["y"])
-</code></pre>
+</pre>
 
 <h3>お菓子の虜</h3>
 
 <p><a href="https://sysbird.jp/profile/">鳥山優子さん</a>のコンビニお菓子の情報サイト<a href="https://sysbird.jp/toriko/">お菓子の虜</a>の<a href="https://sysbird.jp/toriko/webapi/">Web API</a>。</p>
 
-<pre>
-<code>url = "https://sysbird.jp/toriko/api/"
+<pre class="cell">
+url = "https://sysbird.jp/toriko/api/"
 param = {"apikey": "guest", "format": "json", "keyword": "マシュマロ" }
 data = requests.get(url, param).json()
 print("菓子名・メーカー:")
 for i in data["item"]:
     print(i["name"], i["maker"])
-</code></pre>
+</pre>
 
 <h3>Google Calendar API</h3>
 
@@ -157,19 +162,19 @@ for i in data["item"]:
 
 <p>例：三重県の全自治体名を出力</p>
 
-<pre>
-<code>import requests
+<pre class="cell">
+import requests
 
 url = "https://geolonia.github.io/japanese-addresses/api/ja.json"
 data = requests.get(url).json()
 for i, x in enumerate(data['三重県']):
     print(i + 1, x)
-</code></pre>
+</pre>
 
 <p>例：三重県津市の全町名を出力</p>
 
-<pre>
-<code>import requests
+<pre class="cell">
+import requests
 import urllib.parse
 
 query = "三重県/津市"
@@ -178,7 +183,7 @@ url = "https://geolonia.github.io/japanese-addresses/api/ja/"
 data = requests.get(url + urllib.parse.quote(query) + ".json").json()
 for i, x in enumerate(data):
     print(i + 1, x)
-</code></pre>
+</pre>
 
 <h3>その他の登録不要のAPI（お教えいただいたもの）</h3>
 
@@ -276,12 +281,9 @@ sess.mount("https://", adapter)
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-04-23 20:09:11</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-10 15:56:19 JST</time></p>
+</footer>
 </body>
 </html>

@@ -27,29 +27,32 @@
 
 <p>ヒント1：単に点呼するだけなら次のようにします。</p>
 
-<pre><code>for i in range(1, 101):
+<pre>
+for i in range(1, 101):
     print(i)
-</code></pre>
+</pre>
 
 <p>ヒント2：偶数か奇数かを言う場合には次のようにします。</p>
 
-<pre><code>for i in range(1, 101):
+<pre>
+for i in range(1, 101):
     if i % 2 == 0:
-        print(i, 'は偶数')
+        print(i, "は偶数")
     else:
-        print(i, 'は奇数')
-</code></pre>
+        print(i, "は奇数")
+</pre>
 
 <p>ヒント3：場合わけは <code>elif</code> を使って何段階でもできます。</p>
 
-<pre><code>for i in range(1, 101):
+<pre>
+for i in range(1, 101):
     if i % 2 == 0:
-        print(i, 'は偶数')
+        print(i, "は偶数")
     elif i % 3 == 0:
-        print(i, 'は奇数，3で割れる')
+        print(i, "は奇数，3で割れる")
     else:
-        print(i, 'は奇数，3で割れない')
-</code></pre>
+        print(i, "は奇数，3で割れない")
+</pre>
 
 <p>これらを参考にして FizzBuzz 問題を解いてみましょう。</p>
 
@@ -57,12 +60,9 @@
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2020-10-12 09:43:38</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-10 16:04:16 JST</time></p>
+</footer>
 </body>
 </html>

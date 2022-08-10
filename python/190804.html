@@ -31,7 +31,7 @@ window.onload = function() {
 <p><a href="https://ganjoho.jp/reg_stat/statistics/brochure/monitoring.html">全国がん罹患モニタリング集計</a>にある<a href="https://ganjoho.jp/data/reg_stat/statistics/brochure/mcij2015_report.pdf">全国がん罹患モニタリング集計　2015年罹患数・率報告（平成31年3月）（PDF：31,131KB) </a>から各都道府県の白血病についてのデータを抜き出してCSVにしたもの <a href="data/mcij2015leu.csv">mcij2015leu.csv</a> を作成した（方法は後述）。この年齢調整罹患率（日本人口）を使って日本地図を描く。</p>
 
 <pre>
-<code>import pandas as pd
+import pandas as pd
 import japanmap as jp
 import matplotlib.pyplot as plt
 
@@ -41,14 +41,12 @@ x = (x - min(x)) / (max(x) - min(x))
 cmap = plt.get_cmap('coolwarm')
 cols = ['#%02X%02X%02X' % (cmap(x[i], bytes=True)[:3]) for i in range(47)]
 s = jp.pref_map(range(1,48), cols=cols, tostr=True)
-s = s.replace('&lt;svg ',
-              '&lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="500" height="500" ')
 s = s.replace('&lt;path ', '&lt;path stroke="black" stroke-width="0.001" ')
 with open("190804e.svg", "w") as f:
     f.write(s)
-</code></pre>
+</pre>
 
-<figure><img src="img/190804e.svg" alt="白血病罹患地図"></figure>
+<figure><img src="img/190804e.svg" width="500" height="500" alt="白血病罹患地図"></figure>
 
 <p>赤ほど多い地域である。沖縄県が多く，福島県が少ない。</p>
 
@@ -67,13 +65,13 @@ with open("190804e.svg", "w") as f:
 <p>まずPDFをテキストに変換する：</p>
 
 <pre>
-<code>pdftotext -raw mcij2015_report.pdf
-</code></pre>
+pdftotext -raw mcij2015_report.pdf
+</pre>
 
 <p>できたテキストファイルからデータを取り出す次のようなスクリプトを作る。<a href="https://docs.python.org/3/library/fileinput.html">fileinput</a> と正規表現ライブラリ <a href="https://docs.python.org/3/library/re.html">re</a> を使う：</p>
 
 <pre>
-<code>#! /usr/bin/env python3
+#! /usr/bin/env python3
 
 import re
 import fileinput
@@ -100,12 +98,9 @@ for line in fileinput.input():
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2019-08-04 22:47:40</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-10 20:20:08 JST</time></p>
+</footer>
 </body>
 </html>

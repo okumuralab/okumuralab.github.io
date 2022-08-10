@@ -17,85 +17,92 @@
 
 <h1>日時</h1>
 
-<p>[TODO] <a href="https://github.com/arrow-py/arrow">Arrow: Better dates &amp; times for Python</a> についてもそのうち書く。</p>
-
 <h2>時間計測</h2>
 
-<p>時間計測には <a href="https://docs.python.org/ja/3/library/timeit.html">timeit</a> モジュールまたは IPython の <code>%timeit</code> 機能が便利：</p>
+<p>時間計測には <a href="https://docs.python.org/ja/3/library/timeit.html">timeit</a> モジュールまたは IPython の <code>%timeit</code> 機能が便利です：</p>
+
+<pre class="cell">
+%timeit x = 0; x = x + 1
+</pre>
 
 <pre>
-<code>In [ ]: %timeit x = 0; x = x + 1
-29.7 ns ± 0.049 ns per loop (mean ± std. dev. of 7 runs, 10000000 loops each)
+14.7 ns ± 0.106 ns per loop (mean ± std. dev. of 7 runs, 100,000,000 loops each)
+</pre>
 
-In [ ]: %timeit x = 0; x += 1
-31.9 ns ± 0.0136 ns per loop (mean ± std. dev. of 7 runs, 10000000 loops each)
-</code></pre>
-
-<p>（あれ，<code>x += 1</code> より <code>x = x + 1</code> の方が若干速いんだ。）</p>
-
-<p>ちなみに <code>%%timeit</code> とすると複数行の計測ができる。終了は空行を二つほど打つ：</p>
+<pre class="cell">
+%timeit x = 0; x += 1
+</pre>
 
 <pre>
-<code>In [ ]: %%timeit
-   ...: x = 0
-   ...: x += 1
-   ...: 
-   ...: 
-31.8 ns ± 0.0191 ns per loop (mean ± std. dev. of 7 runs, 10000000 loops each)
-</code></pre>
+16.1 ns ± 0.00604 ns per loop (mean ± std. dev. of 7 runs, 100,000,000 loops each)
+</pre>
 
-<p><code>%timeit</code> の代わりに <code>%time</code> とすれば1回の時間を計測できる。</p>
+<p>（あれ、<code>x += 1</code> より <code>x = x + 1</code> の方が若干速いんだ。）</p>
+
+<p>ちなみに <code>%%timeit</code> とすると複数行の計測ができます（対話型環境では終了は空行を二つほど打つ）：</p>
+
+<pre class="cell">
+%%timeit
+x = 0
+x += 1
+</pre>
+
+<pre>
+15.7 ns ± 0.114 ns per loop (mean ± std. dev. of 7 runs, 100,000,000 loops each)
+</pre>
+
+<p><code>%timeit</code> の代わりに <code>%time</code> とすれば1回の時間を計測できます。</p>
 
 <h2>time</h2>
 
-<p>標準モジュール <code>time</code> はOSの機能に依存するので注意しなければならない。</p>
+<p>標準モジュール <code>time</code> はOSの機能に依存するようです。</p>
 
-<p><code>time.time()</code> は現在時刻を1970年からの秒数で返す。OSのものと違って <code>float</code> 型である。<code>time.sleep()</code> もOSのものと違って <code>float</code> で指定できる。</p>
+<p><code>time.time()</code> は現在時刻を1970年元旦からの秒数（<code>float</code> 型）で返します。<code>time.sleep()</code> は指定した秒数（<code>float</code> 型）だけ休止します。</p>
 
-<pre>
-<code>import time
+<pre class="cell">
+import time
 
 t1 = time.time()
 time.sleep(1.5)
 t2 = time.time()
 print(t2 - t1)
-</code></pre>
+</pre>
 
-<p>より精度の良い時間計測には <code>time.perf_counter()</code> を使う。こちらは差だけに意味がある。</p>
+<p>より精度の良い時間計測には <code>time.perf_counter()</code> を使います。こちらは差だけに意味があります。</p>
 
-<pre>
-<code>t1 = time.perf_counter()
+<pre class="cell">
+t1 = time.perf_counter()
 time.sleep(1.5)
 t2 = time.perf_counter()
 print(t2 - t1)
-</code></pre>
+</pre>
 
 <p>年月日時分秒で表した時刻：</p>
 
 <pre>
-<code>time.localtime() # 現在時刻
+time.localtime() # 現在時刻
 time.localtime(t1)  # 1970年頭からの秒数t1の時刻
 time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime()) # 'YYYY-MM-DD HH:MM:SS JST'
 time.strftime('%Y-%m-%d %H:%M:%S %Z', time.gmtime())    # 'YYYY-MM-DD HH:MM:SS UTC'
-</code></pre>
+</pre>
 
 <p>ファイルのタイムスタンプ：</p>
 
-<pre>
-<code>import os
+<pre class="cell">
+import os
 
 p = os.stat("ファイルのパス")
 time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(p.st_mtime))
-</code></pre>
+</pre>
 
 <h2>datetime</h2>
 
-<p>標準モジュール <code>datetime</code> は <code>time</code> と違ってOSに依存しない。</p>
+<p>標準モジュール <code>datetime</code> は <code>time</code> と違ってOSに依存しません。</p>
 
-<p><code>datetime.datetime</code> 型は，年月日時分秒マイクロ秒を持つ構造体である：</p>
+<p><code>datetime.datetime</code> 型は、年月日時分秒マイクロ秒を持つ構造体です：</p>
 
 <pre>
-<code>import datetime
+import datetime
 
 datetime.datetime.now()  # 現在時刻 datetime.datetime(年, 月, 日, 時, 分, 秒, μ秒)
 datetime.datetime.now(datetime.timezone.utc)  # 同上（UTC）
@@ -112,12 +119,12 @@ t1 = datetime.datetime.now()
 t2 = datetime.datetime.now()
 t2 - t1     # datetime.timedelta(seconds=秒, microseconds=μ秒)
 (t2 - t1).total_seconds()  # 秒単位
-</code></pre>
+</pre>
 
 <p>例えば2019年5月1日で始まる32日分の配列：</p>
 
-<pre>
-<code>import numpy as np
+<pre class="cell">
+import numpy as np
 import matplotlib.pyplot as plt
 
 t = [datetime.datetime(2019,5,1) + datetime.timedelta(days=i) for i in range(32)]
@@ -125,12 +132,13 @@ rng = np.random.default_rng()
 x = np.cumsum(rng.standard_normal(32))
 plt.plot(t, x)
 plt.xticks(rotation=20)
-</code></pre>
+plt.show()
+</pre>
 
 <p>別の表示法：</p>
 
-<pre>
-<code>import matplotlib.dates as mdates
+<pre class="cell">
+import matplotlib.dates as mdates
 
 fig, ax = plt.subplots()
 locator = mdates.AutoDateLocator()
@@ -138,51 +146,62 @@ formatter = mdates.ConciseDateFormatter(locator)
 ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 ax.plot(t, x)
-</code></pre>
+plt.show()
+</pre>
 
 <h2>dateutil</h2>
 
-<p><a href="https://dateutil.readthedocs.io">dateutil - powerful extensions to datetime</a> は <code>pip install python-dateutil</code> でインストールできる。</p>
+<p><a href="https://dateutil.readthedocs.io">dateutil - powerful extensions to datetime</a> は <code>pip install python-dateutil</code> でインストールできます。</p>
+
+<pre class="cell">
+from dateutil.parser import parse
+
+parse("1/6/21")
+</pre>
 
 <pre>
-<code>from dateutil.parser import parse
+datetime.datetime(2021, 1, 6, 0, 0)
+</pre>
 
-parse("1/6/21")  #==&gt; datetime.datetime(2021, 1, 6, 0, 0)
+<pre class="cell">
 parse('Wed, 06 Jan 2021 12:54:19 +0900')
-#==&gt; datetime.datetime(2021, 1, 6, 12, 54, 19, tzinfo=tzoffset(None, 32400))
-</code></pre>
+</pre>
+
+<pre>
+datetime.datetime(2021, 1, 6, 12, 54, 19, tzinfo=tzoffset(None, 32400))
+</pre>
 
 <h2>NumPy</h2>
 
-<p>NumPy の <a href="https://www.numpy.org/devdocs/reference/arrays.datetime.html"><code>datetime64</code></a> は最も柔軟な日時型である。年（<code>Y</code>），月（<code>M</code>），週（<code>W</code>），日（<code>D</code>），時（<code>h</code>），分（<code>m</code>），秒（<code>s</code>），ミリ秒（<code>ms</code>）などの単位で64ビット整数で表したものである。日時の起点は1970年1月1日頭である。タイムゾーンは考えない。一番大きい単位 <code>Y</code> を使った <code>datetime64[Y]</code> 型は ±9.2×10<sup>18</sup> 年まで表せる（宇宙の年齢は 1.38×10<sup>10</sup> 年ほど）。</p>
+<p>NumPy の <a href="https://www.numpy.org/devdocs/reference/arrays.datetime.html"><code>datetime64</code></a> はとても柔軟な日時型です。年（<code>Y</code>）、月（<code>M</code>）、週（<code>W</code>）、日（<code>D</code>）、時（<code>h</code>）、分（<code>m</code>）、秒（<code>s</code>）、ミリ秒（<code>ms</code>）などの単位で64ビット整数で表したものです。日時の起点は1970年元旦です。タイムゾーンは考えません。一番大きい単位 <code>Y</code> を使った <code>datetime64[Y]</code> 型は ±9.2×10<sup>18</sup> 年まで表せます（宇宙の年齢は 1.38×10<sup>10</sup> 年ほど）。</p>
 
 <pre>
-<code>import numpy as np
+import numpy as np
 
 np.datetime64("2019")  # np.datetime64("2019", "Y") と同じ
 np.datetime64("2019-05")  # np.datetime64("2019-05", "M") と同じ
 np.datetime64("2019-05-01")  # np.datetime64("2019-05-01", "D") と同じ
 np.datetime64("2019-05-01 12:34:56")  # np.datetime64("2019-05-01 12:34:56", "s") と同じ
-</code></pre>
+</pre>
 
-<p>日時の差は <code>timedelta64()</code> で表す：</p>
-
-<pre>
-<code>t = np.array([np.datetime64("2019-05-01") + np.timedelta64(i,"D") for i in range(32)])
-</code></pre>
-
-<p>これは次のようにも書ける：</p>
+<p>日時の差は <code>timedelta64()</code> で表します：</p>
 
 <pre>
-<code>t = np.arange(np.datetime64("2019-05-01"), np.datetime64("2019-06-02"))
-</code></pre>
+t = np.array([np.datetime64("2019-05-01") + np.timedelta64(i,"D") for i in range(32)])
+</pre>
+
+<p>これは次のようにも書けます：</p>
+
+<pre>
+t = np.arange(np.datetime64("2019-05-01"), np.datetime64("2019-06-02"))
+</pre>
 
 <h2>pandas</h2>
 
-<p>pandas の Timestamp は NumPy の <code>datetime64[ns]</code>（ナノ秒単位）に限定しているので，1677-09-21（<code>pd.Timestamp(-2**63+808)</code>）から2262-04-11（<code>pd.Timestamp(2**63-1)</code>）くらいまでしか扱えない（<a href="read.html">データの読み書き</a>参照）。</p>
+<p>pandas の Timestamp は NumPy の <code>datetime64[ns]</code>（ナノ秒単位）に限定しているので、1677-09-21（<code>pd.Timestamp(-2**63+808)</code>）から2262-04-11（<code>pd.Timestamp(2**63-1)</code>）くらいまでしか扱えません（<a href="read.html">データの読み書き</a>参照）。</p>
 
 <pre>
-<code>import pandas as pd
+import pandas as pd
 
 t = pd.to_datetime("2020-05-06")
 t = pd.to_datetime("2020年5月6日", format='%Y年%m月%d日')  # 上と同じ
@@ -205,29 +224,61 @@ a = pd.date_range("2020-01-01", "2020-01-03")
 a    #==> DatetimeIndex(['2020-01-01', '2020-01-02', '2020-01-03'],
                         dtype='datetime64[ns]', freq='D')
 np.max(a)              #==> Timestamp('2020-01-03 00:00:00', freq='D')
-</code></pre>
+</pre>
 
 <p>format の形式については <a href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes">strftime() and strptime() Format Codes</a> 参照。</p>
 
-<h2>その他</h2>
+<h2>Arrow</h2>
 
-<p>ファイルのタイムスタンプは次のようにして取得できる：</p>
+<p><a href="https://arrow.readthedocs.io">Arrow: Better dates &amp; times for Python</a> は新しい日時ライブラリです。<code>pip install arrow</code> でインストールできます。</p>
+
+<pre class="cell">
+import arrow
+
+t1 = arrow.now()
+t2 = arrow.utcnow()
+print(t1, t2)
+print(t2 - t1)
+print((t2 - t1).total_seconds())
+</pre>
 
 <pre>
-<code>import os
+2022-08-10T10:15:28.009095+09:00 2022-08-10T01:15:28.009191+00:00
+0:00:00.000096
+9.6e-05
+</pre>
+
+<pre class="cell">
+t = arrow.get("2022-08-10 00+09:00")
+print(t)
+print(t.timestamp())
+print(t.format())
+print(t.format("YYYY-MM-DD HH:mm:ss"))
+</pre>
+
+<pre>
+2022-08-10T00:00:00+09:00
+1660057200.0
+2022-08-10 00:00:00+09:00
+2022-08-10 00:00:00
+</pre>
+
+<h2>その他</h2>
+
+<p>ファイルのタイムスタンプは次のようにして取得できます：</p>
+
+<pre class="cell">
+import os
 
 p = os.stat("ファイル名")
 print(f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}')
-</code></pre>
+</pre>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-05-25 22:02:50 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-10 10:46:07 JST</time></p>
+</footer>
 </body>
 </html>

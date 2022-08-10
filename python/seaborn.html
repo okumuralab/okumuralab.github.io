@@ -21,10 +21,32 @@
 
 <p>seaborn 用に用意されているサンプルデータの一覧を見てみましょう：</p>
 
-<pre>
+<pre class="cell">
 import seaborn as sns
 
 sns.get_dataset_names()
+</pre>
+
+<pre>
+['anagrams',
+ 'anscombe',
+ 'attention',
+ 'brain_networks',
+ 'car_crashes',
+ 'diamonds',
+ 'dots',
+ 'exercise',
+ 'flights',
+ 'fmri',
+ 'gammas',
+ 'geyser',
+ 'iris',
+ 'mpg',
+ 'penguins',
+ 'planets',
+ 'taxis',
+ 'tips',
+ 'titanic']
 </pre>
 
 <div class="note">
@@ -33,13 +55,13 @@ sns.get_dataset_names()
 
 <p>現時点で19通りのデータがあります。これらは <a href="https://github.com/mwaskom/seaborn-data">seaborn-data</a> レポジトリからオンデマンドで取ってきて ~/seaborn-data にキャッシュされます。試しに iris データセットを取ってきてみましょう。</p>
 
-<pre>
+<pre class="cell">
 iris = sns.load_dataset("iris")
 </pre>
 
 <p>Seaborn の命令一覧は <a href="https://seaborn.pydata.org/api.html">API reference</a> にあります。ペアプロットを描いてみましょう。</p>
 
-<pre>
+<pre class="cell">
 sns.pairplot(iris)
 </pre>
 
@@ -47,7 +69,7 @@ sns.pairplot(iris)
 
 <p>スタイルの設定は次のようにします：</p>
 
-<pre>
+<pre class="cell">
 sns.set_style("darkgrid")
 </pre>
 
@@ -59,7 +81,7 @@ sns.set_style("darkgrid")
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-04 21:32:00 JST</time>
+Last modified: <time>2022-08-10 13:52:36 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

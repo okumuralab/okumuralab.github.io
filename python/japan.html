@@ -17,90 +17,81 @@
 
 <h1>日本地図</h1>
 
-<p><a href="https://qiita.com/SaitoTsutomu/items/6d17889ba47357e44131">県別データの可視化</a>で紹介されている japanmap ライブラリを使って日本地図を描く。</p>
+<p><a href="https://qiita.com/SaitoTsutomu/items/6d17889ba47357e44131">県別データの可視化</a>で紹介されている japanmap ライブラリを使って日本地図を描いてみます。</p>
 
-<p>Python 3.9 でインストールがうまくいかなかったので少々工夫（今は大丈夫なはず）：</p>
+<p>まずは <code>pip install japanmap</code> でインストールします。インポートして、まずは都道府県名を列挙してみます。</p>
 
-<pre>
-<code>pip install opencv-python Pillow
-pip install --no-deps japanmap
-</code></pre>
+<pre class="cell">
+import japanmap as jp
 
-<p>都道府県名：</p>
-
-<pre>
-<code>In [ ]: jp.pref_names
-Out[ ]: ['_', '北海道', '青森県', ……, '沖縄県']
-</code></pre>
-
-<p>PNG画像の白地図：</p>
+jp.pref_names
+</pre>
 
 <pre>
-<code>import japanmap as jp
+['_',
+ '北海道',
+ '青森県',
+ '岩手県',
+ ……中略……
+ '沖縄県']
+</pre>
+
+<p>最初（第0要素）に無意味なものが入っているのは、都道府県コードと要素番号を一致させるためのようです。</p>
+
+<p>PNG画像の白地図を描いてみます：</p>
+
+<pre class="cell">
 import matplotlib.pyplot as plt
 
 plt.imshow(jp.picture())
-</code></pre>
+</pre>
 
-<p>例として，<a href="../stat/190117.html">がんの分布</a>で紹介したデータを読み込んで地図に色を塗る：</p>
+<p>例として、<a href="../stat/190117.html">がんの分布</a>で紹介したデータを読み込んで地図に色を塗ってみます：</p>
 
-<pre>
-<code>import pandas as pd
+<pre class="cell">
+import pandas as pd
 
 df = pd.read_csv("https://okumuralab.org/~okumura/stat/data/gansokuhou2016.csv")
-x = df['年齢調整罹患率日本総数'][1:48]
+x = df["年齢調整罹患率日本総数"][1:48]
 x = (x - min(x)) / (max(x) - min(x))
-cmap = plt.get_cmap('bwr')  # or 'coolwarm' or 'cividis_r' etc...
+cmap = plt.get_cmap("bwr")  # or "coolwarm" or "cividis_r" etc...
 
-# picture() がnumpy.uint8型を受け付けないみたいなのでintに変換
-def tint(t):
-    return tuple(int(_) for _ in t)
-
-d = {i: tint(cmap(x[i], bytes=True)[:3]) for i in range(1,48)}
+d = {i: cmap(x[i], bytes=True) for i in range(1,48)}
 plt.imshow(jp.picture(d))
 
 # 不要なティックやラベルを削除する
 plt.tick_params(bottom=False, top=False, left=False, right=False,
                 labelbottom=False, labeltop=False, labelleft=False, labelright=False)
 
-plt.savefig('190613a.png', bbox_inches="tight")
-</code></pre>
+plt.savefig("190613a.png", bbox_inches="tight")
+</pre>
 
 <figure><img src="img/190613a.png" alt="がんの分布"></figure>
 
-<p>カラーマップについては matplotlib の <a href="https://matplotlib.org/gallery/color/colormap_reference.html">Colormap reference</a> 参照。</p>
+<p>カラーマップについては matplotlib の <a href="https://matplotlib.org/gallery/color/colormap_reference.html">Colormap reference</a> を参照してください。</p>
 
-<!-- register_cmap についても -->
-
-<p>SVG の図を出力することもできる：</p>
+<p>SVG の図を出力することもできます：</p>
 
 <pre>
-<code>cmap = plt.get_cmap('coolwarm')
-cols = ['#%02X%02X%02X' % (cmap(x[i], bytes=True)[:3]) for i in range(1,48)]
+cmap = plt.get_cmap("coolwarm")
+cols = ["#%02X%02X%02X" % (cmap(x[i], bytes=True)[:3]) for i in range(1,48)]
 s = jp.pref_map(range(1,48), # qpqo=jp.get_data(move_okinawa=True),
                 cols=cols, tostr=True)
-
-# 独立した図として認識させるために頭書きを加える：
-s = s.replace('&lt;svg ',
-              '&lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="500" height="500" ')
 
 # 境界線を黒で描くには：
 # s = s.replace('&lt;path ', '&lt;path stroke="black" stroke-width="0.001" ')
 
 with open("190613b.svg", "w") as f:
     f.write(s)
-</code></pre>
+</pre>
 
-<figure><img src="img/190613b.svg" alt="がんの分布"></figure>
+<figure><img src="img/190613b.svg" width="500" height="500" alt="がんの分布"></figure>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-02-03 21:10:28</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-10 20:05:47 JST</time></p>
+</footer>
 </body>
 </html>

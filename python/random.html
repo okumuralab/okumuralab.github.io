@@ -23,12 +23,13 @@
 
 <p><a href="https://docs.python.org/3/library/random.html">random</a> は標準ライブラリですのでインストールする必要はありません。Mersenne Twister が使われています。</p>
 
-<pre><code>import random
+<pre>
+import random
 
 random.random()  # 引数をとらない。区間 [0,1) の1個の乱数を返す
 random.randrange(1, 7)  # 1から6までの整数の乱数
 random.randint(1, 6)    # 1から6までの整数の乱数
-</code></pre>
+</pre>
 
 <p>本格的なシミュレーションで大量の乱数を必要とする場合には次の NumPy による方法を使います。</p>
 
@@ -40,17 +41,19 @@ random.randint(1, 6)    # 1から6までの整数の乱数
 
 <p>Mersenne Twister が使われています。</p>
 
-<pre><code>import numpy as np
+<pre>
+import numpy as np
 
 np.random.random(10)             # 0以上1未満の一様乱数10個
 np.random.randint(1, 7, size=10) # 1以上7未満の整数の乱数10個
-</code></pre>
+</pre>
 
 <h3>新しい方法</h3>
 
 <p>2013年にリリースされた NumPy 1.17.0 からは Generator を使った新しいインターフェースが推奨されています（NumPy のバージョンは <code>np.__version__</code> でわかります）。デフォルトのアルゴリズムは PCG64 です。これは次のようにして使います：</p>
 
-<pre><code>import numpy as np
+<pre>
+import numpy as np
 
 rng = np.random.default_rng(20200102) # seedの設定（空も可）
 
@@ -64,13 +67,14 @@ rng.integers(1, 7)       # 1以上7未満の整数の乱数
 rng.integers(1, 7, 10)   # 1以上7未満の整数の乱数10個の配列
 rng.exponential(3)       # 平均3の指数分布の乱数
 rng.exponential(3, 10)   # 平均3の指数分布の乱数10個の配列
-</code></pre>
+</pre>
 
 <p>上の例のように「タネ（seed）」を与えるのがシミュレーションでの推奨です。同じタネからは同じ乱数列が生成されますので，あとで結果を再現できます。ゲームなどでは <code>rng = np.random.default_rng()</code> のように空にすると，再現性のない（毎回異なる）乱数列が得られます。</p>
 
 <p>例えばモンテカルロ法で円周率を求めるには次のようにします：</p>
 
-<pre><code>import matplotlib.pyplot as plt
+<pre>
+import matplotlib.pyplot as plt
 
 N = 10000
 x = rng.random(N)
@@ -79,31 +83,39 @@ c = x*x + y*y &lt; 1
 plt.scatter(x, y, c=c)
 plt.axis('scaled')
 print('pi =', 4 * np.sum(c) / N)
-</code></pre>
+</pre>
 
 <p>ランダムウォークの例です：</p>
 
-<pre><code>N = 1000
+<pre>
+N = 1000
 x = np.cumsum(rng.random(N) - 0.5)
 y = np.cumsum(rng.random(N) - 0.5)
 plt.plot(x, y)
 plt.axis('equal')
-</code></pre>
+</pre>
 
 <p>硬貨投げのシミュレーションは <code>rng.integers(0, 2, size=100)</code> のようにできます。表の枚数は <code>np.sum(rng.integers(0, 2, size=100))</code> です。これを何回もやってヒストグラムを描いてみましょう。</p>
 
-<pre><code>a = [np.sum(rng.integers(0, 2, size=100)) for _ in range(10000)]
-plt.hist(a)
-</code></pre>
+<pre>
+a = [np.sum(rng.integers(0, 2, size=100)) for _ in range(10000)]
+
+plt.hist(a, bins=range(min(a), max(a)+2), align="left", edgecolor="black")
+</pre>
+
+<p><code>plt.hist()</code> のオプションがわずらわしいなら seaborn を使いましょう：</p>
+
+<pre>
+import seaborn as sns
+
+sns.histplot(a, discrete=True)
+</pre>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-10-26 15:17:32</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-10 22:23:58 JST</time></p>
+</footer>
 </body>
 </html>

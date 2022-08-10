@@ -86,11 +86,20 @@ sns.histplot(np.floor(10 * x), discrete=True)
 
 <figure><img src="img/hist5.svg" alt="ヒストグラム5"></figure>
 
+<p>同様のことを Matplotlib でするなら、次のようになります：</p>
+
+<pre class="cell">
+a = np.floor(10 * x)
+plt.hist(a, bins=range(min(a), max(a)+2), align="left", edgecolor="black")
+</pre>
+
+
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-09 20:58:01 JST</time></p>
+<p>Last modified: <time>2022-08-10 22:23:18 JST</time></p>
 </footer>
 </body>
 </html>

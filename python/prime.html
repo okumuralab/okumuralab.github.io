@@ -22,27 +22,27 @@
 <p>基本は順に割っていけばよいはずです。</p>
 
 <pre>
-<code>def isprime(n):
+def isprime(n):
     if n < 2:
         return False
     for i in range(2, n):
         if n % i == 0:
             return False
     return True
-</code></pre>
+</pre>
 
 <p>動作確認してみましょう。</p>
 
 <pre>
-<code>for i in range(2,100):
+for i in range(2, 100):
     if isprime(i):
-        print(i, 'は素数')
-</code></pre>
+        print(i, "は素数")
+</pre>
 
 <p>上は 2 以上 <code>n</code> 未満の整数すべてで割ってみました。もっと節約できるでしょうか。</p>
 
 <pre>
-<code>import math
+import math
 
 def isprime(n):
     if n < 2:
@@ -50,12 +50,12 @@ def isprime(n):
     for i in range(2, int(math.sqrt(n)) + 1):
         if n % i == 0: return False
     return True
-</code></pre>
+</pre>
 
 <p>いろいろ改良ができそうです。例えば 2 を除けば偶数で割ってみる必要はないので，計算量は半分にできます。</p>
 
 <pre>
-<code>import math
+import math
 
 def isprime(n):
     if n < 2:
@@ -67,45 +67,45 @@ def isprime(n):
     for i in range(3, int(math.sqrt(n)) + 1, 2):
         if n % i == 0: return False
     return True
-</code></pre>
+</pre>
 
 <p>今日（例えば 20190823）は素数か？</p>
 
 <pre>
-<code>import datetime
+import datetime
 
-n = int(f'{datetime.datetime.now():%Y%m%d}')
+n = int(f"{datetime.datetime.now():%Y%m%d}")
 isprime(n)
-</code></pre>
+</pre>
 
 <p><code>math.sqrt()</code> は平方数については正確な平方根を与えるはずですが，浮動小数点数の精度を超える整数の場合は心配です。整数の平方根を整数の範囲で求める次の <code>isqrt()</code> を使えば万全です：</p>
 
 <pre>
-<code>def isqrt(n):
+def isqrt(n):
     if n == 0:
         return 0
     x, y = n, (n + 1) // 2
     while y < x:
         x, y = y, (y + n // y) // 2
     return x
-</code></pre>
+</pre>
 
 <p>これを使った関数：</p>
 
 <pre>
-<code>def isprime(n):
+def isprime(n):
     if n < 2:
         return False
     for i in range(2, isqrt(n)+1):
         if n % i == 0:
             return False
     return True
-</code></pre>
+</pre>
 
 <p>もっと大きい数の素因数分解をするには，<a href="https://docs.sympy.org/latest/modules/ntheory.html">SymPy の数論ライブラリ</a>が便利です。</p>
 
 <pre>
-<code>import sympy
+import sympy
 
 sympy.factorint(5040)
 # ==&gt; {2: 4, 3: 2, 5: 1, 7: 1}
@@ -115,18 +115,15 @@ sympy.factorint(20190823)
 
 sympy.isprime(20190823)
 # ==&gt; True
-</code></pre>
+</pre>
 
 <p>問：2020年の大晦日と2021年の元日はともに素数です。3000年までにこのような年はどれくらいあるでしょうか。</p>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2020-12-27 11:27:02</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-10 16:07:42 JST</time></p>
+</footer>
 </body>
 </html>
