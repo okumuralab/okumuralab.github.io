@@ -17,144 +17,134 @@
 
 <h1>文科省教材：確率モデルのシミュレーション</h1>
 
-<p><a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416756.htm">高等学校情報科「情報Ⅰ」教員研修用教材（本編）</a>の「第3章　コンピュータとプログラミング」の乱数を使ったシミュレーション（p.138〜）についてコメントする。</p>
+<p><a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416756.htm">高等学校情報科「情報Ⅰ」教員研修用教材（本編）</a>の「第3章　コンピュータとプログラミング」の乱数を使ったシミュレーション（p.138〜）についてコメントします。</p>
 
-<p>まず，Pythonでの乱数の作り方：</p>
+<p>まず、Python での乱数の作り方：</p>
 
 <figure><img src="img/mext-simulation1.png" alt="図表7 乱数発生のプログラム"></figure>
 
-<p>この方法は互換性維持のため現在でも使えるが，2013年にリリースされた NumPy 1.17.0 からは <a href="https://numpy.org/doc/stable/reference/random/index.html">Generator を使った新しいインターフェース</a>が推奨されている：</p>
+<p>このように乱数を1個ずつ生成するのなら標準ライブラリ random の乱数で十分ですが、ここでは次に使う NumPy の導入にしたかったのでしょう。</p>
 
-<pre><code>import numpy as np
+<p>ちなみに、NumPy を使うなら、<a href="random.html">乱数</a>のページでも説明しましたが、2013年にリリースされた NumPy 1.17.0 からは <a href="https://numpy.org/doc/stable/reference/random/index.html">Generator を使った新しいインターフェース</a>が推奨されています：</p>
+
+<pre class="cell">
+import numpy as np
 
 rng = np.random.default_rng()
 ransuu = rng.random()
-print(ransuu)
-</code></pre>
+print("乱数", ransuu)
+</pre>
 
-<p>古い方法より1行余分に必要なので採用しなかったのかもしれないが，とりあえず指摘しておく。なお，ここでは不要であるが，実際のシミュレーションでは再現性が大切なので，乱数のタネ（seed）を例えば次のように設定する：</p>
+<p>このように <code>rng = np.random.default_rng()</code> を引数なしで呼ぶと毎回ランダムに初期化されますが、一般的な使い方としては、あとで同じシミュレーションが再現できるように、例えば <code>rng = np.random.default_rng(12345)</code> のように任意の整数値をタネ（seed）として与えます。授業なら、出席番号（学籍番号）をタネにするのもいいかもしれません。</p>
 
-<pre><code>rng = np.random.default_rng(12345)
-</code></pre>
-
-<p>授業の課題では各自の学籍番号・出席番号をタネとして使わせてもよかろう。一方，パスワード生成などには<a href="secrets.html">安全な乱数</a>を使うべきである。</p>
-
-<p>次はさいころを100回振るプログラムである：</p>
+<p>次はさいころを100回振るプログラム：</p>
 
 <figure><img src="img/mext-simulation2.png" alt="図表8 サイコロのプログラム"></figure>
 
-<p>とりあえず Generator を使う方式に直して，PEP 8 に合わせて書き直す：</p>
+<p>とりあえず NumPy の新しい方式に直して、PEP 8 に合わせて少し書き直します：</p>
 
-<pre><code>import numpy as np
+<pre class="cell">
+import numpy as np
 
 rng = np.random.default_rng()
-saikoro = rng.integers(1, 7, size=100)
+saikoro = rng.integers(1, 6 + 1, size=100)
 print(saikoro)
 deme = []
 for i in range(6):
     deme.append(np.count_nonzero(saikoro == i + 1))
 print("出現数:", deme)
-</code></pre>
+</pre>
 
-<p><code>np.count_nonzero()</code> は，<code>np.sum()</code> や，単なる <code>sum()</code> でもよいが，この場合は <code>np.count_nonzero()</code> が最も速く，次に <code>np.sum()</code> が速い。</p>
+<p><code>np.count_nonzero()</code> は、<code>np.sum()</code> や、単なる <code>sum()</code> でもかまいません（この場合は <code>np.count_nonzero()</code> が最も速く、次に <code>np.sum()</code> が速いようです）。</p>
 
-<p><code>deme = []</code> から始まる3行は次のようにもできる：</p>
+<p><code>deme = []</code> から始まる3行は次のようにもできます：</p>
 
-<pre><code>deme = [np.count_nonzero(saikoro == i + 1) for i in range(6)]
-</code></pre>
+<pre>
+deme = [np.count_nonzero(saikoro == i + 1) for i in range(6)]
+</pre>
 
-<code>np.unique()</code> を使えばもっとスマートにできる：</p>
-
-<pre><code>x, deme = np.unique(saikoro, return_counts=True)
-</code></pre>
-
-<p>これを使えば，次の度数分布図も簡単になる：</p>
-
-<pre><code>import matplotlib.pyplot as plt
-
-plt.bar(x, deme)
-</code></pre>
-
-<p>さて，度数分布図である：</p>
+<p>さて、度数分布図：</p>
 
 <figure><img src="img/mext-simulation3.png" alt="図表10 度数分布（棒グラフ）表現のプログラム"></figure>
 
-<p>これはこれで問題ないが，<code>align="center"</code> はデフォルトなので省いて，次でもよい：</p>
+<p>これはこれで問題ありませんが、<code>align="center"</code> はデフォルトなので省いて、少し整理しました：</p>
 
-<pre><code>plt.bar(range(1, 7), deme)
-</code></pre>
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
 
-<p><a href="https://note.com/evjunior/n/ndce84b6d5eea">E.V.ジュニアさん（現在のペンネームはクリヤキンさん）のnote</a>では次の賢い方法が使われている：</p>
+rng = np.random.default_rng()
+saikoro = rng.integers(1, 6 + 1, size=100)
+x, deme = np.unique(saikoro, return_counts=True)
+plt.bar(x, deme)
+</pre>
 
-<pre><code>plt.hist(saikoro, bins=np.arange(0.5, 7.5), rwidth=0.8)
-</code></pre>
+<p><a href="https://note.com/evjunior/n/ndce84b6d5eea">E.V.ジュニアさん（現在のペンネームはクリヤキンさん）のnote</a>では、分類してから棒グラフを描くのではなく、最初から度数分布図を描いています：</p>
 
-<p>seaborn を使えばもっと簡単である：</p>
+<pre>
+plt.hist(saikoro, bins=np.arange(0.5, 7.5), rwidth=0.8)
+</pre>
 
-<pre><code>import seaborn as sns
-
-sns.histplot(saikoro, discrete=True)
-</code></pre>
-
-<p>次はモンテカルロ法で円周率を求めるプログラムである：</p>
+<p>次はモンテカルロ法で円周率を求めるプログラム：</p>
 
 <figure><img src="img/mext-simulation4.png" alt="図表12  円周率を求めるプログラム"></figure>
 
-<p>Generator を用いる方式に直す：</p>
+<p>Generator を用いる方式にして、ループをベクトル化すると、次のようになります：</p>
 
-<pre><code>import numpy as np
+<pre class="cell">
+import numpy as np
 
 rng = np.random.default_rng()
 totalcount = 1000
-incount = 0
-for i in range(totalcount):
-    x = rng.random()
-    y = rng.random()
-    if x**2 + y**2 < 1:
-        incount += 1
-print("円周率:", incount * 4 / totalcount)
-</code></pre>
-
-<p>最後の7行はループをベクトル化すると次のようになる：</p>
-
-<pre><code>x = rng.random(totalcount)
+x = rng.random(totalcount)
 y = rng.random(totalcount)
 incount = np.count_nonzero(x**2 + y**2 < 1)
 print("円周率:", incount * 4 / totalcount)
-</code></pre>
+</pre>
 
 <p>散布図を描くプログラム：</p>
 
 <figure><img src="img/mext-simulation5.png" alt="図表13 散布図を作成するプログラム"></figure>
 
-<p><code>plt.scatter()</code> を点ごとに呼び出すのはたいへん能率が悪い。ループ全体は次のようにできる：</p>
+<p>このように <code>plt.scatter()</code> を点ごとに呼び出すのはたいへん能率が悪い方法です。次のようにしてはどうでしょうか：</p>
 
-<pre><code>x = rng.random(totalcount)
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+
+rng = np.random.default_rng()
+totalcount = 2000
+x = rng.random(totalcount)
 y = rng.random(totalcount)
 c = x*x + y*y < 1
 plt.scatter(x, y, c=c)
 plt.axis('scaled')  # これをしないとアスペクト比が1にならない
-</code></pre>
+</pre>
 
-<p>色を選ぶ方法はいろいろ考えられそう。パレットをいじらずに済ませる方法：</p>
+<p>色を選ぶ方法はいろいろ考えられそうです。パレットをいじらずに済ませる方法：</p>
 
-<pre><code>col = ['red' if i else 'blue' for i in c]
+<pre>
+col = ['red' if i else 'blue' for i in c]
 plt.scatter(x, y, color=col)
-</code></pre>
+</pre>
 
 <p>別解</p>
 
-<pre><code>plt.scatter(x[c], y[c], color="red")
+<pre>
+plt.scatter(x[c], y[c], color="red")
 plt.scatter(x[np.logical_not(c)], y[np.logical_not(c)], color="blue")
 # または plt.scatter(x[~c], y[~c], color="blue")
-</code></pre>
+</pre>
 
 <p>seaborn を使う例（デフォルトでうまい具合の色になる）：</p>
 
-<pre><code>sns.scatterplot(x=x, y=y, hue=c)
-</code></pre>
+<pre>
+import seaborn as sns
 
-<p>ちなみに，<a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">文科省の研修用教材</a>には<a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1421808.htm">他プログラミング言語版</a>としてJavaScript版，VBA版，ドリトル版，ｓｗｉｆｔ版（なぜかSwiftだけ全角文字で小文字で始まっている）がある。2019年11月21日に出たVBA版では次のようになっていた：</p>
+sns.scatterplot(x=x, y=y, hue=c)
+</pre>
+
+<p>ちなみに、<a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">文科省の研修用教材</a>には<a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1421808.htm">他プログラミング言語版</a>としてJavaScript版、VBA版、ドリトル版、ｓｗｉｆｔ版（なぜかSwiftだけ全角文字で小文字で始まっている）がありますが、2019年11月21日に出たVBA版では次のようになっていました：</p>
 
 <figure><img src="img/mext-simulation6.png" alt="図表13 散布図を作成するプログラム（VBA版）"></figure>
 
@@ -162,16 +152,13 @@ plt.scatter(x[np.logical_not(c)], y[np.logical_not(c)], color="blue")
 
 <figure><img src="img/mext-simulation7.png" alt="図表14 実行結果（VBA版）"></figure>
 
-<p>これを見ればバグっていることは自明である。どこがおかしいかわかるだろうか。ちなみに私たちがツイッターで騒いだせいか，2019年12月11日にはリンク切れとなり，12月27日には修正版が出た。</p>
+<p>これを見ればバグっていることは自明です。ちなみにツイッターで騒がれたせいか、2019年12月11日にはリンク切れとなり、12月27日には修正版が出ました。</p>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-07-11 11:35:46 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-11 10:21:22 JST</time></p>
+</footer>
 </body>
 </html>

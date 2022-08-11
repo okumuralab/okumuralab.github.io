@@ -7,8 +7,16 @@
 <title>pandasによるクエリ</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@h_okumura">
+<meta name="twitter:title" content="pandasによるクエリ">
+<meta name="twitter:image" content="https://okumuralab.org/~okumura/python/img/querying_pandas.jpg">
 </head>
 <body>
+
+<figure class="right">
+  <img src="img/querying_pandas.jpg" width="128" height="128" alt="querying pandas">
+</figure>
 
 <nav id="breadcrumbs">
 <a href="../">ホーム</a> &gt;
@@ -25,10 +33,10 @@
 import pandas as pd
 </pre>
 
-<p>この <code>pd</code> で定義されている <code>read_csv()</code> という関数でデータを読みます。データはネット（Web）で公開されている CSV ファイルを URL で指定します。このように Web で機械可読なデータをもらってくる仕組みを一般に Web API といいます。読み込んだデータを <code>df</code> という名前の変数（データフレーム）に格納し、<code>df</code> を表示しています：</p>
+<p>この <code>pd</code> で定義されている <code>read_csv()</code> という関数でデータを読みます。データは Web で公開されている CSV ファイルを URL で指定します。このように Web で機械可読なデータをもらってくる仕組みを一般に Web API といいます。ここでは2022年1月1日現在の住民基本台帳に基づく都道府県別・男女別人口データを扱います（元データはe-Statの<a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000032224634">住民基本台帳に基づく人口、人口動態及び世帯数調査 / 調査の結果</a>）。読み込んだデータを <code>df</code> という名前の変数（データフレーム）に格納し、<code>df</code> を表示しています：</p>
 
 <pre class="cell">
-df = pd.read_csv("https://okumuralab.org/~okumura/stat/data/population.csv")
+df = pd.read_csv("https://okumuralab.org/~okumura/stat/data/pop2022.csv")
 df
 </pre>
 
@@ -46,94 +54,154 @@ df
 df.query("都道府県 == '東京'")
 </pre>
 
-<p>東京の行だけが表示されました。東京の総人口と性比だけを表示させたいなら、SQL では <code>select 総人口_千人, 性比 from df where 都道府県='東京';</code> としますが、Python では次のように最後に <code>[[ ]]</code> で囲んで指定します：</p>
+<p>東京の行だけが表示されました。男女の人口だけを表示させたいなら、SQL では <code>select 男, 女 from df where 都道府県='東京';</code> としますが、Python では次のように最後に <code>[[ ]]</code> で囲んで指定します：</p>
 
 <pre class="cell">
-df.query("都道府県 == '東京'")[["総人口_千人", "性比"]]
+df.query("都道府県 == '東京'")[["男", "女"]]
 </pre>
 
-<p>次に、男が少ない都道府県、例えば性比（男/女）が 90% 未満のデータを抽出しましょう：</p>
+<p>男女の人口はわかりましたが、合計の人口もほしいですね。「計」という欄を追加しましょう：</p>
 
 <pre class="cell">
-df.query("性比 < 90")
+df["計"] = df["男"] + df["女"]
+</pre>
+
+<p>これで再度 <code>df</code> 全体を表示してみてもいいのですが、スペースを食いますので、頭の数件だけ表示してみましょう：</p>
+
+<pre class="cell">
+df.head()
+</pre>
+
+<p>以下でも、ときどき <code>df.head()</code> や、データの末尾を見る <code>df.tail()</code> をしてみるとわかりやすいと思います。</p>
+
+<div class="note">
+<p><code>df["計"] = df["男"] + df["女"]</code> と同じことをする別の方法として <code>df = df.assign(計 = df["男"] + df["女"])</code> があります。<code>df["計"] = ...</code> は既存のデータに列を直接追加し、<code>df.assign()</code> は列を追加した新しいデータを作成します。</p>
+</div>
+
+<p>全国の合計も知りたいですね：</p>
+
+<pre class="cell">
+df[["男", "女", "計"]].sum()
+</pre>
+
+<pre>
+男     61420626
+女     64507276
+計    125927902
+dtype: int64
+</pre>
+
+<p>この時点での日本の人口は 125927902 人でした。男より女のほうが多いようですね。</p>
+
+<p>都道府県別に男女比が知りたくなりました。「男女比」という欄を追加しましょう。</p>
+
+<pre class="cell">
+df["男女比"] = df["男"] / df["女"]
+</pre>
+
+<p>男が少ない都道府県、例えば男女比が 90% 未満のデータを抽出しましょう：</p>
+
+<pre class="cell">
+df.query("男女比 < 0.9")
 </pre>
 
 <p><code>and</code> や <code>or</code> も使えます。</p>
 
 <pre class="cell">
-df.query("性比 < 90 and 総人口_千人 >= 5000")
+df.query("男女比 < 0.9 and 計 >= 1000000")
 </pre>
 
-<p>抽出されたものは、元の順番（都道府県コード順）に並んでいます。これを性比の昇順（小さい順）に並べ替えてみます：</p>
+<p>抽出されたものは、元の順番（都道府県コード順）に並んでいます。これを男女比の昇順（小さい順）に並べ替えてみます：</p>
 
 <pre class="cell">
-df.query("性比 < 90").sort_values("性比")
+df.query("男女比 < 0.9").sort_values("男女比")
 </pre>
 
 <p>これは次のように分けて書いてもかまいません：</p>
 
 <pre class="cell">
-df1 = df.query("性比 < 90")
-df1.sort_values("性比")
+df1 = df.query("男女比 < 0.9")
+df1.sort_values("男女比")
 </pre>
 
 <p>降順（大きい順）にするには <code>ascending=False</code> というオプションを付けます：</p>
 
 <pre class="cell">
-df.query("性比 < 90").sort_values("性比", ascending=False)
+df.query("男女比 < 0.9").sort_values("男女比", ascending=False)
 </pre>
 
-<p>データ全体を総人口でソートし、大きい順に並び替えて、頭の3行を表示しましょう：</p>
+<p>データ全体を人口の合計でソートし、大きい順に並び替えて、頭の3行を表示しましょう：</p>
 
 <pre class="cell">
-df.sort_values("総人口_千人", ascending=False).head(3)
+df.sort_values("計", ascending=False).head(3)
 </pre>
 
 <p>もう一つデータを読み込んでみます。こちらは各都道府県の面積です：</p>
 
 <pre class="cell">
 df2 = pd.read_csv("https://okumuralab.org/~okumura/stat/data/area.csv")
-df2
 </pre>
 
 <p><code>df</code> と <code>df2</code> をマージ（結合、join）したものを <code>df</code> に代入します：</p>
 
 <pre class="cell">
 df = pd.merge(df, df2)
-df
 </pre>
 
 <p>人口密度を求めてみましょう：</p>
 
 <pre class="cell">
-df["人口密度"] = df["総人口_千人"] / df["面積_km2"]
-df
+df["人口密度"] = df["計"] / df["面積_km2"]
 </pre>
-
-<div class="note">
-<p><code>df = df.assign(人口密度 = df["総人口_千人"] / df["面積_km2"])</code> でも同じことができます。<code>df["人口密度"] = ...</code> は既存のデータフレームに列を直接追加し、<code>df.assign()</code> は列を追加した新しいデータフレームを作成します。</p>
-</div>
 
 <p>問題：人口密度の大きい順に並べて、上位10件（<code>.head(10)</code>）、下位10件（<code>.tail(10)</code>）を表示してください。</p>
 
-<p>おまけ：水平棒グラフ（horizontal bar plot）を描いてみましょう：</p>
+<div class="note">
+<p>ここでは行の追加・変更（SQL の insert や update に相当すること）は行いませんでしたが、簡単な方法として、行をインデックス（表示した際に一番左に現れるもので、デフォルトでは 0 から始まる番号）で指定して追加・変更できます。追加なら例えば</p>
+<pre>
+df.loc[df.index.max() + 1] = [0, "全国", 61420626, 64507276]
+</pre>
+<p>のようにすればいいのですが、インデックスは番号でなくてもよく、例えば</p>
+<pre>
+df.loc["total"] = [0, "全国", 61420626, 64507276]
+</pre>
+<p>でも行が追加できます。既存のインデックスを指定すれば行を上書きできます。行の削除は</p>
+<pre>
+df.drop(インデックス, inplace=True)
+</pre>
+<p>でできます。</p>
+</div>
+
+<hr>
+
+<p>おまけ：水平棒グラフ（horizontal bar plot）を描いてみましょう（Google Colaboratory ならあらかじめ <code>!pip install japanize-matplotlib</code> しておきます。詳しくは<a href="plot.html">プロット</a>参照）：</p>
 
 <pre class="cell">
 import matplotlib.pyplot as plt
+import japanize_matplotlib       # Google Colabの場合
 
 df3 = df.sort_values("人口密度")
+plt.figure(figsize=(8, 10))
 plt.barh(df3["都道府県"], df3["人口密度"])
+plt.xlabel("人口密度（人/km2）")
+</pre>
+
+<p>男女比については、棒グラフではなく、「Cleveland（クリーブランド）のドットプロット」と呼ばれるグラフ（散布図の一種）が妥当です。次のように描きます：</p>
+
+<pre class="cell">
+df4 = df.sort_values("男女比")
+plt.figure(figsize=(8, 10))
+plt.scatter(df4["男女比"], df4["都道府県"])
+plt.grid()
+plt.xlabel("男女比")
 </pre>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-08-10 09:25:13 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-11 20:16:28 JST</time><br>
+Top picture generated by <a href="https://openai.com/dall-e-2/">DALL·E 2</a> with prompt "querying pandas"</p>
 </footer>
 </body>
 </html>

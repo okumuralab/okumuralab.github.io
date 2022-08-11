@@ -24,34 +24,32 @@
 <p>情報処理学会の<a href="https://www.ipsj.or.jp/member/nendomatu-kaiinsu.html">年度末会員数</a>をプロットする。データは <a href="data/ipsj.csv">ipsj.csv</a> である（BOM付きUTF-8，行末CRLF）。</p>
 
 <pre>
-<code>import pandas as pd
+import pandas as pd
 import matplotlib.pyplot as plt
 
-ipsj = pd.read_csv("ipsj.csv")
+ipsj = pd.read_csv("https://okumuralab.org/~okumura/python/data/ipsj.csv")
 plt.plot(ipsj['年度'], ipsj.iloc[:,2:7], 'o-')
 plt.legend(ipsj.columns[2:7])
 plt.xlabel('年度')
 plt.ylabel('会員数')
-plt.savefig('ipsj.png', bbox_inches="tight")
-</code></pre>
+plt.xticks(range(2003, 2022, 2))
+plt.savefig('ipsj.svg', bbox_inches="tight")
+</pre>
 
 <p>これでも十分だが，会員種別によってマーカーを変えるには <code>plt.plot(...)</code> を次のようにする：</p>
 
 <pre>
-<code>for i, m in zip(range(2,8), "ov^<>"):
+for i, m in zip(range(2,8), "ov^<>"):
     plt.plot(ipsj['年度'], ipsj.iloc[:,i], m + '-')
-</code></pre>
+</pre>
 
-<figure><img src="img/ipsj.png" alt="情報処理学会会員数推移"></figure>
+<figure><img src="img/ipsj.svg" alt="情報処理学会会員数推移"></figure>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2019-07-27 09:13:36</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-11 22:31:14 JST</time></p>
+</footer>
 </body>
 </html>
