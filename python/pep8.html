@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/pep8.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PEP 8</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PEP 8</h1>
+
+<h2>PEP 8 とは</h2>
+
+<p>PEP（ペップ）8は Python のスタイルガイドです（<a href="https://www.python.org/dev/peps/pep-0008/">PEP 8 -- Style Guide for Python Code</a>）。<a href="https://pep8-ja.readthedocs.io/ja/latest/">日本語版</a>もあります。</p>
+
+<h2>主なルール</h2>
+
+<p>変数名・関数名はすべて小文字。定数はすべて大文字。例：</p>
+
+<pre class="cell">
+MAX = 50
+foo = list(range(MAX))
+</pre>
+
+<p>インデントはスペース4個で。例：</p>
+
+<pre class="cell">
+for i in range(5):
+    print(i)
+</pre>
+
+<p>演算記号の前後、コンマの後に、スペース1個を入れるのが原則。例：</p>
+
+<pre class="cell">
+x = sum([1, 2, 3]) + 5
+</pre>
+
+<p>ただし、グルーピングを表すために、スペースなしのほうがいいこともある。例：</p>
+
+<pre class="cell">
+z = x*x + y*y
+</pre>
+
+<p>関数の引数の中の <code>=</code> の両側はスペース不要。例：</p>
+
+<pre class="cell">
+df = pd.read_csv(URL, encoding="cp932", comment="#")
+</pre>
+
+<p>インポートは最初にまとめて、プログラム本体とは空行で分ける。例：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+
+rng = np.random.default_rng()
+plt.plot(rng.random(100))
+</pre>
+
+<h2>補足</h2>
+
+<p>このスタイルに合わせるためのツールとして、<a href="https://github.com/hhatto/autopep8">autopep8</a>、<a href="https://gitlab.com/pycqa/flake8">flake8</a>、<a href="https://github.com/psf/black">black</a> などがあります。</p>
+
+<p>例えば black は <code>pip install black</code> でインストールできます。ターミナルに</p>
+
+<pre>
+black ファイル名
+</pre>
+
+<p>と打ち込むだけで、そのファイルを PEP 8 に合わせて書き直して（上書きして）くれます。</p>
+
+<p>PEP 8 と似たものに <a href="https://google.github.io/styleguide/pyguide.html">Google Python Style Guide</a> があります。両者の違いはニュアンスほどのものです（両者の違いをまとめた <a href="https://qiita.com/hi-asano/items/f43ced224483ea1f62f4">@hi-asano さんの記事</a> 参照）が、Google のほうがより具体的なところもあります。例えば <a href="https://www.pylint.org">Pylint</a> の使用を推奨しています。Pylint は <code>pip install pylint</code> でインストールできます。ターミナルに <code>pylint ファイル名</code> と打ち込めば、ファイルにおさめた Python コードの問題点を（英語で）注意してくれます。</p>
+
+<p>Python のほうが他の言語よりスタイルガイドに忠実に書かれる傾向があります。そもそも Python は正しくインデントしないと動かないようにデザインされています。PEP 8 のおかげで、C言語の K&amp;R 流と GNU 流のように対立する流儀がありません。そのため、Python を自己流で書くと目立ってしまいます。ソースコードは人間が読むためのものでもあるので、ぜひ PEP 8 に則った書き方をしましょう。</p>
+
+<div class="note">
+<p>PEP 8 にも Google Python Style Guide にもインデントは4文字分と書かれていますが、Google Colaboratory の自動インデントは2文字がデフォルトです。これを4文字にするには、［ツール］→［設定］→［エディタ］→［インデント幅（スペース）］を4に変更し、［保存］をクリックします。</p>
+</div>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-08-12 11:31:33 JST</time></p>
+</footer>
+</body>
+</html>

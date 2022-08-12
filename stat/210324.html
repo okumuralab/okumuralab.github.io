@@ -27,109 +27,112 @@
 
 <p>本当に「差を見つけられること」ができたのか？</p>
 
-<p>まず，図からおおまかな数値を読み取ってみる。かなりいいかげんである。</p>
+<p><a href="https://automeris.io/WebPlotDigitizer/">WebPlotDigitizer</a> を使って，図から数値を読み取ってみる。</p>
 
 <p>左側：</p>
 
 <pre>
 x,y
-268,0.75
-288,1.0
-319,0.75
-320,1.0
-323,1.7
-325,1.3
-328,1.0
-335,1.25
-339,1.25
-342,1.9
-355,1.0
-364,1.0
-382,1.25
-385,2.2
-408,2.0
-454,2.25
+267.469,0.750
+287.878,0.998
+318.043,0.752
+319.442,1.000
+321.850,1.713
+324.063,1.289
+326.974,1.000
+333.753,1.253
+338.774,1.254
+341.198,1.858
+354.593,0.996
+363.559,1.002
+381.458,1.250
+384.191,2.201
+407.174,2.005
+453.050,2.255
 </pre>
 
 <p>R コード：</p>
 
 <pre>
-df = read.csv("1.csv")
-summary(lm(y ~ x, data=df))
+df1 = read.csv("df1.csv")
+summary(lm(y ~ x, data=df1))
 </pre>
 
 <p>結果：</p>
 
 <pre>
+Call:
+lm(formula = y ~ x, data = df1)
+
 Residuals:
      Min       1Q   Median       3Q      Max 
--0.49473 -0.25074  0.00607  0.12650  0.58155 
+-0.49395 -0.24590  0.01158  0.12252  0.55234 
 
 Coefficients:
              Estimate Std. Error t value Pr(>|t|)   
-(Intercept) -1.421916   0.699686  -2.032  0.06155 . 
-x            0.008013   0.002006   3.994  0.00133 **
+(Intercept) -1.426660   0.694234  -2.055  0.05903 . 
+x            0.008039   0.001995   4.030  0.00124 **
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.3536 on 14 degrees of freedom
-Multiple R-squared:  0.5325,	Adjusted R-squared:  0.4992 
-F-statistic: 15.95 on 1 and 14 DF,  p-value: 0.001333
+Residual standard error: 0.3511 on 14 degrees of freedom
+Multiple R-squared:  0.537,	Adjusted R-squared:  0.504 
+F-statistic: 16.24 on 1 and 14 DF,  p-value: 0.001241
 </pre>
 
 <p>右側：</p>
 
 <pre>
 x,y
-186,0.0
-189,0.7
-216,0.3
-231,0.3
-237,0.7
-247,0.7
-249,1.0
-265,0.3
-279,0.3
-269,0.7
-293,0.7
-299,0.7
-303,1.0
-304,1.0
-316,1.0
-334,1.7
+185.580,0.000
+189.100,0.667
+216.608,0.333
+230.956,0.333
+236.733,0.667
+247.063,0.667
+249.110,1.000
+265.389,0.333
+268.584,0.667
+278.014,0.333
+292.974,0.667
+299.573,0.667
+302.481,1.000
+303.629,1.000
+315.107,1.000
+334.122,1.667
 </pre>
 
 <p>結果：</p>
 
 <pre>
+Call:
+lm(formula = y ~ x, data = df2)
+
 Residuals:
      Min       1Q   Median       3Q      Max 
--0.49113 -0.19238 -0.02629  0.12650  0.56192 
+-0.44546 -0.20270 -0.03121  0.09767  0.53864 
 
 Coefficients:
              Estimate Std. Error t value Pr(>|t|)   
-(Intercept) -0.968824   0.478343  -2.025  0.06233 . 
-x            0.006308   0.001791   3.521  0.00339 **
+(Intercept) -0.955304   0.455039  -2.099  0.05439 . 
+x            0.006236   0.001705   3.658  0.00259 **
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.3071 on 14 degrees of freedom
-Multiple R-squared:  0.4697,	Adjusted R-squared:  0.4318 
-F-statistic:  12.4 on 1 and 14 DF,  p-value: 0.003388
+Residual standard error: 0.2916 on 14 degrees of freedom
+Multiple R-squared:  0.4886,	Adjusted R-squared:  0.4521 
+F-statistic: 13.38 on 1 and 14 DF,  p-value: 0.002585
 </pre>
 
-<p>要は，それぞれの傾きの標準誤差が 0.0020，0.0018 といった値であるのに対して，傾きの差は 0.0016 しかない。つまり，統計的にまったく有意ではない。</p>
+<p>要は，それぞれの傾きの標準誤差が 0.0020，0.0017 といった値であるのに対して，傾きの差は 0.0016 しかない。つまり，統計的にまったく有意ではない。</p>
 
 <p>差を実感してもらっては困る，ということだ（受験生はわからなくていいけれども，出題者には差を実感してほしくない，という意味）。</p>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-02-21 08:53:33</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-12 10:04:42 JST</time></p>
+</footer>
 </body>
 </html>

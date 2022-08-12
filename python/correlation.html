@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/correlation.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>回帰</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>相関係数</h1>
+
+<p>相関係数の中で一番よく使われるのは、Pearson（ピアソン）の（積率）相関係数です。これは、二つのベクトルを、平均が 0、長さが 1 になるように標準化したものの内積で、取り得る値は $-1$ から $1$ までです。</p>
+
+<p>例えば $x = (1,2,3,4,5)$、$y = (1,3,2,5,4)$ について、平均が 0 になるようにそれぞれから 3 を引いて $x' = (-2,-1,0,1,2)$、$y' = (-2,0,-1,2,1)$ とすると、長さの2乗はどちらも $(-2)^2 + (-1)^2 + 0^2 + 1^2 + 2^2 = 10$ ですから、それぞれを $\sqrt{10}$ で割って長さを 1 にします。内積 $((-2)(-2) + (-1)0 + 0(-1) + 1\cdot 2 + 2\cdot 1) / 10 = 0.8$ が相関係数です。式で書けば次のようになります：</p>
+
+\[ r = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum (x_i - \bar{x})^2} \sqrt{\sum (y_i - \bar{y})^2}} \]
+
+<p>Python で相関係数を計算する方法はいくつかあります。NumPy を使う方法：</p>
+
+<pre class="cell">
+import numpy as np
+
+x = [1, 2, 3, 4, 5]
+y = [1, 3, 2, 5, 4]
+np.corrcoef(x, y)
+</pre>
+
+<pre>
+array([[1. , 0.8],
+       [0.8, 1. ]])
+</pre>
+
+<p>このように相関係数の行列を出力します。</p>
+
+<p>pandas で求める方法：</p>
+
+<pre class="cell">
+import pandas as pd
+
+df = pd.DataFrame({"x":x, "y":y})
+df.corr()
+</pre>
+
+<pre>
+     x    y
+x  1.0  0.8
+y  0.8  1.0
+</pre>
+
+<p>これも行列の形で出力します。オプションで Kendall や Spearman の相関係数も求められます。また、<code>df.corrwith()</code> という関数もあります。</p>
+
+<p>SciPy では <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html">scipy.stats.pearsonr</a> を使います：</p>
+
+<pre class="cell">
+from scipy import stats
+
+r = stats.pearsonr(x, y)
+r
+</pre>
+
+<pre>
+PearsonRResult(statistic=0.8, pvalue=0.10408803866182785)
+</pre>
+
+<p>このように $p$ 値も出力します。それぞれの値は <code>r.statistic</code>、<code>r.pvalue</code> として取り出せます。95% 信頼区間も求められます：</p>
+
+<pre class="cell">
+r.confidence_interval()
+</pre>
+
+<pre>
+ConfidenceInterval(low=-0.279640041969355, high=0.9861961933012714)
+</pre>
+
+<p>これも下限・上限を <code>r.confidence_interval().low</code>、<code>r.confidence_interval().high</code> で取り出せます。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-08-12 22:11:43 JST</time></p>
+</footer>
+</body>
+</html>

@@ -17,11 +17,12 @@
 
 <h1>プロットをデータに</h1>
 
-<p>プロット画像をデータに自動で変換する <a href="https://github.com/dilawar/PlotDigitizer">PlotDigitizer</a> のようなツールもあるが，自前でやってみる。</p>
+<p>プロット画像をデータに自動で変換する <a href="https://github.com/dilawar/PlotDigitizer">PlotDigitizer</a> や <a href="https://automeris.io/WebPlotDigitizer/">WebPlotDigitizer</a> のようなツールもあるが，自前でやってみる。</p>
 
 <p><code>plt.ginput()</code> を使う。これは最後に開いた図上でクリックした座標のリストを返す。Jupyter Notebook 等ではうまくいかない。</p>
 
-<pre><code>import matplotlib.pyplot as plt
+<pre>
+import matplotlib.pyplot as plt
 import numpy as np
 
 img = plt.imread("filename.png") # 画像を読む
@@ -50,15 +51,13 @@ with open("filename.csv", "w") as f:
         x = conv(x, a1, a2, x1, x2)
         y = conv(y, b1, b2, y1, y2)
         print(f"{x:.3f},{y:.3f}", file=f) # 小数第3位まで
-</code></pre>
+</pre>
+
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-03-29 21:59:35</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-12 10:16:52 JST</time></p>
+</footer>
 </body>
 </html>

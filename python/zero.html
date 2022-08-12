@@ -51,35 +51,13 @@ Namespaces are one honking great idea -- let's do more of those!
 
 <p>これは <a href="https://www.python.org/dev/peps/pep-0020/">PEP 20</a> としても公開されています（PEP = Python Enhancement Proposals）。要は，シンプルに考えよう，ということです。</p>
 
-<h2 id="PEP8">PEP 8 など</h2>
-
-<p>PEP といえば，Python のスタイルガイド <a href="https://www.python.org/dev/peps/pep-0008/">PEP 8 -- Style Guide for Python Code</a>（PEP 8 = ペップ・エイト）もぜひ（いずれは）読むべきものです。<a href="https://pep8-ja.readthedocs.io/ja/latest/">日本語版</a> もあります。インデントはスペース4個で，代入 <code>=</code> やほとんどの演算記号の前後にスペース1個を入れる，といったルールが書かれています（こういった基本的なルールは Python に限らず他の言語にも昔からあるものと同じです）。</p>
-
-<p>このスタイルに合わせるためのツールとして，<a href="https://github.com/hhatto/autopep8">autopep8</a>，<a href="https://gitlab.com/pycqa/flake8">flake8</a>，<a href="https://github.com/psf/black">black</a> などがあります。</p>
-
-<p>例えば black は <code>pip install black</code> でインストールできます。ターミナルに</p>
-
-<pre><code>black ファイル名</code></pre>
-
-<p>と打ち込むだけで，そのファイルを PEP 8 に合わせて書き直して（上書きして）くれます。</p>
-
-<p>PEP 8 と似たものに <a href="https://google.github.io/styleguide/pyguide.html">Google Python Style Guide</a> があります。両者の違いはニュアンスほどのものです（両者の違いをまとめた <a href="https://qiita.com/hi-asano/items/f43ced224483ea1f62f4">@hi-asano さんの記事</a> 参照）が，Google のほうがより具体的なところもあります。例えば <a href="https://www.pylint.org">Pylint</a> の使用を推奨しています。Pylint は <code>pip install pylint</code> でインストールできます。ターミナルに <code>pylint ファイル名</code> と打ち込めば，ファイルにおさめた Python コードの問題点を（英語で）注意してくれます。</p>
-
-<p>Python のほうが他の言語よりスタイルガイドに忠実に書かれる傾向があります。そもそも Python は正しくインデントしないと動かないようにデザインされています。PEP 8 のおかげで，C言語の K&amp;R 流と GNU 流のように対立する流儀がありません。そのため，Python を自己流で書くと目立ってしまいます。ソースコードは人間が読むためのものでもあるので，ぜひ PEP 8 に則った書き方をしましょう。</p>
-
-<div class="note">
-<p>PEP 8 にも Google Python Style Guide にもインデントは4文字分と書かれていますが，Google Colaboratory の自動インデントは2文字がデフォルトです。これを4文字にするには，［ツール］→［設定］→［エディタ］→［インデント幅（スペース）］を4に変更し，［保存］をクリックします。</p>
-</div>
+<p id="PEP8">PEP 8 などについては <a href="pep8.html">PEP 8</a> に移動しました。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-01-11 21:27:49</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-12 10:25:18 JST</time></p>
 </footer>
 </body>
 </html>
