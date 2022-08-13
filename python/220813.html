@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/220813.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>接種率とコロナ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>接種率とコロナ</h1>
+
+<p>以下は2022-08-12の一連のツイートをまとめたものである。データは2022-08-13朝に再取得し、人口密度などのデータは2020年国勢調査に統一したので、ツイートとは若干異なるかもしれない。</p>
+
+<p><a href="https://web.sapmed.ac.jp">札幌医科大学</a>の<a href="https://web.sapmed.ac.jp/canmol/">ゲノム医科学部門</a>に<a href="https://web.sapmed.ac.jp/canmol/coronavirus/">人口あたりの新型コロナウイルス感染者数の推移【世界・国別】</a>という便利なページがある。その下に<a href="https://web.sapmed.ac.jp/canmol/coronavirus/japan.html">【都道府県別】人口あたりの新型コロナウイルス感染者数の推移</a>、<a href="https://web.sapmed.ac.jp/canmol/coronavirus/japan_vaccine.html">【都道府県別】新型コロナウイルスワクチン接種率の推移</a>などがあり、最新データをダウンロードできる（ちょっとわかりづらい）。</p>
+
+<p>とりあえず「都道府県別人口100万人あたりの感染者数_[令和2年10月国勢調査]_2022-08-12.csv」、「都道府県別ワクチン追加接種率（3回目，全人口に対するパーセント）_[令和2年10月国勢調査]_2022-08-11.csv」をダウンロードした。CSVファイル（文字コードはUTF-8）であるが、不要な行も入っているので、都道府県データだけを切り出す：</p>
+
+<pre>
+egrep '^....?,[0-9.]*$' 都道府県別人口100万人あたりの*.csv > df1.csv
+egrep '^....?,[0-9.]*$' 都道府県別ワクチン追加接種率*.csv > df2.csv
+</pre>
+
+<p>これ以降はPythonで処理する。データを読み込み、マージして、散布図を描く：</p>
+
+<pre>
+import matplotlib.pyplot as plt
+import pandas as pd
+
+df1 = pd.read_csv("df1.csv", names=["都道府県", "人口あたり感染者数"])
+df2 = pd.read_csv("df2.csv", names=["都道府県", "接種率"])
+df = pd.merge(df1, df2)
+
+plt.plot("接種率", "人口あたり感染者数", "o", data=df)
+for i, r in df.iterrows():
+    plt.text(r[2], r[1], r[0])
+plt.xlabel("ワクチン追加接種率（3回目）")
+plt.ylabel("人口100万人あたりの感染者数")
+plt.savefig('220813a.svg', bbox_inches="tight")
+df.corr()  # 相関係数 -0.859
+</pre>
+
+<figure><img src="img/220813a.svg" alt="都道府県ごとのワクチン追加接種率（3回目）と人口100万人あたりの感染者数"></figure>
+
+<p>他の要因も見るために、e-Statの<a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000032143614">2020年国勢調査の都道府県・市区町村別データ</a>を使う。Excelファイル（major_results_2020.xlsx）をダウンロードし、全国・都道府県データだけにして、PythonやRで使いやすいようにしたものを、<a href="data/census2020.csv">census2020.csv</a>として置いておく。ちょっと手抜きで、元のExcelファイルのO列以降は列名を省略している。</p>
+
+<pre>
+census = pd.read_csv("https://okumuralab.org/~okumura/python/data/census2020.csv")
+df = pd.merge(df, census)
+</pre>
+
+<p>例えば人口密度を横軸にとってみよう：</p>
+
+<pre>
+plt.plot("人口密度", "人口あたり感染者数", "o", data=df)
+plt.xscale("log")
+for i, r in df[["人口密度", "人口あたり感染者数", "都道府県"]].iterrows():
+    plt.text(r[0], r[1], r[2])
+plt.xlabel("人口密度")
+plt.ylabel("人口100万人あたりの感染者数")
+plt.savefig('220813b.svg', bbox_inches="tight")
+df[["人口密度", "人口あたり感染者数"]].corr()  # 相関係数 0.522
+</pre>
+
+<figure><img src="img/220813b.svg" alt="都道府県ごとの人口密度と人口100万人あたりの感染者数"></figure>
+
+<p>平均年齢：</p>
+
+<pre>
+plt.plot("平均年齢", "人口あたり感染者数", "o", data=df)
+for i, r in df[["平均年齢", "人口あたり感染者数", "都道府県"]].iterrows():
+    plt.text(r[0], r[1], r[2])
+plt.xlabel("平均年齢")
+plt.ylabel("人口100万人あたりの感染者数")
+plt.savefig('220813c.svg', bbox_inches="tight")
+df[["平均年齢", "人口あたり感染者数"]].corr()  # 相関係数 -0.763
+</pre>
+
+<figure><img src="img/220813c.svg" alt="都道府県ごとの平均年齢と人口100万人あたりの感染者数"></figure>
+
+<p>人口密度より可住地人口密度のほうが適切というご指摘をいただいた。e-Statで<a href="https://www.e-stat.go.jp/stat-search/database?statdisp_id=0000010201">社会・人口統計体系 / 都道府県データ / 社会生活統計指標</a>の<a href="https://www.e-stat.go.jp/dbview?sid=0000010201">DB</a>によると、2019年度の可住地面積1km<sup>2</sup>当たり人口密度は次の通りである（都道府県番号順）：</p>
+
+<pre>
+可住地人口密度 = [234.7, 385.8, 330.4, 730.9, 301.5, 373.7, 437.7,
+    719.4, 648.4, 852, 2843.7, 1761, 9792.9, 6252.6, 490.1, 566.5, 817.6,
+    712.9, 849.8, 635.2, 898.6, 1325.4, 2527.1, 864.9, 1081.7, 2200.5,
+    6619.7, 1964.1, 1554.6, 829.5, 617.2, 518.9, 851.8, 1213.3, 795.6,
+    720.6, 950.7, 800.3, 600.2, 1848.3, 610.2, 792.2, 625.1, 630.9, 580,
+    483.6, 1242.9]
+
+plt.plot(可住地人口密度, df["人口あたり感染者数"], "o")
+plt.xscale("log")
+for i, r in df[["人口あたり感染者数", "都道府県"]].iterrows():
+    plt.text(可住地人口密度[i], r[0], r[1])
+plt.xlabel("可住地人口密度")
+plt.ylabel("人口100万人あたりの感染者数")
+plt.savefig('220813d.svg', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/220813d.svg" alt="都道府県ごとの可住地人口密度と人口100万人あたりの感染者数"></figure>
+
+<p>ちなみにワクチン接種が進む前の2021-02-28の時点：</p>
+
+<pre>
+x20210228 = [3654.4327, 659.1361, 457.6493, 1574.286, 280.3538,
+    508.4141, 1062.1051, 2007.3184, 2117.2741, 2321.6837, 3995.635,
+    4212.4408, 7949.8311, 4860.6, 490.6254, 874.5533, 1634.3996,
+    710.6876, 1159.2965, 1154.2907, 2332.7953, 1415.0053, 3428.7427,
+    1428.0437, 1745.1772, 3515.3973, 5332.0525, 3287.8305, 2535.348,
+    1260.5898, 379.4676, 423.1694, 1315.377, 1794.8339, 1029.761,
+    628.1625, 792.4281, 796.3495, 1278.3304, 3517.0881, 1302.6193,
+    1228.3617, 1980.6696, 1150.5074, 1820.3475, 1108.7633, 5583.0403]
+
+plt.plot(可住地人口密度, x20210228, "o")
+plt.xscale("log")
+for i, r in df[["都道府県"]].iterrows():
+    plt.text(可住地人口密度[i], x20210228[i], r[0])
+plt.xlabel("可住地人口密度")
+plt.ylabel("人口100万人あたりの感染者数（2021-02-28まで）")
+plt.savefig('220813e.svg', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/220813e.svg" alt="都道府県ごとの可住地人口密度と人口100万人あたりの感染者数（2021-02-28まで）"></figure>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-08-13 14:34:12 JST</time></p>
+</footer>
+</body>
+</html>
