@@ -129,11 +129,31 @@ plt.savefig('220813e.svg', bbox_inches="tight")
 
 <figure><img src="img/220813e.svg" alt="都道府県ごとの可住地人口密度と人口100万人あたりの感染者数（2021-02-28まで）"></figure>
 
+<p>NHKの<a href="https://www.nhk.or.jp/info/otherpress/pdf/2022/20220628.pdf">2021年度末都道府県別推計世帯支払率</a>：</p>
+
+<pre>
+NHK = [70.4, 92.5, 94.6, 84.4, 97.9, 93.5, 87.6, 84.3, 85.7, 83.8,
+       81.6, 81.7, 67.3, 78.5, 94.9, 91.9, 84.8, 88.5, 83.3, 87.2, 89.4,
+       86.1, 81.9, 84.9, 82.4, 76.2, 65.2, 76.4, 79.4, 82.0, 92.9, 94.3,
+       84.8, 86.1, 91.1, 83.6, 84.5, 83.4, 82.9, 73.9, 84.1, 87.3, 81.2,
+       79.7, 82.9, 84.0, 49.5]
+
+plt.plot(NHK, df["人口あたり感染者数"], "o")
+for i, r in df[["人口あたり感染者数", "都道府県"]].iterrows():
+    plt.text(NHK[i], r[0], r[1])
+plt.xlabel("NHK世帯支払率")
+plt.ylabel("人口100万人あたりの感染者数")
+plt.savefig('220813f.svg', bbox_inches="tight")
+df[["人口あたり感染者数"]].assign(NHK=NHK).corr()  # 相関係数 -0.890
+</pre>
+
+<figure><img src="img/220813f.svg" alt="都道府県ごとのNHK世帯支払率と人口100万人あたりの感染者数"></figure>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-13 14:34:12 JST</time></p>
+<p>Last modified: <time>2022-08-13 16:11:30 JST</time></p>
 </footer>
 </body>
 </html>
