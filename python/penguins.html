@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/penguins.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>パーマーペンギン（palmerpenguins）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>パーマーペンギン（palmerpenguins）</h1>
+
+<p>統計で例として使うデータとしては、昔は<a href="iris.html">あやめ（iris）</a>のデータが有名でしたが、それに代わるものとして、<a href="https://github.com/allisonhorst/palmerpenguins">palmerpenguins</a> というデータが提案されています。これは南極の<a href="https://ja.wikipedia.org/wiki/%E3%83%91%E3%83%BC%E3%83%9E%E3%83%BC%E3%83%A9%E3%83%B3%E3%83%89">パーマーランド</a>の三つの島に住むペンギンたちのデータです。</p>
+
+<figure style="text-align:center">
+  <img src="img/penguins-small.png" alt="パーマーペンギン">
+  <figcaption>Artwork by @allison_horst</figcaption>
+</figure>
+
+<p>データは、ここでは <a href="seaborn.html">seaborn</a> のものを使います：</p>
+
+<pre class="cell">
+import seaborn as sns
+
+penguins = sns.load_dataset("penguins")
+penguins
+</pre>
+
+<pre>
+    species     island  bill_length_mm  bill_depth_mm  flipper_length_mm  body_mass_g     sex
+0    Adelie  Torgersen            39.1           18.7              181.0       3750.0    Male
+1    Adelie  Torgersen            39.5           17.4              186.0       3800.0  Female
+2    Adelie  Torgersen            40.3           18.0              195.0       3250.0  Female
+3    Adelie  Torgersen             NaN            NaN                NaN          NaN     NaN
+4    Adelie  Torgersen            36.7           19.3              193.0       3450.0  Female
+..      ...        ...             ...            ...                ...          ...     ...
+339  Gentoo     Biscoe             NaN            NaN                NaN          NaN     NaN
+340  Gentoo     Biscoe            46.8           14.3              215.0       4850.0  Female
+341  Gentoo     Biscoe            50.4           15.7              222.0       5750.0    Male
+342  Gentoo     Biscoe            45.2           14.8              212.0       5200.0  Female
+343  Gentoo     Biscoe            49.9           16.1              213.0       5400.0    Male
+
+[344 rows x 7 columns]
+</pre>
+
+<pre class="cell">
+penguins.value_counts("species")
+</pre>
+
+<pre>
+species
+Adelie       152
+Gentoo       124
+Chinstrap     68
+dtype: int64
+</pre>
+
+<pre class="cell">
+penguins.value_counts("island")
+</pre>
+
+<pre>
+island
+Biscoe       168
+Dream        124
+Torgersen     52
+dtype: int64
+</pre>
+
+<p>パーマーペンギンには Adelie（Adélie、アデリーペンギン）、Gentoo（ジェンツーペンギン）、Chinstrap（ヒゲペンギン）という種類があります。島の名前は Biscoe（<a href="https://ja.wikipedia.org/wiki/%E3%83%93%E3%82%B9%E3%82%B3%E3%83%BC%E8%AB%B8%E5%B3%B6">ビスコー</a>）、Dream（<a href="https://en.wikipedia.org/wiki/Dream_Island">ドリーム</a>）、Torgersen（<a href="https://www.env.go.jp/nature/nankyoku/kankyohogo/database/jyouyaku/atcm/atcm_pdf/26.pdf">トージャーセン</a>）です。</p>
+
+<p>変数名は、species（種）、island（島）、bill_length_mm（くちばしの長さmm）、bill_depth_mm（くちばしの上下幅mm）、flipper_length_mm（ひれの長さmm）、body_mass_g（体重g）、sex（性別、Male＝オス、Female＝メス）です。</p>
+
+<p>箱ひげ図を描いてみましょう：</p>
+
+<pre class="cell">
+sns.boxplot(x="species", y="body_mass_g", data=penguins)
+</pre>
+
+<figure><img src="img/penguins1.svg" alt="パーマーペンギン"></figure>
+
+<p>同じことを Matplotlib だけでするなら、次のようになります：</p>
+
+<pre class="cell">
+x1 = penguins.query("species == 'Adelie'")["body_mass_g"].dropna()
+x2 = penguins.query("species == 'Chinstrap'")["body_mass_g"].dropna()
+x3 = penguins.query("species == 'Gentoo'")["body_mass_g"].dropna()
+plt.boxplot([x1, x2, x3], labels=["Adelie", "Chinstrap", "Gentoo"])
+plt.xlabel("Species")
+plt.ylabel("Body Mass (g)")
+</pre>
+
+<p>この最初の4行は次のように書くこともできます：</p>
+
+<pre class="cell">
+s = penguins["species"].unique()   # ["Adelie", "Chinstrap", "Gentoo"]
+x = [penguins.query(f"species == '{i}'")["body_mass_g"].dropna() for i in s]
+plt.boxplot(x, labels=s)
+</pre>
+
+<figure><img src="img/penguins2.svg" alt="パーマーペンギン"></figure>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-08-15 14:40:04 JST</time></p>
+</footer>
+</body>
+</html>

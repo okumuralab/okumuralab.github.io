@@ -58,7 +58,7 @@ array([[1. , 0.8],
 <pre class="cell">
 import pandas as pd
 
-df = pd.DataFrame({"x":x, "y":y})
+df = pd.DataFrame({"x": x, "y": y})
 df.corr()
 </pre>
 
@@ -95,11 +95,23 @@ ConfidenceInterval(low=-0.279640041969355, high=0.9861961933012714)
 
 <p>これも下限・上限を <code>r.confidence_interval().low</code>、<code>r.confidence_interval().high</code> で取り出せます。</p>
 
+<p>Python 3.10 以降の標準ライブラリ statistics にも相関係数を求める関数が追加されました：</p>
+
+<pre class="cell">
+import statistics as st
+
+st.correlation(x, y)
+</pre>
+
+<pre>
+0.8
+</pre>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-12 22:11:43 JST</time></p>
+<p>Last modified: <time>2022-08-14 10:15:50 JST</time></p>
 </footer>
 </body>
 </html>

@@ -180,11 +180,25 @@ model.fit(X, y)
 print(model.coef_, model.intercept_)
 </pre>
 
+<h2>標準ライブラリstatisticsを使う</h2>
+
+<p>Python 3.10 で標準ライブラリ statistics にも線形回帰の関数が追加されました：</p>
+
+<pre class="cell">
+import statistics as st
+
+st.linear_regression(df1["年"], df1["世界全体"])
+</pre>
+
+<pre>
+LinearRegression(slope=0.01840288469329876, intercept=-36.90901844799179)
+</pre>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-13 22:29:23 JST</time></p>
+<p>Last modified: <time>2022-08-14 10:23:29 JST</time></p>
 </footer>
 </body>
 </html>
