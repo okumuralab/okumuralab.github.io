@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/normal.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>正規分布</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>正規分布</h1>
+
+<p>一番簡単な乱数は、ある範囲の数がまんべんなく出る一様乱数（uniform random numbers）です。<a href="random.html">乱数</a>のところで説明したように、次のようにすると $0 \leqq x < 1$ の範囲の一様乱数を生成できます：</p>
+
+<pre class="cell">
+import numpy as np
+
+rng = np.random.default_rng(12345)  # 12345は適当なタネ
+rng.random()    # デフォルトは1個
+</pre>
+
+<pre>
+0.22733602246716966
+</pre>
+
+<pre class="cell">
+rng.random(10)  # 10個
+</pre>
+
+<pre>
+array([0.31675834, 0.79736546, 0.67625467, 0.39110955, 0.33281393,
+       0.59830875, 0.18673419, 0.67275604, 0.94180287, 0.24824571])
+</pre>
+
+<p>もっとたくさんの数、例えば百万個でやってみましょう。画面に書き出すとたいへんなので、ヒストグラムを描いてみましょう。</p>
+
+<pre class="cell">
+N = 1000000  # 百万
+
+plt.hist(rng.random(N), edgecolor="black", bins=20, density=True)
+</pre>
+
+<figure><img src="img/normal1.svg" alt="一様乱数"></figure>
+
+<p>ヒストグラム（度数分布図）を描く <code>plt.hist()</code> を使いました。オプション <code>density = True</code> は縦軸の目盛りを個数でなく密度（density）にすることを意味します。密度とは、棒グラフの棒の面積の和が 1 になるように付けた目盛りです。下で説明する確率密度関数の縦軸と同じものになります。</p>
+
+<p>このヒストグラムを関数で表したものを確率密度関数（probability density function、略して p.d.f.）または単に密度関数といいます。数学的にいえば、任意の $a < b$ について、$a \leqq x < b$ の範囲に乱数が入る確率が $\int_a^b f(x) dx$ になるように選ばれた関数 $f(x)$ が確率密度関数です。<code>rng.random()</code> の確率密度関数は</p>
+
+\[
+  f(x) =
+    \begin{cases}
+      1 & (0 \leqq x < 1) \\
+      0 & (\text{$x < 0$, $1 \leqq x$})
+    \end{cases}
+\]
+
+<p>と表すことができます。</p>
+
+<p>この <code>rng.random()</code> を二つ加えたらどうなるでしょうか。2倍するのではなく、独立な乱数を二つ加えるのです。</p>
+
+<pre class="cell">
+plt.hist(rng.random(N) + rng.random(N),
+         bins=20, edgecolor="black", density=True)
+</pre>
+
+<figure><img src="img/normal2.svg" alt="一様乱数2個の和"></figure>
+
+<p>三個ならどうなるでしょうか。</p>
+
+<pre class="cell">
+plt.hist(rng.random(N) + rng.random(N) + rng.random(N),
+         bins=20, edgecolor="black", density=True)
+</pre>
+
+<figure><img src="img/normal3.svg" alt="一様乱数3個の和"></figure>
+
+<p>だんだん釣り鐘の形になってきました。</p>
+
+<p><code>rng.random()</code> は平均値が 0.5 ですので、0.5 を引いて範囲を $-0.5 \leqq x < 0.5$ にして考えましょう。この分散は</p>
+
+\[  \int_{-0.5}^{0.5} x^2 dx = \frac{1}{12} \]
+
+<p>ですので、12個加えるとちょうど分散が 1 になります。</p>
+
+<p>次の図が、<code>rng.random() - 0.5</code> を12個加えた分布のヒストグラムです。オレンジの曲線は後で説明します。</p>
+
+<pre class="cell">
+plt.hist(rng.random(N) + rng.random(N) + rng.random(N) +
+         rng.random(N) + rng.random(N) + rng.random(N) +
+         rng.random(N) + rng.random(N) + rng.random(N) +
+         rng.random(N) + rng.random(N) + rng.random(N) - 6,
+         bins=np.arange(-4, 4.2, 0.2), edgecolor="black", density=True)
+
+x = np.arange(-4, 4.1, 0.1)
+plt.plot(x, np.exp(-x**2/2) / np.sqrt(2*np.pi))
+</pre>
+
+<figure><img src="img/normal4.svg" alt="一様乱数12個の和"></figure>
+
+<p>オレンジの曲線は</p>
+
+\[ f(x) = \frac{1}{\sqrt{2\pi}} \exp\biggl(-\frac{x^2}{2}\biggr) \]
+
+<p>を描いたものです。ここで $\exp(z) = e^z$ は指数関数です。$e = 2.718\ldots$ は自然対数の底（てい）です。$\int_{-\infty}^{\infty} \exp(-x^2\!/2) dx = \sqrt{2\pi}$ ですので、これは確率密度関数です。この分布を標準正規分布（standard normal distribution）といいます。</p>
+
+<p>乱数を足し合わせる上の実験は、一様分布の乱数 <code>rng.random()</code> から出発しましたが、（分散が有限な）どんな分布から出発しても、まったく同じことが成り立ちます。</p>
+
+<p>数学的に言えば、平均 $\mu$、分散 $\sigma^2$ の確率変数 $X$ がどんな分布であっても、そこから引き出した数 $X_1$, $X_2$, ..., $X_n$ の平均値</p>
+
+\[ \bar{X} = \dfrac{X_1 + X_2 + \cdots + X_n}{n} \]
+
+<p>の分布は、平均値が元と同じ $\mu$ で、分散が $\sigma^2/n$ になりますので、</p>
+
+\[ \dfrac{\bar{X} - \mu}{\sqrt{\sigma^2 \! / n}} \]
+
+<p>の分布は平均 0、分散 1 になります。ここまでは $n$ の値にかかわらず言えることです。ここで、$n$ が十分大きくなると、この分布は標準正規分布に近づきます。このことを中心極限定理といいます。</p>
+
+<p>$X$ が標準正規分布ならば、$\sigma X + \mu$ は平均 $\mu$、分散 $\sigma^2$ の正規分布（normal distribution）になります。平均 $\mu$、分散 $\sigma^2$ の正規分布を $N(\mu, \sigma^2)$ と表します。標準正規分布は平均 0、分散 1 の正規分布ですので $N(0, 1)$ と表されます。</p>
+
+<p>なお、正規分布を研究した数学者ガウス（Carl Friedrich Gauss、1777-1855）に敬意を表して、正規分布のことをガウス分布（Gaussian distribution）ともいいます。</p>
+
+<p>変数がある範囲に入る確率を求めるには、密度関数を積分しなければなりません。そこで、あらかじめ密度関数 $f(x)$ を積分した</p>
+
+\[ F(q) = \int_{-\infty}^q f(x) dx \]
+
+<p>を求めておくと便利です。この $F(q)$ を累積分布関数（cumulative distribution function、略して CDF）あるいは単に分布関数と呼びます。$F(q)$ がわかっていれば、確率変数 $X$ が $a \leqq X < b$ の範囲に入る確率は $F(b) - F(a)$ で求められます。</p>
+
+<p>分布関数 $p = F(q)$ の逆関数 $q = F^{-1}(p)$ を分位関数または分位点関数（quantile function, percent point function）と呼びます。</p>
+
+<p>Python の SciPy ライブラリから <code>from scipy import stats</code> でインポートした <code>stats</code> には、標準正規分布 $N(0,1)$ の</p>
+
+<ul>
+  <li>密度関数 probability density function <code>stats.norm.pdf(<i>x</i>)</code></li>
+  <li>分布関数 cumulative distribution function <code>stats.norm.cdf(<i>q</i>)</code> $= \int_{-\infty}^q \mathrm{stats.norm.pdf}(x) dx$</li>
+  <li>分位関数 percent point function <code>stats.norm.ppf(<i>p</i>)</code></li>
+</ul>
+
+<p>があります。また、正規分布の乱数（正規乱数）は NumPy で <code>rng.normal(平均, 標準偏差, 個数)</code> で生成できます。</p>
+
+<p>物理現象の測定では、測定誤差がほぼ正規分布することがよくあります。これに対して、他の多くの分野では、観測値そのものが正規分布することはまずありませんが、中心極限定理のおかげで、観測値の平均値はほぼ正規分布します。</p>
+
+<p>正規分布 $N(\mu, \sigma^2)$ に従う変数 $X$ が平均±標準偏差の範囲内に入る確率、つまり $\mu - \sigma < X < \mu + \sigma$ になる確率は、標準正規分布 $N(0,1)$ に従う変数 $Z$ が $-1 < Z < 1$ になる確率に等しく、Python で次のようにして求められます。</p>
+
+<pre class="cell">
+stats.norm.cdf(1) - stats.norm.cdf(-1)
+</pre>
+
+<pre>
+0.6826894921370859
+</pre>
+
+<p>正規分布が左右対称であることを使えば、次のようにするほうが簡単です。</p>
+
+<pre class="cell">
+1 - 2 * stats.norm.cdf(-1)
+</pre>
+
+<pre>
+0.6826894921370859
+</pre>
+
+<p>つまり、ほぼ68%の確率で正規分布は $\mu \pm \sigma$ の範囲に入ります。</p>
+
+<p>同様にして、$\mu \pm 2\sigma$、$\mu \pm 3\sigma$ に入る確率を求めてください。</p>
+
+<p>逆に、$\mu \pm k\sigma$ の範囲に入る確率が与えられたときに $k$ の値を求めるには <code>stats.norm.ppf()</code> を使います。例えば 95% の場合は</p>
+
+<pre class="cell">
+stats.norm.ppf(0.025)
+</pre>
+
+<pre>
+-1.9599639845400545
+</pre>
+
+<p>ですので、ほぼ $\mu \pm 1.96\sigma$ です。ざっくり $\mu \pm 2\sigma$ で 95% と覚えておくと便利です。</p>
+
+<p>Scrapboxのほうに書いた<a href="https://scrapbox.io/okumura/%E6%AD%A3%E8%A6%8F%E5%88%86%E5%B8%83%E3%81%AE%E4%BD%95%E3%81%8C%E3%81%84%E3%81%84%E3%81%AE%EF%BC%9F">正規分布の何がいいの？</a>もご参照ください。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-08-16 16:51:02 JST</time></p>
+</footer>
+</body>
+</html>

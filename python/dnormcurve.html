@@ -17,62 +17,32 @@
 
 <h1>正規分布の密度関数を描く</h1>
 
-<p>まずは Matplotlib と NumPy だけで描いてみましょう。
+<p><a href="normal.html">正規分布</a>の密度関数を描いてみましょう。
 
 <pre>
-<code>import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import numpy as np
 
-x = np.linspace(-3, 3, 101)  # 区間[-3,3]を100等分する101点
+x = np.linspace(-3, 3, 61)  # 区間[-3,3]を60等分する61点
 y = np.exp(-x**2 / 2) / np.sqrt(2 * np.pi)
 plt.plot(x, y)
-</code></pre>
+</pre>
 
-<figure><img src="img/dnormcurve.png" alt="正規分布の密度関数"></figure>
+<figure><img src="img/dnormcurve1.svg" alt="正規分布の密度関数"></figure>
 
 <p>x ≧ 1 の部分だけ塗りつぶしてみましょう。</p>
 
 <pre>
-<code>plt.fill_between(x[x >= 1], y[x >= 1])
-</code></pre>
+plt.fill_between(x[x >= 1], y[x >= 1])
+</pre>
 
-<p>計算式を書くのが面倒なら，SciPy の <code>scipy.stats.norm.pdf()</code> を使います。この <code>pdf</code> は PDF ファイルのことではなく確率密度関数（probability density function）のことです。</p>
-
-<pre>
-<code>import matplotlib.pyplot as plt
-import numpy as np
-from scipy.stats import norm
-
-x = np.linspace(-3, 3, 101)  # 区間[-3,3]を100等分する101点
-plt.plot(x, norm.pdf(x))
-</code></pre>
-
-<p>ちなみに R なら</p>
-
-<pre>
-<code>curve(dnorm(x), -3, 3)
-</code></pre>
-
-<p>という1行で描けてしまいます。</p>
-
-<p>他の統計関数については <a href="https://docs.scipy.org/doc/scipy/reference/stats.html">scipy.stats</a> を，特に正規分布については <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html">scipy.stats.norm</a> を参照してください。</p>
-
-<ul>
-  <li>R の <code>dnorm(x)</code> は Python では <code>norm.pdf(x)</code> (probability density function)</li>
-  <li>R の <code>pnorm(x)</code> は Python では <code>norm.cdf(x)</code> (cumulative distribution function)</li>
-  <li>R の <code>qnorm(p)</code> は Python では <code>norm.ppf(x)</code> (percent point function)</li>
-</ul>
-
-<p>R と同程度の統計計算をしたいなら <a href="https://www.statsmodels.org/">StatsModels</a> というライブラリが便利そうです。</p>
+<figure><img src="img/dnormcurve2.svg" alt="正規分布の密度関数"></figure>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2020-11-17 15:41:45</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-16 17:01:31 JST</time></p>
+</footer>
 </body>
 </html>

@@ -77,7 +77,7 @@ td, th { border: 1px solid; }
 
 <p>R では，Wickham の R パッケージ <a href="http://had.co.nz/reshape/">reshape</a> に deshape() という関数があったが，のちに melt() と改名された。これについては2007年の彼の論文 <a href="https://www.jstatsoft.org/article/view/v021i12">Reshaping Data with the reshape Package</a> に詳しい。このパッケージはその後 <a href="https://github.com/hadley/reshape">reshape2</a> となった。その後 Wickham は <a href="https://tidyr.tidyverse.org">tidyr</a> というパッケージを作り，melt() に相当する gather() という関数を実装する。tidyr 1.0.0 からは gather() は pivot_longer() で置き換えられる。</p>
 
-<p>Python の pandas パッケージにはバージョン 0.6.0（2011-11-25）から <a href="https://pandas.pydata.org/docs/reference/api/pandas.melt.html">melt()</a> が導入される。</p>
+<p>Python の pandas パッケージにはバージョン 0.6.0（2011-11-25）から <a href="https://pandas.pydata.org/docs/reference/api/pandas.melt.html">melt()</a> が導入される。なお，その逆は <a href="https://pandas.pydata.org/docs/reference/api/pandas.pivot_table.html">pivot_table()</a> である。</p>
 
 <p>参考：</p>
 
@@ -113,12 +113,9 @@ Date,ALL,Hokkaido,Aomori,Iwate,Miyagi,Akita,(略),Okinawa
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-12-12 19:57:44</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-16 18:12:00 JST</time></p>
+</footer>
 </body>
 </html>

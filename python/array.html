@@ -150,6 +150,27 @@ a[1][2]
 3
 </pre>
 
+<h2>タプル</h2>
+
+<p>リスト以外に、Python には tuple（タプルまたはテュープルと読む）という1次元の配列のようなものがあります。<code>[ ]</code> を使えばリスト、<code>( )</code> を使えばタプルです：</p>
+
+<pre>
+t = (2, 3, 4, 5)
+</pre>
+
+<p>要素1つのリストは <code>[2]</code> のように書きますが、タプルの場合は <code>(2)</code> ではなく特例として <code>(2,)</code> のように書きます。</p>
+
+<p>リストは要素を変えられますが、タプルは変えられません：</p>
+
+<pre>
+x = [2, 3, 4, 5]
+t = (2, 3, 4, 5)
+x[2] = 30
+t[2] = 30    # TypeError: 'tuple' object does not support item assignment
+x.append(6)  # 末尾に 6 を追加
+t.append(6)  # AttributeError: 'tuple' object has no attribute 'append'
+</pre>
+
 <h2>NumPy の array</h2>
 
 <p>ベクトル・行列などの数値計算をより高速に行うには NumPy の array を使います。</p>
@@ -297,7 +318,7 @@ array([[0, 1, 2],
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-04 15:21:36 JST</time>
+Last modified: <time>2022-08-16 11:28:29 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

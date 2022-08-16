@@ -7,6 +7,19 @@
 <title>t検定</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
 </head>
 <body>
 
@@ -15,50 +28,172 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>t検定</h1>
+<h1>$t$ 検定</h1>
 
-<p>Rのt検定はデフォルトでは分散が等しいと仮定しないWelchのt検定です：</p>
+<h2>はじめに</h2>
+
+<p>平均値の検定をする場合、高校では正規分布による検定しか扱いません。例えば、母集団が分散 1 の正規分布だということはわかっているけれども、平均値がわかりません。実際にデータを3個とったところ、値は 1、2、3 でした。平均値が 0 であるという帰無仮説は棄却できるでしょうか。</p>
+
+<p>1、2、3 の平均値は 2 です。分散 1 を仮定すると、3個の平均値の分散は 1/3 です。母集団の平均が 0 だとすると、3個の平均値は平均 0、分散 1/3 の正規分布をするはずです。分散 1/3 ということは、標準偏差 $\sqrt{1/3} \approx 0.577$ です。1、2、3 の平均値 2 は、この標準偏差の $2 / \sqrt{1/3} \approx 3.46$ 倍も離れています。標準偏差の 1.96 倍以上離れる確率は 0.05 ですから、このようなことが起きる確率は 0.05 より小さく、帰無仮説は水準 0.05 で棄却できます。</p>
+
+<p>この論理そのものも難しいですが、平均がわからないのに分散だけわかっているというのは何とも不思議です。現場では平均がわからなければ分散もわからないのが一般的です。</p>
+
+<p>平均も分散もわからないけれども、中心極限定理から、サンプルの平均値はほぼ正規分布をすることがわかっているという一般の場合に、サンプルの平均値が 0 かどうか、あるいは2つのサンプルの平均値が等しいかどうかを検定するのが $t$ 検定です。</p>
+
+<p>こういった統計計算をするための標準的なツールは <a href="../stat/">R</a> ですが、やっぱり Python でも同じことをしたいですよね。Python では <a href="https://www.scipy.org">SciPy</a> を使うのが一般的でしたが、あまり便利ではありません。以下では <a href="https://pingouin-stats.org">pingouin</a> という新しめのパッケージを使っています。<code>pip install pingouin</code> でインストールできます。念のため SciPy による方法も書いておきました。</p>
+
+<div class="note">
+  <p>Pingouin は、英語の penguin（ペンギン）に似ていますが、19世紀に絶滅した<a href="https://ja.wikipedia.org/wiki/%E3%82%AA%E3%82%AA%E3%82%A6%E3%83%9F%E3%82%AC%E3%83%A9%E3%82%B9">オオウミガラス</a>という海鳥を意味するフランス語です（英語 <a href="https://en.wikipedia.org/wiki/Great_auk">great auk</a>、学名 <i>Pinguinus impennis</i>）。フランス語の発音は［pɛ̃-ɡwɛ̃］です（パングアンに近い）。</p>
+</div>
+
+<h2>1標本の $t$ 検定</h2>
+
+<p>10人の患者にある睡眠薬を飲ませたところ、睡眠時間がそれぞれ次の時間だけ増えました（Arthur R. Cushny and A. Roy Peebles, <i>The Journal of Physiology</i> <b>32</b>, 501-510 (1905)）：</p>
 
 <pre>
-&gt; t.test(c(1,2,3), c(3,4,5,6))
-
-	Welch Two Sample t-test
-
-data:  c(1, 2, 3) and c(3, 4, 5, 6)
-t = -2.8868, df = 4.9592, p-value = 0.03465
-alternative hypothesis: true difference in means is not equal to 0
-95 percent confidence interval:
- -4.7317115 -0.2682885
-sample estimates:
-mean of x mean of y 
-      2.0       4.5 
+x = [1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4]
 </pre>
 
-<p>Pythonでは <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html">scipy.stats.ttest_ind</a> を使って次のようにします：</p>
+<p>この睡眠薬は効果があるといえるでしょうか。</p>
+
+<p>帰無仮説は、効果はない（上の <code>x</code> の平均値は 0 である）です。10個の平均値は中心極限定理から正規分布で近似できそうですが、分散については何もわかりません。</p>
+
+<p>こういうときに使うのが、1標本の $t$ 検定です（関数の名前は2標本と同じですが、2番目の引数に 0 を指定します）。</p>
+
+<pre class="cell">
+import pingouin as pg
+
+pg.ttest(x, 0)
+</pre>
+
+<pre>
+               T  dof alternative     p-val        CI95%   cohen-d    BF10     power
+T-test  3.679916    9   two-sided  0.005076  [0.9, 3.76]  1.163692  10.715  0.904364
+</pre>
+
+<p>$p$ 値は 0.005 程度ですので、効果があると言えそうです。効果の 95% 信頼区間は [0.90, 3.76] です。</p>
+
+<div class="note">
+<p>例えば信頼区間だけ欲しい場合には <code>pg.ttest(x, 0)["CI95%"][0]</code> とします。</p>
+</div>
+
+<div class="note">
+<p>念のため、SciPy を使う方法：</p>
 
 <pre class="cell">
 from scipy import stats
 
-stats.ttest_ind([1,2,3], [3,4,5,6], equal_var=False)
+stats.ttest_1samp(x, 0)
 </pre>
 
 <pre>
-Ttest_indResult(statistic=-2.886751345948129, pvalue=0.03464755328828571)
+Ttest_1sampResult(statistic=3.6799158947951884, pvalue=0.005076132649772408)
 </pre>
 
+<p>95% 信頼区間：</p>
+
+<pre class="cell">
+stats.tmean(x) + stats.t.ppf([0.025, 0.975], len(x) - 1) * stats.sem(x)
+</pre>
+
+<pre>
+array([0.89767754, 3.76232246])
+</pre>
+</div>
+
+<div class="note">
+<p>参考までに、R では次のようになります：</p>
+<pre>
+> x = c(1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4)
+> t.test(x)
+
+	One Sample t-test
+
+data:  x
+t = 3.6799, df = 9, p-value = 0.005076
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+ 0.8976775 3.7623225
+sample estimates:
+mean of x 
+     2.33 
+</pre>
+</div>
+
+<h2>2標本の $t$ 検定（対応がない場合）</h2>
+
+<p>2組の患者たちに痛みのレベルを報告してもらったところ，次のような結果を得ました (T. Lumley, <i>Biometrics</i> <b>52</b>, 354-361 (1996))。</p>
+ 
+<pre>
+x = [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1]
+y = [3, 3, 4, 3, 1, 2, 3, 1, 1, 5, 4]
+</pre>
+
+<p>これらの平均値に差があるといえるでしょうか。</p>
+
+<p>このような問題では、両群の分散が等しいと仮定しない $t$ 検定（Welch の検定）を使うのが推奨です（R のデフォルトはそうなっています）。</p>
+
+<pre class="cell">
+pg.ttest(x, y, correction=True)
+</pre>
+
+<pre>
+               T        dof alternative     p-val           CI95%   cohen-d   BF10     power
+T-test -2.948615  15.915569   two-sided  0.009479  [-2.36, -0.38]  1.255397  6.556  0.846951
+</pre>
+
+<p>$p$ 値は 0.009 程度で、両群の平均値に差があると言えそうです。両群の平均値の差の 95% 信頼区間は [-2.36, -0.38] です。</p>
+
+<p><code>pg.ttest()</code> のデフォルトは、両群のサイズ（個数）が等しければ分散が等しいと仮定し、そうでなければ Welch の方法を用います。オプション <code>correction=True</code> で常に Welch の方法を用います。</p>
+
+<div class="note">
+<p>SciPy では <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html">scipy.stats.ttest_ind</a> を使って次のようにします：</p>
+
+<pre class="cell">
+from scipy import stats
+
+stats.ttest_ind(x, y, equal_var=False)
+</pre>
+
+<pre>
+Ttest_indResult(statistic=-2.948615301572607, pvalue=0.009478901687159976)
+</pre>
+</div>
+
+<div class="note">
 <p><a href="https://www.statsmodels.org/dev/generated/statsmodels.stats.weightstats.ttest_ind.html">statsmodels.stats.weightstats.ttest_ind</a> を使うこともできます：</p>
 
 <pre class="cell">
 from statsmodels.stats.weightstats import ttest_ind
 
-ttest_ind([1,2,3], [3,4,5,6], usevar='unequal')
+ttest_ind(x, y, usevar='unequal')
 </pre>
 
 <pre>
-(-2.886751345948129, 0.03464755328828571, 4.959183673469387)
+(-2.9486153015726067, 0.009478901687159983, 15.915568793934193)
+</pre>
+</div>
+
+<div class="note">
+<p>参考までに、R では次のようになります：</p>
+<pre>
+> x = c(1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1)
+> y = c(3, 3, 4, 3, 1, 2, 3, 1, 1, 5, 4)
+> t.test(x, y)
+
+	Welch Two Sample t-test
+
+data:  x and y
+t = -2.9486, df = 15.916, p-value = 0.009479
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -2.3556088 -0.3846509
+sample estimates:
+mean of x mean of y 
+ 1.357143  2.727273 
 </pre>
 
-<p>信頼区間も含めてRと似た出力をするようにしてみましょう。</p>
+<p>Python で R と似た出力をする関数：</p>
 
 <pre class="cell">
 import numpy as np
@@ -80,32 +215,78 @@ def ttest(x, y):
     e = stats.t.ppf(0.975, df) * se
     print("95 percent confidence interval:")
     print(f" {d - e:.8g} {d + e:.8g}")
+
+ttest(x, y)
 </pre>
-
-<p>これで</p>
-
-<pre class="cell">
-ttest([1,2,3], [3,4,5,6])
-</pre>
-
-<p>とすると</p>
 
 <pre>
-t = -2.8868, df = 4.9592, p-value = 0.03465
+t = -2.9486, df = 15.916, p-value = 0.009479
 95 percent confidence interval:
- -4.7317115 -0.26828852
+ -2.3556088 -0.3846509
+</pre>
+</div>
+
+<h2>2標本の $t$ 検定（対応がある場合）</h2>
+
+<p>5人の成績が 1、2、3、4、5 だったのが、勉強したのでそれぞれ 3、5、4、7、6 になりました。勉強によって成績が伸びたと言えるでしょうか？</p>
+
+<pre class="cell">
+pg.ttest([1,2,3,4,5], [3,5,4,7,6], paired=True)
 </pre>
 
-<p>と出力します。</p>
+<pre>
+               T  dof alternative     p-val           CI95%   cohen-d   BF10     power
+T-test -4.472136    4   two-sided  0.011056  [-3.24, -0.76]  1.264911  6.555  0.571609
+</pre>
+
+<p>$p$ 値は 0.01 ほどなので、成績が伸びたと言えそうです。</p>
+
+<p>実は、これは一人一人の成績の伸びを1標本の $t$ 検定したのと本質的に同じです：</p>
+
+<pre class="cell">
+pg.ttest([2, 3, 1, 3, 1], 0)
+</pre>
+
+<pre>
+               T  dof alternative     p-val         CI95%  cohen-d   BF10     power
+T-test  4.472136    4   two-sided  0.011056  [0.76, 3.24]      2.0  6.555  0.908885
+</pre>
+
+<div class="note">
+<p>SciPy では次のようにします：</p>
+<pre class="cell">
+stats.ttest_rel([1,2,3,4,5], [3,5,4,7,6])
+</pre>
+
+<pre>
+Ttest_relResult(statistic=-4.47213595499958, pvalue=0.011056493393450068)
+</pre>
+</div>
+
+<div class="note">
+<p>R では次のようになります：</p>
+  
+<pre>
+> t.test(c(1,2,3,4,5), c(3,5,4,7,6), paired=TRUE)
+
+	Paired t-test
+
+data:  c(1, 2, 3, 4, 5) and c(3, 5, 4, 7, 6)
+t = -4.4721, df = 4, p-value = 0.01106
+alternative hypothesis: true mean difference is not equal to 0
+95 percent confidence interval:
+ -3.241664 -0.758336
+sample estimates:
+mean difference 
+             -2 
+</pre>
+</div>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-11-30 22:07:07</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-16 15:11:06 JST</time></p>
+</footer>
 </body>
 </html>

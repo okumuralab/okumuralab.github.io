@@ -41,7 +41,8 @@ td, th { border: 1px solid; }
 
 <p>次のようにすればよい：</p>
 
-<pre><code>import pandas as pd
+<pre class="cell">
+import pandas as pd
 
 df = pd.read_csv('mc040000.csv', encoding='cp932', skiprows=5, nrows=28)
 df.columns = ['年次', '年', '総数'] + list(range(1, 13)) + ['不詳']
@@ -49,11 +50,11 @@ df = df.melt(id_vars=['年'], value_vars=range(1, 13),
              var_name='月', value_name='死亡数')
 df['月'] = df['月'].astype(int)
 df = df.sort_values(by=['年', '月'])
-</code></pre>
+df
+</pre>
 
-<p>これで <code>df</code> は次のようになる：</p>
-
-<pre><code>        年   月       死亡数
+<pre>
+        年   月       死亡数
 0    1947   1  109940.0
 28   1947   2  115405.0
 56   1947   3  116996.0
@@ -65,16 +66,28 @@ df = df.sort_values(by=['年', '月'])
 279  2020  10  116951.0
 307  2020  11  117607.0
 335  2020  12  132148.0
-</code></pre>
+</pre>
+
+<p>逆にこの表を元のように2次元に戻すには次のようにする：</p>
+
+<pre class="cell">
+pd.pivot_table(df, values="死亡数", columns="月", index="年")
+</pre>
+
+<pre>
+月           1         2         3         4   ...        9         10        11        12
+年                                             ...                                        
+1947  109940.0  115405.0  116996.0   99403.0  ...   79305.0   77592.0   78563.0   92232.0
+1950   91367.0   81463.0   88905.0   71320.0  ...   66578.0   66830.0   67701.0   90629.0
+1955   72754.0   63206.0   64545.0   58779.0  ...   50331.0   53397.0   57304.0   62089.0
+（後略）
+</pre>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-10-16 20:39:54</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-16 18:04:26 JST</time></p>
+</footer>
 </body>
 </html>

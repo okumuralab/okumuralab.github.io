@@ -40,13 +40,13 @@ MathJax = {
 
 \[ _nC_r \theta^r (1-\theta)^{n-r} \]
 
-<p>です。$_nC_r$ は $n$ 個から $r$ 個を選ぶ組合せ（<span lang="en">combination</span>）の数で、英語ではよく <span lang="en">$n$ choose $r$</span> と読みます。階乗（!）を使えば</p>
+<p>です。$_nC_r$ は $n$ 個から $r$ 個を選ぶ組合せ（<span lang="en">combination</span>）の数です。階乗（!）を使えば</p>
 
 \[ _nC_r = \frac{n!}{r!(n-r)!} \]
 
 <p>と表せます。</p>
 
-<p>Pythonでは、階乗は <code>math.factorial()</code> という関数ですので、例えば $_{10}C_3$ は次のようにして求められます。</p>
+<p>Python では、階乗は <code>math.factorial()</code> という関数ですので、例えば $_{10}C_3$ は次のようにして求められます。</p>
 
 <pre class="cell">
 import math
@@ -58,7 +58,11 @@ math.factorial(10) // (math.factorial(3) * math.factorial(7))
 120
 </pre>
 
-<p>ここで <code>//</code> は整数の除算を意味します。ただ、この除算は割り切れますので、<code>/</code> だけでも同じです（後者では出力が <code>120.0</code> となります）。</p>
+<p>ここで <code>//</code> は整数の除算を意味します。</p>
+
+<div class="note">
+<p>上の計算は <code>math.factorial(10) / (math.factorial(3) * math.factorial(7))</code> でも同じですが、<code>//</code> を使えば結果は <code>120</code> なのに対し、<code>/</code> を使えば結果は <code>120.0</code> になります。つまり <code>/</code> は分子・分母が整数でも浮動小数点数に直してから除算します。Python はどんな大きな整数でも正確に計算できるのに対し、浮動小数点数は CPU で決まった精度でしか計算できません。例えば <code>math.factorial(200) // 10</code> は正確に計算できますが <code>math.factorial(200) / 10</code> は分子が大きすぎて浮動小数点数に直せないのでエラーになります。</p>
+</div>
 
 <div class="note">
 <p>Python 3.8 以降では <code>math.comb(10, 3)</code> でも求められます。こちらのほうが高速です。ただ、Coogle Colaboratory がまだ Python 3.7 のようです。3.7 以前では次のようにして定義すると便利です。</p>
@@ -80,24 +84,24 @@ math.factorial(10) // (math.factorial(3) * math.factorial(7)) * 0.4**3 * 0.6**7
 
 <p>です（正確な値は 0.214990848 です）。</p>
 
-<p>同じ値は SciPy ライブラリを使って次のようにしても求められます。</p>
+<p>同じ値は SciPy ライブラリを使っても求められます。SciPy ライブラリは非常に大きいので、統計の部分 <code>stats</code> だけインポートします。</p>
 
 <pre class="cell">
-from scipy.stats import binom
+from scipy import stats
 
-binom.pmf(3, 10, 0.4)
+stats.binom.pmf(3, 10, 0.4)
 </pre>
 
 <pre>
 0.21499084799999982
 </pre>
 
-<p><code>binom.pmf()</code> は <span lang="en">binomial probability mass function</span> の意味です。</p>
+<p><code>stats.binom.pmf()</code> は <span lang="en">binomial probability mass function</span> の意味です。</p>
 
 <p>投げると確率 0.5 で表が出る硬貨を10回投げて表が0〜10回出る確率を全部出力するには次のようにします。</p>
 
 <pre class="cell">
-binom.pmf(range(11), 10, 0.5)
+stats.binom.pmf([0,1,2,3,4,5,6,7,8,9,10], 10, 0.5)
 </pre>
 
 <pre>
@@ -106,12 +110,14 @@ array([0.00097656, 0.00976563, 0.04394531, 0.1171875 , 0.20507812,
        0.00097656])
 </pre>
 
+<p>0 以上 11 未満の整数 <code>[0,1,2,3,4,5,6,7,8,9,10]</code> は <code>range(11)</code> とも書けます。</p>
+
 <p>これをグラフにするには次のように打ち込みます。</p>
 
 <pre class="cell">
 import matplotlib.pyplot as plt
 
-plt.bar(range(11), binom.pmf(range(11), 10, 0.5))
+plt.bar(range(11), stats.binom.pmf(range(11), 10, 0.5))
 </pre>
 
 <figure><img src="img/220715a.svg" alt="グラフ"></figure>
@@ -119,17 +125,17 @@ plt.bar(range(11), binom.pmf(range(11), 10, 0.5))
 <p>確率なので、全部加えると 1 になります。</p>
 
 <pre class="cell">
-sum(binom.pmf(range(11), 10, 0.5))
+sum(stats.binom.pmf(range(11), 10, 0.5))
 </pre>
 
 <pre>
 1.0000000000000004
 </pre>
 
-<p>ちなみに、<code>binom.pmf()</code> の累積を求める <code>binom.cdf()</code> という関数もあります。<code>cdf</code> は <span lang="en">cumulative distribution function</span> の意味です。</p>
+<p>ちなみに、<code>stats.binom.pmf()</code> の累積を求める <code>stats.binom.cdf()</code> という関数もあります。<code>cdf</code> は <span lang="en">cumulative distribution function</span> の意味です。</p>
 
 <pre class="cell">
-binom.cdf(range(11), 10, 0.5)
+stats.binom.cdf(range(11), 10, 0.5)
 </pre>
 
 <pre>
@@ -146,18 +152,18 @@ array([9.76562500e-04, 1.07421875e-02, 5.46875000e-02, 1.71875000e-01,
 
 <p>硬貨を10回投げて表が2回しか出ませんでした。この硬貨は歪んでいるでしょうか。</p>
 
-<p>ある母集団から10人をランダムに選んで聞いたところ、賛成2人、反対8人でした。母集団全体でも反対のほうが多いと言えるでしょうか。</p>
+<p>ある母集団（ここでは例えばある高校の全生徒のように人数の多い集団を考えます）から10人をランダムに選んで聞いたところ、賛成2人、反対8人でした。母集団全体でも反対のほうが多いと言えるでしょうか。</p>
 
-<p>これらの問いについて考えるために、仮に硬貨は歪んでいない（あるいは母集団全体では賛否が等しい）というモデル（帰無仮説、<span lang="en">null hypothesis</span>）を設定します。そして、この帰無仮説が正しかった場合に、実際に観測された事象か、それより珍しい事象の確率の合計を求めます。この場合は、表が0〜2回・8〜10回出る確率の合計です。この確率の合計を $p$ 値（ピーち、<span lang="en">$p$-value</span>）といいます。</p>
+<p>これらの問いについて考えるために、仮に硬貨は歪んでいない（あるいは母集団全体では賛否が等しい）というモデル（帰無仮説、<span lang="en">null hypothesis</span>）を設定します。そして、この帰無仮説が正しかった場合に、実際に観測された事象、およびそれより珍しい事象の確率の合計を求めます。この場合は、表が0〜2回・8〜10回出る確率の合計です。この確率の合計を $p$ 値（ピーち、<span lang="en">$p$-value</span>）といいます。</p>
 
-<p>$p$ 値が非常に小さければ、実際に起きた事象はこのモデルでは説明しにくいので、たぶん硬貨は歪んでいる（あるいは賛否は等しくない）と推測します。$p$ 値が大きければ、これだけのデータでは何も言えません。</p>
+<p>$p$ 値が非常に小さければ、実際に起きた事象はこのモデルでは説明しにくいので、たぶん硬貨は歪んでいる（あるいは賛否は等しくない）と推測します。$p$ 値が大きければ、これだけのデータでは何も言えないので、判断を保留します（硬貨が歪んでない・賛否が等しいと推測するわけではありません）。</p>
 
 <p>$p$ 値が大きいか小さいかの境界（有意水準）を仮に 0.05 として、$p \leqq 0.05$（または $p < 0.05$）であれば帰無仮説からの外れが「統計的に有意」（<span lang="en">statistically significant</span>）である、あるいは「帰無仮説は棄却（<span lang="en">reject</span>）される」ということがあります。0.05 という値に特に意味はありませんが、伝統的によく使われています（物理学では通常もっともっと厳しい条件を課します）。</p>
 
 <p>さて、硬貨投げで表も裏も 1/2 の確率で出るという帰無仮説では、表が $r$ 回出る確率は $_{10}C_r (1/2)^{10}$ です。表が0、1、2、8、9、10回出る確率はそれぞれ</p>
 
 <pre class="cell">
-binom.pmf([0,1,2,8,9,10], 10, 0.5)
+stats.binom.pmf([0,1,2,8,9,10], 10, 0.5)
 </pre>
 
 <pre>
@@ -168,7 +174,7 @@ array([0.00097656, 0.00976563, 0.04394531, 0.04394531, 0.00976563,
 <p>で、この合計、すなわち $p$ 値は</p>
 
 <pre class="cell">
-sum(binom.pmf([0,1,2,8,9,10], 10, 0.5))
+sum(stats.binom.pmf([0,1,2,8,9,10], 10, 0.5))
 </pre>
 
 <pre>
@@ -178,7 +184,7 @@ sum(binom.pmf([0,1,2,8,9,10], 10, 0.5))
 <p>になります。同じことが</p>
 
 <pre class="cell">
-binom.cdf(2, 10, 0.5) * 2
+stats.binom.cdf(2, 10, 0.5) * 2
 </pre>
 
 <pre>
@@ -188,9 +194,7 @@ binom.cdf(2, 10, 0.5) * 2
 <p>でも求められます。また、次のようにすれば、このような計算（2項検定）が簡単にできます。</p>
 
 <pre class="cell">
-from scipy.stats import binomtest
-
-binomtest(2, 10, 0.5).pvalue
+stats.binomtest(2, 10, 0.5).pvalue
 </pre>
 
 <pre>
@@ -200,8 +204,7 @@ binomtest(2, 10, 0.5).pvalue
 <div class="note">
 <p>Python では SciPy に，$p$ 値を返すだけの古い <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom_test.html">scipy.stats.binom_test</a> と，2021-06-20 の <a href="https://scipy.github.io/devdocs/release.1.7.0.html">SciPy 1.7.0</a> で新しく追加された <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html">scipy.stats.binomtest</a> とがあります。計算量は，前者は $O(n)$，後者は2分探索を使うので $O(\log n)$ だそうです。古い方は次のように使います。</p>
 <pre>  
-from scipy.stats import binom_test
-binom_test(2, 10, 0.5)
+stats.binom_test(2, 10, 0.5)
 </pre>
 </div>
 
@@ -212,7 +215,7 @@ binom_test(2, 10, 0.5)
 <p>これが、フィッシャー（<span lang="en">R. A. Fisher</span>、1890〜1962年）が「有意性の検定」（<span lang="en">tests of significance, significance tests<span lang="en">）と呼んだ方法の考え方です。</p>
 
 <div class="note">
-<p>ここでは、実際に生じた事象またはそれより珍しい事象の生じる確率の合計として $p$ 値を定義しました。これは2項分布のような山の形の分布では両側の部分の確率になりますので、両側検定といいます。一方、実際に生じた事象の側（左または右）だけを考える方法もあります。これは片側検定といいます。例えば表が2回出た場合の片側 $p$ 値は、表が0回・1回・2回出る確率の合計です。</p>
+<p>ここでは、実際に生じた事象またはそれより珍しい事象の生じる確率の合計として $p$ 値を定義しました。これは2項分布のような山の形の分布では両側の部分の確率になりますので、両側検定といいます。一方、片側だけを考える片側検定もあります。例えば表が2回出た場合の（左側だけの）片側 $p$ 値は、表が0回・1回・2回出る確率の合計です。</p>
   
 <p>ICH（医薬品規制調和国際会議）の定める<a href="https://www.pmda.go.jp/int-activities/int-harmony/ich/0031.html">ICH E9</a>「臨床試験のための統計的原則」というガイドラインでは、「原則として片側仮説を検証する場合は2.5%、両側仮説の場合は5%とすること」とされています。</p>
 </div>
@@ -221,13 +224,13 @@ binom_test(2, 10, 0.5)
 
 <div class="note">
 <p>授業では<a href="../stat/binom.html">JavaScriptのプログラム</a>も使って説明します。</p>
-<p>なお、高校「数学B」では、2項分布 $B(n, \theta)$ の平均が $n\theta$、分散が $n\theta(1-\theta)$ であることから、同じ平均と分散を持つ正規分布で近似して扱うことが多いと思います（中心極限定理から $n \to \infty$ で正規分布になります）。</p>
+<p>なお、高校「数学B」では、2項分布 $B(n, \theta)$ の平均が $n\theta$、分散が $n\theta(1-\theta)$ であることを使って、同じ平均と分散を持つ正規分布で近似して扱うことが多いと思います（中心極限定理から $n \to \infty$ で正規分布になります）。</p>
 </div>
 
 <p>10回投げて2回表が出たとき、表が出る確率の95%信頼区間は次のようにして求めます。これは正規分布近似ではなく <span lang="en">Clopper-Pearson</span> の正確な方法を使っています。</p>
 
 <pre class="cell">
-binomtest(2, 10).proportion_ci()
+stats.binomtest(2, 10).proportion_ci()
 </pre>
 
 <pre>
@@ -239,19 +242,12 @@ ConfidenceInterval(low=0.025210726326833497, high=0.5560954623076415)
 <p>下限・上限を別々に求めるには次のようにします。</p>
 
 <pre class="cell">
-binomtest(2, 10).proportion_ci().low
+ci = stats.binomtest(2, 10).proportion_ci()
+print(ci.low, ci.high)
 </pre>
 
 <pre>
-0.025210726326833497
-</pre>
-
-<pre class="cell">
-binomtest(2, 10).proportion_ci().high
-</pre>
-
-<pre>
-0.5560954623076415
+0.025210726326833497 0.5560954623076415
 </pre>
 
 <div class="note">
@@ -296,10 +292,10 @@ probability of success
 <p>これとほぼ同じことをするPythonの関数を作ってみました。</p>
 
 <pre class="cell">
-from scipy.stats import binomtest
+from scipy import stats
 
 def binom_test(x, n, p=0.5, alternative="two-sided", conf_level=0.95):
-    r = binomtest(x, n, p, alternative)
+    r = stats.binomtest(x, n, p, alternative)
     print()
     print("	Exact binomial test")
     print()
@@ -340,12 +336,9 @@ probability of success
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-07-17 10:07:05 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-16 09:30:24 JST</time></p>
+</footer>
 </body>
 </html>

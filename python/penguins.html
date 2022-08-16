@@ -93,7 +93,6 @@ x1 = penguins.query("species == 'Adelie'")["body_mass_g"].dropna()
 x2 = penguins.query("species == 'Chinstrap'")["body_mass_g"].dropna()
 x3 = penguins.query("species == 'Gentoo'")["body_mass_g"].dropna()
 plt.boxplot([x1, x2, x3], labels=["Adelie", "Chinstrap", "Gentoo"])
-plt.xlabel("Species")
 plt.ylabel("Body Mass (g)")
 </pre>
 
@@ -111,7 +110,7 @@ plt.boxplot(x, labels=s)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-15 14:40:04 JST</time></p>
+<p>Last modified: <time>2022-08-15 15:09:32 JST</time></p>
 </footer>
 </body>
 </html>
