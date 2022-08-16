@@ -56,19 +56,25 @@ MathJax = {
 
 <h2>UUID</h2>
 
-<p>128ビットのランダムな値を表す <a href="https://ja.wikipedia.org/wiki/UUID">UUID</a>（Universally Unique Identifier）というものが <a href="https://datatracker.ietf.org/doc/html/rfc4122">RFC 4122</a> で定められています。LinuxやMacには uuidgen というコマンドがあります。Pythonには <a href="https://docs.python.org/ja/3/library/uuid.html">uuid</a> という標準ライブラリがあります。</p>
+<p>128ビットのランダムな値を表す <a href="https://ja.wikipedia.org/wiki/UUID">UUID</a>（Universally Unique Identifier）というものが <a href="https://datatracker.ietf.org/doc/html/rfc4122">RFC 4122</a> で定められています。</p>
 
-<p>UUIDにはいくつかのバージョンがありますが，ここではまったくランダムなバージョン4のUUIDを試してみましょう。128ビットですが，6ビットは固定で，ランダムな部分は122ビットです。</p>
+<p>UUIDにはいくつかのバージョンがありますが，よく使われているのは，乱数ベースのバージョン4のUUIDです。128ビットですが，そのうち6ビットは固定値です。</p>
+
+<p>Pythonには <a href="https://docs.python.org/ja/3/library/uuid.html">uuid</a> という標準ライブラリがあります。</p>
 
 <pre class="cell">
 import uuid
 
-uuid.uuid4()
+uuid.uuid4()   # バージョン4のUUIDを生成
 </pre>
 
 <pre>
 UUID('3585b7a9-e35a-433b-be8e-3916c75f6240')
 </pre>
+
+<p>二つめのハイフンの直後の数字 4 がバージョン番号を表します。また，三つめのハイフンの直後の2ビットは 1 0 に固定されています。これらのため，128ビットのうち6ビットは固定値になります。</p>
+
+<p>LinuxやMacには <code>uuidgen</code> というコマンドがあります。Macのものはバージョン4固定です。Linuxのものはオプション <code>-r</code> でバージョン4（乱数ベース），オプション <code>-t</code> でバージョン1（時刻ベース）になります。デフォルトは通常はバージョン4です。</p>
 
 <h2>ULID</h2>
 
@@ -90,11 +96,7 @@ ULID(01F63ZWFQGSMGM3XGXBE8CTRDT)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-05-31 19:37:42</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-16 22:26:22 JST</time></p>
 </footer>
 </body>
 </html>
