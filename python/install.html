@@ -94,7 +94,7 @@ pip install numpy matplotlib pandas jupyter
 
 <p>念のため、Windows PowerShell でパスを確認するには <code>$env:path</code> と打ち込みます。コマンドプロンプトなら <code>path</code> と打ち込みます。</p>
 
-<p>追記：ウイルスバスターが入っていると Jupyter Notebook がうまく立ち上がらないようです。ウイルスバスターは外して Windows Defender を使う設定にしましょう。</p>
+<p>追記：サードパーティのウイルス対策ソフトによっては、Python の動作、特に Jupyter Notebook に支障があるようです。Windows にもともと入っているウイルス対策ソフト Windows Defender なら大丈夫です。</p>
 
 <p>なお、python のパスが設定されていない場合でも使えるように、py.exe というランチャー（起動用プログラム）が C:\Windows の中にインストールされます。こちらを使ってもかまいません。この場合、pip コマンドの代わりに <code>py -m pip</code> のように打ち込みます。</p>
 
@@ -117,6 +117,8 @@ pip install numpy matplotlib pandas jupyter
 <code>python3.10-intel64</code>
 というシンボリックリンクができます。</p>
 
+<p>以下では、ホームディレクトリ（例えば私なら <code>/Users/okumura</code>）を <code>~</code> と略記しています。</p>
+
 <p>インストールすると、Mac では（bash を使っていれば）<code>~/.bash_profile</code> または（zsh を使っていれば）<code>~/.zprofile</code> の最後にパスが付け加えられます：</p>
 
 <pre>
@@ -124,23 +126,25 @@ PATH="/Library/Frameworks/Python.framework/Versions/3.10/bin:${PATH}"
 export PATH
 </pre>
 
-<p>これらを更新したらターミナルに（bash なら）<code>. ~/.bash_profile</code>、（zsh なら）<code>source ~/.zprofile</code> と打ち込みます。<code>python3</code> コマンドのほか、<a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされます。</p>
+<p>ターミナルを立ち上げ直すか、あるいはターミナルに（bash なら）<code>. ~/.bash_profile</code>、（zsh なら）<code>source ~/.zprofile</code> と打ち込みます。</p>
 
-<p>いろいろなパッケージのインストールは <code>pip3</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
+<div class="note">
+<p>私は <code>~/.zshenv</code> に環境変数を書いているのでそちらに移動しました。</p>
+</div>
 
-<p>まずは、アップデートの必要なパッケージを、次のコマンドで調べます（この時点で <code>pip3</code> は <code>/Library/Frameworks/Python.framework/Versions/3.10/bin</code> にあるものです）：</p>
-
-<pre>
-pip3 list --outdated
-</pre>
-
-<p>最初は pip そのものが古いはずですので、まずこれをアップデートしましょう：</p>
+<p>以上ができたら、ターミナルに <code>python3</code> と打ち込んで、次のように表示されるか確認します：</p>
 
 <pre>
-pip3 install --upgrade pip setuptools
+/Library/Frameworks/Python.framework/Versions/3.10/bin/python3
 </pre>
 
-<p>すると、Defaulting to user installation because normal site-packages is not writeable などのメッセージが出て、<code>~/Library/Python/3.10/bin</code> にインストールされますので、こちらにもパスを通しておきます。具体的には <code>~/.bash_profile</code> または <code>~/.zprofile</code> にさきほど追加されたものを</p>
+<p>いろいろなパッケージのインストールは <code>pip</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。まずは、一般ユーザで</p>
+
+<pre>
+python3 -m pip install --upgrade pip
+</pre>
+
+<p>と打ち込んで <code>pip</code> を更新しましょう。Defaulting to user installation because normal site-packages is not writeable などのメッセージが出て、<code>~/Library/Python/3.10/bin</code> に <code>pip</code> コマンドがインストールされますので、こちらにもパスを通しておきます。具体的には <code>~/.bash_profile</code> または <code>~/.zprofile</code> にさきほど追加されたものを</p>
 
 <pre>
 PATH="/Library/Frameworks/Python.framework/Versions/3.10/bin:${PATH}"
@@ -148,19 +152,37 @@ PATH="${HOME}/Library/Python/3.10/bin:${PATH}"
 export PATH
 </pre>
 
-<p>と編集すればいいでしょう（私は <code>~/.zshenv</code> に環境変数を書いているのでそちらに移動しました）。</p>
+<p>のように書き直して、読み込み直します。</p>
 
-<p>ここまでうまくいけば、次からは <code>~/Library/Python/3.10/bin</code> にある <code>pip3</code> またはそれと同等な <code>pip</code> を使うことになります。</p>
+<p><code>which pip</code> と打ち込むと</p>
 
-<p>これ以外に必要なパッケージは、その都度インストールします。例：</p>
+<pre>
+/Users/自分の名前/Library/Python/3.10/bin/pip
+</pre>
+
+<p>のように表示されるはずです。</p>
+
+<p>必要なパッケージをインストールします。例：</p>
 
 <pre>
 pip install numpy matplotlib pandas jupyter
 </pre>
 
 <div class="note">
-<p>ソースでしか提供されていないパッケージには、ビルドに gfortran が必要な場合もあります。Homebrew なら brew install gcc で入ります（巨大なのであまり乗り気しませんが）。</p>
+<p>一般的なパッケージは簡単にインストールできるはずですが、ソースコードでしか提供されていないパッケージもたまにあります。そういったものをインストールするには、あらかじめターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールしておく必要があります。中には、ビルドに gfortran が必要なものもあります。Homebrew なら brew install gcc で入ります（巨大ですし、初心者は入れないほうがいいでしょう）。</p>
 </div>
+
+<p>ときどき、アップデートの必要なパッケージを、次のコマンドで調べます：</p>
+
+<pre>
+pip list --outdated
+</pre>
+
+<p>パッケージをアップデートするには、次のように打ち込みます：</p>
+
+<pre>
+pip install --upgrade パッケージ名をスペースで区切って並べる
+</pre>
 
 <p>https サイトのスクレイピングで証明書エラーになる場合は次のコマンドの管理者権限での実行が必要になるようです：</p>
 
@@ -382,11 +404,7 @@ apk add python3 py3-pip
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-07-31 16:58:26 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-17 14:40:16 JST</time></p>
 </footer>
 </body>
 </html>

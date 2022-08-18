@@ -19,36 +19,39 @@
 
 <p>ワードクラウド（word cloud）とは頻出語を頻度に比例する大きさで雲のように並べたものです。</p>
 
-<p>英語のワードクラウドは wordcloud ライブラリで簡単に描けます。あらかじめ <code>pip install wordcloud</code> などとしてインストールしておきます。テキストとしては何でもいいのですが，ここでは <code>WordCloud()</code> の説明文（docstring）を用いてみます：</p>
+<p>英語のワードクラウドは wordcloud ライブラリで簡単に描けます。あらかじめ <code>pip install wordcloud</code> などとしてインストールしておきます。テキストとしては何でもいいのですが、ここでは <code>WordCloud()</code> の説明文（docstring）を用いてみます：</p>
 
 <pre>
-<code>from wordcloud import WordCloud
+from wordcloud import WordCloud
 
 text = WordCloud.__doc__
 wc = WordCloud(width=480, height=320)
 wc.generate(text)
 wc.to_file('wc1.png')
-</code></pre>
+</pre>
 
 <figure><img src="img/wc1.png" alt="WordCloudの説明のワードクラウド"></figure>
 
-<p>日本語はこのように簡単にはいきません。まずは単語に分解しなければなりません（形態素解析）。そのためのツールとして，<a href="https://taku910.github.io/mecab/">MeCab</a>（めかぶ，和布蕪）が有名ですが，インストールが難しい場合は，Python だけで実装した <a href="https://mocobeta.github.io/janome/">Janome</a>（じゃのめ，蛇の目）が便利です。ここではとりあえず MeCab を使って説明します。</p>
+<p>日本語はこのように簡単にはいきません。まずは単語に分解しなければなりません（形態素解析）。そのためのツールとして、<a href="https://taku910.github.io/mecab/">MeCab</a>（めかぶ、和布蕪）が有名ですが、インストールが難しい場合は、Python だけで実装した <a href="https://mocobeta.github.io/janome/">Janome</a>（じゃのめ、蛇の目）が便利です。ここではとりあえず MeCab を使って説明します。</p>
 
-<p>まず MeCab と辞書をインストールします。Mac では Homebrew でインストールするのが簡単です。また，MeCab を Python から使うためのライブラリもインストールします。</p>
+<p>まず MeCab と辞書をインストールします。Windows では <a href="https://github.com/ikegami-yukino/mecab/releases">MeCab 64bit version</a> でうまくいきました。インストールの際に文字コードを求められますので、必ず UTF-8 を選びます。Mac では Homebrew でインストールするのが簡単です（<code>brew install mecab mecab-ipadic</code>）。</p>
+
+<p>さらに、MeCab を Python から使うためのライブラリもインストールします。</p>
 
 <pre>
-<code>brew install mecab mecab-ipadic
 pip install mecab-python3
-</code></pre>
+</pre>
 
 <p>動作確認してみましょう：</p>
 
+<pre class="cell">
+import MeCab
+
+mecab = MeCab.Tagger()
+print(mecab.parse("すもももももももものうち"))
+</pre>
+
 <pre>
-<code>In [ ]: import MeCab
-
-In [ ]: mecab = MeCab.Tagger()
-
-In [ ]: print(mecab.parse("すもももももももものうち"))
 すもも  名詞,一般,*,*,*,*,すもも,スモモ,スモモ
 も      助詞,係助詞,*,*,*,*,も,モ,モ
 もも    名詞,一般,*,*,*,*,もも,モモ,モモ
@@ -57,11 +60,14 @@ In [ ]: print(mecab.parse("すもももももももものうち"))
 の      助詞,連体化,*,*,*,*,の,ノ,ノ
 うち    名詞,非自立,副詞可能,*,*,*,うち,ウチ,ウチ
 EOS
+</pre>
 
+<pre class="cell">
+chasen = MeCab.Tagger("-Ochasen")
+print(chasen.parse("すもももももももものうち"))
+</pre>
 
-In [ ]: chasen = MeCab.Tagger("-Ochasen")
-
-In [ ]: print(chasen.parse("すもももももももものうち"))
+<pre>
 すもも  スモモ  すもも  名詞-一般               
 も      モ      も      助詞-係助詞             
 もも    モモ    もも    名詞-一般               
@@ -70,20 +76,23 @@ In [ ]: print(chasen.parse("すもももももももものうち"))
 の      ノ      の      助詞-連体化             
 うち    ウチ    うち    名詞-非自立-副詞可能            
 EOS
+</pre>
 
+<pre class="cell">
+wakati = MeCab.Tagger("-Owakati")
+print(wakati.parse("すもももももももものうち"))
+</pre>
 
-In [ ]: wakati = MeCab.Tagger("-Owakati")
-
-In [ ]: print(wakati.parse("すもももももももものうち"))
+<pre>
 すもも も もも も もも の うち 
-</code></pre>
+</pre>
 
 <p>とりあえず最後の例のようにして分かち書きにすればワードクラウドが作れそうです。</p>
 
-<p>サンプルとして，寺田寅彦の<a href="https://www.aozora.gr.jp/cards/000042/files/43260_17028.html">流言蜚語</a>を題材としてみます。青空文庫のサイトからコピペしてください。改行を含む長い文章ですので，全体を <code>"""..."""</code> で囲みます。</p>
+<p>サンプルとして、寺田寅彦の<a href="https://www.aozora.gr.jp/cards/000042/files/43260_17028.html">流言蜚語</a>を題材としてみます。青空文庫のサイトからコピペしてください。改行を含む長い文章ですので、全体を <code>"""..."""</code> で囲みます。</p>
 
-<pre>
-<code>text = """
+<pre class="cell">
+text = """
 長い管の中へ、水素と酸素とを適当な割合に混合したものを入れておく、
 （中略）
 甚だしい恥辱を曝さらす事なくて済みはしないかと思われるのである。
@@ -93,16 +102,18 @@ wc = WordCloud(width=480, height=320, background_color="white",
                font_path="/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc")
 wc.generate(words)
 wc.to_file('wc2.png')
-</code></pre>
+</pre>
+
+<p>Windows では <code>font_path</code> は例えば <code>"C:/WINDOWS/Fonts/meiryob.ttc"</code> などとします。</p>
 
 <figure><img src="img/wc2.png" alt="流言蜚語ワードクラウド"></figure>
 
 <p>「その」「ある」などのあまり意味のないことばが大きく出てしまいました。これらの単語は「ストップワード」として外してしまいましょう。そのためには <code>WordCloud()</code> に例えば <code>stopwords={"その","ある"}</code> のようなオプション引数を与えます。</p>
 
-<p>もっと楽に済ませるには，せっかく MeCab で品詞がわかるのですから，名詞だけにしてしまうという手もあります：</p>
+<p>もっと楽に済ませるには、せっかく MeCab で品詞がわかるのですから、名詞だけにしてしまうという手もあります：</p>
 
-<pre>
-<code>nodes = mecab.parseToNode(text)
+<pre class="cell">
+nodes = mecab.parseToNode(text)
 s = []
 while nodes:
     if nodes.feature[:2] == '名詞':
@@ -113,35 +124,32 @@ wc = WordCloud(width=480, height=320, background_color="white",
                font_path="/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc")
 wc.generate(" ".join(s))
 wc.to_file('wc3.png')
-</code></pre>
+</pre>
 
 <figure><img src="img/wc3.png" alt="流言蜚語ワードクラウド"></figure>
 
-<p>ちなみに，プログラム中にテキストを書き込むのは面倒なので，テキストは別ファイルにして，次のようにして読み込むのが楽です：</p>
+<p>ちなみに、プログラム中にテキストを書き込むのは面倒なので、テキストは別ファイルにして、次のようにして読み込むのが楽です：</p>
 
-<pre>
-<code>with open('filename.txt') as f:
+<pre class="cell">
+with open('filename.txt') as f:
     text = f.read()
-</code></pre>
+</pre>
 
-<p>ワードクラウド（タグクラウド）については，文科省の『高等学校学習指導要領（平成30年告示）解説 情報編』p.39 に次のように書かれています。</p>
+<p>ワードクラウド（タグクラウド）については、文科省の『高等学校学習指導要領（平成30年告示）解説 情報編』p.39 に次のように書かれています。</p>
 
 <blockquote style="text-indent: 1em">
-<p>更に，テキストマイニングの学習として，新聞記事や小説などをテキストデータとして読み込み，適当な整形等を行った上で，単語の出現頻度について調べさせ，出現頻度に応じた文字の大きさで単語を一覧表示したタグクラウドを作らせ，単語の重要度や他の単語との関係性を捉える学習活動などが考えられる。英語と日本語では，テキストマイニングをする際にどのような部分に違いがあるのかについて討論したり，実際にテキストマイニングを行って比較したりする活動なども考えられる。</p>
+<p>更に、テキストマイニングの学習として、新聞記事や小説などをテキストデータとして読み込み、適当な整形等を行った上で、単語の出現頻度について調べさせ、出現頻度に応じた文字の大きさで単語を一覧表示したタグクラウドを作らせ、単語の重要度や他の単語との関係性を捉える学習活動などが考えられる。英語と日本語では、テキストマイニングをする際にどのような部分に違いがあるのかについて討論したり、実際にテキストマイニングを行って比較したりする活動なども考えられる。</p>
 </blockquote>
 
-<p>このため，<a href="https://textmining.userlocal.jp">AIテキストマイニング by ユーザーローカル</a>というサイトなどを使って実習している学校があります。</p>
+<p>このため、<a href="https://textmining.userlocal.jp">AIテキストマイニング by ユーザーローカル</a>というサイトなどを使って実習している学校があります。</p>
 
-<p>一方，テキストマイニングの専門家からはワードクラウドは評判が良くありません。例えば <a href="https://www.niemanlab.org/2011/10/word-clouds-considered-harmful/">Word clouds considered harmful</a> をご覧ください。</p>
+<p>一方、テキストマイニングの専門家からはワードクラウドは評判が良くありません。例えば <a href="https://www.niemanlab.org/2011/10/word-clouds-considered-harmful/">Word clouds considered harmful</a> をご覧ください。</p>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-06-05 08:52:44 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-17 11:40:08 JST</time></p>
+</footer>
 </body>
 </html>

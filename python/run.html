@@ -19,36 +19,7 @@
 
 <p>Python 3 を実行するには、いろいろな方法があります。初心者はまず Google Colab で実行してみましょう。</p>
 
-<h2>Google Colab を使う</h2>
-
-<p>Google Colaboratory（グーグル・コラボラトリー、略称 Google Colab（コラブ））を使えば Web 上で Python が使えます。ただし、Google のアカウントが必要です。無料です（<a href="https://colab.research.google.com/signup">有料版</a>もあります）。古いブラウザでは使えなかったり <span class="keytop">Shift</span> + <span class="keytop">Enter</span> がうまくいかなかったりするようです。</p>
-
-<p><a href="https://colab.research.google.com/">Google Colaboratory</a> にアクセスしてください。上にオレンジ色の帯のあるポップアップが出れば、一番下の「ノートブックを新規作成」をクリックします。ポップアップが出なかったら、上の「ファイル」メニューから「ノートブックを新規作成」を選びます。</p>
-
-<p>コードセル（カーソルの点滅しているところ）に何か計算式を入れてみましょう。例えば</p>
-
-<pre class="cell">
-2+3
-</pre>
-
-<p>と打ち込んで、<span class="keytop">Shift</span> + <span class="keytop">Enter</span> します。答え（上の計算の場合は 5）が現れ、その下に新しいコードセルが出ます。</p>
-
-<div class="note">
-<p>ブラウザによっては <span class="keytop">Shift</span> + <span class="keytop">Enter</span> がうまく効かないことがあるようです。その場合は ● ▷ のボタンをクリックすれば実行されます。ただ、新しいコードセルが出ませんので、「+ コード」ボタンを押してコードセルを追加します。</p>
-</div>
-
-<p>あとは<a href="first.html">Pythonの初歩</a>を見ながらいろいろ試してください。</p>
-
-<p>ちなみに、動いているPythonのバージョンは次のようにして確かめられます。</p>
-
-<pre class="cell">
-import sys
-sys.version
-</pre>
-
-<pre>
-'3.7.13 (default, Apr 24 2022, 01:04:09) \n[GCC 7.5.0]'
-</pre>
+<p>Google Colab については<a href="colab.html">別ページ</a>に移しました。</p>
 
 <h2>python コマンド（REPL）</h2>
 
@@ -190,7 +161,7 @@ $ python3 -c 'x=2;y=32;print(x**y)'
 
 <h2>Jupyter Notebook</h2>
 
-<p><a href="https://jupyter.org">Jupyter Notebook</a>（ジュピター・ノートブック）はブラウザ上で使える Mathematica Notebook のような環境です。もともと Julia、Python、R などをサポートするということで Jupyter という名前になったようですが、今は40以上の言語に対応しています。もしインストールされていなかったなら、<code>pip install jupyter</code> でインストールできます。</p>
+<p><a href="https://jupyter.org">Jupyter Notebook</a>（ジュピター・ノートブック）はブラウザ上で使える Mathematica Notebook のような環境です。もともと Julia、Python、R をサポートするということで Jupyter という名前になったようですが、今は40以上の言語に対応しています。もしインストールされていなかったなら、<code>pip install jupyter</code> でインストールできます。</p>
 
 <p>ターミナルに</p>
 
@@ -232,7 +203,9 @@ jupyter notebook stop
 jupyter lab
 </pre>
 
-<p>と打てば立ち上がります。使い方は Jupyter Notebook と同様です。</p>
+<p>と打てば立ち上がります。</p>
+
+<p>使い方は Jupyter Notebook とほぼ同様です。最初に Launcher（ローンチャーだけれど日本ではよくランチャーと呼ぶ）という画面が出ますので、Notebook の Python 3 を選びます。</p>
 
 <h2>Spyder</h2>
 
@@ -277,12 +250,9 @@ jupyter lab
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-08-04 10:01:04 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-18 21:36:30 JST</time></p>
+</footer>
 </body>
 </html>

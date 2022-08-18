@@ -29,17 +29,17 @@ font.weight: 400
 
 <p>テストコード：</p>
 
-<pre>
+<pre class="cell">
 import matplotlib.pyplot as plt
 
-plt.plot([-1,1])
-plt.title('日本語タイトル')
+plt.plot([-1, 1])
+plt.title("日本語タイトル")
 
-plt.savefig('filename.png', bbox_inches="tight")
-plt.savefig('filename.jpg', bbox_inches="tight")
-plt.savefig('filename.pdf', bbox_inches="tight")
-plt.savefig('filename.svg', bbox_inches="tight")
-plt.savefig('filename.svgz', bbox_inches="tight")
+plt.savefig("filename.png", bbox_inches="tight")
+plt.savefig("filename.jpg", bbox_inches="tight")
+plt.savefig("filename.pdf", bbox_inches="tight")
+plt.savefig("filename.svg", bbox_inches="tight")
+plt.savefig("filename.svgz", bbox_inches="tight")
 </pre>
 
 <p>filename.png (24616バイト)</p>
@@ -61,6 +61,25 @@ plt.savefig('filename.svgz', bbox_inches="tight")
 <p>filename.svgz (6316バイト)</p>
 
 <figure><img src="img/filename.svgz" alt="svgz"></figure>
+
+<p>フォントを埋め込まないSVG：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+
+plt.rcParams["font.family"] = ["sans-serif"]
+plt.rcParams["font.weight"] = "normal"
+plt.rcParams["svg.fonttype"] = "none"
+
+plt.plot([-1, 1])
+plt.title("日本語タイトル")
+
+plt.savefig("filename2.svg", bbox_inches="tight")
+</pre>
+
+<p>filename2.svg (8612バイト)</p>
+
+<figure><img src="img/filename2.svg" alt="svg"></figure>
 
 <p>拡張子 svgz のファイルは，単に svg を gzip で圧縮しただけのものである。これをファイルとして開いて表示できるブラウザは残念ながらなさそうである。ネット越しなら，svg を表示できるブラウザは svgz も表示できる。ただし，そのためにはまず，Webサーバの /etc/mime.types に</p>
 
@@ -90,7 +109,7 @@ AddEncoding gzip svgz
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-31 16:08:05 JST</time>
+Last modified: <time>2022-08-18 20:24:14 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -22,34 +22,34 @@
 <p>ここでは <a href="https://github.com/lincolnloop/python-qrcode">Pure python QR Code generator</a> を使ってみます。<code>pip install qrcode</code> などとしてインストールします（<code>pillow</code> も使われます）。Python ライブラリだけでなく，<code>qr</code> というスクリプトもインストールされます。Mac のターミナルまたは Windows のコマンドプロンプト等で</p>
 
 <pre>
-<code>qr '奥村晴彦です' &gt; test.png
-</code></pre>
+qr '奥村晴彦です' &gt; test.png
+</pre>
 
 <p>として全角文字のQRコードも正しく生成できます（Windows の VS Code のターミナルではうまくいかないという報告があります）。</p>
 
 <p>Google Colab でもうまくいくようです。</p>
 
 <pre>
-<code>!pip install qrcode
+!pip install qrcode
 !qr '奥村晴彦です' &gt; test.png
-</code></pre>
+</pre>
 
 <p>これで test.png というファイルができているので左ペインからダウンロードして表示します。あるいは，Google Colab のノートブックの中に表示したいのであれば次のようにします。</p>
 
 <pre>
-<code>from IPython.display import Image
+from IPython.display import Image
 Image("test.png")
-</code></pre>
+</pre>
 
 <p>コマンドラインではなく Python だけで処理するには次のようにします：</p>
 
 <pre>
-<code>import qrcode
+import qrcode
 
 img = qrcode.make('奥村晴彦です')
 img.show()           # 表示
 img.save("test.png") # 保存
-</code></pre>
+</pre>
 
 <p>ほかに <a href="https://pypi.org/project/qrcodegen/">qrcodegen</a> や，<a href="https://pypi.org/project/PyQRCode/">PyQRCode</a> からフォークした <a href="https://pypi.org/project/PyQRCodeNG/">PyQRCodeNG</a> など，多数のQRコード生成ライブラリがあるようです。</p>
 
@@ -58,7 +58,7 @@ img.save("test.png") # 保存
 <p>QRコードを読むためのライブラリとして，ここでは <a href="https://pypi.org/project/pyzbar/">pyzbar</a> を使ってみます。インストールは <code>pip install pyzbar</code> です。Mac ではあらかじめ <code>brew install zbar</code> として zbar を入れておきます。次のような実行ファイル qrdecode.py を作っておくと便利です。パスの通ったところに置いておき <code>qrdecode.py *.png *.jpg</code> などとすれば画像からQRコードを見つけて復号してくれるはずです。ファイル名を与えなければクリップボードから画像を読みます。Macなら Control + Shift + Command + 4 でQRコードを含む部分をマウスで選択してから実行します。</p>
 
 <pre>
-<code>#! /usr/bin/env python3
+#! /usr/bin/env python3
 
 import sys
 from pyzbar.pyzbar import decode
@@ -75,22 +75,21 @@ if len(sys.argv) == 1:
 else:
     for arg in sys.argv[1:]:
         qrdecode(Image.open(arg))
-</code></pre>
+</pre>
 
 <p>実はこれはQRコードだけでなく通常のバーコードも読めます。</p>
 
+<!--
 <div class="note">
 <p>M1 Macのarm64版Homebrewで入れたminiforgeのPythonではpyzbarを <code>conda install pyzbar</code> でインストールした。zbarライブラリは <code>brew install zbar</code> で入るが，パスの関係で見つけられないようだ。とりあえず <del><code>ln -s /opt/homebrew/lib/libzbar.dylib /opt/homebrew/Caskroom/miniforge/base/lib/</code></del> <ins><code>ln -s /opt/homebrew/lib/libzbar.dylib ~/miniforge3/lib/</code></ins> のようにシンボリックリンクを張れば大丈夫なようだ。</p>
 </div>
+-->
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-02-06 09:12:52</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-19 08:51:37 JST</time></p>
+</footer>
 </body>
 </html>

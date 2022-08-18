@@ -17,12 +17,12 @@
 
 <h1>Collatzの問題</h1>
 
-<p>1937年にドイツの数学者Collatz（コラッツ）が，「ある数が偶数なら2で割り，奇数なら3倍して1を足す。これを繰り返すとすべての数は1になるだろう」と予想しましたが，だれもそれを証明することができていません（ウィキペディアの<a href="https://ja.wikipedia.org/wiki/コラッツの問題">コラッツの問題</a>参照）。<a href="https://mathprize.net/ja/posts/collatz-conjecture/">証明できたら1億2000万円もらえる</a>そうです。</p>
+<p>1937年にドイツの数学者Collatz（コラッツ）が、「ある数が偶数なら2で割り、奇数なら3倍して1を足す。これを繰り返すとすべての数は1になるだろう」と予想しましたが、だれもそれを証明することができていません（ウィキペディアの<a href="https://ja.wikipedia.org/wiki/コラッツの問題">コラッツの問題</a>参照）。<a href="https://mathprize.net/ja/posts/collatz-conjecture/">証明できたら1億2000万円もらえる</a>そうです。</p>
 
 <p>Pythonのプログラムで調べてみましょう。</p>
 
-<pre>
-<code>def collatz(n):
+<pre class="cell">
+def collatz(n):
     print(n, end="")
     while (n &gt; 1):
         if (n % 2 == 0):
@@ -31,41 +31,41 @@
             n = 3 * n + 1
         print(" →", n, end="")
     print()
-</code></pre>
+</pre>
 
 <p>ここで <code>n % 2</code> はnを2で割った余りです。</p>
 
 <p>例えば <code>collatz(3)</code> と打つと次のように出ます。</p>
 
 <pre>
-<code>3 → 10 → 5 → 16 → 8 → 4 → 2 → 1
-</code></pre>
+3 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+</pre>
 
-<p>いろいろな数から出発して，Collatzの予想が正しいかどうか確かめてください。Pythonの整数はどんな大きな数でも扱えますので，桁あふれする心配はありません。</p>
+<p>いろいろな数から出発して、Collatzの予想が正しいかどうか確かめてください。Pythonの整数はどんな大きな数でも扱えますので、桁あふれする心配はありません。</p>
 
-<p>なお，<code>n = n // 2</code> は <code>n //= 2</code> と書くこともできます。同様に，<code>n = n + 1</code> は <code>n += 1</code> と書けます。</p>
+<p>なお、<code>n = n // 2</code> は <code>n //= 2</code> と書くこともできます。同様に、<code>n = n + 1</code> は <code>n += 1</code> と書けます。</p>
 
 <div class="note">
-<p><code>n // 2</code> は <code>n</code> を2で割った整数の商を求めます。実は，ここでは <code>n</code> は偶数ですので，単に <code>n / 2</code> としてもかまいません。</p>
+<p><code>n // 2</code> は <code>n</code> を2で割った整数の商を求めます。ここでは <code>n</code> は偶数ですので、単に <code>n / 2</code> としてもかまいません。ただ、<code>n / 2</code> だと浮動小数点の割り算になり，<code>n</code> が非常に大きい場合にうまくいかない可能性があります。Python は整数についてはどんなに大きな値でも正確に計算します（メモリに入る限り）。</p>
 </div>
 
 <div class="note">
-<p><code>n = n + 1</code> と <code>n += 1</code> では，前者は <code>n</code> を2回評価し，後者は <code>n</code> を1回しか評価しないという違いがあります。評価することによって副作用が生じる場合は，結果が違うことがありますが，上のような単純な例では，まったく違いがないと考えて差し支えありません。<code>n += 1</code> のほうが必ずしも実行が速いというわけでもありません。</p>
+<p><code>n = n + 1</code> と <code>n += 1</code> では、前者は <code>n</code> を2回評価し、後者は <code>n</code> を1回しか評価しないという違いがあります。評価することによって副作用が生じる場合は、結果が違うことがありますが、上のような単純な例では、まったく違いがないと考えて差し支えありません。<code>n += 1</code> のほうが必ずしも実行が速いというわけでもありません。</p>
 </div>
 
 <p>入力を促すためには次のようにします：</p>
 
-<pre>
-<code>n = int(input('正の整数を入力してください: '))
+<pre class="cell">
+n = int(input("正の整数を入力してください: "))
 collatz(n)
-</code></pre>
+</pre>
 
-<p>関数 <code>input()</code> はキーボード入力を文字列として読み込みます。整数にしたいときは <code>int()</code>，浮動小数点数にしたいときは <code>float()</code> で変換します。</p>
+<p>関数 <code>input()</code> はキーボード入力を文字列として読み込みます。整数にしたいときは <code>int()</code>、浮動小数点数にしたいときは <code>float()</code> で変換します。</p>
 
-<p>Collatz の問題で，最後は 1 になるとしても，途中でどれくらい大きい数になるでしょうか。これを調べるための関数を作ってみましょう：</p>
+<p>Collatz の問題で、最後は 1 になるとしても、途中でどれくらい大きい数になるでしょうか。これを調べるための関数を作ってみましょう：</p>
 
-<pre>
-<code>def collatz_max(n):
+<pre class="cell">
+def collatz_max(n):
     nmax = n
     while (n &gt; 1):
         if (n % 2 == 0):
@@ -75,18 +75,18 @@ collatz(n)
             if n &gt; nmax:
                 nmax = n
     return nmax
-</code></pre>
+</pre>
 
 <p>これは <code>n</code> が大きくなるにつれてどれくらい大きくなるでしょうか。</p>
 
-<pre>
-<code>mmax = 0
+<pre class="cell">
+mmax = 0
 for n in range(10000):
     m = collatz(n)
     if m &gt; mmax:
         print(n, m)
         mmax = m
-</code></pre>
+</pre>
 
 <p><code>range()</code> の数をもっと大きくしてやってみましょう。</p>
 
@@ -96,12 +96,9 @@ for n in range(10000):
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-02-21 14:17:54</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-17 20:30:54 JST</time></p>
+</footer>
 </body>
 </html>

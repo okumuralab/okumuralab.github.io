@@ -19,30 +19,46 @@
 
 <p>Python には小さい順に並べ替える関数が二つあります。<code>sort()</code> と <code>sorted()</code> です。この違いを，例で体験してみましょう。</p>
 
+<pre class="cell">
+a = [3, 5, 2, 4, 1]   # 適当なリストを作る
+sorted(a)             # 並べ替えたリストを返す
+</pre>
+
 <pre>
-<code>In [ ]: a = [3, 5, 2, 4, 1]   # 適当なリストを作る
+[1, 2, 3, 4, 5]       # 並べ変わっている
+</pre>
 
-In [ ]: sorted(a)             # 並べ替えたリストを返す
-Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
+<pre class="cell">
+a                     # 元のリスト a は
+</pre>
 
-In [ ]: a                     # 元のリスト a は
-Out[ ]: [3, 5, 2, 4, 1]       # 並べ変わっていない
+<pre>
+[3, 5, 2, 4, 1]       # 並べ変わっていない
+</pre>
 
-In [ ]: a.sort()              # リストをその場で並べ替える
+<pre class="cell">
+a.sort()              # リストをその場で並べ替える
+a                     # 元のリスト a が
+</pre>
 
-In [ ]: a                     # 元のリスト a が
-Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
+<pre>
+[1, 2, 3, 4, 5]       # 並べ変わっている
+</pre>
 
-In [ ]: sorted("I have an apple".lower().split())
-Out[ ]: ['an', 'apple', 'have', 'i']  # 文字列は辞書順に
-</code></pre>
+<pre class="cell">
+sorted("I have an apple".lower().split())
+</pre>
+
+<pre>
+['an', 'apple', 'have', 'i']  # 文字列は辞書順に
+</pre>
 
 <p>デフォルトでは昇順になります。降順にするには <code>reverse=True</code> というオプションを与えます。</p>
 
 <p>並べ替えをする簡単な関数を作ってみましょう。いろいろなアルゴリズムがありますが，次のものは選択ソート（selection sort）というものです：</p>
 
-<pre>
-<code>def selectsort(a):
+<pre class="cell">
+def selectsort(a):
     n = len(a)
     for i in range(n - 1):
         k = i
@@ -50,25 +66,26 @@ Out[ ]: ['an', 'apple', 'have', 'i']  # 文字列は辞書順に
             if a[j] &lt; a[k]:
                 k = j
         a[i], a[k] = a[k], a[i]
-</code></pre>
+</pre>
 
 <p>最後の行は <code>a[i]</code> と <code>a[k]</code> の値を交換しています。Python ならこのように簡単に書けます。</p>
 
 <p>うまくいくか試してみましょう：</p>
 
+<pre class="cell">
+a = [3, 5, 2, 4, 1]   # 適当なリストを作る
+selectsort(a)         # うまくいくかな？
+a                     # 元のリスト a は
+</pre>
+
 <pre>
-<code>In [ ]: a = [3, 5, 2, 4, 1]   # 適当なリストを作る
-
-In [ ]: selectsort(a)         # うまくいくかな？
-
-In [ ]: a                     # 元のリスト a は
-Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
-</code></pre>
+[1, 2, 3, 4, 5]       # 並べ変わっている
+</pre>
 
 <p>もっと速いアルゴリズムとしてクイックソート（quicksort）が知られています：</p>
 
-<pre>
-<code>def quicksort(a, first=0, last=None):
+<pre class="cell">
+def quicksort(a, first=0, last=None):
     if last is None:
         last = len(a) - 1
     x = a[(first + last) // 2]
@@ -88,7 +105,7 @@ Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
         quicksort(a, first, i - 1)
     if j + 1 &lt; last:
         quicksort(a, j + 1, last)
-</code></pre>
+</pre>
 
 <div class="note">
 <p><code>def quicksort(a, first=0, last=len(a)-1):</code> としたいかもしれませんが，Python の引数のデフォルトの値は関数定義を評価したときに決まってしまうので，期待した動作になりません。ここでは，何もないことを表すオブジェクト <code>None</code> をデフォルトの値として，関数の実行時にもし <code>None</code> であれば <code>len(a) - 1</code> に置き換えています。<code>if last is None:</code> は <code>if last == None:</code> と似ていますが <code>==</code> は値の比較，<code>is</code> はオブジェクトのアドレスの比較です。後者の方が速く，しかも <code>==</code> のようにオーバーライド（上書き）できないので確実な比較ができます。</p>
@@ -96,59 +113,74 @@ Out[ ]: [1, 2, 3, 4, 5]       # 並べ変わっている
 
 <p>時間を比べてみましょう。Wall time が実時間（壁にかかっている時計で計った時間）です：</p>
 
+<pre class="cell">
+import numpy as np
+
+rng = np.random.default_rng()
+a = rng.random(10000)
+
+%time selectsort(a)
+</pre>
+
 <pre>
-<code>In [ ]: import numpy as np
-
-In [ ]: rng = np.random.default_rng()
-
-In [ ]: a = rng.random(10000)
-
-In [ ]: %time selectsort(a)
 CPU times: user 19.1 s, sys: 10.3 ms, total: 19.1 s
 Wall time: 19.1 s
+</pre>
 
-In [ ]: a = rng.random(10000)
+<pre class="cell">
+a = rng.random(10000)
+%time quicksort(a)
+</pre>
 
-In [ ]: %time quicksort(a)
+<pre>
 CPU times: user 82.3 ms, sys: 3.79 ms, total: 86.1 ms
 Wall time: 84.8 ms
-</code></pre>
+</pre>
 
 <p>Python の <code>sort()</code> や <code>sorted()</code> は <a href="https://en.wikipedia.org/wiki/Timsort">Timsort</a> というアルゴリズムを使っています。</p>
 
 <p>NumPy にも整列の関数があります。</p>
 
-<pre>
-<code>In [ ]: a = rng.random(10000)
+<pre class="cell">
+a = rng.random(10000)
+%time a.sort() # aを上書きする
+</pre>
 
-In [ ]: %time a.sort() # aを上書きする
+<pre>
 CPU times: user 702 µs, sys: 452 µs, total: 1.15 ms
 Wall time: 593 µs
+</pre>
 
-In [ ]: a = rng.random(10000)
+<pre class="cell">
+a = rng.random(10000)
+time b = np.sort(a) # aを上書きしない
+</pre>
 
-In [ ]: %time b = np.sort(a) # aを上書きしない
+<pre>
 CPU times: user 811 µs, sys: 647 µs, total: 1.46 ms
 Wall time: 817 µs
-</code></pre>
+</pre>
 
 <p>こちらは降順に並べ替えるオプションはありませんが，<code>a[::-1]</code> で逆順にできます。あるいは実際には並べ替えをせず並べ替えた順序だけを返す <code>np.argsort()</code> を使えば逆順もできます。</p>
 
+<pre class="cell">
+a = np.array([3, 5, 2, 4, 1])
+o = np.argsort(a)
+a[o]
+</pre>
+
 <pre>
-<code>In [ ]: a = np.array([3, 5, 2, 4, 1])
+array([1, 2, 3, 4, 5])
+</pre>
 
-In [ ]: o = np.argsort(a)
+<pre class="cell">
+o = np.argsort(-a)
+a[o]
+</pre>
 
-In [ ]: a[o]
-
-Out[ ]: array([1, 2, 3, 4, 5])
-
-In [ ]: o = np.argsort(-a)
-
-In [ ]: a[o]
-
-Out[ ]: array([5, 4, 3, 2, 1])
-</code></pre>
+<pre>
+array([5, 4, 3, 2, 1])
+</pre>
 
 <hr>
 
@@ -160,7 +192,8 @@ Out[ ]: array([5, 4, 3, 2, 1])
 
 <p>さらに念のため，これをそのままテキスト化したもの：</p>
 
-<pre><code>def quicksort(a,start,end):
+<pre class="cell">
+def quicksort(a,start,end):
     m = int((start+end)/2)
     i = start
     j = end
@@ -189,18 +222,15 @@ a = [7,22,11,34,17,52,26,13,40,20,10,5,16,8,4,2,1]
 print("ソート前",a)
 quicksort(a,0,len(a)-1)
 print("ソート後",a)
-</code></pre>
+</pre>
 
 <p>[追記] 上記クイックソートのバグは「正誤表」で訂正されました：<a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">高等学校情報科教員研修用教材</a></p>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-08-06 15:10:38</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-17 21:58:43 JST</time></p>
+</footer>
 </body>
 </html>

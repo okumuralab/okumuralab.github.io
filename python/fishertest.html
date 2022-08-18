@@ -46,15 +46,15 @@ fisher_exact([[3, 2], [1, 4]])
 (6.0, 0.523809523809524)
 </pre>
 
-<p>返ってくるのはオッズ比と<i>p</i>値です。Rの <code>fisher.test()</code> と違って、こちらの <code>[[a, b], [c, d]]</code> のオッズ比は <code>(a/b)/(c/d)</code> と同じです。</p>
+<p>返ってくるのはオッズ比と <i lang="en">p</i> 値です。Rの <code>fisher.test()</code> と違って、こちらの <code>[[a, b], [c, d]]</code> のオッズ比は <code>(a/b)/(c/d)</code> と同じです。オッズ比の2通りの求め方については<a href="../stat/2by2.html">2×2の表，オッズ比，相対危険度</a>もご覧ください。オッズ比を報告する際には <code>(a/b)/(c/d)</code> のほうでいいと思います。</p>
 
-<p>残念ながら2×2行列しか扱えません。より大きな行列を扱うには <a href="https://pypi.org/project/FisherExact/">FisherExact</a> や <a href="https://github.com/boussoffara/fexact">fexact</a> があるようですが、<a href="rpy2.html">rpy2</a> 等を使ってPythonからRを呼び出すのがいいかもしれません。</p>
+<p><code>fisher_exact()</code> は残念ながら2×2行列しか扱えません。より大きな行列を扱うには <a href="https://pypi.org/project/FisherExact/">FisherExact</a> や <a href="https://github.com/boussoffara/fexact">fexact</a> があるようですが、<a href="rpy2.html">rpy2</a> 等を使ってPythonからRを呼び出すのがいいかもしれません。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-09 21:46:37 JST</time></p>
+<p>Last modified: <time>2022-08-17 21:32:41 JST</time></p>
 </footer>
 </body>
 </html>

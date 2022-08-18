@@ -23,11 +23,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-x = np.linspace(0, 2 * np.pi, 101)  # 区間[0,2π]を100等分する101点
+x = np.linspace(0, 2 * np.pi)
 plt.plot(x, np.sin(x))
 </pre>
 
-<p>コサインも追加してみましょう：</p>
+<div class="note">
+<p>詳しく説明すると、<code>np.linspace(start, stop, num)</code> は、<code>start</code> から <code>stop</code> まで両端を含む <code>num</code> 個の等間隔な値を返します。例えば <code>np.linspace(1, 2, 5)</code> は <code>array([1., 1.25, 1.5, 1.75, 2.])</code> を返します。上の例のように <code>num</code> を省略すると <code>num</code> = 50 になります（49等分して50点を返す）。もっと滑らかに描きたい場合は、適当に大きな値にします。</p>
+</div>
+
+<p>コサインも追加してみましょう（Google Colab や Jupyter Notebook なら上のセルに追加します）：</p>
 
 <pre>
 plt.plot(x, np.cos(x))
@@ -39,45 +43,42 @@ plt.plot(x, np.cos(x))
 plt.legend(["sin x", "cos x"])
 </pre>
 
-<p>タンジェントも加えてみましょう：</p>
+<p>タンジェントも加えてみましょう（凡例も置き換えます）：</p>
 
 <pre>
 plt.plot(x, np.tan(x))
+plt.legend(["sin x", "cos x", "tan x"])
 </pre>
 
-<p>あれれ，おかしくなりましたか。y の範囲を限定しましょう：</p>
-
-<pre>
-plt.ylim(-2, 2)
-</pre>
-
-<p>最終版：</p>
+<p>あれれ，おかしくなりましたか。ちょっと工夫してみましょう：</p>
 
 <pre class="cell">
 import matplotlib.pyplot as plt
 import numpy as np
 
-plt.clf()
-x = np.linspace(0, 2 * np.pi, 101)
+x = np.linspace(0, 2 * np.pi)
 plt.plot(x, np.sin(x))
 plt.plot(x, np.cos(x))
-eps = 0.000001
+eps = 0.4
 x1 = np.linspace(0, np.pi/2 - eps)
 x2 = np.linspace(np.pi/2 + eps, 3*np.pi/2 - eps)
 x3 = np.linspace(3*np.pi/2 + eps, 2*np.pi)
-plt.plot(x1, np.tan(x1))
-plt.plot(x2, np.tan(x2), color="C2")  # 色: C0，C1，C2，…
+plt.plot(x1, np.tan(x1), color="C2")
+plt.plot(x2, np.tan(x2), color="C2")
 plt.plot(x3, np.tan(x3), color="C2")
-plt.ylim(-2, 2)
 plt.legend(["sin x","cos x", "tan x"])
 plt.axhline(linewidth=0.5, color="black")  # x軸
 </pre>
+
+<figure><img src="img/curve.svg" alt="サイン・コサイン・タンジェント"></figure>
+
+<p>色は <code>"C0"</code>（青）、<code>"C1"</code>（橙）、<code>"C2"</code>（緑）と自動で変わっていきますが、タンジェントだけ3個に分けて描いているので、同じ色（ここでは <code>"C2"</code>）に設定しました。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-16 20:32:11 JST</time></p>
+<p>Last modified: <time>2022-08-18 13:11:44 JST</time></p>
 </footer>
 </body>
 </html>

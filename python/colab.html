@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/colab.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Google Colaboratory</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+.frame { border: 0.05em solid; padding:0.2em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Google Colaboratory</h1>
+
+<h2>はじめての Google Colab</h2>
+
+<p>Google Colaboratory（グーグル・コラボラトリー、略称 Google Colab（コラブ））を使えば Web 上で Python が使えます。ただし、Google のアカウントが必要です。無料です（<a href="https://colab.research.google.com/signup">有料版</a>もあります）。</p>
+
+<p>古いブラウザでは使えなかったり <span class="keytop">Shift</span> + <span class="keytop">Enter</span> がうまくいかなかったりするようです。最新の Chrome か Safari か Firefox を使いましょう。</p>
+
+<p><a href="https://colab.research.google.com/">Google Colaboratory</a> にアクセスしてください。上にオレンジ色の帯のあるポップアップが出れば、一番下の「ノートブックを新規作成」をクリックします。ポップアップが出なかったら、左上の「ファイル」メニューから「ノートブックを新規作成」を選びます。</p>
+
+<p>コードセル（カーソルの点滅しているところ）に何か計算式を入れてみましょう。例えば</p>
+
+<pre class="cell">
+2+3
+</pre>
+
+<p>と打ち込んで、<span class="keytop">Shift</span> + <span class="keytop">Enter</span> します。答え（上の計算の場合は 5）が現れ、その下に新しいコードセルが出ます。</p>
+
+<div class="note">
+<p>ブラウザによっては <span class="keytop">Shift</span> + <span class="keytop">Enter</span> がうまく効かないことがあるようです。その場合は ● ▷ のボタンをクリックすれば実行されます。ただ、新しいコードセルが出ませんので、「+ コード」ボタンを押してコードセルを追加します。</p>
+</div>
+
+<p>あとは<a href="first.html">Pythonの初歩</a>を見ながらいろいろ試してください。</p>
+
+<h2>ノートブックとして使う</h2>
+
+<p>Google Colaboratory は Jupyter Notebook（ジュピター・ノートブック）をベースに作られたもので、コード（プログラム）とテキスト（マークダウン形式の文書）を織り交ぜて、作業内容を記述できます。</p>
+
+<p>セルのほんの少し上、または一番下のセルのすぐ下にマウスを乗せると、細い横線が現れ、中央に</p>
+
+<p style="text-align:center">————<span class="frame">+ コード</span>——<span class="frame">+ テキスト</span>————</p>
+
+<p>という二つのボタンが現れます。これを使って、好きな位置に新しいセルを追加できます。</p>
+
+<p>ここでは一番上のセルの上で <span class="frame">+ テキスト</span> をクリックして、テキストセルを追加してみましょう。小さいワープロのような枠が現れます。この中に、コード中のコメントだけでは表せない説明を書き込みます。特に、一番上のテキストセルの最初の行は、このノートブックの題名を書きます。その際、次の例のような「マークダウン」（Markdown）と呼ばれる記法を使います：</p>
+
+<pre>
+# 日本の出生率の推移
+
+以下では厚労省のデータをもとに日本の出生率の推移を考察する。
+</pre>
+
+<p>セルの右側にプレビューが現れます。頭に <code>#</code> を付けた行だけ題名用の大きなフォントで表示されます。このような記法がマークダウン記法です。同様に、<code>##</code> を付けた行（節見出し）は、題名よりもやや小さく本文より大きいフォントになります。</p>
+
+<p>頭に <code>#</code> を付けなかった行は、普通の本文です。空の行を挟むと、そこで段落が区切られます。</p>
+
+<p>TeX 形式の数式も使えます。本文中に <code>アインシュタインは $E=mc^2$ と言った。</code> のように数式を挿入したり、独立した行に</p>
+
+<pre>
+$$ \int_0^\infty f(x)dx $$
+</pre>
+
+<p>のように中央揃えの数式を挿入したりできます。</p>
+
+<p>テキストセルは、ダブルクリックすると、再編集できます。</p>
+
+<p>どのセルも、↑ ↓ ボタンで上下に移動できます。</p>
+
+<h2>データの読み込ませ方</h2>
+
+<p>Web で提供されているデータなら、URL 指定で読み込めるので簡単です：</p>
+
+<pre class="cell">
+import pandas as pd
+
+df = pd.read_csv("https://okumuralab.org/~okumura/python/data/pop2020.csv")
+</pre>
+
+<p>Web で提供されていないファイルを読み込ませるには、まずそのファイルを Google Colaboratory の仮想マシンに転送しなければなりません。左端にあるフォルダーマーク 🗂 をクリックすれば、Google Colaboratory のカレントディレクトリ <code>/content</code> の中身が見えます。<code>sample_data</code> というフォルダーがあり、練習用データがいくつか入っています。この中（<code>sample_data</code> の中ではなく、それと同じレベルの場所）にドラッグ＆ドロップでファイルを転送すれば、Python から簡単に読めます：</p>
+
+<pre class="cell">
+df = pd.read_csv("filename.csv")
+</pre>
+
+<p><code>sample_data</code> の中のものは、例えば次のようにして読めます：</p>
+
+<pre class="cell">
+df = pd.read_csv("sample_data/california_housing_train.csv")
+</pre>
+
+<h2>Google Colaboratory の中身</h2>
+
+<p>Google Colaboratory は一つの仮想マシンの上で実行されています。他人にじゃまされずに一つのマシンを無料で使うことができるので、たいへんありがたいサービスです。</p>
+
+<p>ちなみに、動いている OS や Python のバージョンは次のようにして確かめられます。2022年8月現在、Ubuntu 18.04 の Python 3.7.13 のようです。</p>
+
+<pre class="cell">
+!cat /etc/os-release
+</pre>
+
+<pre>
+NAME="Ubuntu"
+VERSION="18.04.6 LTS (Bionic Beaver)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 18.04.6 LTS"
+VERSION_ID="18.04"
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+VERSION_CODENAME=bionic
+UBUNTU_CODENAME=bionic
+</pre>
+
+<pre class="cell">
+import sys
+
+sys.version
+</pre>
+
+<pre>
+'3.7.13 (default, Apr 24 2022, 01:04:09) \n[GCC 7.5.0]'
+</pre>
+
+<p>GPUがあれば次のコマンドでわかります。</p>
+
+<pre class="cell">
+!nvidia-smi
+</pre>
+
+<p>インストールされている Python のパッケージは <code>!pip list</code> でわかります。2022年8月現在の主なものを挙げておきます。最新ではないけれども、まずまずの新しさです。</p>
+
+<pre>
+beautifulsoup4                4.6.3
+bokeh                         2.3.3
+folium                        0.12.1.post1
+graphviz                      0.10.1
+lxml                          4.9.1
+matplotlib                    3.2.2
+numba                         0.56.0
+numpy                         1.21.6
+opencv-python                 4.6.0.66
+openpyxl                      3.0.10
+pandas                        1.3.5
+Pillow                        7.1.2
+pystan                        3.3.0
+requests                      2.23.0
+rpy2                          3.4.5
+scikit-learn                  1.0.2
+scipy                         1.7.3
+seaborn                       0.11.2
+sympy                         1.7.1
+tensorflow                    2.9.1
+torch                         1.12.1+cu113
+tweepy                        3.10.0
+wordcloud                     1.8.2.2
+</pre>
+
+<p>新しいパッケージをインストールするには例えば次のようにします：</p>
+
+<pre class="cell">
+!pip install japanize-matplotlib
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-08-18 21:20:01 JST</time></p>
+</footer>
+</body>
+</html>

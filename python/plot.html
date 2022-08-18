@@ -19,11 +19,11 @@
 
 <h2>はじめに</h2>
 
-<p>Python によるプロット（グラフ描画）には <a href="https://matplotlib.org/">matplotlib</a>（マットプロットリブ）というライブラリを使うのが基本です。より高レベルのライブラリとして <a href="https://seaborn.pydata.org/">seaborn</a> がありますが、これは <a href="seaborn.html">seabornによるプロット</a> のページで説明します。</p>
+<p>Python によるプロット（グラフ描画）には <a href="https://matplotlib.org/">Matplotlib</a>（マットプロットリブ）というライブラリを使うのが基本です。より高レベルのライブラリとして <a href="https://seaborn.pydata.org/">seaborn</a> がありますが、これについては <a href="seaborn.html">seabornによるプロット</a> のページで説明します。</p>
 
-<h3>Google Colaboratory での利用</h3>
+<h3>Google Colaboratory や Jupyter Notebook での利用</h3>
 
-<p><a href="https://colab.research.google.com">Google Colaboratory</a> でノートブックを新規作成してください。まずはセルに次のように打ち込んで <span class="keytop">Shift</span> + <span class="keytop">Enter</span> し、matplotlib を読み込みます：</p>
+<p>まずはセルに次のように打ち込んで <span class="keytop">Shift</span> + <span class="keytop">Enter</span> します：</p>
 
 <pre class="cell">
 import matplotlib.pyplot as plt
@@ -35,7 +35,7 @@ import matplotlib.pyplot as plt
 plt.plot([-1, 1])
 </pre>
 
-<p>グラフの上に [&lt;matplotlib.lines.Line2D at 0x…………&gt;] のような行が表示されます。気にしなければいいのですが、気になるなら、セルの最後に <code>plt.show()</code> と打ち込みます：</p>
+<p>グラフの上に [&lt;matplotlib.lines.Line2D at 0x…………&gt;] のような行が表示されます。気にしなければいいのですが、気になるなら、セルの最後に <code>plt.show()</code> という行を追加します：</p>
 
 <pre class="cell">
 plt.plot([-1, 1])
@@ -49,7 +49,7 @@ plt.plot([-1, 1]);
 </pre>
 </div>
 
-<p>Google Colaboratoryのデフォルトのフォントでは日本語（いわゆる全角文字）が出ません。うまくいかない例：</p>
+<p>Google Colaboratory のデフォルトのフォントでは日本語（いわゆる全角文字）が出ません。うまくいかない例：</p>
 
 <pre class="cell">
 plt.plot([-1, 1])
@@ -58,7 +58,7 @@ plt.ylabel("縦軸")
 plt.show()
 </pre>
 
-<p>エラーがいくつか出て、文字が □□ のような豆腐になります。</p>
+<p>エラーがいくつか出て、文字が □□ のような豆腐になります。自分のマシンで Jupyter Notebook を動かしている場合は、下の「コマンドでの利用」を見て、フォントを設定してください。でも、Google Colaboratory の場合は、そもそも日本語対応のフォントがないので、やや面倒です。</p>
 
 <p>日本語を使わなければいいのですが、使いたい場合は、簡単な解決策として <a href="https://qiita.com/uehara1414/items/6286590d2e1ffbf68f6c">pip install して import するだけで matplotlib を日本語表示対応させる</a> で紹介されている <code>japanize-matplotlib</code> というライブラリを使うのが簡単です。新しいセルに</p>
 
@@ -81,39 +81,42 @@ plt.ylabel("縦軸")
 plt.show()
 </pre>
 
-<p>の中にカーソルを持っていき、<span class="keytop">Shift</span> + <span class="keytop">Enter</span> します。ちゃんと「横軸」「縦軸」の文字が出たでしょうか。</p>
+<p>の中にカーソルを持っていき、再度 <span class="keytop">Shift</span> + <span class="keytop">Enter</span> します。ちゃんと「横軸」「縦軸」の文字が出たでしょうか。</p>
 
-<p>これで当分の間は <code>!pip install japanize-matplotlib</code> は不要で、ライブラリをインポートする際に</p>
+<p>Google Colaboratory の仮想マシンはときどきリセットされます。<code>import japanize_matplotlib</code> がうまくいかなくなったら、<code>!pip install japanize-matplotlib</code> をやりなおしてください。</p>
 
-<pre class="cell">
-import matplotlib.pyplot as plt
-import japanize_matplotlib
-</pre>
-
-<p>のようにすれば、日本語が使えるはずです（エラーになったら <code>!pip install japanize-matplotlib</code> を再実行してください）。</p>
-
-<p>図の大きさのデフォルトは 6.4 × 4.8 インチで、dpi 値（dots per inch）は 100 なので、ピクセル数にすれば 640 × 480 です。これを変えるには次のように横・縦のインチ数で指定します。</p>
+<p>Google Colab や Jupyter Notebook では、余白を含めた図の大きさのデフォルトは 6.0 × 4.0 インチ、dpi（dots per inch）値は 72 なので、ピクセル数にすれば最大 432 × 288 です（ダウンロードした画像ファイルは余白を含まないのでこれより小さくなります）。画像サイズを変えるには次のように横・縦のインチ数で指定します。</p>
 
 <pre class="cell">
-plt.figure(figsize=(8, 6))  # デフォルト (6.4, 4.8)
+plt.figure(figsize=(8, 6))
 plt.plot([-1, 1])
 </pre>
 
-<p>図はドラッグ＆ドロップでダウンロードできます。デフォルトではPNG形式の画像になります。</p>
+<p>図はドラッグ＆ドロップでダウンロードできます。デフォルトでは PNG 形式の画像です。</p>
+
+<div class="note">
+<p>自分のマシンでコマンドで実行した場合と同じ図の大きさにデフォルトを変えるには次のようにします：</p>
+<pre class="cell">
+plt.rcParams["figure.figsize"] = [6.4, 4.8]
+plt.rcParams["figure.dpi"] = 100.0
+</pre>
+</div>
 
 <div class="note">
 <p>画像をSVG形式にすることもできます：</p>
 <pre class="cell">
 from IPython import display
 
-display.set_matplotlib_formats('svg')
+display.set_matplotlib_formats("svg")
 </pre>
-<p>このほうが画像がくっきり表示されますが、ドラッグ＆ドロップで画像だけをダウンロードすることはできなくなるようです。</p>
+<p>このほうが画像がくっきり表示されますが、ドラッグ＆ドロップで画像をダウンロードすることはできなくなります。</p>
 </div>
 
-<h3>自分のマシンでの利用</h3>
+<h3>コマンドでの利用</h3>
 
-<p>対話型の環境なら</p>
+<p>Google Colab や Jupyter Notebook と違って、コマンドで実行する場合のデフォルトの図の大きさ <code>plt.rcParams["figure.figsize"]</code> は <code>[6.4, 4.8]</code>、dpi 値 <code>plt.rcParams["figure.dpi"]</code> は <code>100.0</code> に設定されています。つまり、デフォルトの図の大きさは余白込みで 640 × 480 ピクセルです。</p>
+
+<p>コマンドで <code>ipython --matplotlib</code> として IPython（対話モードの Python）を起動した場合、</p>
 
 <pre>
 import matplotlib.pyplot as plt
@@ -121,23 +124,27 @@ import matplotlib.pyplot as plt
 plt.plot([-1, 1])
 </pre>
 
-<p>でグラフが出ると思います。もし出なければ、この後に</p>
+<p>でグラフが出るはずです。単に <code>python</code> または <code>python3</code> として起動したときや IDLE というツールを使った場合には、これだけではグラフが出ないと思いますので、この後に</p>
 
 <pre>
 plt.show()
 </pre>
 
-<p>を補ってください。うまく対話型にならない場合は</p>
+<p>を補ってください。ただし、おそらくグラフの窓を閉じないと次のコマンドが打てないと思います。この状態を「ブロック」といいます。ブロックしないようにするには <code>plt.show(block=False)</code> のようにオプションを付ける方法がありますが、もっと楽な方法は、あらかじめ</p>
 
 <pre>
 plt.ion()
 </pre>
 
-<p>と打ち込んで interactive mode を on にします。</p>
+<p>と打ち込んで、対話モード（interactive mode）を on にしてから、プロットする方法です。これなら IPython とほぼ同様な対話モードになります。このコマンドは、IPython を使っている場合にも、うまくグラフが更新されない場合に効果があるようです。</p>
 
-<p>うまくいかない場合は、設定ファイル matplotlibrc（Mac と Windows では <code>~/.matplotlib/matplotlibrc</code>、Linux では <code>~/.config/matplotlib/matplotlibrc</code>）をチェックします。このファイルがないか、あっても <code>backend:</code> という設定がなければ、自動で<a href="https://matplotlib.org/stable/users/explain/backends.html">バックエンド</a>が選ばれるはずですが、もし間違えた指定になっていたら、<code>backend:</code> の行を消してください（その場合、Mac なら <code>MacOSX QtAgg Gtk4Agg Gtk3Agg TkAgg WxAgg Agg</code> の中からうまくいく最初のものが選ばれるはずです）。</p>
+<p>IPython には、例えば <code>?plt.plot</code> のように打ち込めばヘルプが現れるなどの便利な機能がいろいろあります。</p>
 
-<p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら、システムにインストールされている適当な TrueType または OpenType フォント名を上記設定ファイル matplotlibrc に書き加えます。Mac なら</p>
+<p>対話モードでは、グラフを閉じなくても次のコマンドを打ち込むことができます。続けて打ち込んだ描画命令は、同じグラフに追記されます。グラフをいったん消去したいときは、グラフの窓を閉じるか、<code>plt.clf()</code> と打ち込みます。グラフの窓を閉じるのは、コマンド <code>plt.close()</code> でもできます。複数のグラフの窓を全部閉じるには <code>plt.close("all")</code> とします。</p>
+
+<p>描画がうまくいかない場合は、設定ファイル matplotlibrc（Mac と Windows では <code>~/.matplotlib/matplotlibrc</code>、Linux では <code>~/.config/matplotlib/matplotlibrc</code>）をチェックします。このファイルがないか、あっても <code>backend:</code> という設定がなければ、自動で<a href="https://matplotlib.org/stable/users/explain/backends.html">バックエンド</a>が選ばれるはずですが、もし間違えた指定になっていたら、<code>backend:</code> の行を消してください（その場合、<code>MacOSX QtAgg Gtk4Agg Gtk3Agg TkAgg WxAgg Agg</code> の中からうまくいく最初のものが選ばれるはずです）。</p>
+
+<p>デフォルトのフォントでは日本語が出ません。日本語を出したいなら、システムにインストールされている適当な TrueType または OpenType フォント名を上記設定ファイル <code>matplotlibrc</code> に書き加えます。Mac なら</p>
 
 <pre>
 font.family: Hiragino Sans
@@ -150,7 +157,13 @@ font.weight: 400
 font.family: MS Gothic
 </pre>
 
-<p>でよさそうです（MS Gothic のような TrueType Collection は matplotlib 3.1.0 以降で使えます）。いろいろな OS で共通のフォントを使いたいなら、<a href="https://moji.or.jp/ipafont/">こちら</a>から IPAex ゴシックをいただいてきてシステムにインストールし、次のように書き加えます：</p>
+<p>または</p>
+
+<pre>
+font.family: Meiryo
+</pre>
+
+<p>などでよさそうです（TrueType Collection（<code>*.ttc</code>）は昔は使えませんでしたが Matplotlib 3.1.0 で使えるようになりました）。いろいろな OS で共通のフォントを使いたいなら、<a href="https://moji.or.jp/ipafont/">こちら</a>から IPAex ゴシックをいただいてきてシステムにインストールし、次のように書き加えます：</p>
 
 <pre>
 font.family: IPAexGothic
@@ -174,52 +187,40 @@ python3 -c "import matplotlib; print(matplotlib.matplotlib_fname())"
 <p>Linux では /usr/local/share/fonts の下に（適当にサブディレクトリを作って）ipaexg.ttf を入れて、フォント名キャッシュをいったん消せば、認識されます。あるいは、ディストリビューションによりますが、<code>yum install ipa-gothic-fonts</code> あるいは <code>apt-get install fonts-ipafont-gothic</code> などとしても IPA フォント（ex でないもの）がインストールできます。この場合は matplotlibrc には <code>font.family: IPAGothic</code> と書きます。</p>
 </div>
 
-<div class="note">
-<p>SVG 形式で保存してから、<code>rsvg-convert</code> コマンド（Mac では <code>brew install librsvg</code>、CentOS 7 では <code>yum install librsvg2-tools</code> で入る）を使って、ターミナルで</p>
-<pre>
-rsvg-convert --format=pdf --output=filename.pdf filename.svg
-</pre>
-<p>で PDF に変換できます。この場合、文字はアウトライン化され、文字情報はなくなります。<code>plt.rcParams['svg.fonttype'] = 'none'</code> としておけば、SVG、PDF とも文字情報が保たれます（デフォルトは <code>'path'</code>）。文字情報を保って PDF にする別の方法として、後述の PGF 経由で出力する方法があります。</p>
-</div>
-
-<p>簡単なプロットで試してみましょう。ターミナルで IPython を使うなら <code>ipython --matplotlib</code> として起動します（<code>--matplotlib</code> はデフォルトでオンになっている環境もあります）。そして、次のように打ち込みます：</p>
+<p>改めて次のようにやってみて、日本語の部分も出るか確認してください：</p>
 
 <pre>
 import matplotlib.pyplot as plt
 
 plt.plot([-1, 1])
-plt.title('日本語タイトル')
+plt.xlabel("横軸")
+plt.ylabel("縦軸")
+plt.show()
 </pre>
 
-<p>これでもしグラフが出ないなら <code>plt.show()</code> と打ち込みます。日本語タイトルも軸のマイナスも化けずに出れば合格です。もし日本語が出てもマイナスが化ける場合は、フォントに MINUS SIGN (U+2212) がないのでしょう。マイナスを HYPHEN-MINUS (U+002D) で代用するために <code>~/.matplotlib/matplotlibrc</code> に次の1行を追加します：</p>
+<p>日本語も軸のマイナスも化けずに出れば合格です。もし日本語が出てもマイナスが化ける場合は、フォントに MINUS SIGN (U+2212) がないのでしょう。マイナスを HYPHEN-MINUS (U+002D) で代用するために <code>~/.matplotlib/matplotlibrc</code> に次の1行を追加します：</p>
 
 <pre>
 axes.unicode_minus: False
 </pre>
 
-<p>環境によっては、<code>plt.show()</code> でグラフが出ても、グラフの窓を閉じない限り、次に進めなくなります。この状態を「ブロック」といいます。ブロックしないようにするには <code>plt.show(block=False)</code> のようにオプションを付けます。対話型環境でないスクリプト中でこれをすると、グラフがすぐ消えてしまいます。</p>
-
-<p>現在のプロットの中身をクリアするのは <code>plt.clf()</code>、最後に描いたプロットを消すのは <code>plt.close()</code> です。全部のプロットを消すには <code>plt.close("all")</code> とします。</p>
-
-<p>IPython では、詳しいヘルプは例えば <code>?plt.plot</code> のように打ち込めば現れます。</p>
-
 <p>プロットのスタイルはいろいろ選べます。例えば</p>
 
 <pre>
-plt.style.use('ggplot')
+plt.style.use("ggplot")
 </pre>
 
 <p>とすれば R の ggplot のスタイルになります。スタイルは <code>plt.style.available</code> で一覧できます。もっと細かい設定は <code>plt.rcParams</code> と打ち込めば一覧できます。フォントも</p>
 
 <pre>
-plt.rcParams['font.family'] = 'IPAexGothic'
-plt.rcParams['font.size'] = 12
+plt.rcParams["font.family"] = "IPAexGothic"
+plt.rcParams["font.size"] = 12
 </pre>
 
 <p>あるいは同じことですが</p>
 
 <pre>
-plt.rc('font', 'family'='IPAexGothic', 'size'=12)
+plt.rc("font", "family"="IPAexGothic", "size"=12)
 </pre>
 
 <p>のようにして変更できます。デフォルト状態に戻すには <code>plt.rcdefaults()</code> と打ちます。</p>
@@ -227,8 +228,7 @@ plt.rc('font', 'family'='IPAexGothic', 'size'=12)
 <p>タイトルやラベルに日本語のフォントを使う程度なら、特にデフォルトのフォントを変えなくても、次のように関数にオプションで与えることもできます：</p>
 
 <pre>
-plt.title('日本語タイトル', fontfamily='IPAexGothic', fontsize=20)
-plt.xlabel('日本語のx軸タイトル', fontfamily='IPAexGothic')
+plt.title("日本語", fontfamily="Yu Gothic", fontsize=20, fontweight=700)
 </pre>
 
 <h2>ファイルへの保存</h2>
@@ -236,11 +236,11 @@ plt.xlabel('日本語のx軸タイトル', fontfamily='IPAexGothic')
 <p>ファイルへの保存は、メニューからも、プログラムでもできます。アクティブなプロット（最後に描いたプロット）を保存しますので、例えば「Figure 2」を保存したいなら、あらかじめ <code>plt.figure(2)</code> と打ち込んでアクティブにしておきます：</p>
 
 <pre>
-plt.savefig('filename.png', bbox_inches="tight")  # デフォルト: dpi=100
-plt.savefig('filename.pdf', bbox_inches="tight")
-plt.savefig('filename.svg', bbox_inches="tight")
-plt.savefig('filename.svgz', bbox_inches="tight")
-plt.savefig('filename.pgf', bbox_inches="tight")
+plt.savefig("filename.png", bbox_inches="tight")  # デフォルト: dpi=100
+plt.savefig("filename.pdf", bbox_inches="tight")
+plt.savefig("filename.svg", bbox_inches="tight")
+plt.savefig("filename.svgz", bbox_inches="tight")
+plt.savefig("filename.pgf", bbox_inches="tight")
 </pre>
 
 <p>→ <a href="images.html">画像テストページ</a></p>
@@ -261,14 +261,22 @@ plt.savefig('filename.pgf', bbox_inches="tight")
 <pre>
 from matplotlib.backends.backend_pdf import PdfPages
 
-with PdfPages('foo.pdf') as pdf:
+with PdfPages("foo.pdf") as pdf:
     # ここで図を描く
     pdf.savefig(fig)
 </pre>
 
+<div class="note">
+<p>SVG 形式で保存してから、<code>rsvg-convert</code> コマンド（Mac では <code>brew install librsvg</code>、CentOS 7 では <code>yum install librsvg2-tools</code> で入る）を使って、ターミナルで</p>
+<pre>
+rsvg-convert --format=pdf --output=filename.pdf filename.svg
+</pre>
+<p>で PDF に変換できます。この場合、文字はアウトライン化され、文字情報はなくなります。<code>plt.rcParams["svg.fonttype"] = "none"</code> としておけば、SVG、PDF とも文字情報が保たれます（デフォルトは <code>"path"</code>）。文字情報を保って PDF にする別の方法として、後述の PGF 経由で出力する方法があります。</p>
+</div>
+
 <h2>文字だけLaTeXを使う</h2>
 
-<p>軸の文字やタイトル・キャプションなどの数式は、LaTeX風に <code>$</code> で囲んで書けば、ちゃんと解釈してくれます。その際に、文字列は <code>r'...'</code> のように <code>r</code> を付けて書けば、<code>\</code> を特別扱いしない「生の」（raw）文字列として扱われます。</p>
+<p>軸の文字やタイトル・キャプションなどの数式は、LaTeX風に <code>$</code> で囲んで書けば、ちゃんと解釈してくれます。その際に、文字列は <code>r"..."</code> のように <code>r</code> を付けて書けば、<code>\</code> を特別扱いしない「生の」（raw）文字列として扱われます。</p>
 
 <p><code>latex</code>、<code>dvipng</code>、<code>dvips</code>、<code>gs</code> コマンドが使える環境では、次のように <code>text.usetex</code> を <code>True</code> にすれば、本当に文字部分だけLaTeXを起動して、きれいな出力を得ることができます。</p>
 
@@ -276,25 +284,25 @@ with PdfPages('foo.pdf') as pdf:
 import matplotlib.pyplot as plt
 import numpy as np
 
-plt.rcParams['text.usetex'] = True
+plt.rcParams["text.usetex"] = True
 
 x = np.linspace(-5, 5, 101)
 y = 1 / (1 + np.exp(-x))
 plt.figure(figsize=(5, 3))
-plt.plot(x, y, 'k')
-plt.xlabel(r'$x$')
-plt.ylabel(r'$y$')
+plt.plot(x, y, "k")
+plt.xlabel(r"$x$")
+plt.ylabel(r"$y$")
 plt.title("Sigmoid Function")
-plt.legend([r'$y = \frac{1}{1+e^{-x}}$'])
+plt.legend([r"$y = \frac{1}{1+e^{-x}}$"])
 plt.savefig("sigmoid.pdf", bbox_inches="tight")
 </pre>
 
 <p>デフォルトではComputer Modernフォント（数式はcmrやcmmi、タイトルはcmss）になります（PDFにはフォントがType 1形式で埋め込まれます）が、次のようにしてフォントを指定できます：</p>
 
 <pre>
-plt.rcParams['font.family'] = 'serif' # あるいは 'sans-serif' など
-plt.rcParams['font.serif'] = 'times'  # あるいは 'palatino' など
-plt.rcParams['font.sans-serif'] = 'helvetica'
+plt.rcParams["font.family"] = "serif" # あるいは "sans-serif" など
+plt.rcParams["font.serif"] = "times"  # あるいは "palatino" など
+plt.rcParams["font.sans-serif"] = "helvetica"
 </pre>
 
 <p>Timesでは <code>\usepackage{mathptmx}</code>、Palatinoでは <code>\usepackage{mathpazo}</code>、Helveticaでは <code>\usepackage{helvet}</code> がプリアンブルに書き込まれます。実際に処理されるLaTeXファイルは例えば次のようになります：</p>
@@ -317,7 +325,7 @@ plt.rcParams['font.sans-serif'] = 'helvetica'
 <p>次のようにしてプリアンブルを直接指定することもできます：</p>
 
 <pre>
-plt.rcParams['text.latex.preamble'] = r'\usepackage{tgtermes},\usepackage{newtxmath}'
+plt.rcParams["text.latex.preamble"] = r"\usepackage{tgtermes},\usepackage{newtxmath}"
 </pre>
 
 <p>プリアンブルを指定する場合は、他のコードと衝突してエラーにならないように、十分注意が必要です。上の例では、<code>\usepackage{newtxtext}</code> を指定するとエラーになったので、<code>\usepackage{tgtermes}</code> にしました。</p>
@@ -335,14 +343,14 @@ plt.figure(figsize=(6.4, 4.8))  # デフォルトは6.4×4.8インチ
 <p>あるいはデフォルトを変更する：</p>
 
 <pre>
-plt.rcParams['figure.figsize'] = (6.4, 4.8)
+plt.rcParams["figure.figsize"] = (6.4, 4.8)
 </pre>
 
 <p>（Jupyter Notebook などの場合）図を PNG でなく SVG にする（拡大しても荒くならない）：</p>
 
 <pre>
 from IPython import display
-display.set_matplotlib_formats('svg')
+display.set_matplotlib_formats("svg")
 </pre>
 
 <p>軸の最小値・最大値を指定する：</p>
@@ -361,14 +369,14 @@ plt.axis([xの最小値, xの最大値, yの最小値, yの最大値])
 <p>軸の目盛位置と目盛ラベルを指定する：</p>
 
 <pre>
-plt.xticks([-np.pi, 0, np.pi], [r'$-\pi$', '$0$', r'$\pi$'])
+plt.xticks([-np.pi, 0, np.pi], [r"$-\pi$", "$0$", r"$\pi$"])
 </pre>
 
 <p>対数目盛：</p>
 
 <pre>
-plt.xscale('log')
-plt.yscale('log')
+plt.xscale("log")
+plt.yscale("log")
 </pre>
 
 <p>グリッド描画：</p>
@@ -381,13 +389,13 @@ plt.gca().set_axisbelow(True) # グリッドを背面に
 <p>どちらかの軸の範囲を拡大して両軸の目盛を等しくする：</p>
 
 <pre>
-plt.axis('equal')
+plt.axis("equal")
 </pre>
 
 <p>プロット領域の縦横比を調節して両軸の目盛を等しくする：</p>
 
 <pre>
-plt.axis('scaled')
+plt.axis("scaled")
 </pre>
 
 <p>水平線、垂直線を引く：</p>
@@ -431,7 +439,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 fig, ax = plt.subplots()
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+ax.xaxis.set_major_formatter(mdates.DateFormatter("%m-%d"))
 </pre>
 
 <p>さらに Matplotlib 3.1 で追加された ConciseDateFormatter を使った時系列の簡潔な軸ラベル：</p>
@@ -448,11 +456,11 @@ ax.xaxis.set_major_formatter(formatter)
 
 ax.plot(dates, y) # いろいろプロットする
 ax.set_ylim(0.1, 10)
-ax.set_yscale('log')
+ax.set_yscale("log")
 ax.grid()
 ax.legend(...)
 
-fig.savefig('filename.svg', bbox_inches="tight")
+fig.savefig("filename.svg", bbox_inches="tight")
 
 ax.clear() # 図をクリアして次の図を描く
 </pre>
@@ -468,12 +476,9 @@ ax.clear() # 図をクリアして次の図を描く
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-08-04 18:22:37 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-18 17:19:09 JST</time></p>
+</footer>
 </body>
 </html>

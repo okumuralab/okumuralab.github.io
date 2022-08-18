@@ -40,25 +40,51 @@ MathJax = {
 
 \[ 1 - e^{-n^2/(2N)} \]
 
+<p>Pythonで試してみましょう：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+
+a = []
+p = 1
+for i in range(366):
+    a.append(1 - p)
+    p *= (365 - i) / 365
+
+x = np.arange(0, 366)
+plt.plot(x, a, "o")
+plt.plot(x, 1 - np.exp(-x**2/(2*365)))
+plt.xlim(0, 60)
+plt.xlabel("人数")
+plt.ylabel("同じ誕生日の人がいる確率")
+</pre>
+
+<figure><img src="img/birthday.svg" alt="同じ誕生日の人がいる確率"></figure>
+
+<p>オレンジの線が指数関数を使った近似式です。</p>
+
 <h2>接種券番号の問題</h2>
 
-<p>日本では2021年に新型コロナ感染症ワクチン接種券を配りました。ところが接種券を発行するのは各自治体だったため，10桁の接種券番号も自治体ごとに付番されました。仮に番号がランダムだったとして，番号の衝突（重複）はあるでしょうか。</p>
+<p>2021年に新型コロナ感染症ワクチン接種券が配られました。ところが接種券を発行するのは各自治体だったため、10桁の接種券番号も自治体ごとに付番されました。その後、自治体の枠を越えた大規模接種センターがつくられましたが、当初の予約システムでは接種券番号をユニークキーとしていたらしく、同じ接種券番号の人がいると予約できないという問題が発生しました。仮に番号がランダムだったとして、番号の衝突（重複）が起こる確率はどれくらいでしょうか。</p>
 
-<p>接種券の枚数を1億枚 $n = 10^8$ とします。10桁の番号は $N = 10^{10}$ 通りです。計算してみれば，</p>
+<p>接種券の枚数を1億枚 $n = 10^8$ とします。10桁の番号は $N = 10^{10}$ 通りです。計算してみれば、</p>
 
 \[ 1 - e^{-n^2/(2N)} \approx 1 \]
 
-<p>ですので，確実に衝突が起こります。</p>
+<p>ですので、ほぼ確率 1 で衝突が起こります。</p>
 
-<p>では，何桁の番号であれば，各自治体がばらばらに付番しても，衝突が起こらないといえるでしょうか。</p>
+<p>では、何桁の番号であれば、各自治体がばらばらに付番しても、衝突が起こらないといえるでしょうか。</p>
 
-<p>うんと大きい数は10進法でない符号化をすることが多いので，ビット数で表すほうが便利です。$N$ が80ビットなら $1 - e^{-n^2/(2N)}$ はおよそ $4 \times 10^{-9}$，100ビットならおよそ $4 \times 10^{-15}$ ですので，衝突はまず起こらないといえます。</p>
+<p>うんと大きい数は10進法でない符号化をすることが多いので、ビット数で表すほうが便利です。$N$ が80ビットなら $1 - e^{-n^2/(2N)}$ はおよそ $4 \times 10^{-9}$、100ビットならおよそ $4 \times 10^{-15}$ ですので、衝突はまず起こらないといえます。</p>
+
+<p>ツイッター上では接種券番号をUUID（次の項参照）にすればよかったという声もありました。</p>
 
 <h2>UUID</h2>
 
 <p>128ビットのランダムな値を表す <a href="https://ja.wikipedia.org/wiki/UUID">UUID</a>（Universally Unique Identifier）というものが <a href="https://datatracker.ietf.org/doc/html/rfc4122">RFC 4122</a> で定められています。</p>
 
-<p>UUIDにはいくつかのバージョンがありますが，よく使われているのは，乱数ベースのバージョン4のUUIDです。128ビットですが，そのうち6ビットは固定値です。</p>
+<p>UUIDにはいくつかのバージョンがありますが、よく使われているのは、乱数ベースのバージョン4のUUIDです。128ビットですが、そのうち6ビットは固定値です。</p>
 
 <p>Pythonには <a href="https://docs.python.org/ja/3/library/uuid.html">uuid</a> という標準ライブラリがあります。</p>
 
@@ -72,15 +98,15 @@ uuid.uuid4()   # バージョン4のUUIDを生成
 UUID('3585b7a9-e35a-433b-be8e-3916c75f6240')
 </pre>
 
-<p>二つめのハイフンの直後の数字 4 がバージョン番号を表します。また，三つめのハイフンの直後の2ビットは 1 0 に固定されています。これらのため，128ビットのうち6ビットは固定値になります。</p>
+<p>二つめのハイフンの直後の数字 4 がバージョン番号を表します。また、三つめのハイフンの直後の2ビットは 1 0 に固定されています。これらのため、128ビットのうち6ビットは固定値になります。</p>
 
-<p>LinuxやMacには <code>uuidgen</code> というコマンドがあります。Macのものはバージョン4固定です。Linuxのものはオプション <code>-r</code> でバージョン4（乱数ベース），オプション <code>-t</code> でバージョン1（時刻ベース）になります。デフォルトは通常はバージョン4です。</p>
+<p>LinuxやMacには <code>uuidgen</code> というコマンドがあります。Macのものはバージョン4固定です。Linuxのものはオプション <code>-r</code> でバージョン4（乱数ベース）、オプション <code>-t</code> でバージョン1（時刻ベース）になります。デフォルトは通常はバージョン4です。</p>
 
 <h2>ULID</h2>
 
-<p><a href="https://github.com/ulid/spec">ULID</a>（Universally Unique Lexicographically Sortable Identifier）はUUIDを改良したもので，UUIDと同じ128ビットでありながら，UUIDは36文字ですが，ULIDは26文字で表されます。128ビットのうち，先頭の48ビットはタイムスタンプで，UNIX時刻をミリ秒の単位で表したものです。10889年まで桁あふれしません。残りの80ビットがランダムな部分です。文字列としてソートすると，時刻順に並びます（lexicographically sortable）。</p>
+<p><a href="https://github.com/ulid/spec">ULID</a>（Universally Unique Lexicographically Sortable Identifier）はUUIDを改良したもので、UUIDと同じ128ビットでありながら、UUIDは36文字ですが、ULIDは26文字で表されます。128ビットのうち、先頭の48ビットはタイムスタンプで、UNIX時刻をミリ秒の単位で表したものです。10889年まで桁あふれしません。残りの80ビットがランダムな部分です。文字列としてソートすると、時刻順に並びます（lexicographically sortable）。</p>
 
-<p>Pythonではいくつかのライブラリがありますが，ここでは <a href="https://pypi.org/project/python-ulid/">python-ulid</a> を使ってみます。<code>pip install python-ulid</code> でインストールします（余分なものが入らないのでconda環境でもpipでインストールして大丈夫です）。</p>
+<p>Pythonではいくつかのライブラリがありますが、ここでは <a href="https://pypi.org/project/python-ulid/">python-ulid</a> を使ってみます。<code>pip install python-ulid</code> でインストールします（余分なものが入らないのでconda環境でもpipでインストールして大丈夫です）。</p>
 
 <pre class="cell">
 from ulid import ULID
@@ -92,11 +118,17 @@ ULID()
 ULID(01F63ZWFQGSMGM3XGXBE8CTRDT)
 </pre>
 
+<h2>関連ページ</h2>
+
+<ul>
+  <li><a href="../misc/170503.html">リンク切れ、DOI、Document ID</a></li>
+</ul>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-16 22:26:22 JST</time></p>
+<p>Last modified: <time>2022-08-17 09:34:02 JST</time></p>
 </footer>
 </body>
 </html>

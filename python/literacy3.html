@@ -32,15 +32,15 @@ MathJax = {
 
 <p><a href="https://okumuralab.org/literacy3/">『改訂第3版 基礎からわかる情報リテラシー』</a>第13章「Rによるデータ処理」をPythonに焼き直したものです。</p>
 
-<p>Pythonのインストール・実行については<a href="./">お品書き</a>をご覧ください。</p>
+<p>Pythonのインストール・実行については<a href="./">お品書き</a>をご覧ください。以下では Google Colaboratory か Jupyter Notebook を仮定しています。</p>
 
 <h3>グラフの描画</h3>
 
 <p>ライブラリ <code>matplotlib</code>，<code>numpy</code> を使っています。</p>
 
-<p>2次関数 $y = x^2$ のグラフを $-3 \leqq x \leqq 3$ の範囲で描きます<del>（Jupyter Notebook では <code>%matplotlib inline</code> という行を最初に追加してください）</del>：</p>
+<p>2次関数 $y = x^2$ のグラフを $-3 \leqq x \leqq 3$ の範囲で描きます：</p>
 
-<pre>
+<pre class="cell">
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -48,15 +48,13 @@ x = np.linspace(-3, 3, 101)
 plt.plot(x, x ** 2)
 </pre>
 
-<p>プロットが現れない場合は <code>plt.show()</code> という行を最後に追加してください。その場合は，プロット窓を閉じないと次に進めなくなります。これは以下でも同じです。</p>
-
 <p><code>x = np.linspace(-3, 3, 101)</code> は区間 $-3 \leqq x \leqq 3$ を100等分する101個の <code>x</code> を計算します。101 という値に特に意味はありませんが，あまり小さすぎると滑らかに表示されません。</p>
 
-<p>縦横比を 1 にするには <code>plt.plot(x, x ** 2)</code> の後に <code>plt.axis('scaled')</code> または <code>plt.axis('equal')</code> という行を追加してください。</p>
+<p>縦横比を 1 にするには <code>plt.plot(x, x ** 2)</code> の後に <code>plt.axis("scaled")</code> または <code>plt.axis("equal")</code> という行を追加してください。</p>
 
-<p>2次関数 $y = x^3 - x$ のグラフを $x$ 軸（$y = 0$ の線）とともに $-1.2 \leqq x \leqq 1.2$ の範囲で描きます（IPython などの対話型環境では，まず <code>plt.clf()</code> と打ち込んで，前のグラフをクリアしてください）：</p>
+<p>2次関数 $y = x^3 - x$ のグラフを $x$ 軸（$y = 0$ の線）とともに $-1.2 \leqq x \leqq 1.2$ の範囲で描きます：</p>
 
-<pre>
+<pre class="cell">
 x = np.linspace(-1.2, 1.2, 101)
 plt.plot(x, x ** 3 - x)
 plt.axhline()
@@ -66,7 +64,7 @@ plt.axhline()
 
 <p>ライブラリ <code>pandas</code> を使っています。Excel ファイルを読むために <code>pandas</code> から <code>openpyxl</code> が呼び出されます。</p>
 
-<pre>
+<pre class="cell">
 import pandas as pd
 
 birthdeath = pd.read_excel("https://okumuralab.org/literacy3/birthdeath.xlsx")
@@ -75,32 +73,32 @@ birthdeath.head()
 
 <h3>データのグラフ化</h3>
 
-<pre>
-plt.plot(birthdeath['年'], birthdeath['出生数'], 'o-')
-plt.plot(birthdeath['年'], birthdeath['死亡数'], 'o-')
+<pre class="cell">
+plt.plot(birthdeath["年"], birthdeath["出生数"], "o-")
+plt.plot(birthdeath["年"], birthdeath["死亡数"], "o-")
 </pre>
 
 <h3>CSVファイルの読み込みと直線のあてはめ</h3>
 
 <p>気象庁のデータを読み込んでプロットします：</p>
 
-<pre>
-df = pd.read_csv('https://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv',
-                 encoding='sjis')
-plt.plot(df['年'], df['世界全体'], 'o-')
+<pre class="cell">
+df = pd.read_csv("https://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv",
+                 encoding="sjis")
+plt.plot(df["年"], df["世界全体"], "o-")
 </pre>
 
 <p>直線をあてはめます。</p>
 
-<pre>
-slope, intercept = np.polyfit(df['年'], df['世界全体'], 1)
+<pre class="cell">
+slope, intercept = np.polyfit(df["年"], df["世界全体"], 1)
 print("傾き", slope, "y切片", intercept)
 </pre>
 
-<p>前のプロットに続けて次のように打ち込むと，予測直線が重ね書きされます（Jupyter Notebookでは上の <code>plt.plot(df['年'], df['世界全体'], 'o-')</code> と同じセルの最後に付け加えてください）：</p>
+<p>前のプロットに続けて次のように打ち込むと，予測直線が重ね書きされます（Jupyter Notebookでは上の <code>plt.plot(df["年"], df["世界全体"], "o-")</code> と同じセルの最後に付け加えてください）：</p>
 
-<pre>
-plt.plot(df['年'], df['年'] * slope + intercept)
+<pre class="cell">
+plt.plot(df["年"], df["年"] * slope + intercept)
 </pre>
 
 <p>より詳しい説明および別のやり方については<a href="reg_an_wld.html">気象庁の「世界の年平均気温偏差」データの回帰分析</a>をご覧ください。</p>
@@ -109,9 +107,9 @@ plt.plot(df['年'], df['年'] * slope + intercept)
 
 <p>学生のデータを読み込み，学部ごとに集計して棒グラフを描きます（Google Colaboratory など日本語フォントが設定されていない環境では文字化けしますが無視するか，あるいは<a href="plot.html">プロット</a>の項を見て環境設定してください）：</p>
 
-<pre>
+<pre class="cell">
 students = pd.read_csv("https://okumuralab.org/literacy3/students.csv")
-s = students.groupby('学部')['学生数'].sum()
+s = students.groupby("学部")["学生数"].sum()
 plt.bar(s.index, s)
 </pre>
 
@@ -123,7 +121,7 @@ plt.bar(s.index, s)
 
 <p>まずディレクトリ名（ここではカレントディレクトリ <code>"."</code>）を与えてファイル名一覧を取得します（Excel で開いているとファイル名の頭に <code>~$</code> の付いたテンポラリファイル名を拾ってしまうことがあるので要注意）：</p>
 
-<pre>
+<pre class="cell">
 import pathlib
 
 path = pathlib.Path(".")
@@ -132,7 +130,7 @@ names = [p for p in path.iterdir() if p.match("*.xlsx")]
 
 <p>ファイル名を与えると，ワークブックを開いて，最初のワークシートのセル B2，B3，B4，C2，C3，C4 の中身をリストとして返す関数を定義します。</p>
 
-<pre>
+<pre class="cell">
 def f(n):
     a = pd.read_excel(n, usecols="B:C", header=None, skiprows=1, nrows=3, engine="openpyxl")
     return a.values.flatten("F")
@@ -140,13 +138,13 @@ def f(n):
 
 <p>縦横に並んだセルを1列に並べる <code>flatten()</code> を使っています。デフォルトでは B2，C2，B3，C3，B4，C4 の順に並びますが，<code>"F"</code> を与えると，縦読み（Fortran流）の B2，B3，B4，C2，C3，C4 の順になります。これを次々に呼び出して，リストのリストを作ります。</p>
 
-<pre>
+<pre class="cell">
 x = [f(n) for n in names]
 </pre>
 
 <p>CSV形式で保存します。</p>
 
-<pre>
+<pre class="cell">
 pd.DataFrame(x).to_csv("x.csv", index=False, header=False, encoding="sjis")
 </pre>
 
@@ -158,19 +156,16 @@ from openpyxl import load_workbook
 def f(n):
     wb = load_workbook(n, read_only=True)
     ws = wb.worksheets[0]
-    return [ws['B2:C4'][i][j].value for j in range(2) for i in range(3)]
-# あるいは return [x.value for x in np.array(ws['B2:C4']).flatten("F")]
+    return [ws["B2:C4"][i][j].value for j in range(2) for i in range(3)]
+# あるいは return [x.value for x in np.array(ws["B2:C4"]).flatten("F")]
 </pre>
 </div>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-08-09 13:59:24 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-17 21:47:51 JST</time></p>
+</footer>
 </body>
 </html>

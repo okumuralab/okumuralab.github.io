@@ -21,7 +21,7 @@
 
 <p>基本は順に割っていけばよいはずです。</p>
 
-<pre>
+<pre class="cell">
 def isprime(n):
     if n < 2:
         return False
@@ -33,7 +33,7 @@ def isprime(n):
 
 <p>動作確認してみましょう。</p>
 
-<pre>
+<pre class="cell">
 for i in range(2, 100):
     if isprime(i):
         print(i, "は素数")
@@ -41,7 +41,7 @@ for i in range(2, 100):
 
 <p>上は 2 以上 <code>n</code> 未満の整数すべてで割ってみました。もっと節約できるでしょうか。</p>
 
-<pre>
+<pre class="cell">
 import math
 
 def isprime(n):
@@ -54,7 +54,7 @@ def isprime(n):
 
 <p>いろいろ改良ができそうです。例えば 2 を除けば偶数で割ってみる必要はないので，計算量は半分にできます。</p>
 
-<pre>
+<pre class="cell">
 import math
 
 def isprime(n):
@@ -71,7 +71,7 @@ def isprime(n):
 
 <p>今日（例えば 20190823）は素数か？</p>
 
-<pre>
+<pre class="cell">
 import datetime
 
 n = int(f"{datetime.datetime.now():%Y%m%d}")
@@ -80,7 +80,7 @@ isprime(n)
 
 <p><code>math.sqrt()</code> は平方数については正確な平方根を与えるはずですが，浮動小数点数の精度を超える整数の場合は心配です。整数の平方根を整数の範囲で求める次の <code>isqrt()</code> を使えば万全です：</p>
 
-<pre>
+<pre class="cell">
 def isqrt(n):
     if n == 0:
         return 0
@@ -92,7 +92,7 @@ def isqrt(n):
 
 <p>これを使った関数：</p>
 
-<pre>
+<pre class="cell">
 def isprime(n):
     if n < 2:
         return False
@@ -104,17 +104,30 @@ def isprime(n):
 
 <p>もっと大きい数の素因数分解をするには，<a href="https://docs.sympy.org/latest/modules/ntheory.html">SymPy の数論ライブラリ</a>が便利です。</p>
 
+<pre class="cell">
+from sympy import factorint, isprime
+
+factorint(5040)
+</pre>
+
 <pre>
-import sympy
+{2: 4, 3: 2, 5: 1, 7: 1}
+</pre>
 
-sympy.factorint(5040)
-# ==&gt; {2: 4, 3: 2, 5: 1, 7: 1}
+<pre class="cell">
+factorint(20190823)
+</pre>
 
-sympy.factorint(20190823)
-# ==&gt; {20190823: 1}
+<pre>
+{20190823: 1}
+</pre>
 
-sympy.isprime(20190823)
-# ==&gt; True
+<pre class="cell">
+isprime(20190823)
+</pre>
+
+<pre>
+True
 </pre>
 
 <p>問：2020年の大晦日と2021年の元日はともに素数です。3000年までにこのような年はどれくらいあるでしょうか。</p>
@@ -123,7 +136,7 @@ sympy.isprime(20190823)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-10 16:07:42 JST</time></p>
+<p>Last modified: <time>2022-08-17 20:05:36 JST</time></p>
 </footer>
 </body>
 </html>
