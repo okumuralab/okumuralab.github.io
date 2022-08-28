@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/biplot.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>特異値分解・主成分分析・バイプロット</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>特異値分解・主成分分析・バイプロット</h1>
+
+<p><a href="pca.html">主成分分析と因子分析</a>で説明したことを、より詳しく説明します。</p>
+
+<h2>特異値分解</h2>
+
+<p>ここでは縦長の行列 $A$ を考えます。$A$ の特異値分解とは、$A$ を次のような形の三つの行列の積に分解することです。</p>
+
+<br>
+
+<div style="text-align:center">
+  <span style="border: solid; padding: 2em 0.5em">$A$</span> =
+  <span style="border: solid; padding: 2em 0.5em">$U$</span>
+  <span style="border: solid; padding: 0.5em 0.5em">$D$</span>
+  <span style="border: solid; padding: 0.5em 0.3em">$V'$</span>
+</div>
+
+<br>
+
+<p>$U$ は直交行列の右側を削って $A$ と同じ形にしたものです。直交行列ですから、各列の2乗和が 1 で、各列は直交しています（内積 0）。$D$ は対角行列で、左上の対角成分ほど大きいように並べられています。$V'$ は直交行列 $V$ の転置です（$V'$ も直交行列です）。</p>
+
+<h2>主成分分析</h2>
+
+<p>主成分分析は、各変数からその平均値を引いた（場合によってはさらに標準偏差で割った）縦長の行列を特異値分解することと同じです。</p>
+
+<p>例えば<a href="pca.html">主成分分析と因子分析</a>での例を考えます：</p>
+
+<pre>
+chu = read.csv("http://okumuralab.org/~okumura/stat/data/atest2014chu.csv",
+               fileEncoding="CP932")
+row.names(chu) = chu[,1]
+chu = chu[,2:5]
+</pre>
+
+<p>これを主成分分析した結果：</p>
+
+<pre>
+&gt; prcomp(chu)
+Standard deviations (1, .., p=4):
+[1] 4.5647586 1.1615710 0.6880953 0.3647093
+
+Rotation (n x k) = (4 x 4):
+            PC1        PC2         PC3        PC4
+国語A 0.3236353  0.4347444 -0.50391566 -0.6725522
+国語B 0.4296899  0.6692517  0.04669831  0.6043906
+数学A 0.5571265 -0.5789391 -0.52250679  0.2853527
+数学B 0.6326427 -0.1671196  0.68620328 -0.3177410
+
+&gt; prcomp(chu)$x
+                  PC1          PC2          PC3         PC4
+北海道    -1.49201813  0.022160600  0.590740297 -0.89633743
+青森県     2.58910026 -0.004574465 -0.949666441 -0.17459994
+（略）
+沖縄県   -15.06049683  1.007170004  0.740618970  0.53323546
+</pre>
+
+<p>同じことを特異値分解でやってみましょう。まずは各科目から平均値を引きます：</p>
+
+<pre>
+&gt; a = t(t(chu) - colMeans(chu))
+&gt; a
+               国語A       国語B        数学A       数学B
+北海道   -0.16808511 -1.14042553 -1.408510638 -0.25744681
+青森県    1.43191489  0.95957447  1.891489362  1.04255319
+（略）
+沖縄県   -5.16808511 -5.44042553 -9.208510638 -9.35744681
+&gt; r = svd(a)
+&gt; r
+$d
+[1] 30.959699  7.878158  4.666889  2.473579
+
+$u
+               [,1]          [,2]          [,3]         [,4]
+ [1,] -0.0481922679  0.0028129164  0.1265811654 -0.362364581
+ [2,]  0.0836280814 -0.0005806516 -0.2034902399 -0.070585956
+（略）
+[47,] -0.4864548788  0.1278433390  0.1586964911  0.215572438
+
+$v
+          [,1]       [,2]        [,3]       [,4]
+[1,] 0.3236353  0.4347444 -0.50391566 -0.6725522
+[2,] 0.4296899  0.6692517  0.04669831  0.6043906
+[3,] 0.5571265 -0.5789391 -0.52250679  0.2853527
+[4,] 0.6326427 -0.1671196  0.68620328 -0.3177410
+</pre>
+
+<p>この <code>r$d</code>、<code>r$u</code>、<code>r$v</code> がそれぞれ $D$ の対角要素、$U$、$V'$ です。<code>r$d</code> を $\sqrt{47-1}$ で割ったものは、主成分の Standard deviations として出力された値と一致します（47 は都道府県の数です）：</p>
+
+<pre>
+&gt; r$d / sqrt(47 - 1)
+[1] 4.5647586 1.1615710 0.6880953 0.3647093
+</pre>
+
+<p>$UD$ が各都道府県の主成分得点（さきほどの <code>prcomp(chu)$x</code>）です：</p>
+
+<pre>
+&gt; r$u %*% diag(r$d)
+              [,1]         [,2]         [,3]        [,4]
+ [1,]  -1.49201813  0.022160600  0.590740297 -0.89633743
+ [2,]   2.58910026 -0.004574465 -0.949666441 -0.17459994
+（略）
+[47,] -15.06049683  1.007170004  0.740618970  0.53323546
+</pre>
+
+<p><code>r$v</code> つまり $V'$ は、主成分分析の Rotation として出力されたものとまったく同じです。</p>
+
+<h2>バイプロット</h2>
+
+<p>バイプロットは特異値分解の第2成分（主成分分析の第2主成分）までを図示したものです。特異値分解の形で書けば、$A = UDV'$ を $UD$ と $V'$ の内積または $U$ と $DV'$ の内積と見て、前半を黒、後半を赤矢印で表したものです。</p>
+
+<p>ヘルプ <code>?biplot.prcomp</code> を見るとわかるように、デフォルトで <code>biplot(prcomp(chu))</code> とすれば、$U$ を黒、$DV'$ を赤で表します。また、<code>biplot(prcomp(chu), scale=0)</code> とすれば、$UD$ を黒、$V'$ を赤で表します（こちらのほうが主成分分析と対応づけやすい形です）。</p>
+
+<p>黒も赤も、文字の位置の座標を見てください。赤の矢印は、文字と重ならないように、長さを 0.8 倍して表示してあります。</p>
+
+<p>念のためにバイプロットのソースも引用しておきます（<code>getAnywhere(biplot.prcomp)</code>、<code>getAnywhere(biplot.default)</code> で見られます）：</p>
+
+<pre>
+biplot.prcomp &lt;- function (x, choices = 1L:2L, scale = 1, pc.biplot = FALSE, ...) 
+{
+    if (length(choices) != 2L) 
+        stop("length of choices must be 2")
+    if (!length(scores &lt;- x$x)) 
+        stop(gettextf("object '%s' has no scores", deparse1(substitute(x))), domain = NA)
+    if (is.complex(scores)) 
+        stop("biplots are not defined for complex PCA")
+    lam &lt;- x$sdev[choices]
+    n &lt;- NROW(scores)
+    lam &lt;- lam * sqrt(n)
+    if (scale &lt; 0 || scale &gt; 1) 
+        warning("'scale' is outside [0, 1]")
+    if (scale != 0) 
+        lam &lt;- lam^scale
+    else lam &lt;- 1
+    if (pc.biplot) 
+        lam &lt;- lam/sqrt(n)
+    biplot.default(t(t(scores[, choices])/lam), t(t(x$rotation[, choices]) * lam), ...)
+    invisible()
+}
+
+biplot.default &lt;- function (x, y, var.axes = TRUE, col, cex = rep(par("cex"), 2), 
+    xlabs = NULL, ylabs = NULL, expand = 1, xlim = NULL, ylim = NULL, 
+    arrow.len = 0.1, main = NULL, sub = NULL, xlab = NULL, ylab = NULL, 
+    ...) 
+{
+    n &lt;- nrow(x)
+    p &lt;- nrow(y)
+    if (missing(xlabs)) {
+        xlabs &lt;- dimnames(x)[[1L]] %||% 1L:n
+    }
+    xlabs &lt;- as.character(xlabs)
+    dimnames(x) &lt;- list(xlabs, dimnames(x)[[2L]])
+    if (missing(ylabs)) {
+        ylabs &lt;- dimnames(y)[[1L]] %||% paste("Var", 1L:p)
+    }
+    ylabs &lt;- as.character(ylabs)
+    dimnames(y) &lt;- list(ylabs, dimnames(y)[[2L]])
+    if (length(cex) == 1L) 
+        cex &lt;- c(cex, cex)
+    if (missing(col)) {
+        col &lt;- par("col")
+        if (!is.numeric(col)) 
+            col &lt;- match(col, palette(), nomatch = 1L)
+        col &lt;- c(col, col + 1L)
+    }
+    else if (length(col) == 1L) 
+        col &lt;- c(col, col)
+    unsigned.range &lt;- function(x) c(-abs(min(x, na.rm = TRUE)), 
+        abs(max(x, na.rm = TRUE)))
+    rangx1 &lt;- unsigned.range(x[, 1L])
+    rangx2 &lt;- unsigned.range(x[, 2L])
+    rangy1 &lt;- unsigned.range(y[, 1L])
+    rangy2 &lt;- unsigned.range(y[, 2L])
+    if (missing(xlim) &amp;&amp; missing(ylim)) 
+        xlim &lt;- ylim &lt;- rangx1 &lt;- rangx2 &lt;- range(rangx1, rangx2)
+    else if (missing(xlim)) 
+        xlim &lt;- rangx1
+    else if (missing(ylim)) 
+        ylim &lt;- rangx2
+    ratio &lt;- max(rangy1/rangx1, rangy2/rangx2)/expand
+    on.exit(par(op))
+    op &lt;- par(pty = "s")
+    if (!is.null(main)) 
+        op &lt;- c(op, par(mar = par("mar") + c(0, 0, 1, 0)))
+    plot(x, type = "n", xlim = xlim, ylim = ylim, col = col[1L], 
+        xlab = xlab, ylab = ylab, sub = sub, main = main, ...)
+    text(x, xlabs, cex = cex[1L], col = col[1L], ...)
+    par(new = TRUE)
+    dev.hold()
+    on.exit(dev.flush(), add = TRUE)
+    plot(y, axes = FALSE, type = "n", xlim = xlim * ratio, ylim = ylim * 
+        ratio, xlab = "", ylab = "", col = col[1L], ...)
+    axis(3, col = col[2L], ...)
+    axis(4, col = col[2L], ...)
+    box(col = col[1L])
+    text(y, labels = ylabs, cex = cex[2L], col = col[2L], ...)
+    if (var.axes) 
+        arrows(0, 0, y[, 1L] * 0.8, y[, 2L] * 0.8, col = col[2L], 
+            length = arrow.len)
+    invisible()
+}
+</pre>
+
+<h2>バイプロットを使わない主成分分析の図示</h2>
+
+<p>バイプロットの赤の矢印が不要の場合は、次のようにして、主成分分析の結果を直接プロットします：</p>
+
+<pre>
+plot(prcomp(chu)$x[,1:2])
+</pre> 
+
+<p>アスペクト比を 1 にする（両軸の目盛を合わせる）なら</p>
+
+<pre>
+plot(prcomp(chu)$x[,1:2], asp=1)
+</pre> 
+
+<p>さらに点ではなく県名をプロットするなら</p>
+
+<pre>
+plot(prcomp(chu)$x[,1:2], asp=1, type="n")
+text(prcomp(chu)$x[,1:2], row.names(chu))
+</pre> 
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-08-28 15:13:30 JST</time></p>
+</footer>
+</body>
+</html>

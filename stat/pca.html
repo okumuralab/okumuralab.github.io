@@ -30,23 +30,23 @@ MathJax = {
 
 <h1>主成分分析と因子分析</h1>
 
-<p>工事中です。やさしくするために，非標準的な説明をしていますが，どうでしょうか。</p>
+<p>[追記] より詳しく説明した<a href="biplot.html">特異値分解・主成分分析・バイプロット</a>という記事も書きました。</p>
 
 <h2>主成分分析</h2>
 
 <p>ここではデータとして平成26年度全国学力・学習状況調査の結果を使う。中学校・小学校の結果をあらかじめ読み込んでおく：</p>
 
 <pre>
-<code>chu = read.csv("http://okumuralab.org/~okumura/stat/data/atest2014chu.csv",
+chu = read.csv("http://okumuralab.org/~okumura/stat/data/atest2014chu.csv",
                fileEncoding="CP932")
 sho = read.csv("http://okumuralab.org/~okumura/stat/data/atest2014sho.csv",
                fileEncoding="CP932")
-</code></pre>
+</pre>
 
 <p>中学校の結果の頭の部分だけ表示してみる：</p>
 
 <pre>
-<code>&gt; head(chu)
+&gt; head(chu)
   都道府県 国語A 国語B 数学A 数学B
 1   北海道  79.4  49.9  66.0  59.4
 2   青森県  81.0  52.0  69.3  60.7
@@ -54,12 +54,12 @@ sho = read.csv("http://okumuralab.org/~okumura/stat/data/atest2014sho.csv",
 4   宮城県  80.3  52.0  65.6  59.4
 5   秋田県  84.4  55.8  73.0  65.5
 6   山形県  80.6  52.1  67.6  60.2
-</code></pre>
+</pre>
 
 <p>1列目 <code>chu[&nbsp;,1]</code> は都道府県名だから，いらない。2〜5列目 <code>chu[&nbsp;,2:5]</code> だけでいい。でも消すのはもったいないので，都道府県名は行の名前にして，それから都道府県の列を外すことにする：</p>
 
 <pre>
-<code>&gt; row.names(chu) = chu[,1]
+&gt; row.names(chu) = chu[,1]
 &gt; chu = chu[,2:5]
 &gt; head(chu)
        国語A 国語B 数学A 数学B
@@ -69,7 +69,7 @@ sho = read.csv("http://okumuralab.org/~okumura/stat/data/atest2014sho.csv",
 宮城県  80.3  52.0  65.6  59.4
 秋田県  84.4  55.8  73.0  65.5
 山形県  80.6  52.1  67.6  60.2
-</code></pre>
+</pre>
 
 <p>各科目の平均点は気にしないので，以下では点数からその科目の平均点を引いた値（偏差）を使うことにする。ここで，すべての値は「ほげ」と「ふが」という二つの独立な隠れた値で決まるという大胆な仮説を立てる：</p>
 
@@ -88,14 +88,14 @@ sho = read.csv("http://okumuralab.org/~okumura/stat/data/atest2014sho.csv",
 <p>Rで実際に計算してみよう。主成分分析し，結果をバイプロットで描く。上のいいかげんな説明の「ほげ」が横軸，「ふが」が縦軸である。「ほげ」「ふが」の正式な名前は「第1主成分」「第2主成分」である。図ではPC1，PC2と書かれているが，PCは主成分（principal component）のことである。</p>
 
 <pre>
-<code>biplot(prcomp(chu))
-</code></pre>
+biplot(prcomp(chu))
+</pre>
 
 <p>よく見ると字が一部欠けている。これを防ぐには
 
 <pre>
-<code>par(xpd=TRUE)
-</code></pre>
+par(xpd=TRUE)
+</pre>
 
 <p>というオマジナイをしてから描くとよい。</p>
 
@@ -113,17 +113,17 @@ sho = read.csv("http://okumuralab.org/~okumura/stat/data/atest2014sho.csv",
 <p>上の例では，各科目の標準偏差をわざと揃えなかった。標準偏差の違いを考えないのであれば，各科目の点数から平均を引いた後で標準偏差で割るのがよい。このようにしてから主成分分析を行う場合は，次のようにする：</p>
 
 <pre>
-<code>biplot(prcomp(chu, scale=TRUE))
-</code></pre>
+biplot(prcomp(chu, scale=TRUE))
+</pre>
 
 <p>実際に描いて結果を比べてみるとよい。また，小学校の場合もやってみるとよい。</p>
 
 <pre>
-<code>row.names(sho) = sho[,1]
+row.names(sho) = sho[,1]
 sho = sho[,2:5]
 biplot(prcomp(sho))
 biplot(prcomp(sho, scale=TRUE))
-</code></pre>
+</pre>
 
 <div class="note">
 <p>Rの主成分分析の関数は <code>prcomp()</code> と <code>princomp()</code> の二つがあるが，より新しい <code>prcomp()</code> のほうを使うべきである。</p>
@@ -134,7 +134,7 @@ biplot(prcomp(sho, scale=TRUE))
 <p>4科目では簡単すぎるので，小学校と合わせて8科目にしてみよう。</p>
 
 <pre>
-<code>&gt; all = data.frame(sho, chu)
+&gt; all = data.frame(sho, chu)
 &gt; names(all) = c("小国A","小国B","小算A","小算B","中国A","中国B","中数A","中数B")
 &gt; head(all)
        小国A 小国B 小算A 小算B 中国A 中国B 中数A 中数B
@@ -144,23 +144,23 @@ biplot(prcomp(sho, scale=TRUE))
 宮城県  74.2  54.3  77.3  56.8  80.3  52.0  65.6  59.4
 秋田県  77.4  67.3  85.1  66.2  84.4  55.8  73.0  65.5
 山形県  74.3  56.7  77.8  57.7  80.6  52.1  67.6  60.2
-</code></pre>
+</pre>
 
 <p>これを主成分分析・バイプロットしてもいいが，ここでは都道府県は考えずに，8科目の相関係数だけを考えることにする。
 
 <pre>
-<code>cor(all)
-</code></pre>
+cor(all)
+</pre>
 
 <p>と打ち込むと，すべての相関係数の行列が出力される。もちろん対角成分（同じ科目どうしの相関係数）は1であるが，対角成分に意味はない。そこで，各科目に相当するベクトルを作って，異なるベクトル間の内積が相関係数にできるだけ等しくなるようにするという問題を考える。これが因子分析（factor analysis）の問題である。</p>
 
 <p>具体的には次のようにすればよい：</p>
 
 <pre>
-<code>r = factanal(all, factors=2)
+r = factanal(all, factors=2)
 plot(NULL, xlim=c(0,1), ylim=c(0,1), xlab="因子1", ylab="因子2")
 text(r$loadings, names(all))
-</code></pre>
+</pre>
 
 <figure><img src="img/150201b.png" alt=""></figure>
 
@@ -178,19 +178,15 @@ text(r$loadings, names(all))
 <p>なお，因子分析でもバイプロットを描くことがある：</p>
 
 <pre>
-<code>r = factanal(all, factors=2, scores="regression")
+r = factanal(all, factors=2, scores="regression")
 biplot(r$scores, r$loadings)
-</code></pre>
+</pre>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>
-<!-- hhmts start -->
-Last modified: <time>2016-02-24 22:35:32</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-08-28 15:01:21 JST</time></p>
 </footer>
 </body>
 </html>

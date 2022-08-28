@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/svd.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>特異値分解と主成分分析</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script>
+MathJax = {
+  chtml: {
+    matchFontHeight: false
+  },
+  tex: {
+    inlineMath: [['$', '$']]
+  }
+};
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>特異値分解と主成分分析</h1>
+
+<p>R を使った<a href="../stat/biplot.html">特異値分解・主成分分析・バイプロット</a>の Python 版です（ただしバイプロットについてはまだ書いていません）。Python の<a href="iris.html">あやめ（iris）</a>でも主成分分析を扱っています。</p>
+
+<p>一般の $m \times n$ 行列 $A$ の特異値分解とは、$A$ を次のような形の三つの行列の積に分解することです。</p>
+
+<br>
+
+<div style="text-align:center">
+  <span style="border: solid; padding: 2em 0.5em">$A$</span> =
+  <span style="border: solid; padding: 2em 2em">$U$</span>
+  <span style="border: solid; padding: 2em 0.5em">$S$</span>
+  <span style="border: solid; padding: 0.5em 0.1em">$V^T$</span>
+</div>
+
+<br>
+
+<p>ここで $U$ は $m \times m$、$V$ は $n \times n$ の直交行列です。$S$ は上（または左）の正方形部分が対角行列で、残りは全部 0 です。対角要素（特異値）は左上ほど大きい値になるように並べます。</p>
+
+<p>以下では $m > n$ つまり $A$ が縦長の場合だけ考えます。このとき $S$ の下側は全部 0 なので、この部分とそれに対応する $U$ の右側の部分は、なくてもかまいません。そこで、</p>
+
+<br>
+
+<div style="text-align:center">
+  <span style="border: solid; padding: 2em 0.5em">$A$</span> =
+  <span style="border: solid; padding: 2em 0.5em">$U$</span>
+  <span style="border: solid; padding: 0.5em 0.5em">$S$</span>
+  <span style="border: solid; padding: 0.5em 0.1em">$V^T$</span>
+</div>
+
+<br>
+
+<p>のように限定してもかまいません。以下の NumPy や SciPy の関数では <code>full_matrices=False</code> というオプションでこのような縮小版になります。</p>
+
+<p>特異値分解は Python では <a href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.svd.html">numpy.linalg.svd</a> か <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.linalg.svd.html">scipy.linalg.svd</a> か <a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html">sklearn.decomposition.TruncatedSVD</a> で行います。</p>
+
+<p>例として<a href="iris.html">あやめ（iris）</a>のデータを考えます。</p>
+
+<pre class="cell">
+from sklearn.datasets import load_iris
+
+iris = load_iris()
+iris.data
+</pre>
+
+<pre>
+array([[5.1, 3.5, 1.4, 0.2],
+       [4.9, 3. , 1.4, 0.2],
+       [4.7, 3.2, 1.3, 0.2],
+       ...,
+       [5.9, 3. , 5.1, 1.8]])
+</pre>
+
+<pre class="cell">
+iris.data.shape
+</pre>
+
+<pre>
+(150, 4)
+</pre>
+
+<p>4列はそれぞれ sepal length、sepal width、petal length、petal width を表します（単位はいずれも cm）。それぞれの平均を求めます：</p>
+
+<pre class="cell">
+iris.data.mean(axis=0)
+</pre>
+
+<pre>
+array([5.84333333, 3.05733333, 3.758     , 1.19933333])
+</pre>
+
+<p>各列からその平均を引いたものを $A$ とします：</p>
+
+<pre class="cell">
+A = iris.data - iris.data.mean(axis=0)
+A
+</pre>
+
+<pre>
+array([[-7.43333333e-01,  4.42666667e-01, -2.35800000e+00, -9.99333333e-01],
+       [-9.43333333e-01, -5.73333333e-02, -2.35800000e+00, -9.99333333e-01],
+       [-1.14333333e+00,  1.42666667e-01, -2.45800000e+00, -9.99333333e-01],
+       ...,
+       [ 5.66666667e-02, -5.73333333e-02,  1.34200000e+00,  6.00666667e-01]])
+</pre>
+
+<p>まずは NumPy の関数を使って特異値分解してみます：</p>
+
+<pre class="cell">
+import numpy as np
+
+U, s, Vh = np.linalg.svd(A, full_matrices=False)
+U
+</pre>
+
+<pre>
+array([[-1.06937444e-01, -5.31164840e-02,  8.17734010e-03,  1.20053534e-03],
+       [-1.08133305e-01,  2.94357038e-02,  6.16531816e-02,  5.25472619e-02],
+       [-1.15099407e-01,  2.41054172e-02, -5.24368218e-03,  1.05959887e-02],
+       ...,
+       [ 5.53860977e-02,  4.70071528e-02, -1.06310369e-01, -8.22694053e-02]])
+</pre>
+
+<pre class="cell">
+s
+</pre>
+
+<pre>
+array([25.09996044,  6.01314738,  3.41368064,  1.88452351])
+</pre>
+
+<pre class="cell">
+Vh
+</pre>
+
+<pre>
+array([[ 0.36138659, -0.08452251,  0.85667061,  0.3582892 ],
+       [-0.65658877, -0.73016143,  0.17337266,  0.07548102],
+       [ 0.58202985, -0.59791083, -0.07623608, -0.54583143],
+       [ 0.31548719, -0.3197231 , -0.47983899,  0.75365743]])
+</pre>
+
+<p>SciPy でのやりかたもほぼ同じです：</p>
+
+<pre class="cell">
+from scipy import linalg
+  
+U, s, Vh = linalg.svd(A, full_matrices=False)
+</pre>
+
+<p>本当に $USV^T$ が $A$ に（誤差範囲内で）一致するか確認します：</p>
+
+<pre class="cell">
+np.allclose(U @ np.diag(s) @ Vh, A)
+</pre>
+
+<pre>
+True
+</pre>
+
+<p>大丈夫なようです。</p>
+
+<p>同じ問題を主成分分析した結果との対応を見てみましょう：</p>
+
+<pre class="cell">
+from sklearn.decomposition import PCA
+
+model = PCA(n_components=2)
+x = model.fit_transform(iris.data)
+x
+</pre>
+
+<pre>
+array([[-2.68412563,  0.31939725],
+       [-2.71414169, -0.17700123],
+       [-2.88899057, -0.14494943],
+       ...,
+       [ 1.39018886, -0.28266094]])
+</pre>
+
+<p>これは特異値分解の $US$ の最初の2列に一致します（ただし2列目の符号がすべて逆です）：</p>
+
+<pre class="cell">
+U @ np.diag(s)
+</pre>
+
+<pre>
+array([[-2.68412563e+00, -3.19397247e-01,  2.79148276e-02,  2.26243707e-03],
+       [-2.71414169e+00,  1.77001225e-01,  2.10464272e-01,  9.90265503e-02],
+       [-2.88899057e+00,  1.44949426e-01, -1.79002563e-02,  1.99683897e-02],
+       ...,
+       [ 1.39018886e+00,  2.82660938e-01, -3.62909648e-01, -1.55038628e-01]])
+</pre>
+
+<p>主成分分析の回転行列は</p>
+
+<pre class="cell">
+model.components_
+</pre>
+
+<pre>
+array([[ 0.36138659, -0.08452251,  0.85667061,  0.3582892 ],
+       [ 0.65658877,  0.73016143, -0.17337266, -0.07548102]])
+</pre>
+
+<p>ですが、これはさきほど求めた特異値分解の <code>Vh</code> の最初の2行と一致します（ただし2行目の符号がすべて逆です）。このように、$U$ の列と $V^T$ の行の符号には不定性があります。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-08-28 18:01:38 JST</time></p>
+</footer>
+</body>
+</html>
