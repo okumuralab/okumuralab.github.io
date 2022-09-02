@@ -144,12 +144,16 @@ plt.ylabel("1日あたり超過死亡数")
   <tr><td>2022-02</td><td>172.9</td></tr>
   <tr><td>2022-03</td><td>144.0</td></tr>
   <tr><td>2022-04</td><td>49.1</td></tr>
+  <tr><td>2022-05</td><td>33.8</td></tr>
+  <tr><td>2022-06</td><td>19.0</td></tr>
+  <tr><td>2022-07</td><td>42.1</td></tr>
+  <tr><td>2022-08</td><td>235.3</td></tr>
   </tbody>
 </table>
 
 <pre>
 df = pd.read_csv("deaths_cumulative_daily.csv", parse_dates=['Date'])
-a = np.arange(np.datetime64("2020-06"), np.datetime64("2022-06"))
+a = np.arange(np.datetime64("2020-06"), np.datetime64("2022-10"))
 da = pd.to_datetime(a)
 da1 = da - np.timedelta64(1,"D")
 da1s = pd.Series(da1, name='Date')
@@ -165,7 +169,7 @@ for i in range(1, len(x)):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-27 14:59:21 JST</time>
+Last modified: <time>2022-09-02 20:05:53 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

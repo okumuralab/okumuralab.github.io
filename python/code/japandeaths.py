@@ -89,3 +89,17 @@ plt.ylabel("1〜4月の1日あたり死亡数")
 plt.xticks(sorted(set(y // 2 * 2).intersection(set(y))))  # 2年ごと
 plt.show()
 plt.savefig("../img/japandeaths6.svg", bbox_inches="tight")
+
+exit()
+
+#------
+
+df = pd.read_csv("deaths_cumulative_daily.csv", parse_dates=['Date'])
+a = np.arange(np.datetime64("2020-06"), np.datetime64("2022-10"))
+da = pd.to_datetime(a)
+da1 = da - np.timedelta64(1,"D")
+da1s = pd.Series(da1, name='Date')
+df2 = pd.merge(da1s, df).diff()
+x = df2.ALL / (df2.Date / np.timedelta64(1,"D"))
+for i in range(1, len(x)):
+    print(f"{a[i-1]},{x[i]:3.1f}")
