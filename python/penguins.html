@@ -86,6 +86,14 @@ sns.boxplot(x="species", y="body_mass_g", data=penguins)
 
 <figure><img src="img/penguins1.svg" alt="パーマーペンギン"></figure>
 
+<div class="note">
+<p><code>sns.boxplot()</code> の代わりに <code>sns.violinplot()</code>、<code>sns.swarmplot()</code> とすると、バイオリンプロットやスウォームプロットが得られます。</p>
+<figure>
+  <img src="img/penguins_violin.svg" alt="パーマーペンギン">
+  <img src="img/penguins_swarm.svg" alt="パーマーペンギン">
+</figure>
+</div>
+
 <p>同じことを Matplotlib だけでするなら、次のようになります：</p>
 
 <pre class="cell">
@@ -110,7 +118,7 @@ plt.boxplot(x, labels=s)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-15 15:09:32 JST</time></p>
+<p>Last modified: <time>2022-09-06 11:13:10 JST</time></p>
 </footer>
 </body>
 </html>
