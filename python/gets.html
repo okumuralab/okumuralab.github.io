@@ -20,21 +20,28 @@
 <p>Ruby の</p>
 
 <pre>
-<code>while line = gets
+while line = gets
   puts line
 end
-</code></pre>
+</pre>
 
 <p>は，コマンドライン引数で与えられたファイルを一つずつ開いて1行ずつ読み込み，出力するループである。コマンドライン引数でファイルを指定しなければ，標準入力から1行ずつ読み込む。</p>
 
 <p>これと同じことをするためのパッケージが <a href="https://docs.python.org/3/library/fileinput.html">fileinput</a> である：</p>
 
 <pre>
-<code>import fileinput
+import fileinput
 
 for line in fileinput.input():
     print(line, end="")  # または print(line.rstrip())
-</code></pre>
+</pre>
+
+<p>文字コードは次のように指定できる（Python 3.7以降）：</p>
+
+<pre>
+sys.stdin.reconfigure(encoding="cp437")
+sys.stdout.reconfigure(encoding="cp437")
+</pre>
 
 <p><code>fileinput.input()</code> に引数でファイル名（のリスト）を与えれば，それが優先される。</p>
 
@@ -43,50 +50,50 @@ for line in fileinput.input():
 <p>標準入力だけ読めばよいなら，次のようにできる：</p>
 
 <pre>
-<code>import sys
+import sys
 
 for line in sys.stdin:
     print(line, end="")  # または print(line.rstrip())
-</code></pre>
+</pre>
 
 <p>ループではなく，標準入力から1行だけ読むには，次のようにする：</p>
 
 <pre>
-<code>line = sys.stdin.readline()
-</code></pre>
+line = sys.stdin.readline()
+</pre>
 
 <p>プロンプトで入力を促すには，次のようにする：</p>
 
 <pre>
-<code>n = int(input('正の整数を入力してください: '))
-</code></pre>
+n = int(input('正の整数を入力してください: '))
+</pre>
 
 <p>全部の行を行（文字列）のリストの形で読み込むには，次のようにする：</p>
 
 <pre>
-<code>lines = sys.stdin.readlines()
-</code></pre>
+lines = sys.stdin.readlines()
+</pre>
 
 <p>全部の行を一つの文字列の形で読み込むには，次のようにする：</p>
 
 <pre>
-<code>lines = sys.stdin.read()
-</code></pre>
+lines = sys.stdin.read()
+</pre>
 
 <p>標準入力でないファイルの場合は，次のようにする：</p>
 
 <pre>
-<code>with open("filename") as f:
+with open("filename") as f:
     for line in f:
         print(line, end="")
-</code></pre>
+</pre>
 
 <p>あるいは</p>
 
 <pre>
-<code>with open("filename") as f:
+with open("filename") as f:
     lines = f.readlines()  # または f.read()
-</code></pre>
+</pre>
 
 <p><code>f.read()</code> は <code>"1行目\n2行目\n..."</code> のような長い一つの文字列，<code>f.readlines()</code> は <code>["1行目\n", "2行目\n", ...]</code> のような行のリストを返す。</p>
 
@@ -102,12 +109,9 @@ for filename in sys.argv[1:]:
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-06-25 10:42:42 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-09-07 22:42:37 JST</time></p>
+</footer>
 </body>
 </html>
