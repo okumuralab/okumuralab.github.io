@@ -86,15 +86,31 @@ sns.boxplot(x="species", y="body_mass_g", data=penguins)
 
 <figure><img src="img/penguins1.svg" alt="パーマーペンギン"></figure>
 
-<div class="note">
-<p><code>sns.boxplot()</code> の代わりに <code>sns.violinplot()</code>、<code>sns.swarmplot()</code> とすると、バイオリンプロットやスウォームプロットが得られます。</p>
+<p>箱ひげ図は、コンピュータグラフィックスがあまり進んでいない1970年代に、John Tukey によって提案されて普及したものです。今なら、同じスペースを使って、より多くの情報を表示することができます。</p>
+
+<p>例えば、図の幅を少し狭くして、箱ひげ図の色を白にし、外れ値を非表示にして、上からストリッププロット（左右にランダムなジッターを加えたドットプロット）をかぶせてみましょう：</p>
+
+<pre class="cell">
+plt.figure(figsize=(4.0, 4.8))
+  
+sns.boxplot(x="species", y="body_mass_g", data=penguins, color="white", fliersize=0)
+sns.stripplot(x="species", y="body_mass_g", data=penguins)
+</pre>
+
+<figure><img src="img/penguins_boxstripplot.svg" alt="パーマーペンギン"></figure>
+
+<p><code>sns.boxplot()</code> や <code>sns.stripplot()</code> の代わりに <code>sns.violinplot()</code>、<code>sns.swarmplot()</code> とすると、バイオリンプロットやスウォームプロットが得られます。</p>
+
 <figure>
   <img src="img/penguins_violin.svg" alt="パーマーペンギン">
   <img src="img/penguins_swarm.svg" alt="パーマーペンギン">
 </figure>
-</div>
 
-<p>同じことを Matplotlib だけでするなら、次のようになります：</p>
+<p>また、<code>pip install git+<a href="https://github.com/mparker2/seaborn_sinaplot">https://github.com/mparker2/seaborn_sinaplot</a>.git</code> してインポートすれば、シーナプロット <code>sinaplot.sinaplot()</code> も使えます：</p>
+
+<figure><img src="img/penguins_sinaplot.svg" alt="パーマーペンギン"></figure>
+
+<p>ちなみに、箱ひげ図を Matplotlib だけでするなら、次のようになります：</p>
 
 <pre class="cell">
 x1 = penguins.query("species == 'Adelie'")["body_mass_g"].dropna()
@@ -118,7 +134,7 @@ plt.boxplot(x, labels=s)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-09-06 11:13:10 JST</time></p>
+<p>Last modified: <time>2022-09-07 14:20:42 JST</time></p>
 </footer>
 </body>
 </html>
