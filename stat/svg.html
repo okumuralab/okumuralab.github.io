@@ -21,13 +21,13 @@
 
 <h2>はじめに</h2>
 
-<p>拡大してもジャギーが出ないベクトルグラフィックの<a href="../html5/svg.html">SVG形式</a>が Web では広く用いられるようになりました。かつては、R で SVG を出力するには、R 標準（cairo）の <code>svg()</code> を使うか、<a href="https://cran.r-project.org/package=RSVGTipsDevice">RSVGTipsDevice</a> パッケージの <code>devSVGTips()</code> を使うという選択肢がありました。2015年末に Hadley Wickham が新しい <a href="https://cran.r-project.org/package=svglite">svglite</a> というパッケージを作りました（<a href="http://blog.rstudio.org/2015/12/10/svglite-1-0-0/">アナウンス</a>、GitHubの <a href="https://github.com/hadley/svglite">hadley/svglite</a>）。一方、RSVGTipsDevice は CRAN から消えてアーカイブ入りしてしまいました。また、ggplot2 では <code>ggsave()</code> という関数で SVG を含むいろいろな形式で保存できるようになりました。</p>
+<p>拡大してもジャギーが出ないベクトルグラフィックの <a href="../html5/svg.html">SVG形式</a> が Web では広く用いられるようになりました。かつては、R で SVG を出力するには、R 標準（cairo）の <code>svg()</code> を使うか、<a href="https://cran.r-project.org/package=RSVGTipsDevice">RSVGTipsDevice</a> パッケージの <code>devSVGTips()</code> を使うという選択肢がありました。2015年末に Hadley Wickham が新しい <a href="https://cran.r-project.org/package=svglite">svglite</a> というパッケージを作りました（<a href="http://blog.rstudio.org/2015/12/10/svglite-1-0-0/">アナウンス</a>、GitHubの <a href="https://github.com/hadley/svglite">hadley/svglite</a>）。一方、RSVGTipsDevice は CRAN から消えてアーカイブ入りしてしまいました。また、ggplot2 では <code>ggsave()</code> という関数で SVG を含むいろいろな形式で保存できるようになりました。</p>
 
 <p>cairo 版では、文字も図形になり、ビューアに依存しないので安心ですが、日本語を使う場合は下の例のように日本語のフォント名を指定する必要があります。一方、svglite 版は文字は文字情報のまま入りますので、テキストエディタで文字列やフォント名を編集することができます。</p>
 
 <h2>例</h2>
 
-<p>Mac で普通に画面に描いてスクリーンショットをとります：</p>
+<p>比較のため、Mac で普通に画面に描いてスクリーンショットをとって PNG にしたものを最初に挙げておきます：</p>
 
 <pre>
 quartz(width=7, height=4)
@@ -37,7 +37,7 @@ curve(dnorm(x), xlim=c(-3, 3), main="正規分布")
 
 <figure><img src="img/dnorm-quartz.png" alt="Quartzグラフィックの例"></figure>
 
-<p>標準（cairo）の <code>svg()</code> を使います（<a href="https://www.xquartz.org">XQuartz</a> のインストールが必要のはずです）：</p>
+<p>標準（cairo）の <code>svg()</code> を使って SVG 出力します（<a href="https://www.xquartz.org">XQuartz</a> のインストールが必要のはずです）：</p>
 
 <pre>
 svg("dnorm-cairo.svg", family="Japan1GothicBBB", width=7, height=4)
@@ -64,11 +64,18 @@ dev.off()
 
 <p>ファイルサイズは 6442 バイトになりました。</p>
 
-<p>フォント指定は <code>Arial</code> になるようです。「正規分布」という日本語の幅がちょっと微妙ですね。SVG ファイルをテキストエディタで開いて、「正規分布」を出力するところだけ <code>textLength='...' lengthAdjust='spacingAndGlyphs'</code> を削除してみました：</p>
+<p>フォント指定は <code>Arial</code> になるようです。「正規分布」という日本語の幅がちょっと微妙ですね。SVG ファイルを見ると、<code>textLength='...' lengthAdjust='spacingAndGlyphs'</code> のような記述がたくさんあるので、これらを一括削除してみました。</p>
 
 <figure><img src="img/dnorm-svglite-fixed.svg" width="600" alt="svgliteのSVGの例（修正）"></figure>
 
-<p>こちらのほうがよさそうです。他の部分も、この指定を削除すれば、もっとファイルサイズが小さくなるはずです。</p>
+<div class="note">
+<p>一括削除の方法はいろいろありそうですが、例えば sed なら次のようにします：</p>
+<pre>
+sed "s/ textLength='[^']*' lengthAdjust='spacingAndGlyphs'//g" dnorm-svglite.svg &gt;dnorm-svglite-fixed.svg
+</pre>
+</div>
+
+<p>こちらのほうがファイルサイズも 5652 バイトに減りますし、見かけ上も良さそうです。</p>
 
 <h2>rsvgによる変換</h2>
 
@@ -115,7 +122,7 @@ rsvg-convert --format=pdf --output=hoge.pdf hoge.svg
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-09-09 20:02:04 JST</time></p>
+<p>Last modified: <time>2022-09-09 20:37:26 JST</time></p>
 </footer>
 </body>
 </html>
