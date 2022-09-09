@@ -25,7 +25,7 @@ while line = gets
 end
 </pre>
 
-<p>は，コマンドライン引数で与えられたファイルを一つずつ開いて1行ずつ読み込み，出力するループである。コマンドライン引数でファイルを指定しなければ，標準入力から1行ずつ読み込む。</p>
+<p>は、コマンドライン引数で与えられたファイルを一つずつ開いて1行ずつ読み込み、出力するループである。コマンドライン引数でファイルを指定しなければ、標準入力から1行ずつ読み込む。</p>
 
 <p>これと同じことをするためのパッケージが <a href="https://docs.python.org/3/library/fileinput.html">fileinput</a> である：</p>
 
@@ -36,18 +36,11 @@ for line in fileinput.input():
     print(line, end="")  # または print(line.rstrip())
 </pre>
 
-<p>文字コードは次のように指定できる（Python 3.7以降）：</p>
+<p><code>fileinput.input()</code> に引数でファイル名（のリスト）を与えれば、それが優先される。</p>
 
-<pre>
-sys.stdin.reconfigure(encoding="cp437")
-sys.stdout.reconfigure(encoding="cp437")
-</pre>
+<p>Ruby の <code>gets</code> と違い、ループの中で余分に行を読み込むことはできない。</p>
 
-<p><code>fileinput.input()</code> に引数でファイル名（のリスト）を与えれば，それが優先される。</p>
-
-<p>Ruby の <code>gets</code> と違い，ループの中で余分に行を読み込むことはできない。</p>
-
-<p>標準入力だけ読めばよいなら，次のようにできる：</p>
+<p>標準入力だけ読めばよいなら、次のようにできる：</p>
 
 <pre>
 import sys
@@ -56,31 +49,38 @@ for line in sys.stdin:
     print(line, end="")  # または print(line.rstrip())
 </pre>
 
-<p>ループではなく，標準入力から1行だけ読むには，次のようにする：</p>
+<p>入力中に UTF-8 として解釈できないバイト列があるとエラーになる。対策として、ほぼバイト列としてふるまう文字コード CP437 を指定すればよさそうだ（Python 3.7以降）：</p>
+
+<pre>
+sys.stdin.reconfigure(encoding="cp437")
+sys.stdout.reconfigure(encoding="cp437")
+</pre>
+
+<p>ループではなく、標準入力から1行だけ読むには、次のようにする：</p>
 
 <pre>
 line = sys.stdin.readline()
 </pre>
 
-<p>プロンプトで入力を促すには，次のようにする：</p>
+<p>プロンプトで入力を促すには、次のようにする：</p>
 
 <pre>
 n = int(input('正の整数を入力してください: '))
 </pre>
 
-<p>全部の行を行（文字列）のリストの形で読み込むには，次のようにする：</p>
+<p>全部の行を行（文字列）のリストの形で読み込むには、次のようにする：</p>
 
 <pre>
 lines = sys.stdin.readlines()
 </pre>
 
-<p>全部の行を一つの文字列の形で読み込むには，次のようにする：</p>
+<p>全部の行を一つの文字列の形で読み込むには、次のようにする：</p>
 
 <pre>
 lines = sys.stdin.read()
 </pre>
 
-<p>標準入力でないファイルの場合は，次のようにする：</p>
+<p>標準入力でないファイルの場合は、次のようにする：</p>
 
 <pre>
 with open("filename") as f:
@@ -95,7 +95,7 @@ with open("filename") as f:
     lines = f.readlines()  # または f.read()
 </pre>
 
-<p><code>f.read()</code> は <code>"1行目\n2行目\n..."</code> のような長い一つの文字列，<code>f.readlines()</code> は <code>["1行目\n", "2行目\n", ...]</code> のような行のリストを返す。</p>
+<p><code>f.read()</code> は <code>"1行目\n2行目\n..."</code> のような長い一つの文字列、<code>f.readlines()</code> は <code>["1行目\n", "2行目\n", ...]</code> のような行のリストを返す。</p>
 
 <p>コマンドラインで指定するファイルそれぞれについて上の処理を行うには次のようにすればよい：</p>
 
@@ -111,7 +111,7 @@ for filename in sys.argv[1:]:
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-09-07 22:42:37 JST</time></p>
+<p>Last modified: <time>2022-09-09 08:40:51 JST</time></p>
 </footer>
 </body>
 </html>
