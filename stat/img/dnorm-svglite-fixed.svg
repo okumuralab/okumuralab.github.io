@@ -39,27 +39,27 @@
 <line x1='330.40' y1='214.56' x2='330.40' y2='221.76' style='stroke-width: 0.75;' />
 <line x1='394.40' y1='214.56' x2='394.40' y2='221.76' style='stroke-width: 0.75;' />
 <line x1='458.40' y1='214.56' x2='458.40' y2='221.76' style='stroke-width: 0.75;' />
-<text x='74.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>-3</text>
-<text x='138.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>-2</text>
-<text x='202.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>-1</text>
-<text x='266.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>0</text>
-<text x='330.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>1</text>
-<text x='394.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>2</text>
-<text x='458.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>3</text>
+<text x='74.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>-3</text>
+<text x='138.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>-2</text>
+<text x='202.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>-1</text>
+<text x='266.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>0</text>
+<text x='330.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>1</text>
+<text x='394.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>2</text>
+<text x='458.40' y='237.60' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>3</text>
 <line x1='59.04' y1='210.42' x2='59.04' y2='64.41' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='210.42' x2='51.84' y2='210.42' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='173.92' x2='51.84' y2='173.92' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='137.42' x2='51.84' y2='137.42' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='100.91' x2='51.84' y2='100.91' style='stroke-width: 0.75;' />
 <line x1='59.04' y1='64.41' x2='51.84' y2='64.41' style='stroke-width: 0.75;' />
-<text transform='translate(44.64,210.42) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>0.0</text>
-<text transform='translate(44.64,173.92) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>0.1</text>
-<text transform='translate(44.64,137.42) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>0.2</text>
-<text transform='translate(44.64,100.91) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>0.3</text>
-<text transform='translate(44.64,64.41) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>0.4</text>
+<text transform='translate(44.64,210.42) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>0.0</text>
+<text transform='translate(44.64,173.92) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>0.1</text>
+<text transform='translate(44.64,137.42) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>0.2</text>
+<text transform='translate(44.64,100.91) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>0.3</text>
+<text transform='translate(44.64,64.41) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>0.4</text>
 <polygon points='59.04,214.56 473.76,214.56 473.76,59.04 59.04,59.04 ' style='stroke-width: 0.75;' />
-<text x='266.40' y='34.70' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: "Arial";'>正規分布</text>
-<text x='266.40' y='254.88' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>x</text>
-<text transform='translate(27.36,136.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: "Arial";'>dnorm(x)</text>
+<text x='266.40' y='34.70' text-anchor='middle' style='font-size: 14.40px; font-weight: bold; font-family: sans-serif;'>正規分布</text>
+<text x='266.40' y='254.88' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>x</text>
+<text transform='translate(27.36,136.80) rotate(-90)' text-anchor='middle' style='font-size: 12.00px; font-family: sans-serif;'>dnorm(x)</text>
 </g>
 </svg>
