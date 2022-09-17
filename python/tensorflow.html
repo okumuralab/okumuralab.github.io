@@ -63,7 +63,7 @@ tf.__version__
 </pre>  
 
 <pre>
-'2.9.2'
+'2.10.0'
 </pre>
 
 <pre class="cell">
@@ -71,7 +71,7 @@ tf.keras.__version__
 </pre>  
 
 <pre>
-'2.9.0'
+'2.10.0'
 </pre>
 
 <p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="mnist.html">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
@@ -112,16 +112,17 @@ model.fit(x_train, y_train, epochs=5)
 <p>経過の例（Mac mini (M1 2020) tensorflow-metal なし）：</p>
 
 <pre>
+2022-09-16 15:43:59.502013: W tensorflow/core/platform/profile_utils/cpu_utils.cc:128] Failed to get CPU frequency: 0 Hz
 Epoch 1/5
-1875/1875 [==============================] - 1s 562us/step - loss: 0.2940 - accuracy: 0.9140
+1875/1875 [==============================] - 1s 592us/step - loss: 0.2949 - accuracy: 0.9131
 Epoch 2/5
-1875/1875 [==============================] - 1s 551us/step - loss: 0.1427 - accuracy: 0.9573
+1875/1875 [==============================] - 1s 576us/step - loss: 0.1432 - accuracy: 0.9578
 Epoch 3/5
-1875/1875 [==============================] - 1s 551us/step - loss: 0.1086 - accuracy: 0.9675
+1875/1875 [==============================] - 1s 589us/step - loss: 0.1087 - accuracy: 0.9680
 Epoch 4/5
-1875/1875 [==============================] - 1s 549us/step - loss: 0.0888 - accuracy: 0.9728
+1875/1875 [==============================] - 1s 594us/step - loss: 0.0877 - accuracy: 0.9726
 Epoch 5/5
-1875/1875 [==============================] - 1s 545us/step - loss: 0.0773 - accuracy: 0.9759
+1875/1875 [==============================] - 1s 571us/step - loss: 0.0759 - accuracy: 0.9766
 </pre>
 
 <p>（<code>pip install tensorflow-metal</code> すると GPU が使えるはずだが、かえって遅くなってしまったので、<code>pip uninstall tensorflow-metal</code> した。）</p>
@@ -150,16 +151,16 @@ tf.math.confusion_matrix(y_test, y_pred)
 
 <pre>
 &lt;tf.Tensor: shape=(10, 10), dtype=int32, numpy=
-array([[ 970,    0,    2,    0,    1,    0,    4,    1,    2,    0],
-       [   0, 1127,    3,    1,    0,    0,    2,    0,    2,    0],
-       [   6,    0, 1007,    4,    4,    0,    2,    2,    7,    0],
-       [   0,    0,    7,  992,    1,    1,    0,    5,    3,    1],
-       [   1,    0,    0,    0,  965,    0,    6,    0,    1,    9],
-       [   4,    0,    0,   16,    2,  861,    4,    1,    3,    1],
-       [   4,    3,    1,    1,    3,    3,  941,    0,    2,    0],
-       [   3,    5,    8,    4,    3,    0,    0,  994,    2,    9],
-       [   2,    2,    4,   12,    5,    5,    2,    3,  937,    2],
-       [   2,    6,    0,    5,   14,    1,    0,    4,    0,  977]],
+array([[ 969,    0,    1,    2,    2,    2,    2,    1,    1,    0],
+       [   0, 1118,    3,    1,    0,    1,    4,    1,    7,    0],
+       [   3,    2, 1011,    3,    1,    0,    2,    5,    5,    0],
+       [   0,    0,    5,  992,    0,    4,    0,    3,    4,    2],
+       [   2,    0,    5,    0,  954,    1,    4,    2,    2,   12],
+       [   3,    0,    0,   11,    2,  863,    5,    1,    6,    1],
+       [   5,    3,    1,    0,    1,    3,  944,    0,    1,    0],
+       [   1,    5,   11,    4,    0,    0,    0,  995,    2,   10],
+       [   2,    0,    3,    6,    5,    3,    2,    3,  948,    2],
+       [   2,    6,    0,    7,    9,    2,    1,    3,    4,  975]],
       dtype=int32)&gt;
 </pre>
 
@@ -179,7 +180,7 @@ model = tf.keras.models.load_model("mymodel.h5")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-06-22 16:06:29 JST</time></p>
+<p>Last modified: <time>2022-09-16 15:46:05 JST</time></p>
 </footer>
 </body>
 </html>

@@ -156,7 +156,7 @@ export PATH
 
 <h2>Command Line Tools</h2>
 
-<p>コマンドラインで開発する場合，巨大な Xcode をインストールする必要はない。コマンドライン用の開発ツールは，何らかの開発用コマンド（gcc とか python3 とか）を実行しようとするとインストールを促される。より確実な方法は，ターミナルに <code>xcode-select --install</code> と打ち込むか，<a href="https://developer.apple.com/downloads">https://developer.apple.com/downloads</a> からダウンロードしてインストールする。OS を更新するとコマンドラインツールも再インストールが必要になることが多いので注意。</p>
+<p>コマンドラインで開発する場合，巨大な Xcode をインストールする必要はない。コマンドライン用の開発ツールは，何らかの開発用コマンド（gcc とか python3 とか）を実行しようとするとインストールを促される。より確実な方法は，ターミナルに <code>xcode-select --install</code> と打ち込む。更新は「システム環境設定」→「ソフトウェアアップデート」でできるはずだが、たまにうまくいかないことがあるので、その場合は <code>sudo rm -rf /Library/Developer/CommandLineTools</code> してから <code>xcode-select --install</code> する（または <a href="https://developer.apple.com/downloads">https://developer.apple.com/downloads</a> からダウンロードしてインストールする）。OS を更新するとコマンドラインツールも再インストールが必要になることがある。</p>
 
 <h2>Homebrew</h2>
 
@@ -185,15 +185,15 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 <p>Homebrew 環境でソースからビルドするには次のようにする：</p>
 
 <pre>
-wget -N http://ftp.gnu.org/gnu/emacs/emacs-27.2.tar.xz
-wget -N ftp://ftp.math.s.chiba-u.ac.jp/emacs/emacs-27.2-mac-8.2.tar.gz
-tar xvzf emacs-27.2.tar.xz
-tar xvzf emacs-27.2-mac-8.2.tar.gz
-cd emacs-27.2
-patch -p1 < ../emacs-27.2-mac-8.2/patch-mac
-cp -R ../emacs-27.2-mac-8.2/mac .
-cp ../emacs-27.2-mac-8.2/src/* src/
-cp ../emacs-27.2-mac-8.2/lisp/term/mac-win.el lisp/term/
+wget -N http://ftp.gnu.org/gnu/emacs/emacs-28.2.tar.xz
+wget -N ftp://ftp.math.s.chiba-u.ac.jp/emacs/emacs-28.2-mac-9.1.tar.gz
+tar xvzf emacs-28.2.tar.xz
+tar xvzf emacs-28.2-mac-9.1.tar.gz
+cd emacs-28.2
+patch -p1 < ../emacs-28.2-mac-9.1/patch-mac
+cp -R ../emacs-28.2-mac-9.1/mac .
+cp ../emacs-28.2-mac-9.1/src/* src/
+cp ../emacs-28.2-mac-9.1/lisp/term/mac-win.el lisp/term/
 cp nextstep/Cocoa/Emacs.base/Contents/Resources/*.icns mac/Emacs.app/Contents/Resources/
 ./configure --prefix=/opt/homebrew --without-x
 make 
@@ -206,7 +206,7 @@ make install
 
 <h2>Python</h2>
 
-<p>いろいろ試したが，今は <del>miniforge 版</del><ins>本家のPython</ins>を使っている。</p>
+<p>いろいろ試したが，今は<a href="https://www.python.org">本家</a>のPythonを使っている。</p>
 
 <h3>コマンドラインツールのPython</h3>
 
@@ -235,9 +235,10 @@ pip3 install tensorflow-macos
 pip3 install torch torchvision torchaudio
 </pre>
 
+<!--
 <h3>miniforgeのPython</h3>
 
-<p><a href="https://github.com/conda-forge/miniforge">miniforge</a> を使えば主要ライブラリを含めて arm64 版がインストールできる。これがお薦め。</p>
+<p><a href="https://github.com/conda-forge/miniforge">miniforge</a> を使えば主要ライブラリを含めて arm64 版がインストールできる。</p>
 
 <p>上記サイトから Miniforge3-MacOSX-arm64.sh をダウンロードし，ターミナルに <code>sh Miniforge3-MacOSX-arm64.sh</code> と打ち込むと，miniforge のインストールが始まる。</p>
 
@@ -298,6 +299,7 @@ conda install pytorch torchvision  # torchaudio はまだダメ
 
 <p>Apple Silicon GPU 対応版も出た：<a href="https://pytorch.org/blog/introducing-accelerated-pytorch-training-on-mac/">Introducing Accelerated PyTorch Training on Mac</a></p>
 
+-->
 <!--
 <h3>miniforgeのPython 3.8とAppleのTensorFlow（古）</h3>
 
@@ -473,7 +475,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-06-21 10:17:02 JST</time>
+Last modified: <time>2022-09-17 10:29:10 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
