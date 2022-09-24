@@ -1,11 +1,11 @@
 #! /usr/local/bin/python3
 
 # https://catalog.data.metro.tokyo.lg.jp/dataset/t000010d0000000068
-# wget -N https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients.csv # old
-# wget -N https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients_2020.csv
-# wget -N https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients_2021.csv
-# wget -N https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients_2022.csv
-# wget -N https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients_2022-1.csv
+# wget -N https://data.stopcovid19.metro.tokyo.lg.jp/130001_tokyo_covid19_patients_2020.csv
+# wget -N https://data.stopcovid19.metro.tokyo.lg.jp/130001_tokyo_covid19_patients_2021.csv
+# wget -N https://data.stopcovid19.metro.tokyo.lg.jp/130001_tokyo_covid19_patients_2022.csv
+# wget -N https://data.stopcovid19.metro.tokyo.lg.jp/130001_tokyo_covid19_patients_2022-1.csv
+# wget -N https://data.stopcovid19.metro.tokyo.lg.jp/130001_tokyo_covid19_patients_2022-2.csv
 
 import os
 import subprocess
@@ -21,10 +21,10 @@ import re
 if "--debug" in sys.argv:
     logging.basicConfig(format='%(asctime)s:%(message)s', level=logging.DEBUG)
 
-URL = "https://stopcovid19.metro.tokyo.lg.jp/data/130001_tokyo_covid19_patients_2022-1.csv"
+URL = "https://data.stopcovid19.metro.tokyo.lg.jp/130001_tokyo_covid19_patients_2022-2.csv"
 
 try:
-    t = os.stat("130001_tokyo_covid19_patients_2022-1.csv").st_mtime
+    t = os.stat("130001_tokyo_covid19_patients_2022-2.csv").st_mtime
 except:
     t = 0
 if time.time() - t < 36000:  # 10時間未満なら
@@ -39,7 +39,7 @@ if not " saved " in r.stderr:
     logging.debug("File not modified.")  # 304 Not Modified
     exit()
 
-p = os.stat("130001_tokyo_covid19_patients_2022-1.csv")
+p = os.stat("130001_tokyo_covid19_patients_2022-2.csv")
 now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime(p.st_mtime))
 
 df0 = pd.read_csv("130001_tokyo_covid19_patients_2022.csv", index_col="No",
@@ -52,7 +52,12 @@ df1 = pd.read_csv("130001_tokyo_covid19_patients_2022-1.csv", index_col="No",
                   na_values=['-', '―', '－', ' ', '不明', '不明性'],
                   low_memory=False)
 
-df = pd.concat([df0, df1])
+df2 = pd.read_csv("130001_tokyo_covid19_patients_2022-2.csv", index_col="No",
+                  parse_dates=['公表_年月日', '発症_年月日', '確定_年月日'],
+                  na_values=['-', '―', '－', ' ', '不明', '不明性'],
+                  low_memory=False)
+
+df = pd.concat([df0, df1, df2])
 
 locator = mdates.AutoDateLocator()
 formatter = mdates.ConciseDateFormatter(locator)

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/giga.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ギガ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+
+<h1>ギガ</h1>
+
+<p>「ギガが足りない」というときの「ギガ」は「ギガバイト」ですが、1ギガバイトは1000メガバイト？ それとも1024メガバイト？</p>
+
+<p>コンピュータでは、キロ、メガ、ギガは1000倍ずつではなく1024倍ずつ増えていくという話があります。本当でしょうか？</p>
+
+<p>まず、コンピュータでも、転送速度（ビット/秒、b/s）などは、1 kb/s = 1000 b/s、1 Mb/s = 1000 kb/s、1 Gb/s = 1000 Mb/s のように、1000倍ずつ増えていきます。</p>
+
+<p>問題は、単位が「バイト」（8ビット）のときだけです。伝統的に、1 KB = 1024 B、1 MB = 1024 KB、1 GB = 1024 MB のように、1024倍ずつ増えていくことになっていました。この場合、キロだけは小文字 k ではなく大文字 K と書きます（区別するためにキロではなくケーと読むこともありました）。</p>
+
+<p>ただ、この伝統は崩れつつあります。国際的に標準となっている<a href="https://ja.wikipedia.org/wiki/SI%E6%8E%A5%E9%A0%AD%E8%AA%9E">SI接頭語</a>を使おうという気運が高まり、1 kB = 1000 B、1 MB = 1000 kB、1 GB = 1000 MB のように、1000倍ずつにすることが、Windows 以外（Mac や Linux やストレージ業界）では一般的になってきました（この場合は k は小文字です）。USB メモリの何 GB や、DVD の 4.7 GB は、これによっています。</p>
+
+<p>この場合、従来のように1024倍ずつ増えるほうは、1 KiB = 1024 B、1 MiB = 1024 KiB、1 GiB = 1024 MiB のように、単位の接頭辞を変えます。Ki は「キビ」、Mi は「メビ」、Gi は「ギビ」と読みます。詳しくはウィキペディアの<a href="https://ja.wikipedia.org/wiki/%E3%82%AD%E3%83%93%E3%83%90%E3%82%A4%E3%83%88">キビバイト</a>をご覧ください。</p>
+
+<p>ギガの従来の定義は 1024<sup>3</sup> = 1073741824、今の定義は 1000<sup>3</sup> = 1000000000 で、両者は約 7.4% も違います。従来の定義だと思って買ったハードディスクの容量が少なかったという訴訟が過去において起こされました（例：<a href="https://japan.zdnet.com/article/20359800/">シーゲイト、ディスク容量をめぐる訴訟で払い戻しを実施へ</a>）。</p>
+
+<p>しかし、Windows は今でも 1024 に固執しているようです。</p>
+
+<p>1000倍と1024倍が混じって使われることもあります。例えば<a href="https://ja.wikipedia.org/wiki/%E3%83%95%E3%83%AD%E3%83%83%E3%83%94%E3%83%BC%E3%83%87%E3%82%A3%E3%82%B9%E3%82%AF">フロッピーディスク</a>の 1.44 MB は、1.44×1000×1024 バイトです。Twitter では次のような例も出ています（これは2016年の話で、今はどうなっているかわかりません）：</p>
+
+<blockquote class="twitter-tweet">
+  <p lang="ja" dir="ltr"><a href="https://twitter.com/Simofle?ref_src=twsrc%5Etfw">@Simofle</a> はい、その通りです。弊社サービスでは1MB=1024*1024バイトとして計算しますが、1GBは1000MBとしております。<a href="https://t.co/O9mwtP1yRn">https://t.co/O9mwtP1yRn</a></p>
+  &mdash; IIJmio (@iijmio) <a href="https://twitter.com/iijmio/status/694269891935735809?ref_src=twsrc%5Etfw">February 1, 2016</a>
+</blockquote>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-09-24 21:22:25 JST</time></p>
+</footer>
+</body>
+</html>

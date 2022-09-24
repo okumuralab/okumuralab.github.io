@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/streaming.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ダウンロードとストリーミング</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+
+<h1>ダウンロードとストリーミング</h1>
+
+<p>ネットを使った音楽やビデオの再生方式として、ダウンロード方式とストリーミング方式に分けて説明することがよくあります。ダウンロード方式はファイルを全部取ってきてからしか再生が始まらないのに対して、ストリーミング方式は再生がすぐ始まると書いてあったり、ダウンロード方式は再生したあとでもファイルが残るけれども、ストリーミング方式ならファイルが残らないと書いてあったりします。</p>
+
+<p>これら以外にプログレッシブダウンロード方式ということばも出てくるかもしれません。その場合、ふつうのダウンロード方式はファイルを全部取ってきてからしか再生が始まらないのに対して、プログレッシブダウンロード方式ならダウンロードしながら再生できると説明されています。この場合、ストリーミング方式との違いはファイルとして残るか残らないかの違いというふうに説明されています。</p>
+
+<p>高校「情報」教科書には、ストリーミング方式は（TCPではなく）UDPを使うと書いてあるものも一冊ありました。</p>
+
+<p>ではYouTubeはどの方式でしょうか？ 授業でダウンロードとストリーミングを習ったなら、もしかしたら試験に出そうですね。</p>
+
+<p>英語版Wikipediaの<a href="https://en.wikipedia.org/wiki/YouTube">YouTube</a>の項目には <a href="https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP">Dynamic Adaptive Streaming over HTTP</a>（DASH、MPEG-DASH）を使うと書いてあります。Streaming ということばが入っていますので、ストリーミングの一種のようです。別のサイトには、HLS（HTTP Live Streaming）またはMPEG-DASHを使うと書いてあるものもありました。一方、日本語版Wikipediaの<a href="https://ja.wikipedia.org/wiki/YouTube">YouTube</a>の項目には「2015年からHTML5での再生が標準になった」としか書かれていません（いずれにしてもUDPではなくTCPですので、ストリーミングはUDPだと習った人はこの時点でダウンロード確定かもしれません）。</p>
+
+<p>でも、日本語版Wikipediaの<a href="https://ja.wikipedia.org/wiki/%E3%83%97%E3%83%AD%E3%82%B0%E3%83%AC%E3%83%83%E3%82%B7%E3%83%96%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89">プログレッシブダウンロード</a>の項目には「プログレッシブダウンロードを使用しているサイトとしてはYouTubeやその他動画共有サイトなどがある」と書かれていて、YouTubeはストリーミングではないことになっています。なお、英語版Wikipediaにはprogressive downloadという独立の項目はなく <a href="https://en.wikipedia.org/wiki/ISO_base_media_file_format#Streaming">ISO base media file format</a> の中の Streaming というセクションで簡単に説明されています（プログレッシブダウンロード用はファイル中のメタデータがファイルの先頭にある）。</p>
+
+<p>ここまでをまとめると、</p>
+
+<ul>
+  <li>ダウンロード方式ではファイル丸ごとダウンロードされて残る。特にプログレッシブダウンロード方式ではファイルの先頭にメタデータがあるのでダウンロードしながら再生できる。</li>
+  <li>ストリーミング方式ではファイルが残らない。</li>
+</ul>
+
+<p>ということになりそうです。ではYouTubeはファイルは残らないのでストリーミング方式でいいのでしょうか。</p>
+
+<p>ここで、渋川よしきさんが書かれた<a href="https://www.oreilly.co.jp/books/9784873119038/">Real World HTTP 第2版</a>という本を紹介していただいたので読んでみました。この本の第8章にはHLSやMPEG-DASHのようなYouTube系のサービスが使っている方式が詳しく説明されています。この中でHLSについて「デメリットとしては「ストリーミング」と名乗っていますが実体はプログレッシブダウンロード方式になっているという点です」、MPEG-DASHについて「MPEG-DASHも、HTTPによるプログレッシブダウンロードを核としたストリーミング方式です」と書かれており、YouTube系のサービスの実態はプログレッシブダウンロードだと主張されています。しかし、プログレッシブダウンロードの定義は書かれていません。</p>
+
+<p>だんだんよくわからなくなってきたので、実際のYouTubeの中身を解析してみることにしました（実は大昔に解析したことがあったのですが、そのころからかなり変わっています）。いくつか調べたところ、webm形式のビデオファイルとオーディオファイルが別々に数秒単位で細切れになってダウンロードされているようです（しかし保存されている形跡はありません）。これを何と呼ぶべきでしょうか。</p>
+
+<p>いろいろ説明を探したのですが、NGINXの <a href="https://www.nginx.com/resources/glossary/progressive-download/">What Is Progressive Download?</a> というページで、プログレッシブダウンロードはファイルの先頭にメタデータがあって一つのファイルをダウンロードしながら再生することと説明されており、YouTubeのような方式は pseudo-streaming（擬似ストリーミング）と呼んでいるようです。これが一番しっくりくるように思いました。</p>
+
+<p>まとめると、</p>
+
+<ul>
+  <li>プログレッシブでないダウンロード方式（全部ダウンロードしないと再生できない）</li>
+  <li>プログレッシブダウンロード方式（ダウンロードしながら再生できるが、ずっと先に飛ぶのは困難）</li>
+  <li>擬似ストリーミング方式（ファイルの細切れをダウンロードするが、保存しない、または保存してもすぐに消す。ずっと先にでも飛べる）</li>
+  <li>擬似でない（UDPを使った）ストリーミング方式（RTPなど）</li>
+</ul>
+
+<p>のようにとりあえず整理できそうですが、高校「情報」では難しすぎるので、上二つと下二つをまとめて、</p>
+
+<ul>
+  <li>ダウンロード方式（ファイルが残る）</li>
+  <li>ストリーミング方式（ファイルが残らない）</li>
+</ul>
+
+<p>と二分するのでいいような気がします。この場合、YouTubeはストリーミングになります（ストリーミングはUDPだと書いた教科書とは矛盾するかもしれません）。</p>
+
+<p>ちなみに、Zoomで出力されるMP4ファイルはメタデータが最初にあるのでそのままサーバに置けばプログレッシブダウンロードできると思いますが、メタデータが最後にあるファイルの場合は、ffmpeg の <code>-movflags faststart</code> オプションでメタデータを最初に持っていきます。例：</p>
+
+<pre>
+ffmpeg -i in.mp4 -codec copy -movflags faststart out.mp4
+</pre>
+
+<p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-09-24 17:00:26 JST</time></p>
+</footer>
+</body>
+</html>

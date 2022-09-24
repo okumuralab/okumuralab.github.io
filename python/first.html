@@ -70,6 +70,10 @@ td { border: 1px solid; text-align: left; }
 
 <p>Python 2 では、C言語などと同様に、整数の割り算は整数に切り捨てましたが、Python 3 では <code>/</code> は実数（浮動小数点数）の範囲で計算します。整数の除算には <code>//</code> を使います。除算の余りは <code>%</code> です。例えば <code>7 // 3</code> は 2 になり、<code>7 % 3</code> は 1 になります。</p>
 
+<div class="note">
+<p>Python の浮動小数点数は一般的な IEEE 754 仕様ですが、整数は上限がありません（いわゆるbignum）。ただし、Python 3.10.7 から、DoS対策のため、10進変換などはデフォルト4300桁に制限されます。この制限を外すには環境変数 <code>PYTHONINTMAXSTRDIGITS</code> を 0 に設定するなどの方法があります（<a href="https://docs.python.org/3/library/stdtypes.html">Built-in Types</a> 参照）。</p>
+</div>
+
 <p>おもしろいことに、文字列を足し算、掛け算することもできます。文字列はダブルクオート <code>"</code> またはシングルクオート <code>'</code> で囲んで表します：</p>
 
 <pre class="cell">
@@ -481,7 +485,7 @@ for i in range(2, 100):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-04 22:03:16 JST</time>
+Last modified: <time>2022-09-19 10:38:43 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
