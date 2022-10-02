@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/thresh.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenCVによる画像の2値化</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>OpenCVによる画像の2値化</h1>
+
+<p>文書をとりあえず写真に撮って、後でモノクロ2値化したいことがある。そのために簡単に使えるPythonのプログラムを作っておく。</p>
+
+<p>アルゴリズムは OpenCV の <a href="https://docs.opencv.org/4.x/d7/d4d/tutorial_py_thresholding.html">Image Thresholding</a> の真ん中あたりに載っている三つのアルゴリズムの比較の図を参考にして、Adaptive Gaussian Thresholding にする。これは、まずグレースケール化して、近傍 blockSize × blockSize の領域の平均の明るさ（ただし Gaussian の重みをつけて平均する）から定数 C を引いた値を閾値として2値化する。</p>
+
+<p>使い方は、次のコードを例えば <code>thresh.py</code> とし、ターミナルで <code>thresh.py 入力ファイル 出力ファイル [blockSize] [C]</code> として起動する。最後の二つはオプションで、blockSize は奇数とする（偶数を与えても奇数にする）。うまくいかないようであれば特に blockSize を調節するとよい。</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import sys
+import cv2
+
+blockSize = 51
+C = 20
+
+if len(sys.argv) &lt; 3:
+    print(sys.argv[0], f"infile outfile [blockSize={blockSize}] [C={C}]")
+    exit()
+
+infile = sys.argv[1]
+outfile = sys.argv[2]
+if len(sys.argv) &gt; 3:
+    blockSize = int(sys.argv[3]) // 2 * 2 + 1  # odd number
+if len(sys.argv) &gt; 4:
+    C = int(sys.argv[4])
+
+img = cv2.imread(infile)
+img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+img = cv2.adaptiveThreshold(
+    img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+    cv2.THRESH_BINARY, blockSize, C)
+
+cv2.imwrite(outfile, img)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-10-02 08:34:12 JST</time></p>
+</footer>
+</body>
+</html>

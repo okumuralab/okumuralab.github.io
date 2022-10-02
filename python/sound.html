@@ -17,11 +17,35 @@
 
 <h1>音</h1>
 
-<p>WAVファイルを操作するPython標準ライブラリ <a href="https://docs.python.org/3/library/wave.html">wave</a> もあるが，以下のようにするほうが楽。</p>
+<h2>音を鳴らす</h2>
+
+<p>いろいろ方法がありますが、簡単でどこでも使えるのが <code>print("\x07")</code> です。ASCII の 07 は音を鳴らすための文字です。いわゆるビープ音ですが、Mac はシステム環境設定の「サウンド」の「サウンドエフェクト」で音が選べます。</p>
+
+<p>440Hzの正弦波を鳴らす方法はいろいろありますが、ここでは <a href="https://pypi.org/project/sounddevice/">python-sounddevice</a> というライブラリを使います。<code>pip install sounddevice</code> または <code>conda install -c conda-forge python-sounddevice</code> でインストールできます。音のデータは ±1 の範囲に収めます。</p>
+
+<pre class="cell">
+import numpy as np
+import sounddevice as sd
+
+x = 0.8 * np.sin(2 * np.pi * 440 * np.linspace(0, 1, 44101))
+sd.play(x, 44100)
+</pre>
+
+<p>WAVファイルの読み書きは、Python標準ライブラリ <a href="https://docs.python.org/3/library/wave.html">wave</a> や、次に説明する SciPy も使えますが、ここでは python-sounddevice と同じ開発者による <a href="https://pypi.org/project/soundfile/">soundfile</a> ライブラリを使ってみます。<code>pip install soundfile</code> でインストールして、次のようにします：</p>
+
+<pre class="cell">
+import soundfile as sf
+import sounddevice as sd
+
+data, fs = sf.read("filename.wav")
+sd.play(data, fs)
+</pre>
 
 <h2>WAVファイルの作成</h2>
 
-<p>880Hzの音と1320Hzの音を混ぜると，あるはずのない440Hzの音も聞こえるという話を聞いたので確かめてみよう。numpy と scipy はインストールしておく（<code>pip install numpy scipy</code>）。</p>
+<p>以下では SciPy を使ってみます。</p>
+
+<p>880Hzの音と1320Hzの音を混ぜると、あるはずのない440Hzの音も聞こえるという話を聞いたので確かめてみましょう。NumPy と SciPy はインストールしておきます（<code>pip install numpy scipy</code>）。</p>
 
 <pre class="cell">
 import numpy as np
@@ -35,31 +59,32 @@ data = 10000 * (np.sin(880 * t) + np.sin(1320 * t))
 wavfile.write("test.wav", samplerate, (data + 0.5).astype("int16"))
 </pre>
 
-<p>こうしてできた test.wav を再生してみよう。Macであればターミナルに <code>afplay test.wav</code> と打ち込めば再生できる。</p>
+<p>こうしてできた test.wav を再生してみましょう。Macであればターミナルに <code>afplay test.wav</code> と打ち込めば再生できます。</p>
 
-<p>880Hzを左耳，1320Hzを右耳に出すには，<code>data = ...</code> の行を次のようにする：</p>
+<p>880Hzを左耳、1320Hzを右耳に出すには、<code>data = ...</code> の行を次のようにします：</p>
 
 <pre>
 data = 10000 * np.c_[np.sin(880 * t), np.sin(1320 * t)]
 </pre>
 
-<p>1320Hzのほうを少し小さい音にして，1秒遅れて出す：</p>
+<p>1320Hzのほうを少し小さい音にして、1秒遅れて出します：</p>
 
 <pre>
 w = np.append(np.zeros(samplerate), np.ones(samplerate * (duration - 1) + 1))
 data = 10000 * np.sin(880 * t) + 5000 * w * np.sin(1320 * t)
 </pre>
 
-<p>いろいろ試してください。聞こえるのは差 (1320-880)Hz だという説もありますが，それなら高い方を例えば 1374 にすれば (1374-880)Hz でほぼレの音が聞こえるはずですね。</p>
+<p>いろいろ試してください。聞こえるのは差 (1320-880)Hz だという説もありますが、それなら高い方を例えば 1374 にすれば (1374-880)Hz でほぼレの音が聞こえるはずですね。</p>
+
+<h2>音楽を作る</h2>
+
+<p><a href="https://pypi.org/project/musicpy/">musicpy</a> が楽しそうです（そのうち書きます）。</p>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-03-09 15:59:14</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-09-28 21:43:04 JST</time></p>
+</footer>
 </body>
 </html>

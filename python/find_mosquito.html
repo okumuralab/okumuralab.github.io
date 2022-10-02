@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/find_mosquito.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenCVによる蚊の検知</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>OpenCVによる蚊の検知</h1>
+
+<p>Zoom会議で使うビデオカメラを使って、蚊の飛来を検知できないだろうか。</p>
+
+<p>まずはビデオカメラから画像を取得して画面に表示してみる。<code>cv2.VideoCapture()</code> の引数はカメラ番号で、カメラが1台であれば <code>0</code> のはずである：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import cv2
+
+capture = cv2.VideoCapture(0)  # 0, 1, 2, ...
+
+while (True):
+    ret, frame = capture.read()
+    if not ret:
+        break
+    cv2.imshow("Frame", frame)
+    if cv2.waitKey(1) == ord("q"):
+        break
+
+capture.release()
+cv2.destroyAllWindows()
+</pre>
+
+<p>これを例えば <code>test.py</code> という名前で保存し、実行許可を与え（<code>chmod 755 test.py</code>）、実行（<code>./test.py</code>）する。Mac では、最初はカメラにアクセスする許可がないので失敗する。システム環境設定の「セキュリティとプライバシー」の「プライバシー」で、「変更するにはカギをクリックします」をしてから、左側「カメラ」、右側「ターミナル」のチェックを付け、ターミナル（で動くPython）からカメラがアクセスできるようにすると、実行できるようになる。ビデオ表示画面がアクティブな状態でキーボードの「Q」を押すと止まる。</p>
+
+<p>このプログラムを少しずつ改良して、蚊が飛んだらアラートが出る（例えば音を鳴らし画面に位置を表示する）ようにしてみよう。</p>
+
+<p>まず考えられるのは、直前の画像を保存しておき、差分をとって、それがある条件を満たせば、アラートを出すことであろう。カラーの差分は解釈が難しいので、グレースケールに直してから差分の絶対値を求める。それをさらに画素値40を境として2値化し、白（つまり40以上変化のあったピクセル）の個数が一定レベルを超えればアラートを出す。ここでは個数を画面に出力し、いわゆるビープ音を出すための制御文字 <code>"\x07"</code> を出力し、2値化した差分を画面に表示している：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import cv2
+import numpy as np
+
+capture = cv2.VideoCapture(0)  # 0, 1, 2, ...
+
+prev = None
+while (True):
+    ret, frame = capture.read()
+    if not ret:
+        break
+    cv2.imshow("Frame", frame)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    if prev is not None:
+        delta = cv2.absdiff(gray, prev)
+        ret, thresh = cv2.threshold(delta, 40, 255, cv2.THRESH_BINARY)  # 40は要調整
+        n = np.count_nonzero(thresh)
+        if n > 10:  # 10は要調整
+            print(n, "\x07")
+            cv2.imshow("Frame", thresh)
+    prev = gray
+    if cv2.waitKey(1) == ord("q"):
+        break
+
+capture.release()
+cv2.destroyAllWindows()
+</pre>
+
+<p>さらに <code>cv2.imwrite("filename.png", frame)</code> などとしてアラート時の画像を出力すると後で便利である。このようにして出力した画像例（<a href="https://www.amazon.co.jp/dp/B082FWYSN9">EMEET NOVA HD1080P</a> 1920×1080だが、蚊らしいものの写っているところあたりを256×256に切り出したもの）と、両者の差分の輪郭を緑で示したものを、次に示す：</p>
+
+<figure>
+  <img src="img/f16.png" alt="蚊の画像">
+  <img src="img/f17.png" alt="蚊の画像">
+  <img src="img/f1617.png" alt="両者の差分の輪郭を緑で示したもの">
+</figure>
+
+<p>輪郭を出力するには、例えば次のようにする：</p>
+
+<pre>
+contours, hierarchy = cv2.findContours(
+    thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+cv2.drawContours(frame, contours, -1, (0, 255, 0), 3)
+cv2.imwrite("diff.png", frame)
+</pre>
+
+<p>ちなみに、両者の写真（切り出したものではなく全体）をグレースケールにしたものの差分の絶対値の和は 4372333、差分の絶対値の平均は約 2.1、差分の絶対値が 40 以上のピクセルは 48 個であった。</p>
+
+<p>改良すべきところはいろいろ考えられる。まず、直前との差分ではなく、直前のいくつかのフレームの移動平均を使う方が安定するであろう。また、蚊は小さいので大きい変化は無視するようにするべきであろう。これらは簡単に実装できる。蚊の形状を判断するのは課題である。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-10-02 11:00:50 JST</time></p>
+</footer>
+</body>
+</html>
