@@ -27,7 +27,7 @@
 #! /usr/bin/env python3
 
 import sys
-import cv2
+import cv2 as cv
 
 blockSize = 51
 C = 20
@@ -43,20 +43,20 @@ if len(sys.argv) &gt; 3:
 if len(sys.argv) &gt; 4:
     C = int(sys.argv[4])
 
-img = cv2.imread(infile)
-img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-img = cv2.adaptiveThreshold(
-    img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-    cv2.THRESH_BINARY, blockSize, C)
+img = cv.imread(infile)
+img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+img = cv.adaptiveThreshold(
+    img, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C,
+    cv.THRESH_BINARY, blockSize, C)
 
-cv2.imwrite(outfile, img)
+cv.imwrite(outfile, img)
 </pre>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-10-02 08:34:12 JST</time></p>
+<p>Last modified: <time>2022-10-03 11:03:21 JST</time></p>
 </footer>
 </body>
 </html>

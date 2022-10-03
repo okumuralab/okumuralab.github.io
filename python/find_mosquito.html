@@ -19,25 +19,28 @@
 
 <p>Zoom会議で使うビデオカメラを使って、蚊の飛来を検知できないだろうか。</p>
 
-<p>まずはビデオカメラから画像を取得して画面に表示してみる。<code>cv2.VideoCapture()</code> の引数はカメラ番号で、カメラが1台であれば <code>0</code> のはずである：</p>
+<p>まずはビデオカメラから画像を取得して画面に表示してみる。<code>cv.VideoCapture()</code> の引数はカメラ番号で、カメラが1台であれば <code>0</code> のはずである：</p>
 
 <pre>
 #! /usr/bin/env python3
 
-import cv2
+import cv2 as cv
 
-capture = cv2.VideoCapture(0)  # 0, 1, 2, ...
+capture = cv.VideoCapture(0)  # 0, 1, 2, ...
+if not capture.isOpened():
+    print("Cannot open camera")
+    exit()
 
 while (True):
     ret, frame = capture.read()
     if not ret:
         break
-    cv2.imshow("Frame", frame)
-    if cv2.waitKey(1) == ord("q"):
+    cv.imshow("Frame", frame)
+    if cv.waitKey(1) == ord("q"):
         break
 
 capture.release()
-cv2.destroyAllWindows()
+cv.destroyAllWindows()
 </pre>
 
 <p>これを例えば <code>test.py</code> という名前で保存し、実行許可を与え（<code>chmod 755 test.py</code>）、実行（<code>./test.py</code>）する。Mac では、最初はカメラにアクセスする許可がないので失敗する。システム環境設定の「セキュリティとプライバシー」の「プライバシー」で、「変更するにはカギをクリックします」をしてから、左側「カメラ」、右側「ターミナル」のチェックを付け、ターミナル（で動くPython）からカメラがアクセスできるようにすると、実行できるようになる。ビデオ表示画面がアクティブな状態でキーボードの「Q」を押すと止まる。</p>
@@ -49,34 +52,37 @@ cv2.destroyAllWindows()
 <pre>
 #! /usr/bin/env python3
 
-import cv2
+import cv2 as cv
 import numpy as np
 
-capture = cv2.VideoCapture(0)  # 0, 1, 2, ...
+capture = cv.VideoCapture(0)  # 0, 1, 2, ...
+if not capture.isOpened():
+    print("Cannot open camera")
+    exit()
 
 prev = None
 while (True):
     ret, frame = capture.read()
     if not ret:
         break
-    cv2.imshow("Frame", frame)
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv.imshow("Frame", frame)
+    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     if prev is not None:
-        delta = cv2.absdiff(gray, prev)
-        ret, thresh = cv2.threshold(delta, 40, 255, cv2.THRESH_BINARY)  # 40は要調整
+        delta = cv.absdiff(gray, prev)
+        ret, thresh = cv.threshold(delta, 40, 255, cv.THRESH_BINARY)  # 40は要調整
         n = np.count_nonzero(thresh)
         if n > 10:  # 10は要調整
             print(n, "\x07")
-            cv2.imshow("Frame", thresh)
+            cv.imshow("Frame", thresh)
     prev = gray
-    if cv2.waitKey(1) == ord("q"):
+    if cv.waitKey(1) == ord("q"):
         break
 
 capture.release()
-cv2.destroyAllWindows()
+cv.destroyAllWindows()
 </pre>
 
-<p>さらに <code>cv2.imwrite("filename.png", frame)</code> などとしてアラート時の画像を出力すると後で便利である。このようにして出力した画像例（<a href="https://www.amazon.co.jp/dp/B082FWYSN9">EMEET NOVA HD1080P</a> 1920×1080だが、蚊らしいものの写っているところあたりを256×256に切り出したもの）と、両者の差分の輪郭を緑で示したものを、次に示す：</p>
+<p>さらに <code>cv.imwrite("filename.png", frame)</code> などとしてアラート時の画像を出力すると後で便利である。このようにして出力した画像例（<a href="https://www.amazon.co.jp/dp/B082FWYSN9">EMEET NOVA HD1080P</a> 1920×1080だが、蚊らしいものの写っているところあたりを256×256に切り出したもの）と、両者の差分の輪郭を緑で示したものを、次に示す：</p>
 
 <figure>
   <img src="img/f16.png" alt="蚊の画像">
@@ -87,21 +93,23 @@ cv2.destroyAllWindows()
 <p>輪郭を出力するには、例えば次のようにする：</p>
 
 <pre>
-contours, hierarchy = cv2.findContours(
-    thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-cv2.drawContours(frame, contours, -1, (0, 255, 0), 3)
-cv2.imwrite("diff.png", frame)
+contours, hierarchy = cv.findContours(
+    thresh, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+cv.drawContours(frame, contours, -1, (0, 255, 0), 3)
+cv.imwrite("diff.png", frame)
 </pre>
 
 <p>ちなみに、両者の写真（切り出したものではなく全体）をグレースケールにしたものの差分の絶対値の和は 4372333、差分の絶対値の平均は約 2.1、差分の絶対値が 40 以上のピクセルは 48 個であった。</p>
 
-<p>改良すべきところはいろいろ考えられる。まず、直前との差分ではなく、直前のいくつかのフレームの移動平均を使う方が安定するであろう。また、蚊は小さいので大きい変化は無視するようにするべきであろう。これらは簡単に実装できる。蚊の形状を判断するのは課題である。</p>
+<p>改良すべきところはいろいろ考えられる。まず、直前との差分ではなく、直前のいくつかのフレームの移動平均を使う方が安定するであろう。また、蚊は小さいので大きい変化は無視するようにするべきであろう。これらは簡単に実装できる（前者は <code>cv.accumulateWeighted()</code> を使う）。蚊の形状を判断するのは課題である。</p>
+
+<p>ビープよりましなアラート音を出すには、<a href="sound.html">音</a>のところで書いたようにすればよい。ただし <code>sd.play()</code> で音が出ているときに再度 <code>sd.play()</code> を呼び出したりしているとハングするようなので、適宜間隔をあける。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-10-02 11:00:50 JST</time></p>
+<p>Last modified: <time>2022-10-03 11:00:39 JST</time></p>
 </footer>
 </body>
 </html>

@@ -253,14 +253,14 @@ t = arrow.get("2022-08-10 00+09:00")
 print(t)
 print(t.timestamp())
 print(t.format())
-print(t.format("YYYY-MM-DD HH:mm:ss"))
+print(t.format("YYYY-MM-DD HH:mm:ss.SSS"))
 </pre>
 
 <pre>
 2022-08-10T00:00:00+09:00
 1660057200.0
 2022-08-10 00:00:00+09:00
-2022-08-10 00:00:00
+2022-08-10 00:00:00.000
 </pre>
 
 <h2>その他</h2>
@@ -278,7 +278,7 @@ print(f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}')
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-10 10:46:07 JST</time></p>
+<p>Last modified: <time>2022-10-02 13:50:20 JST</time></p>
 </footer>
 </body>
 </html>
