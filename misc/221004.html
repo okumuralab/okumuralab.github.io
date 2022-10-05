@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/221004.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WindowsのWSL2でVS Codeを使って開発</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>WindowsのWSL2でVS Codeを使って開発</h1>
+
+<p>Windows 10/11でVisual Studio Code（VS Code）を使ったC/C++言語などの開発環境を簡単に入れる方法をいろいろ模索したのですが、WSL2のUbuntuを使うのが意外と簡単なので、方法をメモしておきます。ほぼ同じことがMicrosoftの <a href="https://learn.microsoft.com/ja-jp/windows/wsl/setup/environment">WSL 開発環境を設定する</a> というページにも書かれています。</p>
+
+<p>まずWindows PowerShellを「管理者として実行する」で立ち上げ、そこに</p>
+
+<pre>
+wsl --install
+</pre>
+
+<p>と打ち込みます。少し時間がかかりますが、WSL2とUbuntuが入ります（昔のようにWindowsの設定を変えたりアプリストアからUbuntuをダウンロードしたりする必要はありません）。終わったら再起動するように言われるので、Windowsを再起動します。</p>
+
+<p>再起動したWindowsのスタートボタンをクリックすると、新しく入ったアプリとしてUbuntuが見えますので、それを立ち上げます。ユーザ名とパスワードを設定するように言われますので、設定します（パスワードは絶対に忘れないように書き留めておきます）。</p>
+
+<p>まずはUbuntuを最新の状態にして、開発環境などをインストールするために、次のように打ち込みます：</p>
+
+<pre>
+sudo apt update
+sudo apt upgrade
+sudo apt install build-essential
+sudo apt install wget ca-certificates
+</pre>
+
+<p>次に、<a href="https://azure.microsoft.com/ja-jp/products/visual-studio-code/">VS Code</a> をまだインストールしていなければインストールします。</p>
+
+<p>VS Codeを立ち上げて、左の「拡張機能」ボタン（「田」の正方形が一つ外れたような形）を押し、検索欄に「Remote Development」と入力して Remote Development 拡張機能を探し、インストールします。終わったら、VS Codeはいったん閉じます。</p>
+
+<p>Ubuntuの窓に</p>
+
+<pre>
+code .
+</pre>
+
+<p>と打ち込むと（最初は少し時間がかかりますが）VS Codeが立ち上がりますので、例えば <code>hello.c</code> というプログラムを作り保存します。上のメニューで「ターミナル」→「新しいターミナル」を選び、VS Codeの下に現れるターミナルに</p>
+
+<pre>
+gcc hello.c
+./a.out
+</pre>
+
+<p>と打つと、コンパイル、実行されます。VS Codeはピン留めしておけば便利です。次回に開けば、Ubuntu側でVS Codeが開きます。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-10-04 16:13:42 JST</time></p>
+</footer>
+</body>
+</html>

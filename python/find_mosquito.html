@@ -105,11 +105,16 @@ cv.imwrite("diff.png", frame)
 
 <p>ビープよりましなアラート音を出すには、<a href="sound.html">音</a>のところで書いたようにすればよい。ただし <code>sd.play()</code> で音が出ているときに再度 <code>sd.play()</code> を呼び出したりしているとハングするようなので、適宜間隔をあける。</p>
 
+<p>Webカメラにはけっこうノイズがある。次の例は、前後のフレームに何も写っていないので、ノイズだと思われる：</p>
+
+<figure><img src="img/noise.png" alt="ノイズ画像"></figure>
+
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-10-03 11:00:39 JST</time></p>
+<p>Last modified: <time>2022-10-05 08:35:58 JST</time></p>
 </footer>
 </body>
 </html>
