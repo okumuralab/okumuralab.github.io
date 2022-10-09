@@ -81,23 +81,32 @@ sns.histplot(x, bins=np.arange(11)/10)
 <p>オプションは <code>plt.hist()</code> とだいたい同じですが、便利なオプションとして <code>discrete=True</code> があります。これは整数値のヒストグラムを描く場合に便利です：</p>
 
 <pre class="cell">
-sns.histplot(np.floor(10 * x), discrete=True)
+a = np.floor(10 * x)
+sns.histplot(a, discrete=True)
 </pre>
 
 <figure><img src="img/hist5.svg" alt="ヒストグラム5"></figure>
 
-<p>同様のことを Matplotlib でするなら、次のようになります：</p>
+<p>なお、さいころの目の分布のようなもともと離散分布のものは、棒グラフのように棒と棒の間隔をあけて描くのが一般的だろうと思います：</p>
+
+<pre>
+sns.histplot(a, discrete=True, shrink=0.8)
+</pre>
+
+<figure><img src="img/hist6.svg" alt="ヒストグラム6"></figure>
+
+<p>最後の2例を Matplotlib でするなら、それぞれ次のようになります：</p>
 
 <pre class="cell">
-a = np.floor(10 * x)
 plt.hist(a, bins=np.arange(min(a)-0.5, max(a)+1.5), edgecolor="black")
+plt.hist(a, bins=np.arange(min(a)-0.5, max(a)+1.5), edgecolor="black", rwidth=0.8)
 </pre>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-11 21:32:33 JST</time></p>
+<p>Last modified: <time>2022-10-09 13:36:18 JST</time></p>
 </footer>
 </body>
 </html>

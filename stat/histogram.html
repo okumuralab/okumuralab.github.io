@@ -31,6 +31,8 @@ MathJax = {
 
 <h1>グラフの例：ヒストグラム</h1>
 
+<p>[追記] いつの間にか <code>hist()</code> に色がつくようになりました（<code>col="lightgray"</code>）。以下の <code>col="gray"</code> は今は不要です。</p>
+
 <p>ヒストグラム（histogram）は度数分布図のこと。</p>
 
 <p>連続量のヒストグラムは，棒どうしをくっつけて描く。</p>
@@ -51,40 +53,55 @@ MathJax = {
 <p>例：100点満点のテストの点数が 10, 12, 20, 23, 25, 50, 100 であった。10点きざみの度数分布図を描け（実際にはこのような少数の度数分布図を描く意味はないが，単なる例示のため）。</p>
 
 <pre>
-<code>x = c(10, 12, 20, 23, 25, 50, 100)
+x = c(10, 12, 20, 23, 25, 50, 100)
 hist(x, breaks=(0:11)*10, right=FALSE, include.lowest=FALSE, col="gray")
-</code></pre>
+</pre>
 
 <figure><img src="img/180725a.png" alt="ヒストグラムの例"></figure>
 
 <p>この場合，最後の階級に100点を含めてしまうには，次のようにする：</p>
 
 <pre>
-<code>hist(x, breaks=(0:10)*10, right=FALSE, col="gray")
-</code></pre>
+hist(x, breaks=(0:10)*10, right=FALSE, col="gray")
+</pre>
 
 <figure><img src="img/180725b.png" alt="ヒストグラムの例"></figure>
 
 <p>実際には，もうちょっと工夫して見やすいものにする。</p>
 
 <pre>
-<code>par(mgp=c(2,0.8,0.5))     # 軸マージン（デフォルト: c(3,1,0)）
+par(mgp=c(2,0.8,0.5))     # 軸マージン（デフォルト: c(3,1,0)）
 hist(x, breaks=(0:10)*10, right=FALSE, col="gray", main="", xlab="", ylab="", yaxt="n")
 axis(2, 0:3, 0:3, las=1)
-</code></pre>
+</pre>
 
 <figure><img src="img/180725c.png" alt="ヒストグラムの例"></figure>
+
+<p>[追記] <code>x</code> が整数値をとる場合に各整数値の個数を表すには、棒と棒がくっつかない棒グラフ <code>barplot(table(x))</code> のほうがいいかもしれません。ただ、<code>table()</code> を使うと、個数 0 の階級が抜けてしまいます。苦肉の策は、いろいろありそうのですが、例：</p>
+
+<pre>
+x = c(1,1,2,2,2,4,5)
+h = hist(x, breaks=1:6, right=FALSE, plot=FALSE)
+barplot(h$counts, names.arg=1:5)
+</pre>
+
+<p>あるいは：</p>
+
+<pre>
+hist(x, breaks=rep(1:5,each=2)+c(-0.4,0.4), freq=TRUE)
+</pre>
+
+<p>@gnutar 先生がもっと賢いやりかたを考えてくださいました：</p>
+
+<pre>
+barplot(table(c(x,1:5)) - 1)
+</pre>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2018-07-25 21:41:56</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-10-09 11:39:21 JST</time></p>
 </footer>
 </body>
 </html>

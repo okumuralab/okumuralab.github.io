@@ -39,16 +39,19 @@ mtext("国立大学法人運営費交付金", cex=1.4, line=1.5, family="HiraKak
 
 <p>念のため，折れ線グラフです：</p>
 
-<figure><img src="img/220809b.png" alt="国立大学運営費交付金"></figure>
+<figure><img src="img/221009a.png" alt="国立大学運営費交付金"></figure>
 
 <pre>
 plot(年, 運営費交付金, type="o", pch=16, xlab="", ylab="", las=1)
+points(年, 運営費交付金[1] * 0.99^(0:18), type="o", col="#ff4b00")
 axis(4, labels=FALSE)
 axis(2, labels="億円", at=12000, padj=-1, las=1, tick=FALSE)
 mtext("国立大学法人運営費交付金", cex=1.4, line=0.5, family="HiraKakuProN-W6")
 </pre>
 
-<p>折れ線グラフのほうが2013年の異常さが見やすくなります。この年と，減少が止まった20167年以降を省いて，単純に最小2乗法で直線をあてはめると（上図の橙色の直線），傾きは -133.6 で，法人化元年の2004年の 12415 の1%を超えています：</p>
+<p>赤丸 <span style="color: #ff4b00">○</span> の折れ線は毎年 1% 減の指数関数です。</p>
+
+<p>折れ線グラフのほうが2013年の異常さが見やすくなります。この年と，減少が止まった2016年以降を省いて，単純に最小2乗法で直線をあてはめると（上図の橙色の直線），傾きは -133.6 で，法人化元年の2004年の 12415 の 1.076% ほどです：</p>
 
 <pre>
 <code class="prom">x = c(2004:2012, 2014:2015)</code>
@@ -68,13 +71,13 @@ Coefficients:
 
 <p>ちなみに，文科省の<a href="https://www.mext.go.jp/a_menu/koutou/houjin/1295896.htm">「国立大学法人化後の現状と課題について（中間まとめ）」について</a>の最初のPDFファイルの図は次のような0で始まらない悪い棒グラフの例となっています。</p>
 
-<div><img src="img/101219a.png" alt="文科省作成の国立大学運営費交付金のグラフ"></div>
+<figure><img src="img/101219a.png" alt="文科省作成の国立大学運営費交付金のグラフ"></figure>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-09 14:44:45 JST</time></p>
+<p>Last modified: <time>2022-10-09 18:03:29 JST</time></p>
 </footer>
 </body>
 </html>

@@ -19,17 +19,19 @@
 
 <p><a href="https://ffmpeg.org">FFmpeg</a> はオープンソースの動画編集コマンドです。必需品です。Mac なら Homebrew で <code>brew install ffmpeg</code> でインストールできます。</p>
 
-<p>動画フォーマットの変換は次のように拡張子で判断してくれます：</p>
+<p>入力ファイルは <code>-i ファイル名</code> で指定します。解像度の変換は <code>-s 1280x720</code> のように指定します。動画フォーマットは拡張子で判断してくれます。</p>
 
 <pre>
-ffmpeg -i in.ts out.mp4
+ffmpeg -i in.ts -s 1280x720 out.mp4
 </pre>
 
 <p><a href="../cs/streaming.html">ダウンロードとストリーミング</a>でも書きましたが、メタデータが最後にある動画ファイルをいわゆるプログレッシブダウンロード可能な形式にするには、次のようにします：</p>
 
 <pre>
-ffmpeg -i in.mp4 -codec copy -movflags faststart out.mp4
+ffmpeg -i in.mp4 -c copy -movflags faststart out.mp4
 </pre>
+
+<p><code>-c copy</code>（または <code>-codec copy</code>）は、動画・音声を再エンコードせずそのままコピーすることを意味します。</p>
 
 <p>静止画 in00.png、in01.png、in02.png、…… をフレームレート 5 で動画に変換するには、次のようにします：</p>
 
@@ -37,17 +39,32 @@ ffmpeg -i in.mp4 -codec copy -movflags faststart out.mp4
 ffmpeg -r 5 -i in%02d.png -vcodec libx264 -pix_fmt yuv420p out.mp4
 </pre>
 
-<p>開始時刻、終了時刻を HH:MM:SS の形式で指定して切り出す例：</p>
+<p>開始時刻、終了時刻を HH:MM:SS の形式で指定して切り出す例（秒は小数点以下があってもかまいません）：</p>
 
 <pre>
-ffmpeg -ss 00:31:04 -to 00:40:25 -i in.mp4 -codec copy out.mp4
+ffmpeg -ss 00:31:04 -to 00:40:25.35 -i in.mp4 -c copy out.mp4
 </pre>
+
+<p>1.mov と 2.mov を結合するには、あらかじめ</p>
+
+<pre>
+file 1.mov
+file 2.mov
+</pre>
+
+<p>とだけ書き込んだテキストファイル files.txt を作っておき、次のように打ち込みます：</p>
+
+<pre>
+ffmpeg -f concat -i files.txt -c copy out.mov
+</pre>
+
+<p>切り出しと結合を組み合わせれば、動画編集が自由にできます。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-10-05 09:29:39 JST</time></p>
+<p>Last modified: <time>2022-10-06 14:42:28 JST</time></p>
 </footer>
 </body>
 </html>
