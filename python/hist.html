@@ -63,7 +63,7 @@ plt.hist(x, color="lightgray", edgecolor="black", bins=np.arange(11)/10)
 <p>オプション <code>density=True</code> で縦軸が個数でなく密度になります。<code>orientation="horizontal"</code> で横向きになります。</p>
 
 <div class="note">
-<p>左が閉じた区間になるのは、R のデフォルトとは逆で、R ではオプション <code>right=FALSE</code> を付けると <code>plt.hist()</code> と同じになります。ちなみに Excel の「グラフ」メニューに加わった「ヒストグラム」も左開区間にしかできないようです。</p>
+<p>左が閉じた区間になるのは R のデフォルトとは逆です。R ではオプション <code>right=FALSE</code> を付けると <code>plt.hist()</code> と同じになります。特に日本では区間は○○以上○○未満という形で表すのが普通なので、Python のデフォルトのほうが自然に思えます。</p>
 </div>
 
 <h2>seabornのヒストグラム</h2>
@@ -106,7 +106,7 @@ plt.hist(a, bins=np.arange(min(a)-0.5, max(a)+1.5), edgecolor="black", rwidth=0.
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-10-09 13:36:18 JST</time></p>
+<p>Last modified: <time>2022-10-12 17:13:08 JST</time></p>
 </footer>
 </body>
 </html>
