@@ -20,11 +20,11 @@
 <p>matplotlib の色については次のチュートリアルやレファレンスがあります：</p>
 
 <ul>
-  <li><a href="https://matplotlib.org/tutorials/colors/colors.html">Specifying Colors</a></li>
-  <li><a href="https://matplotlib.org/tutorials/colors/colormaps">Choosing Colormaps in Matplotlib</a></li>
-  <li><a href="https://matplotlib.org/tutorials/colors/colormap-manipulation.html">Creating Colormaps in Matplotlib</a></li>
-  <li><a href="https://matplotlib.org/tutorials/colors/colorbar_only.html">Customized Colorbars Tutorial</a></li>
-  <li><a href="https://matplotlib.org/tutorials/colors/colormapnorms.html">Colormap Normalization</a></li>
+  <li><a href="https://matplotlib.org/stable/tutorials/colors/colors.html">Specifying Colors</a></li>
+  <li><a href="https://matplotlib.org/stable/tutorials/colors/colormaps">Choosing Colormaps in Matplotlib</a></li>
+  <li><a href="https://matplotlib.org/stable/tutorials/colors/colormap-manipulation.html">Creating Colormaps in Matplotlib</a></li>
+  <li><a href="https://matplotlib.org/stable/tutorials/colors/colorbar_only.html">Customized Colorbars Tutorial</a></li>
+  <li><a href="https://matplotlib.org/stable/tutorials/colors/colormapnorms.html">Colormap Normalization</a></li>
   <li><a href="https://matplotlib.org/gallery/color/named_colors.html">List of named colors</a></li>
   <li><a href="https://matplotlib.org/gallery/color/colormap_reference.html">Colormap reference</a></li>
 </ul>
@@ -32,10 +32,10 @@
 <p>簡単な例で説明します。例えば</p>
 
 <pre>
-<code>import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 plt.plot([[1,2], [3,4]])
-</code></pre>
+</pre>
 
 <p>とすると，青とオレンジのグラフができます。もう一度 <code>plt.plot([[1,2], [3,4]])</code> を打ち込むと，今度は緑と赤になります。これらの色は matplotlib のデフォルトのパレット <code>tab10</code> から順にとっています。これは <a href="https://www.tableau.com">Tableau</a>（タブロー）という有名な可視化ツールの <a href="https://www.tableau.com/about/blog/2016/7/colors-upgrade-tableau-10-56782">Tableau 10</a> というカラーマップの旧版に基づいています：</p>
 
@@ -73,41 +73,43 @@ plt.plot([[1,2], [3,4]])
 <p>これらの値は次のようにして確認できます：</p>
 
 <pre>
-<code>In [ ]: plt.rcParams['axes.prop_cycle']
+In [ ]: plt.rcParams['axes.prop_cycle']
 Out[ ]: cycler('color', ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', ...])
-</code></pre>
+</pre>
 
 <p>この中の色は <code>color="C0"</code> から <code>color="C9"</code> までで指定できます。</p>
 
-<p>これらの色はどれも濃い色です。薄い色も使いたいなら，<a href="https://matplotlib.org/tutorials/colors/colormaps">Choosing Colormaps in Matplotlib</a> の tab10 のすぐ下にある tab20 というカラーマップを使います。</p>
+<p>これらの色はどれも濃い色です。薄い色も使いたいなら，<a href="https://matplotlib.org/stable/tutorials/colors/colormaps">Choosing Colormaps in Matplotlib</a> の tab10 のすぐ下にある tab20 というカラーマップを使います。</p>
 
-<pre><code>cmap = plt.get_cmap("tab20")</code></pre>
+<pre>
+cmap = plt.get_cmap("tab20")
+</pre>
 
 <p>でこのカラーマップを取得し，濃い青は <code>color=cmap(0)</code>，薄い青は <code>color=cmap(1)</code>，濃いオレンジは <code>color=cmap(2)</code> などと指定します。</p>
 
 <p>もし色をいつも黒にしたいなら，</p>
 
 <pre>
-<code>from cycler import cycler
+from cycler import cycler
 plt.rcParams['axes.prop_cycle'] = cycler(color=["black"])
-</code></pre>
+</pre>
 
 <p>あるいは現在のプロットの次の描画からの色を変えるなら，</p>
 
 <pre>
-<code>plt.gca().set_prop_cycle(color=['black'])
-</code></pre>
+plt.gca().set_prop_cycle(color=['black'])
+</pre>
 
 <p>とすればよさそうです。</p>
 
-<p>色のスタイルを変えるには次のようにします（<a href="https://matplotlib.org/3.3.2/tutorials/introductory/customizing.html">Customizing Matplotlib with style sheets and rcParams</a> 参照）：</p>
+<p>色のスタイルを変えるには次のようにします（<a href="https://matplotlib.org/stable/tutorials/introductory/customizing.html">Customizing Matplotlib with style sheets and rcParams</a> 参照）：</p>
 
 <pre>
-<code>plt.style.use('ggplot')               # ggplot風
+plt.style.use('ggplot')               # ggplot風
 plt.style.use('seaborn-colorblind')
 plt.style.use('tableau-colorblind10')
 plt.style.use('default')              # 元に戻す
-</code></pre>
+</pre>
 
 <p>スタイルの一覧は <code>plt.style.available</code> というリストに格納されています。個々のスタイルの実体は <code>ggplot.mplstyle</code> などというファイルに書き込まれています。</p>
 
@@ -119,16 +121,16 @@ plt.style.use('default')              # 元に戻す
   <li><a href="http://yyhhyy.hatenablog.com/entry/2017/05/04/200000">誤解を招かないように配慮された最新のカラーマップ（カラーパレット）について</a></li>
   <li><a href="https://doi.org/10.1371/journal.pone.0199239">Optimizing colormaps with consideration for color vision deficiency to enable accurate interpretation of scientific data</a> (<code>"cividis"</code> の提案)</li>
   <li><a href="https://www.cta-observatory.org/wp-content/uploads/2020/10/CTA_ColourBlindness_BestPractices2.pdf">Best Practices for Colour Blind Friendly Publications and Descriptions</a></li>
+  <li><a href="https://yoshke.org/blog/colorblind-friendly-diagrams">Colorblind-Friendly Diagrams</a></li>
+  <li><a href="https://thenode.biologists.com/data-visualization-with-flying-colors/research/">Data Visualization with Flying Colors</a></li>
+  <li><a href="https://jfly.uni-koeln.de/color/index-j.html">多様な色覚に配慮したカラーユニバーサルデザインと色覚バリアフリー</a> → <a href="https://jfly.uni-koeln.de/lab/colorresearch.html">ヒトの色覚</a></li>
 </ul>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2020-12-22 21:11:25</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-10-23 20:03:03 JST</time></p>
+</footer>
 </body>
 </html>

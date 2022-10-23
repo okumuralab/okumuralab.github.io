@@ -301,9 +301,59 @@ conda list
 conda install ipython numpy scipy matplotlib pandas scikit-learn
 </pre>
 
-<h2>（Windows）WSLのLinuxへのインストール</h2>
+<h2>（Windows）WSL2のUbuntuのPython</h2>
 
-<p><a href="https://news.mynavi.jp/article/liunx_win-28/">Visual Studio CodeとWSLでPython開発に挑戦してみよう</a>参照。要は WSL の Ubuntu に apt で python3 と python3-pip を入れる。グラフィックスは多分面倒（Jupyter NotebookならOK）。</p>
+<p>WSL2のUbuntuの入れ方については、<a href="../misc/221004.html">WindowsのWSL2でVS Codeを使って開発</a>をご覧ください。ちなみに、私はWindows側をほとんど使いませんので、マシンのメモリ16Gのうち12GをUbuntuで使いたいと思いました（デフォルトは半分の8Gになります）。そのため、Windows側のホームディレクトリ（C:\Users\ユーザ名）に <code>.wslconfig</code> というファイルを作り、次のように書き込んでおきました：</p>
+
+<pre>
+[wsl2]
+memory=12GB
+</pre>
+
+<p>GPUのあるマシンなら、WindowsとWSL2で使える<a href="https://developer.nvidia.com/cuda/wsl">NVIDIAドライバ</a>を、Windows側でインストールしておきます。</p>
+
+<p>WSL2 の Ubuntu 20.04 には <code>python3</code> がすでに入っています。念のためアップグレード：</p>
+
+<pre>
+sudo apt update
+sudo apt upgrade
+</pre>
+
+<p><code>python3 --version</code> と打ち込むと Python 3.8.10 と表示されます。pip がないのでインストールします：</p>
+
+<pre>
+sudo apt install python3-pip
+pip install --upgrade pip
+pip install matplotlib pandas jupyterlab japanize-matplotlib
+</pre>
+
+<p>これで <code>python3</code> や <code>ipython</code> が使えます。</p>
+
+<p>Jupyter Lab を使う際には、あらかじめ使いたいブラウザを環境変数で設定しておきます。例：</p>
+
+<pre>
+export BROWSER="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
+</pre>
+
+<p>また、</p>
+
+<pre>
+jupyter lab --generate-config
+</pre>
+
+<p>と打ち込むと、<code>~/.jupyter/jupyter_lab_config.py</code> という設定ファイルができますので、その中の</p>
+
+<pre>
+# c.ServerApp.use_redirect_file = True
+</pre>
+
+<p>というところを</p>
+
+<pre>
+c.ServerApp.use_redirect_file = False
+</pre>
+
+<p>と書き直します。これで、Ubuntu のシェルで <code>jupyter lab</code> と打ち込めば、Windows 側のブラウザが開いて Jupyter Lab が使えるはずです。</p>
 
 <h2>CentOS でのインストール</h2>
 
@@ -315,7 +365,7 @@ conda install ipython numpy scipy matplotlib pandas scikit-learn
 
 <p>CentOS 7 なら <code>yum install libffi-devel sqlite-devel</code> しておきます。</p>
 
-<p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し、ビルドします。次は3.7.7の場合です：</p>
+<p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し、ビルドします。次は3.9.2の場合です：</p>
 
 <pre>
 wget wget -N https://www.python.org/ftp/python/3.9.2/Python-3.9.2.tar.xz
@@ -404,7 +454,7 @@ apk add python3 py3-pip
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-10-10 17:19:30 JST</time></p>
+<p>Last modified: <time>2022-10-19 14:38:03 JST</time></p>
 </footer>
 </body>
 </html>
