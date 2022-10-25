@@ -15,7 +15,7 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>Pythonと色（途中）</h1>
+<h1>Pythonと色</h1>
 
 <p>matplotlib の色については次のチュートリアルやレファレンスがあります：</p>
 
@@ -31,7 +31,7 @@
 
 <p>簡単な例で説明します。例えば</p>
 
-<pre>
+<pre class="cell">
 import matplotlib.pyplot as plt
 
 plt.plot([[1,2], [3,4]])
@@ -72,16 +72,19 @@ plt.plot([[1,2], [3,4]])
 
 <p>これらの値は次のようにして確認できます：</p>
 
+<pre class="cell">
+plt.rcParams['axes.prop_cycle']
+</pre>
+
 <pre>
-In [ ]: plt.rcParams['axes.prop_cycle']
-Out[ ]: cycler('color', ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', ...])
+cycler('color', ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', ...])
 </pre>
 
 <p>この中の色は <code>color="C0"</code> から <code>color="C9"</code> までで指定できます。</p>
 
 <p>これらの色はどれも濃い色です。薄い色も使いたいなら，<a href="https://matplotlib.org/stable/tutorials/colors/colormaps">Choosing Colormaps in Matplotlib</a> の tab10 のすぐ下にある tab20 というカラーマップを使います。</p>
 
-<pre>
+<pre class="cell">
 cmap = plt.get_cmap("tab20")
 </pre>
 
@@ -89,29 +92,41 @@ cmap = plt.get_cmap("tab20")
 
 <p>もし色をいつも黒にしたいなら，</p>
 
-<pre>
+<pre class="cell">
 from cycler import cycler
 plt.rcParams['axes.prop_cycle'] = cycler(color=["black"])
 </pre>
 
 <p>あるいは現在のプロットの次の描画からの色を変えるなら，</p>
 
-<pre>
+<pre class="cell">
 plt.gca().set_prop_cycle(color=['black'])
 </pre>
 
 <p>とすればよさそうです。</p>
 
+<p>Color Universal Design (CUD) に配慮した R の <code>palette("Okabe-Ito")</code> と同じにするには次のようにします：</p>
+
+<pre class="cell">
+plt.rcParams['axes.prop_cycle'] = cycler(
+    color=["black", "#E69F00", "#56B4E9", "#009E73", "#F0E442",
+           "#0072B2", "#D55E00", "#CC79A7", "#999999"])
+</pre>
+
+<p>なお、<a href="https://jfly.uni-koeln.de/color/">Okabe and Ito</a> には最後の <code>#999999</code>（<code>gray60</code>）がありません。</p>
+
 <p>色のスタイルを変えるには次のようにします（<a href="https://matplotlib.org/stable/tutorials/introductory/customizing.html">Customizing Matplotlib with style sheets and rcParams</a> 参照）：</p>
 
-<pre>
+<pre class="cell">
 plt.style.use('ggplot')               # ggplot風
-plt.style.use('seaborn-colorblind')
+plt.style.use('seaborn-v0_8-colorblind')
 plt.style.use('tableau-colorblind10')
 plt.style.use('default')              # 元に戻す
 </pre>
 
-<p>スタイルの一覧は <code>plt.style.available</code> というリストに格納されています。個々のスタイルの実体は <code>ggplot.mplstyle</code> などというファイルに書き込まれています。</p>
+<p>スタイルの一覧は <code>plt.style.available</code> というリストに格納されています。個々のスタイルの実体は Matplotlib がインストールされたディレクトリ下の <code>mpl-data/stylelib/*.mplstyle</code> というファイルに書き込まれています。</p>
+
+<p>R の <a href="../stat/colors.html">統計グラフの色</a> もご覧ください。</p>
 
 <p>リンク</p>
 
@@ -130,7 +145,7 @@ plt.style.use('default')              # 元に戻す
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-10-23 20:03:03 JST</time></p>
+<p>Last modified: <time>2022-10-24 12:55:09 JST</time></p>
 </footer>
 </body>
 </html>
