@@ -5,7 +5,7 @@ import matplotlib.dates as mdates
 import pandas as pd
 
 df = pd.read_csv("../data/COVID-mieu.csv", parse_dates=['date'])
-df = df.groupby('date', as_index=False).sum()
+df = df.groupby('date', as_index=False).sum(numeric_only=True)
 
 # df['students'].sum() # 65
 # df['others'].sum()   #  4
