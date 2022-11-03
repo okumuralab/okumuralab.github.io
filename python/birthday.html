@@ -102,6 +102,8 @@ UUID('3585b7a9-e35a-433b-be8e-3916c75f6240')
 
 <p>LinuxやMacには <code>uuidgen</code> というコマンドがあります。Macのものはバージョン4固定です。Linuxのものはオプション <code>-r</code> でバージョン4（乱数ベース）、オプション <code>-t</code> でバージョン1（時刻ベース）になります。デフォルトは通常はバージョン4です。</p>
 
+<p>いまUUIDバージョン6〜8のドラフトが起草されつつあるようです（<a href="https://www.ietf.org/archive/id/draft-ietf-uuidrev-rfc4122bis-00.html">IETFのこのページ</a>参照）。LiosKさんによるTwitterの<a href="https://twitter.com/LiosK/status/1588116287422877697">このスレッド</a>が参考になります。</p>
+
 <h2>ULID</h2>
 
 <p><a href="https://github.com/ulid/spec">ULID</a>（Universally Unique Lexicographically Sortable Identifier）はUUIDを改良したもので、UUIDと同じ128ビットでありながら、UUIDは36文字ですが、ULIDは26文字で表されます。128ビットのうち、先頭の48ビットはタイムスタンプで、UNIX時刻をミリ秒の単位で表したものです。10889年まで桁あふれしません。残りの80ビットがランダムな部分です。文字列としてソートすると、時刻順に並びます（lexicographically sortable）。</p>
@@ -128,7 +130,7 @@ ULID(01F63ZWFQGSMGM3XGXBE8CTRDT)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-17 09:34:02 JST</time></p>
+<p>Last modified: <time>2022-11-04 08:50:40 JST</time></p>
 </footer>
 </body>
 </html>
