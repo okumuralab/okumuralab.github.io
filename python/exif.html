@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/exif.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exifデータを読む</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Exifデータを読む</h1>
+
+<h2>はじめに</h2>
+
+<p>JPEG や HEIC などの写真データには Exif（Exchangeable image file format、エグジフ、エクシフ）という形式のメタデータが含まれている。写真編集ソフトで表示できる。昔からある <a href="https://exiftool.org">ExifTool</a> というツールで読み出すことができる。また、<a href="https://imagemagick.org">ImageMagick</a> の identify というコマンドで表示できる。ImageMagick は <a href="https://brew.sh">Homebrew</a> を使っている Mac なら <a href="https://formulae.brew.sh/formula/imagemagick">brew install imagemagick</a> で入る。以下では特に撮影日時と GPS 位置情報について扱う。</p>
+
+<p>例えば iPhone で大学の食堂で撮った写真 IMG_7949.HEIC は、Mac の Preview で見れば、次のようなメタ情報がある。</p>
+
+<blockquote>
+オリジナルの日時: 2022/10/18 11:38:32<br>
+高度: 7.52 m (24.66 ft)<br>
+緯度: 34° 44’ 43.08” N<br>
+経度: 136° 31’ 25.992” E
+</blockquote>
+
+<p>これに対して <code>identify -verbose IMG_7949.HEIC</code> と打ち込むと、137行にわたって詳細なメタ情報が出力される。この中で日時と GPS 情報は次の部分である：</p>
+
+<pre>
+    exif:DateTime: 2022:10:18 11:38:32
+    exif:GPSAltitude: 66112/8797
+    exif:GPSLatitude: 34/1, 44/1, 4308/100
+    exif:GPSLatitudeRef: N
+    exif:GPSLongitude: 136/1, 31/1, 2599/100
+    exif:GPSLongitudeRef: E
+</pre>
+
+<p>同じことを ExifTool でやってみると、116行のメタ情報が出力される。日時と GPS 情報は次のようになっている：</p>
+
+<pre>
+Create Date                     : 2022:10:18 11:38:32.937+09:00
+GPS Altitude                    : 7.5 m Above Sea Level
+GPS Latitude                    : 34 deg 44' 43.08" N
+GPS Longitude                   : 136 deg 31' 25.99" E
+</pre>
+
+<p>ExifTool にオプション <code>-c "+%.6f"</code> をつければ次のような10進表示になる：</p>
+
+<pre>
+GPS Latitude                    : +34.745300 N
+GPS Longitude                   : +136.523886 E
+</pre>
+
+<p>得られた位置情報はGoogleマップで <a href="https://maps.google.com/maps?q=34.7453,136.523886">https://maps.google.com/maps?q=34.7453,136.523886</a> のように指定できる。GPS の誤差のため、実際の一と若干ずれている。</p>
+
+<h2>PythonのExifRead（EXIF.py）</h2>
+
+<p>Python で Exif が扱えるライブラリはたくさんある。例えば <a href="https://pypi.org/project/ExifRead/">ExifRead</a> は GitHub では <a href="https://github.com/ianare/exif-py">EXIF.py</a> という名前で開発されている。2022-05-09 に 3.0.0 が出た。ところが HEIC ファイルでエラーになるという<a href="https://github.com/ianare/exif-py/issues/160">指摘</a>がずっと放置されている。これを入れるなら、次のようにして 3.0.0 未満（2.3.2）をインストールするほうがよさそうだ：</p>
+
+<pre>
+pip install --upgrade 'exifread&lt;3'
+</pre>
+
+<p>これをインストールすると、EXIF.py というコマンドが使えるようになる。<code>EXIF.py IMG_7949.HEIC</code> の出力は65行で、日時と位置情報の部分は次の通り：</p>
+
+<pre>
+EXIF DateTimeOriginal (ASCII): 2022:10:18 11:38:32
+GPS GPSAltitude (Ratio): 66112/8797
+GPS GPSLatitude (Ratio): [34, 44, 1077/25]
+GPS GPSLatitudeRef (ASCII): N
+GPS GPSLongitude (Ratio): [136, 31, 2599/100]
+GPS GPSLongitudeRef (ASCII): E
+</pre>
+
+<p>Python から使うには次のようにする：</p>
+
+<pre class="cell">
+import exifread
+
+with open("IMG_7949.HEIC", "rb") as f:
+    tags = exifread.process_file(f)
+tags
+</pre>
+
+<pre>
+{'Image Make': (0x010F) ASCII=Apple @ 146,
+ 'Image Model': (0x0110) ASCII=iPhone SE (3rd generation) @ 152,
+……中略……
+ 'Image DateTime': (0x0132) ASCII=2022:10:18 11:38:32 @ 204,
+……中略……
+ 'GPS GPSLatitudeRef': (0x0001) ASCII=N @ 1682,
+ 'GPS GPSLatitude': (0x0002) Ratio=[34, 44, 1077/25] @ 1774,
+ 'GPS GPSLongitudeRef': (0x0003) ASCII=E @ 1706,
+ 'GPS GPSLongitude': (0x0004) Ratio=[136, 31, 2599/100] @ 1798,
+ 'GPS GPSAltitudeRef': (0x0005) Byte=0 @ 1730,
+ 'GPS GPSAltitude': (0x0006) Ratio=66112/8797 @ 1822,
+……中略……
+ 'EXIF DateTimeOriginal': (0x9003) ASCII=2022:10:18 11:38:32 @ 622,
+ 'EXIF DateTimeDigitized': (0x9004) ASCII=2022:10:18 11:38:32 @ 642,
+……後略……
+</pre>
+
+<p>この特定の項目を取り出すには次のようにする：</p>
+
+<pre class="cell">
+tags['Image DateTime']
+</pre>
+
+<pre>
+(0x0132) ASCII=2022:10:18 11:38:32 @ 204
+</pre>
+
+<pre class="cell">
+tags['Image DateTime'].printable
+</pre>
+
+<pre>
+'2022:10:18 11:38:32'
+</pre>
+
+<pre class="cell">
+a = eval(tags['GPS GPSLatitude'].printable)
+a[0] + (a[1] + a[2]/60) / 60
+</pre>
+
+<pre>
+34.7453
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-11-06 11:49:20 JST</time></p>
+</footer>
+</body>
+</html>
