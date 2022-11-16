@@ -19,23 +19,37 @@
 
 <p>R で最高速なデータ読み込みライブラリ <a href="../stat/datatable.html">data.table</a> を Python に移植した <a href="https://pypi.org/project/datatable/">datatable</a> パッケージがある（<a href="https://towardsdatascience.com/an-overview-of-pythons-datatable-package-5d3a97394ee9">参考1</a>，<a href="https://towardsdatascience.com/its-time-to-say-goodbye-to-pd-read-csv-and-pd-to-csv-27fbc74e84c5">参考2</a>）。<code>pip install datatable</code> でインストールできる。</p>
 
-<p>M1 Mac ではうまくインストールできないようだ（あまり試してない）。以下は2019年に書いたもの。</p>
+<div class="note">
+<p>M1 Mac 用のバイナリはまだない。最新のソースを取ってきてコンパイルすることはできた：</p>
+<pre>  
+git clone https://github.com/h2oai/datatable.git             
+cd datatable
+# Makefile の PYTHON ?= python を PYTHON ?= python3 に直す
+make build
+# src/datatable/lib/_datatable.cpython-310-darwin.so ができればOK
+# ~/Library/Python/3.10/lib/python/site-packages/easy-install.pth に
+# /.../database/src を追記
+pip install pytest  # requirements_*.txt を見て欠けているものを入れる
+make test
+</pre>
+<p>残念ながらいくつかのテストに失敗する。</p>
+</div>
 
 <p>使い方：</p>
 
 <pre>
-<code>import datatable as dt
+import datatable as dt
 
 dfr = dt.fread("hoge.csv")
 dfr.head()  # 頭だけ見る
 df = dfr.to_pandas()  # pandasのデータフレームに変換
 a = dfr.to_numpy()    # numpyの配列に変換
-</code></pre>
+</pre>
 
 <p>次のものが使える：</p>
 
 <pre>
-<code>dfr.append         dfr.cbind          dfr.colindex       dfr.copy           dfr.countna
+dfr.append         dfr.cbind          dfr.colindex       dfr.copy           dfr.countna
 dfr.countna1       dfr.head           dfr.key            dfr.keys           dfr.ltypes
 dfr.materialize    dfr.max            dfr.max1           dfr.mean           dfr.mean1
 dfr.min            dfr.min1           dfr.mode           dfr.mode1          dfr.names
@@ -45,16 +59,13 @@ dfr.scalar         dfr.sd             dfr.sd1            dfr.shape          dfr.
 dfr.stypes         dfr.sum            dfr.sum1           dfr.tail           dfr.to_csv
 dfr.to_dict        dfr.to_jay         dfr.to_list        dfr.to_numpy       dfr.to_pandas
 dfr.to_tuples      dfr.view
-</code></pre>
+</pre>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-05-30 22:32:17 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-11-16 14:23:28 JST</time></p>
+</footer>
 </body>
 </html>

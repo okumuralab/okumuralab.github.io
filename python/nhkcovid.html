@@ -17,6 +17,10 @@
 
 <h1>NHKの新型コロナデータ</h1>
 
+<p><em>【追記】</em> 都道府県のデータは厚労省で一括して毎日16時ごろ発表されることになり、NHKのデータは 2022-09-27 で終了しました。</p>
+
+<hr>
+
 <p>NHKの<a href="https://www3.nhk.or.jp/news/special/coronavirus/data/">新型コロナウイルス特設サイト</a>の下のほうからリンクされている <a href="https://www3.nhk.or.jp/n-data/opendata/coronavirus/nhk_news_covid19_prefectures_daily_data.csv">nhk_news_covid19_prefectures_daily_data.csv</a> というオープンデータは、毎日の都道府県ごとの感染者数や死者数をまとめたものです。これを Python の pandas で読み込んで操作してみましょう。</p>
 
 <p>注意すべきは「日付」という欄に <code>2022/8/18</code> のような形式で日付が入っていることです。これを単に文字列として読むと、<code>2021/9/30</code> と <code>2021/10/1</code> の順序関係が逆になったりして、面倒です。これは pandas の「日付」型に変換して読む必要があります。読み込んで、最後の5行だけを表示してみます：</p>
@@ -97,7 +101,7 @@ plt.xlabel("各地の直近1週間の人口10万人あたりの感染者数")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-19 13:20:19 JST</time></p>
+<p>Last modified: <time>2022-11-16 14:28:50 JST</time></p>
 </footer>
 </body>
 </html>
