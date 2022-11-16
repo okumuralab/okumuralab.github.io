@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/tweepy.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Twitter (tweepy)</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Twitter (tweepy)</h1>
+
+<p><a href="https://pypi.org/project/tweepy/">tweepy</a>（GitHub: <a href="https://github.com/tweepy/tweepy">tweepy</a>）は Python で Twitter API を呼び出すツールの一つ。</p>
+
+<p>インストール：</p>
+
+<pre>
+pip install tweepy
+</pre>
+
+<p>まずは Twitter の Developer Portal の <a href="https://developer.twitter.com/en/portal/dashboard">Dashboard</a> でアプリケーション登録をする。</p>
+
+<p>ここでは API 1.1 の Consumer Key，Consumer Secret，Access Token，Access Token Secret を使う方式について説明する。</p>
+
+<p>ソースコードにこれらを直書きするのは危険なので、別の場所に保存する。例えば <code>~/.twitter.json</code> に次のように書いて、他人には読めないようにしておく：</p>
+
+<pre>
+{
+    "consumer_key": ".....",
+    "consumer_secret": ".....",
+    "access_token": ".....",
+    "access_token_secret": "....."
+}
+</pre>
+
+<p>これを読み出すコード：</p>
+
+<pre>
+import json
+import os
+
+with open(os.path.expanduser("~/.twitter.json")) as f:
+    token = json.load(f)
+</pre>
+
+<p>これを使って api を取得する：</p>
+
+<pre>
+import tweepy
+
+auth = tweepy.OAuth1UserHandler(
+    token["consumer_key"], token["consumer_secret"],
+    token["access_token"], token["access_token_secret"]
+)
+
+api = tweepy.API(auth)
+</pre>
+
+<p>まずは「ホーム」タイムラインを取得してみよう：</p>
+
+<pre>
+home = api.home_timeline(
+    # count=20,                      # デフォルト20ツイート取得
+    # since_id=1234567890123456789,  # これより大きい
+    # max_id=1234567890123456789,    # これ以下
+    tweet_mode="extended")           # 280文字対応
+</pre>
+
+<p>取得したツイートの表示例：</p>
+
+<pre>
+import datetime
+
+tz = datetime.timezone(datetime.timedelta(hours=9))  # JST
+
+for t in home:
+    print(t.created_at.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
+          t.id, t.user.screen_name)
+    if hasattr(t, 'retweeted_status'):   # リツイートなら
+        t = t.retweeted_status           # 元ツイート
+        print(t.created_at.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
+              t.id, t.user.screen_name)
+    print(t.geo, t.coordinates, t.place)
+    s = t.full_text
+    s = s.replace("&lt;", "<")
+    s = s.replace("&gt;", ">")
+    s = s.replace("&amp;", "&")
+    for u in t.entities["urls"]:         # t.coを元に戻す
+        s = s.replace(u["url"], u["expanded_url"])
+    print(s)
+    print("-" * 60)
+</pre>
+
+<p>書き込みはこんな感じ（通常はツイート本文だけでよい）：</p>
+
+<pre>
+media = api.media_upload("/path/to/image.jpg")  # 添付メディアがある場合
+status = api.update_status(
+    "ツイート本文",
+    # in_reply_to_status_id=1234567890123456789,  # リプライ先
+    # auto_populate_reply_metadata=True, # リプライ先の @... を自動挿入
+    # attachment_url="https://twitter.com/.../status/...", # 引用リツイート
+    media_ids=[media.media_id],  # 静止画なら4つまで
+    lat=34.7468, long=136.5248, display_coordinates=True,
+    tweet_mode="extended")
+print("Tweeted:", status.id)
+</pre>
+
+<p>引用リツイートは従来のようにツイート本文末尾にURLを書いてもいいが，<code>attachment_url="..."</code> で指定すると文字数カウントに入らない。リプライの先頭に付ける <code>@...</code> も，手で書く代わりに <code>auto_populate_reply_metadata=True</code> にすれば自動で入り，文字数カウントに入らない。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-11-15 20:05:57 JST</time></p>
+</footer>
+</body>
+</html>

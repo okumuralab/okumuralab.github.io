@@ -90,16 +90,20 @@ pandas.core.frame.DataFrame
 df = pd.read_csv("finename.csv", na_values="", keep_default_na=False)
 </pre>
 
+<div class="note">
+<p>以下の記述について、いま確認したら、結果は <code>0.0</code> つまり誤差は出ませんでした。改善されたのでしょう。念のため残しておきます：</p>
+<blockquote>  
 <p>10進で切りの良い値なのに微妙な誤差が入ることがあります。例：</p>
-
 <pre>
 from io import StringIO
+
 data = ("A\n1258.477\n")
 df = pd.read_csv(StringIO(data))
 df.A[0] - 1258.477    # -2.2737367544323206e-13
 </pre>
-
 <p>これを避けるには <code>float_precision="high"</code> または <code>float_precision="round_trip"</code> というオプションを与えます。</p>
+</blockquote>  
+</div>
 
 <h3>Excel ファイルの読み込み</h3>
 
@@ -115,7 +119,7 @@ df = pd.read_excel("filename.xlsx") # xlsも読める
 
 <h2>DataFrame の操作</h2>
 
-<p>pandas の DataFrame は R のデータフレームとほぼ同じです。簡単な解説が <a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/10min.html">10 Minutes to pandas</a> にあります。</p>
+<p>pandas の DataFrame は R のデータフレームとほぼ同じです。簡単な解説が <a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/10min.html">10 Minutes to pandas</a> にあります。<a href="query.html">pandasによるクエリ</a>も参考にしてください。</p>
 
 <pre>
 df          # 全体を表示
@@ -341,7 +345,7 @@ df = pd.read_csv(StringIO(r.text))
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-04 21:54:20 JST</time>
+Last modified: <time>2022-11-07 09:21:02 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

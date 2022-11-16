@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/221108.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>画像のアップスケール</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>画像のアップスケール</h1>
+
+<h2>CodeFormer</h2>
+
+<blockquote class="twitter-tweet">
+  <p lang="ja" dir="ltr">顔専用のアップスケーラーCodeFormer <a href="https://t.co/UOqrvx29o8">https://t.co/UOqrvx29o8</a> を試し中。左→右。これくらいならまだいいが、ボケボケの顔をくっきりさせると自分じゃない顔になってしまう <a href="https://t.co/SGWZa92QyM">pic.twitter.com/SGWZa92QyM</a></p>
+  &mdash; Haruhiko Okumura (@h_okumura) <a href="https://twitter.com/h_okumura/status/1589936913288695808?ref_src=twsrc%5Etfw">November 8, 2022</a>
+</blockquote>
+
+<blockquote class="twitter-tweet">
+  <p lang="ja" dir="ltr">微妙に自分じゃない顔になる例（顔以外はReal-ESRGAN） <a href="https://t.co/dDP17eB1ku">pic.twitter.com/dDP17eB1ku</a></p>
+  &mdash; Haruhiko Okumura (@h_okumura) <a href="https://twitter.com/h_okumura/status/1589941798432276480?ref_src=twsrc%5Etfw">November 8, 2022</a>
+</blockquote>
+
+<p>上は <a href="https://shangchenzhou.com/projects/CodeFormer/">CodeFormer</a> という顔専用のアップスケーラー（高解像度化ツール）を使った例である。論文は <a href="https://arxiv.org/abs/2206.11253">https://arxiv.org/abs/2206.11253</a>、ソースコードは <a href="https://github.com/sczhou/CodeFormer">https://github.com/sczhou/CodeFormer</a> にある。</p>
+
+<p>私は M1 Mac 上の Python 3.10（<a href="https://www.python.org">公式サイト</a>からインストールしたもの）を使っているので、次のようにしてインストールした。</p>
+
+<pre>
+git clone https://github.com/sczhou/CodeFormer.git
+cd CodeFormer
+python3 scripts/download_pretrained_models.py facelib
+python3 scripts/download_pretrained_models.py CodeFormer
+pip3 install lpips  # ほかにも必要に応じてインストール
+python3 basicsr/setup.py develop --user
+</pre>
+
+<p>まずはサンプルの画像で試してみる：</p>
+
+<pre>
+python3 inference_codeformer.py -w 0.7 --input_path inputs/whole_imgs/00.jpg
+</pre>
+
+<p>出力が results/test_img_0.7/final_results/00.png に入る。</p>
+
+<p>顔以外も高解像度化する際には <a href="https://github.com/xinntao/Real-ESRGAN">Real-ESRGAN</a> が使われる。初回実行時に https://github.com/sczhou/CodeFormer/releases/download/v0.1.0/RealESRGAN_x2plus.pth が weights/realesrgan/RealESRGAN_x2plus.pth にダウンロードされる（64M ほど）。</p>
+
+<pre>
+python3 inference_codeformer.py -w 0.7 --bg_upsampler realesrgan \
+    --input_path inputs/whole_imgs/00.jpg
+</pre>
+
+<h2>SwinIR</h2>
+
+<blockquote class="twitter-tweet">
+  <p lang="ja" dir="ltr">いちえふの写真をSwinIRで縦横とも4倍にしようとしたんだけれど、何となくそれらしいけれど文字がダメだ <a href="https://t.co/tKjLQkpzJi">pic.twitter.com/tKjLQkpzJi</a></p>
+  &mdash; Haruhiko Okumura (@h_okumura) <a href="https://twitter.com/h_okumura/status/1587791611915665408?ref_src=twsrc%5Etfw">November 2, 2022</a>
+</blockquote>
+
+<p>こちらは <a href="https://github.com/JingyunLiang/SwinIR">SwinIR</a> というアップスケーラーである。<a href="https://arxiv.org/abs/2103.14030">Swin Transformer</a> というものを使っている（Swin = Shifted windows）。</p>
+
+<pre>
+git clone https://github.com/JingyunLiang/SwinIR.git
+cd SwinIR
+</pre>
+
+<p><a href="https://github.com/JingyunLiang/SwinIR/releases/tag/v0.0">モデル</a>のどれかを取得して適当な場所（例：experiments/pretrained_models）に入れる。主なモデル：</p>
+
+<ul>
+  <li>2倍 middle: 003_realSR_BSRGAN_DFO_s64w8_SwinIR-M_x2_GAN.pth (63.9MB)</li>
+  <li>4倍 middle: 003_realSR_BSRGAN_DFO_s64w8_SwinIR-M_x4_GAN.pth (64MB)</li>
+  <li>4倍 large:  003_realSR_BSRGAN_DFOWMFC_s64w8_SwinIR-L_x4_GAN.pth (136MB)</li>
+</ul>
+
+<p>例えば上の最後のもの（large）をコマンドで取得する例：</p>
+
+<pre>
+wget https://github.com/JingyunLiang/SwinIR/releases/download/v0.0/003_realSR_BSRGAN_DFOWMFC_s64w8_SwinIR-L_x4_GAN.pth \
+    -P experiments/pretrained_models
+</pre>
+
+<p>実際に動かしてみよう。次のコマンドがエラーになれば不足ライブラリを入れる（私の場合は <code>pip3 install timm</code> が必要であった）。画像は <code>testsets/okumura</code> の中に入れた。</p>
+
+<p>4倍 large:</p>
+
+<pre>
+python3 main_test_swinir.py --task real_sr --scale 4 --large_model \
+    --model_path experiments/pretrained_models/003_realSR_BSRGAN_DFOWMFC_s64w8_SwinIR-L_x4_GAN.pth \
+    --folder_lq testsets/okumura
+</pre>
+
+<p>結果は results/swinir_real_sr_x4_large に入る。</p>
+
+<p>2倍 middle:</p>
+
+<pre>
+python3 main_test_swinir.py --task real_sr --scale 2 \
+    --model_path experiments/pretrained_models/003_realSR_BSRGAN_DFO_s64w8_SwinIR-M_x2_GAN.pth \
+    --folder_lq testsets/okumura
+</pre>
+
+<p>結果は results/swinir_real_sr_x2 に入る。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-11-08 21:54:53 JST</time></p>
+</footer>
+</body>
+</html>

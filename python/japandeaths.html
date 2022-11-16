@@ -149,13 +149,14 @@ plt.ylabel("1日あたり超過死亡数")
   <tr><td>2022-07</td><td>42.1</td></tr>
   <tr><td>2022-08</td><td>235.3</td></tr>
   <tr><td>2022-09</td><td>164.1</td></tr>
+  <tr><td>2022-10</td><td>60.1</td></tr>
   </tbody>
 </table>
 
 <pre>
 df = pd.read_csv("https://covid19.mhlw.go.jp/public/opendata/deaths_cumulative_daily.csv",
                  parse_dates=['Date'])
-a = np.arange(np.datetime64("2020-06"), np.datetime64("2022-11"))
+a = np.arange(np.datetime64("2020-06"), np.datetime64("2022-12"))
 da = pd.to_datetime(a)
 da1 = da - np.timedelta64(1,"D")
 da1s = pd.Series(da1, name='Date')
@@ -167,12 +168,9 @@ for i in range(1, len(x)):
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-10-30 20:06:12 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-11-16 11:13:45 JST</time></p>
+</footer>
 </body>
 </html>

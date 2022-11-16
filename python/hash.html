@@ -19,7 +19,9 @@
 
 <p>☞ <a href="../cs/hash.html">ハッシュ関数</a></p>
 
-<p>データを切り刻んで混ぜ、一定の長さ（例えば256ビット）のデータに変換する関数を、ハッシュ関数といいます。ハッシュ関数の値をハッシュ値または単にハッシュといいます。256ビットに変換するハッシュ関数ではSHA-256（シャー256）がよく使われます。</p>
+<p>データを切り刻んで混ぜ、一定の長さ（例えば256ビット）のデータに変換する関数を、ハッシュ関数といいます（ここでは特に暗号学的ハッシュ関数と呼ばれるものを扱います）。ハッシュ関数の値をハッシュ値または単にハッシュといいます。256ビットに変換するハッシュ関数ではSHA-256（シャー256）がよく使われます。</p>
+
+<p>以下では、Python の標準ライブラリ <a href="https://docs.python.org/3/library/hashlib.html">hashlib</a> を使います。</p>
 
 <p>例えば "The quick brown fox jumps over the lazy dog." という44バイトの文字列のSHA-256を求めてみましょう：</p>
 
@@ -63,13 +65,23 @@ hashlib.sha256("The quick brown fox jumps over the lazy dоg.".encode()).hexdige
 
 <p>→ Bitcoin Wiki: <a href="https://en.bitcoin.it/wiki/Block_hashing_algorithm">Block hashing algorithm</a></p>
 
+<p>［追記］Python 3.11 でファイルのハッシュが簡単に求められるようになりました：</p>
+
+<pre class="cell">
+import hashlib
+
+with open("filename", "rb") as f:
+    digest = hashlib.file_digest(f, "sha256")
+print(digest.hexdigest())
+</pre>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-18 15:57:32 JST</time>
+Last modified: <time>2022-11-06 17:37:37 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

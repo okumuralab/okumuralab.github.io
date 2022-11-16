@@ -55,6 +55,10 @@ plt.xticks(sorted(set(df["年"] // 2 * 2).intersection(set(df["年"]))))
 plt.show()
 plt.savefig("../img/japandeaths3.svg", bbox_inches="tight")
 
+exit()
+
+#------
+
 df1 = df.groupby("年")[["死亡数", "日数"]].sum()
 df2 = df1[df1.index < 2022]
 y = df2.index
@@ -96,7 +100,7 @@ exit()
 
 df = pd.read_csv("https://covid19.mhlw.go.jp/public/opendata/deaths_cumulative_daily.csv",
                  parse_dates=['Date'])
-a = np.arange(np.datetime64("2020-06"), np.datetime64("2022-11"))
+a = np.arange(np.datetime64("2020-06"), np.datetime64("2022-12"))
 da = pd.to_datetime(a)
 da1 = da - np.timedelta64(1,"D")
 da1s = pd.Series(da1, name='Date')

@@ -34,6 +34,8 @@
 
 <pre>
     exif:DateTime: 2022:10:18 11:38:32
+    exif:DateTimeDigitized: 2022:10:18 11:38:32
+    exif:DateTimeOriginal: 2022:10:18 11:38:32
     exif:GPSAltitude: 66112/8797
     exif:GPSLatitude: 34/1, 44/1, 4308/100
     exif:GPSLatitudeRef: N
@@ -45,6 +47,8 @@
 
 <pre>
 Create Date                     : 2022:10:18 11:38:32.937+09:00
+Date/Time Original              : 2022:10:18 11:38:32.937+09:00
+Modify Date                     : 2022:10:18 11:38:32+09:00
 GPS Altitude                    : 7.5 m Above Sea Level
 GPS Latitude                    : 34 deg 44' 43.08" N
 GPS Longitude                   : 136 deg 31' 25.99" E
@@ -70,6 +74,7 @@ pip install --upgrade 'exifread&lt;3'
 <p>これをインストールすると、EXIF.py というコマンドが使えるようになる。<code>EXIF.py IMG_7949.HEIC</code> の出力は65行で、日時と位置情報の部分は次の通り：</p>
 
 <pre>
+EXIF DateTimeDigitized (ASCII): 2022:10:18 11:38:32
 EXIF DateTimeOriginal (ASCII): 2022:10:18 11:38:32
 GPS GPSAltitude (Ratio): 66112/8797
 GPS GPSLatitude (Ratio): [34, 44, 1077/25]
@@ -92,8 +97,6 @@ tags
 {'Image Make': (0x010F) ASCII=Apple @ 146,
  'Image Model': (0x0110) ASCII=iPhone SE (3rd generation) @ 152,
 ……中略……
- 'Image DateTime': (0x0132) ASCII=2022:10:18 11:38:32 @ 204,
-……中略……
  'GPS GPSLatitudeRef': (0x0001) ASCII=N @ 1682,
  'GPS GPSLatitude': (0x0002) Ratio=[34, 44, 1077/25] @ 1774,
  'GPS GPSLongitudeRef': (0x0003) ASCII=E @ 1706,
@@ -109,15 +112,15 @@ tags
 <p>この特定の項目を取り出すには次のようにする：</p>
 
 <pre class="cell">
-tags['Image DateTime']
+tags['EXIF DateTimeOriginal']
 </pre>
 
 <pre>
-(0x0132) ASCII=2022:10:18 11:38:32 @ 204
+(0x9003) ASCII=2022:10:18 11:38:32 @ 622
 </pre>
 
 <pre class="cell">
-tags['Image DateTime'].printable
+tags['EXIF DateTimeOriginal'].printable
 </pre>
 
 <pre>
@@ -133,11 +136,13 @@ a[0] + (a[1] + a[2]/60) / 60
 34.7453
 </pre>
 
+<p>日時については、<code>'Image DateTime'</code>、<code>'EXIF DateTimeOriginal'</code>、<code>'EXIF DateTimeDigitized'</code> の三つが格納されているようだ。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-11-06 11:49:20 JST</time></p>
+<p>Last modified: <time>2022-11-06 14:36:20 JST</time></p>
 </footer>
 </body>
 </html>

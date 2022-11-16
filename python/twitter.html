@@ -4,7 +4,7 @@
 <link rel="canonical" href="https://okumuralab.org/~okumura/python/twitter.html">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Twitter</title>
+<title>Twitter (python-twitter)</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
@@ -15,15 +15,23 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>Twitter</h1>
+<h1>Twitter (python-twitter)</h1>
 
-<p>Twitter を Python から使うライブラリは <a href="https://developer.twitter.com/en/docs/developer-utilities/twitter-libraries.html">Twitter libraries</a> の Python の項にいくつかリストされている。どれがいいかわからないが，とりあえず一番上の <a href="https://github.com/bear/python-twitter/">python-twitter</a> を試してみる（そのうち <a href="https://github.com/geduldig/TwitterAPI">TwitterAPI</a> か <a href="https://pypi.org/project/tweepy/">tweepy</a> か <a href="https://github.com/ryanmcgrath/twython">twython</a> も試してみよう）。インストールは</p>
+<p>こちらもどうぞ→ <a href="tweepy.html">Twitter (tweepy)</a></p>
+
+<p>本稿を書き始めた時点で <a href="https://developer.twitter.com/en/docs/developer-utilities/twitter-libraries.html">Twitter libraries</a> の Python の項の一番上にあった <a href="https://github.com/bear/python-twitter/">python-twitter</a> を試してみた。現在は Twitter libraries のページは <a href="https://developer.twitter.com/en/docs/tools-and-libraries">Tools and libraries</a> にリダイレクトされる。PYPI の <a href="https://pypi.org/project/python-twitter/">python-twitter</a> のページは2018年で更新が止まっている。</p>
+
+<!--
+<p>今なら何が良いかは思案中。候補：<a href="https://pypi.org/project/tweepy/">tweepy</a>（GitHub: <a href="https://github.com/tweepy/tweepy">tweepy</a>）、<a href="https://pypi.org/project/twitter/">twitter</a>（GitHub: <a href="https://github.com/python-twitter-tools/twitter">twitter</a>）、<a href="https://pypi.org/project/TwitterAPI/">TwitterAPI</a>（GitHub: <a href="https://github.com/geduldig/TwitterAPI">TwitterAPI</a>）、・・・。</p>
+-->
+
+<p>インストールは</p>
 
 <pre>
-<code>pip install python-twitter
-</code></pre>
+pip install python-twitter
+</pre>
 
-<p>でできる。</p>
+<p>でできる（パッケージ名は twitter になるので <code>pip install twitter</code> で入る <a href="https://pypi.org/project/twitter/">twitter</a> パッケージとバッティングする）。</p>
 
 <p>まずは Twitter のアプリケーション登録をする。方法は <a href="https://python-twitter.readthedocs.io/en/latest/">python-twitter's documentation</a> にも書かれているし，日本語の解説もたくさんある（例えば <a href="https://cre8cre8.com/python/twitter-api.htm">Python3でTwitterAPIを使う方法をどのサイトよりも丁寧に解説する</a> の前半）。</p>
 
@@ -32,7 +40,7 @@
 <p>試してみよう：</p>
 
 <pre>
-<code>import twitter
+import twitter
 
 api = twitter.Api(consumer_key='...',
                   consumer_secret='...',
@@ -44,32 +52,32 @@ api = twitter.Api(consumer_key='...',
 api.VerifyCredentials() # 自分が正しく認識できているかチェック
 
 home = api.GetHomeTimeline() # ホームタイムラインを取得（デフォルト20件）
-</code></pre>
+</pre>
 
 <p>これで <code>home</code> を表示すればだいたいの感じがわかる。このクラスの詳細は <code>??twitter.models.Status</code> と打ち込めば出てくる。この中の必要な項目を自分好みに出力すればよい。簡単な例を挙げておく：</p>
 
 <pre>
-<code>for t in home:
+for t in home:
     if (t.retweeted_status):
         t = t.retweeted_status
     for u in t.urls:
         t.full_text = t.full_text.replace(u.url, u.expanded_url)
     print(t.id, t.created_at, t.user.screen_name, t.full_text)
-</code></pre>
+</pre>
 
 <p>これを少しいじれば，自家製Twitterクライアントができる。これ以外に，位置情報 <code>t.place</code>，正確な位置情報 <code>t.geo</code> などが得られる。普段はEmacsのtwittering-modeを使っているが，自動処理にはコマンドラインで使えるほうが便利だ。</p>
 
 <p>書き込みはこんな感じ（通常はツイート本文だけでよい）：</p>
 
 <pre>
-<code>api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
+api.PostUpdate("テスト",  # ツイート本文（これだけ必須）
                media="hoge.jpg",  # 添付画像ファイル（複数あればリスト）
                in_reply_to_status_id=1140050903828819970, # リプライ先のツイートID
                auto_populate_reply_metadata=True, # リプライ先の @... を自動挿入
                attachment_url="https://twitter.com/.../status/...", # 引用リツイート
                latitude=34.7468, longitude=136.5248, # 位置情報
                display_coordinates=True) # 正確な位置情報にするか
-</code></pre>
+</pre>
 
 <p>引用リツイートは従来のようにツイート本文末尾にURLを書いてもいいが，<code>attachment_url="..."</code> で指定すると文字数カウントに入らない。リプライの先頭に付ける <code>@...</code> も，手で書く代わりに <code>auto_populate_reply_metadata=True</code> にすれば自動で入り，文字数カウントに入らない。</p>
 
@@ -80,7 +88,7 @@ home = api.GetHomeTimeline() # ホームタイムラインを取得（デフォ�
 <p>毎時cronで起動して日毎のホームタイムラインをファイルにするコード例：</p>
 
 <pre>
-<code>#! /usr/local/bin/python3
+#! /usr/local/bin/python3
 
 import twitter
 import time
@@ -126,14 +134,14 @@ with open(time.strftime("%Y%m%d"), "a", newline="\n") as f:
             s = s.replace(u.url, u.expanded_url)
         c = parse(t.created_at).astimezone(timezone('Asia/Tokyo')).strftime("%Y-%m-%d %H:%M:%S")
         print(t.id, c, t.user.screen_name, s.replace("\n", "\r"), sep="\t", file=f)
-</code></pre>
+</pre>
 
 <p>grepしやすいように1ツイート1行にするために，ツイート中の改行は <code>"\r"</code> に変換している。</p>
 
 <p>稀に <code>h = api.GetHomeTimeline(...)</code> が失敗することがある。ゆっくり何度かやれば成功するみたいなので，この行を次で置き換えてみた：</p>
 
 <pre>
-<code>    cnt = 0
+    cnt = 0
     while cnt < 5:
         time.sleep(30)
         try:
@@ -142,14 +150,14 @@ with open(time.strftime("%Y%m%d"), "a", newline="\n") as f:
         except:
             h = []
             cnt += 1
-</code></pre>
+</pre>
 
 <hr>
 
 <p>検索は python-twitter の<a href="https://python-twitter.readthedocs.io/en/latest/searching.html">ドキュメント</a>や，Twitter API の <a href="https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets">Search Tweets</a>，<a href="https://developer.twitter.com/en/docs/tweets/search/guides">Search Tweet Guides</a> 参照。例：</p>
 
 <pre>
-<code>import urllib.parse
+import urllib.parse
 
 query = {"q": "ほげ ふが",        # 検索文字列（スペース区切り）
          "result_type": "recent", # 新しいもの順に取得
@@ -164,14 +172,14 @@ while True:
     results.extend(r)
     query['max_id'] = results[-1].id - 1
     time.sleep(1)
-</code></pre>
+</pre>
 
 <p>この方法で取得できるものは，検索語によっては，大部分が重複（リツイート）である。</p>
 
 <p>結果をMeCabで形態素解析し，名詞の出現頻度をグラフにしてみよう：</p>
 
 <pre>
-<code>import MeCab
+import MeCab
 import collections
 
 text = ""
@@ -213,16 +221,13 @@ plt.figure(figsize=[5, 5])
 plt.barh(range(len(mc),0,-1), mc.values())
 plt.yticks(range(len(mc),0,-1), mc.keys())
 plt.savefig('hist.png', bbox_inches="tight")
-</code></pre>
+</pre>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-04-12 20:09:33</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-11-13 20:41:26 JST</time></p>
+</footer>
 </body>
 </html>

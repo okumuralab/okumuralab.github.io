@@ -7,9 +7,6 @@
 <title>scriptタグ</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
-<script>
-  "use strict";
-</script>
 </head>
 <body>
 
@@ -58,10 +55,10 @@
 
 <script>
   let s2 = "";
-  for (let i = 1; i <= 100; i++) {
+  for (let i = 1; i <= 10; i++) {
     s2 +=  "羊が" + i + "匹<br>";
   }
-  s2 += "ぐぅ";
+  s2 += "疲れた";
   document.getElementById("out2").innerHTML = s2;
 </script>
 
@@ -70,10 +67,10 @@
 
 &lt;script&gt;
   let s2 = "";
-  for (let i = 1; i &lt;= 100; i++) {
+  for (let i = 1; i &lt;= 10; i++) {
     s2 +=  "羊が" + i + "匹&lt;br&gt;";
   }
-  s2 += "ぐぅ";
+  s2 += "疲れた";
   document.getElementById("out2").innerHTML = s2;
 &lt;/script&gt;
 </pre>
@@ -162,7 +159,35 @@
   s1 = "";      // エラー！
 </pre>
 
-<p>最後に，JavaScript の行末（または <code>}</code> の直前または入力の終わり）のセミコロン <code>;</code> はだいたい省略可能です。特に HTML の <code>onclick="..."</code> などの中に書く JavaScript コードの最後にはセミコロンを付けないことが多いと思います。JavaScript は改行がスペースと同じ意味ではないので，変なところで改行するとエラーになることがあります。</p>
+<p>最後に，JavaScript の行末（または <code>}</code> の直前または入力の終わり）のセミコロン <code>;</code> はだいたい省略可能です。特に HTML の <code>onclick="..."</code> などの中に書く JavaScript コードの最後にはセミコロンを付けないことが多いと思います。JavaScript は改行がスペースと同じ意味ではないので，変なところで改行するとエラーになることがあります。次の例はセミコロンも <code>let</code> の類も全部省略したものです：</p>
+
+<blockquote>
+  <p id="out3"></p>
+</blockquote>
+
+<script>
+  s3 = ""
+  for (j = 1; j <= 100; j++) {
+    s3 += "羊が" + j + "匹，"
+  }
+  s3 += "ぐぅ"
+  document.getElementById("out3").textContent = s3
+</script>
+
+<pre>
+&lt;blockquote&gt;
+  &lt;p id="out3"&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;script&gt;
+  s3 = ""
+  for (j = 1; j &lt;= 100; j++) {
+    s3 += "羊が" + j + "匹，"
+  }
+  s3 += "ぐぅ"
+  document.getElementById("out3").textContent = s3
+&lt;/script&gt;
+</pre>
 
 <hr>
 
@@ -170,7 +195,7 @@
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-05-07 20:54:10 JST</time>
+Last modified: <time>2022-11-08 09:45:35 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
