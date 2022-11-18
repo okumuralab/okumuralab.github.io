@@ -13,7 +13,7 @@ now = time.strftime('%Y-%m-%d %H:%M:%S %Z', time.localtime())
 
 df = pd.read_csv(URLC)
 
-df = df.groupby('Country/Region').sum().iloc[:, 2:]
+df = df.groupby('Country/Region').sum(numeric_only=True).iloc[:, 2:]
 t = pd.to_datetime(df.columns)
 
 locator = mdates.AutoDateLocator()
@@ -60,7 +60,7 @@ fig.savefig('../img/COVID-csse1.svg', bbox_inches="tight")
 
 df = pd.read_csv(URLD)
 
-df = df.groupby('Country/Region').sum().iloc[:, 2:]
+df = df.groupby('Country/Region').sum(numeric_only=True).iloc[:, 2:]
 t = pd.to_datetime(df.columns)
 
 ax.clear()

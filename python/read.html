@@ -148,6 +148,10 @@ df.groupby('列名1')['列名2'].mean() # 列名1でグループ化した列名2
 pd.crosstab(df['列名1'], df['列名2']) # クロス集計
 </pre>
 
+<div class="note">
+<p>場合によっては <code>df.groupby("...").sum()</code> のようなコードは <code>df.groupby("...").sum(numeric_only=True)</code> にしないと警告が出るようになりました。</p>
+</div>
+
 <h2>データ型の指定</h2>
 
 <p>この節については、いしおさんのブログ<a href="https://ishitonton.hatenablog.com/entry/2019/01/04/190748">DataFrameのメモリサイズを節約する</a>が参考になります。</p>
@@ -242,7 +246,7 @@ df.head()
 <p>データフレームのCSV形式での書き出しは <code>pandas.DataFrame.to_csv()</code> を使います。デフォルトはUTF-8ですが、Excel互換のBOM付きUTF-8（行末CRLF）でインデックスを付けずに保存するには次のようにします：</p>
 
 <pre>
-df.to_csv("filename.csv", index=False, encoding="utf_8_sig", line_terminator="\r\n")
+df.to_csv("filename.csv", index=False, encoding="utf_8_sig", lineterminator="\r\n")
 </pre>
 
 <p>データが10進で切りの良い値でも、微妙な誤差が入ることがあります。例えばオプション <code>float_format="%.14g"</code> を付けて、わざと精度を落として書き込むといった対策がありそうです。</p>
@@ -345,7 +349,7 @@ df = pd.read_csv(StringIO(r.text))
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-11-07 09:21:02 JST</time>
+Last modified: <time>2022-11-18 16:48:41 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
