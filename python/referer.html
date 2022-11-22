@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/referer.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Webサイトのreferer</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Webサイトのreferer</h1>
+
+<p>Webページへの訪問者がどのWebページのリンクをたどって来たのかは、referer（リファーラー）という名前の変数を調べればいいことになっている。参照元という意味の英語は本来は referrer だが、だれかが綴りを間違えたのが定着してしまったようである。</p>
+
+<p>Apache の access_log には referer が記録されるように設定してあったのだが、SSL（TLS）になってからの設定はさぼっていた。先日、/etc/httpd/conf.d/ssl.conf の</p>
+
+<pre>
+TransferLog logs/ssl_access_log
+</pre>
+
+<p>の直前に</p>
+
+<pre>
+LogFormat "%h %l %u %t \"%r\" %&gt;s %b \"%{Referer}i\" \"%{User-agent}i\""
+</pre>
+
+<p>と書き込んだので、久しぶりに referer がチェックできるようになった。今回は Python で調べてみよう。</p>
+
+<p>まず、ログの referer 部分だけをファイルに保存するには、次のプログラムを走らせればよい：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import re
+
+with open("/var/log/httpd/ssl_access_log") as f:
+    for line in f:
+        r = re.search(r'^.* .* .* \[.*?\] ".*?" .* .* "(.*?)" ".*?"$', line)
+        if r:
+            print(r[1])
+</pre>
+
+<p>これの出力をファイルにリダイレクトして、解析用マシンに取ってくる。これを次のようにして読んで、referer のドメイン部分をカウントし、大きい順に出力する：</p>
+
+<pre>
+import re
+
+cnt = {}
+with open("ファイル名") as f:
+    for line in f:
+        r = re.search("^https?://(.*?)/", line)
+        if r:
+            if r[1] in cnt:
+                cnt[r[1]] += 1
+            else:
+                cnt[r[1]] = 1
+
+for i in sorted(cnt.items(), key=lambda x:x[1], reverse=True):
+    print(i[0], i[1])
+</pre>
+
+<p>次のような結果が得られた：</p>
+
+<pre>
+okumuralab.org 112392
+www.google.com 4817
+oku.edu.mie-u.ac.jp 1675
+www.google.co.jp 959
+t.co 415
+search.yahoo.co.jp 355
+texwiki.texjp.org 214
+www.bing.com 154
+...
+</pre>
+
+<p>自分のサイトを除けば、やはり Google がトップで、次は t.co（ツイッター）である。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-11-22 15:20:17 JST</time></p>
+</footer>
+</body>
+</html>

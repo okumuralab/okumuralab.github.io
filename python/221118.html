@@ -43,6 +43,10 @@ dfa.to_csv("1a.csv", index=False, encoding="utf_8_sig", lineterminator="\r\n")
 dfb.to_csv("1b.csv", index=False, encoding="utf_8_sig", lineterminator="\r\n")
 </pre>
 
+<div class="note">
+<p>問題文に「一か所でも項目のデータに欠損値がある場合は，それらの都道府県を除外したものを全体として考える」とあるので最初 <code>df1.dropna(inplace=True)</code> を入れたが、それでは回帰係数が合わないので、おそらく間違いであろう。</p>
+</div>
+
 <p>以下では見やすくするためCSVファイル中の <code>.0</code> は一括削除した。</p>
 
 <p>1a.csv:</p>
@@ -192,11 +196,13 @@ pg.linear_regression(dfx[['学業']], dfx['睡眠'], remove_na=True)
 
 <p>福井県を除けば傾きが有意でなくなることに加え、都道府県ごとの平均値の傾向は必ずしも個人の傾向を表すものではないこと（生態学的誤謬、ecological fallacy）を考慮して、この種のデータは慎重に扱う必要がある。</p>
 
+<p>学業の時間と睡眠の時間との関連を調べる際に、なぜスマホ・パソコンの利用時間が1時間未満という条件を付ける必要があったのかもよくわからない。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-11-18 20:34:39 JST</time></p>
+<p>Last modified: <time>2022-11-20 15:35:41 JST</time></p>
 </footer>
 </body>
 </html>
