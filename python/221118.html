@@ -155,6 +155,15 @@ dfb.to_csv("1b.csv", index=False, encoding="utf_8_sig", lineterminator="\r\n")
 47_沖縄県,450,52,103,50,417,49
 </pre>
 
+<p>いったんCSVファイルができてしまえば、これを読むほうが早い：</p>
+
+<pre class="cell">
+import pandas as pd
+
+dfa = pd.read_csv("1a.csv")
+dfb = pd.read_csv("1b.csv")
+</pre>
+
 <p>散布図：</p>
 
 <pre class="cell">
@@ -179,6 +188,14 @@ pg.linear_regression(dfa[['学業']], dfa['睡眠'], remove_na=True)
 
 <p>回帰式 <span lang="en"><i>y</i> = -0.14<i>x</i> + 491.17</span> が確認できる。傾き -0.136 は、95% 信頼区間 [-0.247, -0.026] が 0 をまたがないので、5% 水準で有意である。</p>
 
+<p>散布図と回帰直線（95%信頼区間付き）を描くには <a href="seaborn.html">seaborn</a> のほうが便利である：</p>
+
+<pre class="cell">
+import seaborn as sns
+
+sns.regplot(dfa, x="学業", y="睡眠")
+</pre>
+
 <p>ただし、一番右の点（福井県、752分）を含めなければ、傾きは有意でなくなる：</p>
 
 <pre class="cell">
@@ -192,17 +209,25 @@ pg.linear_regression(dfx[['学業']], dfx['睡眠'], remove_na=True)
 1         学業   -0.097699   0.06385  -1.530144  ...  0.058038  0.03325   -0.226956    0.031558
 </pre>
 
-<p>この意味で、福井県こそが外れ値というべきであろう（問5の後半の議論とは裏腹に）。</p>
+<p>散布図と回帰直線をさきほどの図に重ね書きする。青が全体、オレンジが福井県を除いたものである：</p>
+
+<pre class="cell">
+sns.regplot(dfx, x="学業", y="睡眠")
+</pre>
+
+<figure><img src="img/221118a.svg" alt="学業と睡眠の時間"></figure>
+
+<p>このことから、右端の福井県こそが外れ値というべきであろう（問5の後半の議論とは裏腹に）。</p>
 
 <p>福井県を除けば傾きが有意でなくなることに加え、都道府県ごとの平均値の傾向は必ずしも個人の傾向を表すものではないこと（生態学的誤謬、ecological fallacy）を考慮して、この種のデータは慎重に扱う必要がある。</p>
 
-<p>学業の時間と睡眠の時間との関連を調べる際に、なぜスマホ・パソコンの利用時間が1時間未満という条件を付ける必要があったのかもよくわからない。</p>
+<p>また、学業の時間と睡眠の時間との関連を調べる際に、なぜスマホ・パソコンの利用時間が1時間未満という条件を付ける必要があったのかもよくわからない。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-11-20 15:35:41 JST</time></p>
+<p>Last modified: <time>2022-11-23 11:13:06 JST</time></p>
 </footer>
 </body>
 </html>

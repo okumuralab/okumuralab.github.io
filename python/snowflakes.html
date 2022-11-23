@@ -17,45 +17,46 @@
 
 <h1>TwitterのステータスIDの仕組み</h1>
 
-<p><a href="https://developer.twitter.com/en/docs/basics/twitter-ids">Twitter ID</a> は snowflake という仕組みで日時から生成される。下位22ビットはユニークな値で，上位は 2010-11-04 01:42:54.657 UTC (2010-11-04 10:42:54.657 JST) を起点としたミリ秒単位の時刻を表す。したがって，IDからツイートのタイムスタンプを求めるには次のようにすればよい：</p>
+<p>世界最初のツイートは、ジャック・ドーシー（Jack Dorsey）による 2006-03-22 の <a href="https://twitter.com/jack/status/20">https://twitter.com/jack/status/20</a> である。この「20」というツイートのIDは、当時はMySQLのユニークIDを使っていたようだが、2010-06-01 の <a href="https://blog.twitter.com/engineering/en_us/a/2010/announcing-snowflake">Announcing Snowflake</a> という記事で、Snowflake という仕組みに切り替えることがアナウンスされた。</p>
+
+<p>現在の <a href="https://developer.twitter.com/en/docs/basics/twitter-ids">Twitter ID</a> は、Snowflake という仕組みで、日時から生成される。下位22ビットはユニークなランダム値で，上位は 2010-11-04 01:42:54.657 UTC (2010-11-04 10:42:54.657 JST) を起点としたミリ秒単位の時刻を表す。したがって，IDからツイートのタイムスタンプを求めるには次のようにすればよい：</p>
 
 <pre>
-<code>import datetime
+import datetime
 
 def id2time(id):
     return ((id >> 22) + 1288834974657) / 1000
 
 id = 1177189139873054725 # このIDのツイートのタイムスタンプを求める
 print(f'{datetime.datetime.fromtimestamp(id2time(id)):%Y-%m-%d %H:%M:%S}')
-</code></pre>
+</pre>
 
 <p>2019-09-26 20:52:16 と出力される。あるいは次のようにしてもよい：</p>
 
 <pre>
-<code>import numpy as np
+import numpy as np
 
 print(np.datetime64("2010-11-04 10:42:54.657") + np.timedelta64(id >> 22, "ms"))
-</code></pre>
+</pre>
 
 <p>2019-09-26T20:52:16.719 と出力される。</p>
 
 <p>逆は次のようにすればよい。例えばタイムスタンプ 2019-09-26 20:52:16 のIDは</p>
 
 <pre>
-<code>t = '2019-09-26 20:52:16'
+t = '2019-09-26 20:52:16'
 print((np.datetime64(t) - np.datetime64("2010-11-04 10:42:54.657")).astype(int) << 22)
-</code></pre>
+</pre>
 
 <p>小さめの値 1177189136855990272 が出力される。</p>
 
+<p>ちなみに、Twitterは2022年5月時点で毎秒1万ツイートほどらしい（<a href="https://www.renolon.com/number-of-tweets-per-day/">How Many Tweets per Day</a>）。ミリ秒あたり10ツイート。22ビットあれば十分なのであろう。</p>
+
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2020-12-17 15:27:38</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-11-23 19:52:51 JST</time></p>
+</footer>
 </body>
 </html>
