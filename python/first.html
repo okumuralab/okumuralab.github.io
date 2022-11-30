@@ -226,13 +226,19 @@ NameError: name 'sin' is not defined
 
 <p>駄目ですね。</p>
 
-<p>数学関数はいくつかのライブラリで定義されています（標準数学ライブラリ <code>math</code>、<a href="https://www.numpy.org">NumPy</a>、<a href="https://www.scipy.org">SciPy</a>）。ライブラリ（library）とは図書館のことですが、コンピュータのライブラリは、いろいろな関数などが定義されている場所を意味します。ここでは Python の標準ライブラリ <code>math</code> を使います。そのためには、まず、次のように打ち込みます：</p>
+<p>数学関数はいくつかのライブラリで定義されています（標準ライブラリの <a href="https://docs.python.org/3/library/math.html">math</a>、サードパーティ（外部）ライブラリの <a href="https://www.numpy.org">NumPy</a>、<a href="https://www.scipy.org">SciPy</a>）。ライブラリ（library）とは図書館のことですが、コンピュータのライブラリは、いろいろな関数などが定義されている場所を意味します。</p>
+
+<div class="note">
+<p>より技術的には、Python では、一つのファイルで構成されるものをモジュール、複数のファイルを含むディレクトリで構成されるものをパッケージと呼びます。ライブラリは、<a href="https://docs.python.org/3/library/index.html">Python 標準ライブラリ</a>のようにモジュールやパッケージの集合を指すために使われますが、その意味はあいまいです。いずれにしても、読み込む際には以下で説明する <code>import</code> を使うので、ユーザから見た区別はありません。</p>
+</div>
+
+<p>ここでは Python の標準ライブラリの <code>math</code> モジュールを使います。そのためには、まず、次のように打ち込みます：</p>
 
 <pre class="cell">
 import math
 </pre>
 
-<p>これは <code>math</code> というライブラリを読み込む（インポートする）ことを意味します。これで <code>math.</code> で始まる数学用のあれこれが使えるようになります：</p>
+<p>これは <code>math</code> というものを読み込む（インポートする）ことを意味します。これで <code>math.</code> で始まる数学用のあれこれが使えるようになります：</p>
 
 <pre class="cell">
 math.pi   # 円周率
@@ -485,7 +491,7 @@ for i in range(2, 100):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-09-19 10:38:43 JST</time>
+Last modified: <time>2022-11-27 11:50:59 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
