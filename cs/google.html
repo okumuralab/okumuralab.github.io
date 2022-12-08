@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/google.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Google検索</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+
+<h1>Google検索</h1>
+
+<p>Google検索に使える演算子の一覧で、一番信頼のおけそうなものは、Googleの<a href="https://en.wikipedia.org/wiki/Daniel_M._Russell">Daniel M. Russell</a>がまとめている<a href="https://docs.google.com/document/d/1ydVaJJeL1EYbWtlfj9TPfBTE5IBADkQfZrQaBZxqXGs/edit">Advanced Search Operators</a>というページだと思います。Daniel M. Russelは <a href="https://www.amazon.co.jp/dp/B08BSZZ2Q9">The Joy of Search: A Google Insider's Guide to Going Beyond the Basics</a> という本も書いています。</p>
+
+<p>ここには <code>OR</code> という演算子はあるけれども <code>AND</code> はありません。スペースで区切ればだいたいAND検索してくれるはずですが、本文に foo と bar が含まれるページを探したければ <code>allintext: foo bar</code> という書き方もあるようです（Russell自身は <code>allin〜:</code> はほぼ使わないとのことですが）。</p>
+
+<p>こういった演算子をフルに活用して、隠れた情報を見つける方法は、Google Dorks と呼ばれ、OSINT（オシント、Open Source Intelligence）の技法の一つとされています。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-12-08 21:49:32 JST</time></p>
+</footer>
+</body>
+</html>
