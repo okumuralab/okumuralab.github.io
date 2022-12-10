@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/221209.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>数字と単位の間のスペース</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+  blockquote > p { margin: 1em 0 }
+  .unit { padding-left: 0.167em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>数字と単位の間のスペース</h1>
+
+<hr>
+<p>［要約］数字と単位の間には「スペース」を入れる。通常のスペースでもいいが、LaTeX なら「改行されない狭いスペース」<code>\,</code> が推奨。例えば <span lang="en">9.8<span class="unit">m/s<sup>2</sup></span></span> なら <code>$9.8\,\mathrm{m/s^2}$</code> と書く。Web で <code>\,</code> に相当するものは U+202F (NARROW NO-BREAK SPACE) <code>&amp;#8239;</code> だが、うまく表示できない場合があるので、U+00A0 (NO-BREAK SPACE) <code>&amp;nbsp;</code> でもかまわない。</p>
+<hr>
+
+<p><a href="https://www.bipm.org/en/publications/si-brochure">SI Brochure: The International System of Units (SI)</a> には、数字と単位の間には「スペース」を入れると書かれている：</p>
+
+<blockquote lang="en">
+<p>The numerical value always precedes the unit and a space is always used to separate the unit from the number. Thus the value of the quantity is the product of the number and the unit. The space between the number and the unit is regarded as a multiplication sign (just as a space between units implies multiplication). The only exceptions to this rule are for the unit symbols for degree, minute and second for plane angle, °, ′ and ′′, respectively, for which no space is left between the numerical value and the unit symbol.</p>
+
+<p>This rule means that the symbol °C for the degree Celsius is preceded by a space when one expresses values of Celsius temperature <i>t</i>.</p>
+</blockquote>
+
+<p>例として <span lang="en"><i>m</i> = 12.3 g</span> や <span lang="en"><i>t</i> = 30.2 °C</span> が挙げられている。SI Brochure の PDF ファイルをよく見ても、本当に U+0020 (SPACE) が使われているようである。数字と単位の間だけでなく、等号の両側にも同じスペースが入っているように見える。</p>
+
+<p>ところが、TeX に代表される数式組版ツールでは、もっと細かい制御が行われるのが一般的である。Knuth の TeXbook の169ページには、数字と単位の間は thin space（TeX の記法では <code>\,</code>）を入れるべきだと書かれている。TeX では、例えば公称10ポイントのフォントなら10ポイントの幅（quad）を基準として、thin space は quad の 1/6 倍、「+」の両側に自動挿入される medium space は quad の通常 2/9 倍（伸縮可能）、「=」の両側に自動挿入される thick space は quad の通常 5/18 倍（伸長可能）のスペースになる。</p>
+
+<p>現在一般に使われる LaTeX でも、このルールは同じで、例えば <span lang="en"><i>g</i> = 9.8<span class="unit">m/s<sup>2</sup></span></span> と出力するには <code>$g = 9.8\,\mathrm{m/s^2}$</code> と書くのが一般的である。<code>=</code> や <code>+</code> の両側のスペースは自動挿入され、<code>g</code> のような文字は数式用イタリック体に自動で設定されるが、単位については自分で <code>\mathrm{...}</code> で囲んで数式用ローマン体に設定し、数字との間にスペースを入れるコマンド <code>\,</code> も自分で書き込まなければならない。</p>
+
+<p>SI Brochure に書かれた単位の前の space を thin space と解釈することについて、<a href="https://www.lambdanote.com/products/mathtypo">木枝祐介『数式組版』</a>p.203 の注 2.156 では次のように説明されている：</p>
+
+<blockquote>
+<p>SI ではスペーシングの絶対量を特に定めてはいない．しかしながら，組版の観点からは，数式組版で用いられる三つの（正の）値のスペースのうち，最も小さい thin space を用いるのが妥当である．</p>
+</blockquote>
+
+<p>LaTeX で SI 単位関係のフォントやスペースを自動で設定するためのパッケージとしては、Marcel Heldoorn による古い SIunits や、より新しい Joseph Wright による siunitx がある。ここではこれらについては述べないが、<a href="https://english.stackexchange.com/questions/105553/should-thin-spaces-be-used-between-numerals-and-units">Should thin spaces be used between numerals and units</a> によれば、siunitx パッケージのスペースは、当初は thin space を使っていたが、<a href="https://github.com/josephwright/siunitx/commit/51bd5807a9b36ac3243d0dd61b20a224bec81501">2014-09-03 のコミット</a>で space に変わり、<a href="https://github.com/josephwright/siunitx/commit/c086a843a0edc8d5f44285ecf1a413cef8aeac58">2014-09-05 のコミット</a>で thin space に戻ったという。</p>
+
+<p>ところで、このページで thin space に相当するスペースは、CSS で</p>
+
+<pre>
+.unit { padding-left: 0.167em }
+</pre>
+
+<p>と定義しておいて、<code>9.8&lt;span class="unit"&gt;m/s&lt;sup&gt;2&lt;/sup&gt;&lt;/span&gt;</code> のように書いている。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-12-10 16:39:30 JST</time></p>
+</footer>
+</body>
+</html>
