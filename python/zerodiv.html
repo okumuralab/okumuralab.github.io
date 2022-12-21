@@ -19,9 +19,9 @@
 
 <p>ゼロで割るとどうなるかは言語によります。</p>
 
-<p>R で <code>1 / 0</code> と打ち込むと <code>Inf</code> と返ってきます。<code>0 / 0</code> は <code>NaN</code>（Not a Number）になります。</p>
+<p>R で <code>1 / 0</code> と打ち込むと <code>Inf</code>（Infinity = 無限大）と返ってきます。<code>0 / 0</code> は <code>NaN</code>（Not a Number = 非数）になります。いずれにしても、エラーで止まることはありません。</p>
 
-<p>Ruby では <code>1 / 0</code> や <code>0 / 0</code> は ZeroDivisionError になりますが <code>1.0 / 0.0</code> は <code>Infinity</code>、<code>0.0 / 0.0</code> は <code>NaN</code> になります。C言語でも同じです。</p>
+<p>Ruby では <code>1 / 0</code> や <code>0 / 0</code> は ZeroDivisionError になって止まりますが <code>1.0 / 0.0</code> は <code>Infinity</code>、<code>0.0 / 0.0</code> は <code>NaN</code> になります。C言語でも同じです。</p>
 
 <p>ところが Python では <code>0</code> で割っても <code>0.0</code> で割っても ZeroDivisionError になり、そこで実行が止まってしまいます。これでは不便です。もちろん</p>
 
@@ -83,11 +83,7 @@ with np.errstate(divide="ignore", invalid="ignore"):
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-08-04 17:21:35 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2022-12-15 16:40:21 JST</time></p>
 </footer>
 </body>
 </html>
