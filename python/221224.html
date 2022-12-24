@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/221224.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>都道府県ごとの平均寿命</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>都道府県ごとの平均寿命</h1>
+
+<div class="note">
+<p>生命表については<a href="life_expectancy.html">日本人の平均寿命</a>も参照されたい。</p>
+</div>
+
+<p>2022年12月23日に、厚労省から新しい<a href="https://www.e-stat.go.jp/stat-search?page=1&toukei=00450012">生命表</a>が公開された。</p>
+
+<p>上記ページの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&toukei=00450012&tstat=000001031336">ファイル 2022-12-23</a>をクリックすると、特に今年は、5年に1度の<a href="https://www.e-stat.go.jp/stat-search/files?page=1&toukei=00450012&tstat=000001031336&cycle=7&tclass1=000001060945&tclass2=000001172687&layout=datalist&tclass3val=0">令和２年都道府県別生命表</a>が含まれることがわかる。</p>
+
+<p>都道府県別生命表の下のほうに、表番号80000の<a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000032268110">都道府県別平均寿命の年次推移</a>がある。このCSVファイル（ファイル名80000.csv）を眺めてみよう。</p>
+
+<p>このCSVファイルは、文字コードがShift JISで、開くとExcelが立ち上がる。Excelの画面の一部を下に示す。</p>
+
+<figure><img src="img/221224a.png" alt="都道府県別平均寿命の年次推移"></figure>
+
+<p>ご覧のように、データとしての使いやすさを考えていないCSVファイルである。都道府県名は「青　森」のように全角スペースで整形されている。</p>
+
+<p>これに<a href="tidy.html">データの整然化</a>を行って、次のように縦長のCSVに整形したものを、<a href="data/life_2020_80000.csv">life_2020_80000.csv</a>として置いておく。文字コードはBOM付きUTF-8である。この先頭・末尾を次に示す：</p>
+
+<pre>
+性別,都道府県,年1,年2,平均寿命
+男,北海道,1921,1925,43.61
+男,青森,1921,1925,38.86
+男,岩手,1921,1925,37.31
+男,宮城,1921,1925,42.46
+男,秋田,1921,1925,39.69
+……（中略）……
+女,熊本,2020,2020,88.22
+女,大分,2020,2020,87.99
+女,宮崎,2020,2020,87.6
+女,鹿児島,2020,2020,87.53
+女,沖縄,2020,2020,87.88
+</pre>
+
+<p>大正10〜14年（1921〜1925）の北海道の男の平均寿命は43.61、というわけである。</p>
+
+<p>まずはこれを読んでみよう：</p>
+
+<pre class="cell">
+import pandas as pd
+
+df = pd.read_csv("https://okumuralab.org/~okumura/python/data/life_2020_80000.csv")
+</pre>
+
+<p>グラフを描くために、「年1」と「年2」の平均を「年」としよう：</p>
+
+<pre class="cell">
+df["年"] = (df["年1"] + df["年2"]) / 2
+</pre>
+
+<p>一番新しい2020年の男女の平均寿命の散布図を描いてみる：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+
+life_m = df.query("性別 == '男' and 年 == 2020")["平均寿命"]
+life_f = df.query("性別 == '女' and 年 == 2020")["平均寿命"]
+prefs = df.query("性別 == '男' and 年 == 2020")["都道府県"]
+plt.plot(life_m, life_f, "o")
+plt.axis("equal")
+plt.xlabel("男")
+plt.ylabel("女")
+for i, j, k in zip(life_m, life_f, prefs):
+    plt.text(i, j, k)
+</pre>
+
+<figure><img src="img/221224b.svg" alt="都道府県別平均寿命 2020年"></figure>
+
+<p>全体として男のほうがばらつきが大きい。青森県は男女とも平均寿命が短い。</p>
+
+<p>推移をプロットしてみよう：</p>
+
+<pre class="cell">
+plt.clf()
+for sex in ["男", "女"]:
+    for pref in prefs:
+        if pref == "沖縄":
+            df1 = df.query(f"性別 == '{sex}' and 都道府県 == '{pref}'")
+            plt.plot(df1["年"], df1["平均寿命"], "s-", color="#1f77b4")
+        else:
+            df1 = df.query(f"性別 == '{sex}' and 都道府県 == '{pref}'")
+            if sex == "男":
+                plt.plot(df1["年"], df1["平均寿命"], "o-", color="#2ca02c10")
+            else:
+                plt.plot(df1["年"], df1["平均寿命"], "o-", color="#ff7f0e10")
+</pre>
+
+<figure><img src="img/221224c.svg" alt="都道府県別平均寿命の推移"></figure>
+
+<p>青い四角で示したのは沖縄である。沖縄は長寿県として有名であったが、今はそうではなく、特に男の平均寿命は下位に転じている。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2022-12-25 08:49:12 JST</time></p>
+</footer>
+</body>
+</html>
