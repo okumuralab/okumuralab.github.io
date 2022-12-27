@@ -32,8 +32,11 @@ function check() {
       str += "<span class=\"jis90\">" + c + "</span>";
     } else if (JIS8390.includes(c)) {
       str += "<span class=\"jis8390\">" + c + "</span>";
+    } else if (c >= "⼀" && c <= "⿕") {
+      str += "<span class=\"err\">《" + c + "》</span>";
+      err += 1;
     } else {
-      str += "<span class=\"err\"> " + c + " </span>";
+      str += "<span class=\"err\">【" + c + "】</span>";
       err += 1;
     }
   }
@@ -73,11 +76,12 @@ function check() {
 
 <p>凡例：</p>
 
-<p><span class="err">　</span> 範囲外<br>
-<span class="ascii">　</span> ラテン文字（いわゆる半角英数字・記号。問題ないはず）<br>
-<span class="jis83">　</span> JIS X 0208:1983制定時に変更があったもの（問題ないはず）<br>
-<span class="jis90">　</span> JIS X 0208:1990制定時に変更があったもの（問題ないはず）<br>
-<span class="jis8390">　</span> JIS X 0208:1983およびJIS X 0208:1990制定時に変更があったもの（問題ないはず）</p>
+<p><span class="err">《　》</span> 範囲外（康熙部首）<br>
+<span class="err">【　】</span> 範囲外（その他）<br>
+<span class="ascii">　</span> ラテン文字（いわゆる半角英数字・記号。問題ない）<br>
+<span class="jis83">　</span> JIS X 0208:1983制定時に変更があったもの（問題ない）<br>
+<span class="jis90">　</span> JIS X 0208:1990制定時に変更があったもの（問題ない）<br>
+<span class="jis8390">　</span> JIS X 0208:1983およびJIS X 0208:1990制定時に変更があったもの（問題ない）</p>
 
 <p>文字種については<a href="https://www.asahi-net.or.jp/~ax2s-kmtn/ref/jisx0208.html">こちら</a>を参考にさせていただきました。</p>
 
@@ -89,6 +93,8 @@ function check() {
 
 <p><em>[追記2]</em> NFC（例：パンダ）とNFD（例：パンダ）の扱いはブラウザによって違うようです。念のため，本当にサーバに送ってサーバ上で文字をチェックする<a href="../php/jisx0208check.php">PHP版JIS X 0208チェック</a>も作ってみましたので，気になるかたはそちらもお試しください。</p>
 
+<p><em>[追記3]</em> 色だけでなく《　》【　】を付けるようにしました。また、康熙部首とそれ以外を区別できるようにしました。</p>
+
 <hr>
 
 <footer>
@@ -96,7 +102,7 @@ function check() {
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-10 19:12:32</time>
+Last modified: <time>2022-12-27 10:35:34 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
