@@ -15,7 +15,7 @@ t = df['date'].values
 x = df['confirmed'].values
 
 DAY = pd.to_timedelta(1, 'day')
-t1 = pd.to_datetime('2022-01-01')
+t1 = pd.to_datetime('2022-06-01')
 t2 = t[-1] + DAY
 
 fig, ax = plt.subplots()

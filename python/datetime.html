@@ -37,7 +37,7 @@
 16.1 ns ± 0.00604 ns per loop (mean ± std. dev. of 7 runs, 100,000,000 loops each)
 </pre>
 
-<p>（あれ、<code>x += 1</code> より <code>x = x + 1</code> の方が若干速いんだ。）</p>
+<p>（あれ、<code>x += 1</code> より <code>x = x + 1</code> の方が若干速いんだ。）［2023-01-04 追記: M1 Mac mini 上の Python 3.11.1 で試したところ、どちらの時間も 12.3 ns ほどでした。］</p>
 
 <p>ちなみに <code>%%timeit</code> とすると複数行の計測ができます（対話型環境では終了は空行を二つほど打つ）：</p>
 
@@ -282,7 +282,7 @@ print(f'{datetime.datetime.fromtimestamp(p.st_mtime):%Y-%m-%d %H:%M:%S}')
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-12-10 09:11:36 JST</time></p>
+<p>Last modified: <time>2023-01-04 20:51:21 JST</time></p>
 </footer>
 </body>
 </html>

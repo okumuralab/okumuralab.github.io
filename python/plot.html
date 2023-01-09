@@ -278,7 +278,7 @@ rsvg-convert --format=pdf --output=filename.pdf filename.svg
 
 <h2>文字だけLaTeXを使う</h2>
 
-<p>軸の文字やタイトル・キャプションなどの数式は、LaTeX風に <code>$</code> で囲んで書けば、ちゃんと解釈してくれます。その際に、文字列は <code>r"..."</code> のように <code>r</code> を付けて書けば、<code>\</code> を特別扱いしない「生の」（raw）文字列として扱われます。</p>
+<p>軸の文字やタイトル・キャプションなどの数式は、LaTeX風に <code>$</code> で囲んで書けば、ちゃんと解釈してくれます。<code>\</code> で始まるLaTeXのコマンドを含む場合は、<code>r"..."</code> のように <code>r</code> を付けて書けば、<code>\</code> を特別扱いしない「生の」（raw）文字列として扱われます。</p>
 
 <p><code>latex</code>、<code>dvipng</code>、<code>dvips</code>、<code>gs</code> コマンドが使える環境では、次のように <code>text.usetex</code> を <code>True</code> にすれば、本当に文字部分だけLaTeXを起動して、きれいな出力を得ることができます。</p>
 
@@ -292,8 +292,8 @@ x = np.linspace(-5, 5, 101)
 y = 1 / (1 + np.exp(-x))
 plt.figure(figsize=(5, 3))
 plt.plot(x, y, "k")
-plt.xlabel(r"$x$")
-plt.ylabel(r"$y$")
+plt.xlabel("$x$")
+plt.ylabel("$y$")
 plt.title("Sigmoid Function")
 plt.legend([r"$y = \frac{1}{1+e^{-x}}$"])
 plt.savefig("sigmoid.pdf", bbox_inches="tight")
@@ -480,7 +480,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-12-16 16:39:27 JST</time></p>
+<p>Last modified: <time>2023-01-07 14:56:06 JST</time></p>
 </footer>
 </body>
 </html>

@@ -30,6 +30,8 @@ MathJax = {
 
 <h1>$t$ 検定</h1>
 
+<p>[2023-01-05] SciPy 1.10.0 が出たのでそれに合わせて修正しました。</p>
+
 <h2>はじめに</h2>
 
 <p>平均値の検定をする場合、高校では正規分布による検定しか扱いません。例えば、母集団が分散 1 の正規分布だということはわかっているけれども、平均値がわかりません。実際にデータを3個とったところ、値は 1、2、3 でした。平均値が 0 であるという帰無仮説は棄却できるでしょうか。</p>
@@ -87,17 +89,17 @@ stats.ttest_1samp(x, 0)
 </pre>
 
 <pre>
-Ttest_1sampResult(statistic=3.6799158947951884, pvalue=0.005076132649772408)
+TtestResult(statistic=3.6799158947951884, pvalue=0.005076132649772408, df=9)
 </pre>
 
 <p>95% 信頼区間：</p>
 
 <pre class="cell">
-stats.tmean(x) + stats.t.ppf([0.025, 0.975], len(x) - 1) * stats.sem(x)
+stats.ttest_1samp(x, 0).confidence_interval()
 </pre>
 
 <pre>
-array([0.89767754, 3.76232246])
+ConfidenceInterval(low=0.897677539412931, high=3.762322460587068)
 </pre>
 </div>
 
@@ -147,7 +149,7 @@ T-test -2.948615  15.915569   two-sided  0.009479  [-2.36, -0.38]  1.255397  6.5
 <p><code>pg.ttest()</code> のデフォルトは、両群のサイズ（個数）が等しければ分散が等しいと仮定し、そうでなければ Welch の方法を用います。オプション <code>correction=True</code> で常に Welch の方法を用います。</p>
 
 <div class="note">
-<p>SciPy では <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html">scipy.stats.ttest_ind</a> を使って次のようにします：</p>
+<p>SciPy では <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html">scipy.stats.ttest_ind</a> を使って次のようにします（関数名の <code>_ind</code> は「独立」independent を意味します）：</p>
 
 <pre class="cell">
 from scipy import stats
@@ -254,13 +256,22 @@ T-test  4.472136    4   two-sided  0.011056  [0.76, 3.24]      2.0  6.555  0.908
 </pre>
 
 <div class="note">
-<p>SciPy では次のようにします：</p>
+<p>SciPy では <a href="https://docs.scipy.org/doc/scipy-1.10.0/reference/generated/scipy.stats.ttest_rel.html">stats.ttest_rel</a> を使います（<code>_rel</code> は「関連する」related の意味です）：</p>
+
 <pre class="cell">
 stats.ttest_rel([1,2,3,4,5], [3,5,4,7,6])
 </pre>
 
 <pre>
-Ttest_relResult(statistic=-4.47213595499958, pvalue=0.011056493393450068)
+TtestResult(statistic=-4.47213595499958, pvalue=0.011056493393450068, df=4)
+</pre>
+
+<pre class="cell">
+stats.ttest_rel([1,2,3,4,5], [3,5,4,7,6]).confidence_interval()
+</pre>
+
+<pre>
+ConfidenceInterval(low=-3.2416639982037667, high=-0.7583360017962335)
 </pre>
 </div>
 
@@ -287,7 +298,7 @@ mean difference
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-18 21:57:42 JST</time></p>
+<p>Last modified: <time>2023-01-05 16:30:37 JST</time></p>
 </footer>
 </body>
 </html>

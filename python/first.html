@@ -287,11 +287,35 @@ math.sin(math.pi)
 <p>数値計算の誤差のため sin(π) は 0 にならず、1.22 × 10<sup>-16</sup> という小さな値になりました。</p>
 
 <div class="note">
-<p>IPython 限定の話ですが、関数の括弧を閉じないとどうなるでしょうか。</p>
+<p><code>import math</code> の逆は <code>del math</code> です。</p>
+</div>
+
+<div class="note">
+<p>いちいち <code>math.sin(math.pi / 2)</code> などと書くのが面倒なら、<code>from math import pi, sin, cos</code> などと打ち込んでおけば、単に <code>sin(pi / 2)</code> と書くことができます。この逆は <code>del pi, sin, cos</code> です。</p>
+</div>
+
+<div class="note">
+<p>さらに極端に、<code>math</code> モジュールで定義されているものをすべてインポートする <code>from math import *</code> という命令もありますが、あまり推奨されていません。この逆は、いったん <code>import math</code> してから</p>
 <pre>
-In [ ]: math.sin(math.pi / 2
-   ...: )
-Out[ ]: 1.0
+for x in dir(math):
+    if not x.startswith("_"):
+        del globals()[x]
+</pre>
+<p>とすることが考えられます。インポートしたものや使った変数を全部消し去るには</p>
+<pre>
+for x in dir():
+    if not x.startswith("_"):
+        del globals()[x]
+</pre>
+<p>とします。</p>
+</div>
+
+<div class="note">
+<p>REPL（1行ごとに結果を返してくれる対話型環境）限定の話ですが、関数の括弧を閉じないとどうなるでしょうか。</p>
+<pre>
+&gt;&gt;&gt; math.sin(math.pi / 2
+... )
+1.0
 </pre>
 <p>このように、続きの入力を促すプロンプト <code>...</code> が出ますので、入れ忘れた <code>)</code> を入力して <span class="keytop">Enter</span> を押します。あるいは、わけがわからなくなったなら <span class="keytop">Ctrl</span> + <span class="keytop">C</span> で止まります（Emacs中では <span class="keytop">Ctrl</span> + <span class="keytop">C</span> を2回）。</p>
 </div>
@@ -482,7 +506,7 @@ for i in range(2, 100):
 </div>
 
 <div class="note">
-<p>高速な数値計算には <a href="https://www.numpy.org">NumPy</a>（ナムパイ）というライブラリを使います（<code>pip install numpy</code> でインストールします）。NumPy は <code>import numpy as np</code> のようにして省略名 <code>np</code> でインポートします。よく使うライブラリには<a href="https://import-as.github.io">伝統的な省略名がある</a>ので，それに従いましょう。NumPy を使えば、例えば 0 で初期化した長さ 100 の浮動小数点数の配列なら <code>a = np.zeros(100)</code>、同じく整数の配列なら <code>a = np.zeros(3, dtype=int)</code> のようにして作成・初期化できます。</p>
+<p>高速な数値計算には <a href="https://www.numpy.org">NumPy</a>（ナムパイ）というライブラリを使います（<code>pip install numpy</code> でインストールします）。NumPy は <code>import numpy as np</code> のようにして省略名 <code>np</code> でインポートします（この逆は <code>del np</code> です）。よく使うライブラリには<a href="https://import-as.github.io">伝統的な省略名がある</a>ので，それに従いましょう。NumPy を使えば、例えば 0 で初期化した長さ 100 の浮動小数点数の配列なら <code>a = np.zeros(100)</code>、同じく整数の配列なら <code>a = np.zeros(3, dtype=int)</code> のようにして作成・初期化できます。</p>
 </div>
 
 <hr>
@@ -491,7 +515,7 @@ for i in range(2, 100):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-11-27 11:50:59 JST</time>
+Last modified: <time>2023-01-05 13:06:29 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

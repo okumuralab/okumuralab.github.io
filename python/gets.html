@@ -27,7 +27,7 @@ end
 
 <p>は、コマンドライン引数で与えられたファイルを一つずつ開いて1行ずつ読み込み、出力するループである。コマンドライン引数でファイルを指定しなければ、標準入力から1行ずつ読み込む。</p>
 
-<p>これと同じことをするためのパッケージが <a href="https://docs.python.org/3/library/fileinput.html">fileinput</a> である：</p>
+<p>これと同じことをするための仕組みが Python の標準ライブラリの <a href="https://docs.python.org/3/library/fileinput.html">fileinput</a> モジュールで提供されている：</p>
 
 <pre>
 import fileinput
@@ -47,6 +47,22 @@ import sys
 
 for line in sys.stdin:
     print(line, end="")  # または print(line.rstrip())
+</pre>
+
+<p>ループの中でも行を読み込める：</p>
+
+<pre>
+for line in sys.stdin:
+    print("1:", line, end="")
+    line = next(sys.stdin)
+    print("2:", line, end="")
+</pre>
+
+<p>Python 3.8 以降の walrus operator <code>:=</code> を使えばもっと柔軟なことができる。次の例は最初の空行が現れるまで標準入力を読んで出力する：</p>
+
+<pre>
+while line := next(sys.stdin).strip():
+    print(line)
 </pre>
 
 <p>入力中に UTF-8 として解釈できないバイト列があるとエラーになる。対策として、ほぼバイト列としてふるまう文字コード CP437 を指定すればよさそうだ（Python 3.7以降）：</p>
@@ -111,7 +127,7 @@ for filename in sys.argv[1:]:
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-09-09 08:40:51 JST</time></p>
+<p>Last modified: <time>2023-01-06 09:52:17 JST</time></p>
 </footer>
 </body>
 </html>

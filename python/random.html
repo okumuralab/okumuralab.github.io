@@ -55,7 +55,7 @@ np.random.randint(1, 7, size=10) # 1以上7未満の整数の乱数10個
 <pre>
 import numpy as np
 
-rng = np.random.default_rng(20200102) # seedの設定（空も可）
+rng = np.random.default_rng(348309421) # seedの設定（空も可）
 
 rng.random()             # 0以上1未満の一様乱数
 rng.random(10)           # 0以上1未満の一様乱数10個の配列
@@ -70,6 +70,10 @@ rng.exponential(3, 10)   # 平均3の指数分布の乱数10個の配列
 </pre>
 
 <p>上の例のように「タネ（seed）」を与えるのがシミュレーションでの推奨です。同じタネからは同じ乱数列が生成されますので，あとで結果を再現できます。ゲームなどでは <code>rng = np.random.default_rng()</code> のように空にすると，再現性のない（毎回異なる）乱数列が得られます。</p>
+
+<div class="note">
+<p>乱数のタネとしては、その日の日付でも何でもいいのですが、たまたま自分の都合の良い結果が出るようなタネを採用したのではないかと疑われないように、<a href="https://katahelion.wordpress.com/2022/04/20/should-you-commit-to-always-using-your-orcid-in-set-seed/">自分のORCIDをタネに使う</a>のも一つの手です。ORCID（Open Researcher and Contributor ID）は研究者用のIDで、<a href="https://orcid.org">https://orcid.org</a> に登録すれば無料で発行してもらえます。私のORCIDは 0000-0003-4830-9421 ですので、頭の0と区切りのマイナスを取り除いた 348309421 を上の例で使っています。</p>
+</div>
 
 <p>例えばモンテカルロ法で円周率を求めるには次のようにします：</p>
 
@@ -115,7 +119,7 @@ sns.histplot(a, discrete=True)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-11-07 15:48:01 JST</time></p>
+<p>Last modified: <time>2023-01-01 19:49:46 JST</time></p>
 </footer>
 </body>
 </html>

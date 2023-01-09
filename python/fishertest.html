@@ -15,6 +15,8 @@
 <a href="./">Python</a> &gt;
 </nav>
 
+<p>[2023-01-05] SciPy 1.10.0 が出たのでそれに合わせて修正しました。</p>
+
 <h1>Fisherの検定</h1>
 
 <p>RでFisherの検定をするには <code>fisher.test()</code> を使います。行列は縦に読んで、行数（または列数）を指定します：</p>
@@ -43,7 +45,7 @@ fisher_exact([[3, 2], [1, 4]])
 </pre>
 
 <pre>
-(6.0, 0.523809523809524)
+SignificanceResult(statistic=6.0, pvalue=0.5238095238095238)
 </pre>
 
 <p>返ってくるのはオッズ比と <i lang="en">p</i> 値です。Rの <code>fisher.test()</code> と違って、こちらの <code>[[a, b], [c, d]]</code> のオッズ比は <code>(a/b)/(c/d)</code> と同じです。オッズ比の2通りの求め方については<a href="../stat/2by2.html">2×2の表，オッズ比，相対危険度</a>もご覧ください。オッズ比を報告する際には <code>(a/b)/(c/d)</code> のほうでいいと思います。</p>
@@ -54,7 +56,7 @@ fisher_exact([[3, 2], [1, 4]])
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-17 21:32:41 JST</time></p>
+<p>Last modified: <time>2023-01-05 17:15:58 JST</time></p>
 </footer>
 </body>
 </html>
