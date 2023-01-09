@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/circles.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>円をたくさん描く</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>円をたくさん描く</h1>
+
+<p>ランダムな色とサイズの円をたくさん描いてみましょう。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+
+rng = np.random.default_rng()
+
+N = 1000
+x = rng.random(N)         # x座標
+y = rng.random(N)         # y座標
+s = rng.random(N) * 1000  # サイズ（pt）
+c = rng.random((N, 3))    # 色（RGB）
+
+plt.scatter(x, y, s, c)
+plt.axis("scaled")
+plt.xlim(0, 1)
+plt.ylim(0, 1)
+
+plt.savefig("circles.jpg", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/circles.jpg" alt="円をたくさん描く"></figure>
+
+<p>散布図のマーカー（デフォルトでは円）の色とサイズを乱数で変えているだけです。サイズはデバイスによって違いますので適当に変えてください。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2023-01-06 15:07:30 JST</time></p>
+</footer>
+</body>
+</html>
