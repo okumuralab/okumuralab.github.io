@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/openai_api.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenAIのAPIを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>OpenAIのAPIを使う</h1>
+
+<h2>はじめに</h2>
+
+<p><a href="https://openai.com">OpenAI</a> の <a href="https://openai.com/blog/chatgpt/">ChatGPT</a> が人気ですが、これとほぼ同様な機能をPythonからAPIとして使うパッケージ <code>openai</code> が用意されています。これを使ってみましょう。</p>
+
+<p>自分のプログラムからAPIとして呼び出して使うには、<a href="https://beta.openai.com/signup/">こちら</a>で登録してAPIキーを発行してもらわなければなりません。<a href="https://openai.com/api/pricing/">費用</a>が発生します（ただし3ヶ月間有効な18ドルの無料枠があります）。最も強力なDavinciモデルの場合、1000トークンあたり0.02ドル（2〜3円）かかります。1トークンは、英語なら頻出単語1語（日本語なら1文字）にほぼ相当します。頻出でない語は2トークン以上になります。だいたい1000トークンが英語の750語にあたります。英語のほうが概してトークン数が少ないので安上がりです（答えも的確です）。</p>
+
+<p>APIの詳しい説明は <a href="https://beta.openai.com">https://beta.openai.com</a> にあります。Playgroundでお試し利用もできます。<a href="https://github.com/openai/openai-cookbook">OpenAI Cookbook</a> も参考になります。</p>
+
+<p>Pythonのパッケージは <code>pip install openai</code> でインストールできます。</p>
+
+<p>APIキーは、プログラムに直接書き込まず、環境変数に設定しておくのが安全・便利です。MacやLinuxでは、ターミナルに</p>
+
+<pre>
+export OPENAI_API_KEY="sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+</pre>
+
+<p>と打ち込めば環境変数が設定されます。<code>.bashrc</code> 等に書き込んでおけばシェル起動時に設定されます。APIキーを書き込んだファイルは他人に見られないようにパーミッションを正しく設定しておきましょう。</p>
+
+<h2>自分の名前を知っているか聞いてみる</h2>
+
+<p>以下では <a href="https://openai.com/blog/instruction-following/">InstructGPT</a> から<a href="https://help.openai.com/en/articles/6779149-how-do-text-davinci-002-and-text-davinci-003-differ">派生</a>した text-davinci-003 というモデルを使います。APIの基本の使い方は簡単です：</p>
+
+<pre>
+import openai
+
+prompt = "Haruhiko Okumura is"
+
+res = openai.Completion.create(
+    model="text-davinci-003",
+    prompt=prompt,
+    max_tokens=2048,
+    temperature=0
+)
+
+print(res.choices[0].text)
+</pre>
+
+<p>次のような答えを出力してくれました：</p>
+
+<blockquote>
+ a Japanese computer scientist and professor at the University of Tokyo. He is known for his research in the fields of computer networks, distributed systems, and computer security. He is the author of several books on computer networks and distributed systems, including the widely used textbook Computer Networks: A Systems Approach. He has also served as a consultant for several companies, including Microsoft, IBM, and NTT.
+</blockquote>
+
+<p>最初の6単語以外はまったく嘘です！ OpenAIの言語モデルは自力でネット検索できません（<a href="https://openai.com/blog/webgpt/">WebGPT</a> という研究はありますが提供されていません）。2021年のある時点までのネットで集めた文章で学習しているので、有名人なら覚えてくれている可能性があるのですが、私のことは知らなかったようです。また、仮に正しい知識を答えてくれても、ソース（URL）と紐づけられているわけではないので、根拠を聞いても答えられません。</p>
+
+<p><code>max_tokens</code> は返事の最大トークン数です。プロンプトのトークン数と合わせて、text-davinci-003 なら4097以下でないといけません。<code>temperature</code> は温度（0〜1）です。上げるほど答えがランダムになります（想像力が上がります）。</p>
+
+<p>Pythonをシェルから起動した場合、パッケージ側で環境変数のAPIキーを拾ってくれるはずですが、もしうまくいかなければ、<code>import openai</code> の後に</p>
+
+<pre>
+import os
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+</pre>
+
+<p>のようなコードを入れるか、あるいは直接</p>
+
+<pre>
+openai.api_key = "sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+</pre>
+
+<p>のようにAPIキーを書き込みます（キーは漏れないように注意が必要です）。</p>
+
+<h2>英語の標語を作ってもらう</h2>
+
+<p>ホテルのトイレなどによく「トイレットペーパーの使い切りにご協力ください」と書いてあって、その英訳が意味不明なことがよくあります。そこで、text-davinci-003 に良い標語を考えてもらうことにしましょう。</p>
+
+<pre style="white-space: pre-wrap">
+import openai
+
+prompt = """
+### ホテルの部屋のトイレのトイレットペーパーを、新しいお客様が泊まるたびに取り替えていたのでは、資源が無駄になり、エコロジーの観点から望ましくないと考えます。そのため、新品でないトイレットペーパーを交換せず、資源節約のため最後まで使い切ってほしいと思っています。このことをお客様にご理解いただくためのなるべく短い標語を英語で書いてください。
+"""
+
+res = openai.Completion.create(
+    model="text-davinci-003",
+    prompt=prompt,
+    max_tokens=1024,
+    temperature=0.6,  # 少し創造性豊かにするために温度を上げてみる
+    stop=["###"]
+)
+
+print(res.choices[0].text)
+</pre>
+
+<p>オプション <code>stop</code> は、AIが出力しない文字列のリストを指定します。ここでは質問のプロンプトを <code>###</code> で始め、これを <code>stop</code> に設定して、AIが質問文まで生成してしまうことを避けています（最初は町野さんの <a href="https://github.com/amachino/command-ai/">command ai</a> に倣って <code>&gt;&gt;&gt;</code> にしていたのですが、PythonのプロンプトやJavaScriptの右シフトと被るので、変更しました）。AIの答えが1行だけになるようにするには、<code>stop=["###", "\n"]</code> のように改行を含めればいいでしょう。こういったテクニックは <a href="https://beta.openai.com">https://beta.openai.com</a> のExamplesにいろいろ使われています。<a href="https://www.twilio.com/blog/ultimate-guide-openai-gpt-3-language-model">The Ultimate Guide to OpenAI's GPT-3 Language Model</a> も参考になります。</p>
+
+<p>さて、これを実行すると、</p>
+
+<pre>
+"Use it all - Save the Environment!"
+</pre>
+
+<p>という案を考えてくれました。なるほど！</p>
+
+<p>戻り値 <code>res</code> はJSONオブジェクトです。中を見ると、トークン数などがわかります。</p>
+
+<p>APIは記憶がありませんので、続けて質問する場合には、プロンプトにそれまでの会話を含ませる必要があります。質問と回答が区別できるように会話を記述しましょう。何度か質問を追加した後のプロンプトは、例えば次のようになります：</p>
+
+<pre style="white-space: pre-wrap">
+prompt = """
+### ホテルの部屋のトイレのトイレットペーパーを、新しいお客様が泊まるたびに取り替えていたのでは、資源が無駄になり、エコロジーの観点から望ましくないと考えます。そのため、新品でないトイレットペーパーを交換せず、資源節約のため最後まで使い切ってほしいと思っています。このことをお客様にご理解いただくためのなるべく短い標語を英語で書いてください。
+
+"Use it all - Save the Environment!"
+
+### いいですね！ ほかの案がもしあれば教えてください。
+
+"Be Eco-friendly - Use Every Last Sheet!"
+
+### シートではなくロールなのですが。
+
+"Use Every Last Roll - Go Green!"
+
+### Last Roll ではなく、ロールの最後の部分まで、という意味合いでお願いします。
+"""
+</pre>
+
+<p>このプロンプトの答えは次のようになりました：</p>
+
+<pre>
+"Use Every Last Bit - Help the Environment!"
+</pre>
+
+<p>会話が続くとプロンプトはどんどん長くなりますが、プロンプトのトークン数と回答の <code>max_tokens</code> の合計は4097以下でないといけませんので、長くなってくれば、会話の最初の部分あるいは重要でない部分は削る必要があります。ChatGPTも最大トークン数は<a href="https://help.openai.com/en/articles/6787051-does-chatgpt-remember-what-happened-earlier-in-the-conversation">4000程度</a>とのことです。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2023-01-19 17:03:12 JST</time></p>
+</footer>
+</body>
+</html>
