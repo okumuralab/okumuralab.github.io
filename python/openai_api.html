@@ -19,9 +19,9 @@
 
 <h2>はじめに</h2>
 
-<p><a href="https://openai.com">OpenAI</a> の <a href="https://openai.com/blog/chatgpt/">ChatGPT</a> が人気ですが、これとほぼ同様な機能をPythonからAPIとして使うパッケージ <code>openai</code> が用意されています。これを使ってみましょう。</p>
+<p><a href="https://openai.com">OpenAI</a> の <a href="https://openai.com/blog/chatgpt/">ChatGPT</a> が人気ですが、これとほぼ同様な機能が <a href="https://beta.openai.com">API</a> として提供されています。これをPythonから使うパッケージ <a href="https://github.com/openai/openai-python">openai</a> があります。これを使ってみましょう（よりハイレベルのパッケージとして <a href="https://github.com/hwchase17/langchain">LangChain</a>、<a href="https://github.com/jerryjliu/gpt_index">GPT Index</a> などがあります）。</p>
 
-<p>自分のプログラムからAPIとして呼び出して使うには、<a href="https://beta.openai.com/signup/">こちら</a>で登録してAPIキーを発行してもらわなければなりません。<a href="https://openai.com/api/pricing/">費用</a>が発生します（ただし3ヶ月間有効な18ドルの無料枠があります）。最も強力なDavinciモデルの場合、1000トークンあたり0.02ドル（2〜3円）かかります。1トークンは、英語なら頻出単語1語（日本語なら1文字）にほぼ相当します。頻出でない語は2トークン以上になります。だいたい1000トークンが英語の750語にあたります。英語のほうが概してトークン数が少ないので安上がりです（答えも的確です）。</p>
+<p>自分のプログラムからAPIを使うには、<a href="https://beta.openai.com/signup/">こちら</a>で登録してAPIキーを発行してもらわなければなりません。<a href="https://openai.com/api/pricing/">費用</a>が発生します（ただし3ヶ月間有効な18ドルの無料枠があります）。最も強力なDavinciモデルの場合、1000トークンあたり0.02ドル（2〜3円）かかります。1トークンは、英語なら頻出単語1語（日本語なら1文字）にほぼ相当します。頻出でない語は2トークン以上になります。だいたい1000トークンが英語の750語にあたります。英語のほうが概してトークン数が少ないので安上がりです（答えも的確です）。</p>
 
 <p>APIの詳しい説明は <a href="https://beta.openai.com">https://beta.openai.com</a> にあります。Playgroundでお試し利用もできます。<a href="https://github.com/openai/openai-cookbook">OpenAI Cookbook</a> も参考になります。</p>
 
@@ -60,7 +60,7 @@ print(res.choices[0].text)
  a Japanese computer scientist and professor at the University of Tokyo. He is known for his research in the fields of computer networks, distributed systems, and computer security. He is the author of several books on computer networks and distributed systems, including the widely used textbook Computer Networks: A Systems Approach. He has also served as a consultant for several companies, including Microsoft, IBM, and NTT.
 </blockquote>
 
-<p>最初の6単語以外はまったく嘘です！ OpenAIの言語モデルは自力でネット検索できません（<a href="https://openai.com/blog/webgpt/">WebGPT</a> という研究はありますが提供されていません）。2021年のある時点までのネットで集めた文章で学習しているので、有名人なら覚えてくれている可能性があるのですが、私のことは知らなかったようです。また、仮に正しい知識を答えてくれても、ソース（URL）と紐づけられているわけではないので、根拠を聞いても答えられません。</p>
+<p>最初の6単語以外はまったく嘘です！ OpenAIの言語モデルは自力でネット検索できません（<a href="https://openai.com/blog/webgpt/">WebGPT</a> という研究はありますが提供されていません）。2021年のある時点までのネットで集めた文章で学習しているので、有名人なら覚えてくれている可能性があるのですが、私のことは知らなかったようです。また、仮に正しい知識を答えてくれても、ソース（URL）と紐づけられているわけではないので、根拠を聞いても答えられません（出典付きで答えてほしいなら <a href="https://www.perplexity.ai">Perplexity</a> を使いましょう）。</p>
 
 <p><code>max_tokens</code> は返事の最大トークン数です。プロンプトのトークン数と合わせて、text-davinci-003 なら4097以下でないといけません。<code>temperature</code> は温度（0〜1）です。上げるほど答えがランダムになります（想像力が上がります）。</p>
 
@@ -146,7 +146,7 @@ prompt = """
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-01-19 17:03:12 JST</time></p>
+<p>Last modified: <time>2023-01-20 21:50:44 JST</time></p>
 </footer>
 </body>
 </html>
