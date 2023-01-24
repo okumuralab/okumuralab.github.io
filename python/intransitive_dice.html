@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/intransitive_dice.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>非推移的さいころ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>非推移的さいころ</h1>
+
+<p>普通の数なら「a &gt; b かつ b &gt; c なら a &gt; c」という推移率が成り立ちますが、じゃんけんでは「グー &gt; チョキ &gt; パー」なのに「グー &gt; パー」ではありません。このような推移率の成り立たないゲームのことを<a href="https://ja.wikipedia.org/wiki/%E9%9D%9E%E6%8E%A8%E7%A7%BB%E7%9A%84%E3%82%B2%E3%83%BC%E3%83%A0">非推移的ゲーム</a>といいます。</p>
+
+<p>さいころも、うまく目を工夫すれば、さいころ A はさいころ B より大きい目が出やすく、さいころ B はさいころ C より大きい目が出やすく、さいころ C はさいころ A より大きい目が出やすくできます。このようなサイコロから一つを先に選ばせれば、後手でさいころを選んだ側が勝つことができます。このトリックをウォーレン・バフェット（アメリカの有名な実業家）がビル・ゲイツにしかけて、ビル・ゲーツはその仕組みに気づき、バフェットに先に選べと言ったという話が Wikipedia の <a href="https://en.wikipedia.org/wiki/Intransitive_dice">intransitive dice</a> に書かれています。</p>
+
+<p>ここでは <a href="https://www.quantamagazine.org/mathematicians-roll-dice-and-get-rock-paper-scissors-20230119/">Mathematicians Roll Dice and Get Rock-Paper-Scissors</a> という記事にある例でやってみましょう。三つのさいころの目は次のようになっています：</p>
+
+<pre>
+A = [3, 3, 3, 3, 3, 6]
+B = [2, 2, 2, 5, 5, 5]
+C = [1, 4, 4, 4, 4, 4]
+</pre>
+
+<p>二つのさいころを振って目の大きい方が勝ちます。引き分けはないことがわかります。勝率は次のようにして計算できます：</p>
+
+<pre>
+print(sum([i > j for i in A for j in B]) / 36)  # AのBに対する勝率
+print(sum([i > j for i in B for j in C]) / 36)  # BのCに対する勝率
+print(sum([i > j for i in C for j in A]) / 36)  # CのAに対する勝率
+</pre>
+
+<p>やってみましょう。何がわかるでしょうか。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2023-01-22 09:56:27 JST</time></p>
+</footer>
+</body>
+</html>

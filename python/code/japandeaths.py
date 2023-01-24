@@ -100,7 +100,7 @@ exit()
 
 df = pd.read_csv("https://covid19.mhlw.go.jp/public/opendata/deaths_cumulative_daily.csv",
                  parse_dates=['Date'])
-a = np.arange(np.datetime64("2020-06"), np.datetime64("2022-12"))
+a = np.arange(np.datetime64("2020-06"), np.datetime64("2023-02"))
 da = pd.to_datetime(a)
 da1 = da - np.timedelta64(1,"D")
 da1s = pd.Series(da1, name='Date')
