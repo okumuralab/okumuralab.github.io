@@ -46,7 +46,11 @@ The key's randomart image is:
 <p>ついでに，放置しておくと ssh 接続が切れるのを防ぎたければ，~/.ssh/config というファイルに <code>ServerAliveInterval 60</code> のようなのを書き込めばよい。</p>
 
 <div class="note">
-<p>これを書くきっかけは，パスワードの受け渡しはどうすればいいかというツイッターでの話題だった。DH 鍵交換すればいい。<a href="https://cryptotools.net/dhe">Diffie-Hellman Key Exchange</a> というページで JavaScript で計算できる（openssl を使うやりかたも載っている）。昔は /etc/shadow の行（ソルト＋ハッシュ）を送った。今なら id_rsa.pub を送ればいい。いや RSA はもう古い。という流れだ。</p>
+<p>サーバにシェルログインアカウントを作ってもらう際に、パスワードの受け渡しが面倒である。昔は初期パスワード設定済みの /etc/shadow の行（ソルト＋ハッシュ）をユーザが作成し、サーバ管理者に送った。今ならユーザが公開鍵 id_ed25519.pub をサーバ管理者に送ればいい。</p>
+</div>
+
+<div class="note">
+<p>昔は Ed25519 や ECDSA ではなく RSA を使っていた。鍵のファイル名は id_rsa(.pub) であった。この方式（ssh-rsa）に使われていたハッシュアルゴリズム SHA-1 が廃止されたので、macOS Ventura から ssh-rsa はデフォルトで使えなくなっている。Ventura にしたら古い CentOS 6（2020年にサポート終了）のサーバに ssh でログインできなくなったという話をよく聞く。とりあえずはクライアント（Mac）側の ~/.ssh/config に ssh-rsa を生かす設定を書き加えれば使えるようになるが、Ed25519 など新しい方式を使うようにするべきである。</p>
 </div>
 
 <p>[追記] ~/.ssh のパーミッションは 700 にしておく。秘密鍵は 600 にする。</p>
@@ -57,7 +61,7 @@ The key's randomart image is:
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-03-24 10:11:47 JST</time>
+Last modified: <time>2023-01-27 19:47:50 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

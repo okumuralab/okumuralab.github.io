@@ -25,7 +25,8 @@ td, th { border: 1px solid; }
 
 <p>データはe-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&amp;toukei=00450011&amp;tstat=000001028897">人口動態調査</a>で公開されている。ここから集めた確定数・概数・速報データを <a href="data/japandeaths.csv">japandeaths.csv</a> というファイルに収めた。確定数は上記ページから確定数→死亡→年次→2020年とたどって，5-4「死亡月別にみた年次別死亡数及び死亡率（人口千対）」を選ぶ。このCSVファイルは整然としていないので<a href="211016.html">データの整然化の例</a>のようにして整然化する。</p>
 
-<pre><code>import matplotlib.pyplot as plt
+<pre>
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import datetime
@@ -52,11 +53,12 @@ plt.plot(t, perday2, "s-")
 plt.plot(t, perday3, "*-")
 plt.ylabel("1日あたり死亡数")
 plt.legend(["確定数", "概数", "速報値"])
-</code></pre>
+</pre>
 
 <figure><img src="img/japandeaths1.svg" alt="Deaths in Japan"></figure>
 
-<pre><code>df["死亡数"] = [n3 if np.isnan(n1) and np.isnan(n2) else n2 if np.isnan(n1) else n1
+<pre>
+df["死亡数"] = [n3 if np.isnan(n1) and np.isnan(n2) else n2 if np.isnan(n1) else n1
                 for n1, n2, n3 in zip(df["確定数"], df["概数"], df["速報値"])]
 df["日数"] = [days(year, month) for year, month in zip(df["年"], df["月"])]
 
@@ -67,52 +69,54 @@ for y in sorted(set(df["年"])):
 plt.xlabel("月")
 plt.ylabel("1日あたり死亡数")
 plt.legend(loc=(0.38, 0.60), labelspacing=0.1)
-</code></pre>
+</pre>
 
 <figure><img src="img/japandeaths2.svg" alt="Deaths in Japan"></figure>
 
-<pre><code>for m in range(1, 13):
+<pre>
+for m in range(1, 13):
     df1 = df[df["月"] == m]
     plt.plot(df1["年"], df1["死亡数"] / df1["日数"], marker=f"${m}$")
 plt.ylabel("1日あたり死亡数")
 plt.xticks(sorted(set(df["年"] // 2 * 2).intersection(set(df["年"]))))
-</code></pre>
+</pre>
 
 <figure><img src="img/japandeaths3.svg" alt="Deaths in Japan"></figure>
 
-<pre><code>df1 = df.groupby("年")[["死亡数", "日数"]].sum()
-df2 = df1[df1.index < 2022]
+<pre>
+df1 = df.groupby("年")[["死亡数", "日数"]].sum()
+df2 = df1[df1.index < 2023]
 y = df2.index
 x = df2["死亡数"] / df2["日数"]
 
 plt.plot(y, x, "o-")
 plt.xlabel("年")
 plt.ylabel("1日あたり死亡数")
-</code></pre>
+plt.xticks(sorted(set(y // 2 * 2).intersection(set(y))))
+</pre>
 
 <figure><img src="img/japandeaths4.svg" alt="Deaths in Japan"></figure>
 
-<p>非常に大雑把に2020〜2021年の超過死亡数を求めてみよう。2011年は東日本大地震で死亡数が増えたと考えられるので，ベースラインを2012〜2019年に設定して，最小2乗法で直線をフィットし，そこからの外れを調べよう。</p>
+<p>非常に大雑把に2020〜2022年の超過死亡数を求めてみよう。2011年は東日本大地震で死亡数が増えたと考えられるので，ベースラインを2012〜2019年に設定して，最小2乗法で直線をフィットし，そこからの外れを調べよう。</p>
 
 <pre>
-<code>u = (2012 &lt;= y) &amp; (y &lt;= 2019)
+u = (2012 &lt;= y) &amp; (y &lt;= 2019)
 slope, intercept = np.polyfit(y[u], x[u], 1)
 plt.clf()
 plt.plot(y, x - (slope * y + intercept), "o-")
 plt.axhline(linewidth=0.5, color="black")
 plt.xlabel("年")
 plt.ylabel("1日あたり超過死亡数")
-</code></pre>
+plt.xticks(sorted(set(y // 2 * 2).intersection(set(y))))
+</pre>
 
-<p><a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">厚労省オープンデータ</a>によれば，COVID-19による2020年12月31日までの累積死亡数は3459人，2021年12月31日までの累積死亡数は18385人である。これをオレンジ色で描き足す。</p>
+<p><a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">厚労省オープンデータ</a>によれば，COVID-19による2020年12月31日までの累積死亡数は3459人，2021年12月31日までの累積死亡数は18385人，2022年12月31日までの累積死亡数は57266人である。これをオレンジ色で描き足す。</p>
 
 <pre>
-<code>plt.plot([2020, 2021], [3459 / 366, (18385 - 3459) / 365], "o-")
-</code></pre>
+plt.plot([2020, 2021, 2022], [3459 / 366, (18385 - 3459) / 365, (57266 - 18385) / 365], "o-")
+</pre>
 
 <figure><img src="img/japandeaths5.svg" alt="Excess Deaths in Japan"></figure>
-
-<p>このように，2020年の死亡数は予想よりかなり少ない（-68.6人/日）。その反動か，2021年には予想よりかなり多く（+69.3人/日），報告された死亡数（40.9人/日）よりも多い（1.7倍，+28.4人/日）。一部で騒がれた「報告数の6倍」はどう考えてもありえないし，増分（+28.4人/日）は2012〜2019年のゆらぎと同程度なので，何ともいえない。</p>
 
 <p>ちなみに月ごとの1日あたりのCOVID-19による死亡数は次の通りである。</p>
 
@@ -172,7 +176,7 @@ for i in range(1, len(x)):
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-01-24 21:34:19 JST</time></p>
+<p>Last modified: <time>2023-02-28 15:40:16 JST</time></p>
 </footer>
 </body>
 </html>

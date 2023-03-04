@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/polars.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polars</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Polars</h1>
+
+<h2>概要</h2>
+
+<p><a href="https://www.pola.rs">Polars</a>（ポーラーズ）はRust・Python用のデータ操作ライブラリです。Pythonではpandasを置き換えるものです。日本語の解説として<a href="https://qiita.com/_jinta/items/fac13f09e8e8a5769b79">超高速…だけじゃない！Pandasに代えてPolarsを使いたい理由</a>が参考になります。</p>
+
+<p>Polarsのマスコットは白熊（ホッキョクグマ、polar bear）です。パンダより強そうです。実際、pandasより高速で、機能も豊富です。</p>
+
+<p>インストールは <code>pip install polars</code> です。</p>
+
+<p>例（フォントによっては表が崩れます）：</p>
+
+<pre class="cell">
+import polars as pl
+
+df = pl.read_csv("https://okumuralab.org/~okumura/stat/data/pop2022.csv")
+df
+</pre>
+
+<pre>
+shape: (47, 4)
+┌──────┬────────────┬─────────┬─────────┐
+│ 番号 ┆ 都道府県   ┆ 男      ┆ 女      │
+│ ---  ┆ ---        ┆ ---     ┆ ---     │
+│ i64  ┆ str        ┆ i64     ┆ i64     │
+╞══════╪════════════╪═════════╪═════════╡
+│ 1    ┆ 北海道     ┆ 2450393 ┆ 2733294 │
+│ 2    ┆ 青森       ┆ 589143  ┆ 653938  │
+│ 3    ┆ 岩手       ┆ 581809  ┆ 624670  │
+│ 4    ┆ 宮城       ┆ 1106183 ┆ 1162172 │
+│ ...  ┆ ...        ┆ ...     ┆ ...     │
+│ 44   ┆ 大分       ┆ 538934  ┆ 592206  │
+│ 45   ┆ 宮崎       ┆ 511039  ┆ 567274  │
+│ 46   ┆ 鹿児島     ┆ 759364  ┆ 846055  │
+│ 47   ┆ 沖縄       ┆ 732981  ┆ 752689  │
+└──────┴────────────┴─────────┴─────────┘
+</pre>
+
+<p>1列目の都道府県番号は01〜47の文字列として読みたいですね：</p>
+
+<pre class="cell">
+df = pl.read_csv("https://okumuralab.org/~okumura/stat/data/pop2022.csv", dtypes=[pl.Utf8])
+df
+</pre>
+
+<pre>
+shape: (47, 4)
+┌──────┬────────────┬─────────┬─────────┐
+│ 番号 ┆ 都道府県   ┆ 男      ┆ 女      │
+│ ---  ┆ ---        ┆ ---     ┆ ---     │
+│ str  ┆ str        ┆ i64     ┆ i64     │
+╞══════╪════════════╪═════════╪═════════╡
+│ 01   ┆ 北海道     ┆ 2450393 ┆ 2733294 │
+│ 02   ┆ 青森       ┆ 589143  ┆ 653938  │
+│ 03   ┆ 岩手       ┆ 581809  ┆ 624670  │
+│ 04   ┆ 宮城       ┆ 1106183 ┆ 1162172 │
+│ ...  ┆ ...        ┆ ...     ┆ ...     │
+│ 44   ┆ 大分       ┆ 538934  ┆ 592206  │
+│ 45   ┆ 宮崎       ┆ 511039  ┆ 567274  │
+│ 46   ┆ 鹿児島     ┆ 759364  ┆ 846055  │
+│ 47   ┆ 沖縄       ┆ 732981  ┆ 752689  │
+└──────┴────────────┴─────────┴─────────┘
+</pre>
+
+<p><code>dtypes</code> はリストで例えば <code>dtypes=[pl.Utf8, pl.Utf8, pl.Int32, pl.Int32]</code> のように列ごとに指定できます。4列全部を文字列にするには <code>dtypes=[pl.Utf8]*4</code> とします。</p>
+
+<p>型は <code>pl.Utf8</code>（文字列）、<code>pl.Float64</code>、<code>pl.Float32</code>、<code>pl.Int64</code>、<code>pl.Int32</code>、<code>pl.Int16</code>、<code>pl.Int8</code>、<code>pl.UInt64</code>、<code>pl.UInt32</code>、<code>pl.UInt16</code>、<code>pl.UInt8</code> などが使えます。</p>
+
+<p>Pandasと比べて、0から始まる行インデックスが付きません。</p>
+
+<p>別の例：</p>
+
+<pre class="cell">
+URL = "https://www.data.jma.go.jp/cpdinfo/temp/list/csv/an_wld.csv"
+df1 = pl.read_csv(URL, encoding="cp932")
+</pre>
+
+<p>これは悪名高き気象庁のCSVファイルで、ときどき数値の後に <code>*</code> が付いてエラーになります。pandasはエラーになったら面倒ですが、Polarsなら次のように回避できます：</p>
+
+<pre class="cell">
+df1 = pl.read_csv(URL, encoding="cp932", ignore_errors=True)
+df1
+</pre>
+
+<pre>
+shape: (132, 4)
+┌──────┬────────────┬─────────┬─────────┐
+│ 年   ┆ 世界全体   ┆ 北半球  ┆ 南半球  │
+│ ---  ┆ ---        ┆ ---     ┆ ---     │
+│ i64  ┆ f64        ┆ f64     ┆ f64     │
+╞══════╪════════════╪═════════╪═════════╡
+│ 1891 ┆ -0.78      ┆ -0.88   ┆ -0.68   │
+│ 1892 ┆ -0.89      ┆ -1.0    ┆ -0.74   │
+│ 1893 ┆ -0.94      ┆ -1.06   ┆ -0.79   │
+│ 1894 ┆ -0.86      ┆ -0.93   ┆ -0.77   │
+│ ...  ┆ ...        ┆ ...     ┆ ...     │
+│ 2019 ┆ 0.31       ┆ 0.38    ┆ 0.23    │
+│ 2020 ┆ 0.34       ┆ 0.51    ┆ 0.16    │
+│ 2021 ┆ 0.22       ┆ 0.35    ┆ 0.09    │
+│ 2022 ┆ null       ┆ null    ┆ null    │
+└──────┴────────────┴─────────┴─────────┘
+</pre>
+
+<p>得られた <code>df</code> の扱い方は、pandasとやや異なります。例：</p>
+
+<pre>
+df.query("都道府県 == '東京'")          # pandas
+df.filter(pl.col("都道府県") == "東京") # Polars  
+</pre>
+
+<p><code>df.to_pandas()</code> や <code>df.to_numpy()</code> でpandasやnumpyに変換することもできます。</p>
+
+<h2>例</h2>
+
+<p><a href="query.html">pandasによるクエリ</a>と同じことをPolarsで行ってみましょう。使うのは、さきほど</p>
+
+<pre class="cell">
+df = pl.read_csv("https://okumuralab.org/~okumura/stat/data/pop2022.csv", dtypes=[pl.Utf8])
+</pre>
+
+<p>で読み込んだデータです。まずは東京都だけ選びます：</p>
+
+<pre class="cell">
+df.filter(pl.col("都道府県") == "東京")
+</pre>
+
+<pre>
+shape: (1, 4)
+┌──────┬────────────┬─────────┬─────────┐
+│ 番号 ┆ 都道府県   ┆ 男      ┆ 女      │
+│ ---  ┆ ---        ┆ ---     ┆ ---     │
+│ str  ┆ str        ┆ i64     ┆ i64     │
+╞══════╪════════════╪═════════╪═════════╡
+│ 13   ┆ 東京       ┆ 6775557 ┆ 7019376 │
+└──────┴────────────┴─────────┴─────────┘
+</pre>
+
+<p>元の <code>df</code> は変わりません。変えたいなら <code>df = df.filter(pl.col("都道府県") == "東京")</code> のように代入し直します（ここでは行いません）。</p>
+
+<p>男と女の列だけ表示させたいなら、次のようにします（これはpandasと同様です）：</p>
+
+<pre class="cell">
+df.filter(pl.col("都道府県") == "東京")[["男", "女"]]
+</pre>
+
+<pre>
+shape: (1, 2)
+┌─────────┬─────────┐
+│ 男      ┆ 女      │
+│ ---     ┆ ---     │
+│ i64     ┆ i64     │
+╞═════════╪═════════╡
+│ 6775557 ┆ 7019376 │
+└─────────┴─────────┘
+</pre>
+
+<p>男女の人口はわかりましたが、合計の人口もほしいですね。「計」という欄を追加しましょう：</p>
+
+<pre class="cell">
+df = df.with_columns((pl.col("男") + pl.col("女")).alias("計"))
+df.head()  # 頭の部分だけ見る
+</pre>
+
+<pre>
+shape: (5, 5)
+┌──────┬────────────┬─────────┬─────────┬─────────┐
+│ 番号 ┆ 都道府県   ┆ 男      ┆ 女      ┆ 計      │
+│ ---  ┆ ---        ┆ ---     ┆ ---     ┆ ---     │
+│ str  ┆ str        ┆ i64     ┆ i64     ┆ i64     │
+╞══════╪════════════╪═════════╪═════════╪═════════╡
+│ 01   ┆ 北海道     ┆ 2450393 ┆ 2733294 ┆ 5183687 │
+│ 02   ┆ 青森       ┆ 589143  ┆ 653938  ┆ 1243081 │
+│ 03   ┆ 岩手       ┆ 581809  ┆ 624670  ┆ 1206479 │
+│ 04   ┆ 宮城       ┆ 1106183 ┆ 1162172 ┆ 2268355 │
+│ 05   ┆ 秋田       ┆ 452370  ┆ 504466  ┆ 956836  │
+└──────┴────────────┴─────────┴─────────┴─────────┘
+</pre>
+
+<div class="note">
+<p><code>df = df.with_columns(pl.Series(name="計", values=df["男"] + df["女"]))</code> でもよさそうです。</p>
+</div>
+
+<p>全国の合計も知りたいですね：</p>
+
+<pre class="cell">
+df[["男", "女", "計"]].sum()
+</pre>
+
+<pre>
+shape: (1, 3)
+┌──────────┬──────────┬───────────┐
+│ 男       ┆ 女       ┆ 計        │
+│ ---      ┆ ---      ┆ ---       │
+│ i64      ┆ i64      ┆ i64       │
+╞══════════╪══════════╪═══════════╡
+│ 61420626 ┆ 64507276 ┆ 125927902 │
+└──────────┴──────────┴───────────┘
+</pre>
+
+<p>この時点での日本の人口は 125927902 人でした。男より女のほうが多いようですね。</p>
+
+<p>都道府県別に男女比が知りたくなりました。「男女比」という欄を追加しましょう。</p>
+
+<pre class="cell">
+df = df.with_columns((pl.col("男") / pl.col("女")).alias("男女比"))
+</pre>
+
+<p>男が少ない都道府県、例えば男女比が 90% 未満のデータを抽出しましょう：</p>
+
+<pre class="cell">
+df.filter(pl.col("男女比") &lt; 0.9)
+</pre>
+
+<p><code>&amp;</code>（and）や <code>|</code>（or）で繋げるときは、各不等式を括弧で囲みます：</p>
+
+<pre class="cell">
+df.filter((pl.col("男女比") &lt; 0.9) &amp; (pl.col("計") &gt;= 1000000))
+</pre>
+
+<p>抽出されたものは、元の順番（都道府県コード順）に並んでいます。これを男女比の昇順（小さい順）に並べ替えてみます：</p>
+
+<pre class="cell">
+df.filter(pl.col("男女比") &lt; 0.9).sort("男女比")
+</pre>
+
+<p>これは次のように分けて書いてもかまいません：</p>
+
+<pre class="cell">
+df1 = df.filter(pl.col("男女比") &lt; 0.9)
+df1.sort("男女比")
+</pre>
+
+<p>降順（大きい順）にするには <code>reverse=True</code> というオプションを付けます：</p>
+
+<pre class="cell">
+df.filter(pl.col("男女比") &lt; 0.9).sort("男女比", reverse=True)
+</pre>
+
+<p>データ全体を人口の合計でソートし、大きい順に並び替えて、頭の3行を表示しましょう：</p>
+
+<pre class="cell">
+df.sort("計", reverse=True).head(3)
+</pre>
+
+<p>もう一つデータを読み込んでみます。こちらは各都道府県の面積です：</p>
+
+<pre class="cell">
+df2 = pl.read_csv("https://okumuralab.org/~okumura/stat/data/area.csv", dtypes=[pl.Utf8])
+</pre>
+
+<p><code>df</code> と <code>df2</code> を、共通する「番号」「都道府県」で結合（join）し、<code>df</code> に代入します：</p>
+
+<pre class="cell">
+df = df.join(df2, on=["番号", "都道府県"])
+</pre>
+
+<p>人口密度を求めてみましょう：</p>
+
+<pre class="cell">
+df = df.with_columns((pl.col("計") / pl.col("面積_km2")).alias("人口密度"))
+</pre>
+
+<p>問題：人口密度の大きい順に並べて、上位10件（<code>.head(10)</code>）、下位10件（<code>.tail(10)</code>）を表示してください。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2023-01-26 15:46:37 JST</time></p>
+</footer>
+</body>
+</html>

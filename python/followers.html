@@ -17,12 +17,12 @@
 
 <h1>ツイッターのフォロワー数の推移をプロット</h1>
 
-<p>Rで描いた<a href="../stat/followers.html">グラフの例：Twitterのフォロワー数</a>のPython版である。2021-11-28改訂。</p>
+<p>Rで描いた<a href="../stat/followers.html">グラフの例：Twitterのフォロワー数</a>のPython版である。2023-01-25改訂。</p>
 
 <p><a href="https://twilog.org/">Twilog</a> の該当者（ここでは<a href="https://twilog.org/h_okumura/">私</a>）のページの「Stats」をクリックし，ページのソースから <code>ar_</code> を含む部分をコピペする。</p>
 
 <pre>
-<code>var ar_data = [];
+var ar_data = [];
 ar_data[1] = [...];
 ar_data[2] = [...];
 ar_data[3] = [...];
@@ -38,35 +38,35 @@ ar_lbl[3] = [...];
 ar_lbl[4] = [...];
 ar_lbl[5] = [...];
 ar_lbl[6] = [...];
-</code></pre>
+</pre>
 
 <p>ここで <code>var ar_data = [];</code> を <code>ar_data = {}</code> に，<code>var ar_lbl = [];</code> を <code>ar_lbl = {}</code> に書き換える。各行末の <code>;</code> は不要であるが，あっても問題ないので，消す必要はない。</p>
 
 <p>この後に次のコードを追加して，全体を実行する。</p>
 
 <pre>
-<code>import pandas as pd
+import pandas as pd
 
 t = [pd.to_datetime(x, format="%y%m%d") for x in ar_lbl[6]]
 df = pd.DataFrame(index=t, data={'followers':ar_data[7]})
 df.plot()
-</code></pre>
+</pre>
 
-<figure><img src="img/211128a.png" alt="ツイッターのフォロワー数の推移"></figure>
+<figure><img src="img/230203a.png" alt="ツイッターのフォロワー数の推移"></figure>
 
 <p>東日本大震災から数ヶ月だけ急増していることがわかる。その部分：</p>
 
 <pre>
-<code>df[(df.index &gt;= "2011-03-01") & (df.index &lt;= "2011-08-01")].plot(marker="o")
-</code></pre>
+df[(df.index &gt;= "2011-03-01") & (df.index &lt;= "2011-08-01")].plot(marker="o")
+</pre>
 
 <figure><img src="img/211128b.png" alt="ツイッターのフォロワー数の推移"></figure>
 
 <p>2019年10月以降：</p>
 
 <pre>
-<code>df[(df.index &gt;= "2019-10-01") & (df.index &lt;= "2019-12-01")].plot(marker="o")
-</code></pre>
+df[(df.index &gt;= "2019-10-01") & (df.index &lt;= "2019-12-01")].plot(marker="o")
+</pre>
 
 <figure><img src="img/211128c.png" alt="ツイッターのフォロワー数の推移"></figure>
 
@@ -75,16 +75,16 @@ df.plot()
 <p>2020年はCOVID-19の影響で増えた：</p>
 
 <pre>
-<code>df[(df.index &gt;= "2020-01-01") & (df.index &lt;= "2020-12-01")].plot(marker="o")
-</code></pre>
+df[(df.index &gt;= "2020-01-01") & (df.index &lt;= "2020-12-01")].plot(marker="o")
+</pre>
 
 <figure><img src="img/211128d.png" alt="ツイッターのフォロワー数の推移"></figure>
 
 <p>2021年8月以降：</p>
 
 <pre>
-<code>df[df.index &gt;= "2021-08-01"].plot(marker="o")
-</code></pre>
+df[df.index &gt;= "2021-08-01"].plot(marker="o")
+</pre>
 
 <figure><img src="img/211128e.png" alt="ツイッターのフォロワー数の推移"></figure>
 
@@ -92,26 +92,34 @@ df.plot()
 
 <p>2021-11-04にTwitter Proに登録してみたが，その前後で変化はない。</p>
 
+<p>2022-10-27 Elon MuskがTwitter買収し、さまざまな改革を行ったが、フォロワー数に目立った変化なし。2023-01-11 Twitter Blue課金、2023-01-13 認証マーク付くが、特に変化なし。その少し後になぜかフォロワー数が増加し出した：</p>
+
+<pre>
+df[df.index >= "2023-01-01"].plot(marker="o")
+</pre>
+
+<figure><img src="img/230203b.svg" alt="ツイッターのフォロワー数の推移"></figure>
+
 <hr>
 
 <p>以下は2021-01-01に書いた別のプロットのやりかた：</p>
 
 <pre>
-<code>import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots()
 ax.plot(t, ar_data[7])
 fig.savefig('followers.svg', bbox_inches="tight")
-</code></pre>
+</pre>
 
 <p>37637バイトのSVGファイルができる。もっと軽くするため，プロット部分だけラスタライズしてみる：</p>
 
 <pre>
-<code>ax.clear()
+ax.clear()
 ax.plot(t, ar_data[7], zorder=-10)
 ax.set_rasterization_zorder(0) # zorder < 0 だけラスタライズする
 fig.savefig('followers.svg', bbox_inches="tight")
-</code></pre>
+</pre>
 
 <p>29176バイトに減った。</p>
 
@@ -119,12 +127,9 @@ fig.savefig('followers.svg', bbox_inches="tight")
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-11-28 19:31:22</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2023-02-03 10:28:31 JST</time></p>
+</footer>
 </body>
 </html>

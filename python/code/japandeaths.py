@@ -60,7 +60,7 @@ exit()
 #------
 
 df1 = df.groupby("年")[["死亡数", "日数"]].sum()
-df2 = df1[df1.index < 2022]
+df2 = df1[df1.index < 2023]
 y = df2.index
 x = df2["死亡数"] / df2["日数"]
 
@@ -68,6 +68,7 @@ plt.clf()
 plt.plot(y, x, "o-")
 plt.xlabel("年")
 plt.ylabel("1日あたり死亡数")
+plt.xticks(sorted(set(y // 2 * 2).intersection(set(y))))
 plt.show()
 plt.savefig("../img/japandeaths4.svg", bbox_inches="tight")
 
@@ -78,7 +79,8 @@ plt.plot(y, x - (slope * y + intercept), "o-")
 plt.axhline(linewidth=0.5, color="black")
 plt.xlabel("年")
 plt.ylabel("1日あたり超過死亡数")
-plt.plot([2020, 2021], [3459 / 366, (18385 - 3459) / 365], "o-")
+plt.plot([2020, 2021, 2022], [3459 / 366, (18385 - 3459) / 365, (57266 - 18385) / 365], "o-")
+plt.xticks(sorted(set(y // 2 * 2).intersection(set(y))))
 plt.show()
 plt.savefig("../img/japandeaths5.svg", bbox_inches="tight")
 
@@ -100,7 +102,7 @@ exit()
 
 df = pd.read_csv("https://covid19.mhlw.go.jp/public/opendata/deaths_cumulative_daily.csv",
                  parse_dates=['Date'])
-a = np.arange(np.datetime64("2020-06"), np.datetime64("2023-02"))
+a = np.arange(np.datetime64("2020-06"), np.datetime64("2023-03"))
 da = pd.to_datetime(a)
 da1 = da - np.timedelta64(1,"D")
 da1s = pd.Series(da1, name='Date')
