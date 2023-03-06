@@ -22,12 +22,14 @@ figcaption {
 
 <h1>Google Flu Trends のプロット</h1>
 
-<p><a href="https://en.wikipedia.org/wiki/Google_Flu_Trends">Google Flu Trends</a>（Wikipedia 記事）は Google が検索入力からインフルエンザの流行を調べたプロジェクトである。予測はあまり正確でなく，2015年に打ち切られた。当時の週ごとの予測データは<a href="https://www.google.org/flutrends/about/">こちら</a>で公開されている。</p>
+<p>[2023-03-06] Google Flu Trends は現在は Google から消えています。以下では Internet Archive のURLも挙げておきます。</p>
 
-<p>日本についてのデータを読んでプロットしてみよう：</p>
+<p><a href="https://en.wikipedia.org/wiki/Google_Flu_Trends">Google Flu Trends</a>（Wikipedia 記事）は Google が検索入力からインフルエンザの流行を調べたプロジェクトである。予測はあまり正確でなく，2015年に打ち切られた。当時の週ごとの予測データは https://www.google.org/flutrends/about/ で公開されていた（今は消えているが <a href="https://web.archive.org/web/20201121000800/https://www.google.org/flutrends/about/">こちら</a> にアーカイブがある）。</p>
+
+<p>日本についてのデータを読んでプロットしてみよう（データもGoogleから消えているがアーカイブが <a href="https://web.archive.org/web/20200526011643/http://www.google.org/flutrends/about/data/flu/jp/data.txt">こちら</a> にある）：</p>
 
 <pre>
-<code>import pandas as pd
+import pandas as pd
 import matplotlib.pyplot as plt
 
 df = pd.read_csv("https://www.google.org/flutrends/about/data/flu/jp/data.txt",
@@ -35,7 +37,7 @@ df = pd.read_csv("https://www.google.org/flutrends/about/data/flu/jp/data.txt",
                  skiprows=11)
 df.plot()
 plt.savefig('googleflu-jp.png', bbox_inches="tight")
-</code></pre>
+</pre>
 
 <figure>
 <img src="img/googleflu-jp.png" alt="Google Flu Trends, Japan">
@@ -48,7 +50,7 @@ plt.savefig('googleflu-jp.png', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-15 17:34:55</time>
+Last modified: <time>2023-03-06 16:03:37 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
