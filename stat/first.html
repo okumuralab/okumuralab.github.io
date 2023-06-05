@@ -473,9 +473,9 @@ x = scan(pipe("pbpaste"))</code>
 
 <h2 id="readtabulardata">表形式データの読み込ませ方</h2>
 
-<p><a href="data/atest2018.xlsx">atest2018.xlsx</a> は2018年度（平成30年度）の全国学力・学習状況調査の都道府県別正答率を収めたものです。元データは<a href="https://www.nier.go.jp/">国立教育政策研究所</a>の<a href="https://www.nier.go.jp/18chousakekkahoukoku/index.html">平成30年度　全国学力・学習状況調査　報告書・調査結果資料</a>にあります。このデータをRに読み込んでみましょう。</p>
+<p><a href="data/atest2022.xlsx">atest2022.xlsx</a> は2022年度の全国学力・学習状況調査の都道府県別正答率を収めたものです。元データは<a href="https://www.nier.go.jp/">国立教育政策研究所</a>の<a href="https://www.nier.go.jp/22chousakekkahoukoku/">令和４年度　全国学力・学習状況調査　報告書・調査結果資料</a>にあります。このデータをRに読み込んでみましょう。</p>
 
-<p>まずは上述の <a href="data/atest2018.xlsx">atest2018.xlsx</a> をダウンロード（保存）しましょう。ブラウザによりますが、デフォルトでは多分ホームディレクトリ直下の「ダウンロード」という名前のフォルダに保存されます。このままでもいいですが、プロジェクトを作成している（特定のディレクトリで仕事をしている）場合は、もしやりかたがわかるなら、データはそのプロジェクトのフォルダに保存するほうが便利です。</p>
+<p>まずは上述の <a href="data/atest2022.xlsx">atest2022.xlsx</a> をダウンロード（保存）しましょう。ブラウザによりますが、デフォルトでは多分ホームディレクトリ直下の「ダウンロード」という名前のフォルダに保存されます。このままでもいいですが、プロジェクトを作成している（特定のディレクトリで仕事をしている）場合は、もしやりかたがわかるなら、データはそのプロジェクトのフォルダに保存するほうが便利です。</p>
 
 <p>Excelで開いて、どのようなデータかを確認しましょう。</p>
 
@@ -485,21 +485,21 @@ x = scan(pipe("pbpaste"))</code>
 <p>この時点で、もしライブラリreadxl、Rcppがインストールされていなかったなら、インストールの確認のメッセージが出て、インストールが始まります。</p>
 </div>
 
-<p>右上の「Browse...」からExcelファイルを選びます。ここではさきほど保存したatest2017.xlsxを選んでください。</p>
+<p>右上の「Browse...」からExcelファイルを選びます。ここではさきほど保存したatest2022.xlsxを選んでください。</p>
 
 <div class="note">
 <p>同じ作業をRのコマンドで行うには、次のようにします：</p>
 <pre>
 library(readxl)
-atest2018 = read_excel("atest2018.xlsx")
+atest2022 = read_excel("atest2022.xlsx")
 </pre>
 </div>
 
 <div class="note">
 <p>実は、ダウンロードもRから行うことができます：</p>
 <pre>
-download.file("<span id="dirurl">https://okumuralab.org/~okumura/stat/</span>data/atest2018.xlsx", "atest2018.xlsx")
-atest2018 = read_excel("atest2018.xlsx")
+download.file("<span id="dirurl">https://okumuralab.org/~okumura/stat/</span>data/atest2022.xlsx", "atest2022.xlsx")
+atest2022 = read_excel("atest2022.xlsx")
 </pre>
 <p>これが一番簡単です。</p>
 </div>
@@ -508,19 +508,19 @@ atest2018 = read_excel("atest2018.xlsx")
 
 <p>左上ペインにデータが表示されます。</p>
 
-<p>1列目は「番号」（JIS X 0401「都道府県コード」）、2列目は「都道府県」で、3列目から12列目が実際のデータです。</p>
+<p>1列目は「番号」（JIS X 0401「都道府県コード」）、2列目は「都道府県」で、3列目から8列目が実際のデータです。</p>
 
-<p>Excelファイルの1行目が、列名（変数名）になっています。実際のデータはExcelファイルの2行目から始まります。47都道府県あります。つまり、atest2018というデータは、47行12列の行列になっており、実際のデータ（正答率）は3〜12列目に入っています。</p>
+<p>Excelファイルの1行目が、列名（変数名）になっています。実際のデータはExcelファイルの2行目から始まります。47都道府県あります。つまり、atest2022というデータは、47行8列の行列になっており、実際のデータ（正答率）は3〜8列目に入っています。</p>
 
 <p>全体の相関図をプロットするには、Rコンソール（左下ペイン）に次のように打ち込みます：</p>
 
 <pre>
-plot(atest2018[,3:12])
+plot(atest2022[,3:8])
 </pre>
 
-<p><code>[,3:12]</code> は3〜10列目という意味です。このような指定が面倒であれば、ダウンロードしたatest2018.xlsxをExcelで編集して1列目・2列目を削除したものをRStudioで再び読み込めば、単に <code>plot(atest2018)</code> だけで相関図がプロットできます。</p>
+<p><code>[,3:8]</code> は3〜8列目という意味です。このような指定が面倒であれば、ダウンロードしたatest2022.xlsxをExcelで編集して1列目・2列目を削除したものをRStudioで再び読み込めば、単に <code>plot(atest2022)</code> だけで相関図がプロットできます。</p>
 
-<p>問：箱ひげ図を描いてみましょう（<code>boxplot(atest2018[,3:12])</code>）。科目名が全部表示されない場合は、グラフの横幅をマウスで広げてみましょう。</p>
+<p>問：箱ひげ図を描いてみましょう（<code>boxplot(atest2022[,3:8])</code>）。科目名が全部表示されない場合は、グラフの横幅をマウスで広げてみましょう。</p>
 
 <p>問：全科目の平均正答率を都道府県ごとにExcelで求め、東日本（上半分）と西日本（下半分）で統計的に有意な差があるか調べてみましょう。</p>
 
@@ -1307,7 +1307,7 @@ nohup R CMD BATCH hoge.R &amp;
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-12-22 15:16:19 JST</time></p>
+<p>Last modified: <time>2023-05-08 11:42:44 JST</time></p>
 </footer>
 </body>
 </html>

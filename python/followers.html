@@ -17,7 +17,9 @@
 
 <h1>ツイッターのフォロワー数の推移をプロット</h1>
 
-<p>Rで描いた<a href="../stat/followers.html">グラフの例：Twitterのフォロワー数</a>のPython版である。2023-01-25改訂。</p>
+<p>[2023-04-06] 2023-04-05の朝、Twilog更新が終了した。今後はフォロワー数も更新されないので、2023-04-05までのデータを使って更新した。</p>
+
+<p>Rで描いた<a href="../stat/followers.html">グラフの例：Twitterのフォロワー数</a>のPython版である。</p>
 
 <p><a href="https://twilog.org/">Twilog</a> の該当者（ここでは<a href="https://twilog.org/h_okumura/">私</a>）のページの「Stats」をクリックし，ページのソースから <code>ar_</code> を含む部分をコピペする。</p>
 
@@ -52,7 +54,7 @@ df = pd.DataFrame(index=t, data={'followers':ar_data[7]})
 df.plot()
 </pre>
 
-<figure><img src="img/230203a.png" alt="ツイッターのフォロワー数の推移"></figure>
+<figure><img src="img/230406a.png" alt="ツイッターのフォロワー数の推移"></figure>
 
 <p>東日本大震災から数ヶ月だけ急増していることがわかる。その部分：</p>
 
@@ -98,7 +100,7 @@ df[df.index &gt;= "2021-08-01"].plot(marker="o")
 df[df.index >= "2023-01-01"].plot(marker="o")
 </pre>
 
-<figure><img src="img/230203b.svg" alt="ツイッターのフォロワー数の推移"></figure>
+<figure><img src="img/230406b.svg" alt="ツイッターのフォロワー数の推移"></figure>
 
 <hr>
 
@@ -129,7 +131,7 @@ fig.savefig('followers.svg', bbox_inches="tight")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-02-03 10:28:31 JST</time></p>
+<p>Last modified: <time>2023-04-06 11:56:09 JST</time></p>
 </footer>
 </body>
 </html>

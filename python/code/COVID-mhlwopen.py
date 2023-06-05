@@ -62,7 +62,8 @@ os.system("rsync -e 'ssh -p 59224' -auvz /home/okumura/public_html/python/data/C
 
 
 # PCR検査実施人数
-df1 = readcsv("https://www.mhlw.go.jp/content/pcr_tested_daily.csv")
+# df1 = readcsv("https://www.mhlw.go.jp/content/pcr_tested_daily.csv")
+df1 = readcsv("https://www.mhlw.go.jp/content/001060467.csv")
 
 # 死亡者数（累積）
 df3 = readcsv("https://covid19.mhlw.go.jp/public/opendata/deaths_cumulative_daily.csv")

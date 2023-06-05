@@ -18,7 +18,7 @@
 
 <h1>グラフの例：出生率</h1>
 
-<p>[News] 厚生労働省の<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai21/index.html">令和３年(2021)人口動態統計月報年計（概数）の概況</a>が出ています。2021年の合計特殊出生率概数値は1.30でした。下の表を更新しました。</p>
+<p>[2023-06-02] 厚生労働省の<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai22/index.html">令和４年(2022)人口動態統計月報年計（概数）の概況</a>が出ています。2022年の合計特殊出生率概数値は1.26でした。下の表を更新しました。</p>
 
 <hr>
 
@@ -77,60 +77,61 @@
 2018  918400           1.42
 2019  865239           1.36
 2020  840835           1.33
-2021  811604           1.30
+2021  811622           1.30
+2022  770747           1.26
 </pre>
 
-<p>これをクリップボードにコピーし，次のように読み込む：</p>
+<p>これを（ヘッダ行も含めて）クリップボードにコピーし，次のように読み込む：</p>
 
 <pre>
-<code>X = read.table(pipe("pbpaste"), header=TRUE) # Mac
+X = read.table(pipe("pbpaste"), header=TRUE) # Mac
 X = read.table("clipboard", header=TRUE)     # Windows
-</code></pre>
+</pre>
 
-<p>とりあえず合計特殊出生率だけ折れ線グラフにしてみる（最新のデータを反映していません）：</p>
+<p>とりあえず合計特殊出生率だけ折れ線グラフにしてみる：</p>
 
 <!-- # quartz(width=8.267717,height=5.826772) # Mac -->
 <!-- par(family="Helvetica") # Mac -->
 
 <pre>
-<code>par(las=1)              # 縦軸の文字を横向きにしない
+par(las=1)              # 縦軸の文字を横向きにしない
 par(mar=c(3,3,3,3)+0.1) # マージン（デフォルト: c(5,4,4,2)+0.1）
 par(mgp=c(2,0.8,0))     # 軸マージン（デフォルト: c(3,1,0)）
 plot(X$年, X$合計特殊出生率, type="o", pch=16, xlab="", ylab="")
 t = c(range(X$合計特殊出生率), X$合計特殊出生率[length(X[,1])])
 axis(4, t, t)
 title("合計特殊出生率", line=0.5)
-</code></pre>
+</pre>
 
-<figure><img src="img/190610a.png" alt="合計特殊出生率"></figure>
+<figure><img src="img/230602a.png" alt="合計特殊出生率"></figure>
 
 <p>色付きにしてみる：</p>
 
 <pre>
-<code>plot(NULL, xlim=c(1970,2018), ylim=c(1.2, 2.2), axes=FALSE,
+plot(NULL, xlim=c(1970,2022), ylim=c(1.2, 2.2), axes=FALSE,
    xaxs="i", yaxs="i", xlab="", ylab="")
-rect(1970, 1.2, 2018, 2.2, col="#ccccff", border=NA)
+rect(1970, 1.2, 2022, 2.2, col="#ccccff", border=NA)
 for (i in seq(1.4,2.0,0.2))
-  segments(1970, i, 2018, i, lwd=2, col="white")
+  segments(1970, i, 2022, i, lwd=2, col="white")
 for (i in seq(1.2,2.2,0.2))
   text(1970, i, format(i, nsmall=1), pos=2, xpd=TRUE)
-for (i in seq(1975,2018,5))
+for (i in seq(1975,2022,5))
   segments(i, 1.2, i, 2.2, lwd=2, col="white")
-for (i in seq(1970,2015,5))
+for (i in seq(1970,2022,5))
   text(i, 1.2, i, pos=1, xpd=TRUE)
 lines(X$年, X$合計特殊出生率, type="o", pch=16, xpd=TRUE)
 title("合計特殊出生率", line=0.5)
-</code></pre>
+</pre>
 
-<figure><img src="img/190610b.png" alt="合計特殊出生率"></figure>
+<figure><img src="img/230602b.png" alt="合計特殊出生率"></figure>
 
 <p>ちなみに，出生率にからむリサーチ・リテラシーの問題を扱った本として，赤川 学『子どもが減って何が悪いか！』（ちくま新書，2004年）がある。</p>
 
 <p>日本の合計特殊出生率（TFR）のデータは，中澤港先生の fmsb パッケージの Jvital という表にも含まれている：</p>
 
 <pre>
-<code>plot(Jvital$YEAR, Jvital$TFR, type="o", pch=16)
-</code></pre>
+plot(Jvital$YEAR, Jvital$TFR, type="o", pch=16)
+</pre>
 
 <hr>
 
@@ -138,7 +139,7 @@ title("合計特殊出生率", line=0.5)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-06-03 16:55:57 JST</time>
+Last modified: <time>2023-06-02 14:54:20 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

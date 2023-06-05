@@ -17,9 +17,11 @@
 
 <h1>ChatGPTのAPIを使う</h1>
 
-<h2>はじめに</h2>
+<p>このページは<a href="openai_api.html">OpenAIのAPIを使う</a>を書き直したものです。</p>
 
-<p>従来のOpenAIのAPIについては<a href="openai_api.html">OpenAIのAPIを使う</a>で解説しています。</p>
+<p>[2023-03-18] GPT-4のAPIが私のところにも来ました。以下のコードで <code>"gpt-3.5-turbo"</code> を <code>"gpt-4"</code>（8192トークン版）あるいは <code>"gpt-4-32k"</code>（32768トークン版）にするだけで使えます。値段は1桁以上高くなって、入力は8k版が $0.03/1k、32k版が $0.06/1k、出力はその倍の値段です。</p>
+
+<h2>はじめに</h2>
 
 <p>2023年3月2日（米国時間では1日）、<a href="https://openai.com">OpenAI</a> の <a href="https://openai.com/blog/chatgpt/">ChatGPT</a> の <a href="https://platform.openai.com">API</a> が公開されました（<a href="https://openai.com/blog/introducing-chatgpt-and-whisper-apis">Introducing ChatGPT and Whisper APIs</a>）。費用は従来の text-davinci-003 の1/10の0.0002ドル/1000トークンと、非常にお値打ちです。</p>
 
@@ -37,12 +39,24 @@
 export OPENAI_API_KEY="sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 </pre>
 
-<p>と打ち込めば環境変数が設定されます。<code>.bashrc</code> 等に書き込んでおけばシェル起動時に設定されます。APIキーを書き込んだファイルは他人に見られないようにパーミッションを正しく設定しておきましょう。</p>
+<p>と打ち込めば環境変数が設定されます。<code>.bashrc</code> か <code>.zshenv</code> 等に書き込んでおけばシェル起動時に設定されます。APIキーを書き込んだファイルは他人に見られないようにパーミッションを正しく設定しておきましょう。</p>
+
+<p>Google Colab などの環境では上の方法がうまくいきませんので、プログラムの先頭部分に次のように直接入れればいいでしょう：</p>
+
+<pre>
+import openai
+    
+openai.api_key = "sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+</pre>
+
 
 <p>使い方の基本は次の通りです：</p>
 
 <pre>
 import openai
+
+# もし環境変数が使えないなら次のように書き込む：
+# openai.api_key = "sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 res = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
@@ -101,9 +115,77 @@ while True:
         msg.pop(1)
 </pre>
 
+<h2>ストリーミング</h2>
+
+<p>Web 版 ChatGPT のように文字単位（単語単位）で出力するようにしてみましょう。</p>
+
+<pre>
+import openai
+
+class Chatbot:
+    def __init__(self, model="gpt-4", messages=None, temperature=0, stream=True):
+        self.model = model  # "gpt-4" or "gpt-4-32k" or "gpt-3.5-turbo"
+        self.messages = messages or []
+        self.temperature = temperature
+        self.stream = stream
+
+    def chat(self, prompt, temperature=None, stream=None):
+        prompt = prompt.strip()
+        # print(len(prompt), "letters,", len(prompt.split()), "words")
+        self.messages.append({"role": "user", "content": prompt})
+        stream = stream or self.stream
+        res = openai.ChatCompletion.create(model=self.model,
+                                           messages=self.messages,
+                                           temperature=temperature or self.temperature,
+                                           stream=stream)
+        if stream:
+            ans = []
+            for chunk in res:
+                content = chunk["choices"][0]["delta"].get("content", "")
+                print(content, end="")
+                ans.append(content)
+            ans = "".join(ans).strip()
+        else:
+            ans = res["choices"][0]["message"]["content"].strip()
+            print(ans)
+            u = res["usage"]
+            print(u["prompt_tokens"], u["completion_tokens"], u["total_tokens"])
+        self.messages.append({"role": "assistant", "content": ans})
+
+    def get_messages(self):
+        return self.messages
+</pre>
+
+<p>これを使うには例えば</p>
+
+<pre>
+chatbot = Chatbot()
+chatbot.chat("こんにちは！")
+</pre>
+
+<p>のようにします。会話を続けるには</p>
+
+<pre>
+chatbot.chat("""
+○○について説明してください。
+""")
+</pre>
+
+<p>のようにします。コンテクストが溢れた場合は、とりあえず</p>
+
+<pre>
+chatbot = Chatbot(messages=chatbot.get_messages()[2:])
+</pre>
+
+<p>のようにして新しいチャットのインスタンスを作ってください。</p>
+
+<p>IPython または下のような Jupyter Notebook/Lab でお試しください。</p>
+
+<figure><img src="img/230414a.png" alt="GPT-4 session on Jupyter Lab"></figure>
+
 <h2>トークン</h2>
 
-<p>トークンはほぼ単語に相当する概念で、ChatGPTでは <a href="https://github.com/openai/tiktoken">tiktoken</a> の cl100k_base というエンコーディングが使われているようです。頻出単語は1トークン、そうでない単語は2トークン以上に分割されます。日本語の場合は、2〜3文字が1トークンになることも、逆に1文字が2〜3トークンに分割されることもあります。</p>
+<p>トークンはほぼ単語に相当する概念で、gpt-3.5-turbo や gpt-4 では <a href="https://github.com/openai/tiktoken">tiktoken</a> の cl100k_base というエンコーディングが使われています（→ <a href="https://zenn.dev/microsoft/articles/3438cf410cc0b5">OpenAI 言語モデルごとのエンコーディング一覧</a>）。頻出単語は1トークン、そうでない単語は2トークン以上に分割されます。日本語の場合は、2〜3文字が1トークンになることも、逆に1文字が2〜3トークンに分割されることもあります。平均してトークンあたり日本語0.9170文字程度です（<a href="https://zenn.dev/microsoft/articles/dcf32f3516f013">OpenAI 言語モデルで日本語を扱う際のトークン数推定指標</a>）。</p>
 
 <p><code>pip install tiktoken</code> して試してみましょう：</p>
 
@@ -136,7 +218,7 @@ print()
 「|何|人|も|の|ニ|ュ|ート|ン|が|い|た|（|There| were| several| Newton|s|）|」|と|言|っ|た|の|は|，|科|学|5877|110|家|2845|237|イ|ル|ブ|ロ|ン|で|あ|る|．|同|162|100|246|に|コ|ー�|246|ン|は|「|ニ|ュ|ート|ン|は|つ|2243|255|に|二|つ|の|80631|234|を|持|って|い|た|（|Newton| was| always| amb|ivalent|）|」|と|45918|252|って|い|る|．|
 </blockquote>
 
-<p>英語はだいたい1語1トークンですが、直前のスペースも含めてトークンになっていることがけっこうあります。日本語はだいたい1文字1トークンですが、「様」のようにUTF-8の3バイトがそれぞれトークンになっている場合や、「ーヘ」の「ヘ」の最初の2バイトが「ー」とくっついて1トークンになっているような場合もあります。</p>
+<p>英語はだいたい1語1トークンですが、直前のスペースも含めてトークンになっていることがけっこうあります。日本語はだいたい1文字1トークンですが、「様」のようにUTF-8の3バイトがそれぞれトークンになっている場合や、「ーヘ」の「ヘ」の最初の2バイトが「ー」とくっついて1トークンになっているような場合もあります。平均して10トークンが日本語9文字少々という感じです。</p>
 
 <p>ちなみに、同じ文字列をOpenAIの <a href="https://platform.openai.com/tokenizer">Tokenizer</a> に入れると、GPT-3では120トークンになります。</p>
 
@@ -144,7 +226,7 @@ print()
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-03-08 20:07:46 JST</time></p>
+<p>Last modified: <time>2023-04-24 21:17:49 JST</time></p>
 </footer>
 </body>
 </html>
