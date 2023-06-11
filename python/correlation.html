@@ -95,6 +95,19 @@ ConfidenceInterval(low=-0.279640041969355, high=0.9861961933012714)
 
 <p>これも下限・上限を <code>r.confidence_interval().low</code>、<code>r.confidence_interval().high</code> で取り出せます。</p>
 
+<p><a href="https://pingouin-stats.org">Pingouin</a>（<a href="ttest.html">t検定</a>参照）はもっと便利です：</p>
+
+<pre class="cell">
+import pingouin as pg
+
+pg.corr(x, y)
+</pre>
+
+<pre>
+         n    r          CI95%     p-val   BF10     power
+pearson  5  0.8  [-0.28, 0.99]  0.104088  1.576  0.405232
+</pre>
+
 <p>Python 3.10 以降の標準ライブラリ statistics にも相関係数を求める関数が追加されました：</p>
 
 <pre class="cell">
@@ -111,7 +124,7 @@ st.correlation(x, y)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-14 10:15:50 JST</time></p>
+<p>Last modified: <time>2023-06-07 14:51:48 JST</time></p>
 </footer>
 </body>
 </html>
