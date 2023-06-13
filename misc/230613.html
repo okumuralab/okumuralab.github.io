@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/230613.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPT-3.5のパラメータ数の謎</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>GPT-3.5のパラメータ数の謎</h1>
+
+<p>科学雑誌『Newton』2023年7月号「ChatGPTの衝撃」p.23に次の図がある。</p>
+
+<figure><img src="img/230613a.png" alt="GPTのバージョンごとのパラメーター数"></figure>
+
+<p>GPT-3.5のパラメータ数は3550億とされている。実際、「GPT-3.5 355 billion」等でググると、けっこうな数のサイトでこの数字が出てくる。ところがどこにも出典が書かれていない。</p>
+
+<p>このことをTwitterに書いたところ、<a href="https://exmachina.ch/tech/a-conversation-with-an-artificial-intelligence/">A conversation with an artificial intelligence (AI)</a> というChatGPTとの対話記事で、ChatGPT自身が次のように言っていることを<a href="https://twitter.com/Tsubame33785667/status/1662278907406729218">教えていただいた</a>。2022-12-06の記事である。どうやらこれが初出らしい。</p>
+
+<blockquote>
+  <p>The main difference between GPT-3.0 and GPT-3.5 is the size of the model. GPT-3.0 is the smaller of the two models, with 175 billion parameters, while GPT-3.5 is significantly larger, with a staggering 355 billion parameters. This means that GPT-3.5 has more capacity to learn and generate responses than GPT-3.0.</p>
+</blockquote>
+
+<p>ChatGPTのハルシネーション（妄言）の可能性が大きい。</p>
+
+<p>念のためChatGPT APIに10回聞いてみた（prompt="How many parameters does GPT-3.5 have? No talk; just go.", model="gpt-3.5-turbo", max_tokens=10, temperature=1）：</p>
+
+<pre>
+I'm sorry, but there is no such thing
+I'm sorry, as an AI language model,
+Sorry, as an AI language model, I cannot
+As an AI language model, I am unable to
+As an AI language model, I am not aware
+As an AI language model, I have access to
+As an AI language model, I don't have
+As an AI language model, I'm not capable
+I am sorry, but there is no such thing
+As an AI language model, GPT-3
+</pre>
+
+<p>今は答えてくれないようだ。</p>
+
+<p>『Newton』編集部には3550億の根拠を2023-05-29にWebフォームで問い合わせたので、もし返事があれば追記する。</p>
+
+<hr>
+
+<p>検索結果のごく一部：</p>
+
+<p>「355 billion」英語記事：</p>
+    
+<ul>
+  <li>2023-03-01: <a href="https://medium.com/@robertlockwood/what-is-chatgpt-development-history-and-features-7a5a8203ff25">What is ChatGPT? Development history and features</a></li>
+  <li>2023-03-29: <a href="https://chatgpt4.bio/chat-gpt4-vs-gpt-3-5/">Chat GPT4 Vs GPT 3.5-10 Secret GPT4 Tips</a></li>
+  <li>2023-04-13: <a href="https://doi.org/10.36227/techrxiv.22619932">ChatGPT Needs SPADE (Sustainability, PrivAcy, Digital divide, and Ethics) Evaluation: A Review</a></li>
+  <li>2023-05-07: <a href="https://mainichi.jp/english/articles/20230506/p2g/00m/0sc/013000c">Do AI bots like ChatGPT threaten humanity if left unchecked?</a></li>
+  <li>2023-05-11: <a href="https://eu.mouser.com/blog/gpt-35-vs-gpt-4-difference">GPT-3.5 vs. GPT-4: What's the Difference?</a></li>
+</ul>
+
+<p>「3550億」日本語記事：</p>
+
+<ul>
+  <li>2023-03-13: <a href="https://atmarkit.itmedia.co.jp/ait/articles/2303/13/news013.html">大規模言語モデル（LLM：Large Language Model）とは？</a></li>
+  <li>2023-03-15: <a href="https://toyokeizai.net/articles/-/657537">話題の｢ChatGPT｣､そのすごさと″限界"のワケ</a></li>
+</ul>
+
+<p>ほか多数。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2023-06-13 11:12:25 JST</time></p>
+</footer>
+</body>
+</html>
