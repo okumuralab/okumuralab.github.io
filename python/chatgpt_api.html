@@ -185,6 +185,20 @@ chatbot = Chatbot(messages=chatbot.get_messages()[2:])
 
 <figure><img src="img/230414a.png" alt="GPT-4 session on Jupyter Lab"></figure>
 
+<h2>応用：長いページの要約</h2>
+
+<p>上で作った <code>Chatbot()</code> クラスの応用として、URLを与えてページを要約するアプリを作ってみましょう。ここでは <a href="https://trafilatura.readthedocs.io">Trafilatura</a> というライブラリを使ってWebページのテキストを取り出しています。</p>
+
+<pre>
+import trafilatura
+
+URL = "https://....."
+text = trafilatura.extract(trafilatura.fetch_url(URL))
+
+chatbot = Chatbot(model="gpt-3.5-turbo-16k")
+chatbot.chat(prompt="Provide a long and detailed summary of what follows:\n\n" + text)
+</pre>
+
 <h2>トークン</h2>
 
 <p>トークンはほぼ単語に相当する概念で、gpt-3.5-turbo や gpt-4 では <a href="https://github.com/openai/tiktoken">tiktoken</a> の cl100k_base というエンコーディングが使われています（→ <a href="https://zenn.dev/microsoft/articles/3438cf410cc0b5">OpenAI 言語モデルごとのエンコーディング一覧</a>）。頻出単語は1トークン、そうでない単語は2トークン以上に分割されます。日本語の場合は、2〜3文字が1トークンになることも、逆に1文字が2〜3トークンに分割されることもあります。平均してトークンあたり日本語0.9170文字程度です（<a href="https://zenn.dev/microsoft/articles/dcf32f3516f013">OpenAI 言語モデルで日本語を扱う際のトークン数推定指標</a>）。</p>
@@ -228,7 +242,7 @@ print()
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-14 09:36:16 JST</time></p>
+<p>Last modified: <time>2023-06-14 16:02:33 JST</time></p>
 </footer>
 </body>
 </html>

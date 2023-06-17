@@ -7,19 +7,7 @@
 <title>MathJaxによる数式表示</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
-<script>
-MathJax = {
-  chtml: {
-    matchFontHeight: false
-  },
-  tex: {
-    inlineMath: [['$', '$']]
-  }
-};
-</script>
-<script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
-</script>
+<script src="../js/load-mathjax.js" async></script>
 </head>
 <body>
 
@@ -30,67 +18,57 @@ MathJax = {
 
 <h1>MathJaxによる数式表示</h1>
 
-<p><a href="http://www.mathjax.org/">MathJax</a> は $\mathrm{\LaTeX}$ 並みの数式表示能力をJavaScriptで実現したライブラリです。</p>
+<p><a href="http://www.mathjax.org/">MathJax</a> は $\mathrm{\LaTeX}$ 並みの数式表示能力をJavaScriptで実現したライブラリです。類似のものにKaTeXがあります。</p>
 
-<p>MathJaxの読み込み方はいろいろありますが，<code>&lt;head&gt;</code> … <code>&lt;/head&gt;</code> の中のどこかに例えば次のように書いておきます（以前は <code>tex-chtml.js</code> を使っていましたが，大きい記号がうまくいかないので，こちらに変えました）：</p>
+<p>MathJaxの読み込み方はいろいろ考えられますが、ここではMathJaxのバージョンやブラウザの対応状況に応じて柔軟に変えられるように、別ファイルで読み込んでいます：</p>
 
 <pre>
-<code>&lt;script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
-&lt;/script&gt;</code>
+&lt;script src="/js/load-mathjax.js" async&gt;&lt;/script&gt;
 </pre>
 
-<div class="note">
-<p>もしIE11にも対応させたいなら，上のコードの前に次を挿入します：</p>
-<pre>
-<code>&lt;script src="https://polyfill.io/v3/polyfill.min.js?features=es6"&gt;&lt;/script&gt;
-</code></pre>
-<p>今となっては必要ないでしょう。</p>
-</div>
-
-<p>デフォルトでは周囲の環境と英小文字の高さ（x-height）を自動的に合わせますが，日本語環境ではうまくいかないこともあるので，このサイトではその機能を次のようにして切っています：</p>
+<p><code>load-mathjax.js</code> というファイルは現在次のようになっています：</p>
 
 <pre>
-<code>&lt;script&gt;
-MathJax = {
-  chtml: {
-    matchFontHeight: false
-  }
-};
-&lt;/script&gt;
-&lt;script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
-&lt;/script&gt;</code>
-</pre>
-
-<p>数式の書き方はほぼLaTeX + amsmathのスタイル通りです。ただ，本文中の数式はデフォルトでは
-<code>$ ... $</code>
-ではなく
-<code>\( ... \)</code>
-で指定します。これが面倒なら，頭の部分を</p>
-
-<pre>
-<code>&lt;script&gt;
-MathJax = {
+window.MathJax = {
   chtml: {
     matchFontHeight: false
   },
   tex: {
     inlineMath: [['$', '$']]
+  },
+  svg: {
+    fontCache: 'global'
   }
 };
-&lt;/script&gt;
-&lt;script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
-&lt;/script&gt;</code>
+
+(function () {
+  const script = document.createElement('script');
+  if (navigator.userAgent.includes("Chrome") || navigator.userAgent.includes("Firefox"))
+    script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+  else
+    script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js";
+  script.async = true;
+  document.head.appendChild(script);
+})();
 </pre>
 
-<p>のようにすれば <code>$ ... $</code> になります。ただの <span>$</span> を使いたい場合には <code>&lt;span&gt;$&lt;/span&gt;</code> と書きます（<code>\$</code> のようにエスケープしてもいいはずですが，うまくいかないことがあるようです。バグ？）。なお，<code>&lt;pre&gt; ... &lt;/pre&gt;</code> や <code>&lt;code&gt; ... &lt;/code&gt;</code> の中ではエスケープは不要です。</p>
+<p>ChromeやFirefoxではSVG方式、SafariではCommonHTML方式のMathJaxを読み込んでいます。本来はSVG方式のほうが大きい記号も出せて良いのですが、なぜかSafariでは表示がぼやけるようになってしまいました。また、CommonHTML方式の場合、英小文字の高さ（x-height）を本文に自動的に合わせますが、日本語環境ではうまくいかないこともあるので、切っています。インライン数式の書き方はデフォルトでは <code>\( ... \)</code> ですが、ここでは <code>$ ... $</code> に設定しています。SVG方式の場合のフォントキャッシュをグローバルに設定しています。</p>
+
+<div class="note">
+<p>もしIE11にも対応させたいなら、次も必要かもしれません：</p>
+<pre>
+&lt;script src="https://polyfill.io/v3/polyfill.min.js?features=es6"&gt;&lt;/script&gt;
+</pre>
+</div>
+
+<p>数式の書き方はほぼLaTeX + amsmathのスタイル通りです。</p>
+
+<p>インライン数式を <code>$ ... $</code> に設定しましたが、ただの <span>$</span> を使いたい場合には <code>&lt;span&gt;$&lt;/span&gt;</code> と書きます。なお、<code>&lt;pre&gt; ... &lt;/pre&gt;</code> や <code>&lt;code&gt; ... &lt;/code&gt;</code> の中の <span>$</span> はインライン数式になりません。</p>
 
 <p>例：</p>
 
 <pre>
-<code>エネルギーと質量には $E = mc^2$ の関係がある。</code>
+エネルギーと質量には $E = mc^2$ の関係がある。
 </pre>
 
 <blockquote>
@@ -102,12 +80,12 @@ MathJax = {
 <p>別行の数式は <code>\[ ... \]</code> です。</p>
 
 <pre>
-<code>\[
+\[
   \frac{\pi}{2} =
   \left( \int_{0}^{\infty} \frac{\sin x}{\sqrt{x}} dx \right)^2 =
   \sum_{k=0}^{\infty} \frac{(2k)!}{2^{2k}(k!)^2} \frac{1}{2k+1} =
   \prod_{k=1}^{\infty} \frac{4k^2}{4k^2 - 1}
-\]</code>
+\]
 </pre>
 
 \[
@@ -117,10 +95,10 @@ MathJax = {
   \prod_{k=1}^{\infty} \frac{4k^2}{4k^2 - 1}
 \]
 
-<p>注意として，<code>$a&lt;b$</code> のようにスペースなしで不等号を書くと，ブラウザが <code>&lt;</code> をタグの一部と解釈してしまって，うまくいかないようです。<code>$a &lt; b$</code> のようにスペースを空ければうまくいくはずです。あるいは，<code>$a &amp;lt; b$</code> のように書くか，<code>$a \lt b$</code> のようなマクロを使います。</p>
+<p>注意として、<code>$a&lt;b$</code> のようにスペースなしで不等号を書くと、ブラウザが <code>&lt;</code> をタグの一部と解釈してしまって、うまくいかないようです。<code>$a &lt; b$</code> のようにスペースを空ければうまくいくはずです。あるいは、<code>$a &amp;lt; b$</code> のように書くか、<code>$a \lt b$</code> のようなマクロを使います。</p>
 
 <div class="note">
-<p>MathJaxの <code>\lt</code> というマクロは，標準のLaTeXでは定義されていません。<code>\newcommand{\lt}{&lt;}</code> のように定義しておく必要があります。</p>
+<p>MathJaxの <code>\lt</code> というマクロは、標準のLaTeXでは定義されていません。<code>\newcommand{\lt}{&lt;}</code> のように定義しておく必要があります。</p>
 </div>
 
 <div class="note">
@@ -133,7 +111,7 @@ MathJax = {
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-02-10 13:40:58</time>
+Last modified: <time>2023-06-17 20:37:54 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

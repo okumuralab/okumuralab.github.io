@@ -37,30 +37,30 @@ MathJax = {
 <p>100点満点の模擬テストを20人が受験しました。点数は次の通りです：</p>
 
 <pre>
-<code>x = c(4,5,17,17,19,19,29,41,45,47,49,54,56,58,70,76,88,88,93,97)
-</code></pre>
+x = c(4,5,17,17,19,19,29,41,45,47,49,54,56,58,70,76,88,88,93,97)
+</pre>
 
 <p>この20人がその後実際の試験を受験して，合否が判明しました。合 = 1，否 = 0 で表すと，次のようになりました：</p>
 
 <pre>
-<code>y = c(0,0,0,0,0,0,1,1,1,0,0,1,1,0,1,1,1,1,1,1)
-</code></pre>
+y = c(0,0,0,0,0,0,1,1,1,0,0,1,1,0,1,1,1,1,1,1)
+</pre>
 
 <p>プロットしてみましょう：</p>
 
 <pre>
-<code>plot(x, y, xlim=c(0,100), ylim=c(-0.2,1.2), yaxt="n")
+plot(x, y, xlim=c(0,100), ylim=c(-0.2,1.2), yaxt="n")
 axis(2, at=c(0,1), labels=c(0,1), las=1)
-</code></pre>
+</pre>
 
 <figure><img src="img/190620a.png" alt=""></figure>
 
 <p>x から y を予測する式を求めたいのですが，通常の線形回帰ではうまくあてはまりません：</p>
 
 <pre>
-<code>r = lm(y ~ x)
+r = lm(y ~ x)
 abline(r)
-</code></pre>
+</pre>
 
 <figure><img src="img/190620b.png" alt=""></figure>
 
@@ -73,8 +73,8 @@ abline(r)
 <p>はどうでしょうか。これをグラフにすると，次のようになります：</p>
 
 <pre>
-<code>curve(1 / (1 + exp(-x)), -5, 5)
-</code></pre>
+curve(1 / (1 + exp(-x)), -5, 5)
+</pre>
 
 <figure><img src="img/190620c.png" alt=""></figure>
 
@@ -99,14 +99,14 @@ abline(r)
 <p>R ではロジスティック回帰は次のように打ち込むと簡単にできます：</p>
 
 <pre>
-<code>r = glm(y ~ x, family=binomial(link="logit"))
+r = glm(y ~ x, family=binomial(link="logit"))
 summary(r)
-</code></pre>
+</pre>
 
 <p>結果は次のようになります：</p>
 
 <pre>
-<code>Call:
+Call:
 glm(formula = y ~ x, family = binomial(link = "logit"))
 
 Deviance Residuals: 
@@ -127,7 +127,7 @@ Residual deviance: 15.187  on 18  degrees of freedom
 AIC: 19.187
 
 Number of Fisher Scoring iterations: 5
-</code></pre>
+</pre>
 
 <p>この結果の Coefficients の Estimate のところに係数 $w_0$，$w_1$ が出ます。つまり，</p>
 
@@ -136,10 +136,10 @@ Number of Fisher Scoring iterations: 5
 <p>ということになります。元のデータとこの確率を重ねてグラフにしてみます：</p>
 
 <pre>
-<code>plot(x, y, xlim=c(0,100), ylim=c(-0.2,1.2), yaxt="n")
+plot(x, y, xlim=c(0,100), ylim=c(-0.2,1.2), yaxt="n")
 axis(2, at=c(0,1), labels=c(0,1), las=1)
 curve(1 / (1 + exp(-(0.08319 * x - 3.56668))), add=TRUE)
-</code></pre>
+</pre>
 
 <figure><img src="img/190620d.png" alt=""></figure>
 
@@ -183,27 +183,27 @@ curve(1 / (1 + exp(-(0.08319 * x - 3.56668))), add=TRUE)
 <p>次のように打ち込むとデータが <code>data1</code> に読み込まれます：</p>
 
 <pre>
-<code>data1 = read.csv("<span id="dirurl">https://okumuralab.org/~okumura/stat/</span>data1.csv")
-</code></pre>
+data1 = read.csv("<span id="dirurl">https://okumuralab.org/~okumura/stat/</span>data1.csv")
+</pre>
 
 <script>document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];</script>
 
 <p>このデータについてロジスティック回帰を行うには</p>
 
 <pre>
-<code>r2 = glm(y ~ x1 + x2, data=data1, family=binomial(link="logit"))
-</code></pre>
+r2 = glm(y ~ x1 + x2, data=data1, family=binomial(link="logit"))
+</pre>
 
 <p>と打ち込みます。続いて</p>
 
 <pre>
-<code>summary(r2)
-</code></pre>
+summary(r2)
+</pre>
 
 <p>と打ち込めば次のように表示されます：</p>
 
 <pre>
-<code>Call:
+Call:
 glm(formula = y ~ x1 + x2, family = binomial(link = "logit"), 
     data = data1)
 
@@ -224,7 +224,7 @@ Residual deviance: 12.345  on 7  degrees of freedom
 AIC: 18.345
 
 Number of Fisher Scoring iterations: 4
-</code></pre>
+</pre>
 
 <p>つまり $\mathrm{logit}(\pi) = -9.44589 + 1.27158x_1 + 0.06424x_2$ で予測されることがわかります（ただしどの係数も有意ではありません）。</p>
 
@@ -235,45 +235,45 @@ Number of Fisher Scoring iterations: 4
 <p>R で「<code>iris</code>」と打ち込んでみてください。次のような150行のデータが現れます：</p>
 
 <pre>
-<code>    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
 1            5.1         3.5          1.4         0.2     setosa
 2            4.9         3.0          1.4         0.2     setosa
 3            4.7         3.2          1.3         0.2     setosa
 ...
-</code></pre>
+</pre>
 
 <p>これは有名な Fisher の iris（あやめ）のデータです。3種類の iris（setosa，versicolor，virginica）それぞれ50個ずつについて，sepal length（萼（がく）の長さ），sepal width（萼（がく）の幅），petal length（花びらの長さ），petal width（花びらの幅）が与えられています（単位は cm）。</p>
 
 <pre>
-<code>&gt; sapply(iris[1:4], function(x) sapply(split(x, iris$Species), mean))
+&gt; sapply(iris[1:4], function(x) sapply(split(x, iris$Species), mean))
            Sepal.Length Sepal.Width Petal.Length Petal.Width
 setosa            5.006       3.428        1.462       0.246
 versicolor        5.936       2.770        4.260       1.326
 virginica         6.588       2.974        5.552       2.026
-</code></pre>
+</pre>
 
 <p>例えば萼と花びらの長さをプロット：</p>
 
 <pre>
-<code>plot(iris$Sepal.Length, iris$Petal.Length, col=iris$Species)
+plot(iris$Sepal.Length, iris$Petal.Length, col=iris$Species)
 legend("bottomright", legend=levels(iris$Species), pch=1, col=1:3)
-</code></pre>
+</pre>
 
 <p><a href="pca.html">主成分分析</a>をするのも手です：</p>
 
 <pre>
-<code>r = prcomp(iris[1:4])
+r = prcomp(iris[1:4])
 plot(r$x[,1], r$x[,2], col=iris$Species)
 legend("topright", legend=levels(iris$Species), pch=1, col=1:3)
-</code></pre>
+</pre>
 
 <p>ロジスティック回帰で，これら4つの変数から，まずは setosa かそれ以外かを判別してみましょう。</p>
 
 <p>ヒント：<code>iris</code> というデータに <code>setosa</code> という列を追加して，Species が setosa なら 1，そうでないなら 0 とする命令：</p>
 
 <pre>
-<code>iris$setosa = ifelse(iris$Species == "setosa", 1, 0)
-</code></pre>
+iris$setosa = ifelse(iris$Species == "setosa", 1, 0)
+</pre>
 
 <p>残りは課題です。</p>
 
@@ -300,15 +300,15 @@ legend("topright", legend=levels(iris$Species), pch=1, col=1:3)
 <p>さきほどと同様にしてデータ（<a href="data2.csv">data2.csv</a>）を <code>data2</code> に読み込んで，次のように打ち込みます。</p>
 
 <pre>
-<code>r3 = glm(cbind(y,n-y) ~ x, data=data2, family=binomial(link="logit"))
-</code></pre>
+r3 = glm(cbind(y,n-y) ~ x, data=data2, family=binomial(link="logit"))
+</pre>
 
 <p>関数 <code>glm()</code> に与えるモデル式の左辺は，成功した個数のベクトル $y$ と失敗した個数のベクトル $n - y$ をコラム結合 <code>cbind()</code> した8行2列の行列です。</p>
 
 <p><code>summary(r3)</code> と打つと次のような結果が表示されます：</p>
 
 <pre>
-<code>Call:
+Call:
 glm(formula = cbind(y, n - y) ~ x, family = binomial(link = "logit"), 
     data = data2)
 
@@ -330,7 +330,7 @@ Residual deviance:  11.232  on 6  degrees of freedom
 AIC: 41.43
 
 Number of Fisher Scoring iterations: 4
-</code></pre>
+</pre>
 
 <h2>その他のモデル</h2>
 
@@ -376,7 +376,7 @@ Number of Fisher Scoring iterations: 4
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-11 10:22:09 JST</time>
+Last modified: <time>2023-06-17 10:54:40 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
