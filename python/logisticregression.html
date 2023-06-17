@@ -7,19 +7,7 @@
 <title>ロジスティック回帰</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
-<script>
-MathJax = {
-  chtml: {
-    matchFontHeight: false
-  },
-  tex: {
-    inlineMath: [['$', '$']]
-  }
-};
-</script>
-<script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
-</script>
+<script src="../js/load-mathjax.js" async></script>
 </head>
 <body>
 
@@ -128,7 +116,7 @@ print(model.coef_, model.intercept_)
 
 <p>これが $w_1$、$w_0$ の値です。つまり、</p>
 
-\[ P = \frac{1}{1 + \exp(-(0.08319 x - 3.56668))} \]
+\[ p = \frac{1}{1 + \exp(-(0.08319 x - 3.56668))} \]
 
 <p>ということになります。元のデータとこの確率を重ねてグラフにしてみます：</p>
 
@@ -202,7 +190,7 @@ print(model.coef_, model.intercept_)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2023-06-17 18:17:48 JST</time>
+Last modified: <time>2023-06-17 21:02:40 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
