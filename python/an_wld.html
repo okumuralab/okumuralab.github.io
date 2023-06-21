@@ -66,6 +66,8 @@ df = pd.read_csv(URL, encoding='cp932', converters={1:foo, 2:foo, 3:foo})
 
 <p>のようにコンバータを使う手もある。</p>
 
+<p><a href="polars.html">Polars</a> を使えば <code>ignore_errors=True</code> オプションで <code>*</code> 付きの数値は欠測値扱いになる。</p>
+
 <p>なお，上記の余分な <code>*</code> はタイムスタンプ 2021-02-01 のCSVファイルでは消えた。2020年の数値も改訂されている：</p>
 
 <pre>
@@ -92,7 +94,7 @@ df = pd.read_csv(URL, encoding='cp932', converters={1:foo, 2:foo, 3:foo})
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-09 14:03:09 JST</time>
+Last modified: <time>2023-06-20 17:24:11 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

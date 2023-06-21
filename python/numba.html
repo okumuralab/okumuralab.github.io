@@ -17,51 +17,51 @@
 
 <h1>Numba</h1>
 
-<p><a href="https://numba.pydata.org">Numba</a>（ナンバ）はPythonのJIT（Just In Time）コンパイラです。簡単にいえば，Pythonの自前の関数を高速にする仕組みです。以下は M1 Mac mini 上の Python 3.10.5 で実行しました。</p>
+<p><a href="https://numba.pydata.org">Numba</a>（ナンバ）はPythonのJIT（Just In Time）コンパイラです。簡単にいえば，Pythonの自前の関数を高速にする仕組みです。以下は M1 Mac mini 上の Python 3.11.4、NumPy 1.24.3、Numba 0.57.0 で実行しました。</p>
 
 <p>速さ比べのため，まずは100万個の乱数を用意します：</p>
 
 <pre>
-<code>import numpy as np
+import numpy as np
 
-rng = np.random.default_rng()
+rng = np.random.default_rng(12345)
 a = rng.random(1000000)
-</code></pre>
+</pre>
 
 <p>これをPython標準の <code>sum()</code> 関数を使って合計するのに要する時間を計測します：</p>
 
 <pre>
-<code>%timeit sum(a)
-</code></pre>
+%timeit sum(a)
+</pre>
 
 <p>結果：</p>
 
 <pre>
-<code>35.6 ms ± 46.3 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
-</code></pre>
+37.6 ms ± 1.13 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
 
 <p>次は，自前の関数を作って，時間を計測します：</p>
 
 <pre>
-<code>def sum1(a):
+def sum1(a):
     s = 0
     for x in a:
         s += x
     return s
 
 %timeit sum1(a)
-</code></pre>
+</pre>
 
 <p>結果：</p>
 
 <pre>
-<code>43.4 ms ± 805 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
-</code></pre>
+45.1 ms ± 894 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
 
 <p>次はNumbaを使ってみましょう。<code>pip install numba</code> などとしてインストールしてから，次を実行します：</p>
 
 <pre>
-<code>from numba import jit
+from numba import jit
 
 @jit(nopython=True)
 def sum2(a):
@@ -71,25 +71,25 @@ def sum2(a):
     return s
 
 %timeit sum2(a)
-</code></pre>
+</pre>
 
 <p>結果：</p>
 
 <pre>
-<code>1.2 ms ± 50.4 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
-</code></pre>
+941 µs ± 3.73 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
 
 <p>約1ミリ秒です。数十倍速くなりました。最後にNumPyの <code>np.sum()</code> も試します：</p>
 
 <pre>
-<code>%timeit np.sum(a)
-</code></pre>
+%timeit np.sum(a)
+</pre>
 
 <p>結果：</p>
 
 <pre>
-<code>187 µs ± 865 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
-</code></pre>
+196 µs ± 448 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+</pre>
 
 <p>Numbaで高速化したものよりさらに高速です。</p>
 
@@ -103,12 +103,9 @@ def sum2(a):
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-10-05 07:48:43 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2023-06-18 14:55:14 JST</time></p>
+</footer>
 </body>
 </html>

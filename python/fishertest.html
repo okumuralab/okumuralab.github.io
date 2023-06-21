@@ -48,7 +48,13 @@ fisher_exact([[3, 2], [1, 4]])
 SignificanceResult(statistic=6.0, pvalue=0.5238095238095238)
 </pre>
 
-<p>返ってくるのはオッズ比と <i lang="en">p</i> 値です。Rの <code>fisher.test()</code> と違って、こちらの <code>[[a, b], [c, d]]</code> のオッズ比は <code>(a/b)/(c/d)</code> と同じです。オッズ比の2通りの求め方については<a href="../stat/2by2.html">2×2の表，オッズ比，相対危険度</a>もご覧ください。オッズ比を報告する際には <code>(a/b)/(c/d)</code> のほうでいいと思います。</p>
+<p>返ってくるのはオッズ比と <i lang="en">p</i> 値です。これらを別々に取り出して変数に代入するには</p>
+
+<pre class="cell">
+oddsratio, pvalue = fisher_exact([[3, 2], [1, 4]])
+</pre>
+
+<p>のようにします。Rの <code>fisher.test()</code> と違って、こちらの <code>[[a, b], [c, d]]</code> のオッズ比は <code>(a/b)/(c/d)</code> と同じです。オッズ比の2通りの求め方については<a href="../stat/2by2.html">2×2の表，オッズ比，相対危険度</a>もご覧ください。オッズ比を報告する際には <code>(a/b)/(c/d)</code> のほうでいいと思います。</p>
 
 <p><code>fisher_exact()</code> は残念ながら2×2行列しか扱えません。より大きな行列を扱うには <a href="https://pypi.org/project/FisherExact/">FisherExact</a> や <a href="https://github.com/boussoffara/fexact">fexact</a> があるようですが、<a href="rpy2.html">rpy2</a> 等を使ってPythonからRを呼び出すのがいいかもしれません。</p>
 
@@ -56,7 +62,7 @@ SignificanceResult(statistic=6.0, pvalue=0.5238095238095238)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-01-05 17:15:58 JST</time></p>
+<p>Last modified: <time>2023-06-19 10:17:30 JST</time></p>
 </footer>
 </body>
 </html>

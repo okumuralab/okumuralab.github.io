@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/dice.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>さいころと中心極限定理</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>さいころと中心極限定理</h1>
+
+<p>さいころを振ると、1〜6の目が均等に出ます。</p>
+
+<pre>
+ 1 ⚀
+ 2 ⚁
+ 3 ⚂
+ 4 ⚃
+ 5 ⚄
+ 6 ⚅
+</pre>
+
+<p>さいころを二つ振ると、出る目の和は2〜12ですが、均等にはなりません。なぜでしょう？</p>
+
+<pre>
+ 2 ⚀⚀
+ 3 ⚀⚁ ⚁⚀
+ 4 ⚀⚂ ⚁⚁ ⚂⚀
+ 5 ⚀⚃ ⚁⚂ ⚂⚁ ⚃⚀
+ 6 ⚀⚄ ⚁⚃ ⚂⚂ ⚃⚁ ⚄⚀
+ 7 ⚀⚅ ⚁⚄ ⚂⚃ ⚃⚂ ⚄⚁ ⚅⚀
+ 8 ⚁⚅ ⚂⚄ ⚃⚃ ⚄⚂ ⚅⚁
+ 9 ⚂⚅ ⚃⚄ ⚄⚃ ⚅⚂
+10 ⚃⚅ ⚄⚄ ⚅⚃
+11 ⚄⚅ ⚅⚄
+12 ⚅⚅
+</pre>
+
+<p>さいころを三つ振ったらどうなるでしょうか。Pythonでやってみましょう。</p>
+
+<pre class="cell">
+def count(n):
+    c = 0
+    for i in range(1, 7):
+        for j in range(1, 7):
+            for k in range(1, 7):
+                if i + j + k == n:
+                    c += 1
+    return c
+
+for x in range(3, 19):
+    print(f"{x:2d} " + "*" * count(x))
+</pre>
+
+<pre>
+ 3 *
+ 4 ***
+ 5 ******
+ 6 **********
+ 7 ***************
+ 8 *********************
+ 9 *************************
+10 ***************************
+11 ***************************
+12 *************************
+13 *********************
+14 ***************
+15 **********
+16 ******
+17 ***
+18 *
+</pre>
+
+<p>もっとたくさんのさいころを振ったらどうなるでしょうか。<a href="normal.html">正規分布</a>のところも参照してください。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2023-06-20 16:32:40 JST</time></p>
+</footer>
+</body>
+</html>
