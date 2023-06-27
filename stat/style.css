@@ -39,6 +39,13 @@ td, th { border: 1px solid; padding: 0.2em 0.7em }
 td { text-align: right }
 th { text-align: left }
 del { color: gray }
+.cell {
+  padding: 0.5em 1em;
+  margin: 0 0;
+  background: #f4f4f4;
+  border-left: solid 1em #cccccc;
+  box-shadow: 0 0.2em 0.3em rgba(0, 0, 0, 0.3);
+}
 .note {
   margin-left: 0em;
   padding-left: 1.5em;

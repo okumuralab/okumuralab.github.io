@@ -77,6 +77,34 @@ plt.plot(df1["年"], df1["年"] * slope + intercept)
 
 <p>さらに <code>np.polyfit(df1["年"], df1["世界全体"], 2)</code> とすると、2次式であてはめて、2次の係数、1次の係数、定数項を出力します。何次式でも同様にできます（解が数値的に安定しているかは別問題です）。</p>
 
+<h2>pingouinを使う</h2>
+
+<p><a href="ttest.html">t検定</a>でも紹介したpingouinパッケージを使ってみましょう。</p>
+
+<pre class="cell">
+import pingouin as pg
+
+pg.linear_regression(df1["年"], df1["世界全体"])
+</pre>
+
+<pre>
+       names       coef        se          T  ...        r2    adj_r2   CI[2.5%]  CI[97.5%]
+0  Intercept -36.519467  2.196481 -16.626351  ...  0.870311  0.867148 -40.955351 -32.083583
+1          年   0.018207  0.001098  16.587389  ...  0.870311  0.867148   0.015991   0.020424
+</pre>
+
+<p>例によって画面の幅が狭いので省略されてしまいました。値を少し丸めてみましょう。</p>
+
+<pre class="cell">
+pg.linear_regression(df1["年"], df1["世界全体"]).round(5)
+</pre>
+
+<pre>
+       names      coef       se         T  pval       r2   adj_r2  CI[2.5%]  CI[97.5%]
+0  Intercept -36.51947  2.19648 -16.62635   0.0  0.87031  0.86715 -40.95535  -32.08358
+1          年   0.01821  0.00110  16.58739   0.0  0.87031  0.86715   0.01599    0.02042
+</pre>
+
 <h2>statsmodelsを使う</h2>
 
 <p><a href="https://www.statsmodels.org">statsmodels</a> は R と近い統計解析の機能を Python に実装するライブラリです。あらかじめ <code>pip install statsmodels</code> と打ち込んでインストールしておきます。マニュアルの <a href="https://www.statsmodels.org/stable/generated/statsmodels.formula.api.ols.html">statsmodels.formula.api.ols</a> および <a href="https://www.statsmodels.org/stable/example_formulas.html">Fitting models using R-style formulas</a> を参照してください。</p>
@@ -159,12 +187,14 @@ F-statistic: 258.3 on 1 and 40 DF,  p-value: &lt; 2.2e-16
 <p><a href="https://scipy.org">SciPy</a> の <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html">scipy.stats.linregress</a> で単回帰ができます。</p>
 
 <pre class="cell">
-from scipy.stats import linregress
-res = linregress(df1["年"], df1["世界全体"])
-print(res.slope, res.intercept)
+from scipy import stats
+stats.linregress(df1["年"], df1["世界全体"])
 </pre>
 
-<p>ほかに <i lang="en">p</i> 値なども結果に含まれます。</p>
+<pre>
+LinregressResult(slope=0.018207490184234364, intercept=-36.51946692842041, rvalue=0.932904726545762, pvalue=8.631152502859473e-20, stderr=0.0010976706458372743, intercept_stderr=2.1964812011145125)</pre>
+
+<p>個々の値は <code>res = stats.linregress(df1["年"], df1["世界全体"])</code> して <code>res.slope</code> などとして取り出せます。</p>
 
 <h2>scikit-learnを使う</h2>
 
@@ -198,7 +228,7 @@ LinearRegression(slope=0.01840288469329876, intercept=-36.90901844799179)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-14 10:23:29 JST</time></p>
+<p>Last modified: <time>2023-06-27 09:08:28 JST</time></p>
 </footer>
 </body>
 </html>

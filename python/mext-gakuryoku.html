@@ -76,8 +76,10 @@ sns.histplot(df['正答数_国Ａ'], discrete=True)
 <p>散布図と回帰直線を描いてみよう。</p>
 
 <pre class="cell">
-sns.regplot(df['正答数_国Ａ'], df['正答数_数Ａ'])
+sns.regplot(x='正答数_国Ａ', y='正答数_数Ａ', data=df)
 </pre>
+
+<p>マーカーを小さくするにはオプション <code>marker="."</code> を付けます。ジッター（点が重ならないように乱数で揺らすこと）を加えるには <code>x_jitter=0.3, y_jitter=0.3</code> のようにします。</p>
 
 <p>箱ひげ図なども挑戦してみよう。</p>
 
@@ -90,7 +92,7 @@ sns.regplot(df['正答数_国Ａ'], df['正答数_数Ａ'])
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-02-02 15:39:52</time>
+Last modified: <time>2023-06-22 11:51:27 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

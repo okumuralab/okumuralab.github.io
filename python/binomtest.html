@@ -239,6 +239,13 @@ print(ci.low, ci.high)
 0.025210726326833497 0.5560954623076415
 </pre>
 
+<p>あるいは次のようにもできます。</p>
+
+<pre class="cell">
+lo, hi = stats.binomtest(2, 10).proportion_ci()
+print(lo, hi)
+</pre>
+
 <div class="note">
 <p>信頼区間は <a href="https://www.statsmodels.org/dev/generated/statsmodels.stats.proportion.proportion_confint.html">statsmodels.stats.proportion.proportion_confint</a> でも求められます：</p>
 <pre class="cell">
@@ -327,7 +334,7 @@ probability of success
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-07 09:25:34 JST</time></p>
+<p>Last modified: <time>2023-06-27 08:31:39 JST</time></p>
 </footer>
 </body>
 </html>

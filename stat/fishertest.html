@@ -7,7 +7,7 @@
 <title>Fisherの正確検定</title>
 <meta name="keywords" content="Fisher, フィッシャー, 正確検定, 正確確率検定, 直接確率法, exact test">
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <script src="../js/load-mathjax.js" async></script>
 <style>
 table { border-collapse: collapse; }
@@ -27,6 +27,8 @@ td, th { padding: 0.2em 0.7em }
 <h2>はじめに</h2>
 
 <p>Fisher（フィッシャー）の正確検定（Fisher's exact test）は，分割表（クロス集計表）の各行（各列）が独立かどうかを調べる方法です。直接確率法とも呼ばれます。</p>
+
+<p>この方法はFisherが1935年に著した <i lang="en">The Design of Experiments</i> という本の序章の次の第2章の最初に出てくる有名な <a href="https://en.wikipedia.org/wiki/Lady_tasting_tea">lady tasting tea</a> の問題を解くために使われています。Fisherの帰無仮説の考え方を最初に説明したものとしても有名です。</p>
 
 <h2>2×2分割表の検定</h2>
 
@@ -81,9 +83,9 @@ td, th { padding: 0.2em 0.7em }
 <p>になります。$_n C_r$ を求めるRの関数 <code>choose()</code> を使えば</p>
 
 <pre>
-<code>&gt; choose(4,3)*choose(6,2)/choose(10,5)
+&gt; choose(4,3)*choose(6,2)/choose(10,5)
 [1] 0.2380952
-</code></pre>
+</pre>
 
 <p>のように求められます。</p>
 
@@ -114,7 +116,7 @@ td, th { padding: 0.2em 0.7em }
 があります。この引数はこの場合2×2の行列 $\begin{pmatrix} 3 & 2 \\ 1 & 4 \end{pmatrix}$ ですが，これはRでは <code>matrix(c(3,1,2,4), nrow=2)</code> と表します（デフォルトでは縦に読みます）ので，次のように入力します。</p>
 
 <pre>
-<code>&gt; fisher.test(matrix(c(3,1,2,4),nrow=2))
+&gt; fisher.test(matrix(c(3,1,2,4),nrow=2))
 
 	Fisher's Exact Test for Count Data
 
@@ -126,7 +128,7 @@ alternative hypothesis: true odds ratio is not equal to 1
 sample estimates:
 odds ratio 
   4.918388 
-</code></pre>
+</pre>
 
 <p>この方法をフィッシャーの正確検定（Fisher's exact test）または直接確率法といいます。</p>
 
@@ -168,8 +170,8 @@ odds ratio
 <p>を検定してみましょう。</p>
 
 <pre>
-<code>&gt; fisher.test(matrix(c(228,284,863,851),nrow=2))
-</code></pre>
+&gt; fisher.test(matrix(c(228,284,863,851),nrow=2))
+</pre>
 
 <p>結果は $p = 0.02335$ で，こんな違いが偶然に生じるのは100回に2回しかないことがわかります。</p>
 
@@ -195,14 +197,14 @@ $a + c$，$b + d$，横計 $a + b$，$c + d$
 <p>このページの最初の表の全データを入れてやってみましょう。</p>
 
 <pre>
-<code>&gt; fisher.test(matrix(c(228,863,217,814,456,1618,284,851),nrow=4,byrow=TRUE))
+&gt; fisher.test(matrix(c(228,863,217,814,456,1618,284,851),nrow=4,byrow=TRUE))
 
 	Fisher's Exact Test for Count Data
 
 data:  
 p-value = 0.0712
 alternative hypothesis: two.sided 
-</code></pre>
+</pre>
 
 <p>あれあれ，読売とNHKの違いが $p = 0.02335$ で有意だったのに，今度は $p = 0.0712$
 で有意ではなくなりました（というような 0.05
@@ -252,18 +254,18 @@ $q/(1-q) = b/d$ で，両者の間に何の条件も付けなければ，オッ�
 <p>Fisherの検定はオッズ比が1であることの検定と理屈上は同じことですが，<code>fisher.test()</code> の採用する一般的な計算方法では，$p$ 値とオッズ比の信頼区間とは別の方法で計算されるので，同じ結果にならないことがあります。例えば</p>
 
 <pre>
-<code>ex1 = matrix(c(6,12,12,5), nrow=2)
-</code></pre>
+ex1 = matrix(c(6,12,12,5), nrow=2)
+</pre>
 
 <p>という例で試してみましょう。<code>fisher.test(ex1)</code> では，$p$ 値は 0.044 ですので5%水準で有意ですが，オッズ比の95%信頼区間は $[0.039, 1.056]$ ですので 1 を含みます。</p>
 
 <p>このあたりの事情は <a href="http://cran.r-project.org/web/packages/exact2x2/index.html">exact2x2</a> というパッケージの解説に書かれている通りです。この状況を改善するには，次のように exact2x2 パッケージをインストールし，<code>fisher.test()</code> の代わりに <code>fisher.exact()</code> を使います：</p>
 
 <pre>
-<code>install.packages("exact2x2")
+install.packages("exact2x2")
 library(exact2x2)
 fisher.exact(ex1)
-</code></pre>
+</pre>
 
 <p>$p$ 値は <code>fisher.test()</code> と同じ 0.044 ですが，95%信頼区間は $[0.0435, 0.9170]$ となり，5%水準で有意でないことと矛盾しない結果になります。</p>
 
@@ -281,12 +283,9 @@ fisher.exact(ex1)
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2016-01-12 21:29:37</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2023-06-23 15:11:45 JST</time></p>
+</footer>
 </body>
 </html>

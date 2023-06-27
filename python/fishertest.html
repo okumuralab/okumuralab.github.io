@@ -39,9 +39,9 @@ odds ratio
 <p>Pythonでは <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.fisher_exact.html">scipy.stats.fisher_exact</a> を使います。行列は行ごとに与えます：</p>
 
 <pre class="cell">
-from scipy.stats import fisher_exact
+from scipy import stats
 
-fisher_exact([[3, 2], [1, 4]])
+stats.fisher_exact([[3, 2], [1, 4]])
 </pre>
 
 <pre>
@@ -51,7 +51,7 @@ SignificanceResult(statistic=6.0, pvalue=0.5238095238095238)
 <p>返ってくるのはオッズ比と <i lang="en">p</i> 値です。これらを別々に取り出して変数に代入するには</p>
 
 <pre class="cell">
-oddsratio, pvalue = fisher_exact([[3, 2], [1, 4]])
+oddsratio, pvalue = stats.fisher_exact([[3, 2], [1, 4]])
 </pre>
 
 <p>のようにします。Rの <code>fisher.test()</code> と違って、こちらの <code>[[a, b], [c, d]]</code> のオッズ比は <code>(a/b)/(c/d)</code> と同じです。オッズ比の2通りの求め方については<a href="../stat/2by2.html">2×2の表，オッズ比，相対危険度</a>もご覧ください。オッズ比を報告する際には <code>(a/b)/(c/d)</code> のほうでいいと思います。</p>
@@ -62,7 +62,7 @@ oddsratio, pvalue = fisher_exact([[3, 2], [1, 4]])
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-19 10:17:30 JST</time></p>
+<p>Last modified: <time>2023-06-27 08:45:15 JST</time></p>
 </footer>
 </body>
 </html>

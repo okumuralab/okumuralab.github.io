@@ -47,26 +47,31 @@ ffmpeg -r 5 -i in%02d.png -vcodec libx264 -pix_fmt yuv420p out.mp4
 ffmpeg -ss 00:31:04 -to 00:40:25.35 -i in.mp4 -c copy out.mp4
 </pre>
 
-<p>1.mov と 2.mov を結合するには、あらかじめ</p>
+<p>時刻ではなく時間の長さで指定するには <code>-t HH:MM:SS</code> とします。なお、再エンコードを伴わない <code>-c copy</code> では微妙に時間がずれることがあります。</p>
+
+<p>1.mp4 と 2.mp4 と 3.mp4 を結合するには、あらかじめ</p>
 
 <pre>
-file 1.mov
-file 2.mov
+file 1.mp4
+file 2.mp4
+file 3.mp4
 </pre>
 
 <p>とだけ書き込んだテキストファイル files.txt を作っておき、次のように打ち込みます：</p>
 
 <pre>
-ffmpeg -f concat -i files.txt -c copy out.mov
+ffmpeg -f concat -i files.txt -c copy out.mp4
 </pre>
 
 <p>切り出しと結合を組み合わせれば、動画編集が自由にできます。</p>
+
+<p>ファイルのパスが安全でない場合は <code>-safe 0</code> というオプションが必要になるかもしれません。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-11-29 18:02:21 JST</time></p>
+<p>Last modified: <time>2023-06-24 11:46:24 JST</time></p>
 </footer>
 </body>
 </html>

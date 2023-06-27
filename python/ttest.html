@@ -18,7 +18,7 @@
 
 <h1>$t$ 検定</h1>
 
-<p>[2023-01-05] SciPy 1.10.0 が出たのでそれに合わせて修正しました。</p>
+<p>[2023-06-25] SciPy 1.11.0 が出たのでそれに合わせて修正しました。</p>
 
 <h2>はじめに</h2>
 
@@ -30,7 +30,7 @@
 
 <p>平均も分散もわからないけれども、中心極限定理から、サンプルの平均値はほぼ正規分布をすることがわかっているという一般の場合に、サンプルの平均値が 0 かどうか、あるいは2つのサンプルの平均値が等しいかどうかを検定するのが $t$ 検定です。</p>
 
-<p>こういった統計計算をするための標準的なツールは <a href="../stat/">R</a> ですが、やっぱり Python でも同じことをしたいですよね。Python では <a href="https://www.scipy.org">SciPy</a> を使うのが一般的でしたが、あまり便利ではありません。以下では <a href="https://pingouin-stats.org">Pingouin</a> という新しめのパッケージを使っています。<code>pip install pingouin</code> でインストールできます。念のため SciPy による方法も書いておきました。</p>
+<p>こういった統計計算をするための標準的なツールは <a href="../stat/">R</a> ですが、やっぱり Python でも同じことをしたいですよね。Python では <a href="https://www.scipy.org">SciPy</a> を使うのが一般的でしたが、あまり便利ではありません。以下では <a href="https://pingouin-stats.org">Pingouin</a> という新しめのパッケージを使っています。<code>pip install pingouin</code> でインストールできます。念のため SciPy による方法も書いておきました。なお、$t$ 分布の密度関数などを求めるには SciPy の <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html">scipy.stats.t</a> を使います。</p>
 
 <div class="note">
   <p>Pingouin は、英語の penguin（ペンギン）に似ていますが、19世紀に絶滅した<a href="https://ja.wikipedia.org/wiki/%E3%82%AA%E3%82%AA%E3%82%A6%E3%83%9F%E3%82%AC%E3%83%A9%E3%82%B9">オオウミガラス</a>という海鳥を意味するフランス語です（英語 <a href="https://en.wikipedia.org/wiki/Great_auk">great auk</a>、学名 <i>Pinguinus impennis</i>）。フランス語の発音は［pɛ̃-ɡwɛ̃］（パングアンに近い）ですが、英語圏の人はピングインと読んでいるようです。日本でもピングインのほうが読みやすいと思います。</p>
@@ -146,7 +146,15 @@ stats.ttest_ind(x, y, equal_var=False)
 </pre>
 
 <pre>
-Ttest_indResult(statistic=-2.948615301572607, pvalue=0.009478901687159976)
+TtestResult(statistic=-2.948615301572607, pvalue=0.009478901687159976, df=15.915568793934192)
+</pre>
+
+<pre class="cell">
+stats.ttest_ind(x, y, equal_var=False).confidence_interval()
+</pre>
+
+<pre>
+ConfidenceInterval(low=-2.3556088373583686, high=-0.38465090290137105)
 </pre>
 </div>
 
@@ -286,7 +294,7 @@ mean difference
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-07 16:24:41 JST</time></p>
+<p>Last modified: <time>2023-06-26 22:14:06 JST</time></p>
 </footer>
 </body>
 </html>

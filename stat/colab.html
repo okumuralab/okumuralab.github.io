@@ -19,40 +19,101 @@
 
 <p>[2023-06-21] Colabの中で簡単にRに切り替えられるようになりました。［ランタイム］→［ランタイムのタイプを変更］でランタイムのタイプをPython 3からRに切り替えて「保存」してください。現在のバージョンはR 4.3.0でした。</p>
 
+<pre class="cell">
+version
+</pre>
+
+<pre>
+               _                           
+platform       x86_64-pc-linux-gnu         
+arch           x86_64                      
+os             linux-gnu                   
+system         x86_64, linux-gnu           
+status                                     
+major          4                           
+minor          3.0                         
+year           2023                        
+month          04                          
+day            21                          
+svn rev        84292                       
+language       R                           
+version.string R version 4.3.0 (2023-04-21)
+nickname       Already Tomorrow            
+</pre>
+
+<pre class="cell">
+library()$results[,1]
+</pre>
+
+<pre>
+  [1] "askpass"       "backports"     "base64enc"     "bit"           "bit64"        
+  [6] "blob"          "broom"         "bslib"         "cachem"        "callr"        
+ [11] "cellranger"    "class"         "cli"           "clipr"         "colorspace"   
+ [16] "conflicted"    "cpp11"         "crayon"        "curl"          "data.table"   
+ [21] "DBI"           "dbplyr"        "digest"        "dplyr"         "dtplyr"       
+ [26] "ellipsis"      "evaluate"      "fansi"         "farver"        "fastmap"      
+ [31] "fontawesome"   "forcats"       "fs"            "gargle"        "generics"     
+ [36] "ggplot2"       "glue"          "googledrive"   "googlesheets4" "gtable"       
+ [41] "haven"         "highr"         "hms"           "htmltools"     "httr"         
+ [46] "ids"           "isoband"       "jquerylib"     "jsonlite"      "KernSmooth"   
+ [51] "knitr"         "labeling"      "lifecycle"     "lubridate"     "magrittr"     
+ [56] "MASS"          "memoise"       "mime"          "modelr"        "munsell"      
+ [61] "nnet"          "openssl"       "pillar"        "pkgconfig"     "prettyunits"  
+ [66] "processx"      "progress"      "ps"            "purrr"         "R6"           
+ [71] "ragg"          "rappdirs"      "RColorBrewer"  "readr"         "readxl"       
+ [76] "rematch"       "rematch2"      "reprex"        "rlang"         "rmarkdown"    
+ [81] "rstudioapi"    "rvest"         "sass"          "scales"        "selectr"      
+ [86] "stringi"       "stringr"       "sys"           "systemfonts"   "textshaping"  
+ [91] "tibble"        "tidyr"         "tidyselect"    "tidyverse"     "timechange"   
+ [96] "tinytex"       "tzdb"          "utf8"          "uuid"          "vctrs"        
+[101] "viridisLite"   "vroom"         "withr"         "xfun"          "xml2"         
+[106] "yaml"          "base"          "boot"          "class"         "cluster"      
+[111] "codetools"     "compiler"      "datasets"      "foreign"       "graphics"     
+[116] "grDevices"     "grid"          "KernSmooth"    "lattice"       "MASS"         
+[121] "Matrix"        "methods"       "mgcv"          "nlme"          "nnet"         
+[126] "parallel"      "rpart"         "spatial"       "splines"       "stats"        
+[131] "stats4"        "survival"      "tcltk"         "tools"         "utils"        
+</pre>
+
+<p>以上が2023-06-21追加分です。以下は古いまま。</p>
+
 <p>最も簡単な方法は <a href="https://colab.research.google.com/notebook#create=true&amp;language=r">https://colab.research.google.com/notebook#create=true&amp;language=r</a> のリンクをたどることです。バックエンドが R になります。</p>
 
 <p>グラフのサイズを指定するには，例えば次のようにオプションを指定します：</p>
 
-<pre><code>options(repr.plot.width=8, repr.plot.height=6)</code></pre>
+<pre class="cell">
+options(repr.plot.width=8, repr.plot.height=6)
+</pre>
 
 <p>以降のセッションのすべてのグラフが影響を受けます。それぞれ幅と高さで，単位はインチです。1インチが120ピクセルに相当するサイズのPNG画像になります。Colabの中で見ていると小さいように見えても，ドラッグ＆ドロップで取り出して開くと，けっこうなサイズのものですので，あまり大きくしないようにしましょう。デフォルトは幅・高さとも7インチ（840ピクセル）です。</p>
 
 <p>Python と共存させたい場合には <a href="https://rpy2.github.io">rpy2</a> を使います。あらかじめ</p>
 
-<pre><code>%load_ext rpy2.ipython</code></pre>
+<pre class="cell">
+%load_ext rpy2.ipython
+</pre>
 
 <p>としておきます。R を使いたいときには，セルを <code>%%R</code> で始めます：</p>
 
-<pre><code>%%R
+<pre class="cell">
+%%R
 curve(sin(x), -pi, pi)
-</code></pre>
+</pre>
 
 <p>サインカーブが描かれたでしょうか。</p>
 
 <p>日本語が使えるように設定された Colab 環境（例えば<a href="https://qiita.com/siraasagi/items/d72f60c25b30269d89e4">Google Colabでまたまた日本語表示が豆腐不可避な方に</a>参照）では，フォント名を指定して日本語が使えます：</p>
 
-<pre><code>%%R
+<pre class="cell">
+%%R
 curve(sin(x), -pi, pi, main="サインカーブ", family="IPAexGothic")
-</code></pre>
+</pre>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2023-06-21 10:40:04 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2023-06-21 14:59:12 JST</time></p>
+</footer>
 </body>
 </html>

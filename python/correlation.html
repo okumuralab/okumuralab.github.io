@@ -63,8 +63,7 @@ y  0.8  1.0
 <pre class="cell">
 from scipy import stats
 
-r = stats.pearsonr(x, y)
-r
+stats.pearsonr(x, y)
 </pre>
 
 <pre>
@@ -74,14 +73,14 @@ PearsonRResult(statistic=0.8, pvalue=0.10408803866182785)
 <p>このように $p$ 値も出力します。それぞれの値は <code>r.statistic</code>、<code>r.pvalue</code> として取り出せます。95% 信頼区間も求められます：</p>
 
 <pre class="cell">
-r.confidence_interval()
+stats.pearsonr(x, y).confidence_interval()
 </pre>
 
 <pre>
 ConfidenceInterval(low=-0.279640041969355, high=0.9861961933012714)
 </pre>
 
-<p>これも下限・上限を <code>r.confidence_interval().low</code>、<code>r.confidence_interval().high</code> で取り出せます。</p>
+<p>上限・下限を別々に取り出すには例えば <code>lo, hi = stats.pearsonr(x, y).confidence_interval()</code> のようにします。</p>
 
 <p><a href="https://pingouin-stats.org">Pingouin</a>（<a href="ttest.html">t検定</a>参照）はもっと便利です：</p>
 
@@ -112,7 +111,7 @@ st.correlation(x, y)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-07 14:51:48 JST</time></p>
+<p>Last modified: <time>2023-06-27 08:39:48 JST</time></p>
 </footer>
 </body>
 </html>
