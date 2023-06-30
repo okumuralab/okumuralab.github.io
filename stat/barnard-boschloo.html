@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/barnard-boschloo.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barnard検定、Boschloo検定</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>Barnard検定、Boschloo検定</h1>
+
+<p>Rの<a href="https://CRAN.R-project.org/package=Exact">Exact</a>パッケージには、Fisherの検定より強力なBarnard検定、Boschloo検定をする関数が収められています。このパッケージの著者Peter Calhounは、質問サイトStackExchangeの <a href="https://stats.stackexchange.com/questions/169864/which-test-for-cross-table-analysis-boschloo-or-barnard">Which test for cross table analysis: Boschloo or Barnard?</a> という質問にも的確な回答をされています。</p>
+
+<p>これらの検定を説明する前に、Fisherの検定について復習しておきます。これは、Fisherの有名な「紅茶を味わう婦人」（lady tasting tea）の実験が元になっています。一般化して言うと、コップに紅茶とミルクのどちらを先に入れたかがわかるという婦人をテストするために、$n$ 個のコップを用意し、うち $a$ 個は紅茶を先に入れ、$n-a$ 個はミルクを先に入れます（元のFisherの話では $n=8$、$a=4$）。Fisherはご婦人に $a$ を告げ、$n$ 個を $a$ 個と $n-a$ 個に分けるように頼むのですが、ここでは一般化して、$n$ 個を $b$ 個と $n-b$ 個に分けるように頼むことにしましょう。この場合、可能なのは次の表で、変え得るのは $k$ だけです。</p>
+
+<table>
+  <tbody>
+    <tr><th></th><th>紅茶が先と判定 $b$</th><th>ミルクが先と判定 $n-b$</th></tr>
+    <tr><th>本当は紅茶が先 $a$</th><td>$k$</td><td>$a-k$</td></tr>
+    <tr><th>本当はミルクが先 $n-a$</th><td>$b-k$</td><td>$n-a-b+k$</td></tr>
+  </tbody>
+</table>
+
+<p>ご婦人がランダムにコップを選んだ場合、この表が得られる確率は超幾何分布 $P(k) = {}_aC_k \cdot {}_{n-a}C_{b-k} / {}_nC_b$ で与えられ、$k$ に対する $p$ 値は $\sum_{P(j) \leq P(k)} P(j)$ です。</p>
+
+<p>この場合は $n$、$a$、$b$ が与えられていたから簡単だったのですが、一般の臨床研究では、そうはいきません。</p>
+
+<table>
+  <tbody>
+    <tr><th></th><th>効果あり $b$</th><th>効果なし $n-b$</th></tr>
+    <tr><th>介入群 $a$</th><td>$k$</td><td>$a-k$</td></tr>
+    <tr><th>対照群 $n-a$</th><td>$b-k$</td><td>$n-a-b+k$</td></tr>
+  </tbody>
+</table>
+
+<p>この場合は、介入群・対照群の数は決められますが、何人に効果があるかはわかりません。つまり、$n$、$a$ しか与えられていません。各群は独立な2項分布に従い、それらのパラメータ $\theta_1$、$\theta_2$ が等しいかを検定することになります。</p>
+
+<p>さらに、観察研究では、介入群・対照群にあたるものの数も、決まっていません。つまり、$n$ しか与えられていません。$n$ 個のものを4つに分割する多項分布（multinomial distribution）で、各セルに入る確率が $\theta_{11}:\theta_{12} = \theta_{21}:\theta_{22}$ になるかを検定することになります。</p>
+
+<p>具体例として、Exactパッケージの実行例にある次の例を考えましょう。</p>
+
+<table>
+  <tbody>
+    <tr><th></th><th>Infected</th><th>Not Infected</th></tr>
+    <tr><th>Vaccine</th><td>7</td><td>8</td></tr>
+    <tr><th>Placebo</th><td>12</td><td>3</td></tr>
+  </tbody>
+</table>
+
+<p>これは、30人をランダムに2群に分け、片方にはインフルエンザ予防ワクチンを投与、片方にはプラセボ（偽薬）を投与した実験です。ワクチン群では15人のうち7人がインフルエンザに感染したのに対して、プラセボ群では15人のうち12人が感染しました。両群に違いがあるといえるでしょうか。</p>
+
+<p>とりあえず各群の感染率とエラーバーを描いてみます：</p>
+
+<pre class="cell">
+ci1 = binom.test(X[1,1], X[1,1]+X[1,2])$conf.int
+ci2 = binom.test(X[2,1], X[2,1]+X[2,2])$conf.int
+lo = c(ci1[1], ci2[1])
+hi = c(ci1[2], ci2[2])
+mn = c(X[1,1]/(X[1,1]+X[1,2]), X[2,1]/(X[2,1]+X[2,2]))
+plot(1:2, mn, xlim=c(0.5,2.5), ylim=range(c(lo,hi)), pch=16, xaxt="n", xlab="", ylab="Infected")
+arrows(1:2, lo, 1:2, hi, angle=90, code=3, length=0.05)
+axis(1, at=1:2, labels=c("Vaccine", "Placebo"))
+</pre>
+
+<figure><img src="img/230630c.svg" alt=""></figure>
+
+<p>この実験がもし「19人が感染したら実験を終了する」というものであったなら、行の和だけでなく列の和も固定されますので、Fisherの検定でいいことになります。</p>
+
+<pre class="cell">
+X = matrix(c(7, 8, 12, 3), 2, 2, byrow=TRUE)
+fisher.test(X)
+</pre>
+
+<pre>
+	Fisher's Exact Test for Count Data
+
+data:  X
+p-value = 0.1281
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.02930204 1.37728113
+sample estimates:
+odds ratio 
+ 0.2309464 
+</pre>
+
+<p>$p = 0.1281$ となりました。これも一つの正解です。ただ、19人と固定しない場合、もっといろいろなパターンがありえますので、それらも考慮すれば、もっと良い（小さい）$p$ 値が得られるかもしれません。</p>
+
+<p>そこで、帰無仮説として、どちらの群も $\theta$ の確率で感染するとしましょう。各群の感染者数が $r_1$、$r_2$ である確率は $\mathtt{dbinom}(r_1, n_1, \theta) \cdot \mathtt{dbinom}(r_2, n_2, \theta)$ です（この問題では $n_1 = n_2 = 15$）。$p$ 値を「与えられた事象またはそれより珍しい（確率の小さい）事象の起こる確率」と定義すれば、次の関数で求められます：</p>
+
+<pre class="cell">
+pval = function(r1, r2, n1, n2, theta) {
+    p0 = dbinom(r1, n1, theta) * dbinom(r2, n2, theta)
+    p = 0
+    for (i in 0:n1) {
+        for (j in 0:n2) {
+            p1 = dbinom(i, n1, theta) * dbinom(j, n2, theta)
+            if (p1 <= p0) p = p + p1
+        }
+    }
+    return(p)
+}
+</pre>
+
+<p>$\theta$ はこれだけでは定まらない、いわゆるnuisance parameter（局外パラメータ、迷惑パラメータ）ですが、とりあえず実現値を入れてみましょう：</p>
+
+<pre class="cell">
+pval(7, 12, 15, 15, 19/30)
+</pre>
+
+<pre>
+[1] 0.2205049
+</pre>
+
+<p>かなり大きな値になってしまいました。ちなみにこれを0から1まで動かすと次のようになります：</p>
+
+<pre class="cell">
+plot(0:90/90, sapply(0:90/90, function(x) pval(7, 12, 15, 15, x)), type="o", pch=16)
+</pre>
+
+<figure><img src="img/230630a.svg" alt=""></figure>
+
+<p>これを $\theta$ の事前確率で重み付けして平均すれば $p$ 値になるのかもしれません（単純平均なら $p = 0.03635995$）が、そこまでは立ち入らないことにします。</p>
+
+<p>Barnardの方法は、$p$ 値の定義を「両群の違いを表す何らかの量を定義し、それが与えられた事象についての値またはそれより極端な値になる確率」と変更した上で、nuisance parameter $\theta$ について平均する代わりに、$\theta$ を動かしたときの $p$ 値の最大値で抑えるというものです。両群の違いを表す量としては、なるべく $\theta$ に依存しないものがよいことになります。例えばオッズ比 $(r_1 / (n_1 - r_1)) / (r_2 / (n_2 - r_2))$ は $\theta$ に大きく依存します。$\hat{\theta} = (r_1+r_2)/(n_1+n_2)$ としたときの $(r_1/n_1 - r_2/n_2)^2 / (\hat{\theta}(1-\hat{\theta}))$ はどうでしょうか：</p>
+
+<pre class="cell">
+dst = function(r1, r2, n1, n2) {
+    d = r1 / n1 - r2 / n2
+    if (d == 0) return(0)
+    t = (r1 + r2) / (n1 + n2)
+    return(d * d / (t * (1 - t)))
+}
+
+pval = function(r1, r2, n1, n2, theta) {
+    x0 = dst(r1, r2, n1, n2) - 0.0000001
+    p = 0
+    for (i in 0:n1) {
+        for (j in 0:n2) {
+            x1 = dst(i, j, n1, n2)
+            if (x1 >= x0) {
+                p = p + dbinom(i, n1, theta) * dbinom(j, n2, theta)
+            }
+        }
+    }
+    return(p)
+}
+
+pval(7, 12, 15, 15, 19/30)
+</pre>
+
+<pre>
+0.06719302
+</pre>
+
+<p>さきほどと同様に $\theta$ を動かしてみましょう：</p>
+
+<figure><img src="img/230630b.svg" alt=""></figure>
+
+<div class="note">
+<p>コードの <code>- 0.0000001</code>（小さい値なら何でもかまいません）を最初忘れて、図が左右対称にならず、悩みました。</p>
+</div>
+
+<p>最大値は 0.06820588 ほどです（単純平均は $p=0.04629919$）。Fisherの検定と比べて、$p$ 値は最大値でも半分くらいに減りました。</p>
+
+<p>これがBarnardの方法の概要です。Barnardは上の距離 <code>dst()</code> を求める方法としてより複雑なCSMという方法を推奨しています。BoschlooはFisherの検定の $p$ 値を距離として使う提案をしました（$p$ 値が小さいほど距離が大きい）。これらの方法はPeter CalhounによってRのExactパッケージにまとめられています。インストールは次のようにします：</p>
+
+<pre class="cell">
+install.packages('Exact')
+install.packages('ExactData', repos='https://pcalhoun1.github.io/drat/', type='source')  
+</pre>
+
+<p>使い方は次のようにします。デフォルトは上に述べた方法と原理的に同じはずです：</p>
+
+<pre class="cell">
+library(Exact)
+exact.test(X)
+</pre>
+
+<pre>
+	Z-pooled Exact Test
+
+data:  7 out of 15 vs. 12 out of 15
+test statistic = -1.8943, first sample size = 15, second sample size = 15, p-value =
+0.06822
+alternative hypothesis: true difference in proportion is not equal to 0
+sample estimates:
+difference in proportion 
+              -0.3333333 
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2023-06-30 17:53:26 JST</time></p>
+</footer>
+</body>
+</html>
