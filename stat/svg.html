@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SVG画像</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -16,8 +16,6 @@
 </nav>
 
 <h1>SVG画像</h1>
-
-<p>[2022-09-09] 何年も放置していたので状況がかなり変わってきました。最新の R 4.2.1 でやり直しました。</p>
 
 <h2>はじめに</h2>
 
@@ -50,11 +48,11 @@ dev.off()
 
 <p>ファイルサイズは 29558 バイトです。</p>
 
-<p>svglite の <code>svglite()</code> を使います：</p>
+<p>svglite の <code>svglite()</code> を使います。以前は日本語の文字幅がおかしくなって困りましたが、今は <code>fix_text_size=FALSE</code> というオプションが指定できるようになりました：</p>
 
 <pre>
 library(svglite)
-svglite("dnorm-svglite.svg", width=7, height=4)
+svglite("dnorm-svglite.svg", width=7, height=4, fix_text_size=FALSE)
 par(mgp=c(2, 0.8, 0))
 curve(dnorm(x), xlim=c(-3, 3), main="正規分布")
 dev.off()
@@ -62,20 +60,9 @@ dev.off()
 
 <figure><img src="img/dnorm-svglite.svg" width="600" alt="svgliteのSVGの例"></figure>
 
-<p>ファイルサイズは 6442 バイトになりました。</p>
+<p>ファイルサイズは 5652 バイトになりました。</p>
 
-<p>フォント指定は <code>Arial</code> になるようです。「正規分布」という日本語の幅がちょっと微妙ですね。SVG ファイルを見ると、<code>textLength='...' lengthAdjust='spacingAndGlyphs'</code> のような記述がたくさんあるので、これらを一括削除してみました。[2022-09-15追記] ついでに <code>font-family: "Arial";</code> を <code>font-family: sans-serif;</code> に一括置換しました。</p>
-
-<figure><img src="img/dnorm-svglite-fixed.svg" width="600" alt="svgliteのSVGの例（修正）"></figure>
-
-<div class="note">
-<p>一括削除の方法はいろいろありそうですが、例えば sed なら次のようにします：</p>
-<pre>
-sed "s/ textLength='[^']*' lengthAdjust='spacingAndGlyphs'//g" dnorm-svglite.svg &gt;dnorm-svglite-fixed.svg
-</pre>
-</div>
-
-<p>こちらのほうがファイルサイズも 5652 バイト（"Arial" を sans-serif に直して 5727 バイト）に減りますし、見かけ上も良さそうです。</p>
+<p>フォントは <code>Arial</code> になるようです。<code>system_fonts=list(sans="Arial Unicode MS")</code> のようなオプションで変えられますが、システムに入っているフォントしか指定できないようです。必要なら <code>sans-serif</code> などに一括置換してください。</p>
 
 <h2>rsvgによる変換</h2>
 
@@ -83,18 +70,18 @@ sed "s/ textLength='[^']*' lengthAdjust='spacingAndGlyphs'//g" dnorm-svglite.svg
 
 <p>SVG を PDF などに変換するには、GNOME プロジェクトの一環として開発された SVG ライブラリ <a href="https://en.wikipedia.org/wiki/Librsvg">librsvg</a> が便利です。rsvg の頭の r は 開発者 Raph Levien の頭文字かと思ったら、"Resplendent SVG" の略だそうです（GNOME Wiki: <a href="https://wiki.gnome.org/Projects/LibRsvg">Librsvg</a> にそう書いてありますが、ほんとかな）。これを R から使えるようにしたのが <a href="https://cran.r-project.org/package=rsvg">rsvg</a> パッケージです。これを使えば SVG 画像を PDF や任意解像度のビットマップ画像に変換できます。</p>
 
-<p>前節の最後に書いたように修正した svglite 出力で試してみます：</p>
+<p>前節の svglite 出力で試してみます：</p>
 
 <pre>
 library(rsvg)
-rsvg_png("dnorm-svglite-fixed.svg", "dnorm-svglite-fixed.png")  # PNGに変換
-rsvg_pdf("dnorm-svglite-fixed.svg", "dnorm-svglite-fixed.pdf")  # PDFに変換
+rsvg_png("dnorm-svglite.svg", "dnorm-svglite.png")  # PNGに変換
+rsvg_pdf("dnorm-svglite.svg", "dnorm-svglite.pdf")  # PDFに変換
 </pre>
 
 <p>変換した PDF はちゃんとフォントが埋め込まれています：</p>
 
 <pre>
-% pdffonts dnorm-svglite-fixed.pdf
+% pdffonts dnorm-svglite.pdf
 name                                 type              encoding         emb sub uni object ID
 ------------------------------------ ----------------- ---------------- --- --- --- ---------
 SDIIYF+ArialMT                       TrueType          WinAnsi          yes yes yes      6  0
@@ -122,7 +109,7 @@ rsvg-convert --format=pdf --output=hoge.pdf hoge.svg
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-09-15 11:39:54 JST</time></p>
+<p>Last modified: <time>2023-07-01 17:27:58 JST</time></p>
 </footer>
 </body>
 </html>

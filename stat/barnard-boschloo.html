@@ -63,16 +63,12 @@ td, th { padding: 0.2em 0.7em }
 
 <p>これは、30人をランダムに2群に分け、片方にはインフルエンザ予防ワクチンを投与、片方にはプラセボ（偽薬）を投与した実験です。ワクチン群では15人のうち7人がインフルエンザに感染したのに対して、プラセボ群では15人のうち12人が感染しました。両群に違いがあるといえるでしょうか。</p>
 
-<p>とりあえず各群の感染率とエラーバーを描いてみます：</p>
+<p>とりあえず各群の感染率を95%信頼区間のエラーバー付きで描いてみます：</p>
 
 <pre class="cell">
-ci1 = binom.test(X[1,1], X[1,1]+X[1,2])$conf.int
-ci2 = binom.test(X[2,1], X[2,1]+X[2,2])$conf.int
-lo = c(ci1[1], ci2[1])
-hi = c(ci1[2], ci2[2])
-mn = c(X[1,1]/(X[1,1]+X[1,2]), X[2,1]/(X[2,1]+X[2,2]))
-plot(1:2, mn, xlim=c(0.5,2.5), ylim=range(c(lo,hi)), pch=16, xaxt="n", xlab="", ylab="Infected")
-arrows(1:2, lo, 1:2, hi, angle=90, code=3, length=0.05)
+ci = apply(X, 1, function(x) { r = binom.test(x[1],x[1]+x[2]); c(r$estimate, r$conf.int) })
+plot(1:2, ci[1,], xlim=c(0.5,2.5), ylim=range(ci[2:3,]), pch=16, xaxt="n", xlab="", ylab="Infected")
+arrows(1:2, ci[2,], 1:2, ci[3,], angle=90, code=3, length=0.05)
 axis(1, at=1:2, labels=c("Vaccine", "Placebo"))
 </pre>
 
@@ -104,7 +100,7 @@ odds ratio
 
 <pre class="cell">
 pval = function(r1, r2, n1, n2, theta) {
-    p0 = dbinom(r1, n1, theta) * dbinom(r2, n2, theta)
+    p0 = dbinom(r1, n1, theta) * dbinom(r2, n2, theta) + 1e-10
     p = 0
     for (i in 0:n1) {
         for (j in 0:n2) {
@@ -136,7 +132,7 @@ plot(0:90/90, sapply(0:90/90, function(x) pval(7, 12, 15, 15, x)), type="o", pch
 
 <p>これを $\theta$ の事前確率で重み付けして平均すれば $p$ 値になるのかもしれません（単純平均なら $p = 0.03635995$）が、そこまでは立ち入らないことにします。</p>
 
-<p>Barnardの方法は、$p$ 値の定義を「両群の違いを表す何らかの量を定義し、それが与えられた事象についての値またはそれより極端な値になる確率」と変更した上で、nuisance parameter $\theta$ について平均する代わりに、$\theta$ を動かしたときの $p$ 値の最大値で抑えるというものです。両群の違いを表す量としては、なるべく $\theta$ に依存しないものがよいことになります。例えばオッズ比 $(r_1 / (n_1 - r_1)) / (r_2 / (n_2 - r_2))$ は $\theta$ に大きく依存します。$\hat{\theta} = (r_1+r_2)/(n_1+n_2)$ としたときの $(r_1/n_1 - r_2/n_2)^2 / (\hat{\theta}(1-\hat{\theta}))$ はどうでしょうか：</p>
+<p>Barnardの方法は、$p$ 値の定義を「両群の違いを表す何らかの量を定義し、それが与えられた事象についての値またはそれより極端な値になる確率」と変更した上で、nuisance parameter $\theta$ について平均する代わりに、$\theta$ を動かしたときの $p$ 値の最大値で抑えるというものです。両群の違いを表す量としては、なるべく $\theta$ に依存しないものがよいことになります。例えばオッズ比 $(r_1 / (n_1 - r_1)) / (r_2 / (n_2 - r_2))$ は $\theta$ に大きく依存します。そこで、<a href="https://en.wikipedia.org/wiki/Wald_test">Wald</a> の $(\hat{\theta}-\theta_0)^2/\mathrm{var}(\hat{\theta})$ にヒントを得て、$\hat{\theta} = (r_1+r_2)/(n_1+n_2)$ としたときの $(r_1/n_1 - r_2/n_2)^2 / (\hat{\theta}(1-\hat{\theta}))$ はどうでしょうか：</p>
 
 <pre class="cell">
 dst = function(r1, r2, n1, n2) {
@@ -147,7 +143,7 @@ dst = function(r1, r2, n1, n2) {
 }
 
 pval = function(r1, r2, n1, n2, theta) {
-    x0 = dst(r1, r2, n1, n2) - 0.0000001
+    x0 = dst(r1, r2, n1, n2) - 1e-10
     p = 0
     for (i in 0:n1) {
         for (j in 0:n2) {
@@ -167,17 +163,17 @@ pval(7, 12, 15, 15, 19/30)
 0.06719302
 </pre>
 
-<p>さきほどと同様に $\theta$ を動かしてみましょう：</p>
+<p>さきほどと同様に $\theta$ を動かしてみましょう（次の図の黒丸）：</p>
 
 <figure><img src="img/230630b.svg" alt=""></figure>
 
 <div class="note">
-<p>コードの <code>- 0.0000001</code>（小さい値なら何でもかまいません）を最初忘れて、図が左右対称にならず、悩みました。</p>
+<p>コードの <code>- 1e-10</code>（適当な小さい値）を最初忘れて、値が微妙に違い、そもそも図が左右対称にならず（図の白丸）、悩みました。Pythonにも <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.barnard_exact.html">scipy.stats.barnard_exact</a> があるのでソースを見てみたら、やっぱり対策してなかったので、<a href="https://github.com/scipy/scipy/issues/18798">issue</a>を出しておきました。</p>
 </div>
 
 <p>最大値は 0.06820588 ほどです（単純平均は $p=0.04629919$）。Fisherの検定と比べて、$p$ 値は最大値でも半分くらいに減りました。</p>
 
-<p>これがBarnardの方法の概要です。Barnardは上の距離 <code>dst()</code> を求める方法としてより複雑なCSMという方法を推奨しています。BoschlooはFisherの検定の $p$ 値を距離として使う提案をしました（$p$ 値が小さいほど距離が大きい）。これらの方法はPeter CalhounによってRのExactパッケージにまとめられています。インストールは次のようにします：</p>
+<p>これがBarnardの方法の概要です。Barnardは上の距離 <code>dst()</code> を求める方法としてより複雑なCSMという方法を提唱しています（しかし、Fisherに反論されてBarnardは自身の方法を引っ込めます）。BoschlooはFisherの検定の $p$ 値を距離として使う提案をしました（$p$ 値が小さいほど距離が大きい）。これらの方法はPeter CalhounによってRのExactパッケージにまとめられています。インストールは次のようにします：</p>
 
 <pre class="cell">
 install.packages('Exact')
@@ -203,11 +199,13 @@ difference in proportion
               -0.3333333 
 </pre>
 
+<p>BarnardのCSM法は <code>exact.test(X, method="csm")</code> ですが、$p$ 値は0.083になります。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-30 17:53:26 JST</time></p>
+<p>Last modified: <time>2023-07-02 17:36:32 JST</time></p>
 </footer>
 </body>
 </html>

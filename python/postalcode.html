@@ -17,29 +17,34 @@
 
 <h1>郵便番号CSV</h1>
 
+<p>[2023-06-30] 日本郵便の<a href="https://www.post.japanpost.jp/zipcode/download.html">郵便番号データダウンロード</a>に「1レコード1行、UTF-8形式」が追加された。これでKEN_ALLに悩まされずに済むかも。</p>
+
 <p>郵便番号データは日本郵便の<a href="https://www.post.japanpost.jp/zipcode/download.html">郵便番号データダウンロード</a>からダウンロードできる。通常は<a href="https://www.post.japanpost.jp/zipcode/dl/kogaki-zip.html">読み仮名データの促音・拗音を小書きで表記するもの(zip形式)</a>にある「全国一括」をクリックして ken_all.zip をダウンロードし，展開して KEN_ALL.CSV を得る。</p>
 
 <p>しかし，このデータは，CSVでありながら，読むのがたいへん難しい形式になっている。これについてはネットでいろいろ論じられている（例：<a href="https://www.dampfkraft.com/posuto.html">Parsing the Infamous Japanese Postal CSV</a>）。</p>
 
 <p>実際に KEN_ALL.CSV を読んでみよう。文字コードはCP932（SJIS）である。最初の3列は整数であるが頭の0を読み飛ばさないように文字列扱いする：</p>
 
-<pre><code>import pandas as pd
+<pre>
+import pandas as pd
 
 df = pd.read_csv('KEN_ALL.CSV', encoding='cp932', header=None,
                  dtype={0:str, 1:str, 2:str})
-</code></pre>
+</pre>
 
 <p><a href="https://www.post.japanpost.jp/zipcode/dl/readme.html">説明</a>によれば14番目の列（<code>df[13]</code>）は更新状態（0: 変更なし，1: 変更あり，2: 廃止）である。<code>df[13].value_counts()</code> と打ち込んでみると</p>
 
-<pre><code>0    124484
+<pre>
+0    124484
 1        18
-</code></pre>
+</pre>
 
 <p>で廃止データは含まれていないようである。</p>
 
 <p>3番目の列（<code>df[2]</code>）が郵便番号である。<code>df[2].value_counts()</code> と打ち込んでみると</p>
 
-<pre><code>4520961    66
+<pre>
+4520961    66
 4801103    65
 4410302    46
 7793405    44
@@ -50,7 +55,7 @@ df = pd.read_csv('KEN_ALL.CSV', encoding='cp932', header=None,
 0900037     1
 8020092     1
 8700243     1
-</code></pre>
+</pre>
 
 <p>つまり郵便番号 4520961 は66行もあることになる。中を覗いてみると，</p>
 
@@ -119,12 +124,9 @@ df = pd.read_csv('KEN_ALL.CSV', encoding='cp932', header=None,
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-02-10 09:05:49</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2023-06-30 21:20:17 JST</time></p>
+</footer>
 </body>
 </html>
