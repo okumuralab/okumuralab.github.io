@@ -7,6 +7,9 @@
 <title>SVG画像</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+  img { width: 100% }
+</style>
 </head>
 <body>
 
@@ -33,9 +36,13 @@ par(mgp=c(2, 0.8, 0))
 curve(dnorm(x), xlim=c(-3, 3), main="正規分布")
 </pre>
 
+<p>表示サイズを揃えるため、CSS で <code>img { width: 100% }</code> と指定してあります。</p>
+
 <figure><img src="img/dnorm-quartz.png" alt="Quartzグラフィックの例"></figure>
 
-<p>標準（cairo）の <code>svg()</code> を使って SVG 出力します（<a href="https://www.xquartz.org">XQuartz</a> のインストールが必要のはずです）：</p>
+<p>ファイルサイズは 32213 バイトです。</p>
+
+<p>次に、標準（cairo）の <code>svg()</code> を使って SVG 出力してみます（<a href="https://www.xquartz.org">XQuartz</a> のインストールが必要のはずです）：</p>
 
 <pre>
 svg("dnorm-cairo.svg", family="Japan1GothicBBB", width=7, height=4)
@@ -48,7 +55,7 @@ dev.off()
 
 <p>ファイルサイズは 29558 バイトです。</p>
 
-<p>svglite の <code>svglite()</code> を使います。以前は日本語の文字幅がおかしくなって困りましたが、今は <code>fix_text_size=FALSE</code> というオプションが指定できるようになりました：</p>
+<p>最後に、svglite の <code>svglite()</code> を使ってみます。以前は日本語の文字幅がおかしくなって困りましたが、今は <code>fix_text_size=FALSE</code> というオプションが指定できるようになりました：</p>
 
 <pre>
 library(svglite)
@@ -58,11 +65,11 @@ curve(dnorm(x), xlim=c(-3, 3), main="正規分布")
 dev.off()
 </pre>
 
-<figure><img src="img/dnorm-svglite.svg" width="600" alt="svgliteのSVGの例"></figure>
+<figure><img src="img/dnorm-svglite.svg" alt="svgliteのSVGの例"></figure>
 
-<p>ファイルサイズは 5652 バイトになりました。</p>
+<p>ファイルサイズは 5652 バイトになりました。たいへんコンサイスなので、これがお薦めです。</p>
 
-<p>フォントは <code>Arial</code> になるようです。<code>system_fonts=list(sans="Arial Unicode MS")</code> のようなオプションで変えられますが、システムに入っているフォントしか指定できないようです。必要なら <code>sans-serif</code> などに一括置換してください。</p>
+<p>フォントは <code>Arial</code> になるようです。<code>system_fonts=list(sans="Arial Unicode MS")</code> のようなオプションで変えられますが、システムに入っているフォントしか指定できないようです。必要なら <code>sans-serif</code> などに一括置換してください。<code>Arial</code> のままでも日本語が表示できるようです。</p>
 
 <h2>rsvgによる変換</h2>
 
@@ -109,7 +116,7 @@ rsvg-convert --format=pdf --output=hoge.pdf hoge.svg
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-07-01 17:27:58 JST</time></p>
+<p>Last modified: <time>2023-07-03 11:53:32 JST</time></p>
 </footer>
 </body>
 </html>

@@ -34,7 +34,7 @@
 <p>プログラムはちょっと強引で，もっとエレガントに書けそうだけれど，とりあえず：</p>
 
 <pre>
-<code>import numpy as np
+import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 import tensorflow as tf
@@ -67,18 +67,17 @@ def toimg(nx, ny, ax, ay):
 img = toimg(1024, 1024, y[:,0], y[:,1])
 plt.imshow(img, cmap='gray_r')
 plt.imsave("mnistpca.png", img, cmap='gray_r')
-</code></pre>
+</pre>
 
 <p>t-SNE，UMAPも同様。</p>
 
+<p>追記: <a href="https://twitter.com/svpino/status/1676561661891854338">Deep TDA</a> というのもあるらしい。<a href="https://datarefiner.com/feed/why-tda">Why you should use Topological Data Analysis over t-SNE or UMAP?</a></p>
+
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2020-11-24 20:42:18</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2023-07-06 18:15:14 JST</time></p>
+</footer>
 </body>
 </html>
