@@ -91,6 +91,7 @@ print(data['text'])
 
 <p>（参考）アシアル岡本さんの<a href="https://anko.education/apps/weather_api">気象庁の天気予報JSONファイルをWebAPI的に利用したサンプルアプリ</a>，加納靖之先生の<a href="https://note.com/ykano/n/n93ec73290e25">気象庁の新しい地震情報をみてみた</a></p>
 
+<!--
 <h3>Weather Hacks</h3>
 
 <p><em>なくなってしまった;_;</em></p>
@@ -104,6 +105,7 @@ data = requests.get(url, param).json()
 for x in data["forecasts"]:
     print(f'{x["dateLabel"]}の天気: {x["telop"]}')
 </pre>
+-->
 
 <h3>openBD</h3>
 
@@ -283,7 +285,7 @@ sess.mount("https://", adapter)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-11-27 11:13:34 JST</time></p>
+<p>Last modified: <time>2023-07-18 10:45:20 JST</time></p>
 </footer>
 </body>
 </html>

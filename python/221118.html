@@ -17,7 +17,7 @@
 
 <h1>情報I試作問題 第4問</h1>
 
-<p>新学習指導要領に対応した2025年からの大学入学共通テストの<a href="https://www.dnc.ac.jp/kyotsu/shiken_jouhou/r7ikou/r7houkousei.html">試作問題等</a>が2022-11-09に公開された（2022-12-23一部訂正）。この中の「情報I」の試作問題の第4問は、いわゆるデータサイエンスの問題である。</p>
+<p>新学習指導要領に対応した2025年からの大学入学共通テストの<a href="https://www.dnc.ac.jp/kyotsu/shiken_jouhou/r7ikou/r7houkousei.html">試作問題等</a>が2022-11-09に公開された（2022-12-23一部訂正）。この中の<a href="https://www.dnc.ac.jp/albums/abm.php?d=395&f=abm00003277.pdf&n=6-2-1_試作問題『情報Ⅰ』※令和4年12月23日一部修正.pdf">「情報I」の試作問題</a>の第4問は、いわゆるデータサイエンスの問題である。</p>
 
 <p>この元データをT.Matsushima先生が見つけてくださった（<a href="https://note.com/tkmium/n/nd557d7e8b0b5">令和7年度大学入学共通テスト　情報Ⅰ</a>参照）：</p>
 
@@ -43,13 +43,9 @@ dfa.to_csv("1a.csv", index=False, encoding="utf_8_sig", lineterminator="\r\n")
 dfb.to_csv("1b.csv", index=False, encoding="utf_8_sig", lineterminator="\r\n")
 </pre>
 
-<div class="note">
-<p>問題文に「一か所でも項目のデータに欠損値がある場合は，それらの都道府県を除外したものを全体として考える」とあるので最初 <code>df1.dropna(inplace=True)</code> を入れたが、それでは回帰係数が合わないので、おそらく間違いであろう。</p>
-</div>
-
 <p>以下では見やすくするためCSVファイル中の <code>.0</code> は一括削除した。</p>
 
-<p>1a.csv:</p>
+<p><a href="data/1a.csv">1a.csv</a>: 表1-A:スマートフォン・パソコンなどの使用時間が1時間未満の人の生活行動時間に関する都道府県別平均値</p>
 
 <pre>
 地域区分,睡眠,用事,食事,通学,学業,趣味
@@ -102,7 +98,7 @@ dfb.to_csv("1b.csv", index=False, encoding="utf_8_sig", lineterminator="\r\n")
 47_沖縄県,447,67,90,72,482,13
 </pre>
 
-<p>1b.csv:</p>
+<p><a href="data/1b.csv">1b.csv</a>: 表1-B:スマートフォン・パソコンなどの使用時間が3時間以上6時間未満の人の生活行動時間に関する都道府県別平均値</p>
 
 <pre>
 地域区分,睡眠,用事,食事,通学,学業,趣味
@@ -160,15 +156,58 @@ dfb.to_csv("1b.csv", index=False, encoding="utf_8_sig", lineterminator="\r\n")
 <pre class="cell">
 import pandas as pd
 
-dfa = pd.read_csv("1a.csv")
-dfb = pd.read_csv("1b.csv")
+dfa = pd.read_csv("https://okumuralab.org/~okumura/python/data/1a.csv")
+dfb = pd.read_csv("https://okumuralab.org/~okumura/python/data/1b.csv")
 </pre>
 
-<p>散布図：</p>
+<p>p.26に「ただし，表1-A，表1-Bにおいて一か所でも項目のデータに欠損値がある場合は，それらの都道府県を除外したものを全体として考える」とあるので、欠損値が一つでもある行を削除したものも作っておく：</p>
+
+<pre class="cell">
+dfA = dfa.dropna()
+dfB = dfb.dropna()
+</pre>
+
+<div class="note">
+<p>欠損値を削除しない <code>dfa</code>、<code>dfb</code> も残しておくのは、あとで回帰分析をする際に、<code>dfa</code> のほうを使わないと結果が合わないためである。問題作成者が混乱しているのかもしれない。</p>
+</div>
+
+<div class="note">
+<p>p.26で「なお，以下において，データの範囲については，外れ値も含めて考えるものとする」という指示があるのは、一部で（例えば2σ以上離れた）外れ値は機械的に削除するといった指導がされていることに対応するためなのだろうか。</p>
+</div>
+
+<p>p.27「図1 睡眠の時間の分布」の箱ひげ図：</p>
 
 <pre class="cell">
 import matplotlib.pyplot as plt
 
+plt.boxplot([dfB['睡眠'], dfA['睡眠']], vert=False, labels=['表1-B', '表1-A'])
+</pre>
+
+<p>Seabornを使う場合：</p>
+
+<pre class="cell">
+import seaborn as sns
+
+sns.boxplot(pd.DataFrame({"表1-A": dfA["睡眠"], "表1-B": dfB["睡眠"]}), orient="h")
+</pre>
+
+<p>p.27「図2 学業の時間の分布」の箱ひげ図：</p>
+
+<pre class="cell">
+plt.boxplot([dfB['学業'], dfA['学業']], vert=False, labels=['表1-B', '表1-A'])
+</pre>
+
+<p>p.29「図3 生活行動時間の差」の箱ひげ図：</p>
+
+<pre class="cell">
+plt.boxplot([(dfa['睡眠'] - dfb['睡眠']).dropna(),
+             (dfa['学業'] - dfb['学業']).dropna()],
+            labels=['睡眠', '学業'])
+</pre>
+
+<p>図4 表1-Aの学業の時間と睡眠の時間の散布図：</p>
+
+<pre class="cell">
 plt.plot(dfa['学業'], dfa['睡眠'], 'o')
 </pre>
 
@@ -187,6 +226,21 @@ pg.linear_regression(dfa[['学業']], dfa['睡眠'], remove_na=True)
 </pre>
 
 <p>回帰式 <span lang="en"><i>y</i> = -0.14<i>x</i> + 491.17</span> が確認できる。傾き -0.136 は、95% 信頼区間 [-0.247, -0.026] が 0 をまたがないので、5% 水準で有意である。</p>
+
+<p>残差は次のようにして求められる：</p>
+
+<pre class="cell">
+lm = pg.linear_regression(dfa[['学業']], dfa['睡眠'], remove_na=True, as_dataframe=False)
+r = lm['residuals']  
+</pre>
+
+<p>図6 睡眠の時間（推定値）と残差の変換値との関係：</p>
+
+<pre class="cell">
+import numpy as np
+
+plt.plot(lm['pred'], (r - r.mean()) / r.std(), "o")
+</pre>
 
 <p>散布図と回帰直線（95%信頼区間付き）を描くには <a href="seaborn.html">seaborn</a> のほうが便利である：</p>
 
@@ -227,7 +281,7 @@ sns.regplot(dfx, x="学業", y="睡眠")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-03-05 11:42:25 JST</time></p>
+<p>Last modified: <time>2023-07-22 16:49:47 JST</time></p>
 </footer>
 </body>
 </html>

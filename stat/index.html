@@ -22,9 +22,9 @@
 
 <p>全国学力・学習状況調査の個票の疑似データが<a href="http://www.mext.go.jp/a_menu/shotou/gakuryoku-chousa/sonota/1404609.htm">こちら</a>で公開されています。データ分析の練習に<a href="180613.html">使えそう</a>です。<a href="https://www.nstac.go.jp/SSDSE/">SSDSE（教育用標準データセット）</a>も。</p>
 
-<p>R 4.x では <code>stringsAsFactors=FALSE</code> がデフォルトになりましたが，本サイトの古い記事ではそうなっていないところがあるかもしれません。</p>
+<p>R 4.x では <code>stringsAsFactors=FALSE</code> がデフォルトになりましたが，本サイトの古い記事ではそうなっていないところがあるかもしれません（<code>read.csv()</code> などで <code>as.is=TRUE</code> は不要になります（あってもかまいませんが））。</p>
 
-<p>R 4.2 ではWindowsでもMac同様UTF-8がデフォルトになりました。もう <code>fileEncoding</code> オプションに <code>"UTF-8"</code>，<code>"UTF-8-BOM"</code> を指定する必要はなくなりそうです。</p>
+<p>R 4.2 ではWindowsでもMac同様UTF-8がデフォルトになりました。もう <code>fileEncoding</code> オプションに <code>"UTF-8"</code>，<code>"UTF-8-BOM"</code> を指定する必要はなくなりそうです。一方で、SJIS（CP932）データの場合、Windowsでも <code>fileEncoding="CP932"</code> が必要になります。</p>
 
 <p>姉妹編：<a href="../python/">Python</a></p>
 
@@ -385,7 +385,7 @@
 
 <footer>
 <p><a href="http://creativecommons.org/licenses/by/4.0/" rel="license"><img src="../img/88x31.png" alt="Creative Commons License" style="border:none; position:relative; top:3px" width="88" height="31"></a>  <a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-07-09 12:17:47 JST</time></p>
+<p>Last modified: <time>2023-07-18 11:47:40 JST</time></p>
 </footer>
 </body>
 </html>

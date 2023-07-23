@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>全国学力テスト模擬データ</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -23,7 +23,11 @@
 
 <p>昔なら，いったんCSVファイルに変換してからRで読み込むところだが，CSVファイルの文字コードによってはRで文字化けが起こったりするので，初心者向きでなかった。今は，RでExcelファイルをそのまま読み込むほうが簡単である。</p>
 
-<p>Excelファイルを読み込む操作は，Rstudioならマウスで簡単にできる。右上のペインで「Import Dataset」→「From Excel…」をクリックする（初回使用時にはライブラリのインストールが始まり，しばらく待たされる）。「Browse…」ボタンを押し，ダウンロードしたファイル 1404609_2_1.xlsx を探し，「Open」を押す。データのプレビュー画面が現れる。左下の「Import Options:」で，「Name:」のところ（データの名前）がファイル名から自動生成された「X1404609_2_1」になっている。このままでもよいが，後でわかりやすいように，ここではこれを「seito」に直し，念のためマウスで別の入力欄をクリックする（あるいは Tab キーまたは Enter キーを打つ）。プレビューが再生成されたことを確認してから，右下の「Import」を押す。</p>
+<p>Excelファイルを読み込む操作は，RStudioならマウスで簡単にできる。右上のペインで「Import Dataset」→「From Excel…」をクリックする（初回使用時にはライブラリのインストールが始まり，しばらく待たされる）。「Browse…」ボタンを押し，ダウンロードしたファイル 1404609_2_1.xlsx を探し，「Open」を押す。データのプレビュー画面が現れる。左下の「Import Options:」で，「Name:」のところ（データの名前）がファイル名から自動生成された「X1404609_2_1」になっている。このままでもよいが，後でわかりやすいように，ここではこれを「seito」に直し，念のためマウスで別の入力欄をクリックする（あるいは Tab キーまたは Enter キーを打つ）。プレビューが再生成されたことを確認してから，右下の「Import」を押す。</p>
+
+<div class="note">
+<p>もし上で「ここではこれを「seito」に直し」の部分を忘れたなら，後で <code>seito = X1404609_2_1</code> と打ち込めば，変数名が <code>seito</code> になる。</p>
+</div>
 
 <div class="note">
 <p>同じことを素のRで行うには，次のように打ち込む：</p>
@@ -113,7 +117,7 @@
 <p>数学Aの正答数分布のヒストグラムを描いてみよう（<a href="histogram.html">グラフの例：ヒストグラム</a>参照）。<code>seito</code> の8番目の変数である数学Aの正答数をベクトル（数値の列）として取り出すには <code>seito$正答数_数Ａ</code> または <code>seito[[8]]</code> とする。全角・半角を区別するので <code>seito$正答数_数A</code> ではエラーになる。また，<code>seito[,8]</code> でもいいような気がするが，<code>read_excel()</code> の出力するtibbleというデータ構造は，<code>seito[,8]</code> では1列だけのtibbleとなって，ベクトル（数値の列）を要求する場面ではエラーになる。</p>
 
 <pre>
-<code>hist(seito[[8]], breaks=0:37, right=FALSE, include.lowest=FALSE, col="gray")
+<code>hist(seito[[8]], breaks=0:37, right=FALSE)
 </code></pre>
 
 <p>もうちょっとがんばって綺麗にする：</p>
@@ -122,7 +126,7 @@
 <code>par(mar=c(2,3,1,1)+0.1)  # 下・左・上・右マージン（デフォルト: c(5,4,4,2)+0.1）
 par(mgp=c(2,0.8,0))      # 軸マージン（デフォルト: c(3,1,0)）
 par(las=1)               # 文字は水平に
-hist(seito[[8]], breaks=0:37, right=FALSE, include.lowest=FALSE, col="gray", 
+hist(seito[[8]], breaks=0:37, right=FALSE,
      main="", freq=FALSE, xlab="", ylab="", xaxt="n")
 t = c(0, 10, 20, 30, 36) # 目盛位置
 axis(1, t+0.5, t)        # 位置を0.5ずらす
@@ -284,7 +288,7 @@ mean in group 1 mean in group 2
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2018-09-26 16:27:08</time>
+Last modified: <time>2023-07-18 09:38:35 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>
