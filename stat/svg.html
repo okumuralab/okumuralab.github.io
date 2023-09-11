@@ -112,11 +112,25 @@ rsvg-convert --format=pdf --output=hoge.pdf hoge.svg
 
 <p>のようにして使います。</p>
 
+<div class="note">
+<p><a href="https://inkscape.org">Inkscape</a> を使っても変換できます：</p>
+<pre>
+/Applications/Inkscape.app/Contents/MacOS/inkscape --export-filename=dnorm-svglite.pdf dnorm-svglite.svg
+</pre>
+<p><code>pdffonts</code> の出力：</p>
+<pre>
+name                                 type              encoding         emb sub uni object ID
+------------------------------------ ----------------- ---------------- --- --- --- ---------
+CCFHWU+ArialMT                       TrueType          WinAnsi          yes yes yes     13  0
+SXQLMB+CairoFont-1-1                 CID Type 0C       Identity-H       yes yes yes     14  0
+</pre>
+</div>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-07-03 11:53:32 JST</time></p>
+<p>Last modified: <time>2023-08-23 09:44:45 JST</time></p>
 </footer>
 </body>
 </html>
