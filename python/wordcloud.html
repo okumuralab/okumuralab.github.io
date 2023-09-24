@@ -17,7 +17,7 @@
 
 <h1>ワードクラウド</h1>
 
-<p>[2023-04-27] 現時点の M1 Mac で Python 3.10 では <code>pip install wordcloud</code> でインストールできるが Python 3.11 ではエラーになる。</p>
+<h2>はじめに</h2>
 
 <p>ワードクラウド（word cloud）とは頻出語を頻度に比例する大きさで雲のように並べたものです。</p>
 
@@ -34,7 +34,9 @@ wc.to_file('wc1.png')
 
 <figure><img src="img/wc1.png" alt="WordCloudの説明のワードクラウド"></figure>
 
-<p>日本語はこのように簡単にはいきません。まずは単語に分解しなければなりません（形態素解析）。そのためのツールとして、<a href="https://taku910.github.io/mecab/">MeCab</a>（めかぶ、和布蕪）が有名ですが、インストールが難しい場合は、Python だけで実装した <a href="https://mocobeta.github.io/janome/">Janome</a>（じゃのめ、蛇の目）が便利です。ここではとりあえず MeCab を使って説明します。</p>
+<p>日本語はこのように簡単にはいきません。まずは単語に分解しなければなりません（形態素解析）。そのためのツールとして、昔から有名な<a href="https://taku910.github.io/mecab/">MeCab</a>（めかぶ、和布蕪）、Python だけで実装した <a href="https://mocobeta.github.io/janome/">Janome</a>（じゃのめ、蛇の目）、新しめの <a href="https://github.com/WorksApplications/Sudachi">Sudachi</a>（Python版 <a href="https://github.com/WorksApplications/SudachiPy">SudachiPy</a>）などがあります。</p>
+
+<h2>MeCabを使う</h2>
 
 <p>まず MeCab と辞書をインストールします。Windows では <a href="https://github.com/ikegami-yukino/mecab/releases">MeCab 64bit version</a> でうまくいきました。インストールの際に文字コードを求められますので、必ず UTF-8 を選びます。Mac では Homebrew でインストールするのが簡単です（<code>brew install mecab mecab-ipadic</code>）。</p>
 
@@ -137,6 +139,87 @@ with open('filename.txt') as f:
     text = f.read()
 </pre>
 
+<h2>Sudachiを使う</h2>
+
+<p><code>pip install sudachipy sudachidict_core</code> でインストールできます。Pythonで使うほか、ターミナルでコマンド <code>sudachipy</code> も使えます：</p>
+
+<pre>
+% echo "すもももももももものうち" | sudachipy
+すもも  名詞,普通名詞,一般,*,*,*        李
+も      助詞,係助詞,*,*,*,*     も
+もも    名詞,普通名詞,一般,*,*,*        もも
+も      助詞,係助詞,*,*,*,*     も
+もも    名詞,普通名詞,一般,*,*,*        もも
+の      助詞,格助詞,*,*,*,*     の
+うち    名詞,普通名詞,副詞可能,*,*,*    うち
+EOS
+</pre>
+
+<p>Pythonから使うには次のようにします：</p>
+
+<pre class="cell">
+from sudachipy import tokenizer
+from sudachipy import dictionary
+
+tokenizer_obj = dictionary.Dictionary().create()
+morphemes = tokenizer_obj.tokenize("すもももももももものうち")
+morphemes
+</pre>
+
+<pre>
+&lt;MorphemeList[
+  &lt;Morpheme(すもも, 0:3, (0, 77699))&gt;,
+  &lt;Morpheme(も, 3:4, (0, 156944))&gt;,
+  &lt;Morpheme(もも, 4:6, (0, 160209))&gt;,
+  &lt;Morpheme(も, 6:7, (0, 156944))&gt;,
+  &lt;Morpheme(もも, 7:9, (0, 160209))&gt;,
+  &lt;Morpheme(の, 9:10, (0, 119137))&gt;,
+  &lt;Morpheme(うち, 10:12, (0, 21763))&gt;,
+]&gt;
+</pre>
+
+<pre class="cell">
+[m.surface() for m in morphemes]
+</pre>
+
+<pre>
+['すもも', 'も', 'もも', 'も', 'もも', 'の', 'うち']
+</pre>
+
+<pre class="cell">
+" ".join([m.surface() for m in morphemes])
+</pre>
+
+<pre>
+'すもも も もも も もも の うち'
+</pre>
+
+<pre class="cell">
+[m.part_of_speech() for m in morphemes]
+</pre>
+
+<pre>
+[('名詞', '普通名詞', '一般', '*', '*', '*'),
+ ('助詞', '係助詞', '*', '*', '*', '*'),
+ ('名詞', '普通名詞', '一般', '*', '*', '*'),
+ ('助詞', '係助詞', '*', '*', '*', '*'),
+ ('名詞', '普通名詞', '一般', '*', '*', '*'),
+ ('助詞', '格助詞', '*', '*', '*', '*'),
+ ('名詞', '普通名詞', '副詞可能', '*', '*', '*')]
+</pre>
+
+<pre class="cell">
+[m.surface() for m in morphemes if m.part_of_speech()[0] == "名詞"]
+</pre>
+
+<pre>
+['すもも', 'もも', 'もも', 'うち']
+</pre>
+
+<p>あとはMeCabと同様にできます。</p>
+
+<h2>高校「情報」とワードクラウド</h2>
+
 <p>ワードクラウド（タグクラウド）については、文科省の『高等学校学習指導要領（平成30年告示）解説 情報編』p.39 に次のように書かれています。</p>
 
 <blockquote style="text-indent: 1em">
@@ -151,7 +234,7 @@ with open('filename.txt') as f:
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-04-27 08:31:31 JST</time></p>
+<p>Last modified: <time>2023-09-24 18:13:11 JST</time></p>
 </footer>
 </body>
 </html>
