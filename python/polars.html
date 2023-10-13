@@ -17,6 +17,8 @@
 
 <h1>Polars</h1>
 
+<p>[2023-10-13] <code>reverse=True</code> は <code>descending=True</code> に変更されていましたので修正（Thanks: <a href="https://twitter.com/nobucshirai/status/1712621744136372326">Nobu C. Shirai先生</a>）。</p>
+
 <h2>概要</h2>
 
 <p><a href="https://www.pola.rs">Polars</a>（ポーラーズ）はRust・Python用のデータ操作ライブラリです。Pythonではpandasを置き換えるものです。日本語の解説として<a href="https://qiita.com/_jinta/items/fac13f09e8e8a5769b79">超高速…だけじゃない！Pandasに代えてPolarsを使いたい理由</a>が参考になります。</p>
@@ -247,16 +249,16 @@ df1 = df.filter(pl.col("男女比") &lt; 0.9)
 df1.sort("男女比")
 </pre>
 
-<p>降順（大きい順）にするには <code>reverse=True</code> というオプションを付けます：</p>
+<p>降順（大きい順）にするには <code>descending=True</code> というオプションを付けます：</p>
 
 <pre class="cell">
-df.filter(pl.col("男女比") &lt; 0.9).sort("男女比", reverse=True)
+df.filter(pl.col("男女比") &lt; 0.9).sort("男女比", descending=True)
 </pre>
 
 <p>データ全体を人口の合計でソートし、大きい順に並び替えて、頭の3行を表示しましょう：</p>
 
 <pre class="cell">
-df.sort("計", reverse=True).head(3)
+df.sort("計", descending=True).head(3)
 </pre>
 
 <p>もう一つデータを読み込んでみます。こちらは各都道府県の面積です：</p>
@@ -283,7 +285,7 @@ df = df.with_columns((pl.col("計") / pl.col("面積_km2")).alias("人口密度"
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-01-26 15:46:37 JST</time></p>
+<p>Last modified: <time>2023-10-13 09:39:50 JST</time></p>
 </footer>
 </body>
 </html>
