@@ -126,8 +126,11 @@ df = pd.read_csv("test.csv", na_values=['-', '―', '－'], keep_default_na=Fals
 
 <p>数値に単位や注釈記号（<code>*</code> など）を付けてはいけないのですが、よく混入してエラーになることがあります（具体例は<a href="an_wld.html">気象庁の「世界の年平均気温偏差」データ</a>参照）。
 
-<h2>Excel で CSV ファイルを扱う場合の注意</h2>
+<h2 id="Excel">Excel で CSV ファイルを扱う場合の注意</h2>
 
+<p>[2023-10-13追記] 以下で述べたExcelの欠点のうち、先頭の0が消える問題、日付に変換される問題などは、2023年9月28日（現地時間）のMicrosoft 365バージョン2309、2023年10月10日（現地時間）のExcel for Mac v16.78で解除できるようになりました。詳しくは<a href="https://forest.watch.impress.co.jp/docs/news/1538341.html">先頭のゼロを勝手に消すな ～「Excel」のお節介な自動データ変換を抑制する機能が一般提供開始</a>、<a href="https://applech2.com/archives/20231012-excel-for-mac-automatic-data-conversions.html">Microsoft、先頭の0や15有効桁数、Eを含む科学表記などの数値データの自動データ変換を無効にするオプションを追加した「Excel for Mac 16.78」をリリース。</a>をご覧ください。</p>
+
+<div class="note">
 <p>CSV ファイルは、Excel でデータを作成し、保存時に「CSV UTF-8 (コンマ区切り)」を指定するのが簡単です。この場合、文字コードは BOM 付きの UTF-8 になります。「CSV (コンマ区切り)」にすれば文字コードは CP932（拡張 Shift JIS）になります。</p>
 
 <p>ただし、Excel は <code>#</code> で始まる文字列を入力しても、コメントと認識せず、通常の文字列フィールドと同じ扱いになりますので、データ中に <code>#</code> が含まれる場合は例えば <code>"#abc"</code> のようにダブルクォートで囲んで入力するしかありませんが、その場合 CSV は <code>"""#abc"""</code> のようになります。</p>
@@ -141,6 +144,7 @@ df = pd.read_csv("test.csv", na_values=['-', '―', '－'], keep_default_na=Fals
 <p>テキストエディタには CSV 閲覧・編集用のモードがあるものがあります。特に Windows 用のテキストエディタ <a href="https://jp.emeditor.com">EmEditor Professional</a> の CSV 編集機能は定評があります（<a href="https://forest.watch.impress.co.jp/docs/shseri/emedimaster/1336706.html">最強のCSVエディター「EmEditor」はExcelの代わりにも使える ～テキスト編集上級者への道</a> 参照）。VS Code にも Edit csv という拡張機能があります。Emacs にも csv-mode があります。</p>
 
 <p>CSV ファイルの閲覧・編集に特化した無償アプリもいくつかあるようです（例：<a href="https://www.plus-one.tech/csv-plus/">CSV+</a>）。</p>
+</div>
 
 <h2>Web で提供する CSV ファイル</h2>
 
@@ -193,7 +197,7 @@ AddType text/csv;charset=Shift_JIS csv
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-10 09:15:29 JST</time>
+Last modified: <time>2023-10-13 20:08:49 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
