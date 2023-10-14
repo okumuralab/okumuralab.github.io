@@ -76,10 +76,6 @@ ipython --matplotlib --colors=NoColor
 
 <p>とします。</p>
 
-<div class="note">
-<p>Emacs の <code>M-x shell</code> 内で使うなら、おそらく <code>--simple-prompt</code> オプションが必要です。</p>
-</div>
-
 <p>ヘルプを見るには、例えば <code>?print</code> のように打ち込みます（このヘルプの終了は <code>q</code>）。</p>
 
 <p><code>quit</code> または <code>exit</code> と打ち込めば終了します。</p>
@@ -239,8 +235,12 @@ jupyter lab
 
 <pre>
 (setq python-shell-interpreter "ipython"
-      python-shell-interpreter-args "--simple-prompt --matplotlib --no-automagic -i")
+      python-shell-interpreter-args "--matplotlib --no-automagic -i")
 </pre>
+
+<div class="note">
+<p>今までは <code>--simple-prompt</code> オプションも付けていましたが、macOS Sonoma でバックエンド <code>MacOSX</code> で Matplotlib の表示ができなくなったので、外しました。</p>
+</div>
 
 <p>拡張子 <code>py</code> のファイルを開くと、自動的に Python モードになります。まずは C-c C-p (run-python) で IPython プロセスを起動します（拡張子 <code>py</code> のファイルを開かなくても直接 M-x run-python でも起動できます）。バッファ全体を実行するには C-c C-c (python-shell-send-buffer)、選択したリージョンを実行するには C-c C-r (python-shell-send-region) とします。詳しくは、M-x help の次に m と打つと、モードのヘルプが現れます。</p>
 
@@ -252,7 +252,7 @@ jupyter lab
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-10-10 17:23:09 JST</time></p>
+<p>Last modified: <time>2023-10-14 08:39:53 JST</time></p>
 </footer>
 </body>
 </html>
