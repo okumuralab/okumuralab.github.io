@@ -113,7 +113,7 @@ probability of success
 <p>行列を R に送る例です：</p>
 
 <pre class="cell">
-v = robjects.FloatVector([3, 1, 2, 4])
+v = robjects.IntVector([3, 1, 2, 4])  # FloatVectorでも可
 m = robjects.r["matrix"](v, nrow=2)
 robjects.globalenv["m"] = m
 res = robjects.r("fisher.test(m)")
@@ -135,13 +135,57 @@ odds ratio
   4.918388 
 </pre>
 
+<p>Python と R で結果を比較してみます：</p>
+
+<pre class="cell">
+import numpy as np
+from scipy import stats
+from rpy2 import robjects
+
+rng = np.random.default_rng()
+fisher_test = robjects.r['fisher.test']
+
+x = 0
+for i in range(10000):
+    a = rng.integers(0, 30, 4)
+    m = a.reshape(2, 2)
+    p_scipy = stats.fisher_exact(m).pvalue  # scipyによるp値
+    m_r = robjects.r.matrix(robjects.IntVector(a), nrow=2)
+    res = fisher_test(m_r)
+    p_r = res[0][0]  # Rによるp値
+    e = abs(p_scipy - p_r)
+    if e > x:
+        print(e, p_scipy, p_r, a)
+        x = e
+</pre>
+
+<p>同様なことを<a href="../stat/barnard-boschloo.html">Barnard検定</a>でもやってみます。Rの <code>exact.test()</code> に <code>to.plot=FALSE</code> というオプションも与えたいのですが、Pythonからは <code>to_plot=False</code> のように指定します：</p>
+
+<pre class="cell">
+robjects.r("library(Exact)")
+exact_test = robjects.r['exact.test']
+
+def compare():
+    a = rng.integers(1, 30, 4)
+    m = a.reshape(2, 2)
+    p_scipy = stats.barnard_exact(m).pvalue
+    m_r = robjects.r.matrix(robjects.IntVector(a), nrow=2)
+    res = exact_test(m_r, to_plot=False)
+    p_r = res[2][0]
+    return p_scipy - p_r
+
+r = [compare() for _ in range(1000)]
+</pre>
+
+<p><code>r</code> の分布を調べてみてください（<a href="https://twitter.com/h_okumura/status/1674698802543095808">このスレッド</a>、<a href="https://github.com/scipy/scipy/issues/18798">このissue</a>参照）。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-07-18 20:02:24 JST</time>
+Last modified: <time>2023-10-30 12:57:20 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

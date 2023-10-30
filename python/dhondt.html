@@ -94,9 +94,11 @@ if len(i) > 1:
 
 <p>この問題が，大学入試センター共通テストで2025年から出題される予定の「情報I」の<a href="https://www.dnc.ac.jp/kyotsu/shiken_jouhou/r7ikou.html">サンプル問題</a>（2021-03-24）に出題された：</p>
 
-<figure><img src="img/dhondt-dncl.png" alt="大学入試センター共通テスト「情報I」サンプル問題のDNCL"></figure>
+<figure><img src="img/dhondt-dncl.png" alt="大学入試センター共通テスト「情報I」サンプル問題"></figure>
 
-<p>こういう日本語の擬似言語を大学入試センターではDNCL（Daigaku Nyushi Center Language）と呼んでいる。これをPythonに直すと次のようになる。配列名はDNCLでは大文字で始める約束のようだが，Pythonでは大文字で始めるとクラス名のように見えるので，ここでは小文字にした。擬似言語なので，上の <code>(06)</code>，<code>(07)</code> のような書き方でもエラーにならないが，Pythonはあらかじめ配列を確保しておかなければならない（Pythonがよくわかっていればこの部分は <code>hikaku = tokuhyo.copy()</code> と書くであろう）。</p>
+<p>こういう日本語の擬似言語を大学入試センターではDNCL（Daigaku Nyushi Center Language）と呼んでいたが、<a href="https://www.dnc.ac.jp/kyotsu/shiken_jouhou/r7/r7_kentoujoukyou/r7mondai.html">令和７年度試験の問題作成の方向性、試作問題等</a>の「概要「情報」」では「共通テスト用プログラム表記」という呼称に統一されたようである。</p>
+
+<p>これをPythonに直すと次のようになる。配列名は「共通テスト用プログラム表記」では大文字で始める約束のようだが，Pythonでは大文字で始めるとクラス名のように見えるので，ここでは小文字にした。擬似言語なので，上の <code>(06)</code>，<code>(07)</code> のような書き方でもエラーにならないが，Pythonはあらかじめ配列を確保しておかなければならない（Pythonがよくわかっていればこの部分は <code>hikaku = tokuhyo.copy()</code> と書くであろう）。</p>
 
 <pre class="cell">
 tomei = ["A党", "B党", "C党", "D党"]
@@ -148,7 +150,7 @@ for k in range(4):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-12-03 21:17:02</time>
+Last modified: <time>2023-10-29 14:09:10 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
