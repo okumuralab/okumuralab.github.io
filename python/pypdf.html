@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/pypdf.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pypdfでPDFを読む</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>pypdfでPDFを読む</h1>
+
+<p><a href="https://pypi.org/project/pypdf/">pypdf</a> は Python で書かれたPDFライブラリである。<code>pip install pypdf</code> で入る。pypdf を使ったコマンドラインツール <a href="https://github.com/py-pdf/pdfly">pdfly</a> もある。こちらは <code>pip install pdfly</code> で入る。</p>
+
+<p>pypdf でローカルのPDFファイルを読んでテキストを標準出力に出力する：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import sys
+from pypdf import PdfReader
+
+for arg in sys.argv[1:]:
+    reader = PdfReader(arg)
+    number_of_pages = len(reader.pages)
+    for i in range(number_of_pages):
+        page = reader.pages[i]
+        text = page.extract_text()
+        print(text)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2023-11-03 20:19:26 JST</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>
