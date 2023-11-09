@@ -19,6 +19,8 @@
 
 <p>このページは<a href="openai_api.html">OpenAIのAPIを使う</a>を書き直したものです。</p>
 
+<p>[2023-11-07] <a href="https://openai.com/blog/new-models-and-developer-products-announced-at-devday">DevDayで新しいモデル等が発表</a>されました: <code>"gpt-4-1106-preview"</code>、<code>"gpt-4-vision-preview"</code>、<code>"gpt-3.5-turbo-1106"</code></p>
+
 <p>[2023-06-14] 新しいモデル <code>"gpt-3.5-turbo-0613"</code>、<code>"gpt-3.5-turbo-16k-0613"</code>、<code>"gpt-4-0613"</code>、<code>"gpt-4-32k-0613"</code> が来ました。価格も若干改訂され、<a href="https://platform.openai.com/docs/guides/gpt/function-calling">function calling</a>（関数呼び出し）の機能が付きました。<a href="https://openai.com/blog/function-calling-and-other-api-updates">Function calling and other API updates</a> 参照。GPT-3.5の16k版はすぐに使えましたが、GPT-4の32k版はまだ私には降ってきていません。</p>
   
 <p>[2023-03-18] GPT-4のAPIが私のところにも来ました。以下のコードで <code>"gpt-3.5-turbo"</code> を <code>"gpt-4"</code>（8192トークン版）あるいは <code>"gpt-4-32k"</code>（32768トークン版）にするだけで使えます。値段は1桁以上高くなって、入力は8k版が $0.03/1k、32k版が $0.06/1k、出力はその倍の値段です。</p>
@@ -41,26 +43,19 @@
 export OPENAI_API_KEY="sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 </pre>
 
-<p>と打ち込めば環境変数が設定されます。<code>.bashrc</code> か <code>.zshenv</code> 等に書き込んでおけばシェル起動時に設定されます。APIキーを書き込んだファイルは他人に見られないようにパーミッションを正しく設定しておきましょう。</p>
+<p>と打ち込めば環境変数が設定されます。<code>.bashrc</code> か <code>.zshenv</code> 等に書き込んでおけばシェル起動時に設定されます。APIキーを書き込んだファイルは他人に見られないようにパーミッションを正しく設定しておきましょう。環境変数が使えないときは <a href="https://pypi.org/project/python-dotenv/">python-dotenv</a> が便利そうです。</p>
 
-<p>Google Colab などの環境では上の方法がうまくいきませんので、プログラムの先頭部分に次のように直接入れればいいでしょう：</p>
+<p>使い方の基本は次の通りです（2023-11-07に大きく変わりました）：</p>
 
-<pre>
-import openai
-    
-openai.api_key = "sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-</pre>
+<pre class="cell">
+from openai import OpenAI
 
+client = OpenAI()
 
-<p>使い方の基本は次の通りです：</p>
+# もし環境変数が使えないなら次のようにする：
+# client = OpenAI(api_key="sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 
-<pre>
-import openai
-
-# もし環境変数が使えないなら次のように書き込む：
-# openai.api_key = "sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
-res = openai.ChatCompletion.create(
+res = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=[
         {"role": "system", "content": "あなたは賢いAIです。"},  # 役割設定（省略可）
@@ -69,13 +64,13 @@ res = openai.ChatCompletion.create(
     temperature=1  # 温度（0-2, デフォルト1）
 )
 
-print(res["choices"][0]["message"]["content"])  # 答えが返る
+print(res.choices[0].message.content)  # 答えが返る
 </pre>
 
 <p>ChatGPTのAPIは、質問・応答の履歴を記憶しません。以前の質問・応答を前提としたい場合は、次のように履歴を与えた上で質問をします：</p>
 
 <pre>
-res = openai.ChatCompletion.create(
+res = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=[
         {"role": "system", "content": "あなたは賢いAIです。"},  # 役割設定（省略可）
@@ -86,21 +81,25 @@ res = openai.ChatCompletion.create(
     temperature=1
 )
 
-print(res["choices"][0]["message"]["content"])  # 答えが返る
+print(res.choices[0].message.content)  # 答えが返る
 </pre>
 
-<p>履歴と質問、答えを合わせて、4096トークンが上限です。トークンはほぼ単語に相当するものです（後述）。トークン数を表示するには、次のようにします：</p>
+<p>履歴と質問、答えを合わせたトークン数には上限（モデルによって違いますが、例えば4096トークン）があります。トークンはほぼ単語に相当するものです（後述）。トークン数を表示するには、次のようにします：</p>
 
-<pre>
-print(res["usage"]["prompt_tokens"],      # （履歴と）質問のトークン数
-      res["usage"]["completion_tokens"],  # 答えのトークン数
-      res["usage"]["total_tokens"])       # 合計
+<pre class="cell">
+print(res.usage)
 </pre>
 
-<p>合計が4096を超えることはありません。延々と会話を続けるには、不要な履歴を削除する必要があります。削除も含めて、簡単な会話を続けるには、例えば次のようにすればいいでしょう：</p>
+<pre>
+CompletionUsage(completion_tokens=8, prompt_tokens=27, total_tokens=35)
+</pre>
+
+<p>トークン上限を超えて会話を続けるには、不要な履歴を削除する必要があります。削除も含めて、簡単な会話を続けるには、例えば次のようにすればいいでしょう：</p>
 
 <pre>
-import openai
+from openai import OpenAI
+
+client = OpenAI()
 
 msg = [{"role": "system", "content": "あなたは賢いAIです。"}]
 while True:
@@ -108,11 +107,11 @@ while True:
     if prompt in ["quit", "exit"]:
         break
     msg.append({"role": "user", "content": prompt})
-    res = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=msg)
-    ans = res["choices"][0]["message"]["content"].strip()
+    res = client.chat.completions.create(model="gpt-3.5-turbo", messages=msg)
+    ans = res.choices[0].message.content.strip()
     print(ans)
     msg.append({"role": "assistant", "content": ans})
-    if res["usage"]["total_tokens"] > 3000:
+    if res.usage.total_tokens > 3000:
         msg.pop(1)
         msg.pop(1)
 </pre>
@@ -121,37 +120,40 @@ while True:
 
 <p>Web 版 ChatGPT のように文字単位（単語単位）で出力するようにしてみましょう。</p>
 
-<pre>
-import openai
+<pre class="cell">
+from openai import OpenAI
 
 class Chatbot:
-    def __init__(self, model="gpt-4", messages=None, temperature=0, stream=True):
-        self.model = model  # "gpt-4" or "gpt-4-32k" or "gpt-3.5-turbo"
+    def __init__(self, model="gpt-3.5-turbo", messages=None, temperature=0, stream=True):
+        self.client = OpenAI()
+        self.model = model
         self.messages = messages or []
         self.temperature = temperature
         self.stream = stream
 
-    def chat(self, prompt, temperature=None, stream=None):
+    def chat(self, prompt, temperature=None, stream=None, verbose=0, **kwargs):
         prompt = prompt.strip()
         # print(len(prompt), "letters,", len(prompt.split()), "words")
         self.messages.append({"role": "user", "content": prompt})
         stream = stream or self.stream
-        res = openai.ChatCompletion.create(model=self.model,
+        res = self.client.chat.completions.create(model=self.model,
                                            messages=self.messages,
                                            temperature=temperature or self.temperature,
-                                           stream=stream)
+                                           stream=stream, **kwargs)
         if stream:
-            ans = []
+            ans = ""
             for chunk in res:
-                content = chunk["choices"][0]["delta"].get("content", "")
+                content = chunk.choices[0].delta.content or ""
                 print(content, end="")
-                ans.append(content)
-            ans = "".join(ans).strip()
+                ans += content
         else:
-            ans = res["choices"][0]["message"]["content"].strip()
+            ans = res.choices[0].message.content.strip()
             print(ans)
-            u = res["usage"]
-            print(u["prompt_tokens"], u["completion_tokens"], u["total_tokens"])
+            if verbose:
+                u = res.usage
+                print(u.prompt_tokens, u.completion_tokens, u.total_tokens)
+        if verbose > 1:
+            print(res)
         self.messages.append({"role": "assistant", "content": ans})
 
     def get_messages(self):
@@ -160,14 +162,14 @@ class Chatbot:
 
 <p>これを使うには例えば</p>
 
-<pre>
-chatbot = Chatbot()
+<pre class="cell">
+chatbot = Chatbot(model="gpt-4-1106-preview")
 chatbot.chat("こんにちは！")
 </pre>
 
 <p>のようにします。会話を続けるには</p>
 
-<pre>
+<pre class="cell">
 chatbot.chat("""
 ○○について説明してください。
 """)
@@ -180,10 +182,6 @@ chatbot = Chatbot(messages=chatbot.get_messages()[2:])
 </pre>
 
 <p>のようにして新しいチャットのインスタンスを作ってください。</p>
-
-<p>IPython または下のような Jupyter Notebook/Lab でお試しください。</p>
-
-<figure><img src="img/230414a.png" alt="GPT-4 session on Jupyter Lab"></figure>
 
 <h2>応用：長いページの要約</h2>
 
@@ -242,7 +240,7 @@ print()
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-14 16:02:33 JST</time></p>
+<p>Last modified: <time>2023-11-09 14:02:40 JST</time></p>
 </footer>
 </body>
 </html>
