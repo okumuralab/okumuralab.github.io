@@ -25,13 +25,15 @@
   
 <p>[2023-03-18] GPT-4のAPIが私のところにも来ました。以下のコードで <code>"gpt-3.5-turbo"</code> を <code>"gpt-4"</code>（8192トークン版）あるいは <code>"gpt-4-32k"</code>（32768トークン版）にするだけで使えます。値段は1桁以上高くなって、入力は8k版が $0.03/1k、32k版が $0.06/1k、出力はその倍の値段です。</p>
 
-<h2>はじめに</h2>
+<p>[2023-03-02] [米国時間2023-03-01] <a href="https://openai.com">OpenAI</a> の <a href="https://openai.com/blog/chatgpt/">ChatGPT</a> の <a href="https://platform.openai.com">API</a> が公開されました（<a href="https://openai.com/blog/introducing-chatgpt-and-whisper-apis">Introducing ChatGPT and Whisper APIs</a>）。費用は従来の text-davinci-003 の1/10の0.0002ドル/1000トークンと、非常にお値打ちです。</p>
 
-<p>2023年3月2日（米国時間では1日）、<a href="https://openai.com">OpenAI</a> の <a href="https://openai.com/blog/chatgpt/">ChatGPT</a> の <a href="https://platform.openai.com">API</a> が公開されました（<a href="https://openai.com/blog/introducing-chatgpt-and-whisper-apis">Introducing ChatGPT and Whisper APIs</a>）。費用は従来の text-davinci-003 の1/10の0.0002ドル/1000トークンと、非常にお値打ちです。</p>
+<h2>はじめに</h2>
 
 <p>従来のAPIを使っていた人は何もせずに使えますが、そうでない場合は、まず<a href="https://platform.openai.com/signup/">こちら</a>で登録してAPIキーを発行してもらわなければなりません。</p>
 
-<p>APIの概要はOpenAIの <a href="https://platform.openai.com/docs/guides/chat/introduction">Introduction</a> および <a href="https://platform.openai.com/docs/api-reference/chat">Chat</a> をご覧ください。規約については <a href="https://platform.openai.com/docs/data-usage-policies">API data usage policies</a> をご覧ください。APIで送られたデータは学習用に使われることはありません。不正使用の監視のために30日間保持され、特に問題なければ消去されるようです。</p>
+<p>APIの概要はOpenAIの <a href="https://platform.openai.com">OpenAI developer platform</a> からドキュメンテーション、APIレファレンスなどをご覧ください。APIで送られたデータは学習用に使われることはありません。不正使用の監視のために30日間保持され、特に問題なければ消去されるようです。</p>
+
+<p>APIの<a href="https://openai.com/pricing">料金</a>は、2023-11-06の新モデル <code>gpt-4-1106-preview</code> については、入力1kトークンあたり $0.01、出力1kトークンあたり $0.03 です。初めは一番安い <code>gpt-3.5-turbo-1106</code>（入力1kトークンあたり $0.001、出力1kトークンあたり $0.002）で練習するのがいいでしょう。</p>
 
 <h2>使い方の基本</h2>
 
@@ -240,7 +242,7 @@ print()
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-11-09 14:02:40 JST</time></p>
+<p>Last modified: <time>2023-11-09 20:33:47 JST</time></p>
 </footer>
 </body>
 </html>
