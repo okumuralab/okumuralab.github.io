@@ -28,33 +28,33 @@
 <p>読む方法は，まずzipを展開してから</p>
 
 <pre>
-<code>import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET
 
 tree = ET.parse("apple_health_export/export.xml")
-</code></pre>
+</pre>
 
 <p>としてもよいが，展開せずに済ませるには次のようにする：</p>
 
 <pre>
-<code>#! /usr/bin/env python3
+#! /usr/bin/env python3
 
 from zipfile import ZipFile
 import xml.etree.ElementTree as ET
 
-with ZipFile('書き出したデータ.zip') as zipdata, \
-     zipdata.open('apple_health_export/export.xml') as f:
-    tree = ET.parse(f)
+with ZipFile('書き出したデータ.zip') as zipdata:
+    with zipdata.open('apple_health_export/export.xml') as f:
+        tree = ET.parse(f)
 root = tree.getroot()
 for x in root.findall('Record'):
     if x.get('type') == 'HKQuantityTypeIdentifierHeartRate':
         y = x.find('MetadataEntry')
         print(x.get('startDate')[:19], x.get('value'), y.get('value'), sep=',')
-</code></pre>
+</pre>
 
 <p>標準出力に日時・心拍数・そのときの運動状態（0，1，2）のCSVが出力されるので，適当にリダイレクトしてファイルに収める。あとは<a href="fitbit.html">Fitbit</a>と同様にグラフを描けばよい。CSVからグラフを描く簡単なプログラムを挙げておく：</p>
 
 <pre>
-<code>import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import seaborn as sns
 import pandas as pd
@@ -75,7 +75,7 @@ ax.xaxis.set_major_locator(locator)
 ax.xaxis.set_major_formatter(formatter)
 plt.xlim(min(df.index), max(df.index))
 plt.ylim(50, 170)
-</code></pre>
+</pre>
 
 <figure><img src="img/hr210128.png" alt="Heart Rate"></figure>
 
@@ -84,8 +84,8 @@ plt.ylim(50, 170)
 <p>もしプログラム上で日時を制限したいなら，例えば次のようにすればよい：</p>
 
 <pre>
-<code>df = df[df.index &gt;= pd.Timestamp("2021-01-01 00:00:00")]
-</code></pre>
+df = df[df.index &gt;= pd.Timestamp("2021-01-01 00:00:00")]
+</pre>
 
 <p>ほかにも，例えば <code>HKQuantityTypeIdentifierHeartRateVariabilitySDNN</code> というタイプには心拍変動がミリ秒単位で入る。これらHKで始まる長い名前は<a href="https://developer.apple.com/documentation/healthkit">HealthKit</a>関連のものである。</p>
 
@@ -94,11 +94,11 @@ plt.ylim(50, 170)
 <p>上と同様にして睡眠開始時刻・終了時刻が取得できる：</p>
 
 <pre>
-<code>for x in root.findall('Record'):
+for x in root.findall('Record'):
     if (x.get('type') == 'HKCategoryTypeIdentifierSleepAnalysis' and 
         x.get('value') == 'HKCategoryValueSleepAnalysisAsleep'):
         print(x.get('startDate')[:19], x.get('endDate')[:19], sep=',')
-</code></pre>
+</pre>
 
 <p>こちらは夜間はApple Watchをつけていないことが多いので十分なデータが取れていない。</p>
 
@@ -108,7 +108,7 @@ plt.ylim(50, 170)
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-05-29 14:08:55</time>
+Last modified: <time>2023-11-28 15:49:12 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

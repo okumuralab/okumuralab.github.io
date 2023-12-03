@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/johobooks.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>情報科全教科書用語</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>情報科全教科書用語</h1>
+
+<p><a href="https://researchmap.jp/n-akazawa/works/43305921">情報科全教科書用語</a>というExcelファイルが、電通大の先生方によって公開されている。これは、高校「情報」の教科書の索引に載っている全用語と、その用語が載っている教科書を、表にしたものである。同義語は一つにまとめている。たいへんな努力をして紙の教科書からデータ化されたとお聞きしている。</p>
+
+<p>このデータをPythonで読んで、いろいろ調べてみよう。</p>
+
+<pre class="cell">
+import numpy as np
+import pandas as pd
+import seaborn as sns
+
+df = pd.read_excel("情報科全教科書用語.xlsx")
+joho1 = df['情報Ⅰ'].dropna().values
+
+books = ['東11', '東12', '実11', '実12', '実13', '実14',
+         '開11', '数11', '数12', '日11', '日12', '第11']
+
+data = np.zeros((len(books), len(joho1)))
+for i, b in enumerate(books):
+    for j, x in enumerate(joho1):
+        data[i, j] = b in x
+
+sns.histplot(np.sum(data, 0), discrete=True, shrink=0.8)
+</pre>
+
+<figure><img src="img/231203a.svg" alt="教科書の用語の度数分布"></figure>
+
+<p>上の図は1〜12通りの教科書に載っている用語の数を表す。大部分の用語は1〜2冊の教科書にしか載っていないことがわかる。全部の教科書に載っている用語はごくわずかである。</p>
+
+<p>教科書どうしの類似度を表すJaccard係数（|A∩B|/|A∪B|）の行列を求めよう。</p>
+
+<pre class="cell">
+def jaccard(i, j):
+    return np.sum(np.all(data[(i,j),:], 0)) / np.sum(np.any(data[(i,j),:], 0))
+
+for i, b in enumerate(books):
+    print(b, end="")
+    for j, _ in enumerate(books):
+        print(f" {jaccard(i,j):.3f}", end="")
+    print()
+</pre>
+
+<pre>
+東11 1.000 0.479 0.201 0.197 0.230 0.273 0.275 0.238 0.292 0.283 0.348 0.328
+東12 0.479 1.000 0.207 0.205 0.248 0.230 0.204 0.226 0.259 0.259 0.261 0.285
+実11 0.201 0.207 1.000 0.957 0.317 0.239 0.158 0.167 0.195 0.239 0.212 0.225
+実12 0.197 0.205 0.957 1.000 0.315 0.236 0.157 0.170 0.196 0.236 0.207 0.220
+実13 0.230 0.248 0.317 0.315 1.000 0.284 0.164 0.196 0.225 0.242 0.213 0.265
+実14 0.273 0.230 0.239 0.236 0.284 1.000 0.224 0.222 0.263 0.261 0.242 0.247
+開11 0.275 0.204 0.158 0.157 0.164 0.224 1.000 0.201 0.235 0.205 0.282 0.210
+数11 0.238 0.226 0.167 0.170 0.196 0.222 0.201 1.000 0.516 0.217 0.261 0.231
+数12 0.292 0.259 0.195 0.196 0.225 0.263 0.235 0.516 1.000 0.246 0.271 0.266
+日11 0.283 0.259 0.239 0.236 0.242 0.261 0.205 0.217 0.246 1.000 0.285 0.278
+日12 0.348 0.261 0.212 0.207 0.213 0.242 0.282 0.261 0.271 0.285 1.000 0.308
+第11 0.328 0.285 0.225 0.220 0.265 0.247 0.210 0.231 0.266 0.278 0.308 1.000
+</pre>
+
+<p>大部分の係数が0.3以下で、共通の用語は少ないことがわかる。一つだけ0.957という大きな値があるが、これは実教出版のPython版教科書とJavaScript版教科書で、内容はほぼ共通である。</p>
+
+<p>主成分分析（PCA）をしてみよう。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+
+x = PCA(n_components=2).fit_transform(data)
+sns.scatterplot(x=x[:,0], y=x[:,1], alpha=0)
+for i, b in enumerate(books):
+    plt.text(x[i,0], x[i,1], b, ha='center', va='center')
+plt.axis("scaled")
+</pre>
+
+<figure><img src="img/231203b.svg" alt="教科書の主成分分析"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2023-12-03 17:58:22 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

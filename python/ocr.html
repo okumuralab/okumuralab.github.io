@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/ocr.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PythonでOCR</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PythonでOCR</h1>
+
+<p>昔から <a href="https://github.com/tesseract-ocr/tesseract">tesseract</a> というオープンソースのOCRエンジンが有名です。Pythonからは <a href="https://github.com/madmaze/pytesseract">pytesseract</a> で使えます。ここではより新しい EasyOCR と、Mac限定ですがmacOSのOCRエンジンを使う方法を解説します。</p>
+
+<h2>EasyOCR</h2>
+
+<p><a href="https://github.com/JaidedAI/EasyOCR">EasyOCR</a> はたいへん優れたOCRエンジンです。Apple Silicon もサポートされています。</p>
+
+<p><code>pip install easyocr</code> でインストールできます。</p>
+
+<pre class="cell">
+import easyocr
+
+reader = easyocr.Reader(['en']) # en, ja, ...
+result = reader.readtext('filename.png', detail=0)
+
+print(" ".join(result))
+</pre>
+
+<p>初回実行時にモデル（パラメータのファイル）がダウンロードされます：</p>
+
+<blockquote>
+<p>Downloading detection model, please wait. This may take several minutes depending upon your network connection.</p>
+<p>Downloading recognition model, please wait. This may take several minutes depending upon your network connection.</p>
+</blockquote>
+
+<p>モデルはデフォルトでは <code>~/.EasyOCR/</code> の下に入りますが、環境変数 <code>EASYOCR_MODULE_PATH</code> を設定しておけばそちらに入ります。</p>
+
+<h2>MacのOCR機能を使う</h2>
+
+<p>Macはたいへん優れたOCR機能を持っています。画像ファイルをマウスでテキスト範囲指定してコピーできます。この機能をコマンドラインで使う方法が <a href="https://doratex.hatenablog.jp/entry/20230629/1687977178">macOS のデフォルト状態でコマンドラインからOCR処理を行う</a> という記事で解説されています。</p>
+
+<p>MacのOCR機能をPythonで使うための <a href="https://github.com/straussmaximilian/ocrmac">ocrmac</a> というパッケージがあります。<code>pip install ocrmac</code> でインストールできます。次のようにして使います。</p>
+
+<pre class="cell">
+from ocrmac import ocrmac
+
+annotations = ocrmac.OCR('filename.png', language_preference=['en']).recognize()
+print(" ".join([a[0] for a in annotations]))
+</pre>
+
+<p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2023-12-03 17:11:01 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
