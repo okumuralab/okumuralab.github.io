@@ -20,7 +20,7 @@
 <p>写真をたくさんいただいたが，JPEGファイル内に記録されている日付が間違っている！ 一括置換したいが，バイナリファイルである。どうするか。日付はファイルの冒頭近くに3箇所書き込まれているので，安全のため3箇所だけ置換する。読み書きはバイナリモードで行う。</p>
 
 <pre>
-<code>#! /usr/bin/env python3
+#! /usr/bin/env python3
 
 import sys
 import re
@@ -31,7 +31,31 @@ for arg in sys.argv[1:]:
     newfile = re.sub(b'2021:11:14 ', b'2019:11:15 ', file, count=3)
     with open('new/' + arg, 'wb') as f:
         f.write(newfile)
-</code></pre>
+</pre>
+
+<p>もう一つの例。壊れたWebMファイルを修復したい。WebMのシグネチャ <code>b"\x1a\x45\xdf\xa3"</code> より前を削ればよい。</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import sys
+
+if len(sys.argv) != 3:
+    print(f"Usage: {sys.argv[0]} infile outfile")
+    exit()
+
+with open(sys.argv[1], "rb") as f:
+    data = f.read()
+
+offset = data.find(b"\x1a\x45\xdf\xa3") # webm signature
+print("Offset:", offset)
+if offset < 0:
+    print("Not a webm file")
+    exit()
+
+with open(sys.argv[2], "wb") as f:
+    f.write(data[offset:])
+</pre>
 
 <hr>
 
@@ -39,7 +63,7 @@ for arg in sys.argv[1:]:
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-11-26 21:20:32</time>
+Last modified: <time>2023-12-07 16:19:29 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

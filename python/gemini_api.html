@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/gemini_api.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gemini APIを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Gemini APIを使う</h1>
+
+<p><a href="https://ai.google.dev/tutorials/python_quickstart">Gemini API: Quickstart with Python</a>に従って、Pythonパッケージを</p>
+
+<pre>
+pip install google-generativeai
+</pre>
+
+<p>でインストールすれば、</p>
+
+<pre class="cell">
+import google.generativeai as genai
+</pre>
+
+<p>で使えるようになる。</p>
+
+<p>Google AI Studioの<a href="https://makersuite.google.com/app/apikey">API keys</a>で「Create API key in new project」を選んでAPIキーを発行してもらう。キーは</p>
+
+<pre>
+export GOOGLE_API_KEY="..."
+</pre>
+
+<p>のようにして環境変数としておくと勝手に使ってもらえるが、うまくいかなければ</p>
+
+<pre class="cell">
+genai.configure(api_key="...")
+</pre>
+
+<p>で指定する。</p>
+
+<pre class="cell">
+list(genai.list_models())
+</pre>
+
+<p>と打ち込めば、使えるモデルが一覧できる。例：</p>
+
+<pre>
+[Model(name='models/chat-bison-001',
+       base_model_id='',
+       version='001',
+       display_name='PaLM 2 Chat (Legacy)',
+       description='A legacy text-only model optimized for chat conversations',
+       input_token_limit=4096,
+       output_token_limit=1024,
+       supported_generation_methods=['generateMessage', 'countMessageTokens'],
+       temperature=0.25,
+       top_p=0.95,
+       top_k=40),
+ Model(name='models/text-bison-001',
+       base_model_id='',
+       version='001',
+       display_name='PaLM 2 (Legacy)',
+       description='A legacy model that understands text and generates text as an output',
+       input_token_limit=8196,
+       output_token_limit=1024,
+       supported_generation_methods=['generateText', 'countTextTokens', 'createTunedTextModel'],
+       temperature=0.7,
+       top_p=0.95,
+       top_k=40),
+ Model(name='models/embedding-gecko-001',
+       base_model_id='',
+       version='001',
+       display_name='Embedding Gecko',
+       description='Obtain a distributed representation of a text.',
+       input_token_limit=1024,
+       output_token_limit=1,
+       supported_generation_methods=['embedText', 'countTextTokens'],
+       temperature=None,
+       top_p=None,
+       top_k=None),
+ Model(name='models/gemini-pro',
+       base_model_id='',
+       version='001',
+       display_name='Gemini Pro',
+       description='The best model for scaling across a wide range of tasks',
+       input_token_limit=30720,
+       output_token_limit=2048,
+       supported_generation_methods=['generateContent', 'countTokens'],
+       temperature=0.9,
+       top_p=1.0,
+       top_k=1),
+ Model(name='models/gemini-pro-vision',
+       base_model_id='',
+       version='001',
+       display_name='Gemini Pro Vision',
+       description='The best image understanding model to handle a broad range of applications',
+       input_token_limit=12288,
+       output_token_limit=4096,
+       supported_generation_methods=['generateContent', 'countTokens'],
+       temperature=0.4,
+       top_p=1.0,
+       top_k=32),
+ Model(name='models/embedding-001',
+       base_model_id='',
+       version='001',
+       display_name='Embedding 001',
+       description='Obtain a distributed representation of a text.',
+       input_token_limit=2048,
+       output_token_limit=1,
+       supported_generation_methods=['embedContent', 'countTextTokens'],
+       temperature=None,
+       top_p=None,
+       top_k=None),
+ Model(name='models/aqa',
+       base_model_id='',
+       version='001',
+       display_name='Model that performs Attributed Question Answering.',
+       description=('Model trained to return answers to questions that are grounded in provided '
+                    'sources, along with estimating answerable probability.'),
+       input_token_limit=7168,
+       output_token_limit=1024,
+       supported_generation_methods=['generateAnswer'],
+       temperature=0.2,
+       top_p=1.0,
+       top_k=40)]
+</pre>
+
+<p><code>'gemini-pro'</code> を使って何か聞いてみよう：</p>
+
+<pre class="cell">
+model = genai.GenerativeModel('gemini-pro')
+
+response = model.generate_content("What is the meaning of life?")
+print(response.text)
+</pre>
+
+<p>もし検閲に引っかかるようなら <code>response.prompt_feedback</code> を表示してみれば詳細がわかる。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2023-12-18 13:31:17 JST</time></p>
+</footer>
+</body>
+</html>

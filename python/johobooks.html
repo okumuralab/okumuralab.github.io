@@ -27,7 +27,9 @@ import pandas as pd
 import seaborn as sns
 
 df = pd.read_excel("情報科全教科書用語.xlsx")
-joho1 = df['情報Ⅰ'].dropna().values
+df1 = df[['用語', '情報Ⅰ']].dropna()  # 1855x2
+joho1 = df1['情報Ⅰ'].values
+word = df1['用語'].values
 
 books = ['東11', '東12', '実11', '実12', '実13', '実14',
          '開11', '数11', '数12', '日11', '日12', '第11']
@@ -42,9 +44,108 @@ sns.histplot(np.sum(data, 0), discrete=True, shrink=0.8)
 
 <figure><img src="img/231203a.svg" alt="教科書の用語の度数分布"></figure>
 
-<p>上の図は1〜12通りの教科書に載っている用語の数を表す。大部分の用語は1〜2冊の教科書にしか載っていないことがわかる。全部の教科書に載っている用語はごくわずかである。</p>
+<p>上の図は1〜12通りの教科書に載っている用語の数を表す。大部分の用語は1〜2冊の教科書にしか載っていないことがわかる。全部の教科書に載っている用語は41通りしかない。</p>
 
-<p>教科書どうしの類似度を表すJaccard係数（|A∩B|/|A∪B|）の行列を求めよう。</p>
+<pre class="cell">
+occurrences = np.sum(data, 0)
+for i, w in enumerate(word):
+    if occurrences[i] == 12:
+        print(w)
+</pre>
+
+<ul>
+  <li>著作権</li>
+  <li>bit|ビット</li>
+  <li>E-mail|E-メール|Eメール|e-mail|インターネットメール|メール|電子メール</li>
+  <li>Algorithm|アルゴリズム</li>
+  <li>シミュレーション</li>
+  <li>LAN|LAN（Local Area Network）|Local Area Network|ローカルエリアネットワーク|ローカルネットワーク|ローカル・エリア・ネットワーク</li>
+  <li>データベース</li>
+  <li>ピクセル|画素</li>
+  <li>ウィルス|ウイルス|コンピュータウィルス|コンピュータウイルス|コンピュータウイルス（ウイルス）</li>
+  <li>IPアドレス|IPアドレス（Internet Protocol address）|IP（Internet Protocol）アドレス</li>
+  <li>TCP/IP|TCP/IPプロトコル</li>
+  <li>OS|Operating System|オペレーティングシステム</li>
+  <li>圧縮</li>
+  <li>量子化</li>
+  <li>メディア|伝送媒体|媒体</li>
+  <li>Firewall|ファイアウォール|ファイアウォール（防火壁）|ファイアーウォール|防火壁</li>
+  <li>標本化</li>
+  <li>解像度</li>
+  <li>ドメイン名</li>
+  <li>無体財産権|知的財産権</li>
+  <li>符号化</li>
+  <li>個人情報</li>
+  <li>パスワード</li>
+  <li>工業所有権|産業財産権</li>
+  <li>POS|POSシステム|POS（Point Of Sales）|Point Of Sales|販売時点情報管理システム|販売時点管理システム</li>
+  <li>モデリング|モデル化</li>
+  <li>プレゼンテーション</li>
+  <li>可逆圧縮</li>
+  <li>非可逆圧縮</li>
+  <li>ハードウェア|ハードウェア（ハード）</li>
+  <li>階調</li>
+  <li>メディアリテラシー|メディア・リテラシー</li>
+  <li>フローチャート|流れ図</li>
+  <li>データ</li>
+  <li>プログラム</li>
+  <li>テキストマイニング</li>
+  <li>変数</li>
+  <li>IoT|モノのインターネット</li>
+  <li>情報デザイン</li>
+  <li>AI|人工知能</li>
+  <li>量的データ</li>
+</ul>
+
+<p>同様に、11冊の教科書に載っている用語は次の26通りである。</p>
+
+<ul>
+  <li>B|Byte|byte|バイト</li>
+  <li>HTML|HTML（Hypertext Markup Language）|Hypertext Markup Language|htm|html</li>
+  <li>パケット|パケット（通信）</li>
+  <li>ソフト|ソフトウェア|ソフトウェア（ソフト）</li>
+  <li>暗号化</li>
+  <li>ルータ|ルーター</li>
+  <li>UNICODE|UNICODE（ユニコード）|Unicode|unicode|ユニコード</li>
+  <li>フォント|文字フォント</li>
+  <li>情報</li>
+  <li>情報システム</li>
+  <li>ピクトグラム</li>
+  <li>外れ値</li>
+  <li>質的データ</li>
+  <li>欠損値</li>
+  <li>プロトコル</li>
+  <li>文字コード</li>
+  <li>復号|復号化</li>
+  <li>著作人格権|著作者の人格権|著作者人格権</li>
+  <li>WAN|ワイドエリアネットワーク|広域ネットワーク</li>
+  <li>2進法|二進法</li>
+  <li>特許権</li>
+  <li>意匠権</li>
+  <li>実用新案権</li>
+  <li>商標権</li>
+  <li>ソーシャルエンジニアリング|ソーシャル・エンジニアリング</li>
+  <li>関数</li>
+</ul>
+
+<p>具体的な用語（例えばSSL、TLS）がどの教科書に載っているかを調べる例：</p>
+
+<pre class="cell">
+[(w, joho1[i]) for i, w in enumerate(word) if "SSL" in w or "TLS" in w]
+</pre>
+
+<pre>
+[('SSL/TLS', '実11実12実14開11日11第11'),
+ ('SSL|SSL（Secure Socket Layer）', '東12実13数11数12'),
+ ('TLS', '実11実12日12'),
+ ('IMAP over SSL/TLS|IMAPS', '日11'),
+ ('POP over SSL/TLS|POPS', '日11'),
+ ('SMTP over SSL/TLS|SMTPS', '日11')]
+</pre>
+
+<p>SSL/TLSが6冊、SSLだけが4冊、TLSだけが1冊ある。</p>
+
+<p>教科書どうしの類似度を表すJaccard係数（|A∩B|/|A∪B|）の行列を求めよう（ちなみにJaccardはフランス人なので「ジャカール」と読むのがよさそう）。</p>
 
 <pre class="cell">
 def jaccard(i, j):
@@ -95,7 +196,7 @@ plt.axis("scaled")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2023-12-03 17:58:22 JST</time>
+Last modified: <time>2023-12-04 11:58:05 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

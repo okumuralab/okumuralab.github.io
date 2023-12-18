@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/231203.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Macの音声の扱い</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>Macの音声の扱い</h1>
+
+<p>音声入力については<a href="https://pc.watch.impress.co.jp/docs/column/macinfo/1550163.html">まだキーボード入力？macOS Sonomaで強化された「音声入力」を活用しよう！</a>が詳しい。</p>
+
+<p>音声読み上げについては、普通にGUIでできるほか、コマンド派には <code>say</code> コマンドが便利である。<code>say "Hello world"</code> などとすれば読み上げてくれる。<code>say -v '?'</code> で声の一覧が出るので <code>say -v Alex "Hello world"</code> のように指定できる。GUIではシステム設定→アクセシビリティ→読み上げコンテンツと連動している。システムの声→声を管理…で追加できる。</p>
+
+<p>音声ファイルはGUIのほか <code>afplay</code> コマンドでも再生できる。</p>
+
+<p>Macのシステム音を別のアプリに入力したり録音したりするには、入力・出力の両方に指定できるオーディオループバックデバイス（仮想デバイス）が便利である。私は<a href="https://github.com/ExistentialAudio/BlackHole">BlackHole</a>を使っている。<code>brew install blackhole-2ch</code> で入る。<a href="https://github.com/mattingalls/Soundflower">Soundflower</a>も人気らしい（Apple Silicon未対応？）。</p>
+
+<p>BlackHole 2chをインストールすると、システム設定→サウンドにBlackHole 2ch（仮想）が入力・出力の両方に現れるので、両方でこれを選択すると、システム音がアプリの入力になる。例えばYouTubeを再生して、QuickTime Playerでファイル→新規オーディオ収録すると、録音できる。</p>
+
+<p>出力を仮想デバイスにすると、音が聞こえない。これでは不便なので、Finder→アプリケーション→ユーティリティ→Audio MIDI設定を立ち上げ、左下の「+」をクリックし、「複数出力装置を作成」を選ぶ。作成できたら、右ペインで、通常の出力装置（例えば「外部ヘッドフォン」）とBlackHole 2chの両方の「使用」にチェックを付ける。こうすることによって、出力が二つに分岐される（いわゆるtee）。システム設定→サウンド→出力にも「複数出力装置」が現れるので、これを選んでおけば、聞きながら録音したりできる。</p>
+
+<p>録音するためのアプリは、QuickTime Playerでもいいが、Audacityという昔からあるツールをインストールしておけば、システム設定をいじらなくてもBlackHoleを入力に設定でき、保存形式も選べる。</p>
+
+<p>音声をテキストに文字起こしするには、私は<a href="https://github.com/ggerganov/whisper.cpp">whisper.cpp</a>を使っている。上記のようにして保存した音声ファイルをWAV形式（16000Hz 1ch）にして入力すればテキスト化できる。変換には<a href="221005.html">FFmpeg</a>が便利である。</p>
+
+<pre>
+ffmpeg -i in.webm -ar 16000 -ac 1 -c:a pcm_s16le out.wav
+</pre>
+
+<p>のような感じでできる。AudacityならGUIで保存形式を選べる。</p>
+
+<p>whisper.cppはソースコードでもらってきて（<code>git clone https://github.com/ggerganov/whisper.cpp.git</code>）コンパイル（<code>make</code>）し、モデル（<code>ggml-large.bin</code> とか）を別途ダウンロードしておく必要がある。起動例：</p>
+
+<pre>
+./main --language en --model models/ggml-large.bin --file in.wav --output-txt --output-vtt
+</pre>
+
+<p>リアルタイム文字起こしするには、<code>brew install sdl2</code> しておいて、<code>make stream</code> する。起動例：</p>
+
+<pre>
+./stream --language ja --model models/ggml-large.bin --capture 3
+</pre>
+
+<p>これで標準出力にリアルタイム文字起こしできる。最後の番号は無指定で起動したときに例えば</p>
+
+<pre>
+init:    - Capture device #3: 'BlackHole 2ch'
+</pre>
+
+<p>のように表示されるのでその番号を指定する。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2023-12-07 15:11:46 JST</time></p>
+</footer>
+</body>
+</html>
