@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/radix.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>基数変換</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>基数変換</h1>
+
+<p>2進法で10101101の数を10進法に直すには、頭に <code>0b</code> を付けて</p>
+
+<pre class="cell">
+0b10101101
+</pre>
+
+<pre>
+173
+</pre>
+
+<p>のようにするだけです。逆は</p>
+
+<pre class="cell">
+bin(173)
+</pre>
+
+<pre>
+'0b10101101'
+</pre>
+
+<p>です。</p>
+
+<p>もうちょっとアルゴリズムらしく記述してみます：</p>
+
+<pre class="cell">
+bits = "10101101"
+x = 0
+for b in bits:
+    x = x * 2 + int(b)
+print(x)
+</pre>
+
+<pre>
+173
+</pre>
+
+<pre class="cell">
+x = 173
+bits = ""  
+while x > 0:
+    bits = str(x % 2) + bits
+    x = x // 2
+print(bits)
+</pre>
+
+<pre>
+10101101
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2023-12-29 20:07:10 JST</time></p>
+</footer>
+</body>
+</html>
