@@ -115,11 +115,101 @@ import seaborn as sns
 sns.histplot(a, discrete=True)
 </pre>
 
+<h2>速度比較</h2>
+
+<p>Mac mini (M1, 2020) 16GB Sonoma 14.2.1、Python 3.11.7での速度比較です。一様乱数の配列を作って合計します。最初が標準ライブラリ、次がNumPy、PyTorch、最後がApple Silicon専用の <a href="https://github.com/ml-explore/mlx">MLX</a> です。PyTorchとMLXは32ビット精度、他は64ビット精度です。</p>
+
+<p>[2023-12-23] 最初 N=10000 でやっていましたが、N を増やして再計算しました。<a href="https://twitter.com/mosko_mule/status/1738108536960495909">@mosko_mule</a> さん、<a href="https://twitter.com/BOBtakumi/status/1738211869939355984">@BOBtakumi</a> さんのご教示に感謝します。</p>
+
+<pre class="cell">
+import random
+
+N = 10_000_000
+
+%timeit sum([random.random() for _ in range(N)])
+</pre>
+
+<pre>
+432 ms ± 1.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+
+<pre class="cell">
+import numpy as np
+rng = np.random.default_rng(348309421)
+
+%timeit np.sum(rng.random(N))
+</pre>
+
+<pre>
+48.7 ms ± 12 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<pre class="cell">
+import torch
+
+%timeit torch.rand(N).sum()
+</pre>
+
+<pre>
+28.5 ms ± 23.7 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<p>GPU（mps）を指定してみます。</p>
+
+<pre class="cell">
+%timeit torch.rand(N, device="mps").sum()
+</pre>
+
+<pre>
+The slowest run took 4.03 times longer than the fastest. This could mean that an intermediate result is being cached.
+214 µs ± 129 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+
+<p>キャッシュされたようなので速すぎます。次のほうが正しいようです。</p>
+
+<pre class="cell">
+%timeit torch.rand(N, device="mps").sum().item()
+</pre>
+
+<pre>
+4.03 ms ± 107 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre>
+
+<pre class="cell">
+import mlx.core as mx
+
+%timeit mx.sum(mx.random.uniform(shape=(10000,)))
+</pre>
+
+<pre>
+5.95 µs ± 42.5 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
+</pre>
+
+<p>MLXは遅延評価のため、おかしな値になってしまいました。評価を強制してみます：</p>
+
+<pre class="cell">
+%timeit mx.sum(mx.random.uniform(shape=(N,))).item()
+</pre>
+
+<pre>
+29.2 ms ± 18.5 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<pre class="cell">
+%timeit mx.eval(mx.sum(mx.random.uniform(shape=(N,))))
+</pre>
+
+<pre>
+29.1 ms ± 14.4 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<p>PyTorchでmpsを指定するよりかなり遅くなってしまいました。まだMLX 0.0.6なので将来に期待。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-01-01 19:49:46 JST</time></p>
+<p>Last modified: <time>2023-12-23 13:30:38 JST</time></p>
 </footer>
 </body>
 </html>

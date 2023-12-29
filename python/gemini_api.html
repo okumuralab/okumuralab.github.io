@@ -132,7 +132,7 @@ list(genai.list_models())
        top_k=40)]
 </pre>
 
-<p><code>'gemini-pro'</code> を使って何か聞いてみよう：</p>
+<p><code>models/</code> は省略できるようだ。<code>'gemini-pro'</code> を使って何か聞いてみよう：</p>
 
 <pre class="cell">
 model = genai.GenerativeModel('gemini-pro')
@@ -143,11 +143,39 @@ print(response.text)
 
 <p>もし検閲に引っかかるようなら <code>response.prompt_feedback</code> を表示してみれば詳細がわかる。</p>
 
+<p>上の方法では一つしか質問できない。会話は、次のようにする。</p>
+
+<pre class="cell">
+model = genai.GenerativeModel('gemini-pro')
+
+chat = model.start_chat(history=[])
+response = chat.send_message("What is your knowledge cutoff?")
+print(response.text)
+response = chat.send_message("What are reputable news sources?")
+print(response.text)
+...
+</pre>
+
+<p>会話全体は <code>chat.history</code> で参照できる。</p>
+
+<pre class="cell">
+for h in chat.history:
+    print(f"[{h.role}]\n{h.parts[0].text}")
+</pre>
+
+<p>温度（ランダムさの度合い）などを指定することもできる：</p>
+
+<pre class="cell">
+config = genai.GenerationConfig(temperature=0)
+model = genai.GenerativeModel('gemini-pro',
+                              generation_config=config)
+</pre>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-12-18 13:31:17 JST</time></p>
+<p>Last modified: <time>2023-12-19 18:03:06 JST</time></p>
 </footer>
 </body>
 </html>
