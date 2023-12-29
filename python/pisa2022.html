@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/pisa2022.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PISA 2022データを読む</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PISA 2022データを読む</h1>
+
+<h2>はじめに</h2>
+
+<p><a href="pisa2018.html">PISA 2018データを読む</a>ほぼそのままである。</p>
+
+<p>2023年12月5日、<a href="https://www.oecd.org/publication/pisa-2022-results/">PISA 2022 results</a>が公開された。データは<a href="https://www.oecd.org/pisa/data/2022database/">PISA 2022 Database</a>からダウンロードできる。ここではSPSS用データの生徒アンケート（STU_QQQ_SPSS.zipを展開して得られるCY08MSP_STU_QQQ.savという2Gバイトほどのファイル）をPythonで読み込んでみる。</p>
+
+<p>SPSSのsavデータを読むにはpandasの <code>read_spss()</code> でもできるが，これはpyreadstatパッケージを呼び出しているだけである。以下ではpyreadstatを直接使う（<code>pip install pyreadstat</code> しておく）：</p>
+
+<pre>
+import pyreadstat
+</pre>
+
+<h2>全部一度に読む（これがエラーになるなら次に進んでください）</h2>
+
+<p>メモリの多いマシンなら全部読み込んでしまうのが手っ取り早い：</p>
+
+<pre>
+df, meta = pyreadstat.read_sav('CY08MSP_STU_QQQ.sav')
+</pre>
+
+<p>dfは</p>
+
+<pre>
+import sys
+sys.getsizeof(df)
+</pre>
+
+<p>とすればわかるように，約7Gのメモリを占める。</p>
+
+<pre>
+df.shape
+</pre>
+
+<p>と打ち込めば613744行1279列であることがわかる。</p>
+
+<p>これ以降は次と同じである。</p>
+
+<h2>一部分のデータだけ読み込む（メモリの少ないマシン用）</h2>
+
+<p>まずはメタデータだけ読んでみよう：</p>
+
+<pre>
+df, meta = pyreadstat.read_sav('CY08MSP_STU_QQQ.sav', metadataonly=True)
+</pre>
+
+<p>メタデータに含まれる変数名とその説明を表示する（長い出力に注意！）：</p>
+
+<pre>
+meta.column_names_to_labels
+</pre>
+
+<p>出力は次のようになる：</p>
+
+<pre>
+{'CNT': 'Country code 3-character',
+ 'CNTRYID': 'Country Identifier',
+ 'CNTSCHID': 'Intl. School ID',
+ 'CNTSTUID': 'Intl. Student ID',
+・・・（以下略）・・・
+}
+</pre>
+
+<p>これでは見にくいので，JSON形式で保存しておくことにする：</p>
+
+<pre>
+import json
+
+with open("column_names_to_labels.json", "w") as f:
+    json.dump(meta.column_names_to_labels, f, ensure_ascii=False, indent=2)
+
+with open("variable_value_labels.json", "w") as f:
+    json.dump(meta.variable_value_labels, f, ensure_ascii=False, indent=2)
+</pre>
+
+<p>これらはそれぞれ変数ラベルとその説明，変数ラベルとその値の説明である。例えば <code>"IC182Q02JA"</code> というラベルについては前者が</p>
+
+<pre>
+  "IC182Q02JA": "Agree/disagree: I am interested in learning [computer programming].",
+</pre>
+
+<p>後者が</p>
+
+<pre>
+  "IC182Q02JA": {
+    "1.0": "Strongly disagree",
+    "2.0": "Disagree",
+    "3.0": "Agree",
+    "4.0": "Strongly agree",
+    "95.0": "Valid Skip",
+    "97.0": "Not Applicable",
+    "98.0": "Invalid",
+    "99.0": "No Response"
+  },
+</pre>
+
+<p>となっている。国名（3文字）とこの項目だけを改めて読み込んでみよう：</p>
+
+<pre>
+df, meta = pyreadstat.read_sav('CY08MSP_STU_QQQ.sav', usecols=['CNT', 'IC182Q02JA'])
+</pre>
+
+<p><code>"IC182Q02JA"</code> の回答の度数分布を表示する：</p>
+
+<pre>
+df["IC182Q02JA"].value_counts()
+</pre>
+
+<p>結果は</p>
+
+<pre>
+IC182Q02JA
+3.0    134464
+2.0     93118
+4.0     50305
+1.0     44096
+Name: count, dtype: int64
+</pre>
+
+<p>となって順番通りにならない。<code>value_counts(sort=False)</code> としてもランダムな順序になる。そこで</p>
+
+<pre>
+df[['CNT', 'IC182Q02JA']].groupby('IC182Q02JA').count()
+</pre>
+
+<p>とすると</p>
+
+<pre>
+               CNT
+IC182Q02JA        
+1.0          44096
+2.0          93118
+3.0         134464
+4.0          50305
+</pre>
+
+<p>のように表らしくなってくれる。あるいは別解として</p>
+
+<pre>
+import pandas as pd
+
+pd.crosstab(df["IC182Q02JA"], "count")  # "count" はダミー
+</pre>
+
+<p>とすると</p>
+
+<pre>
+col_0        count
+IC182Q02JA        
+1.0          44096
+2.0          93118
+3.0         134464
+4.0          50305
+</pre>
+
+<p>になってくれるようだ。<code>crosstab()</code> の本来の使い方は</p>
+
+<pre>
+pd.crosstab(df["CNT"], df["IC182Q02JA"])
+</pre>
+
+<p>のようにして国名と回答の度数分布を</p>
+
+<pre>
+IC182Q02JA   1.0   2.0    3.0   4.0
+CNT                                
+ALB          207   640   1812   859
+ARG          856  1697   3224  1299
+AUS         2586  4376   3631  1002
+AUT         1365  1569   1416   969
+BEL         1180  2285   2200   759
+BGR          391  1112   1986   704
+・・・後略・・・
+</pre>
+
+<p>のように出力することである。日本に限れば</p>
+
+<pre>
+df["IC182Q02JA"][df["CNT"] == "JPN"].value_counts()
+# または df[df["CNT"] == "JPN"].groupby('IC182Q02JA').count()
+</pre>
+
+<p>とすればよい。</p>
+
+<p>国ごとに回答3＋回答4の割合を求めるには</p>
+
+<pre>
+s = pd.crosstab(df["CNT"], df["IC182Q02JA"]).apply(lambda x: (x.iloc[2]+x.iloc[3])/sum(x), axis=1)
+s.sort_values(inplace=True)
+</pre>
+
+<p>手抜き棒グラフにする：</p>
+
+<pre>
+import matplotlib.pyplot as plt
+
+plt.barh(s.index, s)
+plt.savefig('231206a.svg', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/231206a.svg" alt=""></figure>
+
+<p>国名を日本語にし，ドットプロットにしてみる：</p>
+
+<pre>
+co = pd.read_csv("https://okumuralab.org/~okumura/stat/data/countries.csv")
+dic = { r['三字']: r['国名'] for i,r in co.iterrows() }
+cj = [ dic[x] for x in s.index ]
+
+plt.plot(s, cj, "o")
+plt.grid()
+plt.savefig('231206b.svg', bbox_inches="tight")
+</pre>
+
+<figure><img src="img/231206b.svg" alt=""></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2023-12-06 17:17:16 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>
