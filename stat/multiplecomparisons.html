@@ -6,15 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>多重比較</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <script src="../js/load-mathjax.js" async></script>
-<style>
-table { border-collapse: collapse; }
-td { border: 1px solid; }
-td, th { padding: 0.2em 0.7em }
-td { text-align: left }
-th { text-align: right }
-</style>
 </head>
 <body>
 
@@ -27,76 +20,52 @@ th { text-align: right }
 
 <h2>多重比較とは</h2>
 
-<p>例えば血液型と性格に関係があるか調べたいとします。20項目の性格検査を行って，それぞれについて統計的検定をします。すると，まったく血液型と性格に関係がなくても，偶然に $p \leq 0.05$ になる項目の数の期待値は 1 ですので，有意な結果が出ても当然です。このような問題を，多重比較（multiple comparisons）の問題といいます。</p>
+<p>例えば血液型と性格に関係があるか調べたいとします。20項目の性格検査を行って、それぞれについて統計的検定をします。すると、血液型と性格にまったく関係がなくても、それぞれの項目が偶然に $p \leq 0.05$ になる確率は 1/20 ですから、20項目も調べれば、偶然に $p \leq 0.05$ になる項目が一つくらいあって当然です。こういう多変量の実験をして安易に「血液型と性格に有意な関係が見つかった」と結論づけられないように、検定を何度もした場合は $p \leq 0.05$ に何らかの補正が必要だとされるようになりました。この問題を、多重比較（multiple comparisons）の問題といいます。</p>
 
-<p>性格検査の項目を1つに絞ったとしても，A型，B型，AB型，O型という4グループを比較しようとして ${}_4 C_2 = 6$ 通りの検定をすれば，（これら6通りの検定は互いに独立ではありませんが）やはり多重比較の問題が生じます。</p>
+<p>この問題の最も簡単な解は、$n$ 回検定したのなら、統計的に有意かどうかの基準を $p \leq 0.05$ でなく $p \leq 0.05 / n$ にすることです。この方法をBonferroni（ボンフェローニ）の方法といいます。上記の血液型の研究の場合、20回検定したのなら、$p \leq 0.05/20 = 0.0025$ であれば有意とします。</p>
 
-<p>このように偶然に統計的に有意な結果が出てしまうのは困るということで，多重比較の際には $p$ 値を調整しなければならない，あるいは有意水準を $\alpha = 0.05$ より下げなければならないという考え方があります。そのための方法がたくさん考え出されています。</p>
+<p>Bonferroniの方法は複数の検定を全体として見ますが、一つずつ見るようにしたものにHolm（ホルム）の方法があります。これは、得られた $p$ 値を小さい順に $p_1 \leq p_2 \leq \ldots \leq p_n$ と並べて、$p_1 \leq 0.05/n$ なら $p_1$ は有意、さらに $p_2 \leq 0.05/(n-1)$ なら $p_2$ も有意、と続けていって $p_i &gt; 0.05/(n-i+1)$ になるまで続け、$p_{i-1}$ までを有意とする方法です。</p>
 
-<h2>いろいろな方法の比較</h2>
+<p>BonferroniやHolmの方法は、それぞれの $p$ 値が独立であることを仮定しないので、適用範囲が広く、よく使われます。</p>
 
-<p>一番単純な考え方が，Bonferroni（ボンフェローニ）の方法です。これは，例えば20通りの検定をするなら，有意水準を $\alpha$ から $\alpha / 20$ に下げます。あるいは，$p$ 値を20倍したものを元の $\alpha$ と比べると考えても同じことです。Rの <code>p.adjust()</code> 関数は後者の考え方で $p$ 値を調整します。</p>
+<h2>多重比較が常識的でない例</h2>
 
-<p>例として，次の $p$ 値の列が得られたとしましょう：</p>
+<p>あることがらについて実験し、$p = 0.02$ を得ました。統計的に有意です！ でも、念のため、少し違う方法で実験し直して、やはり $p = 0.02$ を得ました。さらに念のため、さらに違う方法で実験し直して、やはり $p = 0.02$ を得ました。3回も有意な結果が出たので、これは絶対に正しいだろうと思って論文にして投稿したところ、査読者から「多重比較の補正をすると、BonferroniでもHolmでも $p &gt; 0.05/3$ なので、この3回の実験はどれも有意ではありません」と言われてしまいました。しまった！ 実験を1回で止めておけば有意だったのに！</p>
 
-<pre>
-<code>&gt; p = (1:10) * 0.01
-&gt; p
- [1] 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.10
-</code></pre>
+<h2>仮説検定と $p$ 値の復習</h2>
 
-<p>これをBonferroniの方法で調整します：</p>
+<p>伝統的な統計学では、「何も効果がない」という帰無仮説に対応する数理モデルを仮定して、そのモデルのもとに「実際に得られた実験結果あるいはそれより珍しい実験結果が偶然に起きる確率」$p$ を求め、それが $p \leq \alpha$（有意水準 $\alpha$ は一般に0.05とする）を満たすなら、帰無仮説を棄却して「効果があった」と結論します。$p &gt; \alpha$ なら「効果は確認できなかった」ということになります（しばしば誤って「効果はなかった」と結論されます）。</p>
 
-<pre>
-<code>&gt; p.adjust(p, "bonferroni")
-[1] 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
-</code></pre>
+<p>しかし、そもそも何の意味もない $\alpha = 0.05$ という値をもって効果があるかないかを分ける方法論は、科学的とは言えないので、近年は否定されつつあります（例えばAmerican Statistical Associationの<a href="https://doi.org/10.1080/00031305.2016.1154108">The ASA Statement on p-Values: Context, Process, and Purpose</a>参照）。もちろん $p$ 値の意味がないわけではありませんが、それだけで機械的に効果があるかないかを判断するな、ということです。</p>
 
-<p>ちょうど10倍されていることがわかります。</p>
+<p>$p$ 値を0.05で区切る必要がなければ、多重比較の補正も不要です。</p>
 
-<p>ほかにもいろいろな方法があります。Holmの方法では次のようになります。</p>
-
-<pre>
-<code>&gt; p.adjust(p, "holm")
- [1] 0.10 0.18 0.24 0.28 0.30 0.30 0.30 0.30 0.30 0.30
-</code></pre>
-
-<p>ほかにどういう方法があるのでしょうか。リストしてみます。</p>
-
-<pre>
-<code>&gt; p.adjust.methods
-[1] "holm"       "hochberg"   "hommel"     "bonferroni" "BH"        
-[6] "BY"         "fdr"        "none"
-</code></pre>
-
-<p><code>BH</code> と <code>fdr</code> はどちらも Benjamini and Hochberg (1995) の False Discovery Rate です。<code>BY</code> は Benjamini and Yekutieli (2001) の方法です。全部の方法を適用すると次のようになります：</p>
-
-<table>
-  <tbody>
-  <tr><th>holm</th><td>0.1</td><td>0.18</td><td>0.24</td><td>0.28</td><td>0.3</td><td>0.3</td><td>0.3</td><td>0.3</td><td>0.3</td><td>0.3</td></tr>
-  <tr><th>hochberg</th><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td></tr>
-  <tr><th>hommel</th><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td></tr>
-  <tr><th>bonferroni</th><td>0.1</td><td>0.2</td><td>0.3</td><td>0.4</td><td>0.5</td><td>0.6</td><td>0.7</td><td>0.8</td><td>0.9</td><td>1</td></tr>
-  <tr><th>BH (fdr)</th><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td><td>0.1</td></tr>
-  <tr><th>BY</th><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td><td>0.292</td></tr>
-  <tr><th>none</th><td>0.01</td><td>0.02</td><td>0.03</td><td>0.04</td><td>0.05</td><td>0.06</td><td>0.07</td><td>0.08</td><td>0.09</td><td>0.1</td></tr>
-  </tbody>
-</table>
-
-<p>多重比較の補正をしなければ5項目について有意（$p \leq 0.05$）と判断するはずのところが，多重比較の補正をしたら有意な項目はなくなってしまいました。でも，これら10項目はどれも $p \leq 0.1$ で，10項目すべてが偶然この範囲に入る確率は $0.1^{10} = 0.0000000001$ です。それでもなお，一つも有意でないという結果になってしまいました。</p>
-
-<h2>どの補正を使えばいいの？ そもそも補正は必要？</h2>
-
-<p>以下は独断と偏見です。</p>
-
-<p>統計的仮説検定を金科玉条とする考え方を捨てて，$p$ 値は目安と考えて補正せず，<a href="effectsize.html">効果量</a>と信頼区間を報告しましょう。</p>
-
-<p>参考：</p>
+<p>ずっと前から「多重比較の補正は不要」と言っていた人もいます。Rothmanは疫学の著名な教科書を編纂している大先生です。Andrew Gelmanはたくさん教科書を書いているベイズ寄りの著名な統計学者です。</p>
 
 <ul>
   <li><a href="https://journals.lww.com/epidem/Abstract/1990/01000/No_Adjustments_Are_Needed_for_Multiple_Comparisons.10.aspx">Kenneth J. ‎Rothman: No Adjustments Are Needed for Multiple Comparisons</a> (1990)</li>
   <li><a href="http://arxiv.org/abs/0907.2478">Andrew Gelman, Jennifer Hill, Masanao Yajima: Why we (usually) don't have to worry about multiple comparisons</a> (2009)</li>
 </ul>
+
+<p>でも、論文を書けば必ず「仮説検定しなさい。多重比較の補正をしなさい」と言ってくる査読者がいますので、そちらの立場もよく理解しておく必要があります。</p>
+
+<h2>多重検定の詳しい説明</h2>
+
+<p>帰無仮説のもとで $p \leq \alpha$ が成り立つ確率は、定義により、たかだか $\alpha$ です。つまり、$P(p \leq \alpha) \leq \alpha$ です。連続分布なら、ぴったり $P(p \leq \alpha) = \alpha$ です。つまり、帰無仮説のもとで $p$ は0〜1の一様乱数です。以下では連続分布を仮定します。</p>
+
+<p>もし $n$ 個の $p$ 値が独立なら、帰無仮説（まったく効果なし）のもとで、どれか一つでも偶然に $p \leq \alpha$ になる確率は $1 - (1 - \alpha)^n$ なので、これを例えば 0.05 にしたければ、$\alpha = 1 - (1 - 0.05)^{1/n}$ とすればいいことになります。例えば $n = 2$ なら、$\alpha \approx 0.02532$ と個々の $p$ 値を比べ、どれか一つがこれより小さければ帰無仮説を棄却します。$n = 20$ なら $\alpha \approx 0.00256$ です。これをŠidák（シダック）の方法といいます。これは次のBonferroniの方法 $\alpha = 0.05/n$ と数値的にはほとんど違いません。</p>
+
+<p>必ずしも独立でない二つの $p$ 値 $p_1$、$p_2$ があったとしましょう。これらを一つずつ見たとき水準 $\alpha$ で有意になる個数の期待値は $E([p_1 \leq \alpha] + [p_2 \leq \alpha]) = E([p_1 \leq \alpha]) + E([p_2 \leq \alpha]) = P(p_1 \leq \alpha) + P(p_2 \leq \alpha) = 2\alpha$ になります。ここで $[ \cdots ]$ は中身が真ならば1、偽ならば0です（Iversonの記号）。ここで確率変数 $X$、$Y$ が独立でなくても $E(X+Y) = E(X) + E(Y)$ であることを使いました。同様に、$E([p_1 \leq \alpha] + \cdots + [p_n \leq \alpha]) = n\alpha$ です。これを 0.05 にしたければ、$\alpha = 0.05/n$ にすればよいことになります。これがBonferroniの方法です。</p>
+
+<p>ここで、あらかじめ $p_1 \leq p_2 \leq \cdots \leq p_n$ のように昇順にソートしておくことにしましょう。すると、Bonferroniの方法は、$P(p_1 \leq 0.05/n) \leq 0.05$ と書くことができます。$p_2$ 以降の値はまったく関係しません。そもそもBonferroniの方法は、全部の $p$ 値をまとめて見ているので、どの $p$ 値が有意だという言い方はしないはずです（現実にはそういう言い方をします）。</p>
+
+<p>この $n$ 個全部についてのBonferroniの帰無仮説を $H_1$ とすると、$p_1 \leq 0.05/n$ であれば $H_1$ は棄却されます。</p>
+
+<p>このとき、$p_2$ 以降の $n-1$ 個についてのBonferroniの帰無仮説を $H_2$ とすると、$p_2 \leq 0.05/(n-1)$ であれば $H_2$ も棄却されます。</p>
+
+<p>これをどんどん続けていって、$H_{i-1}$ まで棄却されて $H_i$ が棄却されなかったところで停止するような方法を、Holmの方法といいます（Holmはこの方法をsequentially rejective Bonferroni testと呼んでいます）。</p>
+
+<p>🍊未完🍊</p>
 
 <hr>
 
@@ -104,7 +73,7 @@ th { text-align: right }
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-04-17 15:57:45 JST</time>
+Last modified: <time>2023-12-30 20:51:15 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
