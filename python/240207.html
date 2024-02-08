@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/240207.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>都道府県人口のヒストグラム</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>都道府県人口のヒストグラム</h1>
+
+<p>e-Statの<a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000040045490">人口推計 / 各年10月1日現在人口</a>から2022年10月1日現在の都道府県人口データをいただいてくる（1000人単位）：</p>
+
+<pre class="cell">
+total = 124947
+population = [5140, 1204, 1181, 2280, 930, 1041, 1790, 2840, 1909,
+              1913, 7337, 6266, 14038, 9232, 2153, 1017, 1118, 753, 802, 2020, 1946,
+              3582, 7495, 1742, 1409, 2550, 8782, 5402, 1306, 903, 544, 658, 1862,
+              2760, 1313, 704, 934, 1306, 676, 5116, 801, 1283, 1718, 1107, 1052,
+              1563, 1468]
+</pre>
+
+<p>このヒストグラムを描いてみる：</p>
+
+<pre class="cell">
+plt.hist(population, color="lightgray", edgecolor="black", bins=np.arange(16)*1000)
+plt.yticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
+plt.ylim(0, 25)
+mean = total / 47
+median = np.median(population)
+sd = np.std(population)  # これはNで割る流儀。N-1で割るにはnp.std(population, ddof=1)とする
+tokyo = max(population)
+plt.axvline(mean, ymin=6/25, ymax=22/25, color="black", linewidth=1)
+plt.axvline(median, ymin=21/25, ymax=23/25, color="black", linewidth=1)
+plt.annotate("", xy=(mean,8), xytext=(mean+sd,8), arrowprops=dict(arrowstyle="<->"))
+plt.text(mean, 22.5, "平均値", ha="center")
+plt.text(median, 23.5, "中央値", ha="center")
+plt.text(mean+sd/2, 8.5, "標準偏差", ha="center")
+plt.text(tokyo, 3.5, "東京都", ha="center")
+plt.axvline(tokyo, ymin=1/25, ymax=3/25, color="black", linewidth=1)
+</pre>
+
+<figure><img src="img/240207a.svg" alt="都道府県人口のヒストグラム"></figure>
+
+<p>ちなみに、東京は平均より標準偏差の4倍以上離れている：</p>
+
+<pre class="cell">
+print((tokyo - mean) / sd)
+</pre>
+
+<p>何σ以上離れていたら「外れ値」なので捨てる、と教えている向きがあるようだが、東京を捨てないでほしい。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-02-07 13:36:41 JST</time></p>
+</footer>
+</body>
+</html>

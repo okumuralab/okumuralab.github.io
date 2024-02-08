@@ -19,6 +19,8 @@
 
 <p>このページは<a href="openai_api.html">OpenAIのAPIを使う</a>を書き直したものです。</p>
 
+<p>[2024-01-26] <a href="https://openai.com/blog/new-embedding-models-and-api-updates">2024-01-25の新モデル</a>: 最新のプレビューモデル <code>"gpt-4-0125-preview"</code>、<code>"gpt-3.5-turbo-0125"</code> が出ました。<code>"gpt-4-turbo-preview"</code>、<code>"gpt-3.5-turbo"</code> と指定すれば最新のものが選ばれるようです。</p>
+
 <p>[2023-11-07] <a href="https://openai.com/blog/new-models-and-developer-products-announced-at-devday">DevDayで新しいモデル等が発表</a>されました: <code>"gpt-4-1106-preview"</code>、<code>"gpt-4-vision-preview"</code>、<code>"gpt-3.5-turbo-1106"</code></p>
 
 <p>[2023-06-14] 新しいモデル <code>"gpt-3.5-turbo-0613"</code>、<code>"gpt-3.5-turbo-16k-0613"</code>、<code>"gpt-4-0613"</code>、<code>"gpt-4-32k-0613"</code> が来ました。価格も若干改訂され、<a href="https://platform.openai.com/docs/guides/gpt/function-calling">function calling</a>（関数呼び出し）の機能が付きました。<a href="https://openai.com/blog/function-calling-and-other-api-updates">Function calling and other API updates</a> 参照。GPT-3.5の16k版はすぐに使えましたが、GPT-4の32k版はまだ私には降ってきていません。</p>
@@ -165,7 +167,7 @@ class Chatbot:
 <p>これを使うには例えば</p>
 
 <pre class="cell">
-chatbot = Chatbot(model="gpt-4-1106-preview")
+chatbot = Chatbot(model="gpt-4-turbo-preview")
 chatbot.chat("こんにちは！")
 </pre>
 
@@ -242,7 +244,7 @@ print()
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-11-09 20:33:47 JST</time></p>
+<p>Last modified: <time>2024-01-26 10:06:13 JST</time></p>
 </footer>
 </body>
 </html>

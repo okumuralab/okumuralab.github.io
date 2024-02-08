@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/wealth.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>富の分布</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>富の分布</h1>
+
+<p>拙著『Rで楽しむ統計』の53〜55ページに書いた「富の分布」のシミュレーションをPythonでしてみましょう。</p>
+
+<p>神様が100人に500枚の金貨を投げ与えました。全員がちょうど5枚ずつ金貨を手にすれば貧富の差がないのですが、現実には、たまたま多くの金貨を手にする人もいれば、そうでない人もいます。どのような分布になるでしょうか？</p>
+
+<p>1人の人に着目します。神様が金貨を1枚投げたとき、この人が金貨を手にする確率は0.01です。これが500回繰り返されたとすると、この人が $k$ 個の金貨を手にする確率は</p>
+
+\[ p_k = {}_{500}C_k 0.01^k (1-0.01)^{500-k} \]
+
+<p>という2項分布になります。</p>
+
+<p>これくらいなら簡単ですが、人数 $m$ が100よりずっと多かったらどうでしょうか。神様は1人あたり平均5個の金貨を与えたいので、$5m$ 個の金貨を用意しなければなりません。$m \to \infty$ の極限を考えれば、後述のようにうまい具合に $m$ が消えて、</p>
+
+\[ p_k = \frac{5^k e^{-5}}{k!} \]
+
+<p>となります。これは1人あたり平均5枚の金貨を得る場合ですが、1人あたり $\lambda$ 個の場合は</p>
+
+\[ p_k = \frac{\lambda^k e^{-\lambda}}{k!} \]
+
+<p>となります。ここで $e = 2.718\cdots$ は自然対数の底です。この形の分布をポアソン分布（Poisson distribution）といいます。ポアソン（Poisson）は人名です。</p>
+
+<p>次の図からもわかるように、$p = 0.01$、$n = 500$ 程度で、2項分布（▲）はポアソン分布（▼）で十分正確に近似できます。指数分布（⚫）については後で説明します。</p>
+
+<pre class="cell">
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+x = np.arange(16)  # 0..15
+plt.plot(x, stats.binom.pmf(x, 500, 0.01), "^-", label="Binomial")
+plt.plot(x, stats.poisson.pmf(x, 5), "v-", label="Poisson")
+plt.plot(x, (1/6) * (5/6)**x, "o-", label="Exponential")
+plt.legend()
+</pre>
+
+<figure><img src="img/wealth1.svg" alt="富の分布1"></figure>
+
+<div class="note">
+<p>「$m \to \infty$ の極限を考えれば」の補足：2項分布</p>
+\[ p_k = \frac{n!}{k!(n-k)!} p^k (1-p)^{n-k} \]
+<p>で $np = \lambda$ を一定に保って $p \to 0$、$n \to \infty$ の極限をとると、</p>
+\[ p_k = \frac{n(n-1)(n-2)\cdots(n-k+1) \cdot p^k}{k!} \frac{(1-p)^n}{(1-p)^k}
+       = \frac{(np)^k}{k!} ((1-p)^{1/p})^{\lambda} = \frac{\lambda^k e^{-\lambda}}{k!} \]
+<p>となります。</p>
+</div>
+
+<p>2項分布の平均は $np$、分散は $np(1-p)$ ですが、ポアソン分布は平均が $np = \lambda$、分散が $np(1-p) \to np = \lambda$ と、一つのパラメータしか持たず、平均と分散が等しいという便利な性質を持ちます。</p>
+
+<p>ところで、この「富の分布」には後日談があります。</p>
+
+<p>神様は平等に $5m$ 枚の金貨を $m$ 人に投げ与えたつもりでしたが、平均5枚なのはよいとして、分散も5になってしまいました（標準偏差は $\sqrt{5} \approx 2.236$）。貧富の差が出るのをよしとしなかった神様は、次の方法で富の再分配を促すことにしました： 人間同士が出会ったら、じゃんけんして、買った人が負けた人から金貨を1枚もらうことにします（ただし金貨を持たない人は負けても払う必要はありません）。じゃんけんなら能力差がないからだれでも勝つ確率と負ける確率は等しいので、これで貧富の差は解消に向かうはずです。</p>
+
+<p>ところがやってみると、貧富の差はかえって増えてしまいました。1人あたりの平均資産は金貨5枚に変わりなく、じゃんけんに能力差がないにもかかわらず、自由な取引をさせると、さきほどの図の指数分布になり、無一文の人が一番多いという結果になってしまいました。神様は持たざる人を救済するために社会保障制度を取り入れる必要に迫られます。</p>
+
+<p>シミュレーションでこのことを確かめてみましょう。</p>
+
+<p>まず最初に100人に金貨500枚を配るシミュレーション：</p>
+
+<pre class="cell">
+import seaborn as sns
+
+rng = np.random.default_rng(20240121)
+r = rng.integers(0, 100, 500)
+a = np.histogram(r, range(101))[0]
+sns.histplot(a, discrete=True, shrink=0.8)
+</pre>
+
+<figure><img src="img/wealth2.svg" alt="富の分布2"></figure>
+
+<p>じゃんけんで再分配するシミュレーション：</p>
+
+<pre class="cell">
+for i in range(100000):
+    j, k = rng.integers(0, 100, 2)
+    if a[j] > 0:
+        a[j] -= 1
+        a[k] += 1
+
+sns.histplot(a, discrete=True, shrink=0.8)
+</pre>
+
+<figure><img src="img/wealth3.svg" alt="富の分布3"></figure>
+
+<p>たった100人なので分布はガタガタですが、何度もやってみれば、だいたい指数分布になることがわかります。1000人くらい、金貨5000枚にすれば、もっと滑らかになるでしょう。初期状態がポアソン分布でなくても、どんな分布から始めても、指数分布になります。</p>
+
+<p>連続な指数分布は密度関数が $\lambda e^{-\lambda x}, \ x \geq 0$ で、平均 $1/\lambda$、分散 $1/\lambda^2$ です。ここでは $x = 0, 1, 2, \ldots$ は離散的なので、指数分布は公比 $r$ の等比数列 $(1-r)r^x$ になります。この平均は $r/(1-r)$ です。再分配によって富の平均は変わらないので $r/(1-r) = 5$ を解いて $r = 5/6$ となります。</p>
+
+<div class="note">
+<p>分子の世界では、実際に上のようなことが生じています。例えばわれわれのまわりを飛び交う空気を構成する分子（窒素分子と酸素分子がほぼ $4:1$ で混じったもの）は、ときどき互いに衝突して、ランダムにエネルギーを交換します（エネルギーの総量は変わりません）。一つ一つの分子のエネルギーが最初どのような分布をしていたかにかかわらず、しばらく経つとエネルギーの分布は指数分布になります。このことは気体分子についてマクスウェル（Maxwell）が導き、のちにボルツマン（Boltzmann）が一般化しました。</p>
+</div>
+
+<div class="note">
+<p>分子の世界の話をお金の話に焼き直した話は、すでに多くの人が考えたものと思われます。例えば久保亮五『統計力学』（1952年）第2章の冒頭にかなり詳しく説明されています。大沢文夫『大沢流 手づくり統計力学』（2011年）は実際にさいころとチップを使った体験学習を記述しています。渡辺宙志先生の<a href="https://speakerdeck.com/kaityo256/origin-of-the-disparity-of-wealth">リンゴゲームと貧富の差</a>というスライドはとてもわかりやすくまとめられています。</p>
+</div>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-01-21 16:20:20 JST</time></p>
+</footer>
+</body>
+</html>

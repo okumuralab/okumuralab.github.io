@@ -66,11 +66,27 @@ print(bits)
 10101101
 </pre>
 
+<p>ちなみに、最上位ビットだけマイナスの重みとする2の補数表現では、次のようになります：</p>
+
+<pre class="cell">
+bits = "10101101"
+x = 0
+sign = -1
+for b in bits:
+    x = x * 2 + sign * int(b)
+    sign = 1
+print(x)
+</pre>
+
+<pre>
+-83
+</pre>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-12-29 20:07:10 JST</time></p>
+<p>Last modified: <time>2024-02-06 08:58:54 JST</time></p>
 </footer>
 </body>
 </html>

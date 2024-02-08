@@ -22,17 +22,17 @@
 <p>ここでは Tensorflow に含まれるものを使う：</p>
 
 <pre>
-<code>import tensorflow as tf
+import tensorflow as tf
 
 (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
-</code></pre>
+</pre>
 
 <p>これを最初に実行する際には，ネットからデータをダウンロードする。次回からはローカルにキャッシュされたデータ（<code>~/.keras/datasets/mnist.npz</code>，11Mバイトほど）を使う。拡張子 <code>npz</code> のファイルは NumPy の ndarray を収めたバイナリファイル <code>変数名.npy</code> を束ねたZIPアーカイブである。詳しくは <code>np.savez()</code>，<code>np.load()</code> のヘルプ参照。</p>
 
 <p>トレーニング用が6万画像，テスト用が1万画像ある：</p>
 
 <pre>
-<code>In [ ]: x_train.shape
+In [ ]: x_train.shape
 Out[ ]: (60000, 28, 28)
 
 In [ ]: y_train.shape
@@ -43,33 +43,33 @@ Out[ ]: (10000, 28, 28)
 
 In [ ]: y_test.shape
 Out[ ]: (10000,)
-</code></pre>
+</pre>
 
 <p><code>x_train</code> に入っている画像を表示してみよう：</p>
 
 <pre>
-<code>import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 plt.imshow(x_train[0])
 plt.colorbar()
 fig.savefig("mnistfig0.png", bbox_inches="tight")
-</code></pre>
+</pre>
 
 <figure><img src="img/mnistfig0.png" alt="MNIST"></figure>
 
 <pre>
-<code>for k in range(24):
+for k in range(24):
     plt.subplot(3, 8, k+1)
     plt.xticks([])
     plt.yticks([])
     plt.imshow(x_train[k], cmap='gray_r') # または cmap=plt.cm.binary
     plt.title(y_train[k]) # または plt.xlabel(y_train[k])
 fig.savefig("mnistfig.png", bbox_inches="tight")
-</code></pre>
+</pre>
 
 <!--
 <pre>
-<code>plt.set_cmap("gray_r")  # 反転したグレースケール
+plt.set_cmap("gray_r")  # 反転したグレースケール
 fig = plt.figure()
 for k in range(24):
     ax = fig.add_subplot(3, 8, k+1)
@@ -78,7 +78,7 @@ for k in range(24):
     ax.tick_params(bottom=False, top=False, left=False, right=False,
                    labelbottom=False, labeltop=False, labelleft=False, labelright=False)
     ax.set_title(y_train[k])
-</code></pre>
+</pre>
 -->
 
 <figure><img src="img/mnistfig.png" alt="MNIST"></figure>
@@ -86,7 +86,7 @@ for k in range(24):
 <p>2次元（28×28）を1次元（784）に展開して，主成分分析（<a href="https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html">PCA</a>）を行ってみる：</p>
 
 <pre>
-<code>x = x_train.reshape(60000, 28*28)
+x = x_train.reshape(60000, 28*28)
 
 from sklearn.decomposition import PCA
 
@@ -95,27 +95,27 @@ for i in range(10):
     plt.scatter(y[y_train == i,0], y[y_train == i,1], marker=f'${i}$', alpha=0.5)
 plt.axis('equal')
 plt.legend(range(10))
-</code></pre>
+</pre>
 
 <figure><img src="img/mnist-pca.png" alt="MNIST PCA"></figure>
 
 <p>PCAではあまりうまく分離できないので，<a href="https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html">t-SNE</a>（ティー・スニー）（<a href="https://lvdmaaten.github.io/tsne/">t-SNE</a> も参照）をしてみる（とても時間がかかる）：</p>
 
 <pre>
-<code>from sklearn.manifold import TSNE
+from sklearn.manifold import TSNE
 
 y = TSNE(n_components=2).fit_transform(x)
-</code></pre>
+</pre>
 
 <figure><img src="img/mnist-tsne.png" alt="MNIST t-SNE"></figure>
 
 <p>より新しい <a href="https://github.com/lmcinnes/umap">UMAP</a> もやってみる（あらかじめ <code>pip install umap-learn</code> しておく）。t-SNEよりずっと速い。<a href="https://numba.pydata.org">Numba</a>というJITを使っているので警告が出ることがある。</p>
 
 <pre>
-<code>import umap
+import umap
 
 y = umap.UMAP().fit_transform(x)
-</code></pre>
+</pre>
 
 <figure><img src="img/mnist-umap.png" alt="MNIST UMAP"></figure>
 
@@ -126,7 +126,7 @@ y = umap.UMAP().fit_transform(x)
 <p>MNISTをロードする関数は，ほかにもいろいろなライブラリにある。以下はMXNetの例である。こちらはMXNetのNDArray型になる：</p>
 
 <pre>
-<code>from mxnet import nd, gluon
+from mxnet import nd, gluon
 
 mnist_train = gluon.data.vision.MNIST(train=True)
 mnist_test = gluon.data.vision.MNIST(train=False)
@@ -136,7 +136,7 @@ img.shape  # ==> (28, 28, 1)
 img.max()  # ==> [255]
 type(img)  # ==> mxnet.ndarray.ndarray.NDArray
 type(lbl)  # ==> numpy.int32
-</code></pre>
+</pre>
 
 <p>データは <code>~/.mxnet/datasets/mnist/</code> 以下にキャッシュされる。</p>
 
@@ -146,7 +146,7 @@ type(lbl)  # ==> numpy.int32
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-22 16:29:47</time>
+Last modified: <time>2024-01-31 16:42:53 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

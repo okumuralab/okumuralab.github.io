@@ -21,9 +21,9 @@
 <p><a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。</p>
 </div>
 
-<p>Python 3 のいろいろなインストールの方法を紹介します。</p>
+<p>Python 3 のインストールの方法を解説します。より現代風の pyenv、Poetry を使う方法は例えば<a href="https://tech.uzabase.com/entry/2024/02/02/120601">こちら</a>をご参照ください。</p>
 
-<p>最新のものは Python 3.11 です。PyTorch 2.x が対応しましたので、もう Python 3.11 に移行してもほぼ大丈夫のはずです。</p>
+<p>最新のものは Python 3.12 ですが、ここではライブラリの対応状況から考えて、3.11.x の最新のものをインストールすることにします。</p>
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
@@ -132,7 +132,7 @@ export PATH
 <p>私は <code>~/.zshenv</code> に環境変数を書いているのでそちらに移動しました。</p>
 </div>
 
-<p>以上ができたら、ターミナルに <code>python3</code> と打ち込んで、次のように表示されるか確認します：</p>
+<p>以上ができたら、ターミナルに <code>which python3</code> と打ち込んで、次のように表示されるか確認します：</p>
 
 <pre>
 /Library/Frameworks/Python.framework/Versions/3.11/bin/python3
@@ -191,7 +191,7 @@ pip3 list --outdated
 <p>パッケージをアップデートするには、次のように打ち込みます：</p>
 
 <pre>
-pip install --upgrade パッケージ名をスペースで区切って並べる
+pip3 install --upgrade パッケージ名をスペースで区切って並べる
 </pre>
 
 <p>https サイトのスクレイピングで証明書エラーになる場合は次のコマンドの管理者権限での実行が必要になるようです：</p>
@@ -204,11 +204,11 @@ sudo /Applications/Python\ 3.11/Install\ Certificates.command
 
 <h2>macOS に最初から入っている Python</h2>
 
-<p>macOS では、ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールすると、universal binary の /usr/bin/python3 が入ります（macOS Ventura 13.0 時点では Python 3.9.6）。公式サイトの Python と同様に使えるはずです。</p>
+<p>macOS では、ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールすると、universal binary の /usr/bin/python3 が入ります（macOS Sonoma 14.3 時点では Python 3.9.6）。公式サイトの Python と同様に使えるはずです。</p>
 
 <hr>
 
-<p>これ以降はあまり更新できていませんので、最新の情報でない可能性があります。</p>
+<p>これ以降は古い記述です。</p>
 
 <hr>
 
@@ -464,7 +464,7 @@ apk add python3 py3-pip
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-03-16 14:19:36 JST</time></p>
+<p>Last modified: <time>2024-02-08 14:26:37 JST</time></p>
 </footer>
 </body>
 </html>

@@ -19,39 +19,55 @@
 
 <h2>画像の読み書き表示</h2>
 
-<p><a href="https://opencv.org">OpenCV</a> は画像を扱うためのライブラリである。インストールは <code>pip install opencv-python</code>（または <code>conda install -c conda-forge opencv</code>）でできる。歴史的な事情から、インポートするパッケージ名は <code>cv2</code> であるが、<code>import cv2 as cv</code> のようにインポートすることが推奨されているようである（<a href="https://github.com/opencv/opencv/wiki/Coding_Style_Guide">The OpenCV Coding Style Guide</a> 参照）。</p>
+<p><a href="https://opencv.org">OpenCV</a> は画像を扱うためのライブラリである。インストールは <code>pip install opencv-python</code>（または <code>conda install -c conda-forge opencv</code>）でできる。歴史的な事情から、インポートするパッケージ名は <code>cv2</code> である<del>が、<code>import cv2 as cv</code> のようにインポートすることが推奨されているようである（<a href="https://github.com/opencv/opencv/wiki/Coding_Style_Guide">The OpenCV Coding Style Guide</a> 参照）</del>。</p>
 
 <p>まずは適当な画像を読み込んでみる：</p>
 
 <pre>
 import numpy as np
-import cv2 as cv
+import cv2
 
-img = cv.imread("画像ファイル名")
+img = cv2.imread("画像ファイル名")
 type(img)   # numpy.ndarray
 img.shape   # (縦ピクセル数, 横ピクセル数, チャンネル数)
 </pre>
 
-<p>これでエラーが出ればうまく読めていないことになる。私の環境では  URL や <code>~/</code> で始まるパス名はうまくいかなかった。Windows 環境では全角ファイル名が読み込めないらしい（<a href="https://qiita.com/SKYS/items/cbde3775e2143cad7455">Python OpenCV の cv2.imread 及び cv2.imwrite で日本語を含むファイルパスを取り扱う際の問題への対処について</a> 参照）。</p>
+<p>これでエラーが出ればうまく読めていないことになる。私の環境では URL や <code>~/</code> で始まるパス名はうまくいかなかった。Windows 環境では全角ファイル名が読み込めないらしい（<a href="https://qiita.com/SKYS/items/cbde3775e2143cad7455">Python OpenCV の cv2.imread 及び cv2.imwrite で日本語を含むファイルパスを取り扱う際の問題への対処について</a> 参照）。</p>
 
 <p>このように読み込んだ画像を OpenCV で表示するには</p>
 
 <pre>
-cv.imshow('Image', img)  # 最初の引数（ウィンドウ名）は何でもよい
+cv2.imshow('Image', img)  # 最初の引数（ウィンドウ名）は何でもよい
 </pre>
 
-<p>とすればよい。私の環境（python.org からインストールした Mac 版）ではうまくいくが、環境によってはうまくいかないようである。うまくいかなければ諦めて、以下に示すように matplotlib で表示すればよい。なお、OpenCV の窓をすべて閉じるには次のようにする：</p>
+<p>とすればよい。OpenCV の窓をすべて閉じるには次のようにする：</p>
 
 <pre>
-cv.destroyAllWindows()
+cv2.destroyAllWindows()
 </pre>
 
-<p>上の方法でうまくいかない場合、matplotlib で表示すればよいが、OpenCV で読み込んだ画像は BGR の順、matplotlib の画像は RGB の順なので、そのまま matplotlib で表示すると色がおかしくなる。<a href="https://stackoverflow.com/questions/15072736/extracting-a-region-from-an-image-using-slicing-in-python-opencv">ここ</a>で論じられているように、<code>img2 = cv.cvtColor(img, cv.COLOR_BGR2RGB)</code> で変換してから <code>plt.imshow(img2)</code> すればよい。あるいは次のようにすればよい：</p>
+<p><code>cv2.imshow()</code> による画像表示は、私の環境（python.org からインストールした Mac 版）ではうまくいったが、環境によってはうまくいかないようである。うまくいかない場合、matplotlib で表示すればよいが、OpenCV で読み込んだ画像は BGR の順、matplotlib の画像は RGB の順なので、そのままでは色がおかしくなる。<a href="https://stackoverflow.com/questions/15072736/extracting-a-region-from-an-image-using-slicing-in-python-opencv">ここ</a>で論じられているように、</p>
 
 <pre>
 import matplotlib.pyplot as plt
 
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+plt.axis("off")
+plt.show()
+</pre>
+
+<p>とすればよい。あるいは次のようなハックも知られている：</p>
+
+<pre>
 plt.imshow(img[..., ::-1])  # ::-1 は逆順にするハック
+</pre>
+
+<p>Google Colaboratory でも <code>cv2.imshow()</code> はうまくいかない。Google はパッチを用意してくれているので、次のようにすれば matplotlib を使わなくてもできる：</p>
+
+<pre>
+from google.colab.patches import cv2_imshow
+
+cv2_imshow(img)
 </pre>
 
 <p>画像は NumPy の ndarray で、成分は <code>'uint8'</code> である。チャンネルは [B,G,R] の順に入る。例えば青だけの縦150、横100の画像は次のようにして生成できる：</p>
@@ -64,13 +80,14 @@ img = np.array([[[255,0,0] for x in range(100)] for y in range(150)], dtype='uin
 <p>保存するには、次のようにする：</p>
 
 <pre>
-cv.imwrite("hoge.png", img)
+cv2.imwrite("hoge.png", img)
 </pre>
 
 <div class="note">
-<p>Matplotlib でも画像を読み書きできるが、チャンネルは RGB の順である。デフォルトで読めるのは PNG だけだが、<a href="http://pillow.readthedocs.io/">Pillow</a> をインストール（<code>pip install pillow</code>）すれば他の画像形式も読める。</p>
+<p>Matplotlib でも画像を読み書きできるが、チャンネルは RGB の順である。デフォルトで読めるのは PNG だけだが、<a href="http://pillow.readthedocs.io/">Pillow</a> をインストール（<code>pip install Pillow</code>）すれば他の画像形式も読める。</p>
 <pre>
 import matplotlib.pyplot as plt
+
 img = plt.imread("画像ファイル名")
 plt.imshow(img)
 plt.imsave("hoge.png", img)
@@ -93,7 +110,7 @@ Image("画像ファイル名")
 <p>いろいろな加工ができる。例：</p>
 
 <pre>
-img2 = cv.GaussianBlur(img, (9,9), 0)  # カーネルサイズは奇数に
+img2 = cv2.GaussianBlur(img, (9,9), 0)  # カーネルサイズは奇数に
 </pre>
 
 <h2>線画化</h2>
@@ -102,7 +119,7 @@ img2 = cv.GaussianBlur(img, (9,9), 0)  # カーネルサイズは奇数に
 
 <pre>
 import numpy as np
-import cv2 as cv
+import cv2
 import matplotlib.pyplot as plt
 
 def makecontour(path):
@@ -110,27 +127,27 @@ def makecontour(path):
     kernel = np.ones((5,5), np.uint8)
     kernel[0,0] = kernel[0,4] = kernel[4,0] = kernel[4,4] = 0
     # グレースケールで画像を読み込む.
-    # gray = cv.imread(path, cv.IMREAD_GRAYSCALE)
+    # gray = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     # いらすとやの画像はアルファチャンネルがあるのでこれをまず白にする
     # ImageMagickの convert -flatten x.png y.png に対応
-    img = cv.imread(path, cv.IMREAD_UNCHANGED)
+    img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
     if img.shape[2] == 4:
         mask = img[:,:,3] == 0
         img[mask] = [255] * 4
-        img = cv.cvtColor(img, cv.COLOR_BGRA2BGR)
-    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # ノイズ除去が必要なら
-    # gray = cv.fastNlMeansDenoising(gray, h=20)
+    # gray = cv2.fastNlMeansDenoising(gray, h=20)
     # 白い部分を膨張させる
-    dilated = cv.dilate(gray, kernel, iterations=1)
+    dilated = cv2.dilate(gray, kernel, iterations=1)
     # 差をとる
-    diff = cv.absdiff(dilated, gray)
+    diff = cv2.absdiff(dilated, gray)
     # 白黒反転して2値化
-    # _, contour = cv.threshold(255 - diff, 240, 255, cv.THRESH_BINARY)
+    # _, contour = cv2.threshold(255 - diff, 240, 255, cv2.THRESH_BINARY)
     # あるいは
-    contour = cv.adaptiveThreshold(255 - diff, 255,
-                                   cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                   cv.THRESH_BINARY, 7, 8)
+    contour = cv2.adaptiveThreshold(255 - diff, 255,
+                                    cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                    cv2.THRESH_BINARY, 7, 8)
     return contour
 
 # plt.close("all")
@@ -139,7 +156,7 @@ plt.set_cmap("gray")
 # plt.clf()
 contour = makecontour("bug_chou_tawamureru_kids.png")
 plt.imshow(contour)
-cv.imwrite("190831a.png", contour)
+cv2.imwrite("190831a.png", contour)
 </pre>
 
 <figure><img src="img/190831a.png" alt="蝶と遊ぶ子供のイラスト"></figure>
@@ -150,26 +167,28 @@ cv.imwrite("190831a.png", contour)
 
 <pre>
 import matplotlib.pyplot as plt
-import cv2 as cv
+import cv2
 
-img = cv.imread("lena_std.png")  # 顔が写っている画像
+img = cv2.imread("filename.png")  # 顔が写っている画像
 
-cascade = cv.CascadeClassifier('/usr/local/lib/python3.10/' +
-    'dist-packages/cv2/data/haarcascade_frontalface_default.xml')
-gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 faces = cascade.detectMultiScale(gray, scaleFactor=1.5)
 
 for (x, y, w, h) in faces:
-    cv.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255))
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255))
 
-plt.imshow(img[..., ::-1])
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+plt.axis("off")
+plt.show()
 </pre>
+
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-09-11 08:45:48 JST</time></p>
+<p>Last modified: <time>2024-02-01 11:24:19 JST</time></p>
 </footer>
 </body>
 </html>

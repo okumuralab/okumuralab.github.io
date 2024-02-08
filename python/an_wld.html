@@ -52,7 +52,7 @@ df = pd.read_csv('URL, encoding='cp932', skipfooter=1)
 <p>として最後の行を読まないようにするのが一番簡単である。あるいは，全部読んでから</p>
 
 <pre class="cell">
-df.replace(regex=r'\*', value='').astype(float)
+df = df.replace(r'\*', '', regex=True).astype(float)
 </pre>
 
 <p>のようにして <code>*</code> を削除して数値に変換する。さらに別の方法として</p>
@@ -94,7 +94,7 @@ df = pd.read_csv(URL, encoding='cp932', converters={1:foo, 2:foo, 3:foo})
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2023-06-20 17:24:11 JST</time>
+Last modified: <time>2024-01-10 15:30:11 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

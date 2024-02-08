@@ -21,7 +21,7 @@
 
 <h2>EasyOCR</h2>
 
-<p><a href="https://github.com/JaidedAI/EasyOCR">EasyOCR</a> はたいへん優れたOCRエンジンです。Apple Silicon もサポートされています。</p>
+<p><a href="https://github.com/JaidedAI/EasyOCR">EasyOCR</a> はたいへん優れたOCRエンジンです。Apple Silicon もサポートされています。コマンドラインでも使えます。</p>
 
 <p><code>pip install easyocr</code> でインストールできます。</p>
 
@@ -43,11 +43,15 @@ print(" ".join(result))
 
 <p>モデルはデフォルトでは <code>~/.EasyOCR/</code> の下に入りますが、環境変数 <code>EASYOCR_MODULE_PATH</code> を設定しておけばそちらに入ります。</p>
 
+<h2>Surya</h2>
+
+<p><a href="https://github.com/VikParuchuri/surya">Surya</a> という新しいOCRツールがあるようです。<code>pip install surya-ocr</code> でインストールできます。</p>
+
 <h2>MacのOCR機能を使う</h2>
 
 <p>Macはたいへん優れたOCR機能を持っています。画像ファイルをマウスでテキスト範囲指定してコピーできます。この機能をコマンドラインで使う方法が <a href="https://doratex.hatenablog.jp/entry/20230629/1687977178">macOS のデフォルト状態でコマンドラインからOCR処理を行う</a> という記事で解説されています。</p>
 
-<p>MacのOCR機能をPythonで使うための <a href="https://github.com/straussmaximilian/ocrmac">ocrmac</a> というパッケージがあります。<code>pip install ocrmac</code> でインストールできます。次のようにして使います。</p>
+<p>MacのOCR機能をPythonで使うための <a href="https://github.com/straussmaximilian/ocrmac">ocrmac</a> というパッケージがあります。<code>pip install ocrmac</code> でインストールできます。コマンドラインでも使えます。Pythonからは次のようにして使います。</p>
 
 <pre class="cell">
 from ocrmac import ocrmac
@@ -64,7 +68,7 @@ print(" ".join([a[0] for a in annotations]))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2023-12-03 17:11:01 JST</time>
+Last modified: <time>2024-01-13 14:51:15 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

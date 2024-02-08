@@ -19,7 +19,7 @@
 
 <h2>はじめに</h2>
 
-<p><a href="an_wld.html">気象庁の「世界の年平均気温偏差」データ</a>から、毎年どれくらい地球が温暖化しているかを調べてみましょう。</p>
+<p><a href="an_wld.html">気象庁の「世界の年平均気温偏差」データ</a>から、毎年どれくらい地球が温暖化しているかを調べてみましょう。データは2023年までのものです。</p>
 
 <pre class="cell">
 import pandas as pd
@@ -62,7 +62,7 @@ slope, intercept = np.polyfit(df1["年"], df1["世界全体"], 1)
 print("傾き", slope, "y切片", intercept)
 </pre>
 
-<p>傾き 0.0184 くらいです。毎年 0.0184 度だけ温暖化しています。少ないようですが、100年たつと 1.84 度の上昇になります。</p>
+<p>傾き 0.0189 くらいです。毎年 0.0189 度だけ温暖化しています。少ないようですが、100年たつと 1.89 度の上昇になります。</p>
 
 <p>さきほどのグラフに直線を追加してみましょう。</p>
 
@@ -89,8 +89,8 @@ pg.linear_regression(df1["年"], df1["世界全体"])
 
 <pre>
        names       coef        se          T  ...        r2    adj_r2   CI[2.5%]  CI[97.5%]
-0  Intercept -36.519467  2.196481 -16.626351  ...  0.870311  0.867148 -40.955351 -32.083583
-1          年   0.018207  0.001098  16.587389  ...  0.870311  0.867148   0.015991   0.020424
+0  Intercept -37.883328  2.241121 -16.903738  ...  0.871427  0.868365 -42.406094 -33.360562
+1          年   0.018891  0.001120  16.871930  ...  0.871427  0.868365   0.016632   0.021151
 </pre>
 
 <p>例によって画面の幅が狭いので省略されてしまいました。値を少し丸めてみましょう。</p>
@@ -101,8 +101,8 @@ pg.linear_regression(df1["年"], df1["世界全体"]).round(5)
 
 <pre>
        names      coef       se         T  pval       r2   adj_r2  CI[2.5%]  CI[97.5%]
-0  Intercept -36.51947  2.19648 -16.62635   0.0  0.87031  0.86715 -40.95535  -32.08358
-1          年   0.01821  0.00110  16.58739   0.0  0.87031  0.86715   0.01599    0.02042
+0  Intercept -37.88333  2.24112 -16.90374   0.0  0.87143  0.86837 -42.40609  -33.36056
+1          年   0.01889  0.00112  16.87193   0.0  0.87143  0.86837   0.01663    0.02115
 </pre>
 
 <h2>statsmodelsを使う</h2>
@@ -119,30 +119,30 @@ print(res.summary())
 <pre>
                             OLS Regression Results                            
 ==============================================================================
-Dep. Variable:                   世界全体   R-squared:                       0.866
-Model:                            OLS   Adj. R-squared:                  0.863
-Method:                 Least Squares   F-statistic:                     258.3
-Date:                Tue, 09 Aug 2022   Prob (F-statistic):           4.76e-19
-Time:                        09:55:55   Log-Likelihood:                 42.584
-No. Observations:                  42   AIC:                            -81.17
-Df Residuals:                      40   BIC:                            -77.69
+Dep. Variable:                   世界全体   R-squared:                       0.871
+Model:                            OLS   Adj. R-squared:                  0.868
+Method:                 Least Squares   F-statistic:                     284.7
+Date:                Wed, 07 Feb 2024   Prob (F-statistic):           2.56e-20
+Time:                        14:24:41   Log-Likelihood:                 42.480
+No. Observations:                  44   AIC:                            -80.96
+Df Residuals:                      42   BIC:                            -77.39
 Df Model:                           1                                         
 Covariance Type:            nonrobust                                         
 ==============================================================================
-                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+                 coef    std err          t      P>|t|      [0.025      0.975]
 ------------------------------------------------------------------------------
-Intercept    -36.9090      2.291    -16.111      0.000     -41.539     -32.279
-年              0.0184      0.001     16.070      0.000       0.016       0.021
+Intercept    -37.8833      2.241    -16.904      0.000     -42.406     -33.361
+年              0.0189      0.001     16.872      0.000       0.017       0.021
 ==============================================================================
-Omnibus:                        2.657   Durbin-Watson:                   1.550
-Prob(Omnibus):                  0.265   Jarque-Bera (JB):                1.468
-Skew:                           0.114   Prob(JB):                        0.480
-Kurtosis:                       2.113   Cond. No.                     3.30e+05
+Omnibus:                        2.175   Durbin-Watson:                   1.555
+Prob(Omnibus):                  0.337   Jarque-Bera (JB):                1.575
+Skew:                           0.259   Prob(JB):                        0.455
+Kurtosis:                       2.231   Cond. No.                     3.15e+05
 ==============================================================================
 
 Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The condition number is large, 3.3e+05. This might indicate that there are
+[2] The condition number is large, 3.15e+05. This might indicate that there are
 strong multicollinearity or other numerical problems.
 </pre>
 
@@ -166,18 +166,18 @@ lm(formula = 世界全体 ~ 年, data = df1)
 
 Residuals:
       Min        1Q    Median        3Q       Max 
--0.149183 -0.065294 -0.003765  0.067954  0.200055 
+-0.157424 -0.075507 -0.009075  0.063431  0.205879 
 
 Coefficients:
-              Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) -36.909018   2.290916  -16.11   &lt;2e-16 ***
-年            0.018403   0.001145   16.07   &lt;2e-16 ***
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -37.88333    2.24112  -16.90   <2e-16 ***
+年            0.01889    0.00112   16.87   <2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.08995 on 40 degrees of freedom
-Multiple R-squared:  0.8659,	Adjusted R-squared:  0.8625 
-F-statistic: 258.3 on 1 and 40 DF,  p-value: &lt; 2.2e-16
+Residual standard error: 0.09431 on 42 degrees of freedom
+Multiple R-squared:  0.8714,	Adjusted R-squared:  0.8684 
+F-statistic: 284.7 on 1 and 42 DF,  p-value: < 2.2e-16
 </pre>
 <p>2次式にするには式の部分を <code>世界全体 ~ 年 + I(年^2)</code> とします。</p>
 </div>
@@ -192,7 +192,8 @@ stats.linregress(df1["年"], df1["世界全体"])
 </pre>
 
 <pre>
-LinregressResult(slope=0.018207490184234364, intercept=-36.51946692842041, rvalue=0.932904726545762, pvalue=8.631152502859473e-20, stderr=0.0010976706458372743, intercept_stderr=2.1964812011145125)</pre>
+LinregressResult(slope=0.018891472868217057, intercept=-37.88332840028189, rvalue=0.9335024093239134, pvalue=2.5605509195046824e-20, stderr=0.0011196983660876176, intercept_stderr=2.2411213832828665)
+</pre>
 
 <p>個々の値は <code>res = stats.linregress(df1["年"], df1["世界全体"])</code> して <code>res.slope</code> などとして取り出せます。</p>
 
@@ -210,6 +211,10 @@ model.fit(X, y)
 print(model.coef_, model.intercept_)
 </pre>
 
+<pre>
+[0.01889147] -37.883328400281876
+</pre>
+
 <h2>標準ライブラリstatisticsを使う</h2>
 
 <p>Python 3.10 で標準ライブラリ statistics にも線形回帰の関数が追加されました：</p>
@@ -221,14 +226,14 @@ st.linear_regression(df1["年"], df1["世界全体"])
 </pre>
 
 <pre>
-LinearRegression(slope=0.01840288469329876, intercept=-36.90901844799179)
+LinearRegression(slope=0.018891472868217053, intercept=-37.88332840028188)
 </pre>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-27 09:08:28 JST</time></p>
+<p>Last modified: <time>2024-02-07 15:15:17 JST</time></p>
 </footer>
 </body>
 </html>
