@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/pymupdf.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PyMuPDFでPDFを読む</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PyMuPDFでPDFを読む</h1>
+
+<p><a href="https://pymupdf.io">PyMuPDF</a>は、Ghostscriptをメンテしている<a href="https://artifex.com">Artifex</a>が作っている<a href="https://artifex.com/products/mupdf/">MuPDF</a>のPythonバインディングです。<code>pip install PyMuPDF</code> でインストールできます。ライブラリ名はPyMuPDFですが、パッケージ名は <code>fitz</code> です。次のように使います。</p>
+
+<pre class="cell">
+import fitz
+
+with fitz.open("filename.pdf") as doc:
+    for page in doc:
+        text = page.get_text()
+        print(text)
+</pre>
+
+<hr>
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-02-23 16:19:10 JST</time></p>
+</footer>
+</body>
+</html>

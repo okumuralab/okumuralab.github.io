@@ -85,6 +85,22 @@ plt.show()
 
 <p>Google Colaboratory の仮想マシンはときどきリセットされます。<code>import japanize_matplotlib</code> がうまくいかなくなったら、<code>!pip install japanize-matplotlib</code> をやりなおしてください。</p>
 
+<div class="note">
+<p>上のほうに書いたように、SVGを使っても日本語が表示できます。</p>
+<pre class="cell">  
+import matplotlib.pyplot as plt
+from IPython.display import SVG
+
+plt.rcParams["svg.fonttype"] = "none"  # don't outline fonts
+plt.plot([-1, 1])
+plt.xlabel("横軸")
+plt.ylabel("縦軸")
+plt.savefig("test.svg")
+plt.close()  # don't show png
+SVG(filename="test.svg")
+</pre>
+</div>
+
 <p>Google Colab や Jupyter Notebook では、余白を含めた図の大きさのデフォルトは 6.0 × 4.0 インチ、dpi（dots per inch）値は 72 なので、ピクセル数にすれば最大 432 × 288 です（ダウンロードした画像ファイルは余白を含まないのでこれより小さくなります）。画像サイズを変えるには次のように横・縦のインチ数で指定します。</p>
 
 <pre class="cell">
@@ -480,7 +496,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-01-07 14:56:06 JST</time></p>
+<p>Last modified: <time>2024-02-23 10:28:12 JST</time></p>
 </footer>
 </body>
 </html>

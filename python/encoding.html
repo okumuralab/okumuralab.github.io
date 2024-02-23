@@ -17,28 +17,60 @@
 
 <h1>文字コード</h1>
 
-<h3>文字コード変換</h3>
+<h2>文字コード変換</h2>
 
-<p>（文字コードと <a href="https://docs.python.org/3/library/codecs.html">codecs</a> モジュールについてまとめる予定）</p>
+<p>文字コードは標準ライブラリの <a href="https://docs.python.org/3/library/codecs.html">codecs</a> モジュールで扱える。直接これを使わなくても、いろいろな関数が <code>encoding=...</code> オプションで文字コード指定を受け付ける。デフォルトはUTF-8である。例えばコマンドライン引数で与えたEUC-JPのファイルをUTF-8に変換して <code>utf8/</code> サブディレクトリに保存するには、次のようにすればよい。</p>
 
-<h3>ZIPアーカイブのファイル名文字化け対策</h3>
+<pre>
+import sys
+
+def convert(source, target):
+    with open(source, 'r', encoding='euc_jis_2004', errors='replace') as f:
+        content = f.read()
+    with open(target, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+if __name__ == "__main__":
+    for i in range(1, len(sys.argv)):
+        convert(sys.argv[i], "utf8/" + sys.argv[i])
+</pre>
+
+<p>ここで <code>euc_jp</code> では①などの「機種依存文字」がうまく扱えないので <code>euc_jis_2004</code> を使う。それでも変換できない場合があるので、<code>errors='replace'</code> を付けてエラーで止まらないようにする。例えば ∑ (0xad 0xf4 → U+2211) は変換できなかった。iconv なら EUC-JP-MS とすれば変換できた。</p>
+
+<pre>
+'①'.encode('euc_jp')        # UnicodeEncodeError
+'①'.encode('euc_jis_2004')  # b'\xad\xa1'
+'∑'.encode('euc_jis_2004')  # UnicodeEncodeError
+b'\xad\xa1'.decode('euc_jis_2004')  # '①'
+b'\xad\xf4'.decode('euc_jis_2004')  # UnicodeDecodeError
+</pre>
+
+<p>同様に <code>shift_jis</code> は <code>cp932</code> にする。</p>
+
+<pre>
+'①'.encode('shift_jis')  # UnicodeEncodeError
+'①'.encode('cp932')      # b'\x87@'
+'∑'.encode('cp932')      # b'\x87\x94'
+</pre>
+
+<h2>ZIPアーカイブのファイル名文字化け対策</h2>
 
 <p>ZIP アーカイブの操作は <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> パッケージでできる。ただ，日本語環境の Windows で作成したアーカイブは，ファイル名が CP932（Shift JIS の Microsoft 拡張）になっている。これを Mac や Linux で展開するには，UTF-8 に変換しなければならない。</p>
 
 <p>Python 3 の zipfile モジュール（zipfile.py）では</p>
 
 <pre>
-<code>            if zinfo.flag_bits &amp; 0x800:
+            if zinfo.flag_bits &amp; 0x800:
                 # UTF-8 filename
                 fname_str = fname.decode("utf-8")
             else:
                 fname_str = fname.decode("cp437")
-</code></pre>
+</pre>
 
 <p>のような処理がされている。コードページ 437（DOS Latin US）はオリジナルの IBM PC の文字セットである。したがって，これを UTF-8 に変換して展開するには，次のようにすればよさそうである（DoraTeX さんによる暗号化 ZIP 対応をマージした）：</p>
 
 <pre>
-<code>#! /usr/bin/env python3
+#! /usr/bin/env python3
 
 import sys
 from zipfile import ZipFile
@@ -57,7 +89,7 @@ with ZipFile(sys.argv[1]) as z:
             zinfo.filename = name
         print("Extracting", zinfo.filename)
         z.extract(zinfo)
-</code></pre>
+</pre>
 
 <p>この19行ほどのファイルを <code>unzip.py</code> という名前で作成して実行可能にしておけば，<code>./unzip.py アーカイブ名.zip</code> で展開できる。</p>
 
@@ -65,23 +97,23 @@ with ZipFile(sys.argv[1]) as z:
 
 <p>[追記] DoraTeX さんが<a href="https://gist.github.com/doraTeX/0d79d8ff35710a27bc3e5176cc646b60">改良版</a>を作られた。</p>
 
-<h3>NFC，NFD</h3>
+<h2>NFC，NFD</h2>
 
 <p>新しい macOS では APFS というファイルシステムが用いられるが，従来の Mac で用いられていた HFS+ というファイルシステムでは，ファイル名の Unicode 正規化がほぼ NFD という形式になっていた。例えばカレントディレクトリに「パンダ.txt」というファイルを作り，<a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> でファイル名を読み出す：</p>
 
 <pre>
-<code>!touch パンダ.txt  # カレントディレクトリに「パンダ.txt」を作る
+!touch パンダ.txt  # カレントディレクトリに「パンダ.txt」を作る
 
 import pathlib
 
 path = pathlib.Path(".")
 s = str(list(path.glob("*ン*.txt"))[0])
-</code></pre>
+</pre>
 
 <p>ところが</p>
 
 <pre>
-<code>In [ ]: s
+In [ ]: s
 Out[ ]: 'パンダ.txt'
 
 In [ ]: list(s)
@@ -98,34 +130,34 @@ Out[ ]:
  '0x74',
  '0x78',
  '0x74']
-</code></pre>
+</pre>
 
 <p>このように濁点・半濁点が分離される。これが NFD である。このように直前の文字に結合して半濁点，濁点を付ける文字はそれぞれ COMBINING KATAKANA-HIRAGANA SEMI-VOICED SOUND MARK（U+309A），COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK（U+3099）である。</p>
 
 <p>通常の NFC に直すには <a href="https://docs.python.org/3/library/unicodedata.html">unicodedata</a> モジュールを使う：</p>
 
 <pre>
-<code>import unicodedata
+import unicodedata
 
 t = unicodedata.normalize('NFC', s)
-</code></pre>
+</pre>
 
 <p>すると，今度は</p>
 
 <pre>
-<code>In [ ]: t
+In [ ]: t
 Out[ ]: 'パンダ.txt'
 
 In [ ]: list(t)
 Out[ ]: ['パ', 'ン', 'ダ', '.', 't', 'x', 't']
-</code></pre>
+</pre>
 
 <p>見かけは同じだが中身が違う。</p>
 
 <p>別の例（Pokémon の é）：</p>
 
 <pre>
-<code>In [ ]: list('é')
+In [ ]: list('é')
 Out[ ]: ['é']
 
 In [ ]: unicodedata.normalize('NFD', 'é')
@@ -133,33 +165,33 @@ Out[ ]: 'é'
 
 In [ ]: list(unicodedata.normalize('NFD', 'é'))
 Out[ ]: ['e', '́']
-</code></pre>
+</pre>
 
 <p>たとえAPFSでも，過去のHFS+からコピーしたファイルはNFDになっていることがあるので，要注意。</p>
 
 <p>カレントディレクトリ以下にあるすべてのファイルについて，ファイル名をNFCに直す。<code>XR8L0bKA6Ofb</code> は他と重ならないファイル名なら何でもいい。なぜか <code>os.rename(s, t)</code> ではうまくいかなかった。</p>
 
 <pre>
-<code>for x in pathlib.Path(".").glob("**/*"):
+for x in pathlib.Path(".").glob("**/*"):
     s = str(x)
     t = unicodedata.normalize("NFC", s)
     if s != t:
         print("Renaming", s)
         os.rename(s, "XR8L0bKA6Ofb")
         os.rename("XR8L0bKA6Ofb", t)
-</code></pre>
+</pre>
 
 <p>Homebrewのrsyncは <code>--iconv=UTF8-MAC,UTF-8</code> というオプションでNFD→NFCにしてくれる。ただ，<code>-E</code> がmacOSのrsyncと違って "copy extended attributes, resource forks" の意味を持たないのが残念（<code>man -M /usr/share/man rsync</code> と <code>man -M /usr/local/share/man rsync</code> を比較）。</p>
 
-<h3>「埼玉」と「埼⽟」</h3>
+<h2>「埼玉」と「埼⽟」</h2>
 
 <p>総務省の<a href="https://www.soumu.go.jp/kojinbango_card/">マイナンバー制度とマイナンバーカード</a>にある「マイナンバーカード交付状況」PDFで「埼玉」（玉: U+7389）と「埼⽟」（⽟: U+2F5F）が混在しているという<a href="https://twitter.com/hal_sk/status/1281853581218336768">話</a>を聞いた。後者はCJK部首/康熙部首である。こういうのは <code>unicodedata.normalize('NFKC', '「埼玉」と「埼⽟」')</code> で統一できる（<code>'NFKD'</code> だと濁点などが分離する）。こういったものが混在する原因はAdobe DistillerまたはChromeのPDF出力である<a href="http://twitter.com/MurakamiShinyu/status/1282590800094756864">とのこと</a>。</p>
 
 <p>NFKC化で全部の部首が正規化されるわけではないようだ。次のようにすればよいと<a href="https://twitter.com/imabari_ehime/status/1282605117468897280">教えていただいた</a>：</p>
 
 <pre>
-<code>str.maketrans("⺟⺠⻁⻄⻑⻘⻝⻤⻨⻩⻫⻭⻯⻲戶", "母民虎西長青食鬼麦黄斉歯竜亀戸")
-</code></pre>
+str.maketrans("⺟⺠⻁⻄⻑⻘⻝⻤⻨⻩⻫⻭⻯⻲戶", "母民虎西長青食鬼麦黄斉歯竜亀戸")
+</pre>
 
 <p>詳しくは<a href="https://imabari.hateblo.jp/entry/2020/07/13/231857">マイナンバーカード交付状況のPDFをスクレイピング・CSV変換</a>参照。</p>
 
@@ -167,7 +199,8 @@ Out[ ]: ['e', '́']
 
 <p>いずれにしても，次のようなフィルタで正規化できる：</p>
 
-<pre><code>#! /usr/bin/env python3
+<pre>
+#! /usr/bin/env python3
 
 import fileinput
 import unicodedata
@@ -178,17 +211,18 @@ for line in fileinput.input():
     line = unicodedata.normalize('NFKC', line)
     line = line.translate(tbl)
     print(line, end="")
-</code></pre>
+</pre>
 
 <p>NFKC化の副作用？として，（）が()になるなど，全角の英数字・記号類が半角になる。</p>
 
 <p><a href="https://imabari.hateblo.jp/entry/2020/08/03/220407">表引きだけの方法</a>を教えていただいた：</p>
 
-<pre><code>tbl = str.maketrans(
+<pre>
+tbl = str.maketrans(
     "⺃⺅⺉⺋⺎⺏⺐⺒⺓⺔⺖⺘⺙⺛⺟⺠⺡⺢⺣⺦⺨⺫⺬⺭⺱⺲⺹⺾⻁⻂⻃⻄⻍⻏⻑⻒⻖⻘⻟⻤⻨⻩⻫⻭⻯⻲⼀⼁⼂⼃⼄⼅⼆⼇⼈⼉⼊⼋⼌⼍⼎⼏⼐⼑⼒⼓⼔⼕⼖⼗⼘⼙⼚⼛⼜⼝⼞⼟⼠⼡⼢⼣⼤⼥⼦⼧⼨⼩⼪⼫⼬⼭⼮⼯⼰⼱⼲⼳⼴⼵⼶⼷⼸⼹⼺⼻⼼⼽⼾⼿⽀⽁⽂⽃⽄⽅⽆⽇⽈⽉⽊⽋⽌⽍⽎⽏⽐⽑⽒⽓⽔⽕⽖⽗⽘⽙⽚⽛⽜⽝⽞⽟⽠⽡⽢⽣⽤⽥⽦⽧⽨⽩⽪⽫⽬⽭⽮⽯⽰⽱⽲⽳⽴⽵⽶⽷⽸⽹⽺⽻⽼⽽⽾⽿⾀⾁⾂⾃⾄⾅⾆⾇⾈⾉⾊⾋⾌⾍⾎⾏⾐⾑⾒⾓⾔⾕⾖⾗⾘⾙⾚⾛⾜⾝⾞⾟⾠⾡⾢⾣⾤⾥⾦⾧⾨⾩⾪⾫⾬⾭⾮⾯⾰⾱⾲⾳⾴⾵⾶⾷⾸⾹⾺⾻⾼⾽⾾⾿⿀⿁⿂⿃⿄⿅⿆⿇⿈⿉⿊⿋⿌⿍⿎⿏⿐⿑⿒⿓⿔⿕戶黑",
     "乚亻刂㔾兀尣尢巳幺彑忄扌攵旡母民氵氺灬丬犭罒示礻罓罒耂艹虎衤覀西辶阝長镸阝青飠鬼麦黄斉歯竜亀一丨丶丿乙亅二亠人儿入八冂冖冫几凵刀力勹匕匚匸十卜卩厂厶又口囗土士夂夊夕大女子宀寸小尢尸屮山巛工己巾干幺广廴廾弋弓彐彡彳心戈戸手支攴文斗斤方无日曰月木欠止歹殳毋比毛氏气水火爪父爻爿片牙牛犬玄玉瓜瓦甘生用田疋疒癶白皮皿目矛矢石示禸禾穴立竹米糸缶网羊羽老而耒耳聿肉臣自至臼舌舛舟艮色艸虍虫血行衣襾見角言谷豆豕豸貝赤走足身車辛辰辵邑酉釆里金長門阜隶隹雨靑非面革韋韭音頁風飛食首香馬骨高髟鬥鬯鬲鬼魚鳥鹵鹿麥麻黃黍黒黹黽鼎鼓鼠鼻齊齒龍龜龠戸黒",
 )
-</code></pre>
+</pre>
 
 <p>ものかのさんの<a href="https://tama-san.com/resolve-kanji/">やっかいな漢字 – CJK部首補助／康煕部首</a>が参考になる。</p>
 
@@ -198,7 +232,7 @@ for line in fileinput.input():
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-12-19 15:02:38</time>
+Last modified: <time>2024-02-18 17:11:32 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
