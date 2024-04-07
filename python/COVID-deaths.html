@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/COVID-deaths.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COVID-19による死者数</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>COVID-19による死者数</h1>
+
+<p>e-Statの <a href="https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00450011&tstat=000001028897&cycle=1&year=20230&month=24101210&tclass1=000001053058&tclass2=000001053060&result_back=1&cycle_facet=cycle&tclass3val=0&metadata=1&data=1">人口動態調査 - 人口動態統計 - 月報（概数）</a> の第7表に毎月の新型コロナウイルス感染症による死者数が載っている。これをCSVにしたものを <a href="data/COVID-deaths.csv">COVID-deaths.csv</a> として置いておく。グラフにしてみよう。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import pandas as pd
+
+URL = "https://okumuralab.org/~okumura/python/data/COVID-deaths.csv"
+
+df = pd.read_csv(URL, parse_dates=["month"])
+
+plt.bar(df["month"], df["deaths"], width=25)
+plt.xticks(rotation=10)
+</pre>
+
+<figure><img src="img/COVID-deaths.svg" alt="新型コロナウイルス感染症による死者数"></figure>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-03-09 20:09:31 JST</time></p>
+</footer>
+</body>
+</html>

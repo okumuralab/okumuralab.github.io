@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/securitycam.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>監視カメラ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>監視カメラ</h1>
+
+<p>いわゆる監視カメラは家の内外にいくつか設置しているが、自分の部屋にないことに気づいた。幸い、ほぼずっと動かしているMac miniがある。ネット会議のためのWebカメラも付けてある。これで監視カメラになりそうだ。</p>
+
+<p>GPT-4に聞いたら、OpenCVで画像を取得し、一つ前の画像との差分で動体を検出するプログラムを書いてくれた。さらにClaude 3 Opusに聞いたら、一つの画像だけで動体を検出するプログラムを書いてくれた。ここでは後者に基づいて、まともに動くようにブラッシュアップした。パソコンを壊された・盗まれた場合に備えて、画像をローカルに保存するだけでなくリモートサーバにもrsyncで送るようにした。</p>
+
+<p>OpenCVのBackgroundSubtractorMOG2というアルゴリズムを使って動体を検出している。これは以前のフレームから背景を学習する。</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import cv2
+import time
+import os
+import subprocess
+
+INITIAL = 30
+DEBUG = True
+
+cap = cv2.VideoCapture(0)  # Use 0 for the default camera
+background_subtractor = cv2.createBackgroundSubtractorMOG2(detectShadows=True)
+count = 0
+while True:
+    count += 1
+    ret, frame = cap.read()
+    mask = background_subtractor.apply(frame)
+    _, thresh = cv2.threshold(mask, 244, 255, cv2.THRESH_BINARY)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contourcount = 0
+    for contour in contours:
+        area = cv2.contourArea(contour)
+        if area > 500:
+            contourcount += 1
+            if count < INITIAL:
+                x, y, w, h = cv2.boundingRect(contour)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    if DEBUG:
+        print(count, contourcount)
+    if count >= INITIAL and contourcount != 0:
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        photo_path = f"frame_{timestamp}.jpg"
+        cv2.imwrite(photo_path, frame)
+        subprocess.run(["rsync", "-avz", photo_path, "example.com:watch/"],
+                       check=True)
+    cv2.imshow("Camera", frame)
+    if cv2.waitKey(1000) == ord('q'):
+        break
+cap.release()
+cv2.destroyAllWindows()
+</pre>
+
+<p>SSHポートを変えてある場合は</p>
+
+<pre>
+subprocess.run(["rsync", "-avz", "-e", "ssh -p 12345", photo_path, ...
+</pre>
+
+<p>のようにオプションを増やす。</p>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-06 20:25:28 JST</time></p>
+</footer>
+</body>
+</html>

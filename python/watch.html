@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/watch.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Webページ監視</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>Webページ監視</h1>
+
+<p>与えられたWebページ群を巡回監視し、変化があったら差分を表示するプログラムを作ってみよう。</p>
+
+<p>以下のプログラム <code>watch.py</code> を適当な（空の）ディレクトリに置いて、<code>./watch.py</code> あるいは <code>python3 watch.py</code> などとして起動すると、プログラム最後のリスト <code>targets</code> で与えられたURLを巡回し、カレントディレクトリに（URLのMD5ハッシュ16進をファイル名とする）ファイルを作って保存する（文字コードはUTF-8に統一）。ファイルのタイムスタンプはHTTPのLast-Modifiedヘッダに書かれた日時に設定される（不明の場合は現在時刻）。次回、同様にして <code>watch.py</code> を起動すると、もしURLの指すページが変更されていれば、その差分の先頭100行を表示する。</p>
+
+<p>実はこれはデバッグモードの動作である。もしLinuxサーバなどがあれば、プログラム中の <code>DEBUG = True</code> を <code>DEBUG = False</code> に書き換え、cronなどで定時動作させると、変更があればメールで自分宛に差分を送ってくれる。メールは自マシンのSMTPサーバ（Postfixなど）で無認証で送れるとする。</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import os
+import re
+import time
+import hashlib
+import requests
+from datetime import datetime
+import difflib
+import smtplib
+from email.message import EmailMessage
+
+DEBUG = True
+
+os.environ['TZ'] = 'UTC'
+time.tzset()
+
+def generate_diff(old_content, new_content):
+    old_lines = old_content.splitlines(keepends=True)
+    new_lines = new_content.splitlines(keepends=True)
+    diff = difflib.unified_diff(old_lines, new_lines, fromfile='old', tofile='new', n=0)
+    return ''.join(list(diff)[:100])  # 差分の先頭100行を返す
+
+def send_email(subject, body):
+    if DEBUG:
+        print(subject)
+        print(body)
+        return
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg['Subject'] = subject
+    msg['From'] = "自分のメールアドレス"
+    msg['To'] = "自分のメールアドレス"
+    s = smtplib.SMTP('localhost')
+    s.send_message(msg)
+    s.quit()
+
+def download_and_convert_to_utf8(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    content_type = response.headers.get('Content-Type', '')
+    if 'charset=' in content_type:
+        charset = content_type.split('charset=')[-1]
+    else:
+        charset = 'utf-8'
+        m = re.search(r'<meta\s[^>]*charset=["\']?(.+?)["\'>]',
+                      response.text, re.IGNORECASE)
+        if m:
+            charset = m.group(1)
+    return response.content.decode(charset, errors='replace')
+
+def download_if_newer_and_notify(url):
+    local_file_path = hashlib.md5(url.encode()).hexdigest()
+    if os.path.exists(local_file_path):
+        local_file_mtime = os.path.getmtime(local_file_path)
+        local_file_datetime = datetime.fromtimestamp(local_file_mtime)
+    else:
+        local_file_datetime = None
+    try:
+        response = requests.head(url)
+        response.raise_for_status()
+        last_modified_str = response.headers.get('Last-Modified')
+        if last_modified_str:
+            last_modified_datetime = datetime.strptime(last_modified_str,
+                                                       '%a, %d %b %Y %H:%M:%S %Z')
+        else:
+            last_modified_datetime = datetime.utcnow()
+        if local_file_datetime is None or last_modified_datetime > local_file_datetime:
+            if os.path.exists(local_file_path):
+                with open(local_file_path, 'rb') as file:
+                    old_content = file.read().decode()
+            else:
+                old_content = None
+            new_content = download_and_convert_to_utf8(url)
+            with open(local_file_path, 'wb') as f:
+                f.write(new_content.encode())
+            mtime = last_modified_datetime.timestamp()
+            os.utime(local_file_path, (mtime, mtime))
+            if old_content is not None:
+                diff = generate_diff(old_content, new_content)
+                if diff:
+                    send_email("Updated: " + url, diff)
+    except requests.RequestException as e:
+        print("Error", url, e)
+
+# 監視対象のURL
+targets = [
+    'https://example.com',
+    'https://example.org/foo/bar.html',
+    'https://okumuralab.org/tex/mod/forum/view.php?id=2'
+]
+
+for url in targets:
+    download_if_newer_and_notify(url)
+    # time.sleep(10)  # 必要に応じて設定
+</pre>
+
+<p>Webページの中には、アクセスごとにランダムにページの一部が書き換わるものがあって、厄介である。対応はできそうだが、まだ対応していない。</p>
+
+<p>プログラミング上の注意として、<code>os.environ['TZ'] = 'UTC'</code> がないとUTC時刻を <code>os.utime()</code> でローカル時刻として設定してしまうので、ファイルのタイムスタンプがずれてしまう（<code>time.tzset()</code> は念のために入れた）。これはコマンドラインで <code>./watch.py</code> の代わりに <code>TZ=UTC ./watch.py</code> と打つのと同じ効果を持つ。<code>ls -l</code> と <code>TZ=UTC ls -l</code> の表示を比べてみれば違いがわかる。</p>
+
+<p><code>datetime.strptime(last_modified_str, '%a, %d %b %Y %H:%M:%S %Z')</code> は <code>"Tue, 02 Apr 2024 08:33:40 GMT"</code> のような文字列を読んで <code>datetime</code> オブジェクトを返すが、タイムゾーン情報は正確に反映されない。HTTPのLast-ModifiedヘッダはGMTしか返さないので、これで十分であろう。</p>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-06 13:45:42 JST</time></p>
+</footer>
+</body>
+</html>

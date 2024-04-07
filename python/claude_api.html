@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/claude_api.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClaudeのAPIを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ClaudeのAPIを使う</h1>
+
+<p><a href="https://www.anthropic.com">Anthropic</a>（アンスロピック）は2021年にOpenAIから離脱した人たちが作った会社です。<a href="https://claude.ai">Claude</a>（クロード）という生成AIを開発しています。2024-03-05（日本時間）にはClaude 3が登場し、最上位モデルClaude 3 Opus（オーパス）はGPT-4を超えたと宣伝されています。しかし、今のところWebで無料で使えるのは2番目のモデルClaude 3 Sonnet（ソネット）までです。WebでOpusを使うには、月20ドル払ってClaude Proに登録しなければなりません。しかし、API経由での利用なら、従量制ですし、5ドルの無料枠があります。<a href="https://console.anthropic.com/dashboard">Dashboard</a> 経由で使うこともできますが、ここではPythonから使ってみましょう。</p>
+
+<p>ちなみに、お値段は、百万トークンあたり、入力が15ドル、出力が75ドルです。クレジットカードを登録すれば、例えば残高が5ドルを切ったら10ドル積み増すといった設定ができます。残高は <a href="https://console.anthropic.com/settings/plans">Plans &amp; Billing</a> で確認できます。</p>
+
+<p>あとはAPIの <a href="https://docs.anthropic.com/claude/docs/">ドキュメント</a> を読みながら作業します。まずはAPIキーを発行してもらい、</p>
+
+<pre>
+export ANTHROPIC_API_KEY='...'
+</pre>
+
+<p>のような形で環境変数として登録しておきます（これが難しい場合は以下参照）。Python側では</p>
+
+<pre>
+pip install anthropic
+</pre>
+
+<p>でライブラリをインストールしておき、次のようにして <code>client</code> オブジェクトを作ります。</p>
+
+<pre class="cell">
+import anthropic
+
+client = anthropic.Anthropic(
+    # もし環境変数でAPIキーをセットできなければここで指定:
+    # api_key="..."
+)
+</pre>
+
+<p>最新のClaude 3 Opusを使ってみましょう。</p>
+
+<pre class="cell">
+message = client.messages.create(
+    model="claude-3-opus-20240229",
+    max_tokens=1000, # 出力上限（4096まで）
+    temperature=0.0, # 0.0-1.0
+    system="", # 必要ならシステムプロンプトを設定
+    messages=[
+        {
+            "role": "user",
+            "content": "まどマギでだれが好きですか？"
+        }
+    ]
+)
+
+print(message.content[0].text)
+</pre>
+
+<blockquote>
+<p>まどマギの登場人物の中では、鹿目まどかが一番好きです。</p>
+
+<p>まどかは優しくて思いやりのある性格で、友達思いの一面を持っています。自分の願いを叶えるためではなく、他者を救うために魔法少女になろうとする彼女の強い意志には感銘を受けました。</p>
+
+<p>また、物語を通してまどかが成長していく姿も印象的でした。最終的に彼女が下した選択は、勇気と愛に溢れていて、とても感動的だと思います。</p>
+
+<p>まどかの他にも、暁美ほむらの強さと献身ぶりや、美樹さやかの明るさと真っ直ぐさなど、魅力的なキャラクターが多数登場するのがまどマギの魅力だと思います。一人一人が個性的でありながら、友情や絆といったテーマがしっかり描かれているのが素晴らしいですね。</p>
+</blockquote>
+
+<p><code>message.usage</code> で入力、出力のトークン数がわかります。Claude 3 Opusの場合、百万トークンあたりそれぞれ15ドル、75ドルです。</p>
+
+<p><code>client.messages.create()</code> の <code>messages</code> はリストで、</p>
+
+<pre>
+[
+    { "role": "user", "content": "問1" },
+    { "role": "assistant", "content": "答1" },
+    { "role": "user", "content": "問2" },
+]
+</pre>
+
+<p>のように増やしていきます。このあたりはOpenAIのものと同じです。</p>
+
+<p>マルチメディアの場合は次のように指定します。</p>
+
+<pre>
+message = client.messages.create(
+    ...,
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": "image/jpeg",  # jpeg, png, gif, webp
+                        "data": "/9j/4AAQSkZJRg...",
+                    }
+                },
+                {
+                    "type": "text",
+                    "text": "これは何？"
+                }
+            ]
+        }
+    ]
+)
+</pre>
+
+<p>ストリーミングも簡単です：</p>
+
+<pre>
+with client.messages.stream(
+        max_tokens=1024,
+        messages=[{"role": "user", "content": "Hello"}],
+        model="claude-3-opus-20240229",
+) as stream:
+    for text in stream.text_stream:
+        print(text, end="", flush=True)
+</pre>
+
+<p><a href="chatgpt_api.html">ChatGPTのAPIを使う</a>で作ったような簡単なアプリを作ってみましょう。</p>
+
+<pre class="cell">
+import mimetypes
+import base64
+import anthropic
+
+class Claude:
+    def __init__(self, model="claude-3-opus-20240229", messages=None, temperature=0, stream=True):
+        # model: "claude-3-opus-20240229" or "claude-3-sonnet-20240229"
+        # or "claude-3-haiku-20240307"
+        self.client = anthropic.Anthropic()
+        self.model = model
+        self.messages = messages or []
+        self.temperature = temperature
+        self.stream = stream
+
+    def chat(self, prompt, media=None, temperature=None, stream=None, max_tokens=4096):
+        prompt = prompt.strip()
+        if media is None:
+            content = prompt
+        else:
+            mime_type, _ = mimetypes.guess_type(media)
+            if mime_type and mime_type.startswith("image"):
+                with open(media, "rb") as image_file:
+                    image_content = image_file.read()
+                    base64_content = base64.b64encode(image_content).decode("utf-8")
+            else:
+                print(media, "is not an image")
+                return
+            content = [
+                {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": mime_type,
+                        "data": base64_content
+                    }
+                },
+                {
+                    "type": "text",
+                    "text": prompt
+                }
+            ]
+        if len(self.messages) > 0 and self.messages[-1]["role"] == "user":
+            self.messages.pop()
+        self.messages.append({"role": "user", "content": content})
+        stream = stream if stream is not None else self.stream
+        temperature = temperature if temperature is not None else self.temperature
+        ans = ""
+        if stream:
+            try:
+                with self.client.messages.stream(model=self.model,
+                                                 max_tokens=max_tokens,
+                                                 messages=self.messages,
+                                                 temperature=temperature) as f:
+                    for text in f.text_stream:
+                        print(text, end="", flush=True)
+                        ans += text
+            except Exception as e:
+                print("Error", e)
+        else:
+            try:
+                message = self.client.messages.create(model=self.model,
+                                                      max_tokens=max_tokens,
+                                                      messages=self.messages,
+                                                      temperature=temperature)
+                ans = message.content[0].text
+                print(ans)
+                print(message.usage)
+            except Exception as e:
+                print("Error", e)
+        if ans != "":
+            self.messages.append({"role": "assistant", "content": ans})
+
+    def get_messages(self):
+        return self.messages
+
+claude = Claude()
+
+claude.chat("""
+まどマギでだれが好きですか？
+""")
+</pre>
+
+<p><code>claude.chat("...")</code> で続きの会話ができます。<code>claude.chat("...", media="filename.jpg")</code> のようにして画像を指定できます（JPEG、PNG、GIF、WEBP）。会話をリセットするには <code>claude = Claude()</code> をもう一度行います。</p>
+
+<p>混んでいると <code>APIStatusError: {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}</code> が返ることがあります（特にストリーミングのとき）。そのときは <code>claude.chat("...", stream=False)</code> も試してみてください。</p>
+
+<p><code>model</code> については <code>"claude-3-opus-20240229"</code> 以外に <code>"claude-3-sonnet-20240229"</code>、<code>"claude-3-haiku-20240307"</code> が使えます。入力/出力の値段は、100万トークンあたり、それぞれ15/75ドル、3/15ドル、0.25/1.25ドルです。いずれもコンテキスト窓は200Kトークン、最大出力は4096トークン、学習データは2023年8月までです。詳細は <a href="https://docs.anthropic.com/claude/docs/models-overview">Models overview</a> をご覧ください。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-04 18:48:06 JST</time></p>
+</footer>
+</body>
+</html>

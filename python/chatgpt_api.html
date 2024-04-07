@@ -7,6 +7,7 @@
 <title>ChatGPTのAPIを使う</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
 </head>
 <body>
 
@@ -139,7 +140,7 @@ class Chatbot:
         prompt = prompt.strip()
         # print(len(prompt), "letters,", len(prompt.split()), "words")
         self.messages.append({"role": "user", "content": prompt})
-        stream = stream or self.stream
+        stream = stream if stream is not None else self.stream
         res = self.client.chat.completions.create(model=self.model,
                                            messages=self.messages,
                                            temperature=temperature or self.temperature,
@@ -244,7 +245,7 @@ print()
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-01-26 10:06:13 JST</time></p>
+<p>Last modified: <time>2024-03-06 13:36:05 JST</time></p>
 </footer>
 </body>
 </html>

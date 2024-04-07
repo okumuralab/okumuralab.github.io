@@ -7,34 +7,41 @@
 <title>一括置換</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
 </head>
 <body>
 
+<header>
 <nav id="breadcrumbs">
 <a href="../">ホーム</a> &gt;
 <a href="./">Python</a> &gt;
 </nav>
+</header>
 
+<main>
 <h1>一括置換</h1>
 
 <p><code>str.replace()</code> を使って（正規表現を使わず）ファイル中の文字列を一括置換するコマンドを作ってみましょう。</p>
 
-<pre><code>#! /usr/bin/env python3
+<pre>
+#! /usr/bin/env python3
 
 import sys
 
 for arg in sys.argv[3:]:
-    with open(arg) as f:
+    with open(arg, encoding='utf-8') as f:
         s = f.read()
     t = s.replace(sys.argv[1], sys.argv[2])
     if t != s:
-        with open(arg, 'w') as f:
+        with open(arg, 'w', encoding='utf-8') as f:
             f.write(t)
-</code></pre>
+</pre>
 
 <p>これを <code>replace.py</code> という名前で保存して，パスの通った場所に置いておき，例えば</p>
 
-<pre><code>replace.py hoge fuga *.tex</code></pre>
+<pre>
+replace.py hoge fuga *.tex
+</pre>
 
 <p>と打ち込めば，カレントディレクトリの <code>*.tex</code> 全体にわたって <code>hoge</code> を <code>fuga</code> に置き換えてくれます。</p>
 
@@ -45,25 +52,23 @@ for arg in sys.argv[3:]:
 <p>一括置換をより安全に実行するには，別にフォルダを作っておき，置換した結果をそちらに入れて，問題がなければオリジナルを置き換えます：</p>
 
 <pre>
-<code>for arg in sys.argv[1:]:
-    with open(arg) as f:
+for arg in sys.argv[1:]:
+    with open(arg, encoding='utf-8') as f:
         orig = f.read()
     text = orig
     text = text.replace("A", "B")
     text = text.replace("C", "D")
     if text != orig:
-        with open('new/' + arg, 'w') as f:
+        with open('new/' + arg, 'w', encoding='utf-8') as f:
             f.write(text)
-</code></pre>
+</pre>
+</main>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-02-10 12:44:44</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2024-04-05 15:11:50 JST</time></p>
+</footer>
 </body>
 </html>

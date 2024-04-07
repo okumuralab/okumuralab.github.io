@@ -4,40 +4,43 @@ body {
 }
 h2 {
   font-size: 1.2em;
-  margin: 2em 0 0 0;
+  margin-top: 2em;
   padding: 0.2em 0.5em;
-  border-style: solid;
-  border-width: 0 0 0 2em;
-  border-color: #99F;
-  clear: both;
+  border-left: 1em solid #99F;
+  /* clear: both; */
 }
 h3 {
-  margin: 1em 0 0 0;
+  margin-top: 1em;
   padding: 0.2em 0.5em;
-  border-style: solid;
-  border-width: 0 0 0 1em;
-  border-color: #99F;
+  border-left: 0.5em solid #99F;
+}
+pre, code, tt {
+  font-family: Menlo, Consolas, "Courier New", monospace;
+  color: maroon;
 }
 pre {
-  font-family: Menlo, "Courier New", Consolas, monospace;
-  color: maroon;
   margin-left: 2em;
-  overflow: auto;
+  overflow-x: auto;
 }
-code, tt { font-family: Menlo, "Courier New", Consolas, monospace; color: maroon }
+pre:hover { background: #EEE; }
+pre:active { background: #CCC; }
 em { font-style: normal; color: #F30 }
 a:hover, a:focus, a:active { color: red }
 a[name]:hover, a[name]:focus, a[name]:active { color: black }
-img { border-style: none }
+img {
+  max-width: 100%;
+  height: auto;
+  border-style: none;
+}
 td, th { padding: 0.2em 0.7em }
 td { text-align: right }
 th { text-align: center }
 del { color: gray }
 .cell {
   padding: 0.5em 1em;
-  margin: 0 0;
+  margin: 0;
+  border-left: 1em solid #CCC;
   background: #f4f4f4;
-  border-left: solid 1em #cccccc;
   box-shadow: 0 0.2em 0.3em rgba(0, 0, 0, 0.3);
 }
 .note {
@@ -63,7 +66,15 @@ hr { clear: both }
 blockquote > p { margin: 0 }
 figure { margin-left: 0; margin-right: 0 }
 img { max-width: 100%; height: auto }
-
+.container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.item {
+  flex: 1 1 200px;
+  margin: 1em;
+}
 @media print {
   body { margin: 0 }
   a:link, a:visited { color: #0000EE }

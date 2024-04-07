@@ -14,6 +14,7 @@ window.onload = function() {
   [].forEach.call(a, function(x) {x.textContent = url});
 }
 </script>
+<script src="../js/copypre.js"></script>
 </head>
 <body>
 
@@ -291,12 +292,14 @@ json.dumps(df.to_dict(orient="list"), separators=(',', ':'))
 <p>いったん dict 形式になれば、JSON ファイルへの書き出し・読み込みは次のようにできます：</p>
 
 <pre>
-with open('hoge.json', 'w') as f:
+with open('hoge.json', 'w', encoding='utf-8') as f:
     json.dump(hoge, f)
 
-with open('hoge.json') as f:
+with open('hoge.json', encoding='utf-8') as f:
     hoge = json.load(f)
 </pre>
+
+<p>この <a href="https://docs.python.org/3/library/functions.html#open"><code>open()</code></a> はPython標準の関数で、文字コード <code>encoding</code> はシステム依存です（Python 3.11以降では <a href="https://docs.python.org/3/library/locale.html#locale.getencoding"><code>locale.getencoding()</code></a> で調べられます。Windows日本語環境では <code>'cp932'</code>、それ以外ではだいたい <code>'UTF-8'</code> です）。</p>
 
 <h2>全部メモリに入れないで処理する</h2>
 
@@ -305,7 +308,7 @@ with open('hoge.json') as f:
 <pre>
 import csv
 
-with open('file.csv') as f:
+with open('file.csv', encoding='utf-8') as f:
     reader = csv.reader(f)
     for row in reader:
         print(row)
@@ -349,7 +352,7 @@ df = pd.read_csv(StringIO(r.text))
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-11-18 16:48:41 JST</time>
+Last modified: <time>2024-04-06 10:11:21 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

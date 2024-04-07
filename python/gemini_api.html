@@ -7,6 +7,7 @@
 <title>Gemini APIを使う</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
 </head>
 <body>
 
@@ -85,10 +86,56 @@ list(genai.list_models())
        temperature=None,
        top_p=None,
        top_k=None),
+ Model(name='models/gemini-1.0-pro',
+       base_model_id='',
+       version='001',
+       display_name='Gemini 1.0 Pro',
+       description='The best model for scaling across a wide range of tasks',
+       input_token_limit=30720,
+       output_token_limit=2048,
+       supported_generation_methods=['generateContent', 'countTokens'],
+       temperature=0.9,
+       top_p=1.0,
+       top_k=1),
+ Model(name='models/gemini-1.0-pro-001',
+       base_model_id='',
+       version='001',
+       display_name='Gemini 1.0 Pro 001 (Tuning)',
+       description=('The best model for scaling across a wide range of tasks. This is a stable '
+                    'model that supports tuning.'),
+       input_token_limit=30720,
+       output_token_limit=2048,
+       supported_generation_methods=['generateContent', 'countTokens', 'createTunedModel'],
+       temperature=0.9,
+       top_p=1.0,
+       top_k=1),
+ Model(name='models/gemini-1.0-pro-latest',
+       base_model_id='',
+       version='001',
+       display_name='Gemini 1.0 Pro Latest',
+       description=('The best model for scaling across a wide range of tasks. This is the latest '
+                    'model.'),
+       input_token_limit=30720,
+       output_token_limit=2048,
+       supported_generation_methods=['generateContent', 'countTokens'],
+       temperature=0.9,
+       top_p=1.0,
+       top_k=1),
+ Model(name='models/gemini-1.0-pro-vision-latest',
+       base_model_id='',
+       version='001',
+       display_name='Gemini 1.0 Pro Vision',
+       description='The best image understanding model to handle a broad range of applications',
+       input_token_limit=12288,
+       output_token_limit=4096,
+       supported_generation_methods=['generateContent', 'countTokens'],
+       temperature=0.4,
+       top_p=1.0,
+       top_k=32),
  Model(name='models/gemini-pro',
        base_model_id='',
        version='001',
-       display_name='Gemini Pro',
+       display_name='Gemini 1.0 Pro',
        description='The best model for scaling across a wide range of tasks',
        input_token_limit=30720,
        output_token_limit=2048,
@@ -99,7 +146,7 @@ list(genai.list_models())
  Model(name='models/gemini-pro-vision',
        base_model_id='',
        version='001',
-       display_name='Gemini Pro Vision',
+       display_name='Gemini 1.0 Pro Vision',
        description='The best image understanding model to handle a broad range of applications',
        input_token_limit=12288,
        output_token_limit=4096,
@@ -114,7 +161,7 @@ list(genai.list_models())
        description='Obtain a distributed representation of a text.',
        input_token_limit=2048,
        output_token_limit=1,
-       supported_generation_methods=['embedContent', 'countTextTokens'],
+       supported_generation_methods=['embedContent'],
        temperature=None,
        top_p=None,
        top_k=None),
@@ -175,7 +222,7 @@ model = genai.GenerativeModel('gemini-pro',
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-12-19 18:03:06 JST</time></p>
+<p>Last modified: <time>2024-03-02 20:33:35 JST</time></p>
 </footer>
 </body>
 </html>

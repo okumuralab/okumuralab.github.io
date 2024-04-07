@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>gitサーバ構築</title>
 <link rel="stylesheet" href="style.css">
-<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 </head>
 <body>
 
@@ -60,14 +60,45 @@ git push
 
 <hr>
 
+<p>上の記事は2016年に書いた。当時はCentOSを使っていたが、最近Alma Linuxに乗り換えた。その際にサーバ側のリポジトリが失われてしまったので、再構築した。</p>
+
+<p>まずサーバ側で次のようにしておく。</p>
+
+<pre>
+sudo dnf install git
+sudo mkdir /var/git
+sudo chown okumura /var/git
+
+git init --bare /var/git/hoge.git
+</pre>
+
+<p>ローカルリポジトリの <code>.git/config</code> に</p>
+
+<pre>
+[remote "origin"]
+	url = ssh://example.org/var/git/hoge.git
+</pre>
+
+<p>のような記述があるので必要に応じて編集する（例えばsshポート番号を12345に変えたなら <code>ssh://example.org:12345/var/git/hoge.git</code> のように直す）。そして、ローカルリポジトリ内で</p>
+
+<pre>
+git push --mirror ssh://example.org:12345/var/git/hoge.git
+</pre>
+
+<p>とすれば完成である。あるいは</p>
+
+<pre>
+git push --all origin
+git push --tags origin
+</pre>
+
+<p>でもよい。</p>
+
+<hr>
+
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-05-04 21:20:53 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2024-03-20 17:46:53 JST</time></p>
 </footer>
 </body>
 </html>
