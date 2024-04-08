@@ -22,9 +22,9 @@
 <p><a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。</p>
 </div>
 
-<p>Python 3 のインストールの方法を解説します。より現代風の pyenv、Poetry を使う方法は例えば<a href="https://tech.uzabase.com/entry/2024/02/02/120601">こちら</a>をご参照ください。</p>
+<p>ここでは Python 3 の最新版を一つだけインストールする方法を解説します。複数の Python を切り替えて使う方法は、例えば<a href="https://tech.uzabase.com/entry/2024/02/02/120601">こちらの解説</a>をご参照ください。</p>
 
-<p>最新のものは Python 3.12 ですが、ここではライブラリの対応状況から考えて、3.11.x の最新のものをインストールすることにします。</p>
+<p>最新のものは Python 3.12 です。この後にさらに小数点が付いて 3.12.<i>x</i> のようなバージョン番号になります。3.12 が出た当初はまだ対応していないライブラリがあったのですが、3.12.2 くらいの時点でほぼすべてのライブラリが対応しましたので、ここでは 3.12.x の最新のものをインストールすることにします。</p>
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
@@ -38,13 +38,13 @@ defaults write org.python.python ApplePersistenceIgnoreState NO
 </div>
 -->
 
-<p>ライブラリ名のタイポ（綴り間違い）を狙ってマルウェアをインストールさせる手口が見つかっています。ライブラリをインストールするコマンド <code>pip install 〜</code> を打ち込むときは、なるべく、正しい例をコピペしましょう。</p>
+<p>ライブラリ名のタイポ（綴り間違い）を狙ってマルウェアをインストールさせる手口が見つかっています。ライブラリをインストールするコマンド <code>pip3 install 〜</code> を打ち込むときは、なるべく、正しい例をコピペしましょう。</p>
 
 <h2>公式サイト Python.org からのインストール（Windows）</h2>
 
 <p>まず、初心者のかたで、今までどこかで Python をインストールしたけれどうまく設定できていないという場合は、［スタートボタン］→［⚙設定］→［アプリ］で、それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
 
-<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> から最新版をダウンロードし、開きます。「Install Now」をクリックする前に、特に初心者のかたは、インストーラの最初の画面で「Add Python 3.11 to PATH」にチェックを付けるほうが楽だと思います。また、「Install Now」のすぐ下に、インストールされるパスが表示されます。私の場合、<code>C:\Users\okumu\AppData\Local\Programs\Python\Python311</code> と表示されました。ここが全角だったり文字化けしていたりする場合は、下の説明を見てください。問題なければ「Install Now」をクリックします。ユーザーアカウント制御「このアプリがデバイスに変更を加えることを許可しますか？」が出ますので「はい」をクリックするとインストールが始まります。インストールが無事終われば「Close」をクリックします。</p>
+<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> から最新版をダウンロードし、開きます。「Install Now」をクリックする前に、特に初心者のかたは、インストーラの最初の画面で「Add Python 3.12 to PATH」にチェックを付けるほうが楽だと思います。また、「Install Now」のすぐ下に、インストールされるパスが表示されます。私の場合、<code>C:\Users\okumu\AppData\Local\Programs\Python\Python312</code> と表示されました。ここが全角だったり文字化けしていたりする場合は、下の説明を見てください。問題なければ「Install Now」をクリックします。ユーザーアカウント制御「このアプリがデバイスに変更を加えることを許可しますか？」が出ますので「はい」をクリックするとインストールが始まります。インストールが無事終われば「Close」をクリックします。</p>
 
 <div class="note">
 <p>インストールされるパスが全角だったり文字化していたりする場合は、インストーラが起動した画面で「Customize installation」をクリックし、「Next」をクリックし、「Customize install location」の右の「Browse」をクリックし、「PC」→「C:」を選び、「新しいフォルダーの作成」で例えば <code>Python</code> というフォルダを作り、それをインストール場所に設定します。このあたりは実験が不十分なので、情報があれば教えてください。</p>
@@ -59,7 +59,7 @@ where.exe python
 <p>と打ち込んで、正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell ではうまくいかないようです）。うまくいっていれば</p>
 
 <pre>
-C:\Users\ユーザ名\AppData\Local\Programs\Python\Python311\python.exe
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python312\python.exe
 C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 </pre>
 
@@ -68,7 +68,7 @@ C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 <p>同様に <code>pip</code> も確認します。</p>
 
 <pre>
-C:\Users\ユーザ名\AppData\Local\Programs\Python\Python311\Scripts\pip.exe
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python312\Scripts\pip.exe
 </pre>
 
 <p>ほかに <a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされますが、ここでは使いません。</p>
@@ -101,21 +101,21 @@ pip install matplotlib pandas jupyterlab
 
 <h2>公式サイト Python.org からのインストール（Mac）</h2>
 
-<p><a href="https://www.python.org/download/">Download Python</a> からインストーラをダウンロードし、インストールします。Universal バイナリですので、Intel でも Apple Silicon でも使えます。<code>/Library/Frameworks/Python.framework/Versions/3.11/bin</code> に <code>python3</code> などのバイナリが入ります。また、<code>/usr/local/bin</code> に
+<p><a href="https://www.python.org/download/">Download Python</a> からインストーラをダウンロードし、インストールします。Universal バイナリですので、Intel でも Apple Silicon でも使えます。<code>/Library/Frameworks/Python.framework/Versions/3.12/bin</code> に <code>python3</code> などのバイナリが入ります。また、<code>/usr/local/bin</code> に
 <code>2to3</code>,
-<code>2to3-3.11</code>,
+<code>2to3-3.12</code>,
 <code>idle3</code>,
-<code>idle3.11</code>,
+<code>idle3.12</code>,
 <code>pip3</code>,
-<code>pip3.11</code>,
+<code>pip3.12</code>,
 <code>pydoc3</code>,
-<code>pydoc3.11</code>,
+<code>pydoc3.12</code>,
 <code>python3</code>,
 <code>python3-config</code>,
 <code>python3-intel64</code>,
-<code>python3.11</code>,
-<code>python3.11-config</code>,
-<code>python3.11-intel64</code>
+<code>python3.12</code>,
+<code>python3.12-config</code>,
+<code>python3.12-intel64</code>
 というシンボリックリンクができます。</p>
 
 <p>以下では、ホームディレクトリ（例えば私なら <code>/Users/okumura</code>）を <code>~</code> と略記しています。</p>
@@ -123,7 +123,9 @@ pip install matplotlib pandas jupyterlab
 <p>インストールすると、Mac では（bash を使っていれば）<code>~/.bash_profile</code> または（zsh を使っていれば）<code>~/.zprofile</code> の最後にパスが付け加えられます：</p>
 
 <pre>
-PATH="/Library/Frameworks/Python.framework/Versions/3.11/bin:${PATH}"
+# Setting PATH for Python 3.12
+# The original version is saved in .zprofile.pysave
+PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
 export PATH
 </pre>
 
@@ -136,7 +138,7 @@ export PATH
 <p>以上ができたら、ターミナルに <code>which python3</code> と打ち込んで、次のように表示されるか確認します：</p>
 
 <pre>
-/Library/Frameworks/Python.framework/Versions/3.11/bin/python3
+/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
 </pre>
 
 <p>いろいろなパッケージのインストールは <code>pip3</code> コマンド（または <code>python3 -m pip</code>）を使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。まずは、一般ユーザで</p>
@@ -145,7 +147,21 @@ export PATH
 pip3 list --outdated
 </pre>
 
-<p>と打ち込んで、更新の必要なパッケージがないか確認します。もし例えば <code>pip</code> が更新を要するなら、<code>pip3 install --upgrade pip</code> と打ち込みます。</p>
+<p>と打ち込んで、更新の必要なパッケージがないか確認します。もし例えば <code>pip</code> が更新を要するなら、</p>
+
+<pre>
+pip3 install --upgrade pip
+</pre>
+
+<p>と打ち込みます。</p>
+
+<p>システムの「アプリケーション」にも Python 3.12 というフォルダ（<code>/Applications/Python 3.12</code>）が作られます。この中に <code>Install Certificates.command</code> というシェルスクリプトがあります。これは Python からWebをアクセスする際のSSL/TLSルート証明書をインストールするためのものです。これを実行するには、ダブルクリックするか、ターミナルに</p>
+
+<pre>
+sudo "/Applications/Python 3.12/Install Certificates.command"
+</pre>
+
+<p>と打ち込みます。管理権限のないユーザの場合はエラーになりますので、ユーザを切り替えてください。例えば <code>admin</code> という名前のユーザに切り替えるにはターミナルに <code>su admin</code> と打ち込みます（要パスワード）。</p>
 
 <p>必要なパッケージをインストールします。例：</p>
 
@@ -169,11 +185,11 @@ pyzmq requests Send2Trash six sniffio soupsieve stack-data
 terminado tinycss2 tomli tornado traitlets urllib3 wcwidth
 webencodings websocket-client</code>）がインストールされます。なお、この直後に <code>pip3 list --outdated</code> と打ち込むと、すでに更新が必要なパッケージがありますが、これは新しいほどいいのではなく依存関係があるので、更新の必要はありません。</p>
 
-<p>なお、このとき “Defaulting to user installation because normal site-packages is not writeable” というメッセージが出ますが、これはシステムの <code>site-packages</code> ディレクトリは管理者権限がないと書き込めないので <code>~/Library/Python/3.11/lib/python/site-packages</code> にインストールしたということを意味します。また、実行ファイルが <code>~/Library/Python/3.11/bin</code> にインストールされますので、こちらにもパスを通しておきます。具体的には <code>~/.bash_profile</code> または <code>~/.zprofile</code> にさきほど追加されたものを</p>
+<p>なお、このとき “Defaulting to user installation because normal site-packages is not writeable” というメッセージが出ますが、これはシステムの <code>site-packages</code> ディレクトリは管理者権限がないと書き込めないので <code>~/Library/Python/3.12/lib/python/site-packages</code> にインストールしたということを意味します。また、実行ファイルが <code>~/Library/Python/3.12/bin</code> にインストールされますので、こちらにもパスを通しておきます。具体的には <code>~/.bash_profile</code> または <code>~/.zprofile</code> にさきほど追加されたものを</p>
 
 <pre>
-PATH="/Library/Frameworks/Python.framework/Versions/3.11/bin:${PATH}"
-PATH="${HOME}/Library/Python/3.11/bin:${PATH}"
+PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
+PATH="${HOME}/Library/Python/3.12/bin:${PATH}"
 export PATH
 </pre>
 
@@ -193,12 +209,6 @@ pip3 list --outdated
 
 <pre>
 pip3 install --upgrade パッケージ名をスペースで区切って並べる
-</pre>
-
-<p>https サイトのスクレイピングで証明書エラーになる場合は次のコマンドの管理者権限での実行が必要になるようです：</p>
-
-<pre>
-sudo /Applications/Python\ 3.11/Install\ Certificates.command
 </pre>
 
 <p>Python をアンインストールするには <code>/Library/Frameworks/Python.framework</code> および <code>~/Library/Python</code> を消します。<code>/usr/local/bin</code> にできたシンボリックリンクも消します。<code>~/.bash_profile</code> の類に追加した PATH も消します。</p>
@@ -469,7 +479,7 @@ apk add python3 py3-pip
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-02-08 15:37:57 JST</time></p>
+<p>Last modified: <time>2024-04-08 09:41:35 JST</time></p>
 </footer>
 </body>
 </html>
