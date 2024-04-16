@@ -132,6 +132,17 @@ list(genai.list_models())
        temperature=0.4,
        top_p=1.0,
        top_k=32),
+ Model(name='models/gemini-1.5-pro-latest',
+       base_model_id='',
+       version='001',
+       display_name='Gemini 1.5 Pro',
+       description='Mid-size multimodal model that supports up to 1 million tokens',
+       input_token_limit=1048576,
+       output_token_limit=8192,
+       supported_generation_methods=['generateContent', 'countTokens'],
+       temperature=1.0,
+       top_p=0.95,
+       top_k=None),
  Model(name='models/gemini-pro',
        base_model_id='',
        version='001',
@@ -165,6 +176,17 @@ list(genai.list_models())
        temperature=None,
        top_p=None,
        top_k=None),
+ Model(name='models/text-embedding-004',
+       base_model_id='',
+       version='004',
+       display_name='Text Embedding 004',
+       description='Obtain a distributed representation of a text.',
+       input_token_limit=2048,
+       output_token_limit=1,
+       supported_generation_methods=['embedContent'],
+       temperature=None,
+       top_p=None,
+       top_k=None),
  Model(name='models/aqa',
        base_model_id='',
        version='001',
@@ -179,10 +201,10 @@ list(genai.list_models())
        top_k=40)]
 </pre>
 
-<p><code>models/</code> は省略できるようだ。<code>'gemini-pro'</code> を使って何か聞いてみよう：</p>
+<p><code>models/</code> は省略できるようだ。<code>'gemini-1.5-pro-latest'</code> を使って何か聞いてみよう：</p>
 
 <pre class="cell">
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-1.5-pro-latest')
 
 response = model.generate_content("What is the meaning of life?")
 print(response.text)
@@ -193,7 +215,7 @@ print(response.text)
 <p>上の方法では一つしか質問できない。会話は、次のようにする。</p>
 
 <pre class="cell">
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-1.5-pro-latest')
 
 chat = model.start_chat(history=[])
 response = chat.send_message("What is your knowledge cutoff?")
@@ -214,7 +236,7 @@ for h in chat.history:
 
 <pre class="cell">
 config = genai.GenerationConfig(temperature=0)
-model = genai.GenerativeModel('gemini-pro',
+model = genai.GenerativeModel('gemini-1.5-pro-latest',
                               generation_config=config)
 </pre>
 
@@ -222,7 +244,7 @@ model = genai.GenerativeModel('gemini-pro',
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-03-02 20:33:35 JST</time></p>
+<p>Last modified: <time>2024-04-10 08:37:38 JST</time></p>
 </footer>
 </body>
 </html>

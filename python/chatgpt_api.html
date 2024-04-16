@@ -20,6 +20,8 @@
 
 <p>このページは<a href="openai_api.html">OpenAIのAPIを使う</a>を書き直したものです。</p>
 
+<p>[2024-04-10] <code>gpt-4-turbo-2024-04-09</code> が出ました。<code>gpt-4-turbo</code> は現時点ではこれを指します。</p>
+
 <p>[2024-01-26] <a href="https://openai.com/blog/new-embedding-models-and-api-updates">2024-01-25の新モデル</a>: 最新のプレビューモデル <code>"gpt-4-0125-preview"</code>、<code>"gpt-3.5-turbo-0125"</code> が出ました。<code>"gpt-4-turbo-preview"</code>、<code>"gpt-3.5-turbo"</code> と指定すれば最新のものが選ばれるようです。</p>
 
 <p>[2023-11-07] <a href="https://openai.com/blog/new-models-and-developer-products-announced-at-devday">DevDayで新しいモデル等が発表</a>されました: <code>"gpt-4-1106-preview"</code>、<code>"gpt-4-vision-preview"</code>、<code>"gpt-3.5-turbo-1106"</code></p>
@@ -129,7 +131,7 @@ while True:
 from openai import OpenAI
 
 class Chatbot:
-    def __init__(self, model="gpt-3.5-turbo", messages=None, temperature=0, stream=True):
+    def __init__(self, model="gpt-4-turbo", messages=None, temperature=0, stream=True):
         self.client = OpenAI()
         self.model = model
         self.messages = messages or []
@@ -138,13 +140,19 @@ class Chatbot:
 
     def chat(self, prompt, temperature=None, stream=None, verbose=0, **kwargs):
         prompt = prompt.strip()
-        # print(len(prompt), "letters,", len(prompt.split()), "words")
+        if len(self.messages) > 0 and self.messages[-1]["role"] == "user":
+            self.messages.pop()
         self.messages.append({"role": "user", "content": prompt})
         stream = stream if stream is not None else self.stream
-        res = self.client.chat.completions.create(model=self.model,
-                                           messages=self.messages,
-                                           temperature=temperature or self.temperature,
-                                           stream=stream, **kwargs)
+        temperature = temperature if temperature is not None else self.temperature
+        try:
+            res = self.client.chat.completions.create(model=self.model,
+                                                      messages=self.messages,
+                                                      temperature=temperature,
+                                                      stream=stream, **kwargs)
+        except Exception as e:
+            print("Error", e)
+            return
         if stream:
             ans = ""
             for chunk in res:
@@ -168,7 +176,7 @@ class Chatbot:
 <p>これを使うには例えば</p>
 
 <pre class="cell">
-chatbot = Chatbot(model="gpt-4-turbo-preview")
+chatbot = Chatbot()
 chatbot.chat("こんにちは！")
 </pre>
 
@@ -245,7 +253,7 @@ print()
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-03-06 13:36:05 JST</time></p>
+<p>Last modified: <time>2024-04-10 10:21:52 JST</time></p>
 </footer>
 </body>
 </html>

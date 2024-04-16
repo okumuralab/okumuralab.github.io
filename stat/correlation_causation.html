@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/correlation_causation.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>相関関係と因果関係</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td { border: 1px solid; }
+td, th { padding: 0.2em 0.7em }
+.b {
+    border: 0.15em solid;
+    border-radius: 0.5em;
+    padding: 0.5em;
+}
+</style>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>相関関係と因果関係</h1>
+
+<p>「相関関係は必ずしも因果関係を意味しない」とよく言われていますが、これらの語が必ずしも正しく使われていないケースを見聞きしたので、ちょっとだけ解説します。</p>
+
+<p>まず、「相関関係がある」というのは「相関係数が（ほぼ）0 ではない」という意味ではありません。学校で習う「相関係数」（積率相関係数、Pearson（ピアソン）の相関係数）は、二つの変数の間に直線的な（線形の）相関関係があるかどうかだけを調べるものです。つまり、<i>X</i> が増えれば <i>Y</i> も増える、あるいは <i>X</i> が増えれば <i>Y</i> は減るという傾向があるかどうかを調べるものです。でも、相関関係ということばは、もっと広い意味で使われます。</p>
+
+<p>例えば、人間の作業の能率は、気温によって変わりますが、最適な気温があり、それより低くても高くても能率が落ちます。逆U字型（∩の形）の相関ですね。気温の範囲をうまく選べば、相関係数はほぼ 0 になりますが、それでも相関関係があります。</p>
+
+<p>「相関関係は必ずしも因果関係を意味しない」というときの相関関係は、この意味でとらえなければなりません。</p>
+
+<p>相関関係が因果関係を意味しない場合はいろいろありますが、よく例にあげられるのが、次のような、共通の原因 C が X と Y の両方に影響している場合です。</p>
+
+<div style="margin:0 2em">
+  <span style="position:relative; left:2.5em"><span class="b">C</span></span><br>
+  <span style="position:relative; left:1.7em">︎↙</span><span style="position:relative; left:3em">↘︎</span><br>
+  <span class="b">X</span><span style="position:relative; left:3em"><span class="b">Y</span></span><br>
+</div>
+
+<p>この場合、X と Y に<b>直接の</b>因果関係がないにもかかわらず、相関関係が生じてしまいます。<b>まったく</b>因果関係がないわけではありません。C を含めれば因果関係はあります。でも、<b>直接の</b>因果関係はありません。</p>
+
+<p>これに対して、<b>まったく</b>因果関係がないのに、単なる偶然で相関関係が生じることもありえます。有名な <a href="https://www.tylervigen.com/spurious-correlations">spurious correlations</a> というサイトにある例はたいていが偶然によるものだと考えられます。</p>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2024-04-14 17:35:40 JST</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

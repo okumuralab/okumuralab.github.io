@@ -11,11 +11,14 @@
 </head>
 <body>
 
+<header>
 <nav id="breadcrumbs">
 <a href="../">ホーム</a> &gt;
 <a href="./">Python</a> &gt;
 </nav>
+</header>
 
+<main>
 <h1>Python 3 インストール</h1>
 
 <div class="note">
@@ -25,6 +28,8 @@
 <p>ここでは Python 3 の最新版を一つだけインストールする方法を解説します。複数の Python を切り替えて使う方法は、例えば<a href="https://tech.uzabase.com/entry/2024/02/02/120601">こちらの解説</a>をご参照ください。</p>
 
 <p>最新のものは Python 3.12 です。この後にさらに小数点が付いて 3.12.<i>x</i> のようなバージョン番号になります。3.12 が出た当初はまだ対応していないライブラリがあったのですが、3.12.2 くらいの時点でほぼすべてのライブラリが対応しましたので、ここでは 3.12.x の最新のものをインストールすることにします。</p>
+
+<p>なお、<a href="https://devguide.python.org/versions/">Status of Python versions</a> にあるように、現在3.8以上のバージョンがサポートされています。</p>
 
 <p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
 
@@ -155,14 +160,6 @@ pip3 install --upgrade pip
 
 <p>と打ち込みます。</p>
 
-<p>システムの「アプリケーション」にも Python 3.12 というフォルダ（<code>/Applications/Python 3.12</code>）が作られます。この中に <code>Install Certificates.command</code> というシェルスクリプトがあります。これは Python からWebをアクセスする際のSSL/TLSルート証明書をインストールするためのものです。これを実行するには、ダブルクリックするか、ターミナルに</p>
-
-<pre>
-sudo "/Applications/Python 3.12/Install Certificates.command"
-</pre>
-
-<p>と打ち込みます。管理権限のないユーザの場合はエラーになりますので、ユーザを切り替えてください。例えば <code>admin</code> という名前のユーザに切り替えるにはターミナルに <code>su admin</code> と打ち込みます（要パスワード）。</p>
-
 <p>必要なパッケージをインストールします。例：</p>
 
 <pre>
@@ -196,7 +193,11 @@ export PATH
 <p>のように書き直して、読み込み直します。</p>
 
 <div class="note">
-<p>一般的なパッケージは簡単にインストールできるはずですが、ソースコードでしか提供されていないパッケージもたまにあります。そういったものをインストールするには、あらかじめターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールしておく必要があります。中には、ビルドに gfortran が必要なものもあります。Homebrew なら brew install gcc で入ります（巨大ですし、初心者は入れないほうがいいでしょう）。</p>
+<p>Python 3.12.<i>x</i> をインストールすると、システムの「アプリケーション」に Python 3.12 というフォルダ（<code>/Applications/Python 3.12</code>）が作られます。この中に <code>Install Certificates.command</code> というシェルスクリプトがあります。これはPythonからWebをアクセスする際のSSL/TLSルート証明書をインストールするためのものです。インストーラはこれを実行せよと言ってきますが、特に実行しなくても、Webアクセス用のパッケージ <code>requests</code> をインストール（<code>pip3 install requests</code>）する際に入る <code>certifi</code> が面倒を見てくれますので、不要だと思います。</p>
+</div>
+
+<div class="note">
+<p>一般的なパッケージは簡単にインストールできるはずですが、ソースコードでしか提供されていないパッケージもたまにあります。そういったものをインストールするには、あらかじめターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールしておく必要があります。中には、ビルドに gfortran が必要なものもあります。Homebrew なら <code>brew install gcc</code> で入ります（巨大ですし、初心者は入れないほうがいいでしょう）。</p>
 </div>
 
 <p>ときどき、アップデートの必要なパッケージを、次のコマンドで調べます：</p>
@@ -217,110 +218,22 @@ pip3 install --upgrade パッケージ名をスペースで区切って並べる
 
 <p>macOS では、ターミナルに <code>xcode-select --install</code> と打ち込んでコマンドラインツールをインストールすると、universal binary の /usr/bin/python3 が入ります（macOS Sonoma 14.3 時点では Python 3.9.6）。公式サイトの Python と同様に使えるはずです。</p>
 
-<hr>
-
-<p>これ以降は古い記述です。</p>
-
-<hr>
-
-<h2>Microsoft Store 版 Python</h2>
-
-<p>Windows の場合は Microsoft Store からもダウンロードできます（「Python」で検索）。最近の Windows なら、PowerShell かコマンドプロンプトで「python」と打ち込むと、「ストア」が立ち上がって「Python」をインストールする画面が出てきます。インストール場所は C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps です。</p>
-
-<p>コマンドは 3 を付けても付けなくても同じです（python3 = python、pip3 = pip）。</p>
-
-<h2>Anaconda によるインストール</h2>
-
-<p><a href="https://www.anaconda.com/distribution/">Anaconda Distribution</a> からご自分の環境に合った最新のインストーラをダウンロードし、インストールします。全部入りなので、たいへん大きいパッケージです。最小限のインストールから始めて少しずつ足していくほうが好みの人は、下にある Miniconda を使うほうがいいでしょう。</p>
-
-<p>アップデートは <code>conda</code> コマンドで行います。具体的な方法は、下の Miniconda のところをご覧ください。</p>
-
-<p>Windows版はユーザ名に全角文字が含まれているとインストールできない（できてもまともに動かない）ようです。どうしてもAnacondaを使わなければならない場合には、ユーザ名を変更する方法をググってお調べください。</p>
-
 <h2>Homebrew によるインストール（Mac）</h2>
 
-<p>巨大な Xcode はたいていの場合に不要ですが、ターミナルに <code>xcode-select --install</code> と打ち込むとインストールされる “Command Line Tools” は、Mac を使っている開発者にとって必需品です。さらに、<a href="https://brew.sh">Homebrew</a>（ホームブリュー）というパッケージマネージャを使っているかたが多いと思います。この場合、ターミナルに <code>brew install python3</code> と打ち込めば、簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等ですがまったく同じではありません（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。</p>
+<p><a href="https://brew.sh">Homebrew</a>（ホームブルー）というパッケージマネージャを使っているなら、ターミナルに <code>brew install python3</code> と打ち込めば、簡単に最新の Python が入ります。入るものは Python.org からインストールするものとほぼ同等ですが、まったく同じではありません（詳しくは <a href="https://docs.brew.sh/Homebrew-and-Python">Python — Homebrew Documentation</a> 参照）。</p>
 
-<p>デフォルトでは <code>/usr/local/bin</code> に <code>python3</code> や <code>pip3</code> などのコマンドが入ります。また、<code>/usr/local/opt/python@3.9/libexec/bin</code> には <code>python</code> など <code>3</code> の付かない名前のシンボリックリンクが入ります。</p>
-
-<p><code>/usr/local/bin</code> のシンボリックリンクは python.org のものをインストールしたら上書きされてしまいますので、Homebrew のものを主に使う場合は <code>brew link --overwrite python3</code> と打ち込みます。さらにわけがわからなくなったら <code>brew reinstall python3</code> で再インストールできます。</p>
-
-<p>この時点での pip は <code>/usr/local/bin/pip3</code> です。まず pip 自身の更新をします：</p>
+<h2>AlmaLinux 9.3 でのインストール</h2>
 
 <pre>
-pip3 install --upgrade pip
+$ python3 --version
+Python 3.9.18
 </pre>
 
-<p>インストールしたパッケージは <code>/usr/local/lib/python3.9/site-packages</code> に入ります。</p>
+<p>Python 3.9.18 が入っています（もし入っていなければ <code>sudo dnf install python3</code>）。追加でpipを <code>sudo dnf install python3-pip</code> として入れます。あとは pip で必要なパッケージを入れます。</p>
 
-<div class="note">
-<p>ApplePersistenceIgnoreState という警告を消すにはターミナルに <code>defaults write org.python.python ApplePersistenceIgnoreState NO</code> と打てばよいみたいです（<a href="https://github.com/Homebrew/homebrew-core/issues/24424">参照</a>）。</p>
-</div>
+<hr>
 
-<h2>Homebrew による pyenv 経由のインストール（Mac）</h2>
-
-<p><code>brew install pyenv</code> でまず pyenv を入れてから pyenv 経由で各種 Python を入れる方法です。</p>
-
-<p>まず <code>~/.bash_profile</code> に次を書き込みます：</p>
-
-<pre>
-PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-</pre>
-
-<p>次のコマンドでインストール可能なバージョンを確認します：</p>
-
-<pre>
-pyenv install --list
-</pre>
-
-<p>例えば Python 3.7.3 をインストールしたいなら</p>
-
-<pre>
-pyenv install 3.7.3
-</pre>
-
-<p>と打ち込みます。<code>pyenv versions</code> でバージョンを確認します。おそらく <code>system</code> と <code>3.7.3</code> があり、デフォルトでは前者になっているので、新しいほうに替えます：</p>
-
-<pre>
-pyenv global 3.7.3
-pyenv rehash
-</pre>
-
-<p><code>python --version</code> でバージョンを確認します。</p>
-
-<p>要らなくなったバージョンは <code>pyenv uninstall 3.7.2</code> のようにして消せます。</p>
-
-<p>あとは pip で更新・追加インストールします。例：</p>
-
-<pre>
-pip list --outdated
-pip install --upgrade pip
-pip install matplotlib pandas jupyterlab
-</pre>
-
-<h2>Miniconda によるインストール</h2>
-
-<p><a href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a> から最新の Python 3.x 版インストーラをダウンロードし、実行します。</p>
-
-<p>Windows の exe 形式のインストーラは、デフォルトの「Just Me（自分だけ）」設定なら管理者権限不要でインストールできます。スタートメニューの「Anaconda」の中に「Anaconda Powershell Prompt」「Anaconda Prompt」が入るので、好きな方を使います。</p>
-
-<p>Mac にも pkg 形式のインストーラがありますが、私は Mac や CentOS で bash installer を使いました：</p>
-
-<pre>
-bash Miniconda3-latest-*-x86_64.sh
-</pre>
-
-<p>まずは ENTER を押せと言ってきます。Enter を押すと、ライセンスを表示して、アクセプトするかと聞いてくるので、<code>yes</code> と答えます。次に、インストールの場所は <code>~/miniconda3</code> で良いかと聞いてくるので、それで良ければ Enter を、別の場所（例えば <code>/usr/local/miniconda3</code>）に変えたければその場所を打ち込みます。最後に <code>conda init</code> を実行するかと聞いてくるので、<code>yes</code> と打つと、Mac では <code>~/.bash_profile</code> の最後に、Linux では <code>~/.bashrc</code> の最後に、コードが追加されます。シェルを開き直すか <code>~/.bash何々</code> を再読み込みすると、Mac なら自動でプロンプトの最初に <code>(base)</code> が出て、基本設定の Miniconda 環境が使えるようになります。Linux では安全のため毎回 <code>conda activate</code> と打たないと Miniconda 環境になりません。元の環境（システムの <code>/usr/bin/python</code> を使う）に戻すには <code>conda deactivate</code> します。Mac でも自動アクティベートをオフにしたければ <code>conda config --set auto_activate_base false</code> と打ち込みます（<code>~/.condarc</code> に <code>auto_activate_base: false</code> と書き込まれます）。</p>
-
-<p>パッケージ管理は <code>conda</code> コマンドで行います：</p>
-
-<pre>
-conda update --all
-conda list
-conda install ipython numpy scipy matplotlib pandas scikit-learn
-</pre>
+<p>これ以降はあまり見直していないので古くなっているかもしれません。</p>
 
 <h2>（Windows）WSL2のUbuntuのPython</h2>
 
@@ -375,36 +288,6 @@ c.ServerApp.use_redirect_file = False
 </pre>
 
 <p>と書き直します。これで、Ubuntu のシェルで <code>jupyter lab</code> と打ち込めば、Windows 側のブラウザが開いて Jupyter Lab が使えるはずです。</p>
-
-<h2>CentOS でのインストール</h2>
-
-<p>CentOS 7 の標準の python コマンドは 2.7.x ですが、<code>yum install python3</code> で /usr/bin/python3 や /usr/bin/pip3 が入ります（3.6.x）。</p>
-
-<p>CentOS 8 では /usr/bin/python3、/usr/bin/pip3 のほうが標準です。もし入っていなければ <code>dnf install python36</code> で入ります（3.6.x）。</p>
-
-<h2>ソースからのインストール</h2>
-
-<p>CentOS 7 なら <code>yum install libffi-devel sqlite-devel</code> しておきます。</p>
-
-<p><a href="https://www.python.org/download/">Download Python</a> からソースのtarballをいただいてきて展開し、ビルドします。次は3.9.2の場合です：</p>
-
-<pre>
-wget wget -N https://www.python.org/ftp/python/3.9.2/Python-3.9.2.tar.xz
-tar xvJf Python-3.9.2.tar.xz
-cd Python-3.9.2
-./configure --enable-optimizations
-make
-make install
-
-python3 --version  # 3.9.2であることを確認
-python3 -m pip install --upgrade pip
-</pre>
-
-<p>実行ファイル <code>python3</code>、<code>pip</code> などが（デフォルトでは）<code>/usr/local/bin</code> に入りますので、そこにパスを通しておきます。Linux では <code>python</code> コマンドで Python 2 が動くことが想定されていることがあるので、<code>python3</code> という名前はそのままにしておくほうがよさそうです。</p>
-
-<h2>AlmaLinux 9.3 でのインストール</h2>
-
-<p>Python 3.9.18 が入っていました（もし入っていなければ <code>sudo dnf install python3</code>）。追加でpipを <code>sudo dnf install python3-pip</code> として入れます。あとは pip で必要なパッケージを入れます。</p>
 
 <h2>Google Colab を使う</h2>
 
@@ -474,12 +357,13 @@ apk add python3 py3-pip
 <p><a href="https://apps.apple.com/jp/app/carnets-jupyter/id1450994949">Carnets - Jupyter</a> というアプリ（無料）は iOS・iPadOS で動く Jupyter notebook 環境です。Python インタープリタも入っており、Numpy、Sympy、Matplotlib、Pandas などが含まれ、なんと <a href="https://twitter.com/hirax/status/1472530251712704524">OpenCV も使える</a> そうです。</p>
 
 <p>カシオの電卓 <a href="https://web.casio.jp/dentaku/fxcg50/">fx-CG50</a> などで MicroPython という Python のサブセットが使えるようです。</p>
+</main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-08 09:41:35 JST</time></p>
+<p>Last modified: <time>2024-04-13 09:13:15 JST</time></p>
 </footer>
 </body>
 </html>

@@ -25,7 +25,7 @@
 
 <p>以下のプログラム <code>watch.py</code> を適当な（空の）ディレクトリに置いて、<code>./watch.py</code> あるいは <code>python3 watch.py</code> などとして起動すると、プログラム最後のリスト <code>targets</code> で与えられたURLを巡回し、カレントディレクトリに（URLのMD5ハッシュ16進をファイル名とする）ファイルを作って保存する（文字コードはUTF-8に統一）。ファイルのタイムスタンプはHTTPのLast-Modifiedヘッダに書かれた日時に設定される（不明の場合は現在時刻）。次回、同様にして <code>watch.py</code> を起動すると、もしURLの指すページが変更されていれば、その差分の先頭100行を表示する。</p>
 
-<p>実はこれはデバッグモードの動作である。もしLinuxサーバなどがあれば、プログラム中の <code>DEBUG = True</code> を <code>DEBUG = False</code> に書き換え、cronなどで定時動作させると、変更があればメールで自分宛に差分を送ってくれる。メールは自マシンのSMTPサーバ（Postfixなど）で無認証で送れるとする。</p>
+<p>実はこれはデバッグモードの動作である。もしLinuxサーバなどがあれば、プログラム中の <code>DEBUG = True</code> を <code>DEBUG = False</code> に書き換え、cronなどで定時動作させると、変更があればメールで自分宛に差分を送ってくれる。メールは自マシンのSMTPサーバ（Postfixなど）で無認証で送れるとする（追記：これができない場合のやりかたを<a href="email.html">メールを送る</a>に書いた）。</p>
 
 <pre>
 #! /usr/bin/env python3
@@ -137,7 +137,7 @@ for url in targets:
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-06 13:45:42 JST</time></p>
+<p>Last modified: <time>2024-04-11 10:51:39 JST</time></p>
 </footer>
 </body>
 </html>
