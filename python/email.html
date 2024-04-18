@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/email.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>メールを送る</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>メールを送る</h1>
+
+<p>Pythonでメールを送るのは、<a href="watch.html">Webページ監視</a>で使ったようなローカルのSMTPサーバで送る方法なら簡単だが、ここではiCloudのようなリモートのSMTPサーバにTLSで接続して送る方法を説明する。</p>
+
+<p>Appleの<a href="https://support.apple.com/ja-jp/102525">ほかのメールクライアント App 向けの iCloud メールサーバ設定</a>という説明を読んで、まずはApp用パスワードを設定する。ユーザ名は、iCloudのメインの <code>user@icloud.com</code> の形式のメールアドレスである。</p>
+
+<p>メールを組み立てるのは <a href="https://docs.python.org/3/library/email.html">email</a> モジュール、SMTPで送るのは <a href="https://docs.python.org/3/library/smtplib.html">smtplib</a> モジュール、SSL/TLSは <a href="https://docs.python.org/3/library/ssl.html">ssl</a> モジュールを使う。いずれもPython標準ライブラリに含まれる。特にSSLの <a href="https://docs.python.org/3/library/ssl.html#ssl-security">Security considerations</a> のBest defaultsを参考にした。</p>
+
+<pre>
+from email.message import EmailMessage
+import smtplib
+import ssl
+
+# メールを組み立てる
+msg = EmailMessage()
+msg['From'] = "差出人メアド"
+msg['To'] = "宛先メアド"
+msg['Subject'] = "件名"
+msg.set_content("""本文1行目
+本文2行目
+""")
+
+# メールを送る
+with smtplib.SMTP("smtp.mail.me.com", 587) as smtp:
+    context = ssl.create_default_context()
+    smtp.starttls(context=context)
+    smtp.login("user@icloud.com", "password")
+    smtp.send_message(msg)
+</pre>
+
+<p>メールがどのように組み立てられたかは次のようにしてみればわかる。</p>
+
+<pre>
+print(msg.as_string())
+</pre>
+
+<p><code>smtp.starttls()</code> がうまくいくと <code>(220, b'2.0.0 Ready to start TLS')</code> が返る。さらに <code>smtp.login()</code> がうまくいくと <code>(235, b'2.7.0 Authentication successful')</code> が返る。ユーザ名かパスワードが間違っていると <code>SMTPAuthenticationError: (535, b'5.7.8 Error: authentication failed')</code> が返る。メールを送り終わると <code>(221, b'2.0.0 Bye')</code> が返る。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-08 22:09:38 JST</time></p>
+</footer>
+</body>
+</html>

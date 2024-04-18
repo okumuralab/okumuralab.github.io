@@ -21,7 +21,7 @@
 <main>
 <h1>Blueskyに自動投稿</h1>
 
-<p>まずは <a href="https://bsky.app">Bluesky</a> にユーザ登録します。</p>
+<p>まずは <a href="https://bsky.app">Bluesky</a> にユーザ登録します。ユーザ名は、私は <code>okumura</code> としましたので、<code>okumura.bsky.social</code> というハンドルが付きました。このハンドルをあとで使います。</p>
 
 <p>ブラウザで <a href="https://bsky.app">Bluesky</a> にログインし、左側の歯車⚙️をクリックし、「アプリパスワード」をクリックし、「アプリパスワードを追加」をクリックします。最初に現れる簡単な文字列はパスワードではなくパスワードにつけられた名前ですので、そのままでもかまいませんが、適当な名前に変更してもかまいません。「アプリパスワードを作成」をクリックすると現れる <code>xxxx-xxxx-xxxx-xxxx</code> の形の文字列がパスワードですので、コピペして控えておきます。</p>
 
@@ -39,7 +39,7 @@ pip install atproto
 from atproto import Client
 
 client = Client()
-profile = client.login("okumura.bsky.social", "xxxx-xxxx-xxxx-xxxx")
+profile = client.login("okumura.bsky.social", "xxxx-xxxx-xxxx-xxxx") # ハンドルとパスワード
 post = client.send_post("Pythonから投稿テスト")  # 300文字まで
 </pre>
 
@@ -51,7 +51,7 @@ post = client.send_post("Pythonから投稿テスト")  # 300文字まで
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-16 11:37:25 JST</time></p>
+<p>Last modified: <time>2024-04-16 11:45:11 JST</time></p>
 </footer>
 </body>
 </html>

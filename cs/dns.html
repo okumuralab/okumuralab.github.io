@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/dns.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNS</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>DNS</h1>
+
+<p>DNSは、けっこう難しい話題です。</p>
+
+<p>まず「ドメイン」と「ドメイン名」の違い。「ドメイン」は抽象的な名前空間の区切りで、われわれがふつう使っている www.example.com みたいなのは「ドメイン名」のほうです。</p>
+
+<p>この「ドメイン名」とIPアドレスを対応づけるのがDNS（Doman Name System）という仕組みです。</p>
+
+<p>ドメイン名は、お金さえ出せば自由に登録できるものと、そうでないものがあります。このサイトのドメイン名 okumuralab.org は、お金さえ出せば自由に登録できるものです。いずれにしても、ドメイン名は「登録する」もので、「買う」ものではありません。</p>
+
+<p>go.jp の付くドメイン名は政府の機関（government）しか登録できません。lg.jp の付くドメイン名は地方公共団体（local government）しか登録できません。これらが付いたドメイン名は情報源としてとりあえず安心できるものです。ところが最近では国や地方公共団体が、だれでも登録できるドメイン名、特に「汎用JPドメイン名」と呼ばれるドメイン名でサイトを立ち上げ、サイトの役割が終わったらドメイン名を放出してしまって、無関係な業者に登録されてしまう事例が目立ちます。例えば新型コロナウイルス感染症の情報発信のために厚労省が立ち上げた <a href="https://www.covid19-info.jp" rel="nofollow">https://www.covid19-info.jp</a> というサイトは、汎用JPドメイン名 covid19-info.jp を使ってしまい、役割が終わった時点で手放してしまったため、無関係なサイトになってしまいました。もともと go.jp を使っていればよかったのですが、業者に丸投げしたためにこうなってしまったのでしょう。</p>
+
+<p>さて、教科書に「DNSサーバ」と書いてあるものは、大きく分けて二通りあります。パソコンやスマホから直接問合せをするものが「フルリゾルバ」（キャッシュDNSサーバ）で、フルリゾルバの情報源となるものが「権威サーバ」（権威DNSサーバ）です。</p>
+
+<p>パソコンやスマホのネットワークの設定を見ると、「DNSサーバ」という項目があり、何らかの設定が（手動あるいは自動で）されているはずです。ここにはフルリゾルバを設定しなければなりません。</p>
+
+<p>パソコンに設定するDNSサーバ（フルリゾルバ）としては、プロバイダ（ISP）が提供するものを設定するのが一般的ですが、最近は 8.8.8.8 や 1.1.1.1 を設定する人が増えています。これらは「パブリックDNSサーバ」と呼ばれているもので、8.8.8.8 や 8.8.4.4 はGoogle、1.1.1.1 や 1.0.0.1 はCloudflareが運用しているものです。ISPのものより速いし安全だという触れ込みですが、特定の大企業にインターネットの利用情報をすべて把握されるおそれがあることを懸念する声もあります。</p>
+
+<p>フルリゾルバは、パソコンやスマホからの問合せを受け付けて、自分が覚えている情報を返します。自分が覚えている情報がないか、あるいは情報が古い場合は、フルリゾルバが権威サーバに問い合わせて、情報をもらいます。</p>
+
+<p>フルリゾルバが立ち上がったばかりで何の情報も持っていない場合に、例えば www.example.jp のIPアドレスをパソコンから尋ねられれば、フルリゾルバはまずまず「ルート」サーバに問い合わせて jp の権威サーバのアドレスを教えてもらいます（「ルート」サーバの情報は最初に教えておかなければなりません）。次に、フルリゾルバは jp の権威サーバに example.jp の権威サーバのアドレスを教えてもらいます。最後に、フルリゾルバは example.jp の権威サーバに問い合わせて www.example.jp のIPアドレスを教えてもらい、その情報をパソコンに返す、というわけです。
+
+<p>つまり、www.example.jp は、ルート→jp→example.jpの順に問合せをします。</p>
+
+<p>だったら、www.example.co.jp は、ルート→jp→co.jp→example.co.jp の順に問合せするかというと、そうではなく、ルート→jp→example.co.jp です。このあたりを間違って説明している本がたくさんあるようです。</p>
+
+<p>これは <code>dig +trace</code> というコマンドで確認できます。例として <code>www.gihyo.co.jp</code> を使わせていただきました。</p>
+
+<pre>
+$ dig +trace www.gihyo.co.jp
+
+; &lt;&lt;&gt;&gt; DiG 9.16.23-RH &lt;&lt;&gt;&gt; +trace www.gihyo.co.jp
+;; global options: +cmd
+.			15058	IN	NS	m.root-servers.net.
+.			15058	IN	NS	d.root-servers.net.
+.			15058	IN	NS	h.root-servers.net.
+.			15058	IN	NS	a.root-servers.net.
+.			15058	IN	NS	f.root-servers.net.
+.			15058	IN	NS	i.root-servers.net.
+.			15058	IN	NS	b.root-servers.net.
+.			15058	IN	NS	j.root-servers.net.
+.			15058	IN	NS	c.root-servers.net.
+.			15058	IN	NS	e.root-servers.net.
+.			15058	IN	NS	g.root-servers.net.
+.			15058	IN	NS	l.root-servers.net.
+.			15058	IN	NS	k.root-servers.net.
+.			15058	IN	RRSIG	NS 8 0 518400 20240424170000 20240411160000 5613 . ODOeEpzdxlwgLyLLlCtnFfLFVWvcKAR1p9eNOyAfgrqaT60mrKZFbyod iNYMPn6oe1ZUPCt207CVB409CKGeMH4UzJBnOAq9UJpZvsidb0Iwv3FC pnk3XS7MjBof69d84mg4UdonkFtq8mjVl13mDUq8074bDG17y2N3gyu4 XqmaCO/oIpleBnFoch0/aH0WKlk3ImWQ1skrvyzr+EY4G1F+QHlP+Q0Z r5uxn6mCoLyt5DLhOUthy5HuCv8adP8RiIaVQ6KSmEh+6NaD6JBEfZY4 7qawVxs3Ii89JK6y3cFTT6VPPwSMwXiLV3s+84lVECVo4oE5FPnunrgJ Pk6ksg==
+;; Received 525 bytes from 133.242.0.3#53(133.242.0.3) in 0 ms
+
+jp.			172800	IN	NS	a.dns.jp.
+jp.			172800	IN	NS	b.dns.jp.
+jp.			172800	IN	NS	c.dns.jp.
+jp.			172800	IN	NS	d.dns.jp.
+jp.			172800	IN	NS	e.dns.jp.
+jp.			172800	IN	NS	f.dns.jp.
+jp.			172800	IN	NS	g.dns.jp.
+jp.			172800	IN	NS	h.dns.jp.
+jp.			86400	IN	DS	22111 8 2 E5A43534B9BEAFBF35D6C6B3EAA1E9AE7FE2B4D8961252126FD67B51 72322286
+jp.			86400	IN	RRSIG	DS 8 1 86400 20240424170000 20240411160000 5613 . RxqTf5pZ7qQQHouKEheckt+FWSHTvwBczPG9vr+u1XbIA2Mh1Ffi/hJQ 1O7V5i2paF2l9Zgp6udPTnA3vDNwWS6nN4S7Z9i7SaGiBOpC0KmSc620 vhdmOjT+u+BAkcJSEQmcIs4AFlrbNsJCrxGmUFVOEXjc4Ywq4oUmj0bY Ais/P+JfU5SQJL2Sp+haPKw9/bZ+ru/FnrS/DmM30doj2mhycyP0WFEz hFqAJD+H/8ClM8RYLtncSzmmHL41uJmLUDZsiEG6+ah/lrEddVXxHvXZ asrvL82OAHfu0qpckNPtW0t0hO+xR07k4efdNW+pzjc3yJeeNExsPefO 5swqZg==
+;; Received 835 bytes from 192.203.230.10#53(e.root-servers.net) in 19 ms
+
+gihyo.co.jp.		86400	IN	NS	ns.gihyo.co.jp.
+gihyo.co.jp.		86400	IN	NS	ns2.dns.ne.jp.
+K8D2HBB9BVGEH428NRIO4QRIUB51NDG0.jp. 900 IN NSEC3 1 1 0 - K8DJ2S43IBDJ8QSPIAHOJJSSIAQQKBFT TXT RRSIG
+K8D2HBB9BVGEH428NRIO4QRIUB51NDG0.jp. 900 IN RRSIG NSEC3 8 2 900 20240506174502 20240406174502 25581 jp. x38as+sHhqrzkh+TOkAJML/oy4ePD0Btr9i2iaCDGpsOICTMzIdqb4u8 aueROOmffYqvInEO+ifWlZqnCwLOQ2jF4grW6AAZaXT3MrhjzmvSiYzQ NS1Ob7f1ESEeeoiql4NjyEOzrnnC+6yblONWDgRnNfwM96DfV4VzyJBi Dy0=
+1S2H3L3TIAUEGIS9HI0LJC5PDU2OOPDU.jp. 900 IN NSEC3 1 1 0 - 1SDN0420294B6L2HC9P94L5V4PP3F8P2 NS DS RRSIG
+1S2H3L3TIAUEGIS9HI0LJC5PDU2OOPDU.jp. 900 IN RRSIG NSEC3 8 2 900 20240506174502 20240406174502 25581 jp. KK/glPkbhasYY6h8xNdtOtdBKARNUm/sEuCPUuyEtCpkRMbcbSVAJy9T VdMIpTXKBljFsAYq+JxqevwnrmoK49+hCgmWw4zo5mzQyKK+2ACJ2VkJ irG0JLYkZ2M6IpjOs7W1NKPjgy8rmoiXUIsX8xv13/b/0lSopJ6E29ak do4=
+;; Received 632 bytes from 156.154.100.5#53(c.dns.jp) in 18 ms
+
+www.gihyo.co.jp.	8600	IN	A	160.16.113.252
+gihyo.co.jp.		8600	IN	NS	ns.gihyo.co.jp.
+gihyo.co.jp.		8600	IN	NS	ns2.dns.ne.jp.
+;; Received 118 bytes from 133.167.21.1#53(ns2.dns.ne.jp) in 21 ms
+</pre>
+
+<p>こういうややこしいことがあるので、www.example.co.jp や www.example.ed.jp の類ではなく、www.example.com や、汎用JPアドレス www.example.jp の類で説明するのが楽です。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-18 12:20:16 JST</time></p>
+</footer>
+</body>
+</html>

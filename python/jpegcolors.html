@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/jpegcolors.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JPEGの色数の上限は？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>JPEGの色数の上限は？</h1>
+
+<p>「JPEGは最大65536色表せる」という間違った説明があって、256<sup>3</sup> ≒ 1677万色の間違いだろうととっさに思ったが、JPEGは一般にRGB→YCbCr→RGBと色空間を変換するため、1677万色全部をカバーするとは言えない。それなら何色くらい表せるのか。</p>
+
+<p>JPEGは8×8ブロック単位でDCT変換を行うので、8×8ブロックを256×256含む2048×2048の画像を256枚作れば、ブロック単位ですべての色のパターンが尽くせる。これをいったん保存してから読み出し、何通りの色が使われていたかを調べる。GPT-4に手伝ってもらって、次のようなプログラムを作った。</p>
+
+<pre class="cell">
+import numpy as np
+from PIL import Image
+
+ary = np.zeros((2048, 2048, 3), dtype=np.uint8)
+flg = np.zeros((256, 256, 256), dtype=np.uint8)
+
+for k in range(256):
+    for i in range(256):
+        for j in range(256):
+            ary[8*i:8*i+8, 8*j:8*j+8] = [i, j, k]
+    img = Image.fromarray(ary)
+    img.save("image.jpg", "JPEG", quality=100)
+    img2 = Image.open("image.jpg")
+    img2 = img2.convert('RGB')
+    width, height = img2.size
+    for x in range(width):
+        for y in range(height):
+            r, g, b = img2.getpixel((x, y))
+            flg[r, g, b] = 1
+
+print(np.sum(flg)) # 4006938
+</pre>
+
+<p>この実験では400万通りほどの色が再現された。1677万色の24%ほどである。22ビットくらいの情報量だ。</p>
+
+<p>パターンを変えると色数は変わるが、上限は400万よりそんなに大きくならないようだ。</p>
+
+<p>だいたいの分布を見てみる：</p>
+
+<pre class="cell">
+for k in range(16):
+    print()
+    print(k)
+    for i in range(16):
+        for j in range(16):
+            s = np.sum(flg[16*k:16*k+16, 16*i:16*i+16, 16*j:16*j+16])
+            print(f"{s:5d}", end="")
+        print()
+</pre>
+
+<p>特にどの色域が手薄ということはなく、ほぼまんべんなく1/4くらいの色が再現されるという感じのようだ。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-18 10:23:22 JST</time></p>
+</footer>
+</body>
+</html>

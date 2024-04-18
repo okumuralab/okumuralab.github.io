@@ -86,10 +86,10 @@ C:\Users\ユーザ名\AppData\Local\Programs\Python\Python312\Scripts\pip.exe
 pip list --outdated
 </pre>
 
-<p>最初は pip そのものが古いはずですので、まずこれを</p>
+<p>もし <code>pip</code> そのものが古いと言われたら、</p>
 
 <pre>
-pip install --upgrade pip setuptools
+pip install --upgrade pip
 </pre>
 
 <p>としてアップグレードします。これ以外に必要なパッケージは、その都度インストールします。例：</p>
@@ -180,7 +180,15 @@ prometheus-client prompt-toolkit psutil ptyprocess pure-eval
 pycparser Pygments pyparsing pyrsistent python-dateutil pytz
 pyzmq requests Send2Trash six sniffio soupsieve stack-data
 terminado tinycss2 tomli tornado traitlets urllib3 wcwidth
-webencodings websocket-client</code>）がインストールされます。なお、この直後に <code>pip3 list --outdated</code> と打ち込むと、すでに更新が必要なパッケージがありますが、これは新しいほどいいのではなく依存関係があるので、更新の必要はありません。</p>
+webencodings websocket-client</code>）がインストールされます。</p>
+
+<p>なお、この直後に</p>
+
+<pre>
+pip3 list --outdated
+</pre>
+
+<p>と打ち込むと、すでに更新が必要なパッケージがあるかもしれませんが、<code>pip</code> そのもの、あるいは普段使いの <code>matplotlib</code> や <code>pandas</code> などが古い場合を除き、下手に更新すると依存関係を崩すので、更新の必要はありません。もし依存関係が崩れたら、必要なパッケージを再更新すれば直ります。例えば <code>numpy</code> を更新しすぎために <code>numba</code> に不具合が生じたならば、<code>pip3 install --upgrade numba</code> とすれば、<code>numba</code> が動くように <code>numpy</code> をダウングレードしてくれるはずです。</p>
 
 <p>なお、このとき “Defaulting to user installation because normal site-packages is not writeable” というメッセージが出ますが、これはシステムの <code>site-packages</code> ディレクトリは管理者権限がないと書き込めないので <code>~/Library/Python/3.12/lib/python/site-packages</code> にインストールしたということを意味します。また、実行ファイルが <code>~/Library/Python/3.12/bin</code> にインストールされますので、こちらにもパスを通しておきます。具体的には <code>~/.bash_profile</code> または <code>~/.zprofile</code> にさきほど追加されたものを</p>
 
@@ -363,7 +371,7 @@ apk add python3 py3-pip
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-13 09:13:15 JST</time></p>
+<p>Last modified: <time>2024-04-16 13:06:52 JST</time></p>
 </footer>
 </body>
 </html>

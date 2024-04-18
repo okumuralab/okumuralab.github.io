@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/data_info.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>データと情報</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>データと情報</h1>
+
+<p>データと情報は違います。</p>
+
+<p>例えばビットが100個並んでいれば、100ビットのデータ。</p>
+
+<p>でも、そこに100ビット分の情報が入っているとは限りません。例えば初期化したばかりで全部に 0 が入っていることがわかっているなら、情報量はゼロ。全部に 1 が入っていることがわかっている場合も、情報量はゼロ。</p>
+
+<p>「オオカミが来た！」としか言わない羊飼いは、情報量ゼロ。つねに 0 であるビットや、つねに 1 であるビットは、何ビットあっても情報量はゼロ。</p>
+
+<p>それでは、確率 $p$ で 0、確率 $1 - p$ で 1 になる1ビットのデータの情報量はというと、Shannon（シャノン）の情報理論によれば $-(p \log_2 p + (1-p) \log_2 (1-p))$ ビットであることがわかっています。これは大学で勉強することで、今はわからなくてもかまいませんが、1ビットのデータであっても、その情報量は一般に1ビット以下だということは知っておいて損はしないでしょう。ビットはデータの最小単位かもしれませんが、0.1ビットの情報とかもあるので、ビットは情報の最小単位ではありません。</p>
+
+<p>データ圧縮という技術があります。データ圧縮には、完全に元に戻せる可逆圧縮と、完全には元に戻せない非可逆圧縮とがありますが、可逆圧縮であれば、100ビットのデータを50ビットに縮めて送信し、受信者側で元の100ビットを完全に復元するといったことが可能です。これは、もとの100ビットのデータに50ビット以下の情報しか入っていなかったからできることです。可逆圧縮なら、圧縮してデータを減らしても、情報量は変わりません。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-18 15:39:14 JST</time></p>
+</footer>
+</body>
+</html>
