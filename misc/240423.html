@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/240423.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AlmaLinux 9に最新のMoodleをインストールする</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>AlmaLinux 9に最新のMoodleをインストールする</h1>
+
+<p>さくらのVPS（メモリ1G、ストレージ100G）に <a href="https://manual.sakura.ad.jp/vps/os-packages/almalinux-9.html">AlmaLinux 9</a> をインストールしたものを使っている。<a href="https://manual.sakura.ad.jp/vps/os-packages/add-swapfile.html">Swap</a> は2G設定している。</p>
+
+<p>最新の <a href="https://download.moodle.org/releases/latest/">Moodle 4.4</a> はPHP 8.1、DBは選べるがMariaDBなら10.6.7が必須である。</p>
+
+<p>AlmaLinux 9にこれをインストールしようとすると、罠がある。まず、AlmaLinuxのPHP 8.1にはphp-sodiumがない。なくても動くように見えるが、「php_extension sodium 必ずインストールおよび有効化してください」という警告が出る。</p>
+
+<p>GPT-4に聞いたら、次のようにしてRemi版PHP 8.1に置き換えればいいとのこと。<p>
+
+<pre>
+sudo dnf install epel-release
+sudo dnf install https://rpms.remirepo.net/enterprise/remi-release-9.rpm
+sudo dnf module reset php
+sudo dnf module enable php:remi-8.1
+sudo dnf install php-sodium
+sudo systemctl restart httpd
+sudo systemctl restart php-fpm
+</pre>
+
+<p>やってみたら、うまくいったようである。</p>
+
+<p>また、AlmaLinux 9のMariaDBはまだ10.5.22である。10.6.7以上にするには、MariaDBサーバから直接いただいてくる。<a href="https://mirror.mariadb.org/yum/">https://mirror.mariadb.org/yum/</a> を見ると、現在利用可能なバージョンが並んでいる。例えば10.11.7の中を見ると、almalinux9-amd64というのがあるので、これを使う。それには /etc/yum.repos.d/mariadb.repo というファイルを作り、次のように書き込む：</p>
+
+<pre>
+[mariadb]
+name = MariaDB
+baseurl = https://mirror.mariadb.org/yum/10.11.7/almalinux9-amd64
+gpgkey = https://mirror.mariadb.org/yum/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+</pre>
+
+<p>そして次のように打ち込む：</p>
+
+<pre>
+sudo dnf install --allowerasing mariadb-server mariadb
+</pre>
+
+<p>これで次のものが入るはずである：</p>
+
+<pre>
+MariaDB-shared-10.11.7-1.el9.x86_64
+MariaDB-common-10.11.7-1.el9.x86_64
+MariaDB-client-10.11.7-1.el9.x86_64
+MariaDB-server-10.11.7-1.el9.x86_64
+MariaDB-backup-10.11.7-1.el9.x86_64
+</pre>
+
+<p>起動する：</p>
+
+<pre>
+sudo systemctl enable mariadb.service
+sudo systemctl start mariadb.service
+</pre>
+
+<p>環境が整えば、あとはMoodleのマニュアル通りにインストールすればよい。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-23 19:47:49 JST</time></p>
+</footer>
+</body>
+</html>
