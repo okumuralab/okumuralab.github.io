@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/zenkaku-hankaku.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>アナログとデジタル</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>全角と半角</h1>
+
+<p>日本語の文字は、正方形の枠にデザインされることが多いので、全角文字とも呼ばれます。これに合わせて英数字もＡＢＣ１２３のように正方形の枠にデザインされた全角の英数字があります。問題は、ABC123のような全角でない文字を何と呼ぶかです。</p>
+
+<p>従来の日本語フォントではABC123などは全角の半分の幅にデザインされることが多かったので、「半角文字」という言葉が生まれました。</p>
+
+<p>ところが、今風のフォントでは、ABC123などは全角の半分の幅ではなく、例えばWは広くIは狭いという具合に、文字の形に応じて幅を変えてあるのが一般的です。こういうフォントをプロポーショナルフォントといいます。</p>
+
+<p>プロポーショナルフォントの時代に「半角」文字というのは変です。では何と呼べばいいでしょうか。</p>
+
+<p>昔のShift JISなどの文字コードでは、全角文字は2バイト、「半角」文字は1バイトで表されました。そこで、2バイト文字・1バイト文字という呼び方もされました。</p>
+
+<p>ところが、Unicodeの時代になると、文字のバイト数はエンコーディングによって変わるようになりました。一番よく使われているUTF-8では、「半角」文字は1バイトですが、全角文字の多くは3バイトです。UTF-16ではどちらも2バイト（一部の全角文字は4バイト）です。</p>
+
+<p>Unicodeでは、文字のブロックごとに名前が付けられています。いわゆる「半角」文字には「基本ラテン文字」（Basic Latin）という名前が付いています。この呼び方が一番正確です。でも「半角文字」という呼び名は当分なくなりそうにありません。</p>
+
+<p>ちなみにUnicodeでは、半角AはLATIN CAPITAL LETTER A（ラテン大文字A）、全角ＡはFULLWIDTH LATIN CAPITAL LETTER A（全角ラテン大文字A）という名前が付いています。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-23 15:31:45 JST</time></p>
+</footer>
+</body>
+</html>
