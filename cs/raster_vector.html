@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/raster_vector.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ラスタ形式・ベクタ形式</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>ラスタ形式・ベクタ形式</h1>
+
+<p>情報Iの学習指導要領解説に「静止画を点の集まりとして扱うラスタ形式と座標として扱うベクタ形式」という記述があるので、情報Iの教科書の多くがこれらの用語を扱っています。「ラスタ」でなく「ラスター」という表記にしたり、あるいは「ビットマップ」という用語も挙げていたり、「ベクタ」でなく「ベクター」という表記にしたりしているものもあります。</p>
+
+<p>ラスタ形式の例としてはPNG、JPEG、GIFなど、お馴染みの例が挙げられているのですが、ベクタ形式についてはあまり馴染みのある例が挙げられていないようです。
+
+<p>次の三つの黄色い丸をご覧ください。</p>
+
+<figure>
+  <img src="img/maru.svg" alt="maru.svg">
+  <img src="img/maru.png" alt="maru.png">
+  <img src="img/maru.webp" alt="maru.webp">
+</figure>
+
+<p>最初の黄色い丸はSVGという形式のベクタ画像です。ブラウザの表示を拡大してもギザギザになりません。2番目のものはPNG形式、3番目のものはWebP形式で、どちらもラスタ画像です。</p>
+
+<p>最初のSVG画像は、単なるテキストファイルで、中には</p>
+
+<pre>
+&lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="50" height="50"&gt;
+  &lt;circle cx="25" cy="25" r="22" fill="yellow" stroke="black" stroke-width="2" /&gt;
+&lt;/svg&gt;
+</pre>
+
+<p>と書き込んであります。このようにテキストで簡単に描けるのもSVGの特徴です。</p>
+
+<p>本格的にSVG画像を描きたいなら、Adobe IllustratorやAffinity Designer、あるいはオープンソースの <a href="https://inkscape.org">Inkscape</a>（インクスケープ）が便利です。</p>
+
+<p>Pythonのmatplotlibなどで描くグラフも、今はSVG形式で保存するのがお勧めです。グラフを描いた後で</p>
+
+<pre>
+plt.savefig("filename.svg", bbox_inches="tight")
+</pre>
+
+<p>と打ち込めば、<code>filename.svg</code> というSVG形式の画像ファイルに保存できます。</p>
+
+<p>ちなみに、上の3番目の例のWebP（ウェッピー）という形式は、JPEGに代わって広く用いられるようになりつつある非可逆圧縮の画像形式です。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-28 12:01:26 JST</time></p>
+</footer>
+</body>
+</html>

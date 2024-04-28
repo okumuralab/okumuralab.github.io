@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/udp.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UDPはストリーミングに使われる？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>UDPはストリーミングに使われる？</h1>
+
+<p>昔のストリーミングはUDPを使っていたのですが、YouTubeなどはTCPを使います（<a href="streaming.html">ダウンロードとストリーミング</a>参照）。</p>
+
+<p>UDPを主に使うのは<a href="dns.html">DNS</a>です。</p>
+
+<p>……でよかったのですが、今はさらにQUICの登場でややこしくなっています。</p>
+
+<p>QUIC（クイック）はUDPの上に従来のTCPやTLSの機能を再実装したものです。Googleが開発し、今はおもなブラウザが対応しています。これを使うと今までTCPでやってきたHTTPがUDPになります（HTTP/3といいます）。「UDPは何に使われるか？」という問題が出しにくくなります。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-28 10:48:11 JST</time></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/smtp_pop_imap.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMTP、POP、IMAP</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>SMTP、POP、IMAP</h1>
+
+<p>メール送信はSMTP、受信はサーバからメールを削除するのがPOPで削除しないのがIMAPだと書いてある教科書がありました。</p>
+
+<p>実際は、POPもIMAPも、サーバからメールを読んでもメールは削除されません。削除コマンドを送れば削除されます。</p>
+
+<p>POPとIMAPの違いは、サーバ内のメールの管理がPOPではほとんどできないのにIMAPではフォルダに分けたりが簡単にできる点です。今はPOPを使うメリットはまったくありません。IMAPを使いましょう。</p>
+
+<p>あと、SMTPはメールを暗号化しないと思っている人がまだいるようですが、「送信者→(SMTP)→送信サーバ→(SMTP)→受信サーバ→(IMAP)→受信者」のどの段階でも今は暗号化されるのが普通です。ただし「送信サーバ→(SMTP)→受信サーバ」の暗号化（STARTTLS）はオプションなので、暗号化されない可能性もあります。</p>
+
+<p>いずれにしても、サーバの管理者はメールを読むことができます（読まないとは思いますが）。このため、秘密のメールを送るには、送信の段階で暗号化し、受信者が復号する仕組みが必要です。そのような仕組みはありますが（S/MIME、PGP）、あまり普及していません。</p>
+
+<p>添付ファイルだけ暗号化して、復号の鍵を別便のメールで送ることがありますが、メールを盗聴できる人なら鍵も見れてしまいますので、意味はありません。鍵はメール以外で送るか、読める人を限定できるクラウドサービスを利用しましょう。</p>
+
+<p>公開鍵暗号を使う方法は<a href="../misc/220628.html">GnuPGを使おう</a>をご参照ください。</p>
+
+<p>参考書：</p>
+
+<ul>
+  <li>増井敏克、<a href="https://www.shoeisha.co.jp/book/detail/9784798183930">実務で使える メール技術の教科書 基本のしくみからプロトコル・サーバー構築・送信ドメイン認証・添付ファイル・暗号化・セキュリティ対策まで</a>（翔泳社、2024年）</li>
+</ul>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-28 17:32:15 JST</time></p>
+</footer>
+</body>
+</html>

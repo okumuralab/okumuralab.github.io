@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/outliers.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>外れ値は捨てる？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>外れ値は捨てる？</h1>
+
+<p>「外れ値は捨てる」と教えておられることがあるようです。</p>
+
+<p>これは逆で、「外れ値は注目する」が正しいのです。</p>
+
+<p>箱ひげ図を考案したテューキーは、箱ひげ図の箱の端から、箱の長さの1.5倍（inner fence）以上離れていれば外れ値としましたが、これは捨てるためではなく、注目するためです。テューキーはさらに箱の長さの3倍（outer fence）以上離れているものはもっと注目しました（<span lang="en">John W. Tukey, <i>Exploratory Data Analysis</i> (1977), p.48</span>）：</p>
+
+<figure><img src="img/tukey-p48.png" alt="箱ひげ図"></figure>
+
+<p><a href="../python/240207.html">都道府県人口のヒストグラム</a>に書いたように、東京の人口は47都道府県の人口の平均値から4σ以上離れています。完全に「外れ値」ですが、東京を捨てるのはナンセンスですね。</p>
+
+<p>「外れ値は捨てる」という説は、おそらく異常値（測定ミスや転記ミス）との混同から来たのだろうと思います。ただ、転記ミスは、元の資料に戻って修正するべきですね。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-04-28 13:50:13 JST</time></p>
+</footer>
+</body>
+</html>
