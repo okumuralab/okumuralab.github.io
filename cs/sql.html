@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/sql.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>データベースとSQL</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+<style>
+table {
+  border-collapse: collapse;
+}
+td, th {
+  border: 1px solid;
+}
+</style></head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>データベースとSQL</h1>
+
+<p>データベースはデータの貯蔵庫です。いろいろな種類がありますが、広く使われているのはリレーショナルデータベース（関係データベース、relational database、RDB）と呼ばれるものです。</p>
+
+<p>リレーショナルデータベースを操作するには SQL という言語を使います。SQL はもともと Structured Query Language（構造化問合せ言語）の略でしたが、今では単に SQL（エスキューエル）が正式名になっています。歴史的な事情から英語圏では SQL と書いて Sequel（シークエル）と読む人も多く、冠詞を付ける場合にエスキューエルと読む人は an SQL、シークエルと読む人は a SQL と書くのですが、今は an SQL で統一することが多くなったようです。</p>
+
+<p>データベースへの問合せを query（クエリ、クエリー）といいます。リレーショナルデータベースのクエリは選択・射影・結合を組み合わせて行います。・・・みたいな抽象的な説明ではおもしろくないので、ここでは実習をしながら学んでいきます。</p>
+
+<p>SQL を実習するために使うリレーショナルデータベース管理システム（Relational Database Management System、RDBMS）にはいろいろなものがありますが、ここでは <a href="https://www.sqlite.org">SQLite</a> というオープンソース（パブリックドメイン）のデータベースソフトを使います。macOS や Linux にはたいてい <code>sqlite3</code> というコマンドとして入っていると思います。他に <a href="https://www.mysql.com">MySQL</a> や <a href="https://mariadb.com">MariaDB</a> や <a href="https://www.postgresql.org">PostgreSQL</a> がよく実習で使われます。</p>
+
+<p>SQLite を起動するには</p>
+
+<pre>
+sqlite3 -column -header <i>filename.db</i>
+</pre>
+
+<p>のように打ち込みます（<code><i>filename.db</i></code> は任意のファイル名です）。あるいは</p>
+
+<pre>
+sqlite3 <i>filename.db</i>
+</pre>
+
+<p>のようにオプションなしで立ち上げた場合は</p>
+
+<pre>
+.headers on
+.mode column
+</pre>
+
+<p>という設定を打ち込めば出力結果が見やすくなります。ピリオドで始まる命令は SQL の命令ではなく SQLite の設定のためのものです。<code>.help</code> で説明が出ます。<code>.exit</code> または <code>.quit</code> で終了します。</p>
+
+<h2>テーブルを作ろう</h2>
+
+<p>たとえば hyou という名前のテーブル（表）を作ってみましょう。</p>
+
+<pre>
+create table hyou(hinmei text, nedan int);
+</pre>
+
+<p>と打ち込んでください。あるいは</p>
+
+<pre>
+CREATE TABLE hyou(hinmei TEXT, nedan INT);
+</pre>
+
+<p>のように、SQL の命令部分を大文字で書く流儀もありますが、どちらでも同じことです。</p>
+
+<p><code>text</code> は文字列、<code>int</code> は整数（integer）の意味です。</p>
+
+<p>この表に値（values）を挿入（insert）してみましょう。</p>
+
+<pre>
+insert into hyou values('りんご', 500);
+insert into hyou values('みかん', 300);
+</pre>
+
+<p>挿入した列をすべて表示してみましょう。「すべての列」は米印 <code>*</code> で表します。</p>
+
+<pre>
+select * from hyou;
+</pre>
+
+<p>すると次のような表が表示されるはずです。</p>
+
+<pre>
+hinmei  nedan
+------  -----
+りんご     500  
+みかん     300  
+</pre>
+
+<p>ここでは見やすいように次のように書き表すことにします。</p>
+
+<table>
+<tr><th>hinmei</th><th>nedan</th></tr>
+<tr><td>りんご</td><td>500</td></tr>
+<tr><td>みかん</td><td>300</td></tr>
+</table>
+
+<p>行を<b>レコード</b>、列を<b>フィールド</b>と呼ぶことがあります。</p>
+
+<p>値段が 400 円以上の行だけ表示してみましょう。</p>
+
+<pre>
+select * from hyou where nedan >= 400;
+</pre>
+
+<p>このように、一部の行だけ抜き出すことを、<b>選択</b>といいます。</p>
+
+<p>hinmei の列だけ表示するには次のようにします。</p>
+
+<pre>
+select hinmei from hyou;
+</pre>
+
+<p>このように、一部の列だけ抜き出すことを、<b>射影</b>といいます。</p>
+
+<p>選択と射影は同時に行うことができます。</p>
+
+<pre>
+select hinmei from hyou where nedan >= 400;
+</pre>
+
+<p>合計（sum）を求めてみましょう。</p>
+
+<pre>
+select sum(nedan) from hyou;
+</pre>
+
+<p>値段の順に並べてみましょう。</p>
+
+<pre>
+select * from hyou order by nedan;
+</pre>
+
+<p>無指定では値段の小さい順（昇順、ascending order）に並びます。大きい順（降順、descending order）に並べるには desc を付けます。</p>
+
+<pre>
+select * from hyou order by nedan desc;
+</pre>
+
+<p>データの更新には update を使います。</p>
+
+<pre>
+update hyou set nedan=200 where hinmei='みかん';
+</pre>
+
+<p>行の削除は delete です。</p>
+
+<pre>
+delete from hyou where hinmei='みかん';
+</pre>
+
+<p>表を削除するには <code>drop table 表の名前;</code> とします。</p>
+
+<h2>データベース設計</h2>
+
+<h3>主キーを定めよう</h3>
+
+<p>上の例で使った商品データベースでは、りんごがいろいろあったら品名だけで行が決まりません。名前だけで行が決まるような詳しい名前を付けるか、あるいは商品コードを付けましょう。</p>
+
+<p>学生名簿でも、同じ名前の学生が二人いたら、名前だけで行が決まりません。学籍番号を付けましょう。</p>
+
+<p>商品コードや学籍番号のように、これが決まれば行が特定できるものを、主キーといいます。</p>
+
+<aside>
+<p>嘘のような話ですが、ある学校で学年・組・出席番号を主キーとした生徒データを作ったらしく、4月になったら別人のデータが表示されるようになったというニュースがありました。主キーを決めるときは永続性のあるものを使いましょう。</p>
+</aside>
+
+<h3>第1正規化</h3>
+
+<p>学生名簿に「所属クラブ」という列があると、複数のクラブに所属している学生はどう扱えばいいでしょうか。</p>
+
+<table>
+<tr><th>学籍番号</th><th>氏名</th><th colspan="2">所属クラブ</th></tr>
+<tr><td>1788</td><td>三重太郎</td><td colspan="2">野球部</td></tr>
+<tr><td>1789</td><td>山田花子</td><td>茶道部</td><td>漫研</td></tr>
+</table>
+
+<p>こんな芸当はできません。^^;</p>
+
+<table>
+<tr><th>学籍番号</th><th>氏名</th><th>所属クラブ1</th><th>所属クラブ2</th></tr>
+<tr><td>1788</td><td>三重太郎</td><td>野球部</td><td>-</td></tr>
+<tr><td>1789</td><td>山田花子</td><td>茶道部</td><td>漫研</td></tr>
+</table>
+
+<p>これだと三つのクラブに所属する人が現れたら困ります。それに、このようにしてしまうと、あとの処理が難しくなります。</p>
+
+<p>そのようなときは、複数の行に分けましょう。</p>
+
+<table>
+<tr><th>学籍番号</th><th>氏名</th><th>所属クラブ</th></tr>
+<tr><td>1788</td><td>三重太郎</td><td>野球部</td></tr>
+<tr><td>1789</td><td>山田花子</td><td>茶道部</td></tr>
+<tr><td>1789</td><td>山田花子</td><td>漫研</td></tr>
+</table>
+
+<p>これを第1正規化といいます。</p>
+
+<p>実際に SQL で実習するには、次のようにして入力してください。</p>
+
+<pre>
+create table 学生名簿(学籍番号 text, 氏名 text, 所属クラブ text);
+insert into 学生名簿 values('1788', '三重太郎', '野球部');
+</pre>
+
+<p>学籍番号は整数 <code>int</code> でもいいように思いますが、頭が 0 で始まる番号や、途中にアルファベットを含むような「番号」があるかもしれませんので、文字列にするほうが安全です。</p>
+
+<h3>第2正規化</h3>
+
+<p>上の表では、主キーは「学籍番号」と「所属クラブ」の二つになります。二つの主キーの値を指定すれば行が定まるので、これはまったく問題ありません。問題は、氏名が「学籍番号」だけで決まってしまい、もう一つの主キー「所属クラブ」によらないということです。このように、ある列の値が主キーの一部だけによって決まる場合は、表を次のように二つに分けましょう。</p>
+
+<p><b>学生名簿</b>（主キーは学籍番号）</p>
+
+<table>
+<tr><th>学籍番号</th><th>氏名</th></tr>
+<tr><td>1788</td><td>三重太郎</td></tr>
+<tr><td>1789</td><td>山田花子</td></tr>
+</table>
+
+<p><b>クラブ所属表</b>（主キーは学籍番号と所属クラブ）</p>
+
+<table>
+<tr><th>学籍番号</th><th>所属クラブ</th></tr>
+<tr><td>1788</td><td>野球部</td></tr>
+<tr><td>1789</td><td>茶道部</td></tr>
+<tr><td>1789</td><td>漫研</td></tr>
+</table>
+
+<p>実際にはクラブに属していない学生も多いので、クラブ所属表は学生名簿ほど大きくなりません。</p>
+
+<p>このように、主キーの一部だけに依存するような項目をなくすことを、第2正規化といいます。</p>
+
+<h3>第3正規化</h3>
+
+<p>学生名簿は実際にはもっといろいろな項目を含みます。たとえばコースについての情報が次のように入っているとしましょう。</p>
+
+<table>
+<tr><th>学籍番号</th><th>氏名</th><th>コース名</th><th>コース主任</th></tr>
+<tr><td>1788</td><td>三重太郎</td><td>社会情報</td><td>○○教授</td></tr>
+<tr><td>1789</td><td>山田花子</td><td>情報処理</td><td>□□教授</td></tr>
+</table>
+
+<p>「コース名」が決まれば「コース主任」は決まってしまいますね。そこでまた表を分割しましょう。</p>
+
+<p><b>学生名簿</b>（主キーは学籍番号）</p>
+
+<table>
+<tr><th>学籍番号</th><th>氏名</th><th>コース名</th></tr>
+<tr><td>1788</td><td>三重太郎</td><td>社会情報</td></tr>
+<tr><td>1789</td><td>山田花子</td><td>情報処理</td></tr>
+</table>
+
+<p><b>コース表</b>（主キーはコース名）</p>
+
+<table>
+<tr><th>コース名</th><th>コース主任</th></tr>
+<tr><td>社会情報</td><td>○○教授</td></tr>
+<tr><td>情報処理</td><td>□□教授</td></tr>
+</table>
+
+<p>コース表は、コースの数だけでいいので、たいへん小さくなります。</p>
+
+<p>このように、別の項目に依存するような項目をなくすことを、第3正規化といいます。</p>
+
+<p>表はできるだけ正規化するのが正しいデータベース設計です。</p>
+
+<h2>結合（join）</h2>
+
+<p>上のように正規化した場合、いくつかの小さな表ができます。これらを<b>結合</b>して、正規化する前の大きな表に戻す方法が必要になります。</p>
+
+<p>学生名簿とクラブ所属表から、両方のクラブに所属する学生について、氏名なども含めた大きい表を作るには、次のようにします。</p>
+
+<pre>
+select * from 学生名簿 natural join クラブ所属表;
+</pre>
+
+<p>三つ以上の表を結合することもできます。</p>
+
+<pre>
+select * from 学生名簿 natural join クラブ所属表 natural join コース表;
+</pre>
+
+<p>また、学生名簿とクラブ所属表から、学生名簿に含まれるがクラブ所属表には含まれない学生も含めて出力するには、次のようにします。</p>
+
+<pre>
+select * from 学生名簿 natural left join クラブ所属表;
+</pre>
+
+<p>このとき所属クラブが空欄の行ができます。空欄のある行だけ抜き出すには次のようにします。</p>
+
+<pre>
+select * from 学生名簿 natural left join クラブ所属表 where 所属クラブ is null;
+</pre>
+
+<p>この否定は <code>is not null</code> です。</p>
+
+<p>ほかにもいろいろな結合が考えられますが、これだけ知っていれば大丈夫でしょう。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-05-02 13:42:07 JST</time></p>
+</footer>
+</body>
+</html>
