@@ -15,7 +15,8 @@ table {
 td, th {
   border: 1px solid;
 }
-</style></head>
+</style>
+</head>
 <body>
 
 <header>
@@ -113,7 +114,7 @@ hinmei  nedan
 select * from hyou where nedan >= 400;
 </pre>
 
-<p>このように、一部の行だけ抜き出すことを、<b>選択</b>といいます。</p>
+<p>このように、一部の行だけ抜き出すことを、<b>選択</b>といいます。SQLiteでは比較の演算子はPythonなどと同じものが使えます（ただし規格では等しいは <code>=</code>、等しくないは <code>&lt;&gt;</code> です）。</p>
 
 <p>hinmei の列だけ表示するには次のようにします。</p>
 
@@ -276,9 +277,9 @@ insert into 学生名簿 values('1788', '三重太郎', '野球部');
 
 <h2>結合（join）</h2>
 
-<p>上のように正規化した場合、いくつかの小さな表ができます。これらを<b>結合</b>して、正規化する前の大きな表に戻す方法が必要になります。</p>
+<p>上のように正規化した場合、いくつかの小さな表ができます。これらを<b>結合</b>して、正規化する前の大きな表に戻す方法が必要になります。SQLの結合にはいくつかの方法がありますが、ここでは説明を簡単にするために、同じ列名の列を一つにまとめる natural join だけを扱います。</p>
 
-<p>学生名簿とクラブ所属表から、両方のクラブに所属する学生について、氏名なども含めた大きい表を作るには、次のようにします。</p>
+<p>学生名簿とクラブ所属表で学籍番号が一致する行だけを取り出して、両方の表を結合した表を作るには、次のようにします。</p>
 
 <pre>
 select * from 学生名簿 natural join クラブ所属表;
@@ -303,15 +304,13 @@ select * from 学生名簿 natural left join クラブ所属表 where 所属ク�
 </pre>
 
 <p>この否定は <code>is not null</code> です。</p>
-
-<p>ほかにもいろいろな結合が考えられますが、これだけ知っていれば大丈夫でしょう。</p>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-05-02 13:42:07 JST</time></p>
+<p>Last modified: <time>2024-05-04 13:39:13 JST</time></p>
 </footer>
 </body>
 </html>

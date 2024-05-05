@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/global_local.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>グローバル変数とローカル変数</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>グローバル変数とローカル変数</h1>
+
+<p>次のプログラムを実行すればどのように出力されるでしょうか。</p>
+
+<pre class="cell">
+x = 1
+
+def foo():
+    x = 2
+    print(x)
+
+foo()
+print(x)
+</pre>
+
+<p>答えは次の通りです。</p>
+
+<pre>
+2
+1
+</pre>
+
+<p>関数の外で定義された <code>x = 1</code> はグローバル変数で、プログラム全体で有効です。これに対して、関数の中で定義された <code>x = 2</code> はローカル変数で、関数の中でしか有効でありません。両者はまったく別物なので、関数の中でローカル変数に代入しても、グローバル変数は変わりません。</p>
+
+<p>関数の中でグローバル変数を使うには、次のようにします。</p>
+
+<pre class="cell">
+x = 1
+
+def foo():
+    global x
+    x = 2
+    print(x)
+
+foo()
+print(x)
+</pre>
+
+<p>この出力は次の通りです。</p>
+
+<pre>
+2
+2
+</pre>
+
+<p>関数の中の <code>x</code> はグローバル変数になり、関数の外のものと同じものになりました。</p>
+
+<p>次はどうでしょうか。</p>
+
+<pre class="cell">
+x = 1
+
+def foo():
+    print(x)
+
+foo()
+print(x)
+</pre>
+
+<p>この出力は次の通りです。</p>
+
+<pre>
+1
+1
+</pre>
+
+<p>関数の中で <code>global x</code> しませんでしたが、この場合は関数の中では <code>x</code> を参照しているだけですので、グローバルの <code>x</code> の値を出力します。</p>
+
+<p>では、次はどうでしょうか。</p>
+
+<pre class="cell">
+x = 1
+
+def foo():
+    print(x)
+    x = 2
+
+foo()
+print(x)
+</pre>
+
+<pre>
+UnboundLocalError: cannot access local variable 'x' where it is not associated with a value
+</pre>
+
+<p>エラーになってしまいました。これは関数の中で <code>x</code> の値を変えようとしたため、関数全体で <code>x</code> がローカル変数になり、関数の中で <code>print(x)</code> した時点ではローカル変数に値が入っていないので、エラーになったのです。</p>
+
+<p>これは気をつけないといけないバグの元で、特に</p>
+
+<pre class="cell">
+x = 1
+
+def foo():
+    print(x)
+    # ほかの処理
+    # ほかの処理
+    x = 2
+</pre>
+
+<p>のようにずっと後の方で代入してしまった場合にも、遡って関数の最初の <code>print(x)</code> でエラーになるので、注意が必要です。</p>
+
+<p>なお、この例は、「インタプリタは1行ずつ解釈して実行する」という俗説の反例にもなっています。実際には、現代のインタプリタは全部をコンパイルしてから実行しますので、ずっと後の部分が前の部分に影響することがありえます。</p>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-05-05 08:50:21 JST</time></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/character_code.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文字コード</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+table {
+  border-collapse: collapse;
+}
+td, th {
+  border: 1px solid;
+}
+</style>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>文字コード</h1>
+
+<p>文字コードは文字をビット列で表したもの、またはその対応関係です。文字とビット列との対応関係を文字コードと呼ぶ教科書と、文字を表すビット列を文字コードと呼んで、対応関係を文字コード体系と呼ぶ教科書とがあるようです。</p>
+
+<p>文字に番号を付けた符号化文字集合と、それをビット列で表すための符号化方式とを分けて考えることもあります。</p>
+
+<p>このあたりは、高校ではあまり深入りせず、ざっくり教えているようです。</p>
+
+<p>7ビットのASCII（アスキー）という文字コードは、教科書でよく扱われます。「ASCIIコード」と呼ぶ人もいますが、ASCII（American Standard Code for Information Interchange）のCがcodeの頭文字なので、単にASCIIと呼ぶほうがいいでしょう。ASCIIはコンピュータで表す文字の代名詞みたいな語だった時代があり、そのころ発刊された『ASCII』という日本の雑誌がありました（現在の『週刊アスキー』）。</p>
+
+<p>JIS（ジス）コードという語も教科書に出てきますが、JIS（日本産業規格）はいろいろな文字コードを定めており、JISコードというだけではあいまいです（一般にはISO-2022-JPのことを指すことが多いようですが、JIS X 0201のことをJISコードと呼んでいる教科書もあるようです）。JISで定めたおもな文字コードには次のものがあります。</p>
+
+<ul>
+  <li>JIS X 0201 7ビット及び8ビットの情報交換用符号化文字集合（ほぼASCIIと半角カタカナ）</li>
+  <li>JIS X 0208 7ビット及び8ビットの2バイト情報交換用符号化漢字集合（第一・第二水準漢字など）</li>
+  <li>JIS X 0213 7ビット及び8ビットの2バイト情報交換用符号化拡張漢字集合（JIS X 0208 + 第三・第四水準漢字など）</li>
+</ul>
+
+<p>Unicodeにほぼ相当するJIS X 0221（国際符号化文字集合（UCS））もあります。</p>
+
+<p>JIS X 0208の文字集合の表し方として、Shift JIS（シフトジス）、EUC-JP（イーユーシージェーピー）、ISO-2022-JP（アイエスオーにーまるにーにージェーピー）の三通りがよく使われていました。</p>
+
+<p>ただ、今は、上記も含め、多くの国の文字を含むUnicode（ユニコード）という文字集合が使われることが多くなりました。その符号化方式としてUTF-8やUTF-16などがありますが、一番よく使われるのがUTF-8（ユーティーエフエイト）です。</p>
+
+<p>これからの時代はUTF-8で統一するのがいいと思いますが、古いShift JISなどが混在すると、文字化けが起きることがあります。</p>
+
+<p>かつては、丸囲み数字（①②③…）や全角ローマ数字（ⅠⅡⅢ…）などは「機種依存文字」と呼ばれ、「機種」によって文字化けが起こると説明されてきました。例えばWindowsで①②③と書くと、Macでは㈰㈪㈫と表示されます。これらの文字はJIS X 0208に含まれず、WindowsとMacがそれぞれ独自にJIS X 0208を拡張したために起こった悲劇です。今はUnicodeを使えばこのようなことは起きません。</p>
+
+<table>
+  <caption>おもな「機種依存文字」</caption>
+  <tr><th>Windows</th><td>①</td><td>②</td><td>③</td><td>④</td><td>⑤</td><td>⑥</td><td>⑦</td><td>Ⅰ</td><td>Ⅱ</td><td>Ⅲ</td><td>Ⅳ</td><td>Ⅴ</td></tr>
+  <tr><th>Mac</th><td>㈰</td><td>㈪</td><td>㈫</td><td>㈬</td><td>㈭</td><td>㈮</td><td>㈯</td><td>㈵</td><td>㈼</td><td>㈽</td><td>㈿</td><td>㈸</td></tr>
+</table>
+
+<aside>
+<p>なお、英語圏では、丸囲み文字はあまり用いられていないようです。(1)、(2)、(3)などと書く方が、無限に続けられて便利です。ローマ数字もⅠ、Ⅱ、Ⅲ、Ⅳ等ではなく、ローマ字IやVを並べてI、II、III、IV等のように書きます（だからローマ数字と呼ぶのです）。</p>
+</aside>
+
+<p>ではUnicodeを使えば文字化けは絶対に起きないかというと、これまた微妙です。例えば日本の漢字と中国の漢字は字形が異なりますが、Unicodeではもともと同じだった文字は同じ番号になっているので、正しいフォントを使わないと、日本の文字が中華文字に化けたりします。例えば「骨」は中華フォントでは「<span lang="zh">骨</span>」になりますが文字としては同じです（フォントがなければ同じに表示されるかもしれません）。</p>
+
+<p>日本の文字に限っても、ややこしい事情があります。例えば、葛󠄀城市の「葛󠄀」と、葛󠄁飾区の「葛󠄁」は、同じ番号（U+845B）が振られています。IVSという仕組みを使えばこれらを区別して表示できます。ソフトがIVSに対応していれば、「葛󠄀」はU+845BにU+E0100を後置し、「葛󠄁」はU+845BにU+E0101を後置すれば区別して表示できます。</p>
+
+<p>あと、Windowsの和文フォントが \（U+005C）を ¥（U+00A5）と表示するという問題があります。例えばWindowsのコマンドプロンプトでパスが <code>C:¥Users¥...</code> のように表示されても実際は <code>C:\Users\...</code> だったりするのは悩ましい問題です。</p>
+
+<p>参考</p>
+
+<ul>
+  <li>Python &gt; <a href="../python/encoding.html">文字コード</a></li>
+</ul>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-05-04 17:16:37 JST</time></p>
+</footer>
+</body>
+</html>
