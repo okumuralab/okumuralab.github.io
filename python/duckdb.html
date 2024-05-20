@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/duckdb.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DuckDBでSQL</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>DuckDBでSQL</h1>
+
+<p><a href="https://duckdb.org">DuckDB</a> というデータベースの <a href="https://duckdb.org/docs/api/python/overview.html">Python API</a> を使ってSQLの実習をしてみましょう。CSV、JSON、Parquet形式のファイルを読んだり、pandasやPollarsのデータフレームやArrowのテーブルを操作したりできます。</p>
+
+<p>まずは <code>pip</code> でインストールします：</p>
+
+<pre>
+pip install duckdb
+</pre>
+
+<p>インポートします：</p>
+
+<pre class="cell">
+import duckdb
+</pre>
+
+<p>ここでは <code>duckdb.read_csv()</code> という関数でCSVデータを読んでみます。データはローカルのファイルでもかまいませんが、ここでは Web で公開されている CSV ファイルを URL で指定します。ここでは2022年1月1日現在の住民基本台帳に基づく都道府県別・男女別人口データを扱います（元データはe-Statの<a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000032224634">住民基本台帳に基づく人口、人口動態及び世帯数調査 / 調査の結果</a>）。読み込んだデータをここでは <code>pop</code> という名前のオブジェクト（<code>duckdb.duckdb.DuckDBPyRelation</code>）に格納します。2行目は単に <code>pop</code> とだけ打ち込んで、データの中身を表示しています：</p>
+
+<pre class="cell">
+pop = duckdb.read_csv("https://okumuralab.org/~okumura/stat/data/pop2022.csv")
+pop
+</pre>
+
+<pre>
+┌─────────┬──────────┬─────────┬─────────┐
+│  番号   │ 都道府県 │   男    │   女    │
+│ varchar │ varchar  │  int64  │  int64  │
+├─────────┼──────────┼─────────┼─────────┤
+│ 01      │ 北海道   │ 2450393 │ 2733294 │
+│ 02      │ 青森     │  589143 │  653938 │
+│ 03      │ 岩手     │  581809 │  624670 │
+│ 04      │ 宮城     │ 1106183 │ 1162172 │
+│ 05      │ 秋田     │  452370 │  504466 │
+│ 06      │ 山形     │  511409 │  545273 │
+│ 07      │ 福島     │  904388 │  936856 │
+│ 08      │ 茨城     │ 1449442 │ 1440935 │
+│ 09      │ 栃木     │  971696 │  970798 │
+│ 10      │ 群馬     │  963793 │  979874 │
+│ ·       │  ·       │     ·   │     ·   │
+│ ·       │  ·       │     ·   │     ·   │
+│ ·       │  ·       │     ·   │     ·   │
+│ 38      │ 愛媛     │  637522 │  704017 │
+│ 39      │ 高知     │  327834 │  365535 │
+│ 40      │ 福岡     │ 2430957 │ 2677550 │
+│ 41      │ 佐賀     │  386622 │  425571 │
+│ 42      │ 長崎     │  622766 │  697289 │
+│ 43      │ 熊本     │  829853 │  917660 │
+│ 44      │ 大分     │  538934 │  592206 │
+│ 45      │ 宮崎     │  511039 │  567274 │
+│ 46      │ 鹿児島   │  759364 │  846055 │
+│ 47      │ 沖縄     │  732981 │  752689 │
+├─────────┴──────────┴─────────┴─────────┤
+│ 47 rows (20 shown)           4 columns │
+└────────────────────────────────────────┘
+</pre>
+
+<p>この <code>pop</code> というテーブルの特定の行を抜き出します（選択）。最後のセミコロン <code>;</code> はSQLでは必須ですが、ここでは省略してもかまいません：</p>
+
+<pre class="cell">
+duckdb.sql("select * from pop where 都道府県='東京';")
+</pre>
+
+<pre>
+┌─────────┬──────────┬─────────┬─────────┐
+│  番号   │ 都道府県 │   男    │   女    │
+│ varchar │ varchar  │  int64  │  int64  │
+├─────────┼──────────┼─────────┼─────────┤
+│ 13      │ 東京     │ 6775557 │ 7019376 │
+└─────────┴──────────┴─────────┴─────────┘
+</pre>
+
+<p>さらに特定の列だけ表示させます（射影）：</p>
+
+<pre class="cell">
+duckdb.sql("select 男, 女 from pop where 都道府県='東京';")
+</pre>
+
+<p>「番号」と「都道府県」と男女の人口の「計」だけの表 <code>tot</code> を新たに作ります：</p>
+
+<pre class="cell">
+tot = duckdb.sql("select 番号, 都道府県, 男 + 女 as 人口 from pop;")
+</pre>
+
+<p>これで確認のため <code>tot</code> 全体を表示してみてもいいのですが、スペースを食いますので、頭の5件だけ表示してみましょう：</p>
+
+<pre class="cell">
+duckdb.sql("select * from tot limit 5;")
+</pre>
+
+<pre>
+┌─────────┬──────────┬─────────┐
+│  番号   │ 都道府県 │  人口   │
+│ varchar │ varchar  │  int64  │
+├─────────┼──────────┼─────────┤
+│ 01      │ 北海道   │ 5183687 │
+│ 02      │ 青森     │ 1243081 │
+│ 03      │ 岩手     │ 1206479 │
+│ 04      │ 宮城     │ 2268355 │
+│ 05      │ 秋田     │  956836 │
+└─────────┴──────────┴─────────┘
+</pre>
+
+<p>全国の合計も知りたいですね：</p>
+
+<pre class="cell">
+duckdb.sql("select sum(人口) from tot;")
+</pre>
+
+<pre>
+┌─────────────┐
+│ sum("人口") │
+│   int128    │
+├─────────────┤
+│   125927902 │
+└─────────────┘
+</pre>
+
+<p>この時点での日本の人口は 125927902 人でした。</p>
+
+<p>都道府県別に男女比が知りたくなりました。「番号」と「都道府県」と「男女比」からなる表 <code>ratio</code> を作ってみましょう。</p>
+
+<pre class="cell">
+ratio = duckdb.sql("select 番号, 都道府県, 男 / 女 as 男女比 from pop;")
+</pre>
+
+<p>男が少ない都道府県、例えば男女比が 90% 未満のデータを抽出しましょう：</p>
+
+<pre class="cell">
+duckdb.sql("select * from ratio where 男女比 < 0.9;")
+</pre>
+
+<pre>
+┌─────────┬──────────┬────────────────────┐
+│  番号   │ 都道府県 │       男女比       │
+│ varchar │ varchar  │       double       │
+├─────────┼──────────┼────────────────────┤
+│ 01      │ 北海道   │ 0.8964981447293998 │
+│ 05      │ 秋田     │ 0.8967304040311934 │
+│ 39      │ 高知     │ 0.8968607657269482 │
+│ 42      │ 長崎     │ 0.8931246584988434 │
+│ 46      │ 鹿児島   │ 0.8975350302285312 │
+└─────────┴──────────┴────────────────────┘
+</pre>
+
+<p>もう一つデータを読み込んでみます。こちらは各都道府県の面積です：</p>
+
+<pre class="cell">
+area = duckdb.read_csv("https://okumuralab.org/~okumura/stat/data/area.csv")
+</pre>
+
+<p>これと男女計 <code>tot</code> を結合して、人口密度を求めてみましょう：</p>
+
+<pre class="cell">
+density = duckdb.sql("select 番号, 都道府県, 計 / 面積_km2 as 人口密度 from area natural join tot;")
+</pre>
+
+<p>人口密度の大きい順に並べて、上位10件を表示します：</p>
+
+<pre class="cell">
+duckdb.sql("select * from density order by 人口密度 desc limit 10;")
+</pre>
+
+<pre>
+┌─────────┬──────────┬────────────────────┐
+│  番号   │ 都道府県 │      人口密度      │
+│ varchar │ varchar  │       double       │
+├─────────┼──────────┼────────────────────┤
+│ 13      │ 東京     │  6287.428727695357 │
+│ 27      │ 大阪     │  4619.041945709907 │
+│ 14      │ 神奈川   │  3814.084681925417 │
+│ 11      │ 埼玉     │ 1944.7957343163716 │
+│ 23      │ 愛知     │ 1455.3065347032273 │
+│ 12      │ 千葉     │ 1223.6306349975764 │
+│ 40      │ 福岡     │ 1024.4612987388025 │
+│ 28      │ 兵庫     │  653.3314684648759 │
+│ 47      │ 沖縄     │  650.8873924986747 │
+│ 26      │ 京都     │  544.5327609383809 │
+├─────────┴──────────┴────────────────────┤
+│ 10 rows                       3 columns │
+└─────────────────────────────────────────┘
+</pre>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-05-20 14:02:17 JST</time></p>
+</footer>
+</body>
+</html>

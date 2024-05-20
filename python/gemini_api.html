@@ -96,7 +96,7 @@ list(genai.list_models())
        supported_generation_methods=['generateContent', 'countTokens'],
        temperature=0.9,
        top_p=1.0,
-       top_k=1),
+       top_k=None),
  Model(name='models/gemini-1.0-pro-001',
        base_model_id='',
        version='001',
@@ -108,7 +108,7 @@ list(genai.list_models())
        supported_generation_methods=['generateContent', 'countTokens', 'createTunedModel'],
        temperature=0.9,
        top_p=1.0,
-       top_k=1),
+       top_k=None),
  Model(name='models/gemini-1.0-pro-latest',
        base_model_id='',
        version='001',
@@ -120,7 +120,7 @@ list(genai.list_models())
        supported_generation_methods=['generateContent', 'countTokens'],
        temperature=0.9,
        top_p=1.0,
-       top_k=1),
+       top_k=None),
  Model(name='models/gemini-1.0-pro-vision-latest',
        base_model_id='',
        version='001',
@@ -132,6 +132,17 @@ list(genai.list_models())
        temperature=0.4,
        top_p=1.0,
        top_k=32),
+ Model(name='models/gemini-1.5-flash-latest',
+       base_model_id='',
+       version='001',
+       display_name='Gemini 1.5 Flash',
+       description='Fast and versatile multimodal model for scaling across diverse tasks',
+       input_token_limit=1048576,
+       output_token_limit=8192,
+       supported_generation_methods=['generateContent', 'countTokens'],
+       temperature=1.0,
+       top_p=0.95,
+       top_k=64),
  Model(name='models/gemini-1.5-pro-latest',
        base_model_id='',
        version='001',
@@ -142,7 +153,7 @@ list(genai.list_models())
        supported_generation_methods=['generateContent', 'countTokens'],
        temperature=1.0,
        top_p=0.95,
-       top_k=None),
+       top_k=64),
  Model(name='models/gemini-pro',
        base_model_id='',
        version='001',
@@ -153,7 +164,7 @@ list(genai.list_models())
        supported_generation_methods=['generateContent', 'countTokens'],
        temperature=0.9,
        top_p=1.0,
-       top_k=1),
+       top_k=None),
  Model(name='models/gemini-pro-vision',
        base_model_id='',
        version='001',
@@ -201,7 +212,9 @@ list(genai.list_models())
        top_k=40)]
 </pre>
 
-<p><code>models/</code> は省略できるようだ。<code>'gemini-1.5-pro-latest'</code> を使って何か聞いてみよう：</p>
+<p><code>models/</code> は省略できるようだ。2024-05-30から有料になる。<a href="https://ai.google.dev/pricing">値段</a>。</p>
+
+<p><code>'gemini-1.5-pro-latest'</code> を使って何か聞いてみよう：</p>
 
 <pre class="cell">
 model = genai.GenerativeModel('gemini-1.5-pro-latest')
@@ -244,7 +257,7 @@ model = genai.GenerativeModel('gemini-1.5-pro-latest',
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-10 08:37:38 JST</time></p>
+<p>Last modified: <time>2024-05-15 16:21:38 JST</time></p>
 </footer>
 </body>
 </html>

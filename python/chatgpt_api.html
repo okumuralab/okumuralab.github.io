@@ -20,6 +20,8 @@
 
 <p>このページは<a href="openai_api.html">OpenAIのAPIを使う</a>を書き直したものです。</p>
 
+<p>[2024-05-14] <code>gpt-4o</code> (<code>gpt-4o-2024-05-13</code>) が出ました。半額・倍速。128Kコンテクスト、2023年10月の知識。</p>
+
 <p>[2024-04-10] <code>gpt-4-turbo-2024-04-09</code> が出ました。<code>gpt-4-turbo</code> は現時点ではこれを指します。</p>
 
 <p>[2024-01-26] <a href="https://openai.com/blog/new-embedding-models-and-api-updates">2024-01-25の新モデル</a>: 最新のプレビューモデル <code>"gpt-4-0125-preview"</code>、<code>"gpt-3.5-turbo-0125"</code> が出ました。<code>"gpt-4-turbo-preview"</code>、<code>"gpt-3.5-turbo"</code> と指定すれば最新のものが選ばれるようです。</p>
@@ -249,11 +251,26 @@ print()
 
 <p>ちなみに、同じ文字列をOpenAIの <a href="https://platform.openai.com/tokenizer">Tokenizer</a> に入れると、GPT-3では120トークンになります。</p>
 
+<p>[2024-05-14追記] GPT-4o では新しいトークナイザで日本語のトークン数も減りました。tiktoken 0.7.0 以降で試せます：</p>
+
+<pre>
+enc = tiktoken.get_encoding("o200k_base")
+# または enc = tiktoken.encoding_for_model("gpt-4o")
+</pre>
+
+<p>上の例でトークン数は67です：</p>
+
+<blockquote>
+「|何|人|もの|ニュ|ート|ン|が|いた|（|There| were| several| Newton|s|）」|と言|った|の|は|，|科学|史|家|ハ|イル|ブ|ロン|で|ある|．|同|様|に|コ|ー�|246|ン|は|「|ニュ|ート|ン|は|つ|ね|に|二|つ|の|貌|を|持|って|いた|（|Newton| was| always| amb|ivalent|）」|と|語|って|いる|．|
+</blockquote>
+
+<p>「名無しさん」「転載は禁止」「VIPがお送りします」みたいなのがそれぞれ1トークンになるので、何を学習させたかの想像がついてしまいます。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-10 10:21:52 JST</time></p>
+<p>Last modified: <time>2024-05-14 15:50:01 JST</time></p>
 </footer>
 </body>
 </html>
