@@ -106,12 +106,27 @@ sns.stripplot(x="species", y="body_mass_g", data=penguins)
 
 <p><code>sns.boxplot()</code> や <code>sns.stripplot()</code> の代わりに <code>sns.violinplot()</code>、<code>sns.swarmplot()</code> とすると、バイオリンプロットやスウォームプロットが得られます。</p>
 
-<figure>
-  <img src="img/penguins_violin.svg" alt="パーマーペンギン">
-  <img src="img/penguins_swarm.svg" alt="パーマーペンギン">
-</figure>
+<pre class="cell">
+sns.violinplot(x="species", y="body_mass_g", data=penguins)
+</pre>
+
+<figure><img src="img/penguins_violin.svg" alt="パーマーペンギン"></figure>
+
+<pre class="cell">
+sns.swarmplot(x="species", y="body_mass_g", data=penguins)
+</pre>
+
+<figure><img src="img/penguins_swarm.svg" alt="パーマーペンギン"></figure>
 
 <p>また、<code>pip install git+<a href="https://github.com/mparker2/seaborn_sinaplot">https://github.com/mparker2/seaborn_sinaplot</a>.git</code> してインポートすれば、シーナプロット <code>sinaplot.sinaplot()</code> も使えます：</p>
+
+<p><em>[追記]</em> seabornの新しいバージョンでは使えなくなっているようです。とりあえず作者にissueを送っておきました。もし対応されなければこちらで何とか考えます。</p>
+
+<pre class="cell">
+import sinaplot
+
+sinaplot.sinaplot(x="species", y="body_mass_g", data=penguins)
+</pre>
 
 <figure><img src="img/penguins_sinaplot.svg" alt="パーマーペンギン"></figure>
 
@@ -139,7 +154,7 @@ plt.boxplot(x, labels=s)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-19 20:46:42 JST</time></p>
+<p>Last modified: <time>2024-05-25 13:58:19 JST</time></p>
 </footer>
 </body>
 </html>
