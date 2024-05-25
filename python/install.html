@@ -201,7 +201,11 @@ export PATH
 <p>のように書き直して、読み込み直します。</p>
 
 <div class="note">
-<p>Python 3.12.<i>x</i> をインストールすると、システムの「アプリケーション」に Python 3.12 というフォルダ（<code>/Applications/Python 3.12</code>）が作られます。この中に <code>Install Certificates.command</code> というシェルスクリプトがあります。これはPythonからWebをアクセスする際のSSL/TLSルート証明書をインストールするためのものです。インストーラはこれを実行せよと言ってきますが、特に実行しなくても、Webアクセス用のパッケージ <code>requests</code> をインストール（<code>pip3 install requests</code>）する際に入る <code>certifi</code> が面倒を見てくれますので、不要だと思います。</p>
+<p>Python 3.12.<i>x</i> をインストールすると、システムの「アプリケーション」に Python 3.12 というフォルダ（<code>/Applications/Python 3.12</code>）が作られます。この中に <code>Install Certificates.command</code> というシェルスクリプトがあります。これはPythonからWebをアクセスする際のSSL/TLSルート証明書をインストールするためのものです。管理者権限でこれを実行しておきましょう：</p>
+<pre>
+cd /Applications/Python\ 3.12
+sudo ./Install\ Certificates.command  
+</pre>
 </div>
 
 <div class="note">
@@ -371,7 +375,7 @@ apk add python3 py3-pip
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-16 13:06:52 JST</time></p>
+<p>Last modified: <time>2024-05-23 12:06:41 JST</time></p>
 </footer>
 </body>
 </html>

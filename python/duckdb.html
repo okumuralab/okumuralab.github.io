@@ -201,13 +201,35 @@ duckdb.sql("select * from density order by 人口密度 desc limit 10;")
 └─────────────────────────────────────────┘
 </pre>
 
+<p>DuckDBのテーブルはpandasのデータフレームに変換できます：</p>
+
+<pre class="cell">
+df = pop.df()
+df.head()
+</pre>
+
+<pre>
+   番号 都道府県        男        女
+0  01  北海道  2450393  2733294
+1  02   青森   589143   653938
+2  03   岩手   581809   624670
+3  04   宮城  1106183  1162172
+4  05   秋田   452370   504466
+</pre>
+
+<p>pandasのデータフレームはDuckDBで直接扱えます。</p>
+
+<pre class="cell">
+duckdb.sql("select * from df;")
+</pre>
+
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-05-20 14:02:17 JST</time></p>
+<p>Last modified: <time>2024-05-20 16:19:02 JST</time></p>
 </footer>
 </body>
 </html>

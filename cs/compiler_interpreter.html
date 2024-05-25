@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/compiler_interpreter.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>コンパイラとインタプリタ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>コンパイラとインタプリタ</h1>
+
+<p>言語処理系には、コンパイラ（compiler、コンパイラー）とインタプリタ（interpreter、インタープリター）という二つの方式があります。</p>
+
+<p>例えば、C言語の一般的な処理系はコンパイラで、ソースコードをいったん機械語に翻訳してから実行します。また、Pythonの標準処理系はインタプリタで、ソースコードをそのまま実行します。</p>
+
+<p>これを単純化し、「C言語はコンパイラ言語、Pythonはインタプリタ言語」と教えてしまうことがあります。しかし、これは、C言語やPythonのような言語と、コンパイラ・インタプリタという処理方式とを混乱した間違いです。C言語にもインタプリタがありますし、Pythonのコンパイラも開発されつつあります（例えば <a href="https://www.modular.com/max/mojo">Mojo</a>）。</p>
+
+<p>さらにいうと、現代のインタプリタは、ソースコードを1行ずつ解釈しながら実行するのではなく、まずソースコード全体を中間言語にコンパイルしてから実行します。</p>
+
+<p>中間言語ではなく機械語に、その場で（実行中に）コンパイルするものもあります。こういうものをJIT（Just In Time）コンパイラといいます。Pythonにも <a href="../python/numba.html">Numba</a> というJITコンパイラがあります。</p>
+
+<p>コンパイルと実行の処理をより詳しく説明するために、Pythonで次のような2行だけの間違ったプログラムを実行してみましょう。どちらの行も <code>print(123)</code> を書き間違えたものです。</p>
+
+<pre class="cell">
+plint(123)
+print 123
+</pre>
+
+<p>実行すると、どちらも間違いなのに、Python処理系はまず全体を中間言語にコンパイルする時点で、二つめの間違い <code>print 123</code> を見つけて、SyntaxError として報告します。</p>
+
+<p>そこで、二つめの間違いを修正して実行してみましょう。</p>
+
+<pre class="cell">
+plint(123)
+print(123)
+</pre>
+
+<p>今度は、構文上の間違いはないので、コンパイルは正常に終了し、あらためて1行目から実行しますが、その時点で <code>plint</code> という書き間違いを見つけて、NameError として報告します。<code>plint</code> という命令は、もしかしたらどこかで定義されているかもしれないので、実行してみないことにはエラーかどうかわからないのです。</p>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-05-25 10:05:10 JST</time></p>
+</footer>
+</body>
+</html>
