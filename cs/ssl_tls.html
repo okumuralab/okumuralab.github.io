@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/ssl_tls.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SSL/TLS</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>SSL/TLS</h1>
+
+<p>Webで「https」で始まるURLはSSL/TLSで暗号化されていると高校「情報I」の教科書に載っています。しかし、SSLは2014年に深刻な欠陥が見つかり、2015年には廃止（deprecate）され、代わりにTLSが使われるようになりました。もうSSLという名前は出す必要もないのですが、教科書にはSSL/TLSという書き方をしているものが多いようです。</p>
+
+<p>TLS 1.0は1999年に作られ、2006年にはTLS 1.1になりました。これらは2021年に廃止され、現在は使われていません。現在使われているのは、2008年に作られたTLS 1.2と、2018年に作られたTLS 1.3です。2024年現在、ほとんどの通信はTLS 1.3で行われていますが、クライアントまたはサーバのソフトが古い場合はまだTLS 1.2が使われます。TLS 1.2には互換性維持のため古い方法も残されていますが、今は古い方法は事実上使われておらず、TLS 1.2といえどもTLS 1.3と同じ新しい方法（以下に説明するECDHEを用いる方法）が使われています。</p>
+
+<p>現代のTLSの暗号化には公開鍵暗号（public key encryption）は使われていません（広い意味での公開鍵暗号技術 public key cryptography は使われています）。</p>
+
+<p>なぜ公開鍵暗号が使われなくなったかというと、通信内容を保存しておけば、将来的に秘密鍵が明らかになったとき、過去に遡って通信内容が復号できてしまうからです。</p>
+
+<p>そのため、現代のTLSでは、まずクライアントとサーバ間で使い捨ての鍵を共有し、それを使って共通鍵暗号でコンテンツを暗号化します。</p>
+
+<p>鍵を共有するやりかたとしては、基本的には「ディフィー・ヘルマン（Diffie-Hellman）の鍵共有」というアルゴリズムを使います。このアイデアだけ簡単に説明すると、大きな素数 $p$ と適当な $g$ を定めておいて、クライアントが秘密鍵 $a$ を考えて、それを使って公開鍵 $A = g^a \bmod p$ を計算してサーバに送り、サーバは秘密鍵 $b$ を考えて、それを使って公開鍵 $B = g^b \bmod p$ を計算してクライアントに送り、クライアントは $B^a \bmod p$ を計算し、サーバは $A^b \bmod p$ を計算します。$B^a \bmod p = A^b \bmod p$ なので、これを共有鍵として使います。この通信を傍受されても、秘密鍵 $a$、$b$ が漏れない限り、共有鍵はわかりません。このような方法は広い意味での公開鍵暗号技術に含まれますが、RSAのような公開鍵暗号（公開鍵で暗号化して秘密鍵で復号する）とは異なります。</p>
+
+<p>実際には、この計算を楕円曲線（elliptic curve）上で行うので、この方式を ECDH といいます。ECDH で使い捨て（ephemeral）の鍵を共有する方式を ECDHE といいます。</p>
+
+<p style="text-align:center">
+クライアント―――――A――――→サーバ<br>
+クライアント←――――B―――――サーバ</p>
+
+<p>これで鍵共有が終了します。あとはこの鍵を使って、共通鍵暗号で暗号化します。</p>
+
+<p style="text-align:center">
+クライアント←―――――コンテンツ――――――サーバ<br>
+クライアント――フォームに入力した情報など―→サーバ
+</p>
+
+<p>共通鍵暗号の方式としては、AESに基づいたAES-GCMなどが用いられます。</p>
+
+<p>以上がTLSの暗号化の部分です。実はTLSにはサーバが真正であること（サーバのドメイン名が改ざんされていないこと）を証明する機能もあります。こちらはデジタル証明書が使われます。この機能がなければ、せっかく暗号化しても偽のサイトに接続してしまうこともありえますので、暗号化と同じくらい重要です。</p>
+
+<p>今ではTLSがデフォルトになったので、2023年9月8日にリリースされた「Google Chrome 117」以降ではTLSを表す🔒マークが廃止されました。逆にTLSを使わないサイトは「⚠保護されていない通信」と出ます。URLの先頭に https:// も表示されないので、「アドレスバーのURLの先頭が https:// であることを確認して・・・」といった記述も過去のものになりそうです。</p>
+
+<p>参考リンク：</p>
+
+<ul>
+  <li>光成滋生：<a href="https://zenn.dev/herumi/articles/tls1_3_crypto">イラストで正しく理解するTLS 1.3の暗号技術</a>（2022）</li>
+</ul>
+
+<p>参考書：</p>
+
+<ul>
+  <li>光成滋生：<a href="https://gihyo.jp/book/2021/978-4-297-12307-9">図解即戦力 暗号と認証のしくみと理論がこれ1冊でしっかりわかる教科書</a>（技術評論社、2021年）</li>
+  <li>Ivan Ristić（齋藤孝道 監訳）：<a href="https://www.lambdanote.com/collections/tls-pki-2">プロフェッショナルTLS&PKI 改題第2版</a>（ラムダノート、2023年）</li>
+  <li>國廣 昇 ほか：<a href="https://www.amazon.co.jp/dp/4065356350">暗号の理論と技術 量子時代のセキュリティ理解のために</a>（講談社、2024）</li>
+</ul>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-05-29 11:06:12 JST</time></p>
+</footer>
+</body>
+</html>
