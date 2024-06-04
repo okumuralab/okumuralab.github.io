@@ -112,7 +112,20 @@ def quicksort(a, first=0, last=None):
 <p><code>def quicksort(a, first=0, last=len(a)-1):</code> としたいかもしれませんが，Python の引数のデフォルトの値は関数定義を評価したときに決まってしまうので，期待した動作になりません。ここでは，何もないことを表すオブジェクト <code>None</code> をデフォルトの値として，関数の実行時にもし <code>None</code> であれば <code>len(a) - 1</code> に置き換えています。<code>if last is None:</code> は <code>if last == None:</code> と似ていますが <code>==</code> は値の比較，<code>is</code> はオブジェクトのアドレスの比較です。後者の方が速く，しかも <code>==</code> のようにオーバーライド（上書き）できないので確実な比較ができます。</p>
 </div>
 
-<p>時間を比べてみましょう。Wall time が実時間（壁にかかっている時計で計った時間）です：</p>
+<p>上はPythonを仮定しない汎用的なコードですが、Pythonなら次のような書き方もできます。ただしこちらは配列を並べ替えるのではなく、並べ替わった新しい配列を返します：</p>
+
+<pre class="cell">
+def quicksort(a):
+    if len(a) &lt;= 1:
+        return a
+    pivot = a[len(a) // 2]
+    left = [x for x in a if x &lt; pivot]
+    middle = [x for x in a if x == pivot]
+    right = [x for x in a if x &gt; pivot]
+    return quicksort(left) + middle + quicksort(right)
+</pre>
+
+<p>M1 Mac mini (2020)、Python 3.12.3 で時間を比べてみましょう。Wall time が実時間（壁にかかっている時計で計った時間）です。まず選択ソート：</p>
 
 <pre class="cell">
 import numpy as np
@@ -124,9 +137,11 @@ a = rng.random(10000)
 </pre>
 
 <pre>
-CPU times: user 19.1 s, sys: 10.3 ms, total: 19.1 s
-Wall time: 19.1 s
+CPU times: user 5.27 s, sys: 1.58 ms, total: 5.27 s
+Wall time: 5.27 s
 </pre>
+
+<p>1番目のクイックソート：</p>
 
 <pre class="cell">
 a = rng.random(10000)
@@ -134,11 +149,25 @@ a = rng.random(10000)
 </pre>
 
 <pre>
-CPU times: user 82.3 ms, sys: 3.79 ms, total: 86.1 ms
-Wall time: 84.8 ms
+CPU times: user 25.6 ms, sys: 1.3 ms, total: 26.9 ms
+Wall time: 25.8 ms
 </pre>
 
-<p>Python の <code>sort()</code> や <code>sorted()</code> は <a href="https://en.wikipedia.org/wiki/Timsort">Timsort</a> というアルゴリズムを使っています。</p>
+<p>2番目のクイックソート：</p>
+
+<pre class="cell">
+a = rng.random(10000)
+%time tmp = quicksort(a)
+</pre>
+
+<pre>
+CPU times: user 19.3 ms, sys: 588 μs, total: 19.9 ms
+Wall time: 19.6 ms
+</pre>
+
+<p>実際には何度もやって平均をとらないと正確な時間がわかりません。<code>%time</code> の代わりに <code>%timeit</code> を使えば自動的に何度もやって平均をとってくれるのですが、整列済みの配列を整列すると時間が変わってきますので、ここでは <code>%time</code> を使っています。</p>
+
+<p>Python の組み込み関数 <code>sort()</code> や <code>sorted()</code> は <a href="https://en.wikipedia.org/wiki/Timsort">Timsort</a> というアルゴリズムを使っています。</p>
 
 <p>NumPy にも整列の関数があります。</p>
 
@@ -148,18 +177,18 @@ a = rng.random(10000)
 </pre>
 
 <pre>
-CPU times: user 702 µs, sys: 452 µs, total: 1.15 ms
-Wall time: 593 µs
+CPU times: user 1.06 ms, sys: 616 μs, total: 1.67 ms
+Wall time: 1.17 ms
 </pre>
 
 <pre class="cell">
 a = rng.random(10000)
-time b = np.sort(a) # aを上書きしない
+%time tmp = np.sort(a) # aを上書きしない
 </pre>
 
 <pre>
-CPU times: user 811 µs, sys: 647 µs, total: 1.46 ms
-Wall time: 817 µs
+CPU times: user 975 μs, sys: 711 μs, total: 1.69 ms
+Wall time: 906 μs
 </pre>
 
 <p>こちらは降順に並べ替えるオプションはありませんが，<code>a[::-1]</code> で逆順にできます。あるいは実際には並べ替えをせず並べ替えた順序だけを返す <code>np.argsort()</code> を使えば逆順もできます。</p>
@@ -225,13 +254,13 @@ quicksort(a,0,len(a)-1)
 print("ソート後",a)
 </pre>
 
-<p>[追記] 上記クイックソートのバグは「正誤表」で訂正されました：<a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">高等学校情報科教員研修用教材</a></p>
+<p>[追記] 上記クイックソートのバグは「正誤表」で訂正されました：<a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/mext_00017.html">高等学校情報科教員研修用教材</a></p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-17 21:58:43 JST</time></p>
+<p>Last modified: <time>2024-06-04 10:04:15 JST</time></p>
 </footer>
 </body>
 </html>

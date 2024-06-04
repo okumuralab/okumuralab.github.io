@@ -18,6 +18,54 @@
 
 <h1>文字コード</h1>
 
+<h2>文字化け</h2>
+
+<p>文字が糸へんの難しい文字などに化けるのは、UTF-8のバイト列をShift JIS（またはそれをMicrosoftが拡張したCP932（コードページ932））として解釈されてしまったためである。</p>
+
+<p>例えば「あいうえお」というUTF-8文字列は、メモリ中で次のように保存されている：</p>
+
+<pre class="cell">
+"あいうえお".encode("utf-8")
+</pre>
+
+<pre>
+b'\xe3\x81\x82\xe3\x81\x84\xe3\x81\x86\xe3\x81\x88\xe3\x81\x8a'
+</pre>
+
+<p>つまり16進で <code>e3 81 82 e3 81 84 e3 81 86 e3 81 88 e3 81 8a</code> である。これをShift JISのバイト列と解釈すると、縺 (<code>e3 81</code>) ゅ (<code>82 e3</code>) ＞ (<code>81 84</code>) 縺 (<code>e3 81</code>) 解釈不能 (<code>86</code>) 縺 (<code>e3 81</code>) 医 (<code>88 e3</code>) ♀  (<code>81 8a</code>) となる。これらは</p>
+
+<pre class="cell">
+b'\xe3\x81'.decode("cp932")
+</pre>
+
+<pre>
+'縺'
+</pre>
+
+<p>のようにして調べられる。まとめると、「あいうえお」は次のように化ける：</p>
+
+<pre class="cell">
+"あいうえお".encode("utf-8").decode("cp932", "replace")
+</pre>
+
+<pre>
+'縺ゅ＞縺�縺医♀'
+</pre>
+
+<p>最後の <code>"replace"</code> は解釈できなかったバイトを <code>'�'</code> (U+FFFD REPLACEMENT CHARACTER) に置き換えるオプションで、これを <code>"ignore"</code> にすれば単に無視されて <code>'縺ゅ＞縺縺医♀'</code> になる。</p>
+
+<p>このように化けたものを元に戻すには逆をすればよい：</p>
+
+<pre class="cell">
+'縺ゅ＞縺�縺医♀'.encode("cp932", "ignore").decode("utf-8", "replace")
+</pre>
+
+<pre>
+'あい�えお'
+</pre>
+
+<p>完全には元に戻せない。</p>
+
 <h2>文字コード変換</h2>
 
 <p>文字コードは標準ライブラリの <a href="https://docs.python.org/3/library/codecs.html">codecs</a> モジュールで扱える。直接これを使わなくても、いろいろな関数が <code>encoding=...</code> オプションで文字コード指定を受け付ける。デフォルトはUTF-8である。例えばコマンドライン引数で与えたEUC-JPのファイルをUTF-8に変換して <code>utf8/</code> サブディレクトリに保存するには、次のようにすればよい。</p>
@@ -233,7 +281,7 @@ tbl = str.maketrans(
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2024-02-18 17:11:32 JST</time>
+Last modified: <time>2024-06-02 16:48:42 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

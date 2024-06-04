@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/prefecture_data.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>都道府県データで注意すべきこと</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>都道府県データで注意すべきこと</h1>
+
+<p>統計センターの公開する<a href="https://www.nstac.go.jp/use/literacy/ssdse/">SSDSE（教育用標準データセット）</a>をはじめ、都道府県単位のデータは入手が簡単です。これを使って「Xの多い都道府県はYも多い傾向がある」のようなことを調べると、意外なことがわかって、おもしろいようです。</p>
+
+<p>しかし、そのXとYは、都道府県の規模（人口とか面積とか）にほぼ比例する量ではないでしょうか。例えば「○○の消費量」は人口にほぼ比例します。もしXもYもほぼ人口に比例するなら、XとYに相関があるのは当然ですね。こういう偽の相関関係を、人口が交絡因子となった擬似相関だと言うことがあります。</p>
+
+<p>そういう自明なことを調べてもしかたがないので、例えば人口に比例しそうな量であれば、人口で割って、一人当たりの量に直してから考えましょう。</p>
+
+<p>こうして（自明でない）相関関係を見つけたとして、自信を持って「相関がある」と言えるためには、相関係数0.3程度以上は欲しいところです。</p>
+
+<aside>
+<p>この0.3という値がどこから出たかというと、統計的仮説検定で <span lang="en"><i>n</i> = 47</span> のとき5%水準で統計的に有意な相関係数は0.287563以上であるためです。この値の計算は、Rなら</p>
+<pre class="cell">
+n = 47  # 都道府県数
+t = qt(0.025, n-2)
+sqrt(t^2 / (n-2+t^2))
+</pre>
+<p>Pythonなら</p>
+<pre class="cell">
+import numpy as np
+from scipy import stats
+
+n = 47  # 都道府県数
+t = stats.t.ppf(0.025, n-2)
+np.sqrt(t**2 / (n-2+t**2))
+</pre>
+<p>で求められます。しかし、正規分布を仮定した計算ですし、小数第何位とかまで求めてもあまり意味がないので、約0.3で十分です。</p>
+</aside>
+
+<p>ただ、相関係数で機械的に判断するのではなく、ちゃんと散布図を見て判断することが必要です。都道府県データは外れ値がよくあり、たった一つの例外的な都道府県が相関係数に強く影響していることもありえます。</p>
+
+<p>また、XとYに相関があったとしても、Xを増やせばYは増える（またはYを増やせばXは増える）といった因果関係が成り立つとは限りません。さらに、個人データを集約して作った都道府県データや国別データの場合、Xが大きい都道府県はYも大きいということから、Xが大きい個人はYも大きいということは導けません。個人データと集約データでは相関関係が逆になることもあります。</p>
+
+<p>極端な概念図ですが、横軸X、縦軸Yの散布図だと思ってください。A県の3人、B県の3人、C県の3人が描かれています。県を固定して個人を見れば、右上がりで、Xが増えればYも増えます。しかし各県の平均値を見れば、右下がりです。<a href="https://ja.wikipedia.org/wiki/%E3%82%B7%E3%83%B3%E3%83%97%E3%82%BD%E3%83%B3%E3%81%AE%E3%83%91%E3%83%A9%E3%83%89%E3%83%83%E3%82%AF%E3%82%B9">Simpsonのパラドックス</a>の一形態です。</p>
+
+<svg width="300" height="300">
+  <rect x="1" y="1" width="298" height="298" stroke="black" fill="none" />
+  <text x="150" y="250" text-anchor="middle">C</text>
+  <text x="200" y="225" text-anchor="middle">C</text>
+  <text x="250" y="200" text-anchor="middle">C</text>
+  <text x="100" y="175" text-anchor="middle">B</text>
+  <text x="150" y="150" text-anchor="middle">B</text>
+  <text x="200" y="125" text-anchor="middle">B</text>
+  <text x="50" y="100" text-anchor="middle">A</text>
+  <text x="100" y="75" text-anchor="middle">A</text>
+  <text x="150" y="50" text-anchor="middle">A</text>
+</svg>
+
+<p>都道府県ごとに集約した値の傾向は、必ずしも（都道府県を固定したときの）個人の傾向と同じではありません。この区別を忘れて、前者から後者を結論づけてしまうことを、<a href="https://www.med.osaka-u.ac.jp/pub/kid/clinicaljournalclub13.html">生態学的誤謬（ecological fallacy）</a>といいます。この誤謬に陥らないよう、注意が必要です。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-06-04 16:34:51 JST</time></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/example.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>例示用ドメイン名・IPアドレス</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>例示用ドメイン名・IPアドレス</h1>
+
+<p>本や授業で例示用にうっかりしたドメイン名を挙げると、それが存在して、しかも適切でないコンテンツのWebサーバだったりすることがあります。仮に今そうでなくても、将来そうなるかもしれません。</p>
+
+<p>そういうときは、例示用に予約されたドメイン名を使いましょう。</p>
+
+<p><a href="https://datatracker.ietf.org/doc/html/rfc2606">RFC 2606</a> では example.com、example.net、example.org が例示用として予約されています。<a href="https://jprs.jp/faq/use/">JPRS</a> でも example.jp、example.co.jp、example.ne.jp など、それに1桁の数字（0〜9）が付いた example5.jp などが例示用として挙げてあります。これらのサブドメインなら、www.example1.ed.jp なども大丈夫です。</p>
+
+<p>IPアドレスにも例示用があります。<a href="https://datatracker.ietf.org/doc/html/rfc5737">RFC 5737</a> では例示用IPv4アドレスとして次の三つのブロックが挙げてあります：</p>
+
+<ul>
+  <li>192.0.2.0/24 (TEST-NET-1)</li>
+  <li>198.51.100.0/24 (TEST-NET-2)</li>
+  <li>203.0.113.0/24 (TEST-NET-3)</li>
+</ul>
+
+<p>ここで /24 とは、最初の24ビット以外は何でもいいという意味で、例えば 192.0.2.0/24 であれば 192.0.2.0〜192.0.2.255 が使えるということです。</p>
+
+<p>参考：</p>
+
+<ul>
+  <li><a href="https://techlog.iij.ad.jp/archives/iijnews134">インターネット・トリビア: 「例示」のためのドメイン名・IPアドレス</a></li>
+</ul>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-05-31 20:44:03 JST</time></p>
+</footer>
+</body>
+</html>
