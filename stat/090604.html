@@ -11,15 +11,18 @@
 </head>
 <body>
 
+<header>
 <nav id="breadcrumbs">
 <a href="../">ホーム</a> &gt;
 <a href="./">統計・データ解析</a> &gt;
 <a href="graphs.html">グラフの描き方</a> &gt;
 </nav>
+</header>
 
+<main>
 <h1>グラフの例：出生率</h1>
 
-<p>[2023-06-02] 厚生労働省の<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai22/index.html">令和４年(2022)人口動態統計月報年計（概数）の概況</a>が出ています。2022年の合計特殊出生率概数値は1.26でした。下の表を更新しました。</p>
+<p>[2024-06-05] 厚生労働省の<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai23/index.html">令和５年(2023)人口動態統計月報年計（概数）の概況</a>が出ました。2023年の合計特殊出生率概数値は1.26でした。下の表を更新しました。</p>
 
 <hr>
 
@@ -79,7 +82,8 @@
 2019  865239           1.36
 2020  840835           1.33
 2021  811622           1.30
-2022  770747           1.26
+2022  770759           1.26
+2023  727277           1.20
 </pre>
 
 <p>これを（ヘッダ行も含めて）クリップボードにコピーし，次のように読み込む：</p>
@@ -104,27 +108,27 @@ axis(4, t, t)
 title("合計特殊出生率", line=0.5)
 </pre>
 
-<figure><img src="img/230602a.png" alt="合計特殊出生率"></figure>
+<figure><img src="img/240605a.png" alt="合計特殊出生率"></figure>
 
 <p>色付きにしてみる：</p>
 
 <pre>
-plot(NULL, xlim=c(1970,2022), ylim=c(1.2, 2.2), axes=FALSE,
+plot(NULL, xlim=c(1970,2023), ylim=c(1.2, 2.2), axes=FALSE,
    xaxs="i", yaxs="i", xlab="", ylab="")
-rect(1970, 1.2, 2022, 2.2, col="#ccccff", border=NA)
+rect(1970, 1.2, 2023, 2.2, col="#ccccff", border=NA)
 for (i in seq(1.4,2.0,0.2))
-  segments(1970, i, 2022, i, lwd=2, col="white")
+  segments(1970, i, 2023, i, lwd=2, col="white")
 for (i in seq(1.2,2.2,0.2))
   text(1970, i, format(i, nsmall=1), pos=2, xpd=TRUE)
-for (i in seq(1975,2022,5))
+for (i in seq(1975,2023,5))
   segments(i, 1.2, i, 2.2, lwd=2, col="white")
-for (i in seq(1970,2022,5))
+for (i in seq(1970,2023,5))
   text(i, 1.2, i, pos=1, xpd=TRUE)
 lines(X$年, X$合計特殊出生率, type="o", pch=16, xpd=TRUE)
 title("合計特殊出生率", line=0.5)
 </pre>
 
-<figure><img src="img/230602b.png" alt="合計特殊出生率"></figure>
+<figure><img src="img/240605b.png" alt="合計特殊出生率"></figure>
 
 <p>ちなみに，出生率にからむリサーチ・リテラシーの問題を扱った本として，赤川 学『子どもが減って何が悪いか！』（ちくま新書，2004年）がある。</p>
 
@@ -133,16 +137,13 @@ title("合計特殊出生率", line=0.5)
 <pre>
 plot(Jvital$YEAR, Jvital$TFR, type="o", pch=16)
 </pre>
+</main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>
-<!-- hhmts start -->
-Last modified: <time>2023-06-02 14:54:20 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2024-06-05 14:58:23 JST</time></p>
 </footer>
 </body>
 </html>
