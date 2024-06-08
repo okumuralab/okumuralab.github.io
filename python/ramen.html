@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/ramen.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ラーメン店と脳卒中</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>ラーメン店と脳卒中</h1>
+
+<p>EARL先生が<a href="https://twitter.com/EARL_med_tw/status/1798638838207938905">ラーメン店の店舗数の多い都道府県ほど年齢調整脳卒中死亡リスクが高い</a>という<a href="https://doi.org/10.1186/s12937-019-0482-y">論文</a>を紹介しておられたので、調べてみた。</p>
+
+<p>ラーメン店舗数は<a href="https://todo-ran.com">都道府県別統計とランキングで見る県民性</a>サイトの<a href="https://todo-ran.com/t/kiji/11806">都道府県別ラーメン店舗数</a>によれば次の通り：</p>
+
+<pre class="cell">
+ramen = [1384, 399, 301, 618, 342, 619, 580, 726, 718, 556, 975, 1081,
+         2437, 1178, 831, 326, 343, 173, 228, 620, 333, 776, 1070, 247, 165,
+         396, 1016, 594, 148, 125, 124, 156, 383, 603, 239, 195, 158, 250, 138,
+         962, 178, 157, 335, 219, 275, 398, 182]
+</pre>
+
+<p>都道府県人口はe-Statの<a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000040045490">人口推計 / 各年10月1日現在人口</a>から2022年10月1日現在の都道府県人口データ（1000人単位）：</p>
+
+<pre class="cell">
+population = [5140, 1204, 1181, 2280, 930, 1041, 1790, 2840, 1909,
+              1913, 7337, 6266, 14038, 9232, 2153, 1017, 1118, 753, 802, 2020, 1946,
+              3582, 7495, 1742, 1409, 2550, 8782, 5402, 1306, 903, 544, 658, 1862,
+              2760, 1313, 704, 934, 1306, 676, 5116, 801, 1283, 1718, 1107, 1052,
+              1563, 1468]
+</pre>
+
+<p>脳卒中リスクはe-Statの<a href="https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00450013&tstat=000001211682&cycle=7&tclass1val=0">令和２年　都道府県別年齢調整死亡率（平成27年モデル人口）</a>の28「都道府県別年齢調整死亡率・年齢階級別死亡率（人口10万対），脳血管疾患・男女別」（2020年）のCSVによれば、男は</p>
+
+<pre class="cell">
+stroke_m = [88.9, 116.7, 147.2, 110.7, 124.1, 114.6, 109.6, 116.9,
+            119.7, 101.1, 86.3, 91.2, 89.3, 82.1, 116.3, 101.8, 97.3, 95, 104.3,
+            95.4, 87, 114.7, 87.6, 91.4, 76.2, 83.3, 78.6, 88.7, 77, 87.9, 102.1,
+            88, 91, 86.2, 99, 92.9, 90.6, 100.2, 100.4, 86.7, 85.1, 85.4, 85.2,
+            100.7, 105.2, 100, 99.9]
+</pre>
+
+<p>女は</p>
+
+<pre class="cell">
+stroke_f = [56.6, 69.7, 84.3, 71, 78.2, 71.4, 75.2, 71.5, 74.5, 59.7,
+            56.3, 55.5, 52.6, 49.6, 68.8, 64.6, 57.1, 58.5, 56.4, 65.5, 57.7,
+            64.2, 52, 56.7, 48, 47.2, 45.5, 51.4, 46.5, 48.5, 57.7, 63.8, 50.9,
+            48.8, 56.2, 51.8, 48.6, 58.3, 53.2, 47.7, 52.7, 54.4, 51.2, 59.4,
+            61.4, 61.1, 52.4]
+</pre>
+
+<p>である。散布図を描いてみる：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+
+ramen_p = np.array(ramen) / np.array(population)
+
+plt.scatter(ramen_p, stroke_m)
+plt.scatter(ramen_p, stroke_f)
+plt.xlabel("人口1000人あたりラーメン店舗数")
+plt.ylabel("脳血管疾患年齢調整死亡率")
+</pre>
+
+<figure><img src="img/ramen.svg" alt="ラーメン店と脳卒中"></figure>
+
+<p>上（青）が男、下（オレンジ）が女である。ラーメン店舗数の右端外れ値は山形県、死亡率トップは男女とも岩手県である。</p>
+
+<p>相関係数と <i>p</i> 値：</p>
+
+<pre class="cell">
+from scipy import stats
+
+stats.pearsonr(ramen_p, stroke_m)
+</pre>
+
+<pre>
+PearsonRResult(statistic=0.6519550643155483, pvalue=6.897949703193939e-07)
+</pre>
+
+<pre class="cell">
+stats.pearsonr(ramen_p, stroke_f)
+</pre>
+
+<pre>
+PearsonRResult(statistic=0.7110117701129071, pvalue=2.139993699398195e-08)
+</pre>
+
+<p>ちなみに、上記ラーメン店舗数のソースには「データ出典　タウンページ2021」とある。三重県247軒。<a href="https://itp.ne.jp">iタウンページ</a>で三重県に絞って「ラーメン」で検索すると214件。普通の食堂みたいなところも入っているようだ。データの吟味は難しそう</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-06-07 20:19:50 JST</time></p>
+</footer>
+</body>
+</html>
