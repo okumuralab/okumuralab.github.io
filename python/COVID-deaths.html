@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <script src="../js/copypre.js"></script>
+<style>
+table { border-collapse: collapse; }
+td, th { border: 1px solid; }
+</style>
 </head>
 <body>
 
@@ -18,7 +22,7 @@
 
 <h1>COVID-19による死者数</h1>
 
-<p>e-Statの <a href="https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00450011&tstat=000001028897&cycle=1&year=20230&month=24101210&tclass1=000001053058&tclass2=000001053060&result_back=1&cycle_facet=cycle&tclass3val=0&metadata=1&data=1">人口動態調査 - 人口動態統計 - 月報（概数）</a> の第7表に毎月の新型コロナウイルス感染症による死者数が載っている。これをCSVにしたものを <a href="data/COVID-deaths.csv">COVID-deaths.csv</a> として置いておく。グラフにしてみよう。</p>
+<p>e-Statの <a href="https://www.e-stat.go.jp/stat-search/files?page=1&layout=datalist&toukei=00450011&tstat=000001028897&cycle=1&tclass1=000001053058&tclass2=000001053060&tclass3val=0">人口動態調査 - 人口動態統計 - 月報（概数）</a> の第7表に毎月の新型コロナウイルス感染症による死者数が載っている。これをCSVにしたものを <a href="data/COVID-deaths.csv">COVID-deaths.csv</a> として置いておく。グラフにしてみよう。</p>
 
 <pre class="cell">
 import matplotlib.pyplot as plt
@@ -34,11 +38,19 @@ plt.xticks(rotation=10)
 
 <figure><img src="img/COVID-deaths.svg" alt="新型コロナウイルス感染症による死者数"></figure>
 
+<p><a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai23/index.html">令和５年(2023)人口動態統計月報年計（概数）の概況</a>第6表によれば、年ごとの死亡数は以下の通り：</p>
+
+<table>
+  <tr><th>年</th><th>新型コロナウイルス感染症</th><th>新型コロナウイルス感染症ワクチン</th></tr>
+  <tr><td>2022</td><td>47638</td><td>23</td></tr>
+  <tr><td>2023</td><td>38080</td><td>37</td></tr>
+</table>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-03-09 20:09:31 JST</time></p>
+<p>Last modified: <time>2024-06-07 19:40:15 JST</time></p>
 </footer>
 </body>
 </html>

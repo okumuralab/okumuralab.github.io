@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/text2png.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>テキストをPNGに</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>テキストをPNGに</h1>
+
+<figure class="left"><img src="img/lemon.png" alt="檸檬"></figure>
+
+<p>黒白2色のQRコードをフルカラー（1677万7216色）にしたら、1677万÷2で800万倍以上のデータを格納できるという笑い話がありました。完全に1677万色を区別できたとしても、そんなに大量のデータを格納できるわけはなく、<span lang="en">log<sub>2</sub>16777216 = 24</span> 倍にしかなりません。そもそもフルカラー画像は1ピクセルあたりRGB 8ビットずつ、24ビットのデータ量しかありません。<span lang="en">2<sup>24</sup> = 16777216</span> だから1677万色が表せるのです。</p>
+
+<p>それはそうと、フルカラー画像なら1ピクセルあたり3バイトのデータを格納できるので、これを使えば小さな画像にちょっとした小説を入れることができそうです。</p>
+
+<p>この発想が小飼弾さんの <a href="https://dankogai.livedoor.blog/archives/50783609.html">UTF-PNG (aka Unicolor)</a> なのですが、UTF-PNGは1ピクセルにUTF-8の1文字を入れたのに対して、私は単純にUTF-8テキストをバイト列に直して3バイトずつを1ピクセルにすることにしました。</p>
+
+<p>テキストをPNGにして保存する関数と、PNGファイルを読んでテキストにする関数です（ChatGPTに手伝ってもらいました）：</p>
+
+<pre class="cell">
+import numpy as np
+from PIL import Image
+
+def text2png(text, png_path):
+    byte_string = text.encode("utf-8")
+    area = (len(byte_string) + 2) // 3
+    width = min(int(np.sqrt(area)), 1024)
+    height = (area + width - 1) // width
+    byte_string += b"\x00" * (width * height * 3 - len(byte_string))
+    image_array = np.frombuffer(byte_string, dtype=np.uint8).reshape((height, width, 3))
+    image = Image.fromarray(image_array, "RGB")
+    image.save(png_path)
+
+def png2text(png_path):
+    image = Image.open(png_path)
+    byte_string = np.array(image).flatten().tobytes()
+    return byte_string.decode("utf-8").rstrip("\x00")
+</pre>
+
+<p>梶井基次郎の<a href="https://www.aozora.gr.jp/cards/000074/card424.html">檸檬</a>という小説のPNG画像が冒頭の図です。これは次のようにして作りました：</p>
+
+<pre class="cell">
+text2png(r"""檸檬
+梶井基次郎
+
+　えたいの知れない不吉な塊が（以下略）
+""", "lemon.png")
+</pre>
+
+<p>「檸檬」（16499バイト）が10255バイトの lemon.png になりました。</p>
+
+<p>テキストは普通に <code>"..."</code> で与えてもいいのですが、<code>r"""..."""</code> とすると途中に改行やバックスラッシュで始まる特殊文字が入っていてもうまくいきます。</p>
+
+<p>元に戻すには、この画像をダウンロードして、次のようにします：</p>
+
+<pre class="cell">
+print(png2text("lemon.png"))
+</pre>
+
+<p>ちなみに、1ピクセル3バイトと書きましたが、アルファチャンネル（透明度）を追加すれば4バイトになります。また、既存画像のピクセルの末位ビットをいじっても画像の見え方はあまり変化しませんので、アルファチャンネルを含めた既存画像に秘密の情報を混ぜ込むこともできそうです（ステガノグラフィ）。ChatGPTに手伝ってもらえば、いろいろ楽しいプログラミングができそうです。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-06-06 20:34:06 JST</time></p>
+</footer>
+</body>
+</html>
