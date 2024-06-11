@@ -17,9 +17,8 @@
 <a href="./">Python</a> &gt;
 </nav>
 
+<main>
 <h1>$t$ 検定</h1>
-
-<p>[2023-06-25] SciPy 1.11.0 が出たのでそれに合わせて修正しました。</p>
 
 <h2>はじめに</h2>
 
@@ -31,11 +30,11 @@
 
 <p>平均も分散もわからないけれども、中心極限定理から、サンプルの平均値はほぼ正規分布をすることがわかっているという一般の場合に、サンプルの平均値が 0 かどうか、あるいは2つのサンプルの平均値が等しいかどうかを検定するのが $t$ 検定です。</p>
 
-<p>こういった統計計算をするための標準的なツールは <a href="../stat/">R</a> ですが、やっぱり Python でも同じことをしたいですよね。Python では <a href="https://www.scipy.org">SciPy</a> を使うのが一般的でしたが、あまり便利ではありません。以下では <a href="https://pingouin-stats.org">Pingouin</a> という新しめのパッケージを使っています。<code>pip install pingouin</code> でインストールできます。念のため SciPy による方法も書いておきました。なお、$t$ 分布の密度関数などを求めるには SciPy の <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html">scipy.stats.t</a> を使います。</p>
+<p>こういった統計計算をするための標準的なツールは <a href="../stat/">R</a> ですが、やっぱり Python でも同じことをしたいですよね。Python では <a href="https://www.scipy.org">SciPy</a> を使うのが一般的でしたが、あまり便利ではありません。以下では <a href="https://pingouin-stats.org">Pingouin</a> という新しめのパッケージを使っています。<code>pip install pingouin</code> でインストールできます。念のため SciPy による方法も書いておきました（<code>pip install scipy</code>）。なお、$t$ 分布の密度関数などを求めるには SciPy の <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html">scipy.stats.t</a> を使います。</p>
 
-<div class="note">
-  <p>Pingouin は、英語の penguin（ペンギン）に似ていますが、19世紀に絶滅した<a href="https://ja.wikipedia.org/wiki/%E3%82%AA%E3%82%AA%E3%82%A6%E3%83%9F%E3%82%AC%E3%83%A9%E3%82%B9">オオウミガラス</a>という海鳥を意味するフランス語です（英語 <a href="https://en.wikipedia.org/wiki/Great_auk">great auk</a>、学名 <i>Pinguinus impennis</i>）。フランス語の発音は［pɛ̃-ɡwɛ̃］（パングアンに近い）ですが、英語圏の人はピングインと読んでいるようです。日本でもピングインのほうが読みやすいと思います。</p>
-</div>
+<aside>
+<p>Pingouin は、英語の penguin（ペンギン）に似ていますが、19世紀に絶滅した<a href="https://ja.wikipedia.org/wiki/%E3%82%AA%E3%82%AA%E3%82%A6%E3%83%9F%E3%82%AC%E3%83%A9%E3%82%B9">オオウミガラス</a>という海鳥を意味するフランス語です（英語 <a href="https://en.wikipedia.org/wiki/Great_auk">great auk</a>、学名 <i>Pinguinus impennis</i>）。フランス語の発音は［pɛ̃-ɡwɛ̃］（パングアンに近い）ですが、英語圏の人はピングインと読んでいるようです。日本でもピングインのほうが読みやすいと思います。</p>
+</aside>
 
 <h2>1標本の $t$ 検定</h2>
 
@@ -62,13 +61,13 @@ pg.ttest(x, 0)
 T-test  3.679916    9   two-sided  0.005076  [0.9, 3.76]  1.163692  10.715  0.904364
 </pre>
 
-<p>$p$ 値は 0.005 程度ですので、効果があると言えそうです。効果の 95% 信頼区間は [0.90, 3.76] です。</p>
+<p>$p$ 値は 0.005 程度ですので、効果があると言えそうです。睡眠時間の増加の 95% 信頼区間は [0.90, 3.76] 時間です。</p>
 
-<div class="note">
+<aside>
 <p>例えば信頼区間だけ欲しい場合には <code>pg.ttest(x, 0)["CI95%"][0]</code> とします。</p>
-</div>
+</aside>
 
-<div class="note">
+<aside>
 <p>念のため、SciPy を使う方法：</p>
 
 <pre class="cell">
@@ -90,9 +89,9 @@ stats.ttest_1samp(x, 0).confidence_interval()
 <pre>
 ConfidenceInterval(low=0.897677539412931, high=3.762322460587068)
 </pre>
-</div>
+</aside>
 
-<div class="note">
+<aside>
 <p>参考までに、R では次のようになります：</p>
 <pre>
 > x = c(1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4)
@@ -109,7 +108,7 @@ sample estimates:
 mean of x 
      2.33 
 </pre>
-</div>
+</aside>
 
 <h2>2標本の $t$ 検定（対応がない場合）</h2>
 
@@ -137,7 +136,15 @@ T-test -2.948615  15.915569   two-sided  0.009479  [-2.36, -0.38]  1.255397  6.5
 
 <p><code>pg.ttest()</code> のデフォルトは、両群のサイズ（個数）が等しければ分散が等しいと仮定し、そうでなければ Welch の方法を用います。オプション <code>correction=True</code> で常に Welch の方法を用います。</p>
 
-<div class="note">
+<aside>
+<p>古い教科書には、まず両群の分散が等しいかの検定をして、等しければ分散が等しいと仮定する $t$ 検定、等しくなければ分散が等しいと仮定しない $t$ 検定（Welch の検定）をする、と書かれていると思いますが、このような2段階検定は現在は不推奨です。分散が等しいと仮定する根拠がなければ、分散が等しいと仮定しないほうを最初から使いましょう。</p>
+</aside>
+
+<aside>
+<p>さらに教科書によっては、母集団が正規分布であると仮定すべき理由がなければ（あるいはまず正規分布かどうかの検定をして正規分布でなければ）$t$ 検定ではなくノンパラメトリックな方法（Wilcoxon(-Mann-Whitney) の検定など）を使えと書いてあると思います。しかし、ノンパラメトリックな方法も結局は順位和が漸近的に正規分布に近づくことを使ってしまっています。ノンパラメトリックな方法を使わなくても、標本平均は漸近的に正規分布に近づく（中心極限定理）ので、結局は同じ穴のムジナということもできます。さらに、現代においては $p$ 値よりもサンプル間の測定値の差の信頼区間が重視されますので、ノンパラメトリックな方法で $p$ 値だけを出す意味はあまりなさそうです。</p>
+</aside>
+
+<aside>
 <p>SciPy では <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html">scipy.stats.ttest_ind</a> を使って次のようにします（関数名の <code>_ind</code> は「独立」independent を意味します）：</p>
 
 <pre class="cell">
@@ -157,9 +164,9 @@ stats.ttest_ind(x, y, equal_var=False).confidence_interval()
 <pre>
 ConfidenceInterval(low=-2.3556088373583686, high=-0.38465090290137105)
 </pre>
-</div>
+</aside>
 
-<div class="note">
+<aside>
 <p><a href="https://www.statsmodels.org/dev/generated/statsmodels.stats.weightstats.ttest_ind.html">statsmodels.stats.weightstats.ttest_ind</a> を使うこともできます：</p>
 
 <pre class="cell">
@@ -171,9 +178,9 @@ ttest_ind(x, y, usevar='unequal')
 <pre>
 (-2.9486153015726067, 0.009478901687159983, 15.915568793934193)
 </pre>
-</div>
+</aside>
 
-<div class="note">
+<aside>
 <p>参考までに、R では次のようになります：</p>
 <pre>
 > x = c(1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1)
@@ -224,7 +231,7 @@ t = -2.9486, df = 15.916, p-value = 0.009479
 95 percent confidence interval:
  -2.3556088 -0.3846509
 </pre>
-</div>
+</aside>
 
 <h2>2標本の $t$ 検定（対応がある場合）</h2>
 
@@ -252,7 +259,7 @@ pg.ttest([2, 3, 1, 3, 1], 0)
 T-test  4.472136    4   two-sided  0.011056  [0.76, 3.24]      2.0  6.555  0.908885
 </pre>
 
-<div class="note">
+<aside>
 <p>SciPy では <a href="https://docs.scipy.org/doc/scipy-1.10.0/reference/generated/scipy.stats.ttest_rel.html">stats.ttest_rel</a> を使います（<code>_rel</code> は「関連する」related の意味です）：</p>
 
 <pre class="cell">
@@ -270,9 +277,9 @@ stats.ttest_rel([1,2,3,4,5], [3,5,4,7,6]).confidence_interval()
 <pre>
 ConfidenceInterval(low=-3.2416639982037667, high=-0.7583360017962335)
 </pre>
-</div>
+</aside>
 
-<div class="note">
+<aside>
 <p>R では次のようになります：</p>
   
 <pre>
@@ -289,13 +296,14 @@ sample estimates:
 mean difference 
              -2 
 </pre>
-</div>
+</aside>
+</main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-26 22:14:06 JST</time></p>
+<p>Last modified: <time>2024-06-10 10:07:51 JST</time></p>
 </footer>
 </body>
 </html>

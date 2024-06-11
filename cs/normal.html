@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/normal.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>テストの点数は正規分布すべき？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>テストの点数は正規分布すべき？</h1>
+
+<p><a href="https://scrapbox.io/okumura/%E6%AD%A3%E8%A6%8F%E5%88%86%E5%B8%83%E3%81%AE%E4%BD%95%E3%81%8C%E3%81%84%E3%81%84%E3%81%AE%EF%BC%9F">正規分布の何がいいの？</a>でも書きましたが、受験者数がどれだけ多くても、テストの点数は正規分布には近づきません。正規分布に近いほうが良いわけでもありません。全国学力テストも、共通テストも、正規分布にはなりません。</p>
+
+<p>偏差値は点数を平均50、標準偏差10になるように線形変換（1次関数で変換）したものですので、点数の分布が正規分布でなければ、偏差値の分布も正規分布ではありません。「正規分布でないなら偏差値は使えない」などということはありません。どんな分布でも偏差値は使えます。</p>
+
+<p>ただ、正規分布でなければ「全受験生の2.3%は偏差値70以上だ」などということは言えません。正規分布（一般に左右対称の分布）でなければ「偏差値50以下はちょうど半分いる」ということも言えません。</p>
+
+<p>中心極限定理という定理が数学にありますが、これを「<i>n</i> → ∞ でどんな分布も正規分布になる」と間違えて覚えている人が多いようです。正しくは「母集団から大きさ <i>n</i> の標本を何度も抽出するとき、標本平均の分布は、<i>n</i> → ∞ で正規分布に近づく」が中心極限定理です。</p>
+
+<p>中心極限定理の <i>n</i> → ∞ は百万とか千万とかでなく、数十個くらいでほぼ正規分布と見なせるようになります。昔は0以上1未満の一様乱数を12個足して6を引いたものを正規分布の乱数の代わりに使ったことがよくありましたが、これも中心極限定理の応用です。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-06-11 14:45:58 JST</time></p>
+</footer>
+</body>
+</html>

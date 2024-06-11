@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/DNCL.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNCL？プログラム表記？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>DNCL？プログラム表記？</h1>
+
+<p>センター試験・共通テスト「情報関係基礎」では、プログラミングの問題はDNCLという日本語ベースの擬似言語で出題されていました。DNCLはDaigaku Nyushi Center Languageの略です。どんなプログラム言語を勉強した人でも見ればわかるような、ごく普通の擬似言語ですが、なぜか配列名は大文字で始めるというルールがありました。</p>
+
+<p>共通テスト「情報I」では、DNCLをPython寄りにアップデートした「共通テスト用プログラム表記」が使われることになりました。試作問題（2022-11-09公開、2022-12-23一部訂正）<a href="https://www.dnc.ac.jp/kyotsu/shiken_jouhou/r7/r7_kentoujoukyou/r7mondai.html">令和７年度試験の問題作成の方向性、試作問題等</a>の一番下の「情報」左端「概要「情報」」の最後にある「共通テスト用プログラム表記の例示」で解説されています。</p>
+
+<p>今回はDNCLのようなプログラム言語風の名前は付けられませんでした（一部でDNCL2と呼ばれたこともありましたが）。プログラム言語の一種のように思われたくない、あくまでも擬似言語だ、ということのようです。高校のプログラミングの授業では、これを使うのではなく、一般的なプログラミング言語を使ってくれ、というメッセージでもあるようです。</p>
+
+<p>この擬似言語はPython風ではありますが、配列の添字が0から始まるか1から始まるかは決まっていません（問題ごとに設定できます）。また、DNCLにならって、配列名は大文字で始めます。</p>
+
+<p>Pythonの慣例では、<code>Foo</code> のような大文字で始まる名前は一般にクラス名です（<code>FOO</code> のような全部大文字の名前は定数です）。共通テスト用プログラム表記をPythonに直すときは、配列名は小文字に直すほうがよさそうです。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-06-10 14:53:22 JST</time></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/digital_signature.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>デジタル署名は秘密鍵で暗号化して…</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+table {
+  border-collapse: collapse;
+}
+td, th {
+  border: 1px solid;
+}
+td {
+  text-align: left;
+}
+</style>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>デジタル署名は秘密鍵で暗号化して…</h1>
+
+<p>「デジタル署名はメッセージのハッシュを送信者の秘密鍵で暗号化して、受信者はそれを送信者の公開鍵で復号してメッセージのハッシュと一致するか調べる」といった記述がよく行われていますが、署名の生成を「暗号化」とは言いませんし、これはRSAという特定の方式の原理の説明にはなっていますが、現実に使われているRSAベースの方法も含め、一般のデジタル署名の説明にはなっていません。</p>
+
+<p>説明するなら、「デジタル署名はメッセージと送信者の署名鍵（秘密鍵）を使って署名を生成してメッセージと署名を送り、受信者は送信者の検証鍵（公開鍵）を使ってこれらを検証する」としておけばいいでしょう。</p>
+
+<p>2024年の春のネットワークスペシャリスト試験問2設問5でもこの不備が指摘されて、設問5(1)～(3)を全員正解にするという対応がとられました：</p>
+
+<blockquote>
+<table>
+  <caption>表4 MUAによる電子署名の付与及び電子署名の検証の手順</caption>
+  <thead>
+    <tr>
+      <th>処理MUA</th>
+      <th>手順</th>
+      <th>処理内容</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="3">送信者の<br>MUA</td>
+      <td>1</td>
+      <td>ハッシュ関数hによってメール内容のハッシュ値aを生成する。</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><u>⑨ハッシュ値aを基に，電子署名データを作成する</u>。</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>送信者の電子証明書と電子署名付きのメールを送信する。</td>
+    </tr>
+    <tr>
+      <td rowspan="3">受信者の<br>MUA</td>
+      <td>4</td>
+      <td><u>⑩受信したメール中の電子署名データからハッシュ値aを取り出す</u>。</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>ハッシュ関数hによってメール内容のハッシュ値bを生成する。</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><u>⑪ハッシュ値を比較する</u>。</td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<p>設問5〔S/MIMEの調査と実施策〕について答えよ。<br>
+（1）表4中の下線⑨の電子署名データの作成方法を，25字以内で答えよ。<br>
+（2）表4中の下線⑩のハッシュ値aを取り出す方法を，20字以内で答えよ。<br>
+（3）表4中の下線⑪について、どのような状態になれば改ざんされていないと判断できるかを，25字以内で答えよ。</p>
+</blockquote>
+
+<p>参考：</p>
+
+<ul>
+  <li><a href="https://www.ipa.go.jp/shiken/mondai-kaiotu/2024r06.html#haru_nw">ネットワークスペシャリスト試験（NW）</a></li>
+  <li><a href="https://www.ipa.go.jp/news/2024/shiken_20240607.html">令和6年度春期ネットワークスペシャリスト試験 午後Ⅱ 問2 設問5の不備とその対応について</a></li>
+  <li><a href="https://qiita.com/angel_p_57/items/aa6b58cf7130006810b5">IPA試験問題不備(令和6年春期ネットワークスペシャリスト午後2)</a></li>
+  <li><a href="https://zenn.dev/herumi/articles/rsa-signature">RSA署名を正しく理解する</a></li>
+</li>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-06-11 13:58:38 JST</time></p>
+</footer>
+</body>
+</html>

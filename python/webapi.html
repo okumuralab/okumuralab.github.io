@@ -47,8 +47,8 @@ blockquote > p { text-indent:1em }
 import requests
 
 url = "https://zipcloud.ibsnet.co.jp/api/search"
-param = {"zipcode": "5140007"}
-data = requests.get(url, param).json()
+params = {"zipcode": "5140007"}
+data = requests.get(url, params).json()
 
 # 上の3行は次の2行と同じことである：
 # url = "https://zipcloud.ibsnet.co.jp/api/search?zipcode=5140007"
@@ -57,6 +57,21 @@ data = requests.get(url, param).json()
 address = data["results"][0]
 print(address["address1"], address["address2"], address["address3"])
 </pre>
+
+<aside>
+<p>上では昔からある <code>requests</code> を使いましたが、最近は <code>httpx</code> が人気です：</p>
+<pre class="cell">
+import httpx
+
+url = "https://zipcloud.ibsnet.co.jp/api/search"
+params = {"zipcode": "5140007"}
+data = httpx.get(url, params=params).json()
+
+address = data["results"][0]
+print(address["address1"], address["address2"], address["address3"])
+</pre>
+<p>このようにほぼ <code>requests</code> と同じように使えますが、<code>httpx.get()</code> のほうがオプションがたくさんあるので、パラメータの指定には必ず <code>params=</code> を付けます。以下の例も同じように <code>httpx</code> が使えます。</p>
+</aside>
 
 <p>入力を含むプログラム：</p>
 
@@ -71,8 +86,8 @@ while True:
     if not z:
         break
     print(z)
-    param = {"zipcode": z}
-    data = requests.get(url, param).json()
+    params = {"zipcode": z}
+    data = requests.get(url, params).json()
     address = data["results"][0]
     print(address["address1"], address["address2"], address["address3"])
 </pre>
@@ -101,8 +116,8 @@ print(data['text'])
 
 <pre>
 url = "http://weather.livedoor.com/forecast/webservice/json/v1"
-param = {"city": "240010"} # 三重県津市
-data = requests.get(url, param).json()
+params = {"city": "240010"} # 三重県津市
+data = requests.get(url, params).json()
 for x in data["forecasts"]:
     print(f'{x["dateLabel"]}の天気: {x["telop"]}')
 </pre>
@@ -114,8 +129,8 @@ for x in data["forecasts"]:
 
 <pre class="cell">
 url = "https://api.openbd.jp/v1/get"
-param = {"isbn": "978-4-7741-9690-9"}
-data = requests.get(url, param).json()
+params = {"isbn": "978-4-7741-9690-9"}
+data = requests.get(url, params).json()
 print("著者名:", data[0]["summary"]["author"])
 print("書名:", data[0]["summary"]["title"])
 print("出版社名:", data[0]["summary"]["publisher"])
@@ -129,14 +144,14 @@ print("出版年月:", data[0]["summary"]["pubdate"])
 <pre class="cell">
 url = "https://express.heartrails.com/api/json"
 
-param = {"method": "getLines", "prefecture": "三重県" }
-data = requests.get(url, param).json()
+params = {"method": "getLines", "prefecture": "三重県" }
+data = requests.get(url, params).json()
 print("路線名一覧:")
 for i in data["response"]["line"]:
     print(i)
 
-param = {"method": "getStations", "line": "近鉄名古屋線" }
-data = requests.get(url, param).json()
+params = {"method": "getStations", "line": "近鉄名古屋線" }
+data = requests.get(url, params).json()
 print("駅と経度・緯度:")
 for i in data["response"]["station"]:
     print(i["name"], i["x"], i["y"])
@@ -148,8 +163,8 @@ for i in data["response"]["station"]:
 
 <pre class="cell">
 url = "https://sysbird.jp/toriko/api/"
-param = {"apikey": "guest", "format": "json", "keyword": "マシュマロ" }
-data = requests.get(url, param).json()
+params = {"apikey": "guest", "format": "json", "keyword": "マシュマロ" }
+data = requests.get(url, params).json()
 print("菓子名・メーカー:")
 for i in data["item"]:
     print(i["name"], i["maker"])
@@ -286,7 +301,7 @@ sess.mount("https://", adapter)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-07-18 10:45:20 JST</time></p>
+<p>Last modified: <time>2024-06-10 09:11:03 JST</time></p>
 </footer>
 </body>
 </html>

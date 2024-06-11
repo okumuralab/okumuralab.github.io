@@ -59,11 +59,22 @@ oddsratio, pvalue = stats.fisher_exact([[3, 2], [1, 4]])
 
 <p><code>fisher_exact()</code> は残念ながら2×2行列しか扱えません。より大きな行列を扱うには <a href="https://pypi.org/project/FisherExact/">FisherExact</a> や <a href="https://github.com/boussoffara/fexact">fexact</a> があるようですが、<a href="rpy2.html">rpy2</a> 等を使ってPythonからRを呼び出すのがいいかもしれません。</p>
 
+<p>Fisherの検定がいいか、単純なカイ2乗検定がいいか（その場合、連続性の補正はするべきか）といった議論は<a href="../stat/fisher-chisq.html">いろいろあります</a>。カイ2乗検定はPythonでは次のようにして行います（補正なしの場合）：</p>
+
+<pre class="cell">
+stats.chi2_contingency([[3, 2], [1, 4]], correction=False)
+</pre>
+
+<pre>
+Chi2ContingencyResult(statistic=1.6666666666666665, pvalue=0.1967056024589432, dof=1, expected_freq=array([[2., 3.],
+       [2., 3.]]))
+</pre>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-27 21:57:42 JST</time></p>
+<p>Last modified: <time>2024-06-10 10:42:37 JST</time></p>
 </footer>
 </body>
 </html>
