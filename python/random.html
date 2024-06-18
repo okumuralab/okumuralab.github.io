@@ -118,7 +118,7 @@ sns.histplot(a, discrete=True)
 
 <h2>速度比較</h2>
 
-<p>Mac mini (M1, 2020) 16GB Sonoma 14.2.1、Python 3.11.7での速度比較です。一様乱数の配列を作って合計します。最初が標準ライブラリ、次がNumPy、PyTorch、最後がApple Silicon専用の <a href="https://github.com/ml-explore/mlx">MLX</a> です。PyTorchとMLXは32ビット精度、他は64ビット精度です。</p>
+<p>Mac mini (M1, 2020) 16GB Sonoma 14.5、Python 3.12.4、NumPy 2.0.0、PyTorch 2.3.1、MLX 0.15.1での速度比較です。一様乱数の配列を作って合計します。最初が標準ライブラリ、次がNumPy、PyTorch、最後がApple Silicon専用の <a href="https://github.com/ml-explore/mlx">MLX</a> です。PyTorchとMLXは32ビット精度、他は64ビット精度です。</p>
 
 <p>[2023-12-23] 最初 N=10000 でやっていましたが、N を増やして再計算しました。<a href="https://twitter.com/mosko_mule/status/1738108536960495909">@mosko_mule</a> さん、<a href="https://twitter.com/BOBtakumi/status/1738211869939355984">@BOBtakumi</a> さんのご教示に感謝します。</p>
 
@@ -131,19 +131,50 @@ N = 10_000_000
 </pre>
 
 <pre>
-432 ms ± 1.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+495 ms ± 485 μs per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
+
+<p><a href="numba.html">Numba</a> 0.60.0 で高速化してみましょう。</p>
+
+<pre class="cell">
+from numba import jit
+
+@jit
+def foo():
+    return sum([random.random() for _ in range(N)])
+
+%timeit foo()
+</pre>
+
+<pre>
+48.4 ms ± 122 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<p>NumPy です。</p>
 
 <pre class="cell">
 import numpy as np
+
+%timeit np.sum(np.random.random(N))
+</pre>
+
+<pre>
+40.1 ms ± 149 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<pre class="cell">
 rng = np.random.default_rng(348309421)
 
 %timeit np.sum(rng.random(N))
 </pre>
 
 <pre>
-48.7 ms ± 12 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+48.8 ms ± 12.6 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
+
+<p>PCG64よりMersenne Twisterのほうが若干速いようです。</p>
+
+<p>PyTorch です。</p>
 
 <pre class="cell">
 import torch
@@ -152,48 +183,33 @@ import torch
 </pre>
 
 <pre>
-28.5 ms ± 23.7 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+31.4 ms ± 339 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 
-<p>GPU（mps）を指定してみます。</p>
-
-<pre class="cell">
-%timeit torch.rand(N, device="mps").sum()
-</pre>
-
-<pre>
-The slowest run took 4.03 times longer than the fastest. This could mean that an intermediate result is being cached.
-214 µs ± 129 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
-</pre>
-
-<p>キャッシュされたようなので速すぎます。次のほうが正しいようです。</p>
+<p>GPU（mps）を指定してみます。<code>torch.rand(N, device="mps").sum()</code> ではキャッシュされるようで、次のようにするのが正しいようです。</p>
 
 <pre class="cell">
 %timeit torch.rand(N, device="mps").sum().item()
 </pre>
 
 <pre>
-4.03 ms ± 107 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+2.96 ms ± 14.9 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre>
+
+<p>MLX です。</p>
 
 <pre class="cell">
 import mlx.core as mx
-
-%timeit mx.sum(mx.random.uniform(shape=(10000,)))
 </pre>
 
-<pre>
-5.95 µs ± 42.5 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
-</pre>
-
-<p>MLXは遅延評価のため、おかしな値になってしまいました。評価を強制してみます：</p>
+<p>MLXは遅延評価のため、<code>mx.sum(mx.random.uniform(shape=(10000,)))</code> では速すぎる値になってしまいました。評価を強制してみます：</p>
 
 <pre class="cell">
 %timeit mx.sum(mx.random.uniform(shape=(N,))).item()
 </pre>
 
 <pre>
-29.2 ms ± 18.5 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+29.2 ms ± 41.5 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 
 <pre class="cell">
@@ -201,16 +217,16 @@ import mlx.core as mx
 </pre>
 
 <pre>
-29.1 ms ± 14.4 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+29.2 ms ± 22.1 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 
-<p>PyTorchでmpsを指定するよりかなり遅くなってしまいました。まだMLX 0.0.6なので将来に期待。</p>
+<p>PyTorchでmpsを指定するよりかなり遅くなってしまいました。将来に期待。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-12-23 13:30:38 JST</time></p>
+<p>Last modified: <time>2024-06-17 10:05:42 JST</time></p>
 </footer>
 </body>
 </html>

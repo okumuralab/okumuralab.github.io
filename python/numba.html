@@ -16,13 +16,16 @@
 <a href="./">Python</a> &gt;
 </nav>
 
+<main>
 <h1>Numba</h1>
 
-<p><a href="https://numba.pydata.org">Numba</a>（ナンバ）はPythonのJIT（Just In Time）コンパイラです。簡単にいえば，Pythonの自前の関数を高速にする仕組みです。以下は M1 Mac mini 上の Python 3.11.4、NumPy 1.24.3、Numba 0.57.0 で実行しました。</p>
+<p><a href="https://numba.pydata.org">Numba</a>（ナンバ）はPythonのJIT（Just In Time）コンパイラです。簡単にいえば，Pythonの自前の関数を高速にする仕組みです。以下は M1 Mac mini 上の Python 3.12.4、NumPy 2.0.0、Numba 0.60.0 で実行しました。</p>
+
+<p>使い方は、<code>pip install numba</code> して、<code>from numba import jit</code> して、高速化が必要な関数定義の前に <code>@jit</code>（Numba 0.59以前では <code>@jit(nopython=True)</code>）を付けるだけです（具体的には以下で説明します）。</p>
 
 <p>速さ比べのため，まずは100万個の乱数を用意します：</p>
 
-<pre>
+<pre class="cell">
 import numpy as np
 
 rng = np.random.default_rng(12345)
@@ -31,19 +34,19 @@ a = rng.random(1000000)
 
 <p>これをPython標準の <code>sum()</code> 関数を使って合計するのに要する時間を計測します：</p>
 
-<pre>
+<pre class="cell">
 %timeit sum(a)
 </pre>
 
 <p>結果：</p>
 
 <pre>
-37.6 ms ± 1.13 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+39.1 ms ± 8.28 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 
 <p>次は，自前の関数を作って，時間を計測します：</p>
 
-<pre>
+<pre class="cell">
 def sum1(a):
     s = 0
     for x in a:
@@ -56,12 +59,12 @@ def sum1(a):
 <p>結果：</p>
 
 <pre>
-45.1 ms ± 894 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+45.8 ms ± 517 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 
-<p>次はNumbaを使ってみましょう。<code>pip install numba</code> などとしてインストールしてから，次を実行します：</p>
+<p>次はNumbaを使ってみましょう。<code>pip install numba</code> などとしてインストールしてから，次を実行します（今は <code>nopython=True</code> がデフォルトなので <code>@jit</code> だけでいいのですが、Google Colabなどで古いバージョンが入っているかもしれないので）：</p>
 
-<pre>
+<pre class="cell">
 from numba import jit
 
 @jit(nopython=True)
@@ -74,39 +77,46 @@ def sum2(a):
 %timeit sum2(a)
 </pre>
 
+<p>最初はコンパイルのために遅くなるかもしれないので、もう一度：</p>
+
+<pre class="cell">
+%timeit sum2(a)
+</pre>
+
 <p>結果：</p>
 
 <pre>
-941 µs ± 3.73 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
+962 μs ± 26.4 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 </pre>
 
 <p>約1ミリ秒です。数十倍速くなりました。最後にNumPyの <code>np.sum()</code> も試します：</p>
 
-<pre>
+<pre class="cell">
 %timeit np.sum(a)
 </pre>
 
 <p>結果：</p>
 
 <pre>
-196 µs ± 448 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+198 μs ± 196 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 </pre>
 
 <p>Numbaで高速化したものよりさらに高速です。</p>
 
 <p>つまり，ループを含むようなPythonのコードはたいていNumbaで高速化できますが，同じ機能のNumPy関数があるなら，そちらを使いましょう。</p>
 
-<p>参考：</p>
+<p>NumbaでPythonのどんなコードでもコンパイルできるわけではありません。<code>NumbaNotImplementedError</code> が出ない範囲で、ループなど高速化に役立つ部分だけを切り分けて <code>@jit</code> を付けます。</p>
 
-<ul>
-  <li>Magomed Aliev: 6 ways to significantly speed up Pandas with a couple lines of code. <a href="https://medium.com/swlh/6-ways-to-significantly-speed-up-pandas-with-a-couple-lines-of-code-part-1-2c2dfb0de230">Part 1</a> / <a href="https://medium.com/swlh/6-ways-to-significantly-speed-up-pandas-with-a-couple-lines-of-code-part-2-7a9e41ba76dc">Part 2</a></li>
-</ul>
+<aside>
+<p>Numba 0.59 以降では <code>@jit</code> も <code>@jit(nopython=True)</code> も <code>@njit</code> も同じ意味です。</p>
+</aside>
+</main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-06-18 14:55:14 JST</time></p>
+<p>Last modified: <time>2024-06-17 10:09:10 JST</time></p>
 </footer>
 </body>
 </html>

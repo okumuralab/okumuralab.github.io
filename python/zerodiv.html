@@ -18,15 +18,27 @@
 
 <h1>ゼロ除算</h1>
 
-<p>ゼロで割るとどうなるかは言語によります。</p>
+<p>ゼロで割ることはできません。無理に割ろうとすると</p>
 
-<p>R で <code>1 / 0</code> と打ち込むと <code>Inf</code>（Infinity = 無限大）と返ってきます。<code>0 / 0</code> は <code>NaN</code>（Not a Number = 非数）になります。いずれにしても、エラーで止まることはありません。</p>
+<pre class="cell">
+1 / 0
+</pre>
 
-<p>Ruby では <code>1 / 0</code> や <code>0 / 0</code> は ZeroDivisionError になって止まりますが <code>1.0 / 0.0</code> は <code>Infinity</code>、<code>0.0 / 0.0</code> は <code>NaN</code> になります。C言語でも同じです。</p>
+<p>ZeroDivisionError というエラーになります。</p>
+
+<p>しかし、コンピュータによる数値計算では、<code>a / b</code> のような割り算のときに、たまにしか起こらないエラーのためにいちいち <code>b</code> がゼロかどうか確認するのは面倒ですし、速度的にも不利です。</p>
+
+<p>そこで、浮動小数点演算の <a href="https://ja.wikipedia.org/wiki/IEEE_754">IEEE 754</a> という規格では、<code>1.0 / 0.0</code> に相当する「無限大」という数や、<code>0.0 / 0.0</code> に相当する「非数」という数を導入して、割り算がエラーにならない仕組みを用意しています。</p>
+
+<p>この仕組みをどう使うかは、言語によって異なります。</p>
+
+<p>R では、<code>1 / 0</code> と打ち込むと <code>Inf</code>（Infinity = 無限大）と返ってきます。<code>0 / 0</code> は <code>NaN</code>（Not a Number = 非数）になります。いずれにしても、エラーで止まることはありません。</p>
+
+<p>Ruby では、<code>1 / 0</code> や <code>0 / 0</code> は ZeroDivisionError になって止まりますが <code>1.0 / 0.0</code> は <code>Infinity</code>、<code>0.0 / 0.0</code> は <code>NaN</code> になります。C言語でも同じです。</p>
 
 <p>ところが Python では <code>0</code> で割っても <code>0.0</code> で割っても ZeroDivisionError になり、そこで実行が止まってしまいます。これでは不便です。もちろん</p>
 
-<pre>
+<pre class="cell">
 try:
     x = a / b
 except ZeroDivisionError:
@@ -38,44 +50,56 @@ except ZeroDivisionError:
 
 <p>のようなことはできますが、面倒です。</p>
 
-<p>NumPy の数値（array の要素など）であれば大丈夫です：</p>
+<p>Python でゼロで割って止まらないようにするには、NumPy を使います：</p>
 
 <pre class="cell">
 import numpy as np
 
-a = np.array([1, 0, 0])
+a = np.array([1.0, 0.0, -0.0])
 print(a[0] / a[1])
-print(a[1] / a[2])
+print(a[1] / a[1])
+print(a[0] / a[2])
 </pre>
 
 <pre>
 inf
 nan
+-inf
 </pre>
 
-<div class="note">
-<p>配列の要素でない数の場合は <code>np.float64(0)</code> のようにします。<code>np.array(0)</code> でもかまいません。</p>
-</div>
+<aside>
+<p>ちょっとややこしいですが、上の例のように、浮動小数点数のゼロには <code>0.0</code> と <code>-0.0</code> があります。両者は等しい（<code>0.0 == -0.0</code> はTrueになる）のですが、1 を <code>-0.0</code> で割れば負の無限大になります。</p>
+</aside>
+
+<aside>
+<p>配列の要素でなくても <code>np.float64(0.0)</code> とすれば同じ扱いになります。<code>np.array(0.0)</code> でもかまいません。</p>
+</aside>
 
 <p>ただし、RuntimeWarning（実行時の警告）が出ます。RuntimeWarning を出したくなければ、あらかじめ</p>
 
-<pre>
+<pre class="cell">
 np.seterr(divide="ignore", invalid="ignore")
 </pre>
 
 <p>と打ち込んでおきます（invalid とは 0/0 のこと）。元に戻すには</p>
 
-<pre>
+<pre class="cell">
 np.seterr(divide="warn", invalid="warn")
 </pre>
 
-<p>とします（詳しくは <code>np.seterr</code> のヘルプ参照）。</p>
+<p>とします。デフォルトは</p>
+
+<pre class="cell">
+np.seterr(divide="warn", over="warn", under="ignore", invalid="warn")
+</pre>
+
+<p>で、ゼロ除算・オーバーフロー・0/0 が警告、アンダーフローが無視です。</p>
 
 <p>特定の割り算だけ warn しないようにするには</p>
 
-<pre>
+<pre class="cell">
 with np.errstate(divide="ignore", invalid="ignore"):
-    x = a / b
+    x = a[0] / a[1]
 </pre>
 
 <p>のようにします。</p>
@@ -84,7 +108,7 @@ with np.errstate(divide="ignore", invalid="ignore"):
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-12-15 16:40:21 JST</time></p>
+<p>Last modified: <time>2024-06-18 14:32:51 JST</time></p>
 </footer>
 </body>
 </html>
