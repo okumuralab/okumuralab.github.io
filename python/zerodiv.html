@@ -68,11 +68,13 @@ nan
 </pre>
 
 <aside>
-<p>ちょっとややこしいですが、上の例のように、浮動小数点数のゼロには <code>0.0</code> と <code>-0.0</code> があります。両者は等しい（<code>0.0 == -0.0</code> はTrueになる）のですが、1 を <code>-0.0</code> で割れば負の無限大になります。</p>
+<p>配列の要素でなくても <code>np.float64(0.0)</code> とすれば同じ扱いになります。<code>np.array(0.0)</code> でもかまいません。</p>
 </aside>
 
 <aside>
-<p>配列の要素でなくても <code>np.float64(0.0)</code> とすれば同じ扱いになります。<code>np.array(0.0)</code> でもかまいません。</p>
+<p>ちょっとややこしいですが、上の例のように、浮動小数点数のゼロには <code>0.0</code> と <code>-0.0</code> があります。両者は等しい（<code>0.0 == -0.0</code> はTrueになる）のですが、1 を <code>-0.0</code> で割れば負の無限大になります。</p>
+
+<p>ちなみに、<code>np.fmin(np.float64(-0.0), np.float64(0.0))</code> の値は環境に依存するようです。C言語でも <code>fmin(-0.0, 0.0)</code> は環境に依存するようです。</p>
 </aside>
 
 <p>ただし、RuntimeWarning（実行時の警告）が出ます。RuntimeWarning を出したくなければ、あらかじめ</p>
@@ -104,11 +106,13 @@ with np.errstate(divide="ignore", invalid="ignore"):
 
 <p>のようにします。</p>
 
+<p>似た問題に「0の0乗」があります。Wikipediaの <a href="https://en.wikipedia.org/wiki/Zero_to_the_power_of_zero">Zero to the power of zero</a> で解説されているように、多くの処理系で1になります。Pythonも <code>0 ** 0</code> は1、<code>0.0 ** 0.0</code> は1.0です。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-06-18 14:32:51 JST</time></p>
+<p>Last modified: <time>2024-06-21 10:24:38 JST</time></p>
 </footer>
 </body>
 </html>

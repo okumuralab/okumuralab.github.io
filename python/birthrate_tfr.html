@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/birthrate_tfr.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>出生率と合計特殊出生率</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<main>
+<h1>出生率と合計特殊出生率</h1>
+
+<p>2023年の<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai23/index.html">人口動態統計月報年計（概数）の概況</a>で、日本の合計特殊出生率（total fertility rate、TFR）が1.2になり、東京都の合計特殊出生率が0.99になったというので話題になった。</p>
+
+<p>出生率は人口1000人あたりの出生数であるが、合計特殊出生率は15〜49歳の女性の出生率を合計したものである。つまり、各年齢の出生率が変わらないと仮定したとき、女性が一生の間に産む子供の数が合計特殊出生率である。これが2未満だと人口が減っていくことになる。</p>
+
+<p>各都道府県の合計特殊出生率は上記ページのR5hyou.xlsx 表5、各都道府県の出生率は上記ページのR5toukeihyou.xlsx 第9表①にある。これを使って散布図を描く。</p>
+
+<pre class="cell">
+import numpy as np
+import matplotlib.pyplot as plt
+
+都道府県 = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
+            "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山",
+            "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重",
+            "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根",
+            "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡",
+            "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄"]
+
+tfr = [1.06, 1.23, 1.16, 1.07, 1.10, 1.22, 1.21, 1.22, 1.19, 1.25,
+       1.14, 1.14, 0.99, 1.13, 1.23, 1.35, 1.34, 1.46, 1.32, 1.34,
+       1.31, 1.25, 1.29, 1.29, 1.38, 1.11, 1.19, 1.29, 1.21, 1.33,
+       1.44, 1.46, 1.32, 1.33, 1.40, 1.36, 1.40, 1.31, 1.30, 1.26,
+       1.46, 1.49, 1.47, 1.39, 1.49, 1.48, 1.60]
+
+出生率 = [4.8, 4.8, 4.7, 5.5, 4.0, 5.1, 5.2, 5.4, 5.4, 5.4, 5.9, 5.9,
+          6.4, 6.0, 5.2, 5.6, 6.2, 6.3, 5.7, 5.7, 5.6, 5.5, 6.7, 5.7,
+          6.8, 5.6, 6.5, 6.2, 5.4, 5.5, 6.1, 5.9, 6.4, 6.2, 5.6, 5.7,
+          5.9, 5.4, 5.1, 6.8, 6.5, 6.1, 6.6, 5.8, 6.3, 6.4, 8.7]
+
+plt.figure(figsize=(8, 8))
+plt.plot(tfr, 出生率, "o")
+plt.xlabel("合計特殊出生率")
+plt.ylabel("出生率（人口千対）")
+for x, y, s in zip(tfr, 出生率, 都道府県):
+    plt.text(x, y, s)
+</pre>
+
+<figure><img src="img/birthrate_tfr.svg" alt="出生率と合計特殊出生率"></figure>
+
+<p>こういう散布図を無理に直線であてはめる必要はない。それより、各都道府県の特徴を読み取れることが大切である。例えば合計特殊出生率が1.5近くある九州の各県の出生率が東京とほぼ同じなのはなぜか。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-06-21 17:30:33 JST</time></p>
+</footer>
+</body>
+</html>

@@ -8,6 +8,9 @@
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <script src="../js/copypre.js"></script>
+<style>
+  blockquote > p { margin: 0.3em }
+</style>
 </head>
 <body>
 
@@ -17,6 +20,8 @@
 </nav>
 
 <h1>ClaudeのAPIを使う</h1>
+
+<p>[2024-06-21] Claude 3.5 Sonnet (<code>claude-3-5-sonnet-20240620</code>) が出ました。</p>
 
 <p><a href="https://www.anthropic.com">Anthropic</a>（アンスロピック）は2021年にOpenAIから離脱した人たちが作った会社です。<a href="https://claude.ai">Claude</a>（クロード）という生成AIを開発しています。2024-03-05（日本時間）にはClaude 3が登場し、最上位モデルClaude 3 Opus（オーパス）はGPT-4を超えたと宣伝されています。しかし、今のところWebで無料で使えるのは2番目のモデルClaude 3 Sonnet（ソネット）までです。WebでOpusを使うには、月20ドル払ってClaude Proに登録しなければなりません。しかし、API経由での利用なら、従量制ですし、5ドルの無料枠があります。<a href="https://console.anthropic.com/dashboard">Dashboard</a> 経由で使うこともできますが、ここではPythonから使ってみましょう。</p>
 
@@ -45,11 +50,11 @@ client = anthropic.Anthropic(
 )
 </pre>
 
-<p>最新のClaude 3 Opusを使ってみましょう。</p>
+<p>最新のClaude 3.5 Sonnetを使ってみましょう。</p>
 
 <pre class="cell">
 message = client.messages.create(
-    model="claude-3-opus-20240229",
+    model="claude-3-5-sonnet-20240620",
     max_tokens=1000, # 出力上限（4096まで）
     temperature=0.0, # 0.0-1.0
     system="", # 必要ならシステムプロンプトを設定
@@ -65,16 +70,24 @@ print(message.content[0].text)
 </pre>
 
 <blockquote>
-<p>まどマギの登場人物の中では、鹿目まどかが一番好きです。</p>
+<p>まどマギ（魔法少女まどか☆マギカ）の登場人物は、それぞれ魅力的で個性的なキャラクターが多いですね。人気のあるキャラクターとしては：</p>
 
-<p>まどかは優しくて思いやりのある性格で、友達思いの一面を持っています。自分の願いを叶えるためではなく、他者を救うために魔法少女になろうとする彼女の強い意志には感銘を受けました。</p>
+<p>1. 鹿目まどか：主人公で、優しく純粋な性格が魅力的です。</p>
 
-<p>また、物語を通してまどかが成長していく姿も印象的でした。最終的に彼女が下した選択は、勇気と愛に溢れていて、とても感動的だと思います。</p>
+<p>2. 暁美ほむら：ミステリアスで複雑な背景を持つキャラクターで、まどかへの想いが印象的です。</p>
 
-<p>まどかの他にも、暁美ほむらの強さと献身ぶりや、美樹さやかの明るさと真っ直ぐさなど、魅力的なキャラクターが多数登場するのがまどマギの魅力だと思います。一人一人が個性的でありながら、友情や絆といったテーマがしっかり描かれているのが素晴らしいですね。</p>
+<p>3. 巴マミ：優雅で大人びた雰囲気を持つ先輩魔法少女です。</p>
+
+<p>4. 美樹さやか：正義感が強く、友情に厚いキャラクターです。</p>
+
+<p>5. 佐倉杏子：クールでツンデレな性格が魅力的です。</p>
+
+<p>6. キュゥべえ：物語のキーとなる謎めいたキャラクターです。</p>
+
+<p>これらのキャラクターの中から、あなたの好みや共感できる部分によって、お気に入りのキャラクターが決まると思います。私個人の意見は控えますが、それぞれのキャラクターに魅力があると思います。</p>
 </blockquote>
 
-<p><code>message.usage</code> で入力、出力のトークン数がわかります。Claude 3 Opusの場合、百万トークンあたりそれぞれ15ドル、75ドルです。</p>
+<p><code>message.usage</code> で入力、出力のトークン数がわかります。</p>
 
 <p><code>client.messages.create()</code> の <code>messages</code> はリストで、</p>
 
@@ -121,13 +134,13 @@ message = client.messages.create(
 with client.messages.stream(
         max_tokens=1024,
         messages=[{"role": "user", "content": "Hello"}],
-        model="claude-3-opus-20240229",
+        model="claude-3-5-sonnet-20240620",
 ) as stream:
     for text in stream.text_stream:
         print(text, end="", flush=True)
 </pre>
 
-<p><a href="chatgpt_api.html">ChatGPTのAPIを使う</a>で作ったような簡単なアプリを作ってみましょう。</p>
+<p><a href="chatgpt_api.html">OpenAIのAPIを使う</a>で作ったような簡単なアプリを作ってみましょう。</p>
 
 <pre class="cell">
 import mimetypes
@@ -135,9 +148,8 @@ import base64
 import anthropic
 
 class Claude:
-    def __init__(self, model="claude-3-opus-20240229", messages=None, temperature=0, stream=True):
-        # model: "claude-3-opus-20240229" or "claude-3-sonnet-20240229"
-        # or "claude-3-haiku-20240307"
+    def __init__(self, model="claude-3-5-sonnet-20240620",
+                 messages=None, temperature=0, stream=True):
         self.client = anthropic.Anthropic()
         self.model = model
         self.messages = messages or []
@@ -216,13 +228,13 @@ claude.chat("""
 
 <p>混んでいると <code>APIStatusError: {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}</code> が返ることがあります（特にストリーミングのとき）。そのときは <code>claude.chat("...", stream=False)</code> も試してみてください。</p>
 
-<p><code>model</code> については <code>"claude-3-opus-20240229"</code> 以外に <code>"claude-3-sonnet-20240229"</code>、<code>"claude-3-haiku-20240307"</code> が使えます。入力/出力の値段は、100万トークンあたり、それぞれ15/75ドル、3/15ドル、0.25/1.25ドルです。いずれもコンテキスト窓は200Kトークン、最大出力は4096トークン、学習データは2023年8月までです。詳細は <a href="https://docs.anthropic.com/claude/docs/models-overview">Models overview</a> をご覧ください。</p>
+<p><code>model</code> については <a href="llm_comparison.html">LLM API比較</a> をご覧ください。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-04 18:48:06 JST</time></p>
+<p>Last modified: <time>2024-06-21 10:16:55 JST</time></p>
 </footer>
 </body>
 </html>

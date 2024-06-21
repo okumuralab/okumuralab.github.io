@@ -150,7 +150,7 @@ list(genai.list_models())
        description='Fast and versatile multimodal model for scaling across diverse tasks',
        input_token_limit=1048576,
        output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
+       supported_generation_methods=['generateContent', 'countTokens', 'createCachedContent'],
        temperature=1.0,
        top_p=0.95,
        top_k=64),
@@ -183,7 +183,7 @@ list(genai.list_models())
        description='Mid-size multimodal model that supports up to 1 million tokens',
        input_token_limit=1048576,
        output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
+       supported_generation_methods=['generateContent', 'countTokens', 'createCachedContent'],
        temperature=1.0,
        top_p=0.95,
        top_k=64),
@@ -301,7 +301,7 @@ model = genai.GenerativeModel('gemini-1.5-pro-latest',
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-06-05 10:17:46 JST</time></p>
+<p>Last modified: <time>2024-06-19 09:30:47 JST</time></p>
 </footer>
 </body>
 </html>
