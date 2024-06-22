@@ -26,6 +26,13 @@
 <p>ラーメン店舗数は<a href="https://todo-ran.com">都道府県別統計とランキングで見る県民性</a>サイトの<a href="https://todo-ran.com/t/kiji/11806">都道府県別ラーメン店舗数</a>によれば次の通り：</p>
 
 <pre class="cell">
+都道府県 = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
+            "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山",
+            "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重",
+            "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根",
+            "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡",
+            "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄"]
+
 ramen = [1384, 399, 301, 618, 342, 619, 580, 726, 718, 556, 975, 1081,
          2437, 1178, 831, 326, 343, 173, 228, 620, 333, 776, 1070, 247, 165,
          396, 1016, 594, 148, 125, 124, 156, 383, 603, 239, 195, 158, 250, 138,
@@ -70,6 +77,11 @@ import numpy as np
 
 ramen_p = np.array(ramen) / np.array(population)
 
+plt.figure(figsize=(8, 10))
+
+for x, y, z, s in zip(ramen_p, stroke_m, stroke_f, 都道府県):
+    plt.text(x, y, s)
+    plt.text(x, z, s)
 plt.scatter(ramen_p, stroke_m)
 plt.scatter(ramen_p, stroke_f)
 plt.xlabel("人口1000人あたりラーメン店舗数")
@@ -112,7 +124,7 @@ PearsonRResult(statistic=0.7110117701129071, pvalue=2.139993699398195e-08)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-06-09 11:12:35 JST</time></p>
+<p>Last modified: <time>2024-06-22 09:10:54 JST</time></p>
 </footer>
 </body>
 </html>
