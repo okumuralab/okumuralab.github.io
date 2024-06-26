@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/diffie_hellman.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diffie-Hellmanの鍵共有</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<main>
+<h1>Diffie-Hellmanの鍵共有</h1>
+
+<p>インターネットの安全性はSSL/TLSによる暗号化で支えられています。ただし、SSLはもう使われておらず、現在主流のTLS 1.3では楕円曲線（elliptic curve）上のDiffie-Hellmanの鍵共有（鍵交換）という方法（ECDH、あるいは使い捨て（ephemeral）の鍵という意味でECDHE）という方法が専ら使われています。楕円曲線を使うことを除けば、これはDiffieとHellmanが公開鍵暗号前夜の1976年に書いた「New Directions in Cryptography」という有名な論文で提案されたものです。その後、RSAなどの公開鍵暗号が提案され、それと共通鍵暗号を組み合わせたハイブリッド暗号が使われていた時代がありましたが、安全性の問題から、現代のTLSでは公開鍵暗号は切り捨てられました（デジタル署名には使われています）。</p>
+
+<p>Diffie-Hellmanの鍵共有を使えば、たとえ通信が盗聴されていても、AliceとBobは鍵を共有することができます。共有した「使い捨て」鍵を使って、AESのような普通の共通鍵暗号方式で通信を行います。</p>
+
+<p>Diffie-Hellmanの鍵共有アルゴリズムは簡単です。あらかじめ非常に大きな素数 $p$ を決めておき、すべての計算は $\text{mod}\ p$（$p$ で割った余り）の世界で行います。この世界には $0$ から $p-1$ までの整数しかありません。このような世界のことを有限体 $\mathrm{GF}(p)$ と呼びます。GFはGalois field（ガロア体）の略です。</p>
+
+<p>ここで $2$ 以上 $p-1$ 以下の適当な整数 $g$ を選びます。どんな $g$ を選んでも $g^{p-1} \bmod p = 1$ を満たします（フェルマーの小定理）。</p>
+
+<p>ここで $g$ をうまく選べば、$g^0 \bmod p$、$g^1 \bmod p$、$g^2 \bmod p$、……、$g^{p-2} \bmod p$ が $1$ から $p-1$ までのすべての整数を尽くすようにできます。このような $g$ を有限体 $\mathrm{GF}(p)$ の原始元（primitive element）あるいは $p$ を法とする原始根（primitive root）といいます。このとき、$y = 1,\ldots,p-1$ が与えられれば $g^x \bmod p = y$ を満たす $x$ が一意に求められます（この $y$ から $x$ を求める問題を離散対数問題といいます）。Diffie-Hellman の元論文では原始根を使っていますが、実際には原始根である必要はなく、$g$ の累乗が十分バラエティに富んでいれば十分です。</p>
+
+<p>ここでAliceは秘密の数 $a$ を考え、$g^a \bmod p$ を公開します。Bobは秘密の数 $b$ を考え、$g^b \bmod p$ を公開します。二人は互いの公開した値を自分の秘密の数で累乗して同じ値 $g^{ab} \bmod p$ を得て、それを鍵として通常の共通鍵暗号で情報交換する、というのが話の筋ですが、以下でもっと詳しく説明します。</p>
+
+<p>話を具体的にするため、素数 $p = 17$ と適当な数 $g = 2$ を選んだとして、$g^0 \bmod p$、$g^1 \bmod p$、$g^2 \bmod p$ 等々を順に求めてみましょう。</p>
+
+<pre class="cell">
+p = 17
+g = 2
+for i in range(p - 1):
+    print(g ** i % p)
+</pre>
+
+<pre>
+1
+2
+4
+8
+16
+15
+13
+9
+1
+2
+4
+8
+16
+15
+13
+9
+</pre>
+
+<p>結果は8通りしかありません。$g = 3$ ではどうでしょうか。</p>
+
+<pre class="cell">
+p = 17
+g = 3
+for i in range(p - 1):
+    print(g ** i % p)
+</pre>
+
+<pre>
+1
+3
+9
+10
+13
+5
+15
+11
+16
+14
+8
+7
+4
+12
+2
+6
+</pre>
+
+<p>今度は16通り全部が現れますので、$g = 3$ は原始根です。</p>
+
+<p>ちなみに、最も小さい原始根はSymPyの <a href="https://docs.sympy.org/latest/modules/ntheory.html#sympy.ntheory.residue_ntheory.primitive_root">primitive_root</a> で求められます。</p>
+
+<pre class="cell">
+from sympy.ntheory.residue_ntheory import primitive_root
+
+primitive_root(17)
+</pre>
+
+<pre>
+3
+</pre>
+
+<p>もっと大きい数でやってみましょう。$p = 2^{31}-1 = 2147483647$ の最も小さい原始根は <code>primitive_root(2**31-1)</code> で 7 です。</p>
+
+<p>実際には少なくとも2048ビットの $p$ を使わなければいけませんが、以下では31ビットの $p = 2^{31}-1$、$g = 7$ で例示します。</p>
+
+<p>これくらいの数でも、下手に計算するととても時間がかかります。例えば $g^{12345678} \bmod p$ を求めてみましょう。</p>
+
+<pre class="cell">
+p = 2**31 - 1
+g = 7
+x = 12345678
+
+g**x % p
+</pre>
+
+<pre>
+700333026
+</pre>
+
+<pre class="cell">
+%timeit g**x % p
+</pre>
+
+<pre>
+10 s ± 5.36 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+
+<p>10秒もかかりました。<code>g**p</code> にもなると、非常に長い時間がかかります。</p>
+
+<p>そこで、$p$ で割った余りの世界で累乗を計算するもっと効率の良いプログラムを考えてみましょう。次のものは Claude 3.5 Sonnet に書いてもらいました。</p>
+
+<pre class="cell">
+def power_mod(base, exponent, modulus):
+    """Compute (base^exponent) % modulus efficiently."""
+    result = 1
+    base = base % modulus
+    while exponent > 0:
+        if exponent % 2 == 1:
+            result = (result * base) % modulus
+        exponent = exponent >> 1
+        base = (base * base) % modulus
+    return result
+
+%timeit power_mod(g, x, p)
+</pre>
+
+<pre>
+3.58 μs ± 4.67 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
+</pre>
+
+<p>とても高速です。でも、実はPythonにはこれと同じ仕様の <code>pow()</code> という関数があります。</p>
+
+<pre class="cell">
+%timeit pow(g, x, p)
+</pre>
+
+<pre>
+2.11 μs ± 6.26 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
+</pre>
+
+<p>さて、準備はこれくらいにして、さっそくDiffie-Hellmanごっこをやってみましょう。</p>
+
+<p>まず、大きな素数 $p$ と適当な整数 $g$ を公開しておきます。</p>
+
+<p>オリジナルの論文では、各人が 1 から $p-1$ までの整数からランダムに一つ選ぶことになっています。でも、両端は自明（$g^1 = g$、$g^{p-1} = 1$）なので、ここでは 2 から $p-2$ までを選ぶことにします。通常の乱数ではなく、<a href="secrets.html">安全な乱数</a>を使います。<code>secrets.randbelow(n)</code> は0以上 <code>n</code> 未満の乱数を返します。
+</p>
+
+<pre class="cell">
+import secrets
+
+p = 2**31 - 1
+g = 7
+
+a = secrets.randbelow(p - 3) + 2  # Aliceの秘密鍵
+b = secrets.randbelow(p - 3) + 2  # Bobの秘密鍵
+</pre>
+
+<p>たまたま $a = 592671686$、$b = 1810300099$ が選ばれました。これらは秘密にしておきます。各自が公開するのは、$g^a \bmod p$ と $g^b \bmod p$ です。</p>
+
+<pre class="cell">
+pow(g, a, p)
+</pre>
+
+<pre>
+1807703963
+</pre>
+
+<pre class="cell">
+pow(g, b, p)
+</pre>
+
+<pre>
+330915996
+</pre>
+
+<p>これらを公開しても $a$、$b$ を求めるのはたいへんです。例えば $g^a = 1807703963$ を満たす $a$ を求めようとすれば</p>
+
+<pre class="cell">
+for a in range(1, p):
+    if pow(g, a, p) == 1807703963:
+        print(a)
+</pre>
+
+<p>を実行すればいいのですが、ループ1回につき1マイクロ秒とすれば、平均1000秒くらいかかります。実は、工夫すれば $\sqrt{p}$ のオーダーの計算量で解けます（Knuth, TAOCP Vol.3 p.10）ので、もっともっと $p$ を大きくして（具体的には2048ビット以上）、どんなコンピュータを使っても実用的な時間内には解けないようにしておく必要があります。</p>
+
+<p>さて、Aliceは $g^a = 1807703963$ を公開し、Bobは $g^b = 330915996$ を公開します。AliceはBobの公開した値を $a$ 乗して $(g^b)^a$ を求めます：</p>
+
+<pre class="cell">
+pow(330915996, a, p)
+</pre>
+
+<pre>
+1590368630
+</pre>
+
+<p>BobはAliceの公開した値を $b$ 乗して $(g^a)^b$ を求めます：</p>
+
+<pre class="cell">
+pow(1807703963, b, p)
+</pre>
+
+<pre>
+1590368630
+</pre>
+
+<p>$(g^a)^b = g^{ab} = (g^b)^a$ だから、これらは同じ値です。この $g^{ab} = 1590368630$ という値をパスワードとしてAliceとBobは秘密の通信をします。AliceとBob以外の者は、公開された $g^a$、$g^b$ を使っても $g^{ab}$ を求めることが（$p$ を十分大きくした場合、実用的な時間内には）できません。</p>
+
+<p>この鍵共有は、AliceとBobの2人に限らず、何人もの人がそれぞれ自分の $g^x$ を公開しておけば、相手の $g^x$ を自分の秘密鍵で累乗したものを鍵とすることで秘密の通信ができます。公開鍵暗号に似ていますが、何かを暗号化したわけではありません。</p>
+
+<p>具体的な実装については次のRFCをご覧ください：</p>
+
+<ul>
+  <li><a href="https://www.rfc-editor.org/rfc/rfc2631.html">RFC 2631: Diffie-Hellman Key Agreement Method</a></li>
+  <li><a href="https://www.rfc-editor.org/rfc/rfc3526.html">RFC 3526: More Modular Exponential (MODP) Diffie-Hellman groups for Internet Key Exchange (IKE)</a></li>
+</ul>
+
+<p>Pythonの実装としては <a href="https://cryptography.io">cryptography</a> パッケージがあります。ドキュメントの <a href="https://cryptography.io/en/latest/hazmat/primitives/asymmetric/dh/">Diffie-Hellman key exchange</a> の項をご覧ください。</p>
+
+<p>以上がDiffie-Hellmanの鍵共有ですが、現在のTLSではこれを楕円曲線上で行うことにより、より短いビット数で安全性を保っています。これについては光成滋生（herumi）さんによる次の記事をご覧ください。</p>
+
+<ul>
+  <li><a href="https://zenn.dev/herumi/articles/sd202203-ecc-1">楕円曲線暗号のPythonによる実装その1（有限体とECDH鍵共有）</a></li>
+  <li><a href="https://zenn.dev/herumi/articles/group-ec-ecdh">群と楕円曲線とECDH鍵共有</a></li>
+</ul>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-06-26 11:15:45 JST</time></p>
+</footer>
+</body>
+</html>

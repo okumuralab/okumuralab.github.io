@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <script src="../js/copypre.js"></script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -19,7 +20,9 @@
 <main>
 <h1>出生率と合計特殊出生率</h1>
 
-<p>2023年の<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai23/index.html">人口動態統計月報年計（概数）の概況</a>で、日本の合計特殊出生率（total fertility rate、TFR）が1.2になり、東京都の合計特殊出生率が0.99になったというので話題になった。</p>
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">低い方がいいわけではないが、（期間）合計特殊出生率は年齢分布を一定として計算するので、同じ合計特殊出生率でも年齢分布が違えば人口あたり生まれる子供の数は違うということか。そのうち計算してみよう <a href="https://t.co/tuklVlnz4O">https://t.co/tuklVlnz4O</a></p>&mdash; Haruhiko Okumura (@h_okumura) <a href="https://twitter.com/h_okumura/status/1804022283796930747?ref_src=twsrc%5Etfw">June 21, 2024</a></blockquote>
+
+<p>2023年の<a href="https://www.mhlw.go.jp/toukei/saikin/hw/jinkou/geppo/nengai23/index.html">人口動態統計月報年計（概数）の概況</a>で、日本の合計特殊出生率（total fertility rate、TFR）が1.2になり、東京都の合計特殊出生率が0.99になったというので話題になった。一方で、<a href="https://mainichi.jp/articles/20240621/k00/00m/040/032000c">「合計特殊出生率」は低い方がいい?　自治体別の数値の「うそ」</a>のような言説も流れた。</p>
 
 <p>出生率は人口1000人あたりの出生数であるが、合計特殊出生率は15〜49歳の女性の出生率を合計したものである。つまり、各年齢の出生率が変わらないと仮定したとき、女性が一生の間に産む子供の数が合計特殊出生率である。これが2未満だと人口が減っていくことになる。</p>
 
@@ -58,13 +61,19 @@ for x, y, s in zip(tfr, 出生率, 都道府県):
 <figure><img src="img/birthrate_tfr.svg" alt="出生率と合計特殊出生率"></figure>
 
 <p>こういう散布図を無理に直線であてはめる必要はない。それより、各都道府県の特徴を読み取れることが大切である。例えば合計特殊出生率が1.5近くある九州の各県の出生率が東京とほぼ同じなのはなぜか。</p>
+
+<p>ここまで書いたところでWataru Inoue氏から次のコメントをいただいた。</p>
+
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">左の普通の出生率だと男性や高齢者まで含むからバラつくが、右の15～49歳日本人女性人口に対する出生率だと都道府県単位ではこんな感じか。市町村単位だと違うだろうけど。<br><br>元記事にある合計特殊出生率と未婚率の関係は財務省も資料を出している<a href="https://t.co/BspqRIDWja">https://t.co/BspqRIDWja</a> <a href="https://t.co/xsAJ2Fm0Q9">https://t.co/xsAJ2Fm0Q9</a> <a href="https://t.co/cOJxZtWsBH">pic.twitter.com/cOJxZtWsBH</a></p>&mdash; Wataru Inoue (@Wataru__Inoue) <a href="https://twitter.com/Wataru__Inoue/status/1804765886143926334?ref_src=twsrc%5Etfw">June 23, 2024</a></blockquote>
+
+<p>上記コメントでご指摘いただいた財務省・財務総合政策研究所の<a href="https://www.mof.go.jp/pri/research/conference/fy2020/jinkou_report.htm">「人口動態と経済・社会の変化に関する研究会」報告書</a>の<a href="https://www.mof.go.jp/pri/research/conference/fy2020/jinkou_report06.pdf">第6章　合計特殊出生率と未婚率―都道府県データを用いた分析―</a>（PDF）にいろいろ分析がある。</p>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-06-21 17:30:33 JST</time></p>
+<p>Last modified: <time>2024-06-23 20:52:44 JST</time></p>
 </footer>
 </body>
 </html>

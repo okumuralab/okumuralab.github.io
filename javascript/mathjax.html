@@ -55,13 +55,6 @@ window.MathJax = {
 
 <p>ChromeやFirefoxではSVG方式、SafariではCommonHTML方式のMathJaxを読み込んでいます。本来はSVG方式のほうが大きい記号も出せて良いのですが、なぜかSafariでは表示がぼやけるようになってしまいました。また、CommonHTML方式の場合、英小文字の高さ（x-height）を本文に自動的に合わせますが、日本語環境ではうまくいかないこともあるので、切っています。インライン数式の書き方はデフォルトでは <code>\( ... \)</code> ですが、ここでは <code>$ ... $</code> に設定しています。SVG方式の場合のフォントキャッシュをグローバルに設定しています。</p>
 
-<div class="note">
-<p>もしIE11にも対応させたいなら、上記の前に次も必要かもしれません：</p>
-<pre>
-&lt;script src="https://polyfill.io/v3/polyfill.min.js?features=es6"&gt;&lt;/script&gt;
-</pre>
-</div>
-
 <p>数式の書き方はほぼLaTeX + amsmathのスタイル通りです。</p>
 
 <p>インライン数式を <code>$ ... $</code> に設定しましたが、ただの <span>$</span> を使いたい場合には <code>&lt;span&gt;$&lt;/span&gt;</code> と書きます。なお、<code>&lt;pre&gt; ... &lt;/pre&gt;</code> や <code>&lt;code&gt; ... &lt;/code&gt;</code> の中の <span>$</span> はインライン数式になりません。</p>
@@ -112,7 +105,7 @@ window.MathJax = {
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2023-06-17 21:30:40 JST</time>
+Last modified: <time>2024-06-26 12:59:19 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

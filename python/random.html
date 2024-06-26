@@ -32,6 +32,8 @@ random.randrange(1, 7)  # 1から6までの整数の乱数
 random.randint(1, 6)    # 1から6までの整数の乱数
 </pre>
 
+<p>次の NumPy による方法と違って、整数の乱数の範囲に制限はありません。</p>
+
 <p>本格的なシミュレーションで大量の乱数を必要とする場合には次の NumPy による方法を使います。</p>
 
 <h2>ライブラリ NumPy</h2>
@@ -48,6 +50,8 @@ import numpy as np
 np.random.random(10)             # 0以上1未満の一様乱数10個
 np.random.randint(1, 7, size=10) # 1以上7未満の整数の乱数10個
 </pre>
+
+<p><code>np.random.randint()</code> は64ビット整数の範囲でしか使えません。</p>
 
 <h3>新しい方法</h3>
 
@@ -69,6 +73,8 @@ rng.integers(1, 7, 10)   # 1以上7未満の整数の乱数10個の配列
 rng.exponential(3)       # 平均3の指数分布の乱数
 rng.exponential(3, 10)   # 平均3の指数分布の乱数10個の配列
 </pre>
+
+<p><code>rng.integers()</code> は64ビット整数の範囲でしか使えません。</p>
 
 <p>上の例のように「タネ（seed）」を与えるのがシミュレーションでの推奨です。同じタネからは同じ乱数列が生成されますので，あとで結果を再現できます。ゲームなどでは <code>rng = np.random.default_rng()</code> のように空にすると，再現性のない（毎回異なる）乱数列が得られます。</p>
 
@@ -226,7 +232,7 @@ import mlx.core as mx
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-06-17 10:05:42 JST</time></p>
+<p>Last modified: <time>2024-06-23 11:31:33 JST</time></p>
 </footer>
 </body>
 </html>
