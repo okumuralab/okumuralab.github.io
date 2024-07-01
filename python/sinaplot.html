@@ -29,7 +29,7 @@
 
 <p>オリジナルの著者たちによる <a href="https://cran.r-project.org/web/packages/sinaplot/vignettes/SinaPlot.html">sinaplot</a> パッケージがR用に作られています。Rのggplot2でもsinaplotが描けます。</p>
 
-<p>Python用にはRのggplot2を模した <a href="https://plotnine.org">plotnine</a> パッケージでsinaplotが描けます。Seabornを拡張した <a href="https://github.com/mparker2/seaborn_sinaplot">seaborn_sinaplot</a> パッケージもありましたが、最新のSeabornでは使えなくなっています（Seaborn 0.12.2までなら動きますが、新しめのNumPyで使うには2箇所の <code>np.bool</code> を <code>bool</code> に書き換える必要があります）。</p>
+<p>後で例を挙げますが、Python用にはRのggplot2を模した <a href="https://plotnine.org">plotnine</a> パッケージでsinaplotが描けます。Seabornを拡張した <a href="https://github.com/mparker2/seaborn_sinaplot">seaborn_sinaplot</a> パッケージもありましたが、最新のSeabornでは使えなくなっています（Seaborn 0.12.2までなら動きますが、新しめのNumPyで使うには2箇所の <code>np.bool</code> を <code>bool</code> に書き換える必要があります）。</p>
 
 <p>このページの図を描いたのは、独自実装の次のコードです（ChatGPT-4oに手伝ってもらいました）：</p>
 
@@ -105,13 +105,30 @@ df = pd.DataFrame(data=d)
 sinaplot(x="name", y="value", data=df, violin=False, title="Sinaplot Example")
 </pre>
 
+<p>上にも書きましたが、Rのggplot2を模した <a href="https://plotnine.org">plotnine</a> パッケージの <a href="https://plotnine.org/reference/geom_sina.html">geom_sina</a> を使ってもsinaplotが描けます。</p>
+
+<pre class="cell">
+import seaborn as sns
+from plotnine import ggplot, aes, geom_sina
+
+penguins = sns.load_dataset("penguins")
+
+p = (ggplot(penguins, aes(x='species', y='body_mass_g'))
+     + geom_sina())
+
+p.show()
+</pre>
+
+<figure><img src="img/plotnine_sinaplot.svg" alt="Sinaplot: パーマーペンギンの体重分布"></figure>
+
+<p>この実装では、ご覧のように、群ごとの点の密度が一定ではないようです。</p>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-05-30 14:58:10 JST</time></p>
+<p>Last modified: <time>2024-07-01 10:36:00 JST</time></p>
 </footer>
 </body>
 </html>
