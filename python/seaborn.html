@@ -36,25 +36,28 @@ sns.get_dataset_names()
  'car_crashes',
  'diamonds',
  'dots',
+ 'dowjones',
  'exercise',
  'flights',
  'fmri',
- 'gammas',
  'geyser',
+ 'glue',
+ 'healthexp',
  'iris',
  'mpg',
  'penguins',
  'planets',
+ 'seaice',
  'taxis',
  'tips',
  'titanic']
 </pre>
 
-<div class="note">
+<aside>
 <p>seaborn や sns という短縮名は、どうやら <a href="https://en.wikipedia.org/wiki/Sam_Seaborn">Samuel Norman Seaborn</a> から来ているようです（<a href="https://github.com/mwaskom/seaborn/issues/229">Import seaborn as ??</a>、<a href="https://stackoverflow.com/questions/41499857">Seaborn - Why import as sns?</a>）。</p>
-</div>
+</aside>
 
-<p>現時点で19通りのデータがあります。これらは <a href="https://github.com/mwaskom/seaborn-data">seaborn-data</a> レポジトリからオンデマンドで取ってきて ~/seaborn-data にキャッシュされます。試しに iris データセットを取ってきてみましょう。</p>
+<p>現時点で22通りのデータがあります。これらは <a href="https://github.com/mwaskom/seaborn-data">seaborn-data</a> レポジトリからオンデマンドで取ってきて ~/seaborn-data にキャッシュされます。試しに iris データセットを取ってきてみましょう。</p>
 
 <pre class="cell">
 iris = sns.load_dataset("iris")
@@ -76,15 +79,35 @@ sns.set_style("darkgrid")
 
 <p>スタイルは <code>white</code>、<code>dark</code>、<code>whitegrid</code>、<code>darkgrid</code>、<code>ticks</code> から選びます。</p>
 
+<p>2022年の Seaborn 0.12 からは、まったく新しい <a href="https://seaborn.pydata.org/tutorial/objects_interface.html"><code>seaborn.objects</code> インターフェース</a>が使えるようになりました。これは Wilkinson の Grammar of Graphics という思想に基づいて作られたものです。同じ思想に基づいて作られたものでは R の ggplot2 が有名で、Python でも ggplot2 を模した <a href="https://plotnine.org">plotnine</a> が2017年に作られました（<a href="sinaplot.html">Sinaplot</a> のところにも書きました）が、<code>seaborn.objects</code> も同じ流れを汲むものです。</p>
+
+<pre class="cell">
+import seaborn as sns
+import seaborn.objects as so
+
+penguins = sns.load_dataset("penguins")
+so.Plot(penguins, x="bill_length_mm", y="bill_depth_mm").add(so.Dot()).show()
+</pre>
+
+<p>この最後の1行は、読みやすいように、次のように書くことが一般的です。</p>
+
+<pre class="cell">
+(
+    so.Plot(penguins, x="bill_length_mm", y="bill_depth_mm")
+    .add(so.Dot())
+    .show()
+)
+</pre>
+
+<p>保存は上の <code>.show()</code> を <code>.save("foo.svg", bbox_inches="tight")</code> に置き換えてもできますし、従来通りに Matplotlib を使って <code>plt.savefig("foo.svg", bbox_inches="tight")</code> としてもできます。</p>
+
+<figure><img src="img/seaborn_penguins.svg" alt="Penguins"></figure>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-08-10 13:52:36 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2024-07-01 19:31:29 JST</time></p>
 </footer>
 </body>
 </html>

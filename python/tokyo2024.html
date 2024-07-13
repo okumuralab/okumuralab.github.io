@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/tokyo2024.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2024年の東京都知事選</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>2024年の東京都知事選</h1>
+
+<p>2024年7月7日の東京都知事選には、56人が立候補した。小池百合子氏と蓮舫氏の一騎打ちと思いきや、YouTubeを駆使した石丸伸二氏が若者に支持されて2位。蓮舫氏は3位に。まったく無名だったAIエンジニアの安野貴博氏も善戦した。</p>
+
+<p>まずは56人の得票数の分布。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+
+# 56人の候補の得票数
+hyo = [2918015, 1658363, 1283262, 267699, 154638, 121715, 110196,
+       96222, 83600, 38054, 23825, 9685, 7408, 5419, 4874, 3245, 2761,
+       2339, 2174, 2152, 2035, 1951, 1833, 1747, 1281, 1240, 1232,
+       1153, 894, 882, 833, 812, 792, 759, 691, 676, 669, 612, 588,
+       578, 572, 560, 521, 481, 466, 446, 417, 371, 361, 351, 343,
+       329, 306, 302, 297, 211]
+
+# 1万票以上の候補の氏名
+kou = ["小池 百合子", "石丸 伸二", "蓮舫", "田母神 俊雄",
+       "安野 貴博", "内海 聡", "ひまそら あかね", "石丸 幸人",
+       "桜井 誠", "清水 国明", "ドクター・中松"]
+
+plt.figure(figsize=(6.4, 6.4))
+plt.plot(range(1, 57), hyo, "o")
+for i, h, k in zip(range(1, 57), hyo, kou):
+    plt.text(i, h, k)
+plt.yscale("log")
+plt.xlabel("順位")
+plt.ylabel("票")
+plt.savefig("tokyo2024a.svg", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/tokyo2024a.svg" alt="2024年の東京都知事選の得票分布"></figure>
+
+<p><a href="https://www3.nhk.or.jp/news/html/20240707/k10014502181000.html">NHK</a>と<a href="https://news.yahoo.co.jp/pages/20240707">JNN</a>の出口調査でわかった年代別の投票先が興味深い。</p>
+
+<figure>
+  <img src="img/K10014502181_2407072128_0707230905_02_13.jpg" alt="NHK出口調査">
+  <img src="img/auted_bmaqieoqtwjdusad_1720351672867.jpg" alt="JNN出口調査">
+</figure>
+
+<p>ただし、この図は各年代が同じ重みで描いてある。これに都民の年齢分布と、年齢別の投票率を掛けなければならない。</p>
+
+<p><a href="https://www.toukei.metro.tokyo.lg.jp/juukiy/2024/jy24000001.htm">住民基本台帳による東京都の世帯と人口（町丁別・年齢別） 令和6年1月</a>の第2表（年齢（各歳）別1年間の人口増減（日本人））と、前回（令和2年）の都知事選の<a href="https://www.senkyo.metro.tokyo.lg.jp/election/nendaibetuchousa/tochiji-nendaibetu2014/">年代別推定投票率</a>を使う。</p>
+
+<pre class="cell">
+# 東京都の人口 2024年1月1日現在 0歳-90歳以上
+population = [83287, 87688, 89771, 92574, 94667, 100157, 101887,
+              104402, 106383, 104663, 105363, 103198, 102932, 104979,
+              104030, 104090, 103185, 101619, 99904, 112699, 116858,
+              126990, 135690, 159727, 166693, 178290, 181466, 182543,
+              177600, 183160, 172027, 170947, 169376, 164826, 163908,
+              170145, 172359, 173411, 178547, 185874, 186222, 185265,
+              185369, 189085, 195478, 200395, 202937, 207960, 211566,
+              224727, 232254, 228436, 225202, 218453, 213717, 210596,
+              213679, 154706, 196603, 181114, 166672, 156431, 148003,
+              144050, 137438, 133985, 123280, 123281, 124912, 123585,
+              124741, 132321, 135737, 146017, 166797, 164168, 165898,
+              111391, 97597, 117159, 123376, 116021, 113035, 100271,
+              83717, 77425, 80529, 72365, 68863, 54696, 229046]
+
+# 年代別推定投票率（前回）
+lo = [18, 19, 20, 21, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80]
+hi = [19, 20, 21, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 91]
+rate = [60.58, 47.92, 45.6, 39.19, 41.89, 48.15, 52.15, 55.61, 57.28,
+        59.3, 61.29, 62.53, 64.77, 65.53, 64.58, 45.79]
+
+x = [sum(population[a:b]) * r / 100 for a, b, r in zip(lo, hi, rate)]
+
+lo = [0, 5, 7, 9, 11, 13]
+hi = [5, 7, 9, 11, 13, 16]
+
+y = [sum(x[a:b]) for a, b, r in zip(lo, hi, x)]
+
+plt.figure(figsize=(6.4, 4.8))
+plt.clf()
+plt.barh(range(6,0,-1), y,
+         tick_label=["10代・20代", "30代", "40代", "50代", "60代", "70代〜"])
+plt.savefig("tokyo2024b.svg", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/tokyo2024b.svg" alt="2024年の東京都知事選の得票分布"></figure>
+
+<p>これに合わせてNHKの図をリサイズすればいい。と思ったが、すでにやってくださっていたかたがおられたので、引用しておく：</p>
+
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">おもしろそうだから雑に作ってみた（同じ画像をスクショして伸縮）。<br>人口は令和6年1月 <a href="https://t.co/RmSTY6P97z">https://t.co/RmSTY6P97z</a><br>投票率は前回の（今回のが見つからなかった）<a href="https://t.co/aCeZz8v780">https://t.co/aCeZz8v780</a><br>（15〜19歳→18〜19歳は単純に2/5で計算した） <a href="https://t.co/ma9LUJtqn5">https://t.co/ma9LUJtqn5</a> <a href="https://t.co/lKIXJYR6a6">pic.twitter.com/lKIXJYR6a6</a></p>&mdash; ファッションようじょ (@D_Plius) <a href="https://twitter.com/D_Plius/status/1810126864599621911?ref_src=twsrc%5Etfw">July 8, 2024</a></blockquote>
+
+<p>モザイクプロット風に帯の幅を変えるほうがいいのかもしれない：</p>
+
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">元記事のデータを使ってモザイク図的に作るとこんな感じになる（帯グラフの高さが世代別投票数に比例）。私はこの書き方が好きで２、３回やったことがあるんだけど、もっとカテゴリ間に差が大きくないとあまり嬉しくないかもしれない。面積の比較は難しいということを改めて感じる。　<a href="https://twitter.com/hashtag/info_g?src=hash&amp;ref_src=twsrc%5Etfw">#info_g</a> <a href="https://t.co/eo9UUvKz7m">https://t.co/eo9UUvKz7m</a> <a href="https://t.co/Zfw0NkUN6Z">pic.twitter.com/Zfw0NkUN6Z</a></p>&mdash; Takahiro Sumiya (@gnutar) <a href="https://twitter.com/gnutar/status/1810787940710371367?ref_src=twsrc%5Etfw">July 9, 2024</a></blockquote>
+
+<p>越桐先生も<a href="https://koshix.blogspot.com/2024/07/blog-post_09.html">東京都知事選挙（５）</a>でモザイクプロットを描かれている。</p>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-07-10 10:10:53 JST</time></p>
+</footer>
+</body>
+</html>
