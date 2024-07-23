@@ -4,7 +4,7 @@
 <link rel="canonical" href="https://okumuralab.org/~okumura/python/mexican.html">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>メキシカンハット</title>
+<title>メキシカンハット（3Dグラフ、等高線）</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <script src="../js/copypre.js"></script>
@@ -16,11 +16,11 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>メキシカンハット</h1>
+<h1>メキシカンハット（3Dグラフ、等高線）</h1>
 
 <p>3次元で <a href="https://en.wikipedia.org/wiki/Mexican_hat_wavelet">Mexican hat</a> を描いてみます：</p>
 
-<pre>
+<pre class="cell">
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -32,29 +32,31 @@ t = np.linspace(-4, 4)
 x, y = np.meshgrid(t, t)
 z = hat(x, y)
 
-fig, ax = plt.subplots(figsize=(8,5), subplot_kw=dict(projection="3d"))
-ax.plot_surface(x, y, z)
+plt.figure(figsize=(8, 6))
+ax = plt.axes(projection='3d')
+ax.plot_surface(x, y, z, cmap='viridis')
 </pre>
 
-<figure><img src="img/mexican.png" alt="Mexican hat"></figure>
+<figure><img src="img/mexican.svg" alt="Mexican hat"></figure>
 
 <p>対話型環境なら、マウスでぐりぐりできます。</p>
 
 <p>等高線を描くには <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.contour.html">plt.contour</a> を使います：</p>
 
-<pre>
+<pre class="cell">
 plt.contour(x, y, z) # 塗りつぶすなら plt.contourf(x, y, z)
 </pre>
 
 <p>いろいろ指定できます：</p>
 
-<pre>
+<pre class="cell">
+plt.figure(figsize=(6.4, 6.4))
 cs = plt.contour(x, y, z, levels=[-0.06,-0.04,-0.02,0,0.1,0.2,0.3])
 plt.axis("scaled")  # または plt.axis("equal")
 cs.clabel()  # あるいは例えば cs.clabel([-0.04,0,0.2], fmt="%g")
 </pre>
 
-<figure><img src="img/mexican2.png" alt="Mexican hat"></figure>
+<figure><img src="img/mexican2.svg" alt="Mexican hat"></figure>
 
 <p><code>fmt=...</code> オプションは、例えば <code>"%.2f"</code> なら小数第2位までに揃えて表示、<code>"%g"</code> なら精度を保ちできるだけ短い表示にします。</p>
 
@@ -62,7 +64,7 @@ cs.clabel()  # あるいは例えば cs.clabel([-0.04,0,0.2], fmt="%g")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-10 15:34:24 JST</time></p>
+<p>Last modified: <time>2024-07-14 17:23:45 JST</time></p>
 </footer>
 </body>
 </html>

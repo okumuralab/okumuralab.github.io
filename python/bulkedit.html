@@ -11,17 +11,20 @@
 </head>
 <body>
 
+<header>
 <nav id="breadcrumbs">
 <a href="../">ホーム</a> &gt;
 <a href="./">Python</a> &gt;
 </nav>
+</header>
 
+<main>
 <h1>一括編集</h1>
 
 <p><a href="https://www.mathjax.org">MathJax</a> がバージョン3になった。以前は</p>
 
 <pre>
-<code>&lt;script type="text/x-mathjax-config"&gt;
+&lt;script type="text/x-mathjax-config"&gt;
 MathJax.Hub.Config({
   tex2jax: {
     inlineMath: [['$','$']],
@@ -31,12 +34,12 @@ MathJax.Hub.Config({
 });
 &lt;/script&gt;
 &lt;script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"&gt;&lt;/script&gt;
-</code></pre>
+</pre>
 
 <p>などと書いていたものを</p>
 
 <pre>
-<code>&lt;script&gt;
+&lt;script&gt;
 MathJax = {
   chtml: {
     matchFontHeight: false
@@ -49,14 +52,14 @@ MathJax = {
 &lt;script id="MathJax-script" async
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"&gt;
 &lt;/script&gt;
-</code></pre>
+</pre>
 
 <p>に一括置換したい。</p>
 
 <p>上書きは怖いので，カレントディレクトリに <code>new</code> というサブディレクトリを作り，そこに書き出すことにした。<a href="https://docs.python.org/3/library/re.html">正規表現</a>をうまく使うことがキモである：</p>
 
 <pre>
-<code>#! /usr/bin/env python3
+#! /usr/bin/env python3
 
 import sys
 import re
@@ -83,14 +86,14 @@ MathJax = {
     if text != orig:
         with open('new/' + arg, 'w') as f:
             f.write(text)
-</code></pre>
+</pre>
 
 <p>うまくいったようである。</p>
 
 <p>別の例として，<code>&lt;pre&gt;...&lt;/pre&gt;</code> を <code>&lt;pre&gt;&lt;code&gt;...&lt;/code&gt;&lt;/pre&gt;</code> に直すコード：</p>
 
 <pre>
-<code>for arg in sys.argv[1:]:
+for arg in sys.argv[1:]:
     with open(arg) as f:
         orig = f.read()
     text = orig
@@ -99,12 +102,12 @@ MathJax = {
     if text != orig:
         with open('new/' + arg, 'w') as f:
             f.write(text)
-</code></pre>
+</pre>
 
 <p>さらに別の例として，<code>&lt;pre&gt;...&lt;/pre&gt;</code> の中の <code>&lt;code&gt;</code> を <code>&lt;code class="prom"&gt;</code> に直す：</p>
 
 <pre>
-<code>def foo(x):
+def foo(x):
     t = x.group(0)
     while True:
         u = re.sub('&lt;code&gt;', '&lt;code class="prom"&gt;', t)
@@ -120,16 +123,13 @@ for arg in sys.argv[1:]:
     if text != orig:
         with open('new/' + arg, 'w') as f:
             f.write(text)
-</code></pre>
+</pre>
+</main>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2020-02-11 15:45:56</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2024-07-23 12:35:46 JST</time></p>
 </body>
 </html>

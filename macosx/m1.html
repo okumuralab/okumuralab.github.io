@@ -178,33 +178,18 @@ curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ho
 
 <h2>Emacs</h2>
 
-<p><a href="https://emacsformacosx.com">Emacs for Mac OS X</a> にあるものは arm64 対応のユニバーサルバイナリである。下の自分でビルドしたものと比べて，日本語入力中に画面表示がちらつくことがあるが，許容範囲内であろう。</p>
-
-<p>初回の起動は右クリックして「開く」。そのままではディスクにアクセスできないので，システム環境設定の「セキュリティとプライバシー」の「プライバシー」で「フルディスクアクセス」を許可する必要がある。私の場合，なぜかフルディスクアクセスを許可しても外付けHDDにアクセスできなかったが，ターミナルから一度 <code>open -a Emacs /Volumes/opt</code> と打ち込んで強制的にアクセスさせたら，以後は問題なくなった。</p>
-
-<p>Homebrew 環境でソースからビルドするには次のようにする：</p>
+<p><a href="https://emacsformacosx.com">Emacs for Mac OS X</a> にもバイナリがあるが、ここでは自分でビルドする。</p>
 
 <pre>
-wget -N http://ftp.gnu.org/gnu/emacs/emacs-28.2.tar.xz
-wget -N ftp://ftp.math.s.chiba-u.ac.jp/emacs/emacs-28.2-mac-9.1.tar.gz
-tar xvzf emacs-28.2.tar.xz
-tar xvzf emacs-28.2-mac-9.1.tar.gz
-cd emacs-28.2
-patch -p1 < ../emacs-28.2-mac-9.1/patch-mac
-cp -R ../emacs-28.2-mac-9.1/mac .
-cp ../emacs-28.2-mac-9.1/src/* src/
-cp ../emacs-28.2-mac-9.1/lisp/term/mac-win.el lisp/term/
-cp nextstep/Cocoa/Emacs.base/Contents/Resources/*.icns mac/Emacs.app/Contents/Resources/
+wget -N https://ftp.gnu.org/gnu/emacs/emacs-29.4.tar.xz
+tar xvzf emacs-29.4.tar.xz
+cd emacs-29.4
 ./configure --prefix=/opt/homebrew --without-x
 make 
 make install
 </pre>
 
-<p>これで mac サブディレクトリの中にできる Emacs.app を /Applications にドラッグ＆ドロップでコピーする。</p>
-
-<p>上のようにコンパイルした場合、補助ファイルは /usr/local/share/emacs ではなく /opt/homebrew/share/emacs に入ることに注意。</p>
-
-<p>ARM 版 Homebrew で <code>brew install emacs</code> でインストールされる emacs はターミナル版。<code>brew install --cask emacs</code> でインストールされるものは <a href="https://emacsformacosx.com">Emacs for Mac OS X</a> のもの。</p>
+<p>これで nextstep サブディレクトリの中にできる Emacs.app を /Applications にドラッグ＆ドロップする。</p>
 
 <h2>Python</h2>
 
@@ -477,7 +462,7 @@ mv usr/local/texlive/2020/bin/custom /usr/local/texlive/2020/bin/
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-09-18 21:22:52 JST</time>
+Last modified: <time>2024-07-16 17:35:04 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

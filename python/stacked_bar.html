@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/stacked_bar.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>棒グラフ・積み重ね棒グラフ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>棒グラフ・積み重ね棒グラフ</h1>
+
+<p>2022年の学校保健統計調査の<a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000040120027">身長の年齢別分布</a>から男女17歳の身長を棒グラフにする。重なりがわかるように、少し透明（<code>alpha=0.7</code>）にした。元データは ‰ で 0.1 刻みだが、10倍して整数に直した。丸め誤差のため、合計 10000 にならない。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+
+# 高等学校 男/女 17歳 137-198cm 1/10000
+
+m17 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 5, 3, 9, 20, 22,
+       44, 54, 82, 123, 154, 222, 294, 339, 443, 524, 587, 622, 626,
+       723, 693, 692, 656, 579, 499, 400, 367, 302, 234, 192, 137,
+       109, 80, 49, 32, 30, 18, 12, 12, 1, 2, 0, 1, 1, 1, 0, 0, 1]
+
+f17 = [3, 1, 3, 3, 4, 10, 16, 20, 39, 54, 76, 139, 184, 262, 342, 376,
+       481, 599, 649, 721, 715, 720, 692, 731, 628, 562, 435, 394,
+       292, 253, 184, 129, 102, 64, 40, 27, 16, 12, 8, 8, 2, 1, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+plt.bar(range(137, 199), m17, alpha=0.7, label="男性")
+plt.bar(range(137, 199), f17, alpha=0.7, label="女性")
+plt.legend()
+plt.xlabel("身長（cm）")
+plt.ylabel("割合（1万人中）")
+</pre>
+
+<figure><img src="img/240715a.svg" alt="17歳男女の身長"></figure>
+
+<p>男女ともほぼ正規分布である。男女を合わせたら2峰になるだろうか。積み重ね棒グラフにしてみる。</p>
+
+<pre class="cell">
+plt.bar(range(137, 199), m17, label="男性")
+plt.bar(range(137, 199), f17, bottom=m17, label="女性")
+plt.legend()
+plt.xlabel("身長（cm）")
+plt.ylabel("割合（1万人中）")
+</pre>
+
+<figure><img src="img/240715b.svg" alt="17歳男女の身長"></figure>
+
+<p>2峰というよりは頭が平らなカルデラのようになった。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-07-15 13:27:21 JST</time></p>
+</footer>
+</body>
+</html>
