@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/rsa.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RSA暗号</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>RSA暗号</h1>
+
+<p>RSA暗号は公開鍵暗号で最初に考えられた方式です。ここでは論文 <span lang="en">R. L. Rivest, A. Shamir, and L. Adleman, “A Method for Obtaining Digital Signatures and Public-Key Cryptosystems”, CACM <b>21</b>, No.2 (1978)</span> に従って説明します。</p>
+
+<p>公開鍵暗号は、メッセージ $M$ を暗号化する関数 $E(M)$ と、それを復号する（つまり元に戻す）関数 $D(E(M)) = M$ から成ります。$E()$ は公開しますが、$D()$ は秘密にしておきます。$E()$ から $D()$ を導くことは簡単にはできません。</p>
+
+<p>RSA暗号では $D(E(M)) = M$ だけでなく $E(D(M)) = M$ も成り立ちます。暗号化されていないメッセージ $M$ を復号するというのは変な気がしますが、RSA暗号ではどんなメッセージも何らかのメッセージを暗号化したものですので、$E(D(M))$ という操作が可能です。この性質はデジタル署名に使います。</p>
+
+<p>このような性質を持つ $E()$ と $D()$ の簡単な例を挙げます。</p>
+
+<pre class="cell">
+n = 2773
+e = 17
+d = 157  
+
+def E(M):
+    return pow(M, e, n)
+
+def D(M):
+    return pow(M, d, n)
+</pre>
+
+<p>ここで <code>pow(M, e, n)</code> は <code>M</code> の <code>e</code> 乗を <code>n</code> で割った余りを求めるPythonの組み込み関数です。メッセージ <code>M</code> は 0 以上 <code>n</code> 未満の整数とします。</p>
+
+<p>本当にこれが $D(E(M)) = M$ や $E(D(M)) = M$ を満たすでしょうか。</p>
+
+<pre class="cell">
+E(1234)
+</pre>
+
+<pre>
+1793
+</pre>
+
+<pre class="cell">
+D(E(1234))
+</pre>
+
+<pre>
+1234
+</pre>
+
+<pre class="cell">
+E(D(1234))
+</pre>
+
+<pre>
+1234
+</pre>
+
+<pre class="cell">
+for i in range(n):
+    if D(E(i)) != i:
+        print(i)
+</pre>
+
+<p>どうやらどんな $M$ についても $D(E(M)) = E(D(M)) = M$ が成り立ちそうです。</p>
+
+<p>要は $E(M) = M^e \bmod n$、$D(M) = M^d \bmod n$ なので $D(E(M)) = E(D(M))$ は自明ですが、$D(E(M)) = M$ になるためには $e$、$d$、$n$ をうまく選ばなければなりません。また、$E()$ すなわち $e$、$n$ が公開されても $d$ が簡単に導けないことが必要ですが、そのためには $n$ をもっと大きくする必要があります。</p>
+
+<p>この後の話は、多少の数学の知識が必要です。</p>
+
+<p>まず、二つの非常に大きい（1000ビット規模の）素数 $p$、$q$ を選び、$n = pq$ とします。上の簡単な例では $p=47$、$q=59$ で、$n = pq = 2773$ です。</p>
+
+<p>$\phi(n) = (p-1)(q-1) = 46 \times 58 = 2668$ を計算します。$\phi(n)$ はオイラー（Euler）のトーシェント（totient）関数と呼ばれ、一般には $n$ と互いに素な 1 以上 $n$ 以下の自然数の個数と定義されますが、$p$、$q$ が素数の場合は $\phi(p) = p-1$、$\phi(pq) = (p-1)(q-1)$ が成り立ちます。</p>
+
+<p>$\phi(n)$ と互いに素な数 $d$ を選びます。ここでは $d = 157$ としました。</p>
+
+<p>$de \bmod \phi(n) = 1$ となるような $e$ を選びます。ここでは $e = 17$ としました。$de = 157 \times 17 = 2669$ ですから確かに $de \bmod 2668 = 1$ になっています。</p>
+
+<p>これで $D(E(M)) = (M^e)^d = M^{de} = M^{1 + k\phi(n)}$ ですが、オイラーの定理 $M^{\phi(n)} \bmod n = 1$ を使えば $D(E(M)) = M$ が示されます。</p>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-07-26 10:34:35 JST</time></p>
+</footer>
+</body>
+</html>
