@@ -67,7 +67,7 @@ df = pd.read_csv("test.csv")
 
 <p>表形式のデータの場合は JSON より CSV のほうが無駄がないですね。</p>
 
-<p>CSV ファイルの構造は <a href="https://datatracker.ietf.org/doc/html/rfc4180">RFC 4180</a> という文書で定められています。それによれば、1行目（ヘッダ行）は、なくてもかまいません。行末は CRLF（0D 0A の2バイト）とされていますが、現実には LF（0A の1バイト）だけの場合もよくあります。文字コードは特に定められていませんが、国際化を考えれば UTF-8 が望ましいでしょう（JSON は UTF-8 と定められています）。ただし、日本語環境の Excel で単純に開く場合は、CP932（拡張 Shift JIS）または BOM 付き UTF-8 のどちらかでないと文字化けします。</p>
+<p>CSV ファイルの構造は <a href="https://www.rfc-editor.org/rfc/rfc4180.html">RFC 4180</a> という文書で定められています。それによれば、1行目（ヘッダ行）は、なくてもかまいません。行末は CRLF（0D 0A の2バイト）とされていますが、現実には LF（0A の1バイト）だけの場合もよくあります。文字コードは特に定められていませんが、国際化を考えれば UTF-8 が望ましいでしょう（JSON は UTF-8 と定められています）。ただし、日本語環境の Excel で単純に開く場合は、CP932（拡張 Shift JIS）または BOM 付き UTF-8 のどちらかでないと文字化けします。</p>
 
 <p>RFC 4180 では定められていませんが、CSV には次のように通常 <code>#</code> で始まるコメントを付けることがあります：</p>
 
@@ -198,7 +198,7 @@ AddType text/csv;charset=Shift_JIS csv
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2023-10-13 20:08:49 JST</time>
+Last modified: <time>2024-07-26 11:33:35 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

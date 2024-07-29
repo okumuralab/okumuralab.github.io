@@ -29,17 +29,17 @@ window.onload = function() {
 
 <h1>日本人の平均寿命</h1>
 
-<p><em>[2022-07-29]</em> 2021年までのデータに基づいて図を描き直した。</p>
+<p>[2024-07-26] 2023年までのデータに基づいて図を描き直した。</p>
 
 <p>Rで描いた<a href="../stat/life_expectancy.html">日本人の平均寿命</a>のPython版である。</p>
 
-<p>e-Statで公開されている簡易生命表の「年齢」および男女「生存数」（10万人あたり）を抜き出したCSVファイル <a href="../stat/data/lifetable2021.csv">lifetable2021.csv</a> を読んでプロットする。</p>
+<p>e-Statで<a href="https://www.e-stat.go.jp/stat-search/files?tclass=000001219680&cycle=7&year=20230">公開</a>されている簡易生命表の「年齢」および男女「生存数」（10万人あたり）を抜き出したCSVファイル <a href="../stat/data/lifetable2023.csv">lifetable2023.csv</a> を読んでプロットする。</p>
 
-<pre>
+<pre class="cell">
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("<span class="dirurl1">https://okumuralab.org/~okumura/</span>stat/data/lifetable2021.csv")
+df = pd.read_csv("<span class="dirurl1">https://okumuralab.org/~okumura/</span>stat/data/lifetable2023.csv")
 plt.plot(df.Age, df.Male / 100000)
 plt.plot(df.Age, df.Female / 100000)
 plt.yticks([0, 0.5, 1])
@@ -47,22 +47,34 @@ plt.grid()
 plt.legend(["男", "女"])
 plt.xlabel("年齢")
 plt.ylabel("生存率")
-plt.savefig("220729a.svg", bbox_inches="tight")
+plt.savefig("240726a.svg", bbox_inches="tight")
 </pre>
 
-<figure><img src="img/220729a.svg" alt="年齢と生存率"></figure>
+<figure><img src="img/240726a.svg" alt="年齢と生存率"></figure>
 
-<p>2021年の平均寿命は男81.47歳，女87.57歳であるが，寿命の中央値（上の図の半減期）にあたる寿命中位数は男84歳台，女90歳台である。これは上の図を描いた後で <code>plt.xlim(82, 92)</code> などと打ち込んで右の方を拡大すると読み取りやすい。平均より中央値のほうが意味があるだろうし，自分（男性）としても，寿命が81歳台と考えるより84歳台と考えるほうがうれしい。さらに，現在の年齢（70歳）を1として描き直すと，半減期は87歳近くまで伸びるので，さらにうれしい。</p>
+<p>2023年の平均寿命は男81.09歳，女87.14歳であるが，寿命の中央値（上の図の半減期）にあたる寿命中位数は男84歳ほど，女90歳ほどである。これは上の図を描いた後で <code>plt.xlim(82, 92)</code> などと打ち込んで右の方を拡大すると読み取りやすい。平均より中央値のほうが意味があるだろうし，自分（男性）としても，寿命が81歳と考えるより84歳と考えるほうがうれしい。さらに，現在の年齢（72歳）を1として描き直すと，半減期は86〜87歳まで伸びるので，さらにうれしい。</p>
 
 <p>上のグラフを微分したものに相当するものは，簡易生命表では「死亡数」として10万人あたりの値が出ている。これを上と同様にプロットしたものが次の図である。</p>
 
-<figure><img src="img/221010a.svg" alt="年齢と死亡数"></figure>
+<pre class="cell">
+import numpy as np
 
-<p>死亡数の最頻値は男88歳，女93歳である。女性の右端が上がっているのは，最後の階級（105歳）がそれ以上の歳も含んでいるためであろう。</p>
+plt.plot(df.Age[:-1], -np.diff(df.Male) / 100000)
+plt.plot(df.Age[:-1], -np.diff(df.Female) / 100000)
+plt.grid()
+plt.legend(["男", "女"])
+plt.xlabel("年齢")
+plt.ylabel("死亡率/10万")
+plt.savefig("240726b.svg", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/240726b.svg" alt="年齢と死亡数"></figure>
+
+<p>死亡数の最頻値は男88歳，女92歳である。</p>
 
 <p>ついでに平均寿命の推移も：</p>
 
-<pre>
+<pre class="cell">
 df2 = pd.read_csv("<span class="dirurl1">https://okumuralab.org/~okumura/</span>stat/data/life_expectancy_Japan.csv",
                   comment="#")
 plt.plot(df2.Year, df2.Male, "o-")
@@ -71,14 +83,14 @@ plt.xlabel("年")
 plt.ylabel("平均寿命")
 plt.grid()
 plt.legend(["男", "女"])
-plt.savefig("220729b.svg", bbox_inches="tight")
+plt.savefig("240726c.svg", bbox_inches="tight")
 </pre>
 
-<figure><img src="img/220729b.svg" alt="平均寿命の推移"></figure>
+<figure><img src="img/240726c.svg" alt="平均寿命の推移"></figure>
 
 <p>1990年以降に限ってプロット：</p>
 
-<pre>
+<pre class="cell">
 df3 = df2[df2.Year >= 1990]
 plt.plot(df3.Year, df3.Male, "o-")
 plt.plot(df3.Year, df3.Female, "o-")
@@ -86,30 +98,26 @@ plt.xlabel("年")
 plt.ylabel("平均寿命")
 plt.grid()
 plt.legend(["男", "女"])
-plt.savefig("220729c.svg", bbox_inches="tight")
+plt.savefig("240726d.svg", bbox_inches="tight")
 </pre>
 
-<figure><img src="img/220729c.svg" alt="平均寿命の推移"></figure>
+<figure><img src="img/240726d.svg" alt="平均寿命の推移"></figure>
 
-<p>1995年は阪神・淡路大震災，2011年は東日本大震災の年である。2021年はCOVID-19が原因のようだ。ただし2020年は逆に平均寿命の伸びが増えているように見える。<a href="japandeaths.html">日本の超過死亡？</a>も参照されたい。</p>
-
-<p>[2022-07-30] 男女の違いをより詳しく見ると次のようになる：</p>
-
-<figure><img src="img/220730a.svg" alt="平均寿命の推移"></figure>
+<p>1995年は阪神・淡路大震災，2011年は東日本大震災の年である。2021〜2022年の減少はCOVID-19が原因のようだ。ただし2020年は逆に平均寿命の伸びが増えているように見える。<a href="japandeaths.html">日本の超過死亡？</a>も参照されたい。</p>
 
 <hr>
 
-<p>ところで，<a href="https://minato.sip21c.org/im3r/20220129.html">中澤港先生に教えていただいた</a>のだが，平均寿命の男女差をプロットするとおもしろい。男女差はほぼ7歳近くまで開いたが，その後また6歳近くまで持ち直しているのだ。<a href="https://blog.goo.ne.jp/r-de-r/e/c60253cfa3f97f60635b5f11b2ace6f1">裏RjpWikiさん</a>，<a href="https://minato.sip21c.org/im3r/20220130.html">中澤先生</a>の考察を参照されたい。</p>
+<p><a href="https://minato.sip21c.org/im3r/20220129.html">中澤港先生に教えていただいた</a>のだが，平均寿命の男女差をプロットするとおもしろい。男女差はほぼ7歳近くまで開いたが，その後また6歳近くまで持ち直しているのだ。<a href="https://blog.goo.ne.jp/r-de-r/e/c60253cfa3f97f60635b5f11b2ace6f1">裏RjpWikiさん</a>，<a href="https://minato.sip21c.org/im3r/20220130.html">中澤先生</a>の考察を参照されたい。</p>
 
-<pre>
+<pre class="cell">
 plt.plot(df3.Year, df3.Female - df3.Male, "o-")
 plt.xlabel("年")
 plt.ylabel("平均寿命の男女差")
 plt.grid()
-plt.savefig("220729d.svg", bbox_inches="tight")
+plt.savefig("240726e.svg", bbox_inches="tight")
 </pre>
 
-<figure><img src="img/220729d.svg" alt="平均寿命の推移"></figure>
+<figure><img src="img/240726e.svg" alt="平均寿命の推移"></figure>
 
 <hr>
 
@@ -117,7 +125,7 @@ plt.savefig("220729d.svg", bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-10-10 19:21:57 JST</time>
+Last modified: <time>2024-07-26 21:40:05 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
