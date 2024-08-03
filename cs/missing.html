@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/missing.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>欠測値は平均値で置き換える？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>欠測値は平均値で置き換える？</h1>
+
+<p>欠測値（欠損値）は平均値で置き換えるという誤解があるようです。<a href="https://www.kyoritsu-pub.co.jp/book/b10003896.html">『欠測データ処理』</a>の著者、高橋将宜先生のツイートを紹介します。</p>
+
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">予測モデルの精度を上げるためであっても，欠測値を平均値で代入処理することは一切お勧めしません．添付の図のとおり，予測値yhat2は実測値y1に対して一列になってしまうので，MCARであっても，平均値代入法で予測モデルの精度は下がります．(1/2) <a href="https://t.co/gMP3q0Q4VJ">https://t.co/gMP3q0Q4VJ</a> <a href="https://t.co/pmFpnNuLtH">pic.twitter.com/pmFpnNuLtH</a></p>&mdash; 高橋将宜 Masayoshi Takahashi (@M123Takahashi) <a href="https://twitter.com/M123Takahashi/status/1658036202325573633?ref_src=twsrc%5Etfw">May 15, 2023</a></blockquote>
+
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">『統計検定データサイエンス基礎対応　データアナリティクス基礎』（日本能率協会マネジメントセンター）という書籍に，代入法について「欠測部分に平均値を入力して補う方法が代表的」とあって，「やれやれ」という感じです．日本のデータサイエンスを20年後退させる記述はしないで欲しいものです． <a href="https://t.co/AUm0JMSCBl">pic.twitter.com/AUm0JMSCBl</a></p>&mdash; 高橋将宜 Masayoshi Takahashi (@M123Takahashi) <a href="https://twitter.com/M123Takahashi/status/1665986064438403075?ref_src=twsrc%5Etfw">June 6, 2023</a></blockquote>
+
+<p>正しい欠測データ処理についての判断はたいへん難しいので、上記の高橋先生の本を読んで勉強するしかありませんが、欠測値のある行を削除するのが一つの方法です。</p>
+
+<p>統計解析ソフトにデータを入力するときは、欠測値は <code>NA</code> という文字列ないしは空白にしておき、デフォルトの欠測値の扱い（通常は削除）をすればよいでしょう。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-08-03 17:34:16 JST</time></p>
+</footer>
+</body>
+</html>
