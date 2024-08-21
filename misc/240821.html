@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/240821.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Macのmdfindを活用する</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>Macのmdfindを活用する</h1>
+
+<p><a href="190715.html">Macでファイルにタグを付ける</a>でも書いたが、Macのファイルにはいろいろメタデータが付いていて、それを使って高速に検索できる。これはGUIのSpotlightで使われているが、コマンドでもできる。</p>
+
+<p>まず、ファイルのメタデータを表示するコマンド：</p>
+
+<pre>
+mdls <i>somefile</i>
+</pre>
+
+<p>2019年6月16日の写真（必ずしも写真ライブラリに入っていない）を検索したいというのが目的。とりあえず写真という条件は省いて、Linuxなら</p>
+
+<pre>
+find / -type f -newermt 2019-06-16 ! -newermt 2019-06-17
+</pre>
+
+<p>でできる。ただし、ファイルシステム全体を検索するのは時間がかかる。</p>
+
+<p>mdfindを使うなら</p>
+
+<pre>
+mdfind '(kMDItemFSCreationDate < $time.iso(2019-06-17) && kMDItemFSCreationDate >= $time.iso(2019-06-16))'
+</pre>
+
+<p>でできる。こっちのほうが高速である。ただし、時間はUTCになるので、少し過去に向かって広めにするほうがよいかもしれない：</p>
+
+<pre>
+mdfind '(kMDItemFSCreationDate < $time.iso(2019-06-17) && kMDItemFSCreationDate > $time.iso(2019-06-15))'
+</pre>
+
+<p>写真（RAWフォーマットの <code>CR2</code> も含める）だけを表示するには、これらのコマンドの最後に <code>| egrep -i '\.(jpg|jpeg|cr2|heic)$'</code> を付ければよい。</p>
+
+
+<p>参考</p>
+
+<ul>
+  <li><a href="https://metaredux.com/posts/2019/12/22/mdfind.html">mdfind: A Command-line Interface to macOS's Spotlight</a></li>
+  <li><a href="https://ss64.com/mac/mdfind.html">mdfind</a></li>
+</ul>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-08-21 10:15:09 JST</time></p>
+</footer>
+</body>
+</html>

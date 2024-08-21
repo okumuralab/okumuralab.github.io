@@ -77,6 +77,17 @@ data = 10000 * np.sin(880 * t) + 5000 * w * np.sin(1320 * t)
 
 <p>いろいろ試してください。聞こえるのは差 (1320-880)Hz だという説もありますが、それなら高い方を例えば 1374 にすれば (1374-880)Hz でほぼレの音が聞こえるはずですね。</p>
 
+<p>ついでに聴力検査用の4000Hzの音を左に5秒、右に5秒出してみましょう。</p>
+
+<pre>
+data1 = 10000 * np.c_[np.sin(4000 * t), 0 * t]
+data2 = 10000 * np.c_[0 * t, np.sin(4000 * t)]
+data = np.vstack((data1, data2))
+wavfile.write("4000.wav", samplerate, (data + 0.5).astype("int16"))
+</pre>
+
+<p>ボリュームを十分小さくして聞いてみてください。</p>
+
 <h2>音楽を作る</h2>
 
 <p><a href="https://pypi.org/project/musicpy/">musicpy</a> が楽しそうです（そのうち書きます）。</p>
@@ -85,7 +96,7 @@ data = 10000 * np.sin(880 * t) + 5000 * w * np.sin(1320 * t)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-09-28 21:43:04 JST</time></p>
+<p>Last modified: <time>2024-08-16 15:59:17 JST</time></p>
 </footer>
 </body>
 </html>
