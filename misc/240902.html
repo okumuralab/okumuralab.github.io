@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/240902.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UTF-8文字列を含むURL</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>UTF-8文字列を含むURL</h1>
+
+<p>内閣官房 国民保護ポータルサイト <a href="https://www.kokuminhogo.go.jp/hinan/list.html">避難施設の一覧表</a> にあるPDFで、例えば <a href="https://www.kokuminhogo.go.jp/pdf/hinan_mie.pdf">三重県</a> を選ぶと、三重県の避難施設一覧の表が現れる。各避難施設にはGoogleマップとYahooマップへのリンクが付いている。この種のリンクは緯度・経度を指定するのが一般的だが、ここでは住所の文字列を指定している。例えば最初の津市立豊が丘小学校のGoogleマップへのリンクは「三重県津市高野尾町３２１４番地１」という住所を指定している。しかも、その住所がURLエンコード（<code>%</code> で始まる16進表記）されておらず、生UTF-8バイト列になっている。</p>
+
+<p>次の三つのリンクでテストしてみよう。</p>
+
+<ul>
+  <li><a href="https://www.google.com/maps?q=三重県津市高野尾町３２１４番地１">https://www.google.com/maps?q=三重県津市高野尾町３２１４番地１</a></li>
+  <li><a href="https://www.google.com/maps?q=%E4%B8%89%E9%87%8D%E7%9C%8C%E6%B4%A5%E5%B8%82%E9%AB%98%E9%87%8E%E5%B0%BE%E7%94%BA%EF%BC%93%EF%BC%92%EF%BC%91%EF%BC%94%E7%95%AA%E5%9C%B0%EF%BC%91">https://www.google.com/maps?q=%E4%B8%89%E9%87%8D%E7%9C%8C%E6%B4%A5%E5%B8%82%E9%AB%98%E9%87%8E%E5%B0%BE%E7%94%BA%EF%BC%93%EF%BC%92%EF%BC%91%EF%BC%94%E7%95%AA%E5%9C%B0%EF%BC%91</a></li>
+  <li><a href="https://www.google.com/maps?q=%C3%A4%C2%B8%C2%89%C3%A9%C2%87%C2%8D%C3%A7%C2%9C%C2%8C%C3%A6%C2%B4%C2%A5%C3%A5%C2%B8%C2%82%C3%A9%C2%AB%C2%98%C3%A9%C2%87%C2%8E%C3%A5%C2%B0%C2%BE%C3%A7%C2%94%C2%BA%C3%AF%C2%BC%C2%93%C3%AF%C2%BC%C2%92%C3%AF%C2%BC%C2%91%C3%AF%C2%BC%C2%94%C3%A7%C2%95%C2%AA%C3%A5%C2%9C%C2%B0%C3%AF%C2%BC%C2%91">https://www.google.com/maps?q=%C3%A4%C2%B8%C2%89%C3%A9%C2%87%C2%8D%C3%A7%C2%9C%C2%8C%C3%A6%C2%B4%C2%A5%C3%A5%C2%B8%C2%82%C3%A9%C2%AB%C2%98%C3%A9%C2%87%C2%8E%C3%A5%C2%B0%C2%BE%C3%A7%C2%94%C2%BA%C3%AF%C2%BC%C2%93%C3%AF%C2%BC%C2%92%C3%AF%C2%BC%C2%91%C3%AF%C2%BC%C2%94%C3%A7%C2%95%C2%AA%C3%A5%C2%9C%C2%B0%C3%AF%C2%BC%C2%91</a></li>
+</ul>
+
+<p>最初のリンクは生UTF-8のバイト列で指定している。これはUTF-8なWebページからのリンクであれば正しく動作する。</p>
+
+<p>これをURLエンコードすると第2のURLになる。</p>
+
+<p>ところが、このPDFファイルをMacのSafariまたは「プレビュー」アプリで開くと、第3のURLのように解釈されて、検索文字列は ä で始まる文字化けしたような文字列になる。</p>
+
+<pre class="cell">
+import urllib.parse
+
+s = "%C3%A4%C2%B8%C2%89%C3%A9%C2%87%C2%8D%C3%A7%C2%9C%C2%8C%C3%A6%C2%B4%C2%A5%C3%A5%C2%B8%C2%82%C3%A9%C2%AB%C2%98%C3%A9%C2%87%C2%8E%C3%A5%C2%B0%C2%BE%C3%A7%C2%94%C2%BA%C3%AF%C2%BC%C2%93%C3%AF%C2%BC%C2%92%C3%AF%C2%BC%C2%91%C3%AF%C2%BC%C2%94%C3%A7%C2%95%C2%AA%C3%A5%C2%9C%C2%B0%C3%AF%C2%BC%C2%91"
+
+urllib.parse.unquote(s)
+</pre>
+
+<pre>
+'ä¸\x89é\x87\x8dç\x9c\x8cæ´¥å¸\x82é«\x98é\x87\x8eå°¾ç\x94ºï¼\x93ï¼\x92ï¼\x91ï¼\x94ç\x95ªå\x9c°ï¼\x91'
+</pre>
+
+<p>そこで、ChatGPT 4oやClaude 3.5 Sonnetに</p>
+
+<blockquote>
+<p>URLエンコードされた文字列 "%C3%A4%C2%B8%C2%89%C3%A9%C2%87%C2%8D%C3%A7%C2%9C%C2%8C%C3%A6%C2%B4%C2%A5%C3%A5%C2%B8%C2%82%C3%A9%C2%AB%C2%98%C3%A9%C2%87%C2%8E%C3%A5%C2%B0%C2%BE%C3%A7%C2%94%C2%BA%C3%AF%C2%BC%C2%93%C3%AF%C2%BC%C2%92%C3%AF%C2%BC%C2%91%C3%AF%C2%BC%C2%94%C3%A7%C2%95%C2%AA%C3%A5%C2%9C%C2%B0%C3%AF%C2%BC%C2%91" を解読してください。</p>
+</blockquote>
+
+<p>と聞いてみると、正しく「三重県津市高野尾町３２１４番地１」と答える。どうやって解読したのか、Pythonで書いてくれといっても、うまく書けない。</p>
+
+<p>しかし、いろいろ聞き方を変えてみると、ChatGPT 4oが正しい答えをくれた。</p>
+
+<pre class="cell">
+import urllib.parse
+
+s = "%C3%A4%C2%B8%C2%89%C3%A9%C2%87%C2%8D%C3%A7%C2%9C%C2%8C%C3%A6%C2%B4%C2%A5%C3%A5%C2%B8%C2%82%C3%A9%C2%AB%C2%98%C3%A9%C2%87%C2%8E%C3%A5%C2%B0%C2%BE%C3%A7%C2%94%C2%BA%C3%AF%C2%BC%C2%93%C3%AF%C2%BC%C2%92%C3%AF%C2%BC%C2%91%C3%AF%C2%BC%C2%94%C3%A7%C2%95%C2%AA%C3%A5%C2%9C%C2%B0%C3%AF%C2%BC%C2%91"
+
+urllib.parse.unquote(s).encode('latin1').decode('utf-8')
+</pre>
+
+<pre>
+'三重県津市高野尾町３２１４番地１'
+</pre>
+
+<p>つまり、Safariやプレビューは、生UTF-8の文字列をLatin-1だと解釈したようだ：</p>
+
+<pre class="cell">
+import urllib.parse
+
+urllib.parse.quote('三重県津市高野尾町３２１４番地１'.encode("utf-8").decode("latin1"))
+</pre>
+
+<pre>
+'%C3%A4%C2%B8%C2%89%C3%A9%C2%87%C2%8D%C3%A7%C2%9C%C2%8C%C3%A6%C2%B4%C2%A5%C3%A5%C2%B8%C2%82%C3%A9%C2%AB%C2%98%C3%A9%C2%87%C2%8E%C3%A5%C2%B0%C2%BE%C3%A7%C2%94%C2%BA%C3%AF%C2%BC%C2%93%C3%AF%C2%BC%C2%92%C3%AF%C2%BC%C2%91%C3%AF%C2%BC%C2%94%C3%A7%C2%95%C2%AA%C3%A5%C2%9C%C2%B0%C3%AF%C2%BC%C2%91'
+</pre>
+
+<p>実際にこのようなPDFファイルを作ってみよう。次のファイルをUTF-8で作り、<code>test.tex</code> という名前で保存する。</p>
+
+<pre>
+\documentclass{jlreq}
+\usepackage{hyperref}
+\begin{document}
+
+\href{https://www.google.com/maps?q=三重県津市高野尾町３２１４番地１}{リンク1}
+
+\href{https://www.google.com/maps?q=%E4%B8%89%E9%87%8D%E7%9C%8C%E6%B4%A5%E5%B8%82%E9%AB%98%E9%87%8E%E5%B0%BE%E7%94%BA%EF%BC%93%EF%BC%92%EF%BC%91%EF%BC%94%E7%95%AA%E5%9C%B0%EF%BC%91}{リンク2}
+
+\href{https://www.google.com/maps?q=%C3%A4%C2%B8%C2%89%C3%A9%C2%87%C2%8D%C3%A7%C2%9C%C2%8C%C3%A6%C2%B4%C2%A5%C3%A5%C2%B8%C2%82%C3%A9%C2%AB%C2%98%C3%A9%C2%87%C2%8E%C3%A5%C2%B0%C2%BE%C3%A7%C2%94%C2%BA%C3%AF%C2%BC%C2%93%C3%AF%C2%BC%C2%92%C3%AF%C2%BC%C2%91%C3%AF%C2%BC%C2%94%C3%A7%C2%95%C2%AA%C3%A5%C2%9C%C2%B0%C3%AF%C2%BC%C2%91}{リンク3}
+
+\end{document}
+</pre>
+
+<p>次に、LaTeXがインストールされた環境で <code>lualatex test</code> と打ち込むと、<code>test.pdf</code> というPDFファイルができる。これをいろいろなブラウザやPDFビューアで開いてリンクをクリックしてみると、最初に挙げた3通りのリンクの動作が確認できる。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-09-03 10:07:01 JST</time></p>
+</footer>
+</body>
+</html>

@@ -25,7 +25,7 @@
 <p>まず、ファイルのメタデータを表示するコマンド：</p>
 
 <pre>
-mdls <i>somefile</i>
+mdls <i>filename</i>
 </pre>
 
 <p>2019年6月16日の写真（必ずしも写真ライブラリに入っていない）を検索したいというのが目的。とりあえず写真という条件は省いて、Linuxなら</p>
@@ -39,17 +39,50 @@ find / -type f -newermt 2019-06-16 ! -newermt 2019-06-17
 <p>mdfindを使うなら</p>
 
 <pre>
-mdfind '(kMDItemFSCreationDate < $time.iso(2019-06-17) && kMDItemFSCreationDate >= $time.iso(2019-06-16))'
+mdfind 'kMDItemFSCreationDate < $time.iso(2019-06-17) && kMDItemFSCreationDate >= $time.iso(2019-06-16)'
 </pre>
 
 <p>でできる。こっちのほうが高速である。ただし、時間はUTCになるので、少し過去に向かって広めにするほうがよいかもしれない：</p>
 
 <pre>
-mdfind '(kMDItemFSCreationDate < $time.iso(2019-06-17) && kMDItemFSCreationDate > $time.iso(2019-06-15))'
+mdfind 'kMDItemFSCreationDate < $time.iso(2019-06-17) && kMDItemFSCreationDate > $time.iso(2019-06-15)'
 </pre>
 
-<p>写真（RAWフォーマットの <code>CR2</code> も含める）だけを表示するには、これらのコマンドの最後に <code>| egrep -i '\.(jpg|jpeg|cr2|heic)$'</code> を付ければよい。</p>
+<p>写真（RAWフォーマットの <code>CR2</code> も含める）だけを表示するには、メタデータの検索式を書くよりも、これらのコマンドの最後に <code>| egrep -i '\.(jpg|jpeg|cr2|heic)$'</code> を付けるほうが簡単そうだ。</p>
 
+<p>メタデータを編集するには <a href="https://github.com/RhetTbull/osxmetadata">osxmetadata</a> というPythonパッケージ兼コマンドラインツールが便利そうである。</p>
+
+<pre>
+osxmetadata --get findercomment <i>filename</i>
+</pre>
+
+<p>または</p>
+
+<pre>
+osxmetadata --get kMDItemFinderComment <i>filename</i>
+</pre>
+
+<p>でFinderの「情報を見る」でセットできるコメントがゲットでき、</p>
+
+<pre>
+osxmetadata --set findercomment 'ほげほげ' <i>filename</i>
+</pre>
+
+<p>または</p>
+
+<pre>
+osxmetadata --set kMDItemFinderComment 'ほげほげ' <i>filename</i>
+</pre>
+
+<p>でセットでき、</p>
+
+<pre>
+mdfind "kMDItemFinderComment == '*げほ*'"
+</pre>
+
+<p>で検索できる。</p>
+
+<p>mdlsで表示されるメタデータをすべてユーザが上書きできるわけではない。</p>
 
 <p>参考</p>
 
@@ -63,7 +96,7 @@ mdfind '(kMDItemFSCreationDate < $time.iso(2019-06-17) && kMDItemFSCreationDate 
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-08-21 10:15:09 JST</time></p>
+<p>Last modified: <time>2024-08-26 15:20:22 JST</time></p>
 </footer>
 </body>
 </html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/sound.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>音を鳴らす</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 5px;
+    cursor: pointer;
+}
+button.active {
+    background-color: #4CAF50;
+    color: white;
+}
+</style>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<h1>音を鳴らす</h1>
+
+<p>JavaScriptで音を鳴らすことができます。ご自分の耳が何Hzまで聞こえるか試してみてください（23000Hzまで聞こえたというかたがおられたので24000Hzまでに増やしてみました）。</p>
+
+<p>
+<button onclick="playSineWave(1000, this)">1000 Hz</button> <button onclick="stopSineWave()">Stop</button><br>
+<button onclick="playSineWave(4000, this)">4000 Hz</button><br>
+<button onclick="playSineWave(8000, this)">8000 Hz</button><br>
+<button onclick="playSineWave(10000, this)">10000 Hz</button><br>
+<button onclick="playSineWave(11000, this)">11000 Hz</button><br>
+<button onclick="playSineWave(12000, this)">12000 Hz</button><br>
+<button onclick="playSineWave(13000, this)">13000 Hz</button><br>
+<button onclick="playSineWave(14000, this)">14000 Hz</button><br>
+<button onclick="playSineWave(15000, this)">15000 Hz</button><br>
+<button onclick="playSineWave(16000, this)">16000 Hz</button><br>
+<button onclick="playSineWave(17000, this)">17000 Hz</button><br>
+<button onclick="playSineWave(18000, this)">18000 Hz</button><br>
+<button onclick="playSineWave(19000, this)">19000 Hz</button><br>
+<button onclick="playSineWave(20000, this)">20000 Hz</button><br>
+<button onclick="playSineWave(21000, this)">21000 Hz</button><br>
+<button onclick="playSineWave(22000, this)">22000 Hz</button><br>
+<button onclick="playSineWave(23000, this)">23000 Hz</button><br>
+<button onclick="playSineWave(24000, this)">24000 Hz</button>
+</p>
+
+<p>仕組みはソースを見てください。ほぼChatGPT 4oに書いてもらいました。最初はボタンの数が少なかったこともあってChatGPTはボタン一つ一つに <code>id</code> を付けていたのですが、ボタンの数が増えると厄介なので、<code>this</code> を使ってくださいと指示したら、こうなりました。</p>
+
+<script>
+  let audioContext;
+  let oscillator;
+  let activeButton;
+    
+  function playSineWave(frequency, button) {
+      if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (oscillator) {
+          oscillator.stop();
+          oscillator.disconnect();
+      }
+      if (activeButton) {
+          activeButton.classList.remove('active');
+      }
+      button.classList.add('active');
+      activeButton = button;
+      oscillator = audioContext.createOscillator();
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+      oscillator.connect(audioContext.destination);
+      oscillator.start();
+  }
+
+  function stopSineWave() {
+      if (oscillator) {
+          oscillator.stop();
+          oscillator.disconnect();
+      }
+      if (activeButton) {
+          activeButton.classList.remove('active');
+          activeButton = null;
+      }
+  }
+</script>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-08-25 21:33:46 JST</time></p>
+</footer>
+</body>
+</html>

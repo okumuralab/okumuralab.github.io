@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/obi.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>帯グラフ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>帯グラフ</h1>
+
+<p>帯グラフに相当する英語は <span lang="en">stacked bar chart</span> つまり<a href="stacked_bar.html">積み重ね棒グラフ</a>である。特に日本の帯グラフは割合を表すので <span lang="en">(horizontal) proportional stacked bar chart</span> あるいは具体的に <span lang="en">(horizontal) stacked bar chart showing the proportion of ...</span> ということになる。</p>
+
+<pre class="cell">
+import pandas as pd
+
+df = pd.DataFrame({"反対": [10, 40],
+                   "やや反対": [20, 30],
+                   "やや賛成": [30, 20],
+                   "賛成": [40, 10]},
+                  index = ["男", "女"])
+
+df[::-1].plot(figsize=(6.4, 2), kind="barh", stacked=True,
+              xlim=[0, 100], colormap="coolwarm")
+</pre>
+
+<figure><img src="img/obi1.svg" alt="帯グラフ1"></figure>
+
+<p><code>df</code> に <code>[::-1]</code> を付けるのは逆順にするためである。これがなければ下から上に「男」「女」が並ぶ。</p>
+
+<p>凡例を消したければ <code>plot()</code> に <code>legend=False</code>、凡例を逆に「賛成」から始めるには <code>legend="reverse"</code> を付ける。</p>
+
+<p>帯の左端にヒゲ（tick mark）が付くのが嫌なら、次のようにする：</p>
+
+<pre>
+ax = df[::-1].plot(figsize=(6.4, 2), kind="barh", stacked=True,
+                   xlim=[0, 100], colormap="coolwarm")
+ax.tick_params(left=False)
+</pre>
+
+<p>この <code>ax</code> とMatplotlibの機能を使えばいろいろなことができる。例えば凡例を図の下に移動してみよう：</p>
+
+<pre>
+import matplotlib.pyplot as plt
+
+ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=4)
+plt.tight_layout()
+</pre>
+
+<figure><img src="img/obi2.svg" alt="帯グラフ2"></figure>
+
+<p><a href="https://stackoverflow.com/questions/77416441/how-to-add-trendlines-to-stacked-barcharts">こちら</a>に倣って補助線を付けてみよう：</p>
+
+<pre>
+for i in range(len(ax.patches)-len(df)-1):
+    if (i + 1) % len(df) != 0:
+        dn = ax.patches[i].get_corners()[2]
+        up = ax.patches[i+1].get_corners()[1]
+        ax.plot([dn[0], up[0]], [dn[1], up[1]], c='gray', lw=0.5)
+</pre>
+
+<figure><img src="img/obi3.svg" alt="帯グラフ3"></figure>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-09-09 09:01:24 JST</time></p>
+</footer>
+</body>
+</html>
