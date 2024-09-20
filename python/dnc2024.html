@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/dnc2024.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>共通テスト（2024年）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>共通テスト（2024年）</h1>
+
+<p>大学入試センター<a href="https://www.dnc.ac.jp/kyotsu/hyouka/r6_hyouka/r6_data.html">令和６年度 試験情報データ（本試験）</a>で2024年の共通テスト各科目の度数分布が公開されたので、グラフにしてみる。一部科目は3点刻み。オレンジの線は、平均・標準偏差が同じ正規分布。</p>
+
+<figure>
+  <img src="img/dnc2024_kokugo.svg" alt="2024年 共通テスト 国語">
+  <img src="img/dnc2024_chireki.svg" alt="2024年 共通テスト 地理歴史">
+  <img src="img/dnc2024_sekaishi_b.svg" alt="2024年 共通テスト 世界史B">
+  <img src="img/dnc2024_nihonshi_b.svg" alt="2024年 共通テスト 日本史B">
+  <img src="img/dnc2024_chiri_b.svg" alt="2024年 共通テスト 地理B">
+  <img src="img/dnc2024_koumin.svg" alt="2024年 共通テスト 公民">
+  <img src="img/dnc2024_suu1a.svg" alt="2024年 共通テスト 数学I・A">
+  <img src="img/dnc2024_suu2b.svg" alt="2024年 共通テスト 数学II・B">
+  <img src="img/dnc2024_reading.svg" alt="2024年 共通テスト 英語（リーディング）">
+  <img src="img/dnc2024_listening.svg" alt="2024年 共通テスト 英語（リスニング）">
+</figure>
+
+<p>ソース：</p>
+
+<pre class="cell">
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from scipy import stats
+
+def hist(basename, title, smooth=None):
+    df = pd.read_csv(basename + ".csv")
+    maxscore = np.max(df["点数"])
+    n = np.sum(df["人数"])
+    mean = np.sum(df["人数"] * df["点数"]) / n
+    sqmean = np.sum(df["人数"] * df["点数"]**2) / n
+    sd = np.sqrt(sqmean - mean**2)
+    x = np.arange(0, maxscore + 1, max(1, maxscore / 100))
+    y = n * stats.norm.pdf(x, loc=mean, scale=sd)
+    if smooth is not None:
+        df["人数"] = df["人数"].astype(float)
+        for i in range(0, maxscore + 1, smooth):
+            m = np.mean(df["人数"][i:i+smooth])
+            for j in range(smooth):
+                df.loc[i+j, "人数"] = m
+    plt.clf()
+    cmap = plt.get_cmap("tab20")
+    plt.bar(df["点数"], df["人数"], width=1.08, color=cmap(1))
+    plt.xlabel("点数")
+    plt.ylabel("人数")
+    plt.plot(x, y, color=cmap(2), lw=2)
+    plt.title(title)
+    plt.savefig("dnc2024_" + basename + ".svg", bbox_inches="tight")
+
+hist("kokugo", "国語")
+hist("chireki", "地理歴史", 3)
+hist("sekaishi_b", "世界史B", 3)
+hist("nihonshi_b", "日本史B", 3)
+hist("chiri_b", "地理B", 3)
+hist("koumin", "公民", 3)
+hist("suu1a", "数学I・A")
+hist("suu2b", "数学II・B")
+hist("reading", "英語（リーディング）")
+hist("listening", "英語（リスニング）")
+</pre>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-07-06 09:49:29 JST</time></p>
+</footer>
+</body>
+</html>

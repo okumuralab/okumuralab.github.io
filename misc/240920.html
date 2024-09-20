@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/240920.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MacのFinderコメントを活用する</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>MacのFinderコメントを活用する</h1>
+
+<p><a href="240821.html">Macのmdfindを活用する</a>の続編として、Finderコメントに特化して、ゲット・セット・検索するシェルスクリプトを書いてみた。</p>
+
+<p>Finderコメントを表示する <code>getcomment.sh</code>:</p>
+
+<pre>
+#!/bin/bash
+
+path=`realpath "$1"`
+osascript -e "tell application \"Finder\" to get comment of (POSIX file \"$path\" as alias)"
+</pre>
+
+<p>Finderコメントを設定する <code>setcomment.sh</code>:</p>
+
+<pre>
+#!/bin/bash
+
+path=`realpath "$1"`
+osascript -e "tell application \"Finder\" to set comment of (POSIX file \"$path\" as alias) to \"$2\""
+</pre>
+
+<p>Finderコメントを検索する <code>findcomment.sh</code>:</p>
+
+<pre>
+#!/bin/bash
+
+mdfind "kMDItemFinderComment == \"$1\""
+</pre>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-09-20 16:59:42 JST</time></p>
+</footer>
+</body>
+</html>

@@ -7,6 +7,7 @@
 <title>Macのmdfindを活用する</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
 </head>
 <body>
 
@@ -50,7 +51,7 @@ mdfind 'kMDItemFSCreationDate < $time.iso(2019-06-17) && kMDItemFSCreationDate >
 
 <p>写真（RAWフォーマットの <code>CR2</code> も含める）だけを表示するには、メタデータの検索式を書くよりも、これらのコマンドの最後に <code>| egrep -i '\.(jpg|jpeg|cr2|heic)$'</code> を付けるほうが簡単そうだ。</p>
 
-<p>メタデータを編集するには <a href="https://github.com/RhetTbull/osxmetadata">osxmetadata</a> というPythonパッケージ兼コマンドラインツールが便利そうである。</p>
+<p>メタデータを編集するには <a href="https://github.com/RhetTbull/osxmetadata">osxmetadata</a> というPythonパッケージ兼コマンドラインツールが便利そうである。<code>pip3 install osxmetadata</code> でインストールできる。</p>
 
 <pre>
 osxmetadata --get findercomment <i>filename</i>
@@ -84,6 +85,10 @@ mdfind "kMDItemFinderComment == '*げほ*'"
 
 <p>mdlsで表示されるメタデータをすべてユーザが上書きできるわけではない。</p>
 
+<p>メタデータはrsyncで別Macに送れる。そのためのオプションは、Mac付属の /usr/bin/rsync では <code>-E</code>、本家（Homebrewで入るもの）では <code>-X</code> である。Homebrewで入る新しいrsyncはzlib圧縮に加えてzstd圧縮などができる（zstdがデフォルト）。</p>
+
+<p>続編として<a href="240920.html">MacのFinderコメントを活用する</a>も書いた。</p>
+
 <p>参考</p>
 
 <ul>
@@ -96,7 +101,7 @@ mdfind "kMDItemFinderComment == '*げほ*'"
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-08-26 15:20:22 JST</time></p>
+<p>Last modified: <time>2024-09-20 17:01:07 JST</time></p>
 </footer>
 </body>
 </html>

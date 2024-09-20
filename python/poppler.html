@@ -18,10 +18,10 @@
 
 <h1>PopplerでPDFを読む</h1>
 
-<p><a href="https://poppler.freedesktop.org">Poppler</a> はPDF操作のためのライブラリで，これをPythonから使えるようにしたのが <a href="https://pypi.org/project/python-poppler/">python-poppler</a> ライブラリである。<code>pip install python-poppler</code> で入る。</p>
+<p><a href="https://poppler.freedesktop.org">Poppler</a> はPDF操作のためのライブラリで、これをPythonから使えるようにしたのが <a href="https://pypi.org/project/python-poppler/">python-poppler</a> ライブラリである。<code>pip install python-poppler</code> で入る。</p>
 
 <div class="note">
-<p>conda の場合は <code>brew install poppler cmake</code>，<code>conda install poppler</code>，<code>pip install --no-deps python-poppler</code> で入った。</p>
+<p>conda の場合は <code>brew install poppler cmake</code>、<code>conda install poppler</code>、<code>pip install --no-deps python-poppler</code> で入った。</p>
 </div>
 
 <p>ローカルのPDFファイルを読んでテキスト化する：</p>
@@ -48,18 +48,13 @@ for i in range(pdf.pages):
     print(p.text())
 </pre>
 
-<p>PDFスクレイピングにはほかに <a href="https://github.com/pdfminer/pdfminer.six">pdfminer.six</a> や <a href="https://github.com/jsvine/pdfplumber">pdfplumber</a> などさまざまなツールがある。<a href="https://qiita.com/barobaro">@barobaro</a> さんの記事，<a href="https://imabari.hateblo.jp">IMABARI ZINE</a> さんの記事など参照。</p>
+<p>PDFスクレイピングにはほかに <a href="https://github.com/pdfminer/pdfminer.six">pdfminer.six</a> や <a href="https://github.com/jsvine/pdfplumber">pdfplumber</a> などさまざまなツールがある。<a href="https://qiita.com/barobaro">@barobaro</a> さんの記事、<a href="https://imabari.hateblo.jp">IMABARI ZINE</a> さんの記事、<a href="https://acro-engineer.hatenablog.com/entry/2024/09/11/120000">PythonでPDFからテキスト/表情報の抽出精度を比較してみた</a>など参照。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2022-12-27 20:56:27 JST</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2024-09-15 17:40:30 JST</time></p>
 </footer>
 </body>
 </html>

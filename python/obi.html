@@ -21,7 +21,7 @@
 <main>
 <h1>帯グラフ</h1>
 
-<p>帯グラフに相当する英語は <span lang="en">stacked bar chart</span> つまり<a href="stacked_bar.html">積み重ね棒グラフ</a>である。特に日本の帯グラフは割合を表すので <span lang="en">(horizontal) proportional stacked bar chart</span> あるいは具体的に <span lang="en">(horizontal) stacked bar chart showing the proportion of ...</span> ということになる。</p>
+<p>帯グラフに相当する英語は <span lang="en">stacked bar chart</span> つまり<a href="stacked_bar.html">積み重ね棒グラフ</a>である。特に日本の帯グラフは割合を表すので <span lang="en">(horizontal) proportional stacked bar chart</span> あるいは具体的に <span lang="en">stacked bar chart showing the proportion of ...</span> ということになる。</p>
 
 <pre class="cell">
 import pandas as pd
@@ -33,7 +33,7 @@ df = pd.DataFrame({"反対": [10, 40],
                   index = ["男", "女"])
 
 df[::-1].plot(figsize=(6.4, 2), kind="barh", stacked=True,
-              xlim=[0, 100], colormap="coolwarm")
+              xlim=[0, 100], colormap="coolwarm", edgecolor="black")
 </pre>
 
 <figure><img src="img/obi1.svg" alt="帯グラフ1"></figure>
@@ -41,6 +41,8 @@ df[::-1].plot(figsize=(6.4, 2), kind="barh", stacked=True,
 <p><code>df</code> に <code>[::-1]</code> を付けるのは逆順にするためである。これがなければ下から上に「男」「女」が並ぶ。</p>
 
 <p>凡例を消したければ <code>plot()</code> に <code>legend=False</code>、凡例を逆に「賛成」から始めるには <code>legend="reverse"</code> を付ける。</p>
+
+<p>黒い輪郭線 <code>edgecolor="black"</code> は、場合によっては白のほうがいいかも。</p>
 
 <p>帯の左端にヒゲ（tick mark）が付くのが嫌なら、次のようにする：</p>
 
@@ -73,13 +75,44 @@ for i in range(len(ax.patches)-len(df)-1):
 
 <figure><img src="img/obi3.svg" alt="帯グラフ3"></figure>
 
+<p>反対と賛成の中央で揃える方法もある：</p>
+
+<pre>
+left = df.iloc[::-1, :2].sum(axis=1)
+df[::-1].plot(figsize=(6.4, 2), kind="barh", stacked=True,
+              left=-left, xlim=[-max(left),100-min(left)],
+              colormap="coolwarm", edgecolor="black", legend="reverse")
+</pre>
+
+<figure><img src="img/obi4.svg" alt="帯グラフ4"></figure>
+
+<p>選択肢が奇数個の場合は中央の「どちらでもない」の中央を揃える。一般に「無回答」は省くので帯の長さは必ずしも100％にならない。</p>
+
+<hr>
+
+<p>Matplotlibだけで描くこともできる：</p>
+
+<pre class="cell">
+plt.figure(figsize=(6.4, 2))
+
+df1 = df[::-1]
+cmap = plt.get_cmap("coolwarm")
+bottom = 0
+for i in range(4):
+    plt.barh(df1.index, df1.iloc[:,i], left=bottom, color=cmap(i/3))
+    bottom += df1.iloc[:,i]
+plt.xlim(0, 100)
+</pre>
+
+<figure><img src="img/obi5.svg" alt="帯グラフ5"></figure>
+
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-09-09 09:01:24 JST</time></p>
+<p>Last modified: <time>2024-09-12 11:27:22 JST</time></p>
 </footer>
 </body>
 </html>

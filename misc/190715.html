@@ -54,6 +54,8 @@ $ mdfind "kMDItemUserTags == Hinton && kMDItemFSName == *.pdf"
 
 <p>これらのメタ情報はMac固有のものである。別のMacに送る場合は <code>rsync -auvzE ....</code> のように <code>-E</code> オプションを付ける必要がある。</p>
 
+<p>[2024-09-19追記] 教えていただいたが、Homebrewで入る本家rsyncでも <code>-X</code> オプションでメタ情報が送れるようになっていた。この新しいrsyncはzlib圧縮に加えてzstd圧縮などができる（zstdがデフォルト）。</p>
+
 <p>タグを操作するもっと便利なコマンドとして <a href="https://github.com/jdberry/tag/">tag</a> がある。Homebrew でもインストールできる。</p>
 
 <pre>
@@ -117,7 +119,7 @@ $ tag --find 'Deep Learn*'                  # 見つからない
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2024-02-23 16:38:03 JST</time>
+Last modified: <time>2024-09-19 14:09:57 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

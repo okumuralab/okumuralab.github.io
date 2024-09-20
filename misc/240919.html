@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/240919.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>brotli圧縮を使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>brotli圧縮を使う</h1>
+
+<p>Googleの<a href="https://github.com/google/brotli">brotli</a>は比較的新しいデータ圧縮形式である。zlib/gzipより高い圧縮率が望める。特にWebコンテンツの圧縮によく使われる。現在の一般的なWebブラウザはすべてbrotliに対応している。詳しいアルゴリズムは<a href="https://www.rfc-editor.org/rfc/rfc7932.html">RFC 7932</a>に掲載されている。</p>
+
+<p>Apache Web Serverをbrotli対応にするには <code>httpd.conf</code> に</p>
+
+<pre>
+&lt;IfModule mod_brotli.c&gt;
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml
+&lt;/IfModule&gt;
+</pre>
+
+<p>のような感じに書いてhttpdを再起動すればよい。</p>
+
+<p>Webサーバがbrotliに対応しているかは</p>
+
+<pre>
+curl -I -H 'Accept-Encoding: br' https://example.com
+</pre>
+
+<p>のように打ち込んで</p>
+
+<pre>
+Content-Encoding: br
+</pre>
+
+<p>が出ればよい。</p>
+
+<p>wgetはbrotliに対応していないので、より新しい<a href="https://github.com/rockdaboot/wget2">wget2</a>を使う。</p>
+
+<p>wgetしか使えない場合は</p>
+
+<pre>
+wget -E --header='Accept-Encoding: br' https://example.com
+</pre>
+
+<p>のようにすれば拡張子 <code>br</code> が付いた形でダウンロードできる。</p>
+
+<p><code>brotli</code> コマンドがインストールされていれば</p>
+
+<pre>
+brotli -d *.br
+</pre>
+
+<p>で展開できる。カレントディレクトリ以下の <code>br</code> ファイルをすべて展開するには</p>
+
+<pre>
+find . -type f -name "*.br" -exec brotli -df {} +
+</pre>
+
+<p>とすればよい。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-09-20 18:05:50 JST</time></p>
+</footer>
+</body>
+</html>

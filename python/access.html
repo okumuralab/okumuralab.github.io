@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/access.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>アクセスログ解析</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>アクセスログ解析</h1>
+
+<p>JavaScriptで<a href="../javascript/sound.html">音を鳴らす</a>ページを作ったところ、<a href="https://gigazine.net/news/20240828-oto-wo-narasu/">Gigazine</a>でも取り上げていただいて、アクセス数が伸びているみたいだ。毎時のアクセス数をグラフにしてみよう。</p>
+
+<p>Apache httpdであれば /var/log/httpd/ssl_access_log に例えば次のような形でログが記録される。頭の <code>XXX.XXX.XXX.XXX</code> はIPアドレスである。</p>
+
+<pre>
+XXX.XXX.XXX.XXX - - [25/Aug/2024:15:11:42 +0900] "GET /~okumura/javascript/sound.html HTTP/1.1" 200 3238 "https://okumuralab.org/~okumura/javascript/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Safari/605.1.15"
+</pre>
+
+<p>これを読んで該当の時刻だけ抜き出し、ヒストグラムにすればよい。</p>
+
+<pre class="cell">
+import re
+import numpy as np
+from datetime import datetime
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from collections import defaultdict
+
+log_pattern = re.compile(r'\[(.*?) .*?\] "GET /~okumura/javascript/sound.html')
+
+log = []
+
+with open("ssl_access_log", "r") as file:
+    for line in file:
+        match = log_pattern.search(line)
+        if match:
+            timestamp = match.group(1)
+            log.append(datetime.strptime(timestamp, "%d/%b/%Y:%H:%M:%S"))
+
+b = np.arange(min(log).replace(minute=0, second=0),
+              max(log).replace(minute=0, second=0) + np.timedelta64(1, "h"),
+              np.timedelta64(1, "h"))
+
+locator = mdates.AutoDateLocator()
+formatter = mdates.ConciseDateFormatter(locator)
+
+fig, ax = plt.subplots(figsize=(10, 4.8)) # default 6.4, 4.8
+ax.xaxis.set_major_locator(locator)
+ax.xaxis.set_major_formatter(formatter)
+ax.hist(log, bins=b)
+</pre>
+
+<p>ある時点までのアクセス数の推移：</p>
+
+<figure><img src="img/access.svg" alt="JavaScriptで音を鳴らすページのアクセス数の推移"></figure>
+
+<p>なお、二つある <code>np.timedelta64(1, "h")</code> の一つめは本当は <code>np.timedelta64(2, "h")</code> であるべきだが、最後のビンは1時間に満たないことが多いので、急に減ったと勘違いされないように、最後のビンを表示しないためにこのようにした。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-08-28 17:12:17 JST</time></p>
+</footer>
+</body>
+</html>
