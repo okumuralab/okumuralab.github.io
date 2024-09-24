@@ -23,6 +23,10 @@
 
 <p>Googleの<a href="https://github.com/google/brotli">brotli</a>は比較的新しいデータ圧縮形式である。zlib/gzipより高い圧縮率が望める。特にWebコンテンツの圧縮によく使われる。現在の一般的なWebブラウザはすべてbrotliに対応している。詳しいアルゴリズムは<a href="https://www.rfc-editor.org/rfc/rfc7932.html">RFC 7932</a>に掲載されている。</p>
 
+<aside>
+<p>brotliは英語圏では [brɑtli|brɔtli]（ブロットリ）のように発音される。語源はスイスのドイツ語Brötli（ブレートリ）で、これはパン（bread）のドイツ語Brot（ブロート）の縮小形Brötchen（[brǿːtçən] ブレートヒェン、ブレーチェン）のスイスでの呼び方で、小さいパン（ロールパン）を意味する。</p>
+</aside>
+
 <p>Apache Web Serverをbrotli対応にするには <code>httpd.conf</code> に</p>
 
 <pre>
@@ -31,7 +35,7 @@
 &lt;/IfModule&gt;
 </pre>
 
-<p>のような感じに書いてhttpdを再起動すればよい。</p>
+<p>のような感じに書いてhttpdを再起動すればよい。詳しくは <a href="https://httpd.apache.org/docs/2.4/mod/mod_brotli.html">mod_brotli</a> 参照。デフォルトでは圧縮品質（0〜11）は5となる。</p>
 
 <p>Webサーバがbrotliに対応しているかは</p>
 
@@ -76,7 +80,7 @@ find . -type f -name "*.br" -exec brotli -df {} +
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-09-20 18:05:50 JST</time></p>
+<p>Last modified: <time>2024-09-21 19:44:05 JST</time></p>
 </footer>
 </body>
 </html>
