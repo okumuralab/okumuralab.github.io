@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/241011.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marp入門</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>Marp入門</h1>
+
+<p>Marpで <a href="https://marp.app">Marp</a> を説明します。VS Codeを使う方法ではなくMarp CLIを使う方法ですので、テキストエディタはお好きなものをお使いください。</p>
+
+<pre>
+---
+marp: true
+paginate: true
+---
+
+# Marp入門
+
+奥村晴彦
+
+---
+
+## Marpとは
+
+Markdownでプレゼンテーションスライドを作るための仕組みです。
+`---` が改ページです。最初のYAML部分は設定です。
+
+- 箇条書きは `-` または数字で始めます。
+  - スペース2個でネストできます。
+
+1〜3個の `*` で囲んで *Italic*、**Bold**、***Bold Italic*** にできます。
+
+> 引用は `>` で始めます。
+
+このファイルがサンプルです。
+このファイルを `test.md` という名前で保存してお試しください。
+
+---
+
+## Mac/Homebrewでのインストール
+
+```
+brew install node
+node -v
+npm -v
+
+npm install -g @marp-team/marp-cli
+marp --version
+```
+
+---
+
+## ブラウザでの利用
+
+このファイルのあるディレクトリで次のように打ち込みます：
+
+```
+marp . --server
+```
+
+ブラウザで http://localhost:8080/ を開き、`test.md` をクリックします。
+
+---
+
+## HTML/PDF/PowerPointファイルへの変換
+
+```
+marp test.md --html
+
+marp test.md --pdf
+
+marp test.md --pptx
+```
+
+それぞれ `test.html`、`test.pdf`、`test.pptx` ができます。
+
+---
+
+## 画像の入れ方
+
+```
+![](https://okumuralab.org/~okumura/img/okumura130506.jpg)
+```
+
+`[]` にはオプションが入ります。例：
+
+```
+![bg fit left:40%](logo.svg)
+```
+
+HTMLの `img` タグも使えます。
+
+ローカルの画像を使ってPDF/PowerPointにするには `--allow-local-files` が必要です：
+
+```
+marp test.md --pdf --allow-local-files
+```
+
+---
+
+## 表
+
+|中央揃え|左揃え|右揃え|
+|:-:|-|-:|
+|1|A|B|
+|2|C|D|
+|3|E|F|
+
+---
+
+## 数式
+
+MathJaxで数式が書けます。
+
+Einsteinは $E=mc^2$ と言った。
+
+$$ \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty} e^{-x^2/2} dx = 1 $$
+
+---
+
+## テーマ
+
+`theme` は `default`、`gaia`、`uncover` が設定できます。
+
+```
+---
+marp: true
+paginate: true
+theme: gaia
+---
+```
+
+さらに `class: invert` で白黒反転します。
+</pre>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-10-13 09:46:35 JST</time></p>
+</footer>
+</body>
+</html>

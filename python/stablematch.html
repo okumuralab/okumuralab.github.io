@@ -7,10 +7,6 @@
 <title>安定マッチングの問題</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
-<style>
-  table { border-collapse: collapse; }
-  td, th { border: 1px solid; }
-</style>
 <script src="../js/copypre.js"></script>
 </head>
 <body>
@@ -150,61 +146,7 @@ print(a[1:])
 
 <p>「捨てる神あれば拾う神あり」をうまく利用して全員が得をするマッチングを見つけるのがGAアルゴリズムである。しかし、学生のゼミ（あるいはコース）への振り分けは、どのゼミも同じ基準（学生の成績）で判断することが多い。その場合、（学生側からプロポーズする、学生最適な）GSアルゴリズムは、単に学生を成績順に並べて、上から順に第一希望に割り振り、第1希望が定員に達したら第2希望、それも定員に達したら第3希望という具合に埋めていく通常の方式に帰着する。学生が戦略的に希望リストを偽って得をすることはできない。正直に自分の希望を並べるのがベストである。</p>
 
-<p><a href="https://note.com/tdism/n/n6cc0c3f99766">新型コロナワクチンWeb予約抽選申込フォームについて</a>という記事に次のような例題がある。6人の接種希望対象者がいる。元記事ではA〜Fだがここでは1〜6とした。これらにランダムに順位を付ける。横軸1〜10は元記事では会場1〜5の午前・午後であったが、ここでは時刻スロットとし、1スロット1人しか入らないとする。</p>
-
-<table>
-  <tbody>
-    <tr><th>対象者</th><th>順位</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
-    <tr><th>1</th><td>3</td><td>○</td><td></td><td>○</td><td></td><td>○</td><td></td><td>○</td><td></td><td>○</td><td></td></tr>
-    <tr><th>2</th><td>4</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td></tr>
-    <tr><th>3</th><td>6</td><td></td><td>○</td><td></td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td></td></tr>
-    <tr><th>4</th><td>5</td><td>○</td><td></td><td></td><td></td><td></td><td>○</td><td></td><td></td><td></td><td></td></tr>
-    <tr><th>5</th><td>1</td><td></td><td></td><td>○</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><th>6</th><td>2</td><td></td><td></td><td></td><td></td><td></td><td>○</td><td></td><td>○</td><td></td><td></td></tr>
-  </tbody>
-</table>
-
-<p>これを安定結婚問題と考えれば、データは次のようになる：</p>
-
-<pre>
-A = [[],
-     [1, 3, 5, 7, 9],
-     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-     [2, 4, 5, 6, 7, 8, 9],
-     [1, 6],
-     [3],
-     [6, 8]]
-
-B = [[]] + [[5, 6, 1, 2, 4, 3]] * 10
-</pre>
-
-<p>これを解けば、6人の接種スロット <code>a[1:]</code> は <code>[1, 2, 4, 0, 3, 6]</code> となる。図で表せば次の通りである：</p>
-
-<table>
-  <tbody>
-    <tr><th>対象者</th><th>順位</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
-    <tr><th>1</th><td>3</td><td>●</td><td></td><td>○</td><td></td><td>○</td><td></td><td>○</td><td></td><td>○</td><td></td></tr>
-    <tr><th>2</th><td>4</td><td>○</td><td>●</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td></tr>
-    <tr><th>3</th><td>6</td><td></td><td>○</td><td></td><td>●</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td></td></tr>
-    <tr><th>4</th><td>5</td><td>○</td><td></td><td></td><td></td><td></td><td>○</td><td></td><td></td><td></td><td></td></tr>
-    <tr><th>5</th><td>1</td><td></td><td></td><td>●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><th>6</th><td>2</td><td></td><td></td><td></td><td></td><td></td><td>●</td><td></td><td>○</td><td></td><td></td></tr>
-  </tbody>
-</table>
-
-<p>対象者4は接種を受けることができない。でも、ちょっと考えれば、例えば対象者6をスロット8に移動すれば、対象者4はスロット6で接種を受けられる。しかしこれは「安定」ではない。もしこれが学生のゼミ配属の問題なら、学生6は第1希望のゼミ6に入りたいし、ゼミ6の教員は成績の高い学生6のほうを取りたいであろう。成績が低いのに希望ゼミを2つしか挙げなかった学生4が悪いのである。</p>
-
-<p>でも、もともとの接種の問題では、「順位」は市が便宜上ランダムに振ったものである。どのスロットも同じ順位にする理由はない。順位をスロットごとにランダムにしたらどうだろう？</p>
-
-<pre>
-B = [[]]
-for i in range(10):
-    B.append(random.sample(range(1, len(A)), len(A) - 1))
-</pre>
-
-<p>やってみると、全員が接種を受けられることもあれば、そうでないこともある。乱数で何回かやってみて、できるだけ多くの人が接種を受けられるようなマッチングを選べばどうだろう。もっとも、これは単なる説明のための例題で、実際にはこのようなことは生じないのかもしれない。</p>
-
-<p>この問題を本気で解くのなら、2部グラフの最大マッチング（maximum bipartite matching）の問題として扱うべきであろう。これはまた別の機会に。</p>
+<p>[追記] ここにとりあえず押し込んでいたワクチン接種希望者と接種枠のマッチングの問題は、<a href="max_bipartite_match.html">接種枠を埋める問題</a>に移した。</p>
 
 <hr>
 
@@ -212,7 +154,7 @@ for i in range(10):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2024-09-23 21:09:19 JST</time>
+Last modified: <time>2024-09-26 19:55:21 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -45,30 +45,30 @@ window.onload = function() {
 <p>古畑（田中）の表をOCRして目視チェックしたものを <a href="../stat/data/abo.xlsx">abo.xlsx</a> として置いておく。Pythonで読み出してみよう：</p>
 
 <pre>
-<code>import pandas as pd
+import pandas as pd
 
 df = pd.read_excel("<span class="dirurl1">https://okumuralab.org/~okumura/</span>stat/data/abo.xlsx")
-</code></pre>
+</pre>
 
 <p>これで読めたはずだが，合計が合わない：</p>
 
 <pre>
-<code>sum(df['検査人員'][:49])  # 1136456
+sum(df['検査人員'][:49])  # 1136456
 df['検査人員'][49] - sum(df['検査人員'][:49])  # 12167
-</code></pre>
+</pre>
 
 <p>血液型の合計は誤差範囲内で100%になっている：</p>
 
 <pre>
-<code>max(abs(df[["O型","A型","B型","AB型"]].sum(axis=1) - 100))  # 0.01
-</code></pre>
+max(abs(df[["O型","A型","B型","AB型"]].sum(axis=1) - 100))  # 0.01
+</pre>
 
 <p>全対象者についてのO，A，B，AB型の比率は 31.51%，37.34%，22.06%，9.10% となっている。都道府県別の対象者人数が人口に比例していないので，都道府県別の割合を人口で重み付けして平均しないといけないが，ここではそこまでやっていない。</p>
 
 <p>この表の「府県名」はJIS X 0401「都道府県コード」の順になっていない。また，当時はまだ沖縄は外地であった。JIS X 0401順に並べ替えるには，次のようにする：</p>
 
 <pre>
-<code>kenmei = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
+kenmei = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城",
           "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山",
           "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重",
           "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根",
@@ -76,7 +76,7 @@ df['検査人員'][49] - sum(df['検査人員'][:49])  # 12167
           "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄"]
 pref = pd.DataFrame({"id": range(1,48), "都道府県名": kenmei})
 df1 = pd.merge(pref, df, left_on="都道府県名", right_on="府県名").drop(columns="府県名")
-</code></pre>
+</pre>
 
 <p>なお，田中の表には $p$，$q$，$r$ という欄があるが，これについては後述する。</p>
 
@@ -87,25 +87,25 @@ df1 = pd.merge(pref, df, left_on="都道府県名", right_on="府県名").drop(c
 <p>こちらも，JIS X 0401順に並べ替えるには，次のようにする：</p>
 
 <pre>
-<code>df2 = pd.read_excel("<span class="dirurl1">https://okumuralab.org/~okumura/</span>stat/data/abo2010.xlsx")
+df2 = pd.read_excel("<span class="dirurl1">https://okumuralab.org/~okumura/</span>stat/data/abo2010.xlsx")
 df2 = pd.merge(pref, df2, on="都道府県名")
-</code></pre>
+</pre>
 
 <p>簡単な集計をしてみる：</p>
 
 <pre>
-<code>s = df2[["計O","計A","計B","計AB"]].sum()
+s = df2[["計O","計A","計B","計AB"]].sum()
 s / sum(s)
-</code></pre>
+</pre>
 
 <p>結果は次のとおり：</p>
 
 <pre>
-<code>計O     0.297807
+計O     0.297807
 計A     0.378646
 計B     0.218775
 計AB    0.104772
-</code></pre>
+</pre>
 
 <p>こちらも，本来は都道府県別の割合を人口で重み付けして平均しないといけないが，ここではそこまでやっていない。</p>
 
@@ -120,25 +120,25 @@ s / sum(s)
 <p>古畑（田中）のデータ，高校生のデータ，冒頭で挙げたツイッターでのアンケート3通りを，グラフで比較してみる。</p>
 
 <pre>
-<code>import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import numpy as np
-from statsmodels.stats.proportion import proportion_confint
+from scipy import stats
 
-n1 = np.round(df[["O型","A型","B型","AB型"]].iloc[49] / 100 * df['検査人員'][49])
-n2 = df2[["計O","計A","計B","計AB"]].sum(axis=0)
+# n1 = np.round(df[["O型","A型","B型","AB型"]].iloc[49] / 100 * df['検査人員'][49])
+n1 = [361931, 428896, 253386, 104525]
+# n2 = df2[["計O","計A","計B","計AB"]].sum(axis=0)
+n2 = [6259, 7958, 4598, 2202]
 n3 = [89326, 102229, 67376, 38469]
 n4 = [253, 297, 197, 123]
 n5 = [167791, 186333, 116163, 67069]
 
-def prop(n):
-    n = np.array(n)
-    ntot = sum(n)
-    p = n / ntot
-    ci0, ci1 = proportion_confint(n, ntot, method='beta') # Clopper-Pearson
-    return p, np.array([p - ci0, ci1 - p])
+def prop(a):
+    n = sum(a)
+    p = np.array(a) / n
+    confint = np.array([stats.binomtest(x, n).proportion_ci() for x in a])
+    return p, np.array([p - confint[:, 0], confint[:, 1] - p])
 
-x = np.array([1,2,3,4])
-plt.clf()
+x = np.array([1, 2, 3, 4])
 
 p, ci = prop(n1)
 plt.errorbar(x, p, ci, fmt="o", label='古畑')
@@ -159,9 +159,9 @@ plt.xticks(x+0.2, ["O","A","B","AB"])
 plt.legend()
 
 plt.savefig('abo4.svg', bbox_inches="tight")
-</code></pre>
+</pre>
 
-<figure><img src="img/abo4.svg" alt=""></figure>
+<figure><img src="img/abo4.svg" alt="ABO血液型"></figure>
 
 <p>エラーバーは95%信頼区間（Rの <code>binom.test()</code> と同じClopper-Pearson流）である。古畑（田中）のデータに比べ，高校生のデータはOが少なくABが多い。ツイッターのアンケート結果は平均に近づいているように見える。ランダムに答えた人がいるのかもしれない。</p>
 
@@ -172,7 +172,7 @@ plt.savefig('abo4.svg', bbox_inches="tight")
 <p>古畑（田中）のデータ：</p>
 
 <pre>
-<code>df1a = df1[["O型","A型","B型","AB型"]]
+df1a = df1[["O型","A型","B型","AB型"]]
 df1a.index = df1["都道府県名"]
 
 import matplotlib.pyplot as plt
@@ -204,7 +204,7 @@ for i in range(4):
 plt.axis('scaled')
 
 plt.savefig('abo1b.png', bbox_inches="tight")
-</code></pre>
+</pre>
 
 <figure><img src="img/abo1a.png" alt=""></figure>
 <figure><img src="img/abo1b.png" alt=""></figure>
@@ -214,7 +214,7 @@ plt.savefig('abo1b.png', bbox_inches="tight")
 <p>高校生のデータ：</p>
 
 <pre>
-<code>df2a = df2[["計O","計A","計B","計AB"]]
+df2a = df2[["計O","計A","計B","計AB"]]
 df2a.index = df2["都道府県名"]
 df2a = df2a[df2a.sum(axis=1) != 0]
 df2a = df2a.div(df2a.sum(axis=1), axis=0)
@@ -245,7 +245,7 @@ for i in range(4):
 plt.axis('scaled')
 
 plt.savefig('abo2b.png', bbox_inches="tight")
-</code></pre>
+</pre>
 
 <figure><img src="img/abo2a.png" alt=""></figure>
 <figure><img src="img/abo2b.png" alt=""></figure>
@@ -257,7 +257,7 @@ plt.savefig('abo2b.png', bbox_inches="tight")
 <p>A型はA型遺伝子を持ち，B型はB型遺伝子を持ち，AB型は両方の遺伝子を持ち，O型はどちらも持たない。これに基づいて，横軸にA型遺伝子を持つ割合（A+AB），縦軸にB型遺伝子を持つ割合（B+AB）をとってプロットしてみる。青が古畑（田中）のデータ，橙が高校生のデータである。</p>
 
 <pre>
-<code>a1 = (df1["A型"] + df1["AB型"]) / 100
+a1 = (df1["A型"] + df1["AB型"]) / 100
 b1 = (df1["B型"] + df1["AB型"]) / 100
 a2 = df2a["計A"] + df2a["計AB"]
 b2 = df2a["計B"] + df2a["計AB"]
@@ -276,7 +276,7 @@ plt.xlabel('A+AB')
 plt.ylabel('B+AB')
 
 plt.savefig('abo3.png', bbox_inches="tight")
-</code></pre>
+</pre>
 
 <figure><img src="img/abo3.png" alt=""></figure>
 
@@ -307,7 +307,7 @@ plt.savefig('abo3.png', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-07-18 13:53:06</time>
+Last modified: <time>2024-10-13 21:02:43 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

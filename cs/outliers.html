@@ -7,6 +7,7 @@
 <title>外れ値は捨てる？</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -20,24 +21,40 @@
 <main>
 <h1>外れ値は捨てる？</h1>
 
-<p>「外れ値は捨てる」と教えておられることがあるようです。</p>
+<p>高校で「外れ値は捨てる」と教えておられることがあるようです。「大学受験では除外することになっている」という説もあるようです。</p>
 
-<p>これは逆で、「外れ値は注目する」が正しいのです。</p>
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">駒場の実験の思い出は、化学の試料の何か平均値を求める作業で、外れ値があったからそれを除外（大学受験では除外することになっている）したら、えらい怒られ全部やり直しを命じられたこと。「その外れ値が測定ミスじゃなかったらノーベル賞かもしれないんだぞ。お前はその外れ値を捨てるのか？」と。</p>&mdash; OKUMURA, Akira（奥村 曉） (@AkiraOkumura) <a href="https://twitter.com/AkiraOkumura/status/1280681164957614080?ref_src=twsrc%5Etfw">July 8, 2020</a></blockquote>
+
+<p>「外れ値は捨てる」ではなく、「外れ値は注目する」が正しいのです。</p>
 
 <p>箱ひげ図を考案したテューキーは、箱ひげ図の箱の端から、箱の長さの1.5倍（inner fence）以上離れていれば外れ値としましたが、これは捨てるためではなく、注目するためです。テューキーはさらに箱の長さの3倍（outer fence）以上離れているものはもっと注目しました（<span lang="en">John W. Tukey, <i>Exploratory Data Analysis</i> (1977), p.48</span>）：</p>
 
 <figure><img src="img/tukey-p48.png" alt="箱ひげ図"></figure>
 
-<p><a href="../python/240207.html">都道府県人口のヒストグラム</a>に書いたように、東京の人口は47都道府県の人口の平均値から4σ以上離れています。完全に「外れ値」ですが、東京を捨てるのはナンセンスですね。</p>
+<p><a href="../python/240207.html">都道府県人口のヒストグラム</a>に書いたように、東京都の人口は47都道府県の人口の平均値から4σ以上離れています。完全に「外れ値」ですが、東京都を捨てるのはナンセンスですね。</p>
+
+<figure><img src="../python/img/240207a.svg" alt="都道府県人口のヒストグラム"></figure>
 
 <p>「外れ値は捨てる」という説は、おそらく異常値（測定ミスや転記ミス）との混同から来たのだろうと思います。ただ、転記ミスは、元の資料に戻って修正するべきですね。</p>
+
+<p>「外れ値は捨てる」と混同されやすいものに、trimmed mean（トリム平均，トリムド平均，調整平均，刈り込み平均）があります。これは上と下から同数の値を削除して残ったものの平均で、運動競技などの採点でよく使われます。捨てるのは「2σ以上」などではなく「上と下から同数」であることに注意してください。</p>
+
+<p>この「上と下から同数捨てる」を押し進めて、1個または2個が残るまで両端から同数を捨てて残った値（2個残ればその平均）が「中央値」です。</p>
+
+<p>極端な値に影響されにくい代表値を求めたいときは、外れ値を捨てるのではなく、中央値を使いましょう。</p>
+
+<h3>参考リンク</h3>
+
+<ul>
+  <li><a href="https://tanigaku.jp/wp/?p=3158">統計一口メモ　第12話 「外れ値をかってに外してはいけないって言われるけど」</a></li>
+</ul>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-28 13:50:13 JST</time></p>
+<p>Last modified: <time>2024-10-10 14:06:18 JST</time></p>
 </footer>
 </body>
 </html>

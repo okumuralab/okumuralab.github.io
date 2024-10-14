@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/max_bipartite_match.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>接種枠を埋める問題</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+  table { border-collapse: collapse; }
+  td, th { border: 1px solid; }
+</style>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>接種枠を埋める問題</h1>
+
+<p><a href="https://note.com/tdism/n/n6cc0c3f99766">新型コロナワクチンWeb予約抽選申込フォームについて</a>という記事に、説明用として次のような例が挙げてある。</p>
+
+<p>6人の接種希望対象者A〜Fがいる。各対象者は、会場・時間帯の異なる枠1〜10のうち、希望する枠をいくつでも選べる（元記事では会場1〜5の午前・午後であったが、ここでは1〜10の通し番号とした）。1つの枠には1人しか入れない。元記事では、対象者にランダムに順位を付け、その順に枠を左から埋めていく。</p>
+
+<table>
+  <tbody>
+    <tr><th>対象者</th><th>順位</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+    <tr><th>A</th><td>3</td><td>○</td><td></td><td>○</td><td></td><td>○</td><td></td><td>○</td><td></td><td>○</td><td></td></tr>
+    <tr><th>B</th><td>4</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td></tr>
+    <tr><th>C</th><td>6</td><td></td><td>○</td><td></td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td></td></tr>
+    <tr><th>D</th><td>5</td><td>○</td><td></td><td></td><td></td><td></td><td>○</td><td></td><td></td><td></td><td></td></tr>
+    <tr><th>E</th><td>1</td><td></td><td></td><td>○</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><th>F</th><td>2</td><td></td><td></td><td></td><td></td><td></td><td>○</td><td></td><td>○</td><td></td><td></td></tr>
+  </tbody>
+</table>
+
+<p>しかし、実際にやってみると、うまく全員が埋まらない。埋まった枠を●で表すと、次のようになる：</p>
+
+<table>
+  <tbody>
+    <tr><th>対象者</th><th>順位</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th></tr>
+    <tr><th>A</th><td>3</td><td>●</td><td></td><td>○</td><td></td><td>○</td><td></td><td>○</td><td></td><td>○</td><td></td></tr>
+    <tr><th>B</th><td>4</td><td>○</td><td>●</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td></tr>
+    <tr><th>C</th><td>6</td><td></td><td>○</td><td></td><td>●</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td></td></tr>
+    <tr><th>D</th><td>5</td><td>○</td><td></td><td></td><td></td><td></td><td>○</td><td></td><td></td><td></td><td></td></tr>
+    <tr><th>E</th><td>1</td><td></td><td></td><td>●</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><th>F</th><td>2</td><td></td><td></td><td></td><td></td><td></td><td>●</td><td></td><td>○</td><td></td><td></td></tr>
+  </tbody>
+</table>
+
+<p>順位5のDさんは枠1・6を希望したが、枠1は順位3のAさんが先に取り、枠6は順位2のFさんが先に取ってしまっているので、どこにも入れない。</p>
+
+<p>しかし、AさんかDさんに別の枠に移ってもらえば、うまく全員が収まる。</p>
+
+<p>このような場合にできるだけ多くの人に枠を割り振る問題は、2部グラフの最大マッチング（maximum bipartite matching）の問題と呼ばれる。</p>
+
+<p>深さ優先探索による簡単な解き方（<a href="https://www.geeksforgeeks.org/maximum-bipartite-matching/">Maximum Bipartite Matching</a> 参照）：</p>
+
+<pre class="cell">
+slots = {
+    'A': [1, 3, 5, 7, 9],
+    'B': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'C': [2, 4, 5, 6, 7, 8, 9],
+    'D': [1, 6],
+    'E': [3],
+    'F': [6, 8]
+}
+
+order = {
+    'A': 3,
+    'B': 4,
+    'C': 6,
+    'D': 5,
+    'E': 1,
+    'F': 2
+}
+
+applicants = {}  # empty dict
+
+def bpm(applicant, visited):
+    for slot in slots[applicant]:
+        if slot not in visited:
+            visited.add(slot)
+            if slot not in applicants or bpm(applicants[slot], visited):
+                applicants[slot] = applicant
+                return True
+    return False
+
+results = 0
+for applicant in sorted(slots.keys(), key=lambda k: order[k]):
+    visited = set()  # empty set
+    if bpm(applicant, visited):
+        results += 1
+
+print(f"埋まった人数: {results}")
+print("枠と対象者:")
+for slot in sorted(applicants):
+    print(f"{slot}: {applicants[slot]}")
+</pre>
+
+<p><code>for applicant in ...</code> のループは、実際にはどういう順序で埋めていっても埋まる人数は同じなので、単に</p>
+
+<pre>
+for applicant in slots.keys():
+</pre>
+
+<p>でもよいが、全員が埋まらない場合はループの順序に依存するので、<code>order</code> の昇順に埋めていく。あるいは、順位をランダムに定めるよりは、たくさんの枠を書いてくれた人を優先するために</p>
+
+<pre>
+for applicant in sorted(slots.keys(), key=lambda k: len(slots[k]), reverse=True):
+</pre>
+
+<p>のようにするのでもよいかもしれない。</p>
+</main>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2024-09-26 19:52:56 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

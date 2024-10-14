@@ -32,6 +32,9 @@ population = [5140, 1204, 1181, 2280, 930, 1041, 1790, 2840, 1909,
 <p>このヒストグラムを描いてみる：</p>
 
 <pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+
 plt.hist(population, color="lightgray", edgecolor="black", bins=np.arange(16)*1000)
 plt.yticks([0, 5, 10, 15, 20], [0, 5, 10, 15, 20])
 plt.ylim(0, 25)
@@ -47,6 +50,8 @@ plt.text(median, 23.5, "中央値", ha="center")
 plt.text(mean+sd/2, 8.5, "標準偏差", ha="center")
 plt.text(tokyo, 3.5, "東京都", ha="center")
 plt.axvline(tokyo, ymin=1/25, ymax=3/25, color="black", linewidth=1)
+plt.xlabel("人口（1000人）")
+plt.ylabel("度数")
 </pre>
 
 <figure><img src="img/240207a.svg" alt="都道府県人口のヒストグラム"></figure>
@@ -63,7 +68,7 @@ print((tokyo - mean) / sd)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-02-07 13:36:41 JST</time></p>
+<p>Last modified: <time>2024-10-10 14:01:09 JST</time></p>
 </footer>
 </body>
 </html>
