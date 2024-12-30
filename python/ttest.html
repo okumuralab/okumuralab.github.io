@@ -77,7 +77,7 @@ stats.ttest_1samp(x, 0)
 </pre>
 
 <pre>
-TtestResult(statistic=3.6799158947951884, pvalue=0.005076132649772408, df=9)
+TtestResult(statistic=np.float64(3.6799158947951884), pvalue=np.float64(0.005076132649772408), df=np.int64(9))
 </pre>
 
 <p>95% 信頼区間：</p>
@@ -87,7 +87,7 @@ stats.ttest_1samp(x, 0).confidence_interval()
 </pre>
 
 <pre>
-ConfidenceInterval(low=0.897677539412931, high=3.762322460587068)
+ConfidenceInterval(low=np.float64(0.897677539341315), high=np.float64(3.7623224606586843))
 </pre>
 </aside>
 
@@ -154,7 +154,7 @@ stats.ttest_ind(x, y, equal_var=False)
 </pre>
 
 <pre>
-TtestResult(statistic=-2.948615301572607, pvalue=0.009478901687159976, df=15.915568793934192)
+TtestResult(statistic=np.float64(-2.948615301572607), pvalue=np.float64(0.009478901687159976), df=np.float64(15.915568793934192))
 </pre>
 
 <pre class="cell">
@@ -162,7 +162,7 @@ stats.ttest_ind(x, y, equal_var=False).confidence_interval()
 </pre>
 
 <pre>
-ConfidenceInterval(low=-2.3556088373583686, high=-0.38465090290137105)
+ConfidenceInterval(low=np.float64(-2.3556088373583686), high=np.float64(-0.38465090290137105))
 </pre>
 </aside>
 
@@ -303,7 +303,7 @@ mean difference
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-06-10 10:07:51 JST</time></p>
+<p>Last modified: <time>2024-10-23 10:23:04 JST</time></p>
 </footer>
 </body>
 </html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/shu2024.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2024年の衆議院選</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>2024年の衆議院選</h1>
+
+<p><a href="tokyo2024.html">2024年の東京都知事選</a>に倣って、2024年10月27日の衆議院選の出口調査を調べてみる。</p>
+
+<p><a href="https://news.ntv.co.jp/category/politics/3539f35c8d8147c48aacc04e67855deb">【速報・出口調査】比例投票先 20代と30代は国民民主党がトップ</a>という日本テレビ系列と読売新聞社が行った出口調査の結果：</p>
+
+<figure><img src="img/deguchi1.png" alt="2024年衆院選出口調査による年代別投票先"></figure>
+
+<p>年代別の人口と前回衆院選の投票率を考慮した重み：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+
+# 2023年10月1日現在の人口/1000人 0歳-100歳以上
+# https://www.e-stat.go.jp/stat-search/files?stat_infid=000040166025
+population = [757, 797, 828, 835, 871, 915, 939, 979, 1004, 1002,
+              1027, 1030, 1056, 1065, 1070, 1090, 1084, 1075, 1089, 1156, 1176,
+              1227, 1269, 1285, 1280, 1300, 1294, 1291, 1302, 1293, 1262, 1270,
+              1260, 1283, 1304, 1342, 1376, 1394, 1444, 1492, 1511, 1512, 1523,
+              1590, 1629, 1689, 1733, 1814, 1887, 1993, 2026, 1988, 1930, 1869,
+              1837, 1791, 1784, 1391, 1711, 1601, 1558, 1505, 1471, 1476, 1498,
+              1451, 1405, 1469, 1508, 1499, 1580, 1656, 1737, 1845, 1999, 1952,
+              1825, 1116, 1175, 1405, 1327, 1326, 1247, 1090, 905, 916, 886,
+              827, 725, 624, 562, 483, 405, 327, 268, 214, 148, 110, 75, 50,
+              87]
+
+# 2021年衆院選 年代別投票率
+# https://www.soumu.go.jp/senkyo/senkyo_s/news/sonota/nendaibetu/
+lo = [18, 20, 30, 40, 50, 60, 70]
+hi = [20, 30, 40, 50, 60, 70, 101]
+rate = [43.23, 36.50, 47.13, 55.56, 62.96, 71.38, 61.90]
+
+x = [sum(population[a:b]) * r / 100 for a, b, r in zip(lo, hi, rate)]
+
+lo = [0, 5, 7, 9, 11, 13]
+hi = [5, 7, 9, 11, 13, 16]
+
+plt.clf()
+plt.barh(range(7,0,-1), x,
+         tick_label=["10代", "20代", "30代", "40代", "50代", "60代", "70〜"])
+plt.savefig("deguchi.svg", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/deguchi.svg" alt="2024年衆院選の重み分布"></figure>
+
+<p>この比率でグラフを縮小するのは手作業で、マウス操作が苦手であまりうまくいっていないが、とりあえず：</p>
+
+<figure><img src="img/deguchi2.png" alt="重みを加味した分布"></figure>
+
+<p>なお、<a href="https://twitter.com/gyui_san/status/1850631406008832501">すでに同じことをされたかた</a>がおられたので、二番煎じになってしまった。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-10-28 12:01:01 JST</time></p>
+</footer>
+</body>
+</html>

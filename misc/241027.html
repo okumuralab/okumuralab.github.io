@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/241027.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>サーバへの攻撃を止める</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>サーバへの攻撃を止める</h1>
+
+<p>Linuxサーバ（Alma Linux 9）が急に重くなった。/var/log/httpd/ssl_access_log を見れば、特定のIPアドレスから大量にアクセスがある。しかもアクセス内容がおかしい。攻撃か、暴走クローラか。</p>
+
+<p>とりあえず <a href="https://help.dreamhost.com/hc/en-us/articles/216363167-Deny-access-to-a-site-with-an-htaccess-file">Deny access to a site with an .htaccess file</a> を参考にして <code>.htaccess</code> にアクセス禁止の呪文を書いた：</p>
+
+<pre>
+&lt;RequireAll&gt;
+  Require all granted
+  Require not ip XXX.XXX.XXX.XXX
+&lt;/RequireAll&gt;
+</pre>
+
+<p>これでアクセス要求には 403 Forbidden が返る。</p>
+
+<p>それでも止まらないので、firewalld を使うことにした。</p>
+
+<p>いきなり <code>sudo systemctl start firewalld</code> とするとssh接続まで切れて難儀する。</p>
+
+<pre>
+sudo systemctl start firewalld &amp;&amp; sudo firewall-cmd --set-default-zone=public
+</pre>
+
+<p>ならsshは大丈夫である。でもこれでは http/https も止まる。</p>
+
+<pre>
+sudo firewall-cmd --add-service=http
+sudo firewall-cmd --add-service=https
+</pre>
+
+<p>のようにしてサービスごとに許可する。ただ、これでは再起動すると元に戻るので、うまくいったならば</p>
+
+<pre>
+sudo firewall-cmd --add-service=http --permanent
+sudo firewall-cmd --add-service=https --permanent
+</pre>
+
+<p>のようにして永続化する。</p>
+
+<p>サービス一覧は次のようにして確認できる：</p>
+
+<pre>
+sudo firewall-cmd --get-services
+</pre>
+
+<p>たくさんのサービスが現れるので、必要に応じて設定する：</p>
+
+<pre>
+sudo firewall-cmd --add-service=git
+sudo firewall-cmd --add-service=git --permanent
+</pre>
+
+<p>現状および永続化された設定は次のコマンドで確認できる：</p>
+
+<pre>
+sudo firewall-cmd --list-all
+sudo firewall-cmd --list-all --permanent
+</pre>
+
+<p>あと、sshのポートを変更しているなら、そのポートを開けておく必要がある：</p>
+
+<pre>
+sudo firewall-cmd --add-port=XXXXX/tcp
+sudo firewall-cmd --add-port=XXXXX/tcp --permanent
+</pre>
+
+<p>さて、問題は例の XXX.XXX.XXX.XXX というホストである。ここからのアクセスをすべて拒否したい。それには</p>
+
+<pre>
+sudo firewall-cmd --add-rich-rule="rule family='ipv4' source address='XXX.XXX.XXX.XXX' reject"
+</pre>
+
+<p>とすればよい。必要に応じてこれも <code>--permanent</code> を付けたものも実行しておく。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-11-12 15:23:39 JST</time></p>
+</footer>
+</body>
+</html>

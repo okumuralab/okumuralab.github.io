@@ -61,19 +61,19 @@ plt.show()
 
 <p>エラーがいくつか出て、文字が □□ のような豆腐になります。自分のマシンで Jupyter Notebook を動かしている場合は、下の「コマンドでの利用」を見て、フォントを設定してください。でも、Google Colaboratory の場合は、そもそも日本語対応のフォントがないので、やや面倒です。</p>
 
-<p>日本語を使わなければいいのですが、使いたい場合は、簡単な解決策として <a href="https://qiita.com/uehara1414/items/6286590d2e1ffbf68f6c">pip install して import するだけで matplotlib を日本語表示対応させる</a> で紹介されている <code>japanize-matplotlib</code> というライブラリを使うのが簡単です。新しいセルに</p>
+<p>日本語を使わなければいいのですが、使いたい場合は、簡単な解決策として <a href="https://github.com/ciffelia/matplotlib-fontja">matplotlib-fontja</a> というパッケージを使うのが簡単です。新しいセルに</p>
 
 <pre class="cell">
-!pip install japanize-matplotlib
+!pip install matplotlib-fontja
 </pre>
 
-<p>と打ち込むと、メッセージがいろいろ出て、最後に Successfully installed japanize-matplotlib-X.X.X のように出れば、インストール完了です。完了したら、新しいセルに</p>
+<p>と打ち込むと、メッセージがいろいろ出て、最後に Successfully installed matplotlib-fontja-X.X.X のように出れば、インストール完了です。完了したら、新しいセルに</p>
 
 <pre class="cell">
-import japanize_matplotlib
+import matplotlib_fontja
 </pre>
 
-<p>と打ち込んでください。そして、さきほどうまくいかななった例</p>
+<p>と打ち込んでください（こちらはマイナスではなくアンダーバーです）。そして、さきほどうまくいかななった例</p>
 
 <pre class="cell">
 plt.plot([-1, 1])
@@ -84,11 +84,7 @@ plt.show()
 
 <p>の中にカーソルを持っていき、再度 <span class="keytop">Shift</span> + <span class="keytop">Enter</span> します。ちゃんと「横軸」「縦軸」の文字が出たでしょうか。</p>
 
-<p>Google Colaboratory の仮想マシンはときどきリセットされます。<code>import japanize_matplotlib</code> がうまくいかなくなったら、<code>!pip install japanize-matplotlib</code> をやりなおしてください。</p>
-
-<aside>
-<p>参考: <a href="https://qiita.com/take_me/items/7d1a8823b99951210efa">japanize_matplotlibがPython 3.12以降`ModuleNotFoundError`で動かない時の対処法</a></p>
-</aside>
+<p>Google Colaboratory の仮想マシンはときどきリセットされます。途中でうまくいかなくなったら、<code>!pip install matplotlib-fontja</code> からやりなおしてください。</p>
 
 <div class="note">
 <p>上のほうに書いたように、SVGを使っても日本語が表示できます。</p>
@@ -501,7 +497,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-09-24 15:54:22 JST</time></p>
+<p>Last modified: <time>2024-12-24 09:09:20 JST</time></p>
 </footer>
 </body>
 </html>

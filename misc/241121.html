@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/241121.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日本語の組版ルール</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:url" content="https://okumuralab.org/~okumura/misc/241121.html">
+<meta property="og:title" content="日本語の組版ルール">
+<meta property="og:description" content="日本語の文字はすべて全角なので原稿用紙を埋めるようにして組めばよい、というのは間違いである。">
+<meta property="og:image" content="https://okumuralab.org/~okumura/misc/img/241121a.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@h_okumura">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>日本語の組版ルール</h1>
+
+<p>日本語の文字はすべて全角なので原稿用紙を埋めるようにして組めばよい、というのは間違いである。JIS X 4051「日本語文書の組版方法」（<a href="https://www.jisc.go.jp">JISC</a>の「JIS検索」から閲覧可能）やW3Cの<a href="https://www.w3.org/TR/jlreq/">日本語組版処理の要件</a>に正しいルールが載っている。</p>
+
+<p>例えば行長が全角6文字、段落頭の字下げが全角1文字の場合、<code>「（あ）、『い「う」。』」「」</code> を日本語対応のLaTeX（(lt)jsarticleやjlreqドキュメントクラス）で組むと、次のようになる。</p>
+
+<figure><img src="img/241121a.png" alt="「（あ）、『い「う」。』」「」"></figure>
+
+<p>つまり、<code>「『（</code> などの開き括弧類、<code>」』）、。</code> などの閉じ括弧類や句読点は、基本的には半角（全角の1/2幅）であり、それ以外＋開き、閉じ＋それ以外の組合せになったときに二分アキ（全角の1/2幅の空き）が入る仕組みである。LaTeXなどの組版ソフトはこの二分アキを微調整して、段落の右が揃うようにしている。</p>
+
+<p>実は行頭の引用符の類の処理方法は<a href="https://www.w3.org/TR/jlreq/#positioning_of_opening_brackets_at_line_head">日本語組版処理の要件 3.1.5 行頭の​始め括弧類の​配置方法</a>によれば3通りあって、上に挙げた組み方は最初に挙げられている方法（段落頭は全角アキ、段落途中は天ツキ）に従ったものである。後で見るように、WordやChromeではこれを右に二分だけシフトした2番目の方法（段落頭は全角半アキ、段落途中は二分アキ）になっている。</p>
+
+<p>お使いのブラウザは正しい組み方に対応しているであろうか。HTMLソース</p>
+
+<pre>
+&lt;p style="text-indent: 1em"&gt;「（あ）、『い&lt;br&gt;「う」。』」「」&lt;/p&gt;
+</pre>
+
+<p>を表示してみよう。</p>
+
+<blockquote>
+  <p style="text-indent: 1em">「（あ）、『い<br>「う」。』」「」</p>
+</blockquote>
+
+<p>2024年3月にリリースされたGoogle Chrome 123からは<a href="https://zenn.dev/inaniwaudon/articles/3ff8761773178c">正しい幅で表示されるようになった</a>。</p>
+
+<p><a href="241111.html">Typst</a>（0.12.0）は、幅は正しいが、段落頭は全角半アキ、段落途中は天ツキというどっちつかずの仕様になっている。</p>
+
+<pre>
+#set text(lang: "ja", font: "Harano Aji Mincho")
+#set par(first-line-indent: 1em)
+
+例：
+
+「（あ）、『い\
+「う」。』」「」
+</pre>
+
+<p>また、現状のTypstでは、正規表現や <code>#show "、": "，"</code> のような置換を行うと正しい組版ルールが適用されないという点にも注意が必要である。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-11-26 15:25:01 JST</time></p>
+</footer>
+</body>
+</html>

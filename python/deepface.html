@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/deepface.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeepFaceによる顔認識</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>DeepFaceによる顔認識</h1>
+
+<p><a href="https://viso.ai/computer-vision/deepface/">DeepFace</a>（<a href="https://github.com/serengil/deepface">GitHub</a>）という顔認識ライブラリを使ってみよう。</p>
+
+<p><code>pip install deepface</code> でインストールできる（はずである）。</p>
+
+<aside>
+<p>・・・はずであるが、普段使いのPython 3.12.8でうまくいかなかった。そもそもDeepFaceはTensorFlowに依存するのだが、久しぶりに使ったので少しトラブった。そもそも最近のTensorFlowは <code>pip install tensorflow</code> だけでなく <code>pip install tf-keras</code> も必要である。さらに、<code>import tensorflow as tf</code> すると AttributeError: 'NoneType' object has no attribute 'Rlocation' で落ちてしまう。これは <code>mesop</code> が悪さをしているようだ（<a href="https://github.com/tensorflow/tensorflow/issues/75288">Fail import tensorflow if rules_python is installed.</a>）。とりあえず <code>pip uninstall mesop</code> すれば動いた。</p>
+</aside>
+
+<p>使い方の基本は、</p>
+
+<pre>
+from deepface import DeepFace
+
+r = DeepFace.represent(img_path=画像ファイルのパスまたはBGR形式の画像,
+                       model_name=モデル,
+                       enforoce_detection=False,
+                       detector_backend=顔検出器)
+</pre>
+
+<p>とすれば顔情報のリストが返る。画像ファイルのパスを渡すのが簡単だが、日本語ファイル名だとうまくいかないので、以下では自前で読み込んでから渡す。モデルは <code>"VGG-Face"</code> がデフォルトだが、<code>"Facenet512"</code> のほうが性能が良さそうである。<code>enforce_detection=False</code> を付けないと、顔が検出されないときエラーになる。顔検出器は <code>"opencv"</code> がデフォルトだがあまり賢くないので以下では <code>"mtcnn"</code> を使う。</p>
+
+<p>まずはフォルダにいろいろ写真を入れてやってみよう。</p>
+
+<pre class="cell">
+import pathlib
+
+path = pathlib.Path("/path/to/dir")
+names = [p for p in path.iterdir() if p.match("*.jp*g")] # .jpg .jpeg
+# あるいは import glob で name = glob.glob("/path/to/dir/*.jp*g")
+</pre>
+
+<p>でファイルパス一覧を読み出す。ここで日本語ファイル名があると後で失敗する。</p>
+
+<p>まず、それぞれのファイルについて、埋め込みベクトルを計算する：</p>
+
+<pre class="cell">
+from deepface import DeepFace
+import cv2
+import matplotlib.pyplot as plt
+import os
+
+embeddings = []
+basenames = []
+for name in names:
+    basename = os.path.splitext(os.path.basename(name))[0]
+    img = cv2.imread(name)
+    rs = DeepFace.represent(img_path=img,
+                            model_name="Facenet512",
+                            enforce_detection=False,
+                            detector_backend="mtcnn")
+    color = [0, 255, 0]
+    for r in rs:
+        print(r['face_confidence'], end=" ")
+        if r['face_confidence'] > 0.9:
+            embeddings.append(r['embedding'])
+            basenames.append(basename)
+            f = r['facial_area']
+            cv2.rectangle(img,
+                          (f['x'], f['y']), (f['x']+f['w'], f['y']+f['h']),
+                          color, 2)
+            color = color[1:] + color[:1]
+    print(basename)
+    # cv2.imshow("Image", img) または
+    plt.figure()
+    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    plt.axis("off")
+    plt.show()
+</pre>
+
+<p>距離行列を表示する：</p>
+
+<pre class="cell">
+import numpy as np
+
+def distance(a, b): # コサイン距離
+    return max(1 - np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b)), 0)
+
+# 距離行列（0.6より大きければ * を付ける）
+for e1 in embeddings:
+    for e2 in embeddings:
+        d = distance(e1, e2)
+        if d > 0.6:
+            print(f" {d:4.2f}*", end="")
+        else:
+            print(f" {d:4.2f} ", end="")
+    print()
+</pre>
+
+<p>クラスタリングのためのデンドログラムを描く：</p>
+
+<pre class="cell">
+from scipy.cluster.hierarchy import dendrogram, linkage
+
+n = len(embeddings)
+condensed_dist_mat = np.array([distance(embeddings[i], embeddings[j])
+                               for i in range(n) for j in range(i+1, n)])
+linked = linkage(condensed_dist_mat)
+plt.figure(figsize=(8, 4))
+dendrogram(linked, labels=basenames, orientation="left")
+plt.show()
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-12-30 16:04:23 JST</time></p>
+</footer>
+</body>
+</html>

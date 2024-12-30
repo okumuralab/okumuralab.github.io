@@ -52,12 +52,12 @@ print(" ".join(result))
 
 <p>Macはたいへん優れたOCR機能を持っています。画像ファイルをマウスでテキスト範囲指定してコピーできます。この機能をコマンドラインで使う方法が <a href="https://doratex.hatenablog.jp/entry/20230629/1687977178">macOS のデフォルト状態でコマンドラインからOCR処理を行う</a> という記事で解説されています。</p>
 
-<p>MacのOCR機能をPythonで使うための <a href="https://github.com/straussmaximilian/ocrmac">ocrmac</a> というパッケージがあります。<code>pip install ocrmac</code> でインストールできます。コマンドラインでも使えます。Pythonからは次のようにして使います。</p>
+<p>MacのOCR機能をPythonで使うための <a href="https://github.com/straussmaximilian/ocrmac">ocrmac</a> というパッケージがあります。<code>pip install ocrmac</code> でインストールできます。コマンドラインでも使えます。Pythonからは例えば次のようにして使います。</p>
 
 <pre class="cell">
 from ocrmac import ocrmac
 
-annotations = ocrmac.OCR('filename.png', language_preference=['en']).recognize()
+annotations = ocrmac.OCR('filename.png', language_preference=['ja-JP','en-US']).recognize()
 print(" ".join([a[0] for a in annotations]))
 </pre>
 
@@ -69,7 +69,7 @@ print(" ".join([a[0] for a in annotations]))
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2024-01-13 14:51:15 JST</time>
+Last modified: <time>2024-12-12 12:07:04 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

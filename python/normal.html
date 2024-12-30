@@ -44,6 +44,8 @@ array([0.31675834, 0.79736546, 0.67625467, 0.39110955, 0.33281393,
 <p>もっとたくさんの数、例えば百万個でやってみましょう。画面に書き出すとたいへんなので、ヒストグラムを描いてみましょう。</p>
 
 <pre class="cell">
+import matplotlib.pyplot as plt
+
 N = 1000000  # 百万
 
 plt.hist(rng.random(N), edgecolor="black", bins=20, density=True)
@@ -190,7 +192,7 @@ stats.norm.ppf(0.025)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-16 16:51:02 JST</time></p>
+<p>Last modified: <time>2024-10-23 10:03:09 JST</time></p>
 </footer>
 </body>
 </html>

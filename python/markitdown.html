@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/markitdown.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MarkItDownで何でもMarkdownに変換</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>MarkItDownで何でもMarkdownに変換</h1>
+
+<p><a href="https://github.com/microsoft/markitdown">MarkItDown</a> は2024年末に出たばかりのMicrosoft謹製のMarkdown変換ツールです。PDFやOffice文書だけでなく、画像、音声、HTML、CSV、JSON、XMLといったものをMarkdownに変換できるとのことです。</p>
+
+<p><code>pip install markitdown</code> で入ります。同時に、<code>beautifulsoup4</code>、<code>mammoth</code>、<code>markdownify</code>、<code>numpy</code>、<code>openpyxl</code>、<code>pandas</code>、<code>pathvalidate</code>、<code>pdfminer-six</code>、<code>puremagic</code>、<code>pydub</code>、<code>python-pptx</code>、<code>requests</code>、<code>speechrecognition</code>、<code>youtube-transcript-api</code> が（入っていなければ）インストールされます。</p>
+
+<p>CLIツール <code>markitdown</code> がインストールされますので、通常は <code>markitdown ファイル名</code> と打ち込むだけで標準出力にMarkdown形式で出力されます（ファイル名を与えなければ標準入力からの入力になります）。ファイルに出力するには <code>markitdown ファイル名 > output.md</code> のようにリダイレクトします。</p>
+
+<p>Pythonからの使い方は</p>
+
+<pre class="cell">
+from markitdown import MarkItDown
+
+markitdown = MarkItDown()
+result = markitdown.convert("test.xlsx")
+print(result.text_content)
+</pre>
+
+<p>です。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-12-15 11:15:17 JST</time></p>
+</footer>
+</body>
+</html>

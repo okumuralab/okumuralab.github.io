@@ -34,6 +34,7 @@ df = pd.read_csv(URL, parse_dates=["month"])
 
 plt.bar(df["month"], df["deaths"], width=25)
 plt.xticks(rotation=10)
+# plt.savefig("COVID-deaths.svg", bbox_inches="tight")
 </pre>
 
 <figure><img src="img/COVID-deaths.svg" alt="新型コロナウイルス感染症による死者数"></figure>
@@ -50,7 +51,7 @@ plt.xticks(rotation=10)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-06-07 19:40:15 JST</time></p>
+<p>Last modified: <time>2024-12-25 09:58:32 JST</time></p>
 </footer>
 </body>
 </html>

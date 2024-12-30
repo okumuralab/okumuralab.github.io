@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/241019.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Macのアプリを英語環境にする</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>Macのアプリを英語環境にする</h1>
+
+<p>MacやLinuxなどUnix系OSのコマンドなら、ロケールという仕組みで言語環境を設定するものが多い。ターミナルに <code>locale</code> と打ち込むと、日本語環境のMacなら</p>
+
+<pre>
+LANG="ja_JP.UTF-8"
+LC_COLLATE="ja_JP.UTF-8"
+LC_CTYPE="ja_JP.UTF-8"
+LC_MESSAGES="ja_JP.UTF-8"
+LC_MONETARY="ja_JP.UTF-8"
+LC_NUMERIC="ja_JP.UTF-8"
+LC_TIME="ja_JP.UTF-8"
+LC_ALL=
+</pre>
+
+<p>のように返る。このうち特に <code>LANG</code> 環境変数が言語を定めている。</p>
+
+<p>例えば <code>gpg</code> のようなコマンドは、日本語に設定されていると拙い日本語のメッセージになるので、<code>LANG=en_US.UTF-8 gpg</code> あるいは <code>LANG=en gpg</code> あるいは <code>LANG=C gpg</code> のようにして英語のメッセージに戻すことがよく行われている。</p>
+
+<p>Macの（GUIな）アプリケーションでは、<code>LANG=en_US.UTF-8 open -a アプリ名</code> や <code>open --env LANG=en_US.UTF-8 -a アプリ名</code> と打ち込んでも言語が変わらないようである。</p>
+
+<p>次のようにすればよさそうである。例えば Google Chrome の場合、</p>
+
+<pre>
+% osascript -e 'id of app "Google Chrome"'
+com.google.Chrome
+% defaults read com.google.Chrome AppleLanguages
+（存在しない）
+% defaults write com.google.Chrome AppleLanguages '("en-US")'
+% defaults read com.google.Chrome AppleLanguages
+(
+    "en-US"
+)
+</pre>
+
+<p>とする（<code>"en_US"</code> や <code>"en_US.UTF-8"</code> でもいいみたい）。これでGoogle Chromeを立ち上げ直すと英語環境になる。元に戻すには</p>
+
+<pre>
+% defaults delete com.google.Chrome AppleLanguages
+</pre>
+
+<p>とする。</p>
+
+<p>同様に、ChatGPTアプリの場合、<code>com.openai.chat</code> に対して同様にすればよい。</p>
+
+<p>もっと楽な方法：システム設定→一般→言語と地域→アプリケーションで「＋」をクリックしてアプリごとに言語設定をカスタマイズできる。これでGoogle Chromeを「English ― 英語」にしたところ、</p>
+
+<pre>
+% defaults read com.google.Chrome AppleLanguages
+(
+    "en-JP",
+    ja,
+    "ja-JP",
+    "ru-JP"
+)
+</pre>
+
+<p>のようになった（最後のは私のMacでロシア語も有効にしてあったかららしい）。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-10-20 15:59:59 JST</time></p>
+</footer>
+</body>
+</html>

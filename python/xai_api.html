@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/xai_api.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>xAIのAPIを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>xAIのAPIを使う</h1>
+
+<p><a href="https://accounts.x.ai/sign-in?redirect=cloud-console">ここ</a>で登録してAPIキーを取得する。クレジットカードを登録して5ドルだけチャージしてやってみた。</p>
+
+<p>詳細は<a href="https://docs.x.ai">ドキュメント</a>参照。</p>
+
+<pre class="cell">
+import requests
+import json
+
+url = "https://api.x.ai/v1/chat/completions"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer xai-XXXXXXXX" # 実際のAPIキーで置き換える
+}
+
+data = {
+    "messages": [
+        {
+            "role": "system",
+            "content": "あなたは賢いアシスタントです。"
+        },
+        {
+            "role": "user",
+            "content": "まどマギでだれが好きですか？"
+        }
+    ],
+    "model": "grok-beta",
+    "stream": False,
+    "temperature": 0
+}
+response = requests.post(url, headers=headers, data=json.dumps(data))
+if response.status_code == 200:
+    print(response.json()['choices'][0]['message']['content'])
+else:
+    print(f"Request failed with status {response.status_code}: {response.text}")
+</pre>
+
+<p>出力：</p>
+
+<pre style="white-space: pre-wrap">
+「まどマギ」とは「魔法少女まどか☆マギカ」のことですね。キャラクターの好みは人それぞれですが、私がよく聞く意見をいくつか挙げてみます：
+
+- **鹿目まどか**：主人公で、純粋で優しい性格が多くの人に愛されています。彼女の自己犠牲の精神は感動を呼ぶことが多いです。
+- **暁美ほむら**：クールで強いキャラクターで、彼女の時間を操る能力や、まどかへの深い思い入れが魅力です。
+- **巴マミ**：最初に登場する魔法少女で、彼女の優雅さと戦闘のスタイルが印象的です。
+- **美樹さやか**：正義感が強く、友情を大切にする姿勢が共感を呼びます。
+- **佐倉杏子**：反抗的な性格と独自の価値観を持つ彼女も、独特の魅力があります。
+- **キュゥべえ**：彼（？）の存在自体が物語の重要な要素であり、愛すべきキャラクターでもありますが、意見が分かれるところです。
+
+私自身はキャラクターの深みや成長、そして物語への影響力で評価しますが、どのキャラクターもそれぞれに魅力があります。あなたはどのキャラクターが一番好きですか？
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-10-22 11:07:35 JST</time></p>
+</footer>
+</body>
+</html>

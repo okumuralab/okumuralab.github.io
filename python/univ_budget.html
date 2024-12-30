@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/univ_budget.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>国立大学運営費交付金の推移</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@h_okumura">
+<meta property="og:title" content="国立大学運営費交付金の推移">
+<meta property="og:image" content="https://okumuralab.org/~okumura/python/img/univ_budget.png">
+<meta property="og:url" content="https://okumuralab.org/~okumura/python/univ_budget.html">
+<meta property="og:description" content="Pythonで描く国立大学運営費交付金の推移">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>国立大学運営費交付金の推移</h1>
+
+<p>Rで描いた<a href="../stat/090503d.html">国立大学運営費交付金</a>のPython版である。</p>
+
+<pre>
+import matplotlib.pyplot as plt
+
+# 2004年〜2025年の運営費交付金
+運営費交付金 = [12415, 12317, 12214, 12043, 11813, 11695, 11585,
+                11528, 11366, 10792, 11123, 10945, 10945, 10971,
+                10971, 10971, 10807, 10790, 10786, 10784, 10784,
+                10784]
+年 = list(range(2004, 2004+len(運営費交付金)))
+plt.figure(figsize=(8, 4.8))
+plt.bar(年, 運営費交付金, color="lightgray")
+for year, value in zip(年, 運営費交付金):
+    plt.text(year, value, value, ha="center", va="bottom", fontsize=5)
+plt.text(2002.1, 12200, '億円', ha='right', va='bottom') # , fontsize=12) # , color='black')
+# plt.savefig("univ_budget.svg", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/univ_budget.svg" alt="国立大学運営費交付金の推移"></figure>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-12-28 11:29:39 JST</time></p>
+</footer>
+</body>
+</html>

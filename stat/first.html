@@ -20,7 +20,7 @@
 
 <h2>Rのインストール</h2>
 
-<p><a href="https://www.r-project.org">R</a>（アール）は統計・データ解析・統計グラフ作成のためのオープンソースソフトです。<a href="https://cran.r-project.org">CRAN</a>（「シーラン」または「クラン」、Comprehensive R Archive Network）のミラーサイト（日本では統数研 <a href="https://cran.ism.ac.jp/">https://cran.ism.ac.jp/</a> など）からダウンロードし、インストールしてください。Windows用、Mac用、Linux用があります。</p>
+<p><a href="https://www.r-project.org">R</a>（アール）は統計・データ解析・統計グラフ作成のためのオープンソースソフトです。<a href="https://cran.r-project.org">CRAN</a>（「シーラン」または「クラン」、Comprehensive R Archive Network）のミラーサイト（例えば <a href="https://cloud.r-project.org">https://cloud.r-project.org</a> など）からダウンロードし、インストールしてください。Windows用、Mac用、Linux用があります。</p>
 
 <p>最近では下図のような <a href="https://posit.co/products/open-source/rstudio/">RStudio</a>（アール・スタジオ、英語の発音により忠実に書けばアール・ステューディオまたはアール・ストゥーディオ）という統合開発環境（IDE）を介してRを使う人が増えています。<a href="https://posit.co/download/rstudio-desktop/">Download RStudio Desktop</a> のページからダウンロードしてインストールします。</p>
 
@@ -1182,10 +1182,10 @@ library("MASS")
 と打ち込むと "package:MASS" が一覧に加わります。</p>
 
 <p><code>library()</code>
-でリストされるのはR標準のものだけです。これ以外に無数のパッケージがCRANサイトで公開されています。パッケージをインストールする前に、すでにインストールされているパッケージを念のため最新の状態に更新しておきましょう。次のコマンドは、統計数理研究所のCRANミラーを使ってパッケージを更新・インストールします（パッケージ名にはダブルクォートを付けます）。</p>
+でリストされるのはR標準のものだけです。これ以外に無数のパッケージがCRANサイトで公開されています。パッケージをインストールする前に、すでにインストールされているパッケージを念のため最新の状態に更新しておきましょう。</p>
 
 <pre>
-options(repos="https://cran.ism.ac.jp")
+options(repos="https://cloud.r-project.org")
 update.packages()
 install.packages("パッケージ名")
 </pre>
@@ -1308,7 +1308,7 @@ nohup R CMD BATCH hoge.R &amp;
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-05-08 11:42:44 JST</time></p>
+<p>Last modified: <time>2024-11-02 10:35:13 JST</time></p>
 </footer>
 </body>
 </html>

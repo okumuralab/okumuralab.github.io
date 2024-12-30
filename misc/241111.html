@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/241111.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typst入門</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>Typst入門</h1>
+
+<p>[2024-11-21] 別ページの<a href="241121.html">日本語の組版ルール</a>でも補足しました。</p>
+
+<p>[2024-12-26] 少し書き足しました。</p>
+
+<h2>はじめに</h2>
+
+<p><a href="https://typst.app">Typst</a>（タイプスト）はLaTeX代替とされる新しい組版ツールである。無料〜有料のサービスだが、<a href="https://github.com/typst/typst">GitHub</a> でオープンソースのコマンド版（CLI）が公開されている。ここではオープンソース版について扱う。なお、TeX Liveを入れていれば、<code>texdoc typstfun</code> でTypstとLaTeXのコマンド対照表が表示される。</p>
+
+<p>インストールはGitHubからダウンロードするか、あるいはHomebrewで <code>brew install typst</code> として入れる。私はGitHubからダウンロードした。</p>
+
+<pre>
+typst --help
+</pre>
+
+<p>で簡単な使い方が表示される。</p>
+
+<pre>
+typst update
+</pre>
+
+<p>で自己アップデートできる。</p>
+
+<p>Typstはシステムにインストールされたフォントをそのまま使える。それ以外のところにあるフォントは、例えば</p>
+
+<pre>
+export TYPST_FONT_PATHS=/usr/local/texlive/2024/texmf-dist/fonts/opentype
+</pre>
+
+<p>のように環境変数を設定することによって使えるようになる。使えるフォント一覧は</p>
+
+<pre>
+typst fonts
+</pre>
+
+<p>で表示される。</p>
+
+<h2>最初のTypst文書</h2>
+
+<p>さっそく最初の文書をタイプセットしてみよう。</p>
+
+<pre>
+Einsteinは $E=m c^2$ と言った。
+</pre>
+
+<p>LaTeXと違って <code>m c</code> のようにスペースが必要である。これを <code>test.typ</code> というファイル名で保存し、</p>
+
+<pre>
+typst compile test.typ
+</pre>
+
+<p>と打ち込むと、<code>test.pdf</code> というPDFファイルが出力される。しかし漢字の字形をよく見ると、いわゆる中華フォントだ（SIL-Hei-Med-Jian）。ちなみに欧文はデフォルトでLibertinus、数式は『LaTeX美文書作成入門』第9版で採用したのと同じNewCMMath-Bookである。</p>
+
+<p>日本語フォントにするには、<code>typst fonts</code> で出力されるフォントから適当なものを選んで指定すればよい。Macならヒラギノ明朝にしてみよう。</p>
+
+<pre>
+#set text(lang: "ja", font: "Hiragino Mincho ProN")
+
+Einsteinは $E=m c^2$ と言った。
+</pre>
+
+<p>これで数式以外がヒラギノ明朝になる。欧文「Einstein」の部分もヒラギノ明朝の従属欧文フォントになる。</p>
+
+<p>欧文はやっぱりLibertinusのほうがいいなら、</p>
+
+<pre>
+#set text(lang: "ja", font: ("Libertinus Serif", "Hiragino Mincho ProN"))
+
+Einsteinは $E=m c^2$ と言った。
+</pre>
+
+<p>のようにする。これでとりあえず数式以外はデフォルトでLibertinusが使われ、Libertinusにない文字はヒラギノになる（後述の「LaTeXと比べて未完成の部分」参照）。</p>
+
+<h2>pandocで使う</h2>
+
+<p>以上でも見たように、Typstでは <code>#</code> で始まる部分はTypstの命令である。Markdownと違って、見出しは <code>#</code> ではなく <code>=</code> で始める。数式もMarkdownで使うLaTeX風の記法とはかなり違う。LaTeX/Markdownに慣れていたら、最初は混乱する。そんな場合は、まずはLaTeXかMarkdownで書いて、pandocでTypstに変換すれば簡単である。</p>
+
+<p><a href="https://pandoc.org">pandoc</a> は物書きには必須の汎用ドキュメント形式変換ツールである。Homebrewなら <code>brew install pandoc</code> でインストールできる。<code>markdown</code>、<code>html</code>、<code>latex</code>、<code>typst</code>、<code>docx</code>、<code>epub</code>、<code>ipynb</code> などに対応する。</p>
+
+<p>例えばMarkdownで</p>
+
+<pre>
+---
+title: Typst入門
+author: 奥村晴彦
+date: 2024年11月11日
+mainfont: Hiragino Mincho ProN
+---
+
+# はじめに
+
+Einsteinは $E=mc^2$ と言った。
+</pre>
+
+<p>のように書いて、</p>
+
+<pre>
+pandoc test.md -o test.pdf
+</pre>
+
+<p>と打ち込むと、デフォルトでは <code>test.md</code> をLaTeXに変換して <code>pdflatex</code> でPDFにしようとするので、日本語があるとエラーになる。そこで</p>
+
+<pre>
+pandoc test.md --pdf-engine=typst -o test.pdf
+</pre>
+
+<p>とすると、LaTeXの代わりにTypstを使ってPDFに変換するので、とりあえずうまくいく。</p>
+
+<p>中で何が起こっているかというと、<code>pandoc -D typst</code> で出力されるTypstテンプレートを使ってTypstでPDFに変換している。したがって、<code>pandoc -D typst >mytemplate.typ</code> のようにテンプレートをファイルに収めてそれを修正し、</p>
+
+<pre>
+pandoc test.md --pdf-engine=typst --template=mytemplate.typ -o test.pdf
+</pre>
+
+<p>のようにして適用すれば、好きな出力にできる。例えば</p>
+
+<pre>
+  font: ("$mainfont$",),
+</pre>
+
+<p>を</p>
+
+<pre>
+  font: $mainfont$,
+</pre>
+
+<p>に直せば、</p>
+
+<pre>
+---
+title: Typst入門
+author: 奥村晴彦
+date: 2024年11月11日
+mainfont: ("New Computer Modern", "Hiragino Mincho ProN")
+---
+
+# はじめに
+
+Einsteinは $E=mc^2$ と言った。
+</pre>
+
+<p>のように欧文フォント・和文フォントを別に指定できるようになる。</p>
+
+<p>以上はMarkdownで書いた文書をpandoc＋TypstでPDFに変換する方法であった。もちろん <code>pandoc test.md -o test.typ</code> とすればPDFではなくTypst文書に変換できる。ただし、Markdown文書冒頭の <code>---</code> で囲まれた部分はpandocのTypstテンプレートで処理されるので、これでは出力されない。</p>
+
+<h2>パッケージの利用</h2>
+
+<p>以下ではLaTeXに近い出力を得るために</p>
+
+<pre>
+export TYPST_FONT_PATHS=/usr/local/texlive/2024/texmf-dist/fonts/opentype
+</pre>
+
+<p>のようにしてTeX LiveのOpenTypeフォントディレクトリにある原ノ味フォント等を利用する。TeX Liveをインストールしていない場合は、<code>typst fonts</code> で列挙されるフォントの中から適当なものに置き換えられたい。</p>
+
+<p>まずはどこかのディレクトリでターミナルに</p>
+
+<pre>
+typst init @preview/rubber-article myproj
+</pre>
+
+<p>と打ち込んでみよう。これは <a href="https://typst.app/universe/">Typst Universe</a>（LaTeXのCTANに相当する場所）から <code>rubber-article</code> というパッケージ（いわばスタイルファイル）をダウンロードし、カレントディレクトリ下に <code>myproj</code> というフォルダを作ってサンプルファイル <code>main.typ</code> を入れる。パッケージは環境変数 <code>TYPST_PACKAGE_CACHE_PATH</code> で指定した場所（デフォルトはLinuxなら <code>~/.cache</code> の中、Macなら <code>~/Library/Caches</code> の中、Windowsなら <code>C:\Users\ユーザ名\AppData\Local</code> の中）にキャッシュされる。</p>
+
+<p>とりあえずサンプルファイルをコンパイルしてみよう。</p>
+
+<pre>
+cd myproj
+typst watch main.typ
+</pre>
+
+<p>このように <code>typst compile main.typ</code> でなく <code>typst watch main.typ</code> とすると <code>main.typ</code> が変化するタイミングで自動コンパイルしてくれる。生成される <code>main.pdf</code> を自動再読み込みに対応したPDFビューア（MacのPreviewなど）で開いておけばリアルタイムで編集結果が見れる。</p>
+
+<p>ご覧のように、<code>rubber-article</code> はLaTeXのarticleドキュメントクラスとほぼそっくりの仕上がりになる。</p>
+
+<p>この <code>main.typ</code> を適当に書き直してみよう。日本語メインの文書なら、おおよそ次のようにするとよさそうである（数値は調整の必要あり）。</p>
+
+<pre>
+#import "@preview/rubber-article:0.1.0": *
+
+#show: article.with(lang:"ja", text-size:10pt)
+
+#set text(font: ("New Computer Modern", "Harano Aji Mincho"), weight: 450)
+#show heading: set text(font: ("New Computer Modern Sans", "Harano Aji Gothic"), weight: 450)
+#show strong: set text(font: ("New Computer Modern Sans", "Harano Aji Gothic"), weight: 300)
+#set par(first-line-indent: 1em, spacing: 1em, leading: 1em)
+#show heading: it => {
+  v(2em, weak: true)
+  it
+  par(text(size: 0pt, ""))
+  v(0.3em, weak: true)
+}
+
+#maketitle(
+  title: "Typst入門",
+  authors: (
+    "奥村晴彦",
+  ),
+  date: datetime.today().display("[year]年[month]月[day]日"),
+)
+
+= 日本語でTypstを使う
+
+Einsteinは $E = m c^2$ と言った。
+</pre>
+
+<p>New Computer Modernについては、『LaTeX美文書作成入門』第9版ではRegularでなくBookのほうを使っている。TypstでBookにするにはweightを425〜575にすればよい（デフォルトは400）。原ノ味はRegularでいいのでここではweightを450に設定した。見出しについてはTypstのデフォルトでは強すぎるように感じたので少しweightを落としてあるが、好みに応じて加減されたい。</p>
+
+<h2>和文文字の組み方</h2>
+
+<p>日本語の文字は、例えば</p>
+
+<pre>
+#set text(lang: "ja", font: "Harano Aji Mincho", 10pt)
+</pre>
+
+<p>のようにして10ptに設定しても、幅は10ptになるが、高さはそれより小さくなる。これは</p>
+
+<pre>
+#context{ measure("あ") }
+</pre>
+
+<p>をコンパイルしてみればわかる。原ノ味フォントでは (width: 10pt, height: 7.29pt) と表示されるはずである。したがって、<code>#set par(spacing: 1em, leading: 1em)</code> で10行を組めば、高さは 72.9pt + 90pt になる。高さはフォントによって異なり、"Hiragino Mincho ProN" なら 7.43pt になる。</p>
+
+<p>マージンは、行長が全角文字幅の整数倍になるように調整しないと、不自然な伸びが生じてしまう。例えば原ノ味フォントで本文40文字×38行をA4判に組むには、次のようにすればよいであろう。</p>
+
+<pre>
+#let width = 210mm
+#let height = 297mm
+#let fontsize = 10pt
+#let xmargin = (width - 40 * fontsize) / 2
+#let ymargin = (height - (1.729 * 38 - 1) * fontsize) / 2
+
+#set page(
+  width: width,
+  height: height,
+  margin: (x: xmargin, y: ymargin),
+  numbering: "1",
+)
+
+#set text(lang: "ja", font: "Harano Aji Mincho", fontsize)
+#set par(first-line-indent: 1em, justify: true, spacing: 1em, leading: 1em)
+</pre>
+
+<p>2段組にする場合でも</p>
+
+<pre>
+#set page(columns: 2)
+#set columns(gutter: 2em) // 段間隔
+</pre>
+
+<p>のように段間隔を調節して、各段の幅が全角幅の整数倍になるようにしなければならない。</p>
+
+<p>（書きかけです）</p>
+
+<h2>LaTeXと比べて未完成の部分</h2> 
+
+<p>和欧混植の仕組みが基本的に未実装である。上で採用した欧文フォントのフォールバックとして和文フォントを指定する方法では、例えば“ダブルクオート”は欧文フォントにも含まれているので全角扱いできない（Unicodeの「東アジアの文字幅」問題、『LaTeX美文書作成入門』第9版p.199参照）。和欧文のサイズ調整もできない。例えばLaTeXの(lt)jsarticleなどでは和文フォントサイズを欧文より少し小さくしているし、jlreqドキュメントクラスではまったく独立に指定できる。これらをTypstで実現するには、正規表現を使って例えば</p>
+
+<pre>
+#show regex("[\p{scx:Han}\p{scx:Hira}\p{scx:Kana}]"): set text(font: "Harano Aji Mincho", size: 0.925em)
+</pre>
+
+<p>のようにすることが考えられる。ただ、これでは約物（句読点・括弧類）の組版ルール（<a href="https://www.w3.org/TR/jlreq/">日本語組版処理の要件</a>の例えばFigure 46参照）が正しく適用されない（「「あ」「い」、「う」」のように括弧や句読点が並ぶ例をタイプセットしてみればわかる）。提案されている <a href="https://github.com/typst/typst/issues/3331">Font Unicode Range</a> の実装が待たれる。</p>
+
+<p>なお、これは正規表現に限らず、<code>#show "、": "，"</code> 等で句読点を置換する際にも生じるので、気をつけなければならない。</p>
+
+<p>段落の最初の全角下げが最初の段落に適用されない。<code>#set par(first-line-indent: 1em)</code> と指定しても、各セクション2番目の段落からしか全角下げされない。これは欧文組版の一般的なルールであるが、それがハードコードされてしまっている。上に挙げたスタイルでは見出しに <code>par(text(size: 0pt, ""))</code> のようなダミーの段落を入れるというハックを使っているが、見出しのない文章では困る。</p>
+
+<p><a href="https://www.w3.org/TR/jlreq/">日本語組版処理の要件</a> 3.1.5 行頭の​始め括弧類の​配置方法で、LaTeXの(lt)jsarticleなどはFigure 71の①の組み方に統一しているが、Typstの現状では段落頭で全角半アキ、段落途中で天ツキになってしまう。</p>
+
+<p>以上に関連する<a href="241121.html">日本語の組版ルール</a>の解説を別に書いたので参照されたい。</p>
+
+<p>和欧間のアキ（LaTeXの <code>\xkanjiskip</code>）は入るが、和文と数式の間にはアキが自動で入らない。とりあえずは半角空白を入れるので十分であろう（→ <a href="https://qiita.com/zr_tex8r/items/a9d82669881d8442b574">Typstで和文と数式の間の空きをどうにかしたい話</a>）。</p>
+
+<p>句読点のブラ下げ組ができない（これは需要が少ないと思われる）。</p>
+
+<p>ルビや割注については <a href="https://typst.app/docs/roadmap/">roadmap</a> に載っているが未実装である。ただし <a href="https://typst.app/universe/package/rubby">rubby</a> というパッケージが開発されている。</p>
+
+<p>縦組ができない。</p>
+
+<p>参考文献の並べ方は引用順にしかできないようなので、分野/ジャーナルによっては困るかも。</p>
+
+<p>あと、欠点ではないが注意すべき仕様として、和文文字列の途中で改行すると欧文スペースが挿入されるので、長い段落も1行で書かなければならない。</p>
+
+<h2>参考</h2>
+
+<ul>
+  <li>公式ドキュメント: <a href="https://typst.app/docs/">Typst Documentation</a></li>
+  <li>非公式日本語ドキュメント: <a href="https://typst-jp.github.io/docs/">Typstについて</a>（特に<a href="https://typst-jp.github.io/docs/japanese/">日本語組版情報</a>が役に立つ）</li>
+</ul>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-12-26 07:54:54 JST</time></p>
+</footer>
+</body>
+</html>

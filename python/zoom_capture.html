@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/zoom_capture.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zoom画面をキャプチャー</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>Zoom画面をキャプチャー</h1>
+
+<p>Zoom画面を録画することはできるが、スライドを共有する形の発表ではスライドごとに画像として保存して、あとでPDFにまとめるほうが楽である。そこで、Zoom画面を毎秒キャプチャし、差分がほぼ 0 の場合は捨てて、異なるキャプチャだけを保存するコードをPythonで書くことにした。</p>
+
+<p>ChatGPT 4oに聞いたところ、pygetwindowでウィンドウを取得し、pyautoguiでスクリーンショットを撮る方法を教えてくれたが、どちらもうまく働かない。さらに聞いたらpyobjcのQuartzモジュールが使えそうなことがわかった。一方、スクリーンキャプチャはPILでもできるようだが、結局はmacOSのscreencaptureコマンドを呼び出している。それなら自前でやったほうが良さそうだ。</p>
+
+<p>ということで、まず <code>pip install pyobjc</code> して、次のようにすることにした。これでマルチスクリーンにも対応するはずである。</p>
+
+<p>Zoomのミーティングウィンドウは "Zoom Meeting" という名前であるが、同じ名前のウィンドウが二つできる。一方が全員の画面、もう一方が発表者の共有画面である。どうやって区別すればいいか、わからなかったが、たまたまうちでは全員の画面は縦長、共有画面は横長にしているので、幅と高さを比べて調べることにした。</p>
+
+<p>ウィンドウの位置とサイズがわかれば、macOSの <code>screencapture</code> コマンドで画面キャプチャし、PNGファイルに保存する。これを開いて、<code>.convert("L")</code> でグレイスケールに変換する。これだけでもいいが、少しずれる可能性も考えて、Gaussian blur をかけている。</p>
+
+<p>この画像を一つ前と比べて、十分違っていなければ削除する。これを毎秒繰り返す。</p>
+
+<p>違っているかの判断は、差分のノルムで判断する。最初ChatGPTが教えてくれたコードは <code>np.array()</code> でNumPy配列に変換して差分をとるものであったが、なぜかうまくいかない。よく考えたら、画像の要素は <code>uint8</code> なので、例えば 99 - 100 は -1 ではなく 255 になる。これではうまくないので、<code>int16</code> に変換してから差分をとることにした。</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import os
+import time
+import subprocess
+import numpy as np
+from PIL import Image, ImageFilter
+import Quartz # pip install pyobjc
+
+blur_radius = 10
+
+num = 0
+img_prev = np.array([])
+while True:
+    while os.path.exists(f"zoom{num:04}.png"):
+        num += 1
+    file = f"zoom{num:04}.png"
+    window_list = Quartz.CGWindowListCopyWindowInfo(
+        Quartz.kCGWindowListOptionOnScreenOnly,
+        Quartz.kCGNullWindowID
+    )
+    captured = False
+    for window in window_list:
+        if window.get("kCGWindowName", "") == "Zoom Meeting":
+            bounds = window.get("kCGWindowBounds", {})
+            x = int(bounds.get("X", 0))
+            y = int(bounds.get("Y", 0))
+            w = int(bounds.get("Width", 0))
+            h = int(bounds.get("Height", 0))
+            if w > h:
+                # print(f"screencapture -x -R {x},{y},{w},{h} {file}")
+                subprocess.call(["screencapture", "-x", "-R", f"{x},{y},{w},{h}", file])
+                captured = True
+                break
+    if not captured:
+        break
+    img = np.int16(
+        Image.open(file).convert("L").filter(ImageFilter.GaussianBlur(blur_radius))
+    )
+    if img.size == img_prev.size:
+        diff = np.linalg.norm(img - img_prev) / (255 * np.sqrt(img.size))
+        # print(f"{num:04} {diff:.3f} {'' if diff < 0.01 else '*'}")
+        if diff < 0.01:
+            os.unlink(file)
+    img_prev = img
+    time.sleep(1)
+</pre>
+
+<p>上のプログラムではキャプチャ範囲を自動で取得してくれるが、手動で指定するには、Macでは command+shift+ctrl+4 でキャプチャ範囲を指定する過程で、始点 x、y、終点 w、h が取得できる。マルチスクリーン環境で <code>screencapture</code> コマンドの <code>-R x,y,w,h</code> での範囲指定はちょっと工夫が必要である。うちではメインディスプレイが縦置き（▯）1200×1920、2番目のディスプレイがその右側で横置き（▭）1920×1080で、底辺を揃えるように配置しているので、2番目のディスプレイの位置座標はxに1200を加え、yに1920-1080=840を加えた値になる。</p>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-12-28 16:03:58 JST</time></p>
+</footer>
+</body>
+</html>

@@ -18,21 +18,39 @@
 
 <h1>PyMuPDFでPDFを読む</h1>
 
-<p><a href="https://pymupdf.io">PyMuPDF</a>は、Ghostscriptをメンテしている<a href="https://artifex.com">Artifex</a>が作っている<a href="https://artifex.com/products/mupdf/">MuPDF</a>のPythonバインディングです。<code>pip install PyMuPDF</code> でインストールできます。ライブラリ名はPyMuPDFですが、パッケージ名は <code>fitz</code> です。GitHubの<a href="https://github.com/pymupdf/PyMuPDF">PyMuPDF</a>や<a href="https://pymupdf.readthedocs.io/en/latest/">詳しいドキュメント</a>もあります。次のように使います。</p>
+<p><a href="https://pymupdf.io">PyMuPDF</a>は、Ghostscriptをメンテしている<a href="https://artifex.com">Artifex</a>が作っている<a href="https://artifex.com/products/mupdf/">MuPDF</a>のPythonバインディングです。<code>pip install PyMuPDF</code> でインストールできます。GitHubの<a href="https://github.com/pymupdf/PyMuPDF">PyMuPDF</a>や<a href="https://pymupdf.readthedocs.io/en/latest/">詳しいドキュメント</a>もあります。次のように使います。</p>
 
 <pre class="cell">
-import fitz
+import pymupdf
 
-with fitz.open("filename.pdf") as doc:
-    for page in doc:
-        text = page.get_text()
-        print(text)
+doc = pymupdf.open("example.pdf")
+for page in doc:
+    text = page.get_text()
+    print(text)
+</pre>
+
+<p>コマンド <code>pymupdf</code> もインストールされます。<code>pymupdf gettext example.pdf</code> とすれば <code>example.txt</code> に上書きされます。</p>
+
+<p>PyMuPDFを使ってLLM/RAGで扱いやすいMarkdown形式を出力する <a href="https://pymupdf.readthedocs.io/en/latest/pymupdf4llm/">PyMuPDF4LLM</a> があります。これを使ってコマンドラインで与えたファイル名のPDFをすべてMarkdownにする簡単なプログラム：</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import pymupdf4llm
+import pathlib
+import sys
+
+for arg in sys.argv[1:]:
+    md_text = pymupdf4llm.to_markdown(arg)
+    if arg.endswith(".pdf"):
+        arg = arg[:-4]
+    pathlib.Path(arg + ".md").write_bytes(md_text.encode())
 </pre>
 
 <hr>
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-02-23 16:23:39 JST</time></p>
+<p>Last modified: <time>2024-11-11 17:10:30 JST</time></p>
 </footer>
 </body>
 </html>
