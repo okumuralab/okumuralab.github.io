@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/causality.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>相関関係がなければ因果関係もない？</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>相関関係がなければ因果関係もない？</h1>
+
+<p>相関関係があっても（直接の）因果関係があるとは限りません。これについては<a href="../stat/correlation_causation.html">相関関係と因果関係</a>や<a href="../stat/spuriouscorrelation.html">疑似相関</a>のところで詳しく述べましたので、繰り返しません。</p>
+
+<p>では、「相関関係がなければ因果関係はない」は正しいでしょうか？</p>
+
+<p>実は、これも必ずしも正しくありません。相関関係が（ほぼ）なくても（直接の）因果関係があることはありえます。</p>
+
+<p>例えば、<a href="../stat/spuriouscorrelation.html">疑似相関</a>のところでも挙げた「ワクチン接種」と（感染した場合の）「重症化」の関係を考えてみましょう。ワクチン接種すれば重症化しにくいという（直接の）因果関係がありますが、（少なくともある時期においては）ワクチン接種するのは高齢者が多く、高齢者は（感染した場合に）重症化しやすいという関係もあります。この二つの関係は逆向きなので、打ち消しあって、相関関係がほぼ見えなくなることがありえます。それでも因果関係はあります。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2024-12-31 15:32:29 JST</time></p>
+</footer>
+</body>
+</html>

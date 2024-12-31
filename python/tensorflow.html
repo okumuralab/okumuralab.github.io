@@ -4,7 +4,7 @@
 <link rel="canonical" href="https://okumuralab.org/~okumura/python/tensorflow.html">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TensorFlowによる機械学習</title>
+<title>TensorFlow（Keras）による機械学習</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <script src="../js/copypre.js"></script>
@@ -16,40 +16,39 @@
 <a href="./">Python</a> &gt;
 </nav>
 
-<h1>TensorFlowによる機械学習</h1>
+<h1>TensorFlow（Keras）による機械学習</h1>
 
-<p><a href="https://www.tensorflow.org/">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。通常は</p>
+<p>[2024-12-30] 古い「TensorFlowによる機械学習」をとりあえず改訂しました。TensorflowからKerasが独立したので「Kerasによる・・・」という題名のほうが適切になりました。</p>
+
+<p><a href="https://www.tensorflow.org/">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。今は PyTorch のほうが流行りである。Tensorflow の一部であった <a href="https://keras.io">Keras</a> は独立して Keras 3 となったが、<code>tf-keras</code> を入れることで Keras 2 も使える。</p>
+
+<p>インストールは、Apple Silicon を含め、</p>
 
 <pre>
 pip install tensorflow
 </pre>
 
-<p>または</p>
+<p>でできるはずである。Keras 3 を入れるには</p>
 
 <pre>
-pip install tensorflow-macos
+pip install keras
 </pre>
 
-<p>で入るはずである。Apple Silicon での別の入れ方は <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> 参照。</p>
+<p>Keras 2 を入れるには</p>
 
-<p><code>tf.keras</code> を使う上では TensorFlow 1 系 と 2 系で見かけ上の違いはほぼない。</p>
-
-<div class="note">
-<p>TensorFlow 2 で 1.x のコードを走らせるには</p>
 <pre>
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+pip install tf-keras
 </pre>
+
 <p>とする。</p>
-</div>
 
-<div class="note">
-<p>TensorFlow 1.x のコードを 2.x 用に変換するには</p>
-<pre>
-tf_upgrade_v2 --intree dir/ --outtree dir2/ --reportfile report.txt
-</pre>
-<p>と打ち込む。<code>dir/</code> が元のディレクトリ，<code>dir2/</code> は新しく作られるディレクトリ（あらかじめ作成しておいてはいけない）。必ずしもうまくいくとは限らない。</p>
-</div>
+<aside>
+<p>Apple Silicon についての <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> は古くなってしまった。今は <a href="https://pypi.org/project/tensorflow-metal/">tensorflow-metal</a> も更新されていないようである。</p>
+</aside>
+
+<aside>
+<p><code>import tensorflow as tf</code> すると AttributeError: 'NoneType' object has no attribute 'Rlocation' で落ちることがある。これは <code>mesop</code> が悪さをしているようだ（<a href="https://github.com/tensorflow/tensorflow/issues/75288">Fail import tensorflow if rules_python is installed.</a>）。とりあえず <code>pip uninstall mesop</code> すれば動く。</p>
+</aside>
 
 <p>インポートする：</p>
 
@@ -64,21 +63,37 @@ tf.__version__
 </pre>  
 
 <pre>
-'2.10.0'
+'2.18.0'
 </pre>
 
+<p>Keras については、Keras 2 を使うなら</p>
+
 <pre class="cell">
-tf.keras.__version__
+import tf_keras as keras
+
+keras.__version__
 </pre>  
 
 <pre>
-'2.10.0'
+'2.18.0'
 </pre>
 
-<p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>の最初の例をやってみる。データには有名な <a href="mnist.html">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
+<p>Keras 3 を使うなら</p>
 
 <pre class="cell">
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+import keras
+
+keras.__version__
+</pre>  
+
+<pre>
+'3.7.0'
+</pre>
+
+<p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>に昔あった最初の例をやってみる。データには有名な <a href="mnist.html">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
+
+<pre class="cell">
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 </pre>
 
 <p>初回はネットからダウンロードするが次回からは ~/.keras 以下のキャッシュ（11Mバイトくらい）を使う。ピクセルは0〜255の整数値だが，0〜1の実数に変換する：</p>
@@ -90,14 +105,14 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 <p>ごくごく簡単なモデルを定義する：</p>
 
 <pre class="cell">
-model = tf.keras.models.Sequential([
-  tf.keras.layers.Flatten(input_shape=(28, 28)),
-  tf.keras.layers.Dense(128, activation='relu'),
-  tf.keras.layers.Dropout(0.2),
-  tf.keras.layers.Dense(10)
+model = keras.models.Sequential([
+  keras.layers.Flatten(input_shape=(28, 28)),
+  keras.layers.Dense(128, activation='relu'),
+  keras.layers.Dropout(0.2),
+  keras.layers.Dense(10)
 ])
 
-loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+loss_fn = keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 
 model.compile(optimizer='adam',
               loss=loss_fn,
@@ -110,23 +125,35 @@ model.compile(optimizer='adam',
 model.fit(x_train, y_train, epochs=5)
 </pre>
 
-<p>経過の例（Mac mini (M1 2020) tensorflow-metal なし）：</p>
+<p>Keras 2 による経過の例（Mac mini (M1 2020)）：</p>
 
 <pre>
-2022-09-16 15:43:59.502013: W tensorflow/core/platform/profile_utils/cpu_utils.cc:128] Failed to get CPU frequency: 0 Hz
 Epoch 1/5
-1875/1875 [==============================] - 1s 592us/step - loss: 0.2949 - accuracy: 0.9131
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.2911 - accuracy: 0.9150
 Epoch 2/5
-1875/1875 [==============================] - 1s 576us/step - loss: 0.1432 - accuracy: 0.9578
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.1432 - accuracy: 0.9571
 Epoch 3/5
-1875/1875 [==============================] - 1s 589us/step - loss: 0.1087 - accuracy: 0.9680
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.1079 - accuracy: 0.9678
 Epoch 4/5
-1875/1875 [==============================] - 1s 594us/step - loss: 0.0877 - accuracy: 0.9726
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.0869 - accuracy: 0.9736
 Epoch 5/5
-1875/1875 [==============================] - 1s 571us/step - loss: 0.0759 - accuracy: 0.9766
+1875/1875 [==============================] - 4s 2ms/step - loss: 0.0741 - accuracy: 0.9766
 </pre>
 
-<p>（<code>pip install tensorflow-metal</code> すると GPU が使えるはずだが、かえって遅くなってしまったので、<code>pip uninstall tensorflow-metal</code> した。）</p>
+<p>Keras 3 による経過の例（Mac mini (M1 2020)）：</p>
+
+<pre>
+Epoch 1/5
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 2s 805us/step - accuracy: 0.8655 - loss: 0.4684
+Epoch 2/5
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 790us/step - accuracy: 0.9556 - loss: 0.1505
+Epoch 3/5
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 794us/step - accuracy: 0.9673 - loss: 0.1075
+Epoch 4/5
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 790us/step - accuracy: 0.9730 - loss: 0.0891
+Epoch 5/5
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 794us/step - accuracy: 0.9747 - loss: 0.0798
+</pre>
 
 <p>最後に評価：</p>
 
@@ -174,14 +201,14 @@ model.save("mymodel.h5")
 <p>保存したモデルは次のようにして読み出す：</p>
 
 <pre class="cell">
-model = tf.keras.models.load_model("mymodel.h5")
+model = keras.models.load_model("mymodel.h5")
 </pre>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-09-16 15:46:05 JST</time></p>
+<p>Last modified: <time>2024-12-30 22:05:02 JST</time></p>
 </footer>
 </body>
 </html>
