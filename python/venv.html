@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/venv.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>venvによる仮想環境</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>venvによる仮想環境</h1>
+
+<p>自分でプログラミングするなら、最新のPythonをインストールして、最新のパッケージと組み合わせて使えばいいので、簡単です。でも、特定の作業をするためには、Pythonやパッケージのバージョンを指定しなければならないことがよくあります。このようなときにvenvによる仮想環境が役に立ちます。</p>
+
+<p>例えば <code>mywork</code> というディレクトリの中で特定の作業をするとしましょう。この中では <code>/Library/Frameworks/Python.framework/Versions/3.13/bin/python3</code> というPythonバイナリを使って作業するとします。</p>
+
+<p>まずはこのディレクトリの中でターミナルに次のように打ち込みます：</p>
+
+<pre>
+/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 -m venv .venv
+</pre>
+
+<p>すると、このディレクトリの中に <code>.venv</code> というサブディレクトリができます。この名前は <code>.venv</code> でなくても何でもよく、場所も別のディレクトリに作ってもいいのですが、自分で流儀を決めておくとわかりやすくなります。</p>
+
+さて、<code>.venv</code> というディレクトリには <code>bin</code> というサブディレクトリができ、その中に <code>activate</code> というbash/zshシェルスクリプト（およびcsh等のシェルのための同様のシェルスクリプト）ができます。bashやzshを使っているなら、</p>
+
+<pre>
+source .venv/bin/activate
+</pre>
+
+<p>と打ち込みます。するとシェルのプロンプトの先頭に <code>(.venv)</code> という名前が付くようになります。この状態で <code>python</code> あるいは <code>python3</code> と打つと、最初に指定した <code>/Library/Frameworks/Python.framework/Versions/3.13/bin/python3</code> が実行されるようになります（念のためシェルに <code>hash -r</code> と打ち込むと実行ファイルのパスのキャッシュがリフレッシュされます）。また、サードパーティのパッケージはまったくインストールされていない状態になります。</p>
+
+<p>このまっさらな環境で、まずは <code>pip install ...</code> で必要なパッケージをインストールします。パッケージは <code>.venv/lib/python3.xx/site-packages</code> 以下にインストールされます。</p>
+
+<p>GitHubなどで公開されたものには、どういうパッケージが必要かを書き込んだテキストファイル <code>requirements.txt</code> が入っていることがよくあります。その場合は</p>
+
+<pre>
+pip install -r requirements.txt
+</pre>
+
+<p>と打ち込むだけでパッケージがインストールされます。このファイルには、例えば <code>numpy==2.2.1</code> のようにパッケージ名とバージョンが行ごとに書き込まれています。</p>
+
+<p>逆に、</p>
+
+<pre>
+pip freeze > requirements.txt
+</pre>
+
+<p>と打ち込めば、現在インストールされているパッケージ名とバージョンが並んだ <code>requirements.txt</code> ファイルが生成されますので、これを含めて公開すれば、パッケージのバージョン違いでうまく動かないといったことが避けられます。</p>
+
+<p>最後に、activate された仮想環境を抜けるには、<code>deactivate</code> と打ち込みます。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-01-03 20:15:06 JST</time></p>
+</footer>
+</body>
+</html>
