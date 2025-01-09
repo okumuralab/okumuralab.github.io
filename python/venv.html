@@ -21,11 +21,15 @@
 <main>
 <h1>venvによる仮想環境</h1>
 
-<p>自分でプログラミングするなら、最新のPythonをインストールして、最新のパッケージと組み合わせて使えばいいので、簡単です。でも、特定の作業をするためには、Pythonやパッケージのバージョンを指定しなければならないことがよくあります。このようなときにvenvによる仮想環境が役に立ちます。</p>
+<p>自分でプログラミングするなら、最新のPythonをインストールして、最新のパッケージと組み合わせて使えばいいので、簡単です。でも、特定の作業をするためには、Pythonのバージョンやパッケージのバージョンを指定しなければならないことがよくあります。あるいは、あまり有名でないパッケージを試したいけれど普段使いの環境にインストールするのは怖いと思うことがあります。このようなときに、Python標準のモジュール <a href="https://docs.python.org/3/library/venv.html">venv</a> による仮想環境が役に立ちます。</p>
 
-<p>例えば <code>mywork</code> というディレクトリの中で特定の作業をするとしましょう。この中では <code>/Library/Frameworks/Python.framework/Versions/3.13/bin/python3</code> というPythonバイナリを使って作業するとします。</p>
+<p>あるディレクトリの中で特定の作業をするとしましょう。まずはこのディレクトリの中でターミナルに次のように打ち込みます：</p>
 
-<p>まずはこのディレクトリの中でターミナルに次のように打ち込みます：</p>
+<pre>
+python3 -m venv .venv
+</pre>
+
+<p>別バージョンのPythonを使いたいなら、絶対パスで指定します。例：</p>
 
 <pre>
 /Library/Frameworks/Python.framework/Versions/3.13/bin/python3 -m venv .venv
@@ -33,13 +37,13 @@
 
 <p>すると、このディレクトリの中に <code>.venv</code> というサブディレクトリができます。この名前は <code>.venv</code> でなくても何でもよく、場所も別のディレクトリに作ってもいいのですが、自分で流儀を決めておくとわかりやすくなります。</p>
 
-さて、<code>.venv</code> というディレクトリには <code>bin</code> というサブディレクトリができ、その中に <code>activate</code> というbash/zshシェルスクリプト（およびcsh等のシェルのための同様のシェルスクリプト）ができます。bashやzshを使っているなら、</p>
+<p>さて、<code>.venv</code> というディレクトリには <code>bin</code> というサブディレクトリができ、その中に <code>activate</code> というbash/zshシェルスクリプト（およびcsh等のシェルのための同様のシェルスクリプト）ができます。bashやzshを使っているなら、</p>
 
 <pre>
 source .venv/bin/activate
 </pre>
 
-<p>と打ち込みます。するとシェルのプロンプトの先頭に <code>(.venv)</code> という名前が付くようになります。この状態で <code>python</code> あるいは <code>python3</code> と打つと、最初に指定した <code>/Library/Frameworks/Python.framework/Versions/3.13/bin/python3</code> が実行されるようになります（念のためシェルに <code>hash -r</code> と打ち込むと実行ファイルのパスのキャッシュがリフレッシュされます）。また、サードパーティのパッケージはまったくインストールされていない状態になります。</p>
+<p>と打ち込みます。するとシェルのプロンプトの先頭に <code>(.venv)</code> という名前が付くようになります。この状態で <code>python</code> あるいは <code>python3</code> と打つと、<code>.venv</code> を作る際に起動したPythonが実行されます（念のためシェルに <code>hash -r</code> と打ち込むと実行ファイルのパスのキャッシュがリフレッシュされます）。また、サードパーティのパッケージはまったくインストールされていない状態になります。</p>
 
 <p>このまっさらな環境で、まずは <code>pip install ...</code> で必要なパッケージをインストールします。パッケージは <code>.venv/lib/python3.xx/site-packages</code> 以下にインストールされます。</p>
 
@@ -60,13 +64,15 @@ pip freeze > requirements.txt
 <p>と打ち込めば、現在インストールされているパッケージ名とバージョンが並んだ <code>requirements.txt</code> ファイルが生成されますので、これを含めて公開すれば、パッケージのバージョン違いでうまく動かないといったことが避けられます。</p>
 
 <p>最後に、activate された仮想環境を抜けるには、<code>deactivate</code> と打ち込みます。</p>
+
+<p>仮想環境をもう使わないなら <code>rm -rf .venv</code> でディレクトリごと消します。</p>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-01-03 20:15:06 JST</time></p>
+<p>Last modified: <time>2025-01-05 10:06:43 JST</time></p>
 </footer>
 </body>
 </html>

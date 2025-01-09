@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/250106.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LilyPond</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>LilyPond</h1>
+
+<p><a href="https://lilypond.org">LilyPond</a>（リリーポンド、「スイレンの池」の意）は、テキストで書いた楽譜をPDFやMIDIに変換するツールである。</p>
+
+<p>本家の <a href="https://lilypond.org/doc/Documentation/web/download">Download</a> ページからダウンロードできるが、私はMacでHomebrewを使っているので、ターミナルに <a href="https://formulae.brew.sh/formula/lilypond">brew install lilypond</a> と打ち込むだけでインストールできた。インストールすると abc2ly、convert-ly、etf2ly、lilymidi、lilypond、lilypond-book、lilypond-invoke-editor、lilysong、midi2ly、musicxml2ly というコマンドが入る。このうち lilypond は（arm64の）バイナリで、残りはPythonスクリプトである。ついでに <a href="https://ja.wikipedia.org/wiki/GNU_Guile">Guile</a> というScheme（Lispの一種）の処理系（コマンド guile、guild、guile-config、guile-snarf、guile-tools）も入る。</p>
+
+<p>GUIツール <a href="https://github.com/frescobaldi/frescobaldi">Frescobaldi</a> もあるが、以下ではコマンドラインツールだけを使うことにする。VS CodeにはLilyPond入力・プレビュー拡張機能がいろいろあるようだ。</p>
+
+<p>LilyPondファイルは拡張子 <code>ly</code> のテキストファイルである。以下では LilyPond 2.24.4 を使うと仮定する。例えば</p>
+
+<pre>
+\version "2.24.4"
+{ c' d' e' f' g' a' b' c'' }
+</pre>
+
+<p>というテキストファイル <code>test.ly</code> を用意し、ターミナルに <code>lilypond test.ly</code> と打ち込めば、</p>
+
+<figure><img src="img/250106a.svg" alt="LilyPond example 1"></figure>
+
+<p>のように出力される。</p>
+
+<aside>
+<p>デフォルトではPDFで出力されるが、<code>lilypond --svg test.ly</code> とすればSVGになり、<code>lilypond --png test.ly</code> とすればPNGになる。デフォルトではフッタの付いた1ページ大のサイズになるが、上の図は <code>lilypond --svg -dcrop='#t' test.ly</code> として出力された <code>test.cropped.svg</code> を使った。<code>-dcrop=#t</code> は <code>crop</code> を <code>#t</code> と定義する。<code>#t</code>、<code>#f</code> はScheme（Guile）のtrue、falseである。シェルが <code>#</code> を特別扱いしないようにクォートで囲んでいる。</p>
+</aside>
+
+<p>先頭に <code>\version "2.24.4"</code> と書く意味は、将来バージョンが上がって記法が変わった場合に <code>convert-ly -e test.ly</code> と打ち込むことで最新バージョンの記法に変換できるようにするためである。変換内容は上書きされ、元ファイルは <code>test.ly~</code> に改名される。</p>
+
+<p>古くからある<a href="250105.html">ABC記譜法</a>をLilyPond記法に変換するには <code>abc2ly test.ly</code> と打ち込む。</p>
+
+<p>LilyPondの記法をまとめておく。以下では <code>\version</code> 指定は省略する。</p>
+
+<p>最初の例</p>
+
+<pre>
+{ c' d' e' f' g' a' b' c'' }
+</pre>
+
+<p>で、いちいち <code>'</code> をたくさん書くのは面倒だ。そのときは相対指定を使う：</p>
+
+<pre>
+\relative { c' d e f g a b c }
+</pre>
+
+<p>出力は同じである。最初の音符の絶対的な高さだけ指定すれば、次からは直前の音符に一番近い音が選ばれる。あるいは</p>
+
+<pre>
+\relative c' { c d e f g a b c }
+</pre>
+
+<p>とすれば、<code>c'</code> に一番近い音から始まる。</p>
+
+<p>オクターブ上げるには <code>'</code> を付け、下げるには <code>,</code> を付ける。</p>
+
+<p>音符の長さは四分音符がデフォルトだが、例えば <code>8</code> を付ければ八分音符になる。これは <code>\relative</code> 関係なく、省略すれば直前の音符と同じ長さになる。付点はピリオド <code>.</code> を付ける。</p>
+
+<pre>
+\relative c' { c d8 e f g a b c2 r2 }
+</pre>
+
+<figure><img src="img/250106b.svg" alt="LilyPond example 2"></figure>
+
+<p>このように、連桁（れんこう、beam、♪♪→🎵）がデフォルトで、<code>\autoBeamOff</code> と <code>\autoBeamOn</code> で自動連桁を制御する。</p>
+
+<p>シャープ、フラットは、デフォルトではドイツ語流に <code>is</code>、<code>es</code> を付けるが、<code>\language "english"</code> と宣言しておけば <code>s</code>、<code>f</code> を付ける英語流になる。</p>
+
+<p>ヘ音記号は <code>\clef bass</code> とする。<code>bass</code> 以外は <code>treble</code>、<code>alt</code>、<code>tenor</code> などがある。</p>
+
+<p>次の例は、一挙にいろいろな記法を使っている。MIDI出力も指定しているので、<code>lilypond test.ly</code> とするとPDF以外に <code>test.midi</code> も生成される。<code>\f</code> はフォルテ記号である。<code>^\f</code> とすれば上に付く。スラーは <code>( )</code>、タイは <code>~</code> である。</p>
+
+<pre>
+\language "english"
+\score {
+  \relative {
+    \clef bass
+    \key d \major
+    \time 4/4
+    \tempo 2 = 80
+    \set Score.currentBarNumber = #257
+    e\f e fs d | e fs8( g) fs4 d | e fs8( g) fs4 e |
+  }
+  \layout { indent = 0 }
+  \midi {}
+}
+</pre>
+
+<figure><img src="img/250106c.svg" alt="LilyPond example 3"></figure>
+
+<p>歌詞などを加える。<code><< >></code> はグルーピング。<code>%</code> 以下はコメント。</p>
+
+<pre>
+\version "2.24.4"
+\header {
+  title = "Symphony No. 9 Bass Chorus 257–"
+  composer = "Ludwig van Beethoven"
+  tagline = ""
+}
+\language "english"
+\score {
+  <<
+  \relative {
+    \clef bass
+    \key d \major
+    \time 4/4
+    \tempo "Allegro assai" 2 = 80
+    \set Score.currentBarNumber = #257
+    \mark "D"
+    e^\f e fs d | e fs8( g) fs4 d | e fs8( g) fs4 e |
+    d e a, fs'~ | fs fs g a | a g \autoBeamOff fs( g8) e \autoBeamOn |
+    d4 d e fs | e4. d8 d2 |
+  }
+  \addlyrics {
+    Dei -- ne Zau -- ber bin -- den wie -- der, Was die Mo -- de
+    streng ge -- teilt; Al -- le Men -- schen wer -- den Brü -- der,
+    Wo dein sanf -- ter Flü -- gel weilt.
+  }
+  >>
+  \layout { indent = 0 }
+  \midi {}
+}
+</pre>
+
+<figure><img src="img/250106d.svg" alt="LilyPond example 4"></figure>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-01-09 19:20:11 JST</time></p>
+</footer>
+</body>
+</html>

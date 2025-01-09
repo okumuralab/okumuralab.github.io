@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/250105.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABC記譜法</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>ABC記譜法</h1>
+
+<p>新年なのでピアノでも弾きたいが、指が動かない。昔 <a href="https://ja.wikipedia.org/wiki/Music_Macro_Language">MML</a> という言語で音楽を作ったことを思い出して、似たものがないか探したところ、<a href="https://ja.wikipedia.org/wiki/ABC記譜法">ABC</a> を見つけた。ABC記譜法の詳細は <a href="https://abcnotation.com">abcnotation.com</a> というサイトが詳しい。VS CodeにはABC入力・プレビュー拡張機能がいくつかあるようだ。</p>
+
+<p>例えば次のようなテキストファイルを作り、<code>star.abc</code> というファイル名で保存しておくとする。</p>
+
+<pre>
+X:1
+T:Twinkle Twinkle Little Star
+M:4/4
+L:1/4
+K:C
+C C G G | A A G2 | F F E E | D D C2 |
+</pre>
+
+<p>これをMIDIや楽譜に変換する方法はいろいろあるようだ。昔からあるのは <a href="https://github.com/xlvector/abcmidi">abc2midi</a> というツールである。Macなら <a href="https://formulae.brew.sh/formula/abcmidi">brew install abcmidi</a> で abc2abc、abc2midi、abcmatch、mftext、midi2abc、midicopy、midistats、yaps というコマンドが入る。さきほどの例では、</p>
+
+<pre>
+abc2midi star.abc
+</pre>
+
+<p>と打ち込むと、<code>star1.mid</code> ができる。ファイル名に付いた番号 <code>1</code> は、<code>X:1</code> に因むもので、一つのファイルに複数の曲を入れた場合にこの参照番号で区別される。できたMIDIファイルは、MacならGarageBandで開ける。より軽いツールとしては <a href="https://www.videolan.org/vlc/">VLC media player</a> がある。楽譜を生成するには <code>yaps star.abc</code> と打ち込めば <code>star.ps</code> というPostScriptファイルができるので <code>ps2pdf</code> などでPDFに変換する。</p>
+
+<p>別の方法として、<a href="https://lilypond.org">LilyPond</a> の abc2ly を使ってLilyPondに変換する方法がある（ただし <a href="https://lilypond.org/doc/v2.24/Documentation/usage/invoking-abc2ly.html">abc2ly</a> に書かれているように、abc2ly は現在サポートされておらず、将来は削除されるかもしれない）。LilyPondについては<a href="250106.html">別稿</a>で紹介する。これで</p>
+
+<pre>
+abc2ly star.abc
+</pre>
+
+<p>と打ち込めば <code>star.ly</code> ができ、さらに</p>
+
+<pre>
+lilypond star.ly
+</pre>
+
+<p>と打ち込めば <code>star.midi</code> と楽譜 <code>star.pdf</code> ができる。</p>
+
+<p>LilyPondを経由する方法では、Unicodeや日本語も使えるが、微妙に仕上がりが異なる。例えば八分音符が連続するとABC記法では音符間にスペースを入れないと連桁（れんこう、beam、♪♪→🎵）になるが、LilyPondでは連桁がデフォルトで、<code>\autoBeamOff</code> と <code>\autoBeamOn</code> で自動連桁を制御する。</p>
+
+<p>ABC記法では、ドレミファソ…は <code>C D E F G A B c d e f g a b c' d' ...</code> で示す。<code>A</code> が中央のラ（≒440Hz）である。さらに高い音は <code>c''</code> など、さらに低い音は <code>C, C,,</code> などと表す。以下のようにヘッダ部分に <code>L:1/4</code> と書けば四分音符が基本となり、2分音符は <code>C2</code>、全音符は <code>C4</code>、八分音符は <code>C/2</code>、などと書ける。<code>/2</code> は <code>/</code> と略記できる。<code>L:1/8</code> と書けば八分音符が基本となり、4分音符は <code>C2</code>、二分音符は <code>C4</code> である。臨時記号は <code>^C</code> が♯C、<code>_C</code> が♭C、<code>=C</code> が♮Cである。<code>^^C</code> とすれば♯♯Cになる。休符は <code>z</code> である。例えば4小節にわたる休符は <code>Z4</code> と書ける。スラーは括弧、タイは <code>-</code> で表す。</p>
+
+<p>以下は歌詞（<code>w:</code>）を含む例である。<code>%</code> から行末まではコメントである。</p>
+
+<pre>
+X:1% reference number
+T:Symphony No. 9 (Bass Chorus)% Title
+C:Ludwig van Beethoven% Composer
+K:D bass% key (D-major, bass clef)
+M:4/4% meter
+L:1/4% unit note length
+Q:2/4=80% tempo
+E, E, F, D, | E, (F,/G,/) F, D, | E, (F,/G,/) F, E, |
+w:Dei-ne Zau-ber | bin-den* wie-der, | Was die* Mo-de |
+D, E, A,, F,- | F, F, G, A, | A, G, (F, G,/) E,/ |
+w:streng ge-teilt; Al-*le Men-schen | Wer-den Br\"u-*der, |
+D, D, E, F, | E, > D, D,2 ||
+w:Wo dein sanf-ter | Fl\"u-gel weilt. ||
+</pre>
+
+<p>これをyapsでPostScriptに変換し、ps2pdfでPDFに変換し、pdfcropでクロップし、MacのプレビューでPNGに変換すると、次のようになる：</p>
+
+<figure><img src="img/250105a.png" alt="Beethoven Symphony No. 9 (Bass Chorus)"></figure>
+
+<p>Fl\"ugel の部分 <code>E, > D,</code> は <code>E,3/ D,/</code> の略記で、<code>E, D,</code> の前の音符を長くするという意味で不等号を使う。</p>
+
+<p>LilyPondに変換する場合は、歌詞のプレースホルダ <code>*</code> をすべて外して、ウムラウト <code>\"u</code> をUnicode文字 <code>ü</code> にする。</p>
+
+<p>Br\"uder の部分（<code>G,/) E,/</code>）はスペースを入れているので連桁にならないはずだがLilyPondを経由すると繋がってしまうので、気になるなら <code>*.ly</code> ファイルを手で修正して <code>fis4 ( g8 -) e8</code> を <code>\autoBeamOff fis4 ( g8 -) e8 \autoBeamOn</code> にすればいいのだろう。</p>
+
+<p>LilyPondのデフォルトでは1行目がインデントされるので、<code>*.ly</code> ファイルの適当な場所に <code>\paper { indent = 0\cm }</code> を入れるか、または abc2ly で生成されたファイルの最後の方に <code>\layout {  }</code> という空のレイアウト指定があるのでこれを <code>\layout { indent = 0\cm }</code> にすると、左端が揃う。ページ下部に "Lily was here 2.24.4 -- automatically converted from ABC" のようなフッタが出るが、これは <code>tagline = "..."</code> の行を編集すれば変えたり消したりできる。結果は（SVG出力で）次のようになる：</p>
+
+<figure><img src="img/250105b.svg" alt="Beethoven Symphony No. 9 (Bass Chorus)"></figure>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-01-07 10:06:46 JST</time></p>
+</footer>
+</body>
+</html>
