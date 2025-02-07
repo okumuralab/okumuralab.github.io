@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/clipboard.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>クリップボードの内容を表示</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<article>
+<h1>クリップボードの内容を表示</h1>
+
+<p>このページは、ユーザのクリップボードの中身のテキストを読み取り、下の枠内に表示しようとします。簡単に読み取れてしまうとセキュリティ上のリスクになるので、ブラウザはエラーを返すか、ユーザに許可を求めます。</p>
+
+<fieldset>
+<legend>クリップボードの中身</legend>
+  <div id="clipboardContent" style="color:red"></div>
+</fieldset>
+
+<script>
+  window.onload = async () => {
+      const clipboardContent = document.getElementById("clipboardContent");
+      try {
+          const text = await navigator.clipboard.readText();
+          clipboardContent.innerText = text;
+          clipboardContent.style = "color:black";
+      } catch (error) {
+          clipboardContent.innerText = error;
+          clipboardContent.style = "color:red";
+      }
+  };
+</script>
+
+<p>自動で読み取れない場合でも、ユーザが次のボタンを押して、さらに何らかの許可をすれば、読み取れると思います。</p>
+
+<button id="readClipboard">クリップボードを読み取る</button>
+
+<script>
+  document.getElementById("readClipboard").addEventListener("click", async () => {
+      const clipboardContent = document.getElementById("clipboardContent");
+      try {
+          const text = await navigator.clipboard.readText();
+          clipboardContent.innerText = text;
+          clipboardContent.style = "color:black";
+      } catch (error) {
+          clipboardContent.innerText = error;
+          clipboardContent.style = "color:red";
+      }
+  });
+</script>
+
+<p>Google Chromeは、一度サイトにクリップボード読み取り許可を与えてしまうと、その後は確認なしに読み取ってしまうようです。Settings → Privacy and security → Site settings で該当のサイトを見つけて、Clipboard の設定を Ask (default) / Allow / Block のうちから適切に選びましょう。</p>
+</article>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-01-23 16:23:21 JST</time></p>
+</footer>
+</body>
+</html>

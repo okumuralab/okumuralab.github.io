@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/stanine.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2025年共通テスト情報IのStanine度数分布</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<style>
+table { border-collapse: collapse; }
+td, th { border: 1px solid; }
+</style>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>2025年共通テスト情報IのStanine度数分布</h1>
+
+<p>2025年1月19日、初めての「情報I」共通テストが行われた。22日の中間集計では、94751人の平均値73.10、標準偏差15.58、最高100、最低0であった。24日の中間集計（採点未終了者は約3000人）では、265785人の平均値69.46、標準偏差16.07であった。</p>
+
+<p>24日には「段階表示換算表」も発表された。この「段階表示」というのは、Stanine（大学入試センターの表記はスタナイン、英語の発音はステイナイン）という方法で、全体を得点順におおよそ4，7，12，17，20，17，12，7，4%の9段階に分ける。「情報I」では次のようになった。</p>
+
+<table>
+  <thead>
+  <tr><th>段階</th><th>点数範囲</th></tr>
+  </thead>
+  <tbody>
+  <tr><td>9</td><td>94〜100</td></tr>
+  <tr><td>8</td><td>89〜93</td></tr>
+  <tr><td>7</td><td>83〜88</td></tr>
+  <tr><td>6</td><td>75〜82</td></tr>
+  <tr><td>5</td><td>66〜74</td></tr>
+  <tr><td>4</td><td>58〜65</td></tr>
+  <tr><td>3</td><td>49〜57</td></tr>
+  <tr><td>2</td><td>39〜48</td></tr>
+  <tr><td>1</td><td>0〜38</td></tr>
+  </tbody>
+</table>
+
+<p>これを4，7，12，17，20，17，12，7，4%であると仮定して、ヒストグラムを描き、平均・標準偏差から正規分布の密度関数を重ね書きする：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+
+data = np.array([[94, 100, 4],
+                 [89, 93, 7],
+                 [83, 88, 12],
+                 [75, 82, 17],
+                 [66, 74, 20],
+                 [58, 65, 17],
+                 [49, 57, 12],
+                 [39, 48, 7],
+                 [0, 38, 4]])
+
+plt.bar(data[:,0]-0.5, data[:,2]/(data[:,1]-data[:,0]+1)/100,
+        width=data[:,1]-data[:,0]+1, align="edge",
+        color="lightgray", edgecolor="black")
+
+mean = 69.46
+sd = 16.07
+x = np.arange(101)
+y = np.exp(-((x-mean)/sd)**2/2) / np.sqrt(2*np.pi*(sd**2))
+plt.plot(x, y)
+</pre>
+
+<figure><img src="img/joho_stanine.svg" alt="情報I Stanine"></figure>
+
+<p>正規分布より頭が平べったいことがわかる。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-01-27 08:45:41 JST</time></p>
+</footer>
+</body>
+</html>

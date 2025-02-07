@@ -85,7 +85,7 @@ td {
 
 <p>ちなみに、電子署名とデジタル署名は、同じ意味で使われることもあれば、電子署名は<a href="https://laws.e-gov.go.jp/law/412AC0000000102">電子署名法</a>で定められた電子的に効力を持つ署名一般、デジタル署名は公開鍵暗号技術を使った署名、というふうに使い分けられることもあるようです。</p>
 
-<p>なお、<a href="../misc/220628.html">GnuPG</a>の現在のデフォルトの署名アルゴリズムはRSAではなく<a href="https://ja.wikipedia.org/wiki/エドワーズ曲線デジタル署名アルゴリズム">EdDSA</a>です。</p>
+<p>なお、<a href="../misc/220628.html">GnuPG</a>の現在のデフォルトの署名アルゴリズムはRSAではなく<a href="https://ja.wikipedia.org/wiki/エドワーズ曲線デジタル署名アルゴリズム">EdDSA</a>です。マイナンバーカードは現在はRSA（2048ビット）ですが、2026年を目標に検討が進められている<a href="https://www.itmedia.co.jp/news/articles/2403/19/news163.html">次期マイナンバーカード</a>はECDSA-384に移行する予定のようです。</p>
 
 <p>参考：</p>
 
@@ -94,7 +94,8 @@ td {
   <li><a href="https://www.ipa.go.jp/news/2024/shiken_20240607.html">令和6年度春期ネットワークスペシャリスト試験 午後Ⅱ 問2 設問5の不備とその対応について</a></li>
   <li><a href="https://qiita.com/angel_p_57/items/aa6b58cf7130006810b5">IPA試験問題不備(令和6年春期ネットワークスペシャリスト午後2)</a></li>
   <li><a href="https://zenn.dev/herumi/articles/rsa-signature">RSA署名を正しく理解する</a></li>
-</li>
+  <li><a href="https://qiita.com/lemiyachi/items/628576b16e8f490de17c">RSAからECDSAへ、そしてその先へ</a></li>
+</ul>
 
 </main>
 
@@ -102,7 +103,7 @@ td {
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-01-13 11:01:43 JST</time></p>
+<p>Last modified: <time>2025-01-17 14:13:26 JST</time></p>
 </footer>
 </body>
 </html>

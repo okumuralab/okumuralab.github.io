@@ -64,13 +64,26 @@
 </pre>
 
 <p>また、現状のTypstでは、正規表現や <code>#show "、": "，"</code> のような置換を行うと正しい組版ルールが適用されないという点にも注意が必要である。</p>
+
+<p>ルビについては、次のように正方形の仮想ボディが接するように配置するのが標準である。このとき、ベースラインは仮想ボディの下から12%のところにあるのが一般的なので、親文字とルビとのベースラインの間隔は、親文字のサイズの 0.88 + 0.12/2 = 0.94 倍になる。</p>
+
+<svg width="300" height="300">
+  <rect x="50" y="0" width="100" height="100" stroke="#0CC" stroke-width="3" fill="none" />
+  <rect x="150" y="0" width="100" height="100" stroke="#0CC" stroke-width="3" fill="none" />
+  <path d="M 25 88 l 250 0" fill="none" stroke="#0CC" stroke-width="3" />
+  <rect x="50" y="100" width="200" height="200" stroke="#0CC" stroke-width="3" fill="none" />
+  <path d="M 0 276 l 300 0" fill="none" stroke="#0CC" stroke-width="3" />
+  <text style="font-size:200px" x="50" y="276" text-anchor="start">漢</text>
+  <text style="font-size:100px" x="50" y="88" text-anchor="start">かん</text>
+</svg>
+
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-11-26 15:25:01 JST</time></p>
+<p>Last modified: <time>2025-01-25 17:52:05 JST</time></p>
 </footer>
 </body>
 </html>

@@ -21,9 +21,9 @@
 <main>
 <h1>Typst入門</h1>
 
-<p>[2024-11-21] 別ページの<a href="241121.html">日本語の組版ルール</a>でも補足しました。</p>
+<p>依然として試行錯誤中ですが、以下で述べたようなことを取り込んだテンプレート <a href="https://github.com/okumuralab/typst-js">typst-js</a> を公開しました。</p>
 
-<p>[2024-12-26] 少し書き足しました。</p>
+<p><a href="241121.html">日本語の組版ルール</a>もご参照ください。</p>
 
 <h2>はじめに</h2>
 
@@ -163,7 +163,7 @@ Einsteinは $E=mc^2$ と言った。
 
 <p>のように欧文フォント・和文フォントを別に指定できるようになる。</p>
 
-<p>以上はMarkdownで書いた文書をpandoc＋TypstでPDFに変換する方法であった。もちろん <code>pandoc test.md -o test.typ</code> とすればPDFではなくTypst文書に変換できる。ただし、Markdown文書冒頭の <code>---</code> で囲まれた部分はpandocのTypstテンプレートで処理されるので、これでは出力されない。</p>
+<p>以上はMarkdownで書いた文書をpandoc＋TypstでPDFに変換する方法であった。もちろん <code>pandoc test.md -o test.typ</code> とすればPDFではなくTypst文書に変換できる。ただし、Markdown文書冒頭の <code>---</code> で囲まれた部分はpandocのTypstテンプレートで処理されるので、これでは出力されない。さらにオプション <code>--standalone=true</code> を付ければテンプレートを埋め込んだ形のファイルが出力される。</p>
 
 <h2>パッケージの利用</h2>
 
@@ -217,7 +217,7 @@ typst watch main.typ
   authors: (
     "奥村晴彦",
   ),
-  date: datetime.today().display("[year]年[month]月[day]日"),
+  date: datetime.today().display("[year]年[month repr:numerical padding:none]月[day]日"),
 )
 
 = 日本語でTypstを使う
@@ -227,30 +227,42 @@ Einsteinは $E = m c^2$ と言った。
 
 <p>New Computer Modernについては、『LaTeX美文書作成入門』第9版ではRegularでなくBookのほうを使っている。TypstでBookにするにはweightを425〜575にすればよい（デフォルトは400）。原ノ味はRegularでいいのでここではweightを450に設定した。見出しについてはTypstのデフォルトでは強すぎるように感じたので少しweightを落としてあるが、好みに応じて加減されたい。</p>
 
-<h2>和文文字の組み方</h2>
+<h2 id="wabun">和文文字の組み方</h2>
 
-<p>日本語の文字は、例えば</p>
+<p>日本語メインの文書の組み方で注意すべきは、行長が全角文字幅の整数倍になるようにマージンを調整しないと、不自然な伸びが生じてしまうことである。日本語の文字は、例えば</p>
 
 <pre>
 #set text(lang: "ja", font: "Harano Aji Mincho", 10pt)
 </pre>
 
-<p>のようにして10ptに設定しても、幅は10ptになるが、高さはそれより小さくなる。これは</p>
+<p>のようにして10ptに設定すると、全角1文字の幅 1em は 10pt になる。したがって、例えばA4判に1行40文字とするならば、A4判の幅210mmから 10pt×40 を引いた長さの半分を左右のマージンとすればいい。</p>
+
+<p>一方、</p>
+
+<pre>
+#set par(first-line-indent: 1em, justify: true, spacing: 1em, leading: 1em)
+</pre>
+
+<p>とすると、段落間 <code>spacing</code> も行間 <code>leading</code> も10ptになるので、行送りは20ptになりそうに思うが、そうはならない。これはTypstの認識する文字の高さが10ptでないからである。例えば</p>
 
 <pre>
 #context{ measure("あ") }
 </pre>
 
-<p>をコンパイルしてみればわかる。原ノ味フォントでは (width: 10pt, height: 7.29pt) と表示されるはずである。したがって、<code>#set par(spacing: 1em, leading: 1em)</code> で10行を組めば、高さは 72.9pt + 90pt になる。高さはフォントによって異なり、"Hiragino Mincho ProN" なら 7.43pt になる。</p>
+<p>をコンパイルすると、原ノ味フォントでは (width: 10pt, height: 7.29pt) と表示されることから、高さは 7.29pt である。したがって、<code>#set par(spacing: 1em, leading: 1em)</code> で10行を組めば、高さは 7.29pt×10 + 10pt×9 になる。文字の高さはフォントによって異なり、"Hiragino Mincho ProN" では 7.43pt になる。</p>
 
-<p>マージンは、行長が全角文字幅の整数倍になるように調整しないと、不自然な伸びが生じてしまう。例えば原ノ味フォントで本文40文字×38行をA4判に組むには、次のようにすればよいであろう。</p>
+<p>実はこの 7.29pt などという文字の高さは「大文字の高さ」（cap-height）で、Typstのデフォルトの設定 <code>#set text(top-edge: "cap-height")</code> に因むものである。</p>
+
+<p>日本語フォントでは正方形の仮想ボディの下から12%のところにベースラインがあるのが一般的なので、<code>#set text(top-edge: 0.88em)</code> と固定値に設定すれば、和欧で別フォントを設定している場合でも、行送りが一定になる。［<code>top-edge</code> を固定値に設定できることをご教示いただいたおかげで以前の記述よりずっと単純化できました。感謝］</p>
+
+<p>これらのことを考慮して、例えば10pt、行送り1.73emで、本文40文字×40行をA4判に組むには、次のようにすればよいであろう。</p>
 
 <pre>
 #let width = 210mm
 #let height = 297mm
 #let fontsize = 10pt
 #let xmargin = (width - 40 * fontsize) / 2
-#let ymargin = (height - (1.729 * 38 - 1) * fontsize) / 2
+#let ymargin = (height - (1.73 * 40 - 0.73) * fontsize) / 2
 
 #set page(
   width: width,
@@ -259,9 +271,21 @@ Einsteinは $E = m c^2$ と言った。
   numbering: "1",
 )
 
-#set text(lang: "ja", font: "Harano Aji Mincho", fontsize)
-#set par(first-line-indent: 1em, justify: true, spacing: 1em, leading: 1em)
+#set text(lang: "ja", font: "Harano Aji Mincho", fontsize,
+          top-edge: 0.88em)
+#set par(first-line-indent: 1em, justify: true,
+         spacing: 1.73em - 0.88em, leading: 1.73em - 0.88em)
 </pre>
+
+<p>ただ、<code>top-edge</code> を調節したために、微妙にバランスが崩れる場合がある。例えばルビを振るパッケージ <code>rubby</code> を使う場合に、設定で <code>dy: -0.16em</code> くらいにしないとルビが離れすぎる。また、表組みは <code>#show table: set text(top-edge: 0.76em)</code> くらいに設定しないと文字の上が広くなりすぎる。</p>
+
+<aside>
+<p>行送り1.73emにした理由は、LaTeXのjsarticleは全角文字13Q（13×0.25mm）に対して行送り16pt（TeXでは72.27pt=1in）なので、16/72.27*25.4/(13/4) を計算すると、ほぼ 1.73 になるからである。</p>
+
+<p><code>rubby</code> の設定で <code>dy: -0.16em</code> とした理由は、<code>rubby</code> では親字の上端とルビの上端との距離をルビの高さの1.5倍に設定しているので、ルビの高さが 0.5em×0.88 = 0.44em ならその1.5倍は 0.66em になり、-0.16em すればちょうど 0.5em になるからである（計算違ってたら教えてください。<a href="241121.html">日本語の組版ルール</a>の最後の図も参照）。</p>
+
+<p>表組みで <code>#show table: set text(top-edge: 0.76em)</code> とする根拠は、Typstがベースライン以下（0.12em）を無視するとすれば文字の上側も 0.88em - 0.12em = 0.76em に設定すれば上下対称になりそうだという計算である（これも怪しいので正しい計算があれば教えてください）。</p>
+</aside>
 
 <p>2段組にする場合でも</p>
 
@@ -271,8 +295,6 @@ Einsteinは $E = m c^2$ と言った。
 </pre>
 
 <p>のように段間隔を調節して、各段の幅が全角幅の整数倍になるようにしなければならない。</p>
-
-<p>（書きかけです）</p>
 
 <h2>LaTeXと比べて未完成の部分</h2> 
 
@@ -286,21 +308,23 @@ Einsteinは $E = m c^2$ と言った。
 
 <p>なお、これは正規表現に限らず、<code>#show "、": "，"</code> 等で句読点を置換する際にも生じるので、気をつけなければならない。</p>
 
-<p>段落の最初の全角下げが最初の段落に適用されない。<code>#set par(first-line-indent: 1em)</code> と指定しても、各セクション2番目の段落からしか全角下げされない。これは欧文組版の一般的なルールであるが、それがハードコードされてしまっている。上に挙げたスタイルでは見出しに <code>par(text(size: 0pt, ""))</code> のようなダミーの段落を入れるというハックを使っているが、見出しのない文章では困る。</p>
+<p>段落の最初の全角下げが最初の段落に適用されない。<code>#set par(first-line-indent: 1em)</code> と指定しても、各セクション2番目の段落からしか全角下げされない。これは欧文組版の一般的なルールであるが、それがハードコードされてしまっている。上に挙げたスタイルでは見出しに <code>par(text(size: 0pt, ""))</code> のようなダミーの段落を入れるというハックを使っているが、見出しのない文章では困るし、ページの最後が見出しになることが避けられない。［この不具合は <a href="https://github.com/typst/typst/pull/5768">Support first-line-indent for every paragraph #5768</a> で報告されてから2年近くを経て、ようやく解決されたようだ。次のリリースでは直っているはず。］</p>
 
 <p><a href="https://www.w3.org/TR/jlreq/">日本語組版処理の要件</a> 3.1.5 行頭の​始め括弧類の​配置方法で、LaTeXの(lt)jsarticleなどはFigure 71の①の組み方に統一しているが、Typstの現状では段落頭で全角半アキ、段落途中で天ツキになってしまう。</p>
 
 <p>以上に関連する<a href="241121.html">日本語の組版ルール</a>の解説を別に書いたので参照されたい。</p>
 
-<p>和欧間のアキ（LaTeXの <code>\xkanjiskip</code>）は入るが、和文と数式の間にはアキが自動で入らない。とりあえずは半角空白を入れるので十分であろう（→ <a href="https://qiita.com/zr_tex8r/items/a9d82669881d8442b574">Typstで和文と数式の間の空きをどうにかしたい話</a>）。</p>
+<p>和欧間のアキ（LaTeXの <code>\xkanjiskip</code>）は入るが、和文と数式の間にはアキが自動で入らない。数式に限らず、例えば A-B を途中で改行されたくないので <code>#box[A-B]</code> のように箱に入れたものも、和文との間にアキが入らない。とりあえずは半角空白を入れるので十分であろう（→ <a href="https://qiita.com/zr_tex8r/items/a9d82669881d8442b574">Typstで和文と数式の間の空きをどうにかしたい話</a>）。</p>
 
 <p>句読点のブラ下げ組ができない（これは需要が少ないと思われる）。</p>
 
-<p>ルビや割注については <a href="https://typst.app/docs/roadmap/">roadmap</a> に載っているが未実装である。ただし <a href="https://typst.app/universe/package/rubby">rubby</a> というパッケージが開発されている。</p>
+<p>ルビや割注については <a href="https://typst.app/docs/roadmap/">roadmap</a> に載っているが未実装である。ただし <a href="https://typst.app/universe/package/rubby">rubby</a> というパッケージが開発されている（上に述べたようにデフォルトではルビと親文字の位置関係が正確でない）。<a href="https://github.com/okumuralab/typst-js">typst-js</a> でも <code>ruby[よみ][親文字]</code> という関数を実装した。</p>
 
 <p>縦組ができない。</p>
 
 <p>参考文献の並べ方は引用順にしかできないようなので、分野/ジャーナルによっては困るかも。</p>
+
+<p>索引は <a href="https://typst.app/universe/package/in-dexter">in-dexter</a> というパッケージがある。日本語に対応していないと思ったが、<code>#index(display: "索引")[さくいん]</code> のようにすれば、何とかなりそうである。</p>
 
 <p>あと、欠点ではないが注意すべき仕様として、和文文字列の途中で改行すると欧文スペースが挿入されるので、長い段落も1行で書かなければならない。</p>
 
@@ -317,7 +341,7 @@ Einsteinは $E = m c^2$ と言った。
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-12-26 07:54:54 JST</time></p>
+<p>Last modified: <time>2025-02-02 21:21:40 JST</time></p>
 </footer>
 </body>
 </html>
