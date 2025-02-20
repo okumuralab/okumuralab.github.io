@@ -21,6 +21,8 @@
 <main>
 <h1>Typst入門</h1>
 
+<p>Typst 0.13.0-rc1が出ました。変更点を<a href="250210.html">別記事</a>にまとめました。1行目がインデントされないバグが直り、和欧混植に便利な機能も追加されたので、日本人には嬉しい更新です。<a href="https://github.com/okumuralab/typst-js">typst-js</a> も<del>新しいブランチに0.13用を置きました</del>0.13用をマージして一本化しました。</p>
+
 <p>依然として試行錯誤中ですが、以下で述べたようなことを取り込んだテンプレート <a href="https://github.com/okumuralab/typst-js">typst-js</a> を公開しました。</p>
 
 <p><a href="241121.html">日本語の組版ルール</a>もご参照ください。</p>
@@ -29,7 +31,7 @@
 
 <p><a href="https://typst.app">Typst</a>（タイプスト）はLaTeX代替とされる新しい組版ツールである。無料〜有料のサービスだが、<a href="https://github.com/typst/typst">GitHub</a> でオープンソースのコマンド版（CLI）が公開されている。ここではオープンソース版について扱う。なお、TeX Liveを入れていれば、<code>texdoc typstfun</code> でTypstとLaTeXのコマンド対照表が表示される。</p>
 
-<p>インストールはGitHubからダウンロードするか、あるいはHomebrewで <code>brew install typst</code> として入れる。私はGitHubからダウンロードした。</p>
+<p>インストールはGitHubからダウンロードするか、あるいはMacならHomebrewで <code>brew install typst</code> と打ち込むか、Windowsなら <code>winget install --id Typst.Typst -e</code> と打ち込めば完了する。</p>
 
 <pre>
 typst --help
@@ -43,13 +45,13 @@ typst update
 
 <p>で自己アップデートできる。</p>
 
-<p>Typstはシステムにインストールされたフォントをそのまま使える。それ以外のところにあるフォントは、例えば</p>
+<p>Typstはシステムにインストールされたフォントをそのまま使える。それ以外のところにあるフォントは <code>TYPST_FONT_PATHS</code> という環境変数の設定で使うことができる。MacなどUnix系であれば例えば</p>
 
 <pre>
 export TYPST_FONT_PATHS=/usr/local/texlive/2024/texmf-dist/fonts/opentype
 </pre>
 
-<p>のように環境変数を設定することによって使えるようになる。使えるフォント一覧は</p>
+<p>のようにしてTeX LiveのOpenTypeフォント群が使える。使えるフォント一覧は</p>
 
 <pre>
 typst fonts
@@ -71,9 +73,9 @@ Einsteinは $E=m c^2$ と言った。
 typst compile test.typ
 </pre>
 
-<p>と打ち込むと、<code>test.pdf</code> というPDFファイルが出力される。しかし漢字の字形をよく見ると、いわゆる中華フォントだ（SIL-Hei-Med-Jian）。ちなみに欧文はデフォルトでLibertinus、数式は『LaTeX美文書作成入門』第9版で採用したのと同じNewCMMath-Bookである。</p>
+<p>と打ち込むと、<code>test.pdf</code> というPDFファイルが出力される。ただ、デフォルトのままでは、Windowsでは日本語部分がMeiryoになり、MacではSIL-Hei-Med-Jianといういわゆる中華フォントになる。ちなみに欧文はデフォルトでLibertinus、数式は『LaTeX美文書作成入門』第9版で採用したのと同じNewCMMath-Bookである。</p>
 
-<p>日本語フォントにするには、<code>typst fonts</code> で出力されるフォントから適当なものを選んで指定すればよい。Macならヒラギノ明朝にしてみよう。</p>
+<p>明朝体のフォントにするには、<code>typst fonts</code> で出力されるフォントから適当なものを選んで指定すればよい。Macならヒラギノ明朝（<code>Hiragino Mincho ProN</code>）、Windowsなら游明朝（<code>Yu Mincho</code>）などが候補である。</p>
 
 <pre>
 #set text(lang: "ja", font: "Hiragino Mincho ProN")
@@ -81,7 +83,7 @@ typst compile test.typ
 Einsteinは $E=m c^2$ と言った。
 </pre>
 
-<p>これで数式以外がヒラギノ明朝になる。欧文「Einstein」の部分もヒラギノ明朝の従属欧文フォントになる。</p>
+<p>これで数式以外が明朝体になる。欧文「Einstein」の部分も明朝体の従属欧文フォントになる。</p>
 
 <p>欧文はやっぱりLibertinusのほうがいいなら、</p>
 
@@ -91,7 +93,7 @@ Einsteinは $E=m c^2$ と言った。
 Einsteinは $E=m c^2$ と言った。
 </pre>
 
-<p>のようにする。これでとりあえず数式以外はデフォルトでLibertinusが使われ、Libertinusにない文字はヒラギノになる（後述の「LaTeXと比べて未完成の部分」参照）。</p>
+<p>のようにする。これでとりあえず数式以外はデフォルトでLibertinusが使われ、Libertinusにない文字はヒラギノになる（後述の「LaTeXと比べて未完成の部分」参照）。欧文フォントと数式フォントが同じデザインのほうがよければ <code>Libertinus Serif</code> の代わりに <code>New Computer Modern</code> を指定すればよい。</p>
 
 <h2>pandocで使う</h2>
 
@@ -163,9 +165,9 @@ Einsteinは $E=mc^2$ と言った。
 
 <p>のように欧文フォント・和文フォントを別に指定できるようになる。</p>
 
-<p>以上はMarkdownで書いた文書をpandoc＋TypstでPDFに変換する方法であった。もちろん <code>pandoc test.md -o test.typ</code> とすればPDFではなくTypst文書に変換できる。ただし、Markdown文書冒頭の <code>---</code> で囲まれた部分はpandocのTypstテンプレートで処理されるので、これでは出力されない。さらにオプション <code>--standalone=true</code> を付ければテンプレートを埋め込んだ形のファイルが出力される。</p>
+<p>以上はMarkdownで書いた文書をpandoc＋TypstでPDFに変換する方法であった。直接Typstファイルに変換するには <code>pandoc test.md -o test.typ</code> とする。ただし、Markdown文書冒頭の <code>---</code> で囲まれた部分はpandocのTypstテンプレートで処理されるので、これでは出力されない。さらにオプション <code>--standalone=true</code> を付ければテンプレートを埋め込んだ形のファイルが出力される。</p>
 
-<h2>パッケージの利用</h2>
+<h2>パッケージ・テンプレートの利用</h2>
 
 <p>以下ではLaTeXに近い出力を得るために</p>
 
@@ -318,7 +320,7 @@ Einsteinは $E = m c^2$ と言った。
 
 <p>句読点のブラ下げ組ができない（これは需要が少ないと思われる）。</p>
 
-<p>ルビや割注については <a href="https://typst.app/docs/roadmap/">roadmap</a> に載っているが未実装である。ただし <a href="https://typst.app/universe/package/rubby">rubby</a> というパッケージが開発されている（上に述べたようにデフォルトではルビと親文字の位置関係が正確でない）。<a href="https://github.com/okumuralab/typst-js">typst-js</a> でも <code>ruby[よみ][親文字]</code> という関数を実装した。</p>
+<p>ルビや割注については <a href="https://typst.app/docs/roadmap/">roadmap</a> に載っているが未実装である。ただし <a href="https://typst.app/universe/package/rubby">rubby</a> というパッケージが開発されている（上に述べたようにデフォルトではルビと親文字の位置関係が正確でない）。<a href="https://github.com/okumuralab/typst-js">typst-js</a> でも <code>ruby[親文字][よみ]</code> という関数を実装した。</p>
 
 <p>縦組ができない。</p>
 
@@ -341,7 +343,7 @@ Einsteinは $E = m c^2$ と言った。
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-02-02 21:21:40 JST</time></p>
+<p>Last modified: <time>2025-02-12 11:20:24 JST</time></p>
 </footer>
 </body>
 </html>

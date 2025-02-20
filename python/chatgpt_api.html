@@ -18,7 +18,9 @@
 
 <h1>OpenAIのAPIを使う</h1>
 
-<p>[2024-11-09] Googleの <a href="gemini_api.html">Gemini API</a> も同じ方法で使えるようになりました。</p>
+<p>[?] <a href="xai_api.html">xAIのAPI</a>も同じ方法で使えるようになりました。「ストリーミング」の下のコード参照。</p>
+
+<p>[2024-11-09] Googleの <a href="gemini_api.html">Gemini API</a> も同じ方法で使えるようになりました。「ストリーミング」の下のコード参照。</p>
 
 <p>[2024-06-12] 旧<a href="openai_api.html">OpenAIのAPIを使う</a>と区別するために「ChatGPTのAPIを使う」という題名にしていましたが、「OpenAIのAPIを使う」に変更しました。</p>
 
@@ -129,18 +131,23 @@ while True:
 
 <h2>ストリーミング</h2>
 
-<p>Web 版 ChatGPT のように文字単位（単語単位）で出力するようにしてみましょう。モデル名として Gemini のモデル（<code>"gemini-1.5-pro"</code> など）を与えてもいいようにしました（環境変数 <code>GOOGLE_API_KEY</code> にAPIキーを入れておきます）。</p>
+<p>Web 版 ChatGPT のように文字単位（単語単位）で出力するようにしてみましょう。モデル名として Gemini のモデル（<code>"gemini-1.5-pro"</code> など）や xAI のモデル（<code>"grok-2-latest"</code> など）を与えてもいいようにしました（それぞれ環境変数 <code>GOOGLE_API_KEY</code>、<code>XAI_API_KEY</code> にAPIキーを入れておきます）。</p>
 
 <pre class="cell">
 import os
 from openai import OpenAI
 
 class Chatbot:
-    def __init__(self, model="gpt-4-turbo", messages=None, temperature=0, stream=True):
+    def __init__(self, model="chatgpt-4o-latest", messages=None, temperature=0, stream=True):
         if "gemini" in model:
             self.client = OpenAI(
                 api_key=os.getenv("GOOGLE_API_KEY"),
-                base_url="https://generativelanguage.googleapis.com/v1beta/"
+                base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+            )
+        elif "grok" in model:
+            self.client = OpenAI(
+                api_key=os.getenv("XAI_API_KEY"),
+                base_url="https://api.x.ai/v1"
             )
         else:
             self.client = OpenAI()
@@ -279,7 +286,7 @@ enc = tiktoken.get_encoding("o200k_base")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-11-09 14:35:27 JST</time></p>
+<p>Last modified: <time>2025-02-20 21:23:49 JST</time></p>
 </footer>
 </body>
 </html>

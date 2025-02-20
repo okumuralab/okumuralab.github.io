@@ -18,7 +18,8 @@ function foo() {
   t = t.replace(/\)/g, "%29");
   t = t.replace(/'/g, "%27");
   t = t.replace(/@/g, "%40");
-  t = t.replace(/\.$/, "%2E");  // 最後のピリオド
+  // t = t.replace(/\.$/, "%2E");  // 最後のピリオド
+  t = t.replace(/\.+$/, match => match.replace(/\./g, "%2E"));  // 最後のピリオドの連続
   u = document.getElementById("output");
   u.value = t;
   navigator.clipboard.writeText(t);
@@ -61,7 +62,7 @@ function foo() {
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-01-10 19:08:49</time>
+Last modified: <time>2025-02-19 09:44:44 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

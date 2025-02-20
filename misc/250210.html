@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/250210.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Typst 0.13</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>Typst 0.13</h1>
+
+<p>Typst 0.13.0-rc1が出た（<a href="https://forum.typst.app/t/typst-0-13-is-in-its-final-testing-period-your-help-is-wanted/2683">アナウンス</a>、<a href="https://staging.typst.app/docs/changelog/0.13.0">ChangeLog</a>）。Web版は⚙️→Compilerで切り替えられる。バイナリは<a href="https://github.com/typst/typst/releases/">こちら</a>でダウンロードできる。私の <a href="https://github.com/okumuralab/typst-js">typst-js</a> も <del><code>for_0_13</code> ブランチで0.13対応した</del> 0.13用に一本化した。</p>
+
+<p>しばらく使ってみたが、これはもう0.12から乗り換えたほうがよさそうだ。typst-js のブランチもマージして0.13に一本化した。</p>
+
+<p>まずは、最初の段落で字下げできないバグ <a href="https://github.com/typst/typst/issues/311">Behavior of first line indentation in paragraphs seems limiting #311</a> が、報告されてから2年近くを経て、ようやく解決された（<a href="https://github.com/typst/typst/pull/5768">Support first-line-indent for every paragraph #5768</a>）。今までは見出しに空の段落を入れて誤魔化していたが、それだと見出しがページ最後に来ることを防げないので、たいへんありがたい。</p>
+
+<p>和欧混植については、今までは欧文フォントのフォールバックとして和文フォントを指定するしかなかった（正規表現で置換することはできたがそれでは<a href="241121.html">和文約物の組版規則</a>が適用されない（<ruby>約物<rp>（</rp><rt>やくもの</rt><rp>）</rp></ruby>＝句読点・括弧類））が、0.13ではフォント指定が正規表現や <code>"latin-in-cjk"</code> で指定できるようになった。具体的には、今までは</p>
+
+<pre>
+#set text(lang: "ja", font: ("New Computer Modern", "Harano Aji Mincho"))
+
+あ……あ“あ”あ。
+</pre>
+
+<figure><img src="img/250210a.svg" alt="欧文フォントのフォールバックとして和文フォントを指定"></figure>
+
+<p>としていたが、これからは</p>
+
+<pre>
+#set text(lang: "ja", font: ((name: "New Computer Modern", covers: "latin-in-cjk"), "Harano Aji Mincho"))
+
+あ……あ“あ”あ。
+</pre>
+
+<figure><img src="img/250210b.svg" alt="latin-in-cjkで欧文フォントを指定"></figure>
+
+<p>のようにできる。「…」「“」「”」に欧文フォントではなく和文フォントが使われていることがわかる。ただ、本来は「“」「”」は</p>
+
+<figure><img src="img/250210c.svg" alt="正しい和文組版"></figure>
+
+<p>のように全角に組むべきところが、こうなってしまっているのは、バグであろう。また、和欧でサイズを変える仕組みはサポートされていない。</p>
+
+<p>（書きかけ）</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-02-11 22:00:23 JST</time></p>
+</footer>
+</body>
+</html>
