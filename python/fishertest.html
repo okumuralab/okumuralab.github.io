@@ -16,9 +16,8 @@
 <a href="./">Python</a> &gt;
 </nav>
 
+<main>
 <h1>Fisherの検定</h1>
-
-<p>[2023-01-05] SciPy 1.10.0 が出たのでそれに合わせて修正しました。</p>
 
 <p>RでFisherの検定をするには <code>fisher.test()</code> を使います。行列は縦に読んで、行数（または列数）を指定します：</p>
 
@@ -57,7 +56,7 @@ oddsratio, pvalue = stats.fisher_exact([[3, 2], [1, 4]])
 
 <p>のようにします。Rの <code>fisher.test()</code> と違って、こちらの <code>[[a, b], [c, d]]</code> のオッズ比は <code>(a/b)/(c/d)</code> と同じです。オッズ比の2通りの求め方については<a href="../stat/2by2.html">2×2の表，オッズ比，相対危険度</a>もご覧ください。オッズ比を報告する際には <code>(a/b)/(c/d)</code> のほうでいいと思います。</p>
 
-<p><code>fisher_exact()</code> は残念ながら2×2行列しか扱えません。より大きな行列を扱うには <a href="https://pypi.org/project/FisherExact/">FisherExact</a> や <a href="https://github.com/boussoffara/fexact">fexact</a> があるようですが、<a href="rpy2.html">rpy2</a> 等を使ってPythonからRを呼び出すのがいいかもしれません。</p>
+<p>また、Rの <code>fisher.test()</code> と違って、この <code>fisher_exact()</code> は2×2行列より大きい行列に対しては乱数を使ったシミュレーションで答えを出しますので、毎回結果が違います。PythonにもRと同じようなことをするパッケージがあるようですが、<a href="rpy2.html">rpy2</a> 等を使ってPythonからRを呼び出すのがいいかもしれません。</p>
 
 <p>Fisherの検定がいいか、単純なカイ2乗検定がいいか（その場合、連続性の補正はするべきか）といった議論は<a href="../stat/fisher-chisq.html">いろいろあります</a>。カイ2乗検定はPythonでは次のようにして行います（補正なしの場合）：</p>
 
@@ -69,12 +68,13 @@ stats.chi2_contingency([[3, 2], [1, 4]], correction=False)
 Chi2ContingencyResult(statistic=1.6666666666666665, pvalue=0.1967056024589432, dof=1, expected_freq=array([[2., 3.],
        [2., 3.]]))
 </pre>
+</main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-06-10 10:42:37 JST</time></p>
+<p>Last modified: <time>2025-02-25 15:01:10 JST</time></p>
 </footer>
 </body>
 </html>

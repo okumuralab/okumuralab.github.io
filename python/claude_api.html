@@ -21,19 +21,19 @@
 
 <h1>ClaudeのAPIを使う</h1>
 
-<p>[2024-06-21] Claude 3.5 Sonnet (<code>claude-3-5-sonnet-20240620</code>) が出ました。</p>
+<p>[2025-02-25] Claude 3.7 Sonnet (thinking) 用のコードを追記しました。</p>
 
-<p><a href="https://www.anthropic.com">Anthropic</a>（アンスロピック）は2021年にOpenAIから離脱した人たちが作った会社です。<a href="https://claude.ai">Claude</a>（クロード）という生成AIを開発しています。2024-03-05（日本時間）にはClaude 3が登場し、最上位モデルClaude 3 Opus（オーパス）はGPT-4を超えたと宣伝されています。しかし、今のところWebで無料で使えるのは2番目のモデルClaude 3 Sonnet（ソネット）までです。WebでOpusを使うには、月20ドル払ってClaude Proに登録しなければなりません。しかし、API経由での利用なら、従量制ですし、5ドルの無料枠があります。<a href="https://console.anthropic.com/dashboard">Dashboard</a> 経由で使うこともできますが、ここではPythonから使ってみましょう。</p>
+<p><a href="https://www.anthropic.com">Anthropic</a>（アンスロピック）は2021年にOpenAIから離脱した人たちが作った会社です。<a href="https://claude.ai">Claude</a>（クロード）という生成AIを開発しています。APIを使うには <a href="https://console.anthropic.com">コンソール</a> で登録してAPIキーをもらいます。</p>
 
-<p>ちなみに、お値段は、百万トークンあたり、入力が15ドル、出力が75ドルです。クレジットカードを登録すれば、例えば残高が5ドルを切ったら10ドル積み増すといった設定ができます。残高は <a href="https://console.anthropic.com/settings/plans">Plans &amp; Billing</a> で確認できます。</p>
+<p>お値段などは <a href="llm_comparison.html">LLM API比較</a> をご覧ください。</p>
 
-<p>あとはAPIの <a href="https://docs.anthropic.com/claude/docs/">ドキュメント</a> を読みながら作業します。まずはAPIキーを発行してもらい、</p>
+<p>Pythonから使うには、発行されたAPIキーを</p>
 
 <pre>
 export ANTHROPIC_API_KEY='...'
 </pre>
 
-<p>のような形で環境変数として登録しておきます（これが難しい場合は以下参照）。Python側では</p>
+<p>のような形で環境変数として登録しておくか、あるいは <a href="https://pypi.org/project/python-dotenv/">python-dotenv</a> を使うのが便利です。</p>
 
 <pre>
 pip install anthropic
@@ -50,12 +50,12 @@ client = anthropic.Anthropic(
 )
 </pre>
 
-<p>最新のClaude 3.5 Sonnetを使ってみましょう。</p>
+<p>最新のClaude 3.7 Sonnetを使ってみましょう。</p>
 
 <pre class="cell">
 message = client.messages.create(
-    model="claude-3-5-sonnet-20240620",
-    max_tokens=1000, # 出力上限（4096まで）
+    model="claude-3-7-sonnet-20250219",
+    max_tokens=1000, # 出力上限
     temperature=0.0, # 0.0-1.0
     system="", # 必要ならシステムプロンプトを設定
     messages=[
@@ -68,24 +68,6 @@ message = client.messages.create(
 
 print(message.content[0].text)
 </pre>
-
-<blockquote>
-<p>まどマギ（魔法少女まどか☆マギカ）の登場人物は、それぞれ魅力的で個性的なキャラクターが多いですね。人気のあるキャラクターとしては：</p>
-
-<p>1. 鹿目まどか：主人公で、優しく純粋な性格が魅力的です。</p>
-
-<p>2. 暁美ほむら：ミステリアスで複雑な背景を持つキャラクターで、まどかへの想いが印象的です。</p>
-
-<p>3. 巴マミ：優雅で大人びた雰囲気を持つ先輩魔法少女です。</p>
-
-<p>4. 美樹さやか：正義感が強く、友情に厚いキャラクターです。</p>
-
-<p>5. 佐倉杏子：クールでツンデレな性格が魅力的です。</p>
-
-<p>6. キュゥべえ：物語のキーとなる謎めいたキャラクターです。</p>
-
-<p>これらのキャラクターの中から、あなたの好みや共感できる部分によって、お気に入りのキャラクターが決まると思います。私個人の意見は控えますが、それぞれのキャラクターに魅力があると思います。</p>
-</blockquote>
 
 <p><code>message.usage</code> で入力、出力のトークン数がわかります。</p>
 
@@ -228,13 +210,86 @@ claude.chat("""
 
 <p>混んでいると <code>APIStatusError: {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}</code> が返ることがあります（特にストリーミングのとき）。そのときは <code>claude.chat("...", stream=False)</code> も試してみてください。</p>
 
-<p><code>model</code> については <a href="llm_comparison.html">LLM API比較</a> をご覧ください。</p>
+<p>Claude 3.7 Sonnet からは thinking が使えますが、thinking を使うなら temperature は 1 にする必要があります。上のコードを thinking に特化したものは次のようになりそうです（これで一応うまく動いているようですが <code>redacted_thinking</code> は配慮していません）。</p>
+
+<pre class="cell">
+import anthropic
+
+class Claude:
+    def __init__(self, model="claude-3-7-sonnet-20250219", messages=None):
+        self.client = anthropic.Anthropic()
+        self.model = model
+        self.messages = messages or []
+
+    def get_messages(self):
+        return self.messages
+
+    def chat(self, prompt, max_tokens=64000): # max 64000
+        if len(self.messages) &gt; 0 and self.messages[-1]["role"] == "user":
+            self.messages.pop()
+        self.messages.append({"role": "user", "content": prompt.strip()})
+        content_thinking = ""
+        content_text = ""
+        content_signature = ""
+        try:
+            with self.client.messages.stream(
+                    model=self.model,
+                    max_tokens=max_tokens,
+                    thinking={
+                        "type": "enabled",
+                        "budget_tokens": int(max_tokens / 2)  # min 1024
+                    },
+                    messages=self.messages) as stream:
+                current_block_type = None
+                for event in stream:
+                    if event.type == "content_block_start":
+                        current_block_type = event.content_block.type
+                        print("&lt;" + current_block_type + "&gt;")
+                    elif event.type == "content_block_delta":
+                        if event.delta.type == "thinking_delta":
+                            print(event.delta.thinking, end="", flush=True)
+                            content_thinking += event.delta.thinking
+                        elif event.delta.type == "text_delta":
+                            print(event.delta.text, end="", flush=True)
+                            content_text += event.delta.text
+                        elif event.delta.type == "signature_delta":
+                            # print(event.delta.signature, end="", flush=True)
+                            content_signature += event.delta.signature
+                    elif event.type == "content_block_stop":
+                        print("\n&lt;/" + current_block_type + "&gt;")
+                        current_block_type = None
+                    elif event.type == "message_stop":
+                        print("--- Message complete ---")
+        except Exception as e:
+            print("Error", e)
+        self.messages.append({
+            "role": "assistant",
+            "content": [
+                anthropic.types.thinking_block.ThinkingBlock(
+                    signature=content_signature,
+                    thinking=content_thinking,
+                    type="thinking"
+                ),
+                anthropic.types.text_block.TextBlock(
+                    text=content_text,
+                    type="text"
+                )
+            ]
+        })
+
+claude = Claude()
+claude.chat("""
+（ここに質問を書く）
+""")
+</pre>
+
+<p>詳しくはドキュメントの <a href="https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking">Building with extended thinking</a> をご覧ください。コード例は <a href="https://github.com/anthropics/anthropic-cookbook/blob/main/extended_thinking/extended_thinking.ipynb">これ</a> が参考になります。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-06-21 10:16:55 JST</time></p>
+<p>Last modified: <time>2025-02-26 16:39:19 JST</time></p>
 </footer>
 </body>
 </html>
