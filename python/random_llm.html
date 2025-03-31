@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/random_llm.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ランダムな文字列をLLMに出力させる</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ランダムな文字列をLLMに出力させる</h1>
+
+<p>GPT-4oのようなLLMは、プロンプトが同じで温度0でも、同じ出力をするとは限らない。</p>
+
+<pre class="cell">
+from openai import OpenAI
+client = OpenAI()
+
+response = client.responses.create(
+    model="gpt-4o",
+    max_output_tokens=512,
+    temperature=0,
+    input="Please output as many random tokens as possible."
+)
+
+print(response.output_text)
+</pre>
+
+<p>1回目：</p>
+
+<pre>
+Sure! Here are some random tokens:
+
+- Quokka
+- Zephyr
+- Luminescent
+...(後略)...
+</pre>
+
+<p>2回目：</p>
+
+<pre>
+Sure! Here are some random tokens:
+
+- Z3x9Q
+- b7LkP
+- mN8vR
+...(後略)...
+</pre>
+
+<p>1行目の前振りだけ同じで、あとは全部違う。</p>
+
+<p>一方、Mac Studio上でローカルLLMのGemma 3をOllama経由で使ったところ（<a href="ollama.html">OllamaでローカルLLM</a>参照）、まったく同じになる。</p>
+
+<pre class="cell">
+from ollama import chat
+
+def ai(prompt):
+    response = chat(
+        model="hf.co/unsloth/gemma-3-27b-it-GGUF:Q8_0",
+        messages=[{ 'role': 'user', 'content': prompt }],
+        options={ "temperature": 0, "num_ctx": 512 }
+    )
+    return response['message']['content']
+
+ans1 = ai("Please output as many random tokens as possible.")
+ans2 = ai("Please output as many random tokens as possible.")
+print(ans1 == ans2)
+</pre>
+
+<p>GPT-4の類が温度0でも再現性がないのは、GPUで並列処理するために計算順序によって誤差が異なるという説があったが、少なくともMac Studioでは（512トークンまでは）そういうことはなさそうだ。</p>
+
+<p>MoEが原因だという説もある: <a href="https://152334h.github.io/blog/non-determinism-in-gpt-4/">Non-determinism in GPT-4 is caused by Sparse MoE</a></p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-03-31 10:41:16 JST</time></p>
+</footer>
+</body>
+</html>

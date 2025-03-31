@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/paired_comparison.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一対比較法</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>一対比較法</h1>
+
+<p>人間は何かに点数を付けるのは苦手である。基準がだんだん変わってくるし、複数の人で基準を統一するのはさらに難しい。しかし、AとBを比べてどちらが良いかを判断するのは比較的簡単である。そこで、比較の結果から数量化する方法がいろいろ考え出された。</p>
+
+<p>心理学の分野ではThurstoneが1927年に一対比較法（paired comparison）を提案した。AとBを比較したときに、どちらも分散が等しい正規分布でゆらぐとすれば、AがBより大きいと判断される確率はAとBの差によって定まる。複数の対象について、比較データをたくさん集めれば、最尤法でそれぞれの対象が数量化できる（原点と乗数は任意に定める）。この方法でハッカソンの採点をするツールとして <a href="https://github.com/anishathalye/gavel">Gavel</a>（ギャブル）がある（<a href="https://anishathalye.com/designing-a-better-judging-system/">Designing a Better Judging System</a> に背景が書かれている）。</p>
+
+<p>対戦ゲームの勝敗結果から、個々のプレーヤーに点数を付けるのも、同じ考え方が使える。プレーヤー $i$ がプレーヤー $j$ に勝った回数 $w_{ij}$ が与えられたとき、各プレーヤーの点数 $p_i$ はどう付ければいいか、という問題である。これについては有名なZermelo（ツェルメロ）が1929年に論じている。彼はThurstoneとは違って、$i$ が $j$ に勝つ確率が $p_i / (p_i + p_j)$ になるように $w_{ij}$ から $p_i$ を求めることを考えた。この考え方は1952年にBradleyとTerryにより再発見され、Bradley-Terryモデルと呼ばれるようになった。</p>
+
+<p>AIの歴史でAlphaGoなどについて調べた方は、棋士の強さをElo rating（イロ・レーティング）という数値で表すことをご存じであろう。これはEloという物理学者にしてチェスのマスターだった人が考案したものである。Eloは当初Thurstoneと同じ方法を考えたが、現在使われているのはBradley-Terryモデルに基づくもので、$p_i = \exp(R_i / 400)$ と置いた $R_i$ がElo ratingである。ただし $R_i$ の平均が1500になるように原点を定める。また、試合ごとに全プレーヤーの点数を再計算するのではなく、対戦者間で点数を更新する。</p>
+
+<p><a href="https://lmarena.ai">Chatbot Arena</a> のリーダーボードのスコアは、かつてはElo ratingを用いていたが、現在はBradley-Terryモデルに基づいて毎回再計算している（<a href="https://arxiv.org/abs/2403.04132">Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference</a> 参照）。</p>
+
+<p>行列 $w_{ij}$ から全プレーヤーの点数 $p_i$ を最尤法で求めるには、対数尤度</p>
+
+\[ \log \prod_{i,j} \left( \frac{p_i}{p_i + p_j} \right)^{w_{ij}} = \sum_{i,j} w_{ij} (\log p_i - \log (p_i + p_j)) \] 
+
+<p>を $p_i$ で微分したものを 0 と置いて</p>
+
+\[ p_i = \frac{\sum_j w_{ij}}{\sum_j (w_{ij} + w_{ji}) / (p_i + p_j)} \]
+
+<p>の形にして、右辺で左辺を更新していく反復法で解くことができる。より収束の速い方法も提案されているが、この方法で途中ゼロ除算が生じないように工夫した次のものが便利である（OpenAI o3-miniに手伝ってもらった）。</p>
+
+<pre class="cell">
+import numpy as np
+
+def bradley_terry(w, tol=1e-8, max_iter=10000, eps=1e-16):
+    n = w.shape[0]
+    p = np.ones(n) / n
+    for iter in range(max_iter):
+        p_old = p.copy()
+        p_sum = p.reshape(-1, 1) + p.reshape(1, -1)
+        D = np.sum((w + w.T) / (p_sum + eps), axis=1)
+        p = np.sum(w, axis=1) / (D + eps)
+        p = p / np.sum(p)
+        if np.max(np.abs(p - p_old)) < tol:
+            break
+    return p
+</pre>
+
+<p>行列 $w_{ij}$ の対角要素は $w_{ii} = 0$ である。タイ（引き分け）の扱いにはいろいろな方法が考えられるが、最も簡単な方法は、双方に 0.5 の勝ち数を加える。</p>
+
+<p>簡単な例で試してみよう。100人のプレーヤー（0〜99）がいて、0は1に勝ち、1は2に勝ち、…、98は99にかつとする。</p>
+
+<pre class="cell">
+w = np.zeros((100, 100))
+for i in range(99):
+    w[i, i+1] = 1
+print(bradley_terry(w).argsort())
+</pre>
+
+<p>結果は <code>[99, 98, 97, ..., 2, 1, 0]</code> になるはずである。</p>
+
+<p>もっとランダムかつ疎なケースで試してみよう。100人の生徒と30人の先生がいる。どの先生も10人の生徒を選んで1位から10位まで順位を付ける（つまり45対の比較をする）。どの生徒もちょうど3人の先生に選ばれる。つまり $45 \times 30 = 1350$ 対の比較が行われる。しかし100人の生徒なら4950対の比較が可能なので、疎な比較であり、おそらく不定である。</p>
+
+<pre class="cell">
+NUM_STUDENTS = 100
+NUM_TEACHERS = 30
+TEACHERS_PER_STUDENT = 3
+STUDENTS_PER_TEACHER = 10
+
+rng = np.random.default_rng(20250325)
+
+def generate_assignments():
+    s = np.full(NUM_STUDENTS, TEACHERS_PER_STUDENT)
+    teacher_to_students = []
+    for t in range(NUM_TEACHERS):
+        for thresh in [2, 1, 0]:
+            s1 = [i for i in range(NUM_STUDENTS) if s[i] > thresh]
+            if len(s1) >= STUDENTS_PER_TEACHER:
+                break
+        r = rng.choice(s1, STUDENTS_PER_TEACHER, replace=False)
+        for i in r:
+            s[i] -= 1
+        teacher_to_students.append(r)
+    return teacher_to_students
+
+def simulate():
+    teacher_to_students = generate_assignments()
+    w = np.zeros((NUM_STUDENTS, NUM_STUDENTS))
+    for t in range(NUM_TEACHERS):
+        for s1 in teacher_to_students[t]:
+            for s2 in teacher_to_students[t]:
+                if s1 > s2:
+                    w[s1, s2] += 1
+    return w
+
+w = simulate()
+print(bradley_terry(w).argsort())
+</pre>
+
+<p>試してみると、やはり不定で、<code>eps</code> をちょっと変えただけで結果が変わる。</p>
+
+<hr>
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-03-26 10:47:36 JST</time></p>
+</footer>
+</body>
+</html>

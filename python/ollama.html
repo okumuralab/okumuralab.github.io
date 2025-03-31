@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/ollama.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OllamaでローカルLLM</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>OllamaでローカルLLM</h1>
+
+<p>外部に出すのがはばかられる情報を扱う場合や、費用をかけたくない場合、再現性が必要な場合に、ローカルLLMは魅力的である。ここでは <a href="https://ollama.com">Ollama</a>（オラーマ）というツールを使ってコマンドラインまたはPythonからLLMを使う方法を説明する。</p>
+
+<p>ここではMacを使う。OllamaサイトよりバイナリのZIPファイルをダウンロードし、展開してOllama.appを/Applications（あるいは適当な場所）に移動し、起動すると、/Applications/Ollama.app/Contents/Resources/ollamaへのシンボリックリンクが/usr/local/binにできる。また、バックグラウンドのプロセスが起動し、メニューバーにOllamaアイコンが常駐する。利用はターミナルからollamaコマンドを使って行うか、後述するようにPythonなどを使ってバックグラウンドのプロセスのAPIを呼び出す。</p>
+
+<p>まずは適当なモデルをダウンロードして動かす。ここではGoogleの <a href="https://blog.google/technology/developers/gemma-3/">Gemma 3</a>（ジェンマ・スリー）を使ってみる。</p>
+
+<p><a href="https://ollama.com/library/gemma3">OllamaのGemma 3のページ</a>を参考にして、4サイズのGemma 3のうち適当なものを選ぶ。メモリ8GのMacなら4B、メモリ16GのMacなら12B、それ以上なら27Bを使えばよかろう（Bはbillionつまり10億パラメータ）。12Bモデルなら</p>
+
+<pre>
+ollama run gemma3:12b
+</pre>
+
+<p>と打ち込むと、初回はモデルのダウンロードが始まり、それが終われば入力を受け付ける状態になるので、何か質問すれば、答えが返る。</p>
+
+<p>モデルは <code>~/.ollama</code> に入る。ドライブの容量が足りなければ、あとで外部ドライブにモデルを移動してシンボリックリンクを張ってもよい。</p>
+
+<p>これらのモデルは、Ollama用に用意された4ビット量子化（Q4_K_M）モデルである。私はメモリ128GのMac Studioを買ったので、4ビットでなくても8ビットでも16ビットでも大丈夫だが、8ビットあれば十分だ。そこで、Ollamaの対応するGGUFというフォーマットで提供されている27Bモデル <a href="https://huggingface.co/unsloth/gemma-3-27b-it-GGUF">hf.co/unsloth/gemma-3-27b-it-GGUF</a> の8ビット量子化版を使うことにした。コマンドは</p>
+
+<pre>
+ollama run hf.co/unsloth/gemma-3-27b-it-GGUF:Q8_0
+</pre>
+
+<p>である。最後の <code>Q8_0</code> は <a href="https://huggingface.co/unsloth/gemma-3-27b-it-GGUF/tree/main">Files</a> にあるファイル名 <code>gemma-3-27b-it-Q8_0.gguf</code> にも含まれる8ビット量子化を意味するものである。8ビット27Bなら27Gバイト＋αのメモリを使う。＋αの量はコンテキスト長（<code>num_ctx</code>、デフォルト2048トークン）にも依存する。Gemma 3は最大128Kまで上げられる（1Bモデルは32Kまで）。ただし出力は8Kまでのようだ。メモリ・CPU・GPUの利用率は例えば <a href="https://github.com/context-labs/mactop">mactop</a> というツールで表示できる。</p>
+
+<p>ちなみに、MacのメモリでGPUから使えるのはデフォルトでは3/4（64G以上のMac）または2/3（64G未満）に設定されているようだ（<a href="https://blog.peddals.com/ja/fine-tune-vram-size-of-mac-for-llm/">macOS でローカル LLM を使うときの VRAM 最適化設定</a>参照）。例えば128GのMacなら <code>sudo sysctl iogpu.wired_limit_mb=122880</code> と打ち込むと120Gまで使えるようになる。このあたりの事情は <a href="https://ml-explore.github.io/mlx/build/html/python/_autosummary/mlx.core.set_wired_limit.html">mlx.core.set_wired_limit</a> の説明にも書かれている。</p>
+
+<p>Ollamaは上記のようにコマンドラインで使うのが簡単だが、Pythonで使うこともできる。あらかじめ <a href="https://github.com/ollama/ollama-python">ollama-python</a> というパッケージ <code>pip install ollama</code> でインストールしておく。</p>
+
+<p>簡単なプログラム例（温度0でランダムな文字列を出力させ、比較する）：</p>
+
+<pre class="cell">
+from ollama import chat
+
+def ai(prompt):
+    response = chat(
+        model="hf.co/unsloth/gemma-3-27b-it-GGUF:Q8_0",
+        messages=[{ 'role': 'user', 'content': prompt }],
+        options={ "temperature": 0, "num_ctx": 512 }
+    )
+    return response['message']['content']
+
+ans1 = ai("Please output as many random tokens as possible.")
+ans2 = ai("Please output as many random tokens as possible.")
+print(ans1 == ans2)
+</pre>
+
+<p>まったく同じである。</p>
+
+<p>簡単なプログラム例（ファイルの各行に収めた文章を分類する）：</p>
+
+<pre class="cell">
+from ollama import chat
+
+def ai(prompt):
+    response = chat(
+        model="hf.co/unsloth/gemma-3-27b-it-GGUF:Q8_0",
+        messages=[{ 'role': 'user', 'content': prompt }],
+        options={ "temperature": 0, "num_ctx": 2048 }
+    )
+    return response['message']['content']
+
+with open("list.txt") as f:
+    lines = f.readlines()
+
+for line in lines:
+    prompt = f"次の文章を○○○と×××に分類して、○○○なら「A」、×××なら「B」と答えてください。\n\n{line}"
+    print(ai(prompt).strip())
+</pre>
+
+<p>より高度なプログラム例（ストリーミング使用、会話を続ける）：</p>
+
+<pre class="cell">
+from ollama import chat
+
+class Ollama:
+    def __init__(self,
+                 model="hf.co/unsloth/gemma-3-27b-it-GGUF:Q8_0",
+                 messages=None, temperature=1, num_ctx=131072):
+        self.model = model
+        self.messages = messages or []
+        self.temperature = temperature
+        self.num_ctx = num_ctx
+
+    def chat(self, prompt, num_ctx=None, temperature=None):
+        if len(self.messages) > 0 and self.messages[-1]["role"] == "user":
+            self.messages.pop()
+        self.messages.append({"role": "user", "content": prompt.strip()})
+        temperature = self.temperature if temperature is None else temperature
+        num_ctx = self.num_ctx if num_ctx is None else num_ctx
+        stream = chat(
+            model=self.model,
+            messages=self.messages,
+            stream=True,
+            options={
+                "temperature": temperature,
+                "num_ctx": num_ctx
+            }
+        )
+        ans = ""
+        for chunk in stream:
+            content = chunk['message']['content']
+            print(content, end="")
+            ans += content
+        self.messages.append({"role": "assistant", "content": ans})
+
+    def get_messages(self):
+        return self.messages
+
+ai = Ollama(temperature=1)
+
+ai.chat('''
+最初のプロンプト...
+''')
+
+ai.chat('''
+次のプロンプト...
+''')
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-03-31 09:36:07 JST</time></p>
+</footer>
+</body>
+</html>

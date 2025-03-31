@@ -210,7 +210,7 @@ claude.chat("""
 
 <p>混んでいると <code>APIStatusError: {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}</code> が返ることがあります（特にストリーミングのとき）。そのときは <code>claude.chat("...", stream=False)</code> も試してみてください。</p>
 
-<p>Claude 3.7 Sonnet からは thinking が使えますが、thinking を使うなら temperature は 1 にする必要があります。上のコードを thinking に特化したものは次のようになりそうです（これで一応うまく動いているようですが <code>redacted_thinking</code> は配慮していません）。</p>
+<p>Claude 3.7 Sonnet からは thinking が使えますが、thinking を使うなら temperature は 1 にする必要があります。上のコードに thinking を付けたものは次のようになりそうです（とりあえず動いているようですが十分テストできていません）。</p>
 
 <pre class="cell">
 import anthropic
@@ -224,24 +224,39 @@ class Claude:
     def get_messages(self):
         return self.messages
 
-    def chat(self, prompt, max_tokens=64000): # max 64000
+    def chat(self, prompt, thinking=True,
+             max_tokens=4000,    # &lt;= 64000 (&lt;= 128000)
+             budget_tokens=2000, # &gt;= 1024, &lt; max_tokens, not used when thinking=False
+             temperature=0):     # not used when thinking=True
         if len(self.messages) &gt; 0 and self.messages[-1]["role"] == "user":
             self.messages.pop()
         self.messages.append({"role": "user", "content": prompt.strip()})
         content_thinking = ""
         content_text = ""
         content_signature = ""
+        redacted_data = ""
+        args = {
+            "model": self.model,
+            "max_tokens": max_tokens,
+            "messages": self.messages
+        }
+        if thinking:
+            args["thinking"] = {
+                "type": "enabled",
+                "budget_tokens": budget_tokens
+            }
+        else:
+            args["temperature"] = temperature
+        if max_tokens &gt; 64000:
+            args["extra_headers"] = {
+                "anthropic-beta": "output-128k-2025-02-19"
+            }
         try:
-            with self.client.messages.stream(
-                    model=self.model,
-                    max_tokens=max_tokens,
-                    thinking={
-                        "type": "enabled",
-                        "budget_tokens": int(max_tokens / 2)  # min 1024
-                    },
-                    messages=self.messages) as stream:
+            # debugout = open("debugout", "a") ##### debug
+            with self.client.messages.stream(**args) as stream:
                 current_block_type = None
                 for event in stream:
+                    # print(event, file=debugout) ##### debug
                     if event.type == "content_block_start":
                         current_block_type = event.content_block.type
                         print("&lt;" + current_block_type + "&gt;")
@@ -257,24 +272,40 @@ class Claude:
                             content_signature += event.delta.signature
                     elif event.type == "content_block_stop":
                         print("\n&lt;/" + current_block_type + "&gt;")
+                        if current_block_type == "redacted_thinking":
+                            redacted_data += event.content_block.data
                         current_block_type = None
                     elif event.type == "message_stop":
-                        print("--- Message complete ---")
+                        print(event.message.usage)
+            # debugout.close() ##### debug
         except Exception as e:
             print("Error", e)
-        self.messages.append({
-            "role": "assistant",
-            "content": [
+        content = []
+        if redacted_data != "":
+            content.append(
+                anthropic.types.redacted_thinking_block.RedactedThinkingBlock(
+                    data=redacted_data,
+                    type="redacted_thinking"
+                )
+            )
+        if content_thinking != "":
+            content.append(
                 anthropic.types.thinking_block.ThinkingBlock(
                     signature=content_signature,
                     thinking=content_thinking,
                     type="thinking"
-                ),
+                )
+            )
+        if content_text != "":
+            content.append(
                 anthropic.types.text_block.TextBlock(
                     text=content_text,
                     type="text"
                 )
-            ]
+            )
+        self.messages.append({
+            "role": "assistant",
+            "content": content
         })
 
 claude = Claude()
@@ -289,7 +320,7 @@ claude.chat("""
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-02-26 16:39:19 JST</time></p>
+<p>Last modified: <time>2025-02-27 15:32:39 JST</time></p>
 </footer>
 </body>
 </html>

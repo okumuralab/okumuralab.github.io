@@ -18,531 +18,79 @@
 
 <h1>Gemini APIを使う</h1>
 
-<p>[2024-12-15追記] <a href="https://ai.google.dev/gemini-api/docs/models/gemini-v2">Gemini 2.0 (experimental)</a> のページの下に書いてあるように、新しい Google Gen AI SDK (experimental) が出ました。これは <code>pip install google-genai</code> で入れるもので、従来の <code>pip install google-generativeai</code> で入れるものとは別物です。</p>
+<p>[2025-03-26] 書き直しました。</p>
 
-<p>[2024-11-09追記] <a href="https://developers.googleblog.com/en/gemini-is-now-accessible-from-the-openai-library/">Gemini is now accessible from the OpenAI Library</a> というわけで<a href="chatgpt_api.html">OpenAIのAPIを使う</a>の方法がそのまま使えるようになりました。ドキュメントにも <a href="https://ai.google.dev/gemini-api/docs/openai">OpenAI compatibility</a> が加わりました。</p>
+<p>Gemini APIは、かつては <code>pip install google-generativeai</code> で入れる <code>google.generativeai</code> パッケージで使いましたが、2024年末に <code>pip install google-genai</code> で入れる新しいパッケージが出ました。また、Gemini APIはOpenAIとの互換性があり（<a href="https://ai.google.dev/gemini-api/docs/openai">OpenAI compatibility</a>）、<a href="chatgpt_api.html">OpenAIのAPIを使う</a>の方法もそのまま使えます。</p>
 
-<p><a href="https://ai.google.dev/tutorials/python_quickstart">Gemini API: Quickstart with Python</a>に従って、Pythonパッケージを</p>
-
-<pre>
-pip install google-generativeai
-</pre>
-
-<p>でインストールすれば、</p>
-
-<pre class="cell">
-import google.generativeai as genai
-</pre>
-
-<p>で使えるようになる。</p>
-
-<p>Google AI Studioの<a href="https://makersuite.google.com/app/apikey">API keys</a>で「Create API key in new project」を選んでAPIキーを発行してもらう。キーは</p>
+<p>まずは、<a href="https://aistudio.google.com/app/apikey">APIキー</a> を発行してもらいます。APIキーはコードに直接書き込むこともできますが、次のようにして環境変数に登録しておくと便利です。</p>
 
 <pre>
 export GOOGLE_API_KEY="..."
 </pre>
 
-<p>のようにして環境変数としておくと勝手に使ってもらえるが、うまくいかなければ</p>
-
-<pre class="cell">
-genai.configure(api_key="...")
-</pre>
-
-<p>で指定する。</p>
-
-<pre class="cell">
-list(genai.list_models())
-</pre>
-
-<p>と打ち込めば、使えるモデルが一覧できる。例：</p>
+<p>次に、<a href="https://ai.google.dev/gemini-api/docs/quickstart?lang=python">Gemini API quickstart</a> に従って、Pythonパッケージをインストールします。</p>
 
 <pre>
-[Model(name='models/chat-bison-001',
-       base_model_id='',
-       version='001',
-       display_name='PaLM 2 Chat (Legacy)',
-       description='A legacy text-only model optimized for chat conversations',
-       input_token_limit=4096,
-       output_token_limit=1024,
-       supported_generation_methods=['generateMessage', 'countMessageTokens'],
-       temperature=0.25,
-       max_temperature=None,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/text-bison-001',
-       base_model_id='',
-       version='001',
-       display_name='PaLM 2 (Legacy)',
-       description='A legacy model that understands text and generates text as an output',
-       input_token_limit=8196,
-       output_token_limit=1024,
-       supported_generation_methods=['generateText', 'countTextTokens', 'createTunedTextModel'],
-       temperature=0.7,
-       max_temperature=None,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/embedding-gecko-001',
-       base_model_id='',
-       version='001',
-       display_name='Embedding Gecko',
-       description='Obtain a distributed representation of a text.',
-       input_token_limit=1024,
-       output_token_limit=1,
-       supported_generation_methods=['embedText', 'countTextTokens'],
-       temperature=None,
-       max_temperature=None,
-       top_p=None,
-       top_k=None),
- Model(name='models/gemini-1.0-pro-latest',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.0 Pro Latest',
-       description=('The original Gemini 1.0 Pro model. This model will be discontinued on '
-                    'February 15th, 2025. Move to a newer Gemini version.'),
-       input_token_limit=30720,
-       output_token_limit=2048,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=0.9,
-       max_temperature=None,
-       top_p=1.0,
-       top_k=None),
- Model(name='models/gemini-1.0-pro',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.0 Pro',
-       description='The best model for scaling across a wide range of tasks',
-       input_token_limit=30720,
-       output_token_limit=2048,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=0.9,
-       max_temperature=None,
-       top_p=1.0,
-       top_k=None),
- Model(name='models/gemini-pro',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.0 Pro',
-       description='The best model for scaling across a wide range of tasks',
-       input_token_limit=30720,
-       output_token_limit=2048,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=0.9,
-       max_temperature=None,
-       top_p=1.0,
-       top_k=None),
- Model(name='models/gemini-1.0-pro-001',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.0 Pro 001 (Tuning)',
-       description=('The original Gemini 1.0 Pro model version that supports tuning. Gemini 1.0 '
-                    'Pro will be discontinued on February 15th, 2025. Move to a newer Gemini '
-                    'version.'),
-       input_token_limit=30720,
-       output_token_limit=2048,
-       supported_generation_methods=['generateContent', 'countTokens', 'createTunedModel'],
-       temperature=0.9,
-       max_temperature=None,
-       top_p=1.0,
-       top_k=None),
- Model(name='models/gemini-1.0-pro-vision-latest',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.0 Pro Vision',
-       description=('The original Gemini 1.0 Pro Vision model version which was optimized for '
-                    'image understanding. Gemini 1.0 Pro Vision was deprecated on July 12, 2024. '
-                    'Move to a newer Gemini version.'),
-       input_token_limit=12288,
-       output_token_limit=4096,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=0.4,
-       max_temperature=None,
-       top_p=1.0,
-       top_k=32),
- Model(name='models/gemini-pro-vision',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.0 Pro Vision',
-       description=('The original Gemini 1.0 Pro Vision model version which was optimized for '
-                    'image understanding. Gemini 1.0 Pro Vision was deprecated on July 12, 2024. '
-                    'Move to a newer Gemini version.'),
-       input_token_limit=12288,
-       output_token_limit=4096,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=0.4,
-       max_temperature=None,
-       top_p=1.0,
-       top_k=32),
- Model(name='models/gemini-1.5-pro-latest',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Pro Latest',
-       description=('Alias that points to the most recent production (non-experimental) release '
-                    'of Gemini 1.5 Pro, our mid-size multimodal model that supports up to 2 '
-                    'million tokens.'),
-       input_token_limit=2000000,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-1.5-pro-001',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Pro 001',
-       description=('Stable version of Gemini 1.5 Pro, our mid-size multimodal model that '
-                    'supports up to 2 million tokens, released in May of 2024.'),
-       input_token_limit=2000000,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens', 'createCachedContent'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=64),
- Model(name='models/gemini-1.5-pro-002',
-       base_model_id='',
-       version='002',
-       display_name='Gemini 1.5 Pro 002',
-       description=('Stable version of Gemini 1.5 Pro, our mid-size multimodal model that '
-                    'supports up to 2 million tokens, released in September of 2024.'),
-       input_token_limit=2000000,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens', 'createCachedContent'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-1.5-pro',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Pro',
-       description=('Stable version of Gemini 1.5 Pro, our mid-size multimodal model that '
-                    'supports up to 2 million tokens, released in May of 2024.'),
-       input_token_limit=2000000,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-1.5-pro-exp-0801',
-       base_model_id='',
-       version='exp-0801',
-       display_name='Gemini 1.5 Pro Experimental 0801',
-       description=('Experimental release (August 1st, 2024) of Gemini 1.5 Pro, our mid-size '
-                    'multimodal model that supports up to 2 million tokens, with across the board '
-                    'improvements. Replaced by Gemini-1.5-pro-002 (stable).'),
-       input_token_limit=2000000,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=64),
- Model(name='models/gemini-1.5-pro-exp-0827',
-       base_model_id='',
-       version='exp-1206',
-       display_name='Gemini Experimental 1206',
-       description='Experimental release (December 6th, 2024) of Gemini.',
-       input_token_limit=2097152,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=64),
- Model(name='models/gemini-1.5-flash-latest',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Flash Latest',
-       description=('Alias that points to the most recent production (non-experimental) release '
-                    'of Gemini 1.5 Flash, our fast and versatile multimodal model for scaling '
-                    'across diverse tasks.'),
-       input_token_limit=1000000,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-1.5-flash-001',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Flash 001',
-       description=('Stable version of Gemini 1.5 Flash, our fast and versatile multimodal model '
-                    'for scaling across diverse tasks, released in May of 2024.'),
-       input_token_limit=1000000,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens', 'createCachedContent'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=64),
- Model(name='models/gemini-1.5-flash-001-tuning',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Flash 001 Tuning',
-       description=('Version of Gemini 1.5 Flash that supports tuning, our fast and versatile '
-                    'multimodal model for scaling across diverse tasks, released in May of 2024.'),
-       input_token_limit=16384,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens', 'createTunedModel'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=64),
- Model(name='models/gemini-1.5-flash',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Flash',
-       description=('Alias that points to the most recent stable version of Gemini 1.5 Flash, our '
-                    'fast and versatile multimodal model for scaling across diverse tasks.'),
-       input_token_limit=1000000,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-1.5-flash-exp-0827',
-       base_model_id='',
-       version='exp-1206',
-       display_name='Gemini Experimental 1206',
-       description='Experimental release (December 6th, 2024) of Gemini.',
-       input_token_limit=2097152,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=64),
- Model(name='models/gemini-1.5-flash-002',
-       base_model_id='',
-       version='002',
-       display_name='Gemini 1.5 Flash 002',
-       description=('Stable version of Gemini 1.5 Flash, our fast and versatile multimodal model '
-                    'for scaling across diverse tasks, released in September of 2024.'),
-       input_token_limit=1000000,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens', 'createCachedContent'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-1.5-flash-8b',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Flash-8B',
-       description=('Stable version of Gemini 1.5 Flash-8B, our smallest and most cost effective '
-                    'Flash model, released in October of 2024.'),
-       input_token_limit=1000000,
-       output_token_limit=8192,
-       supported_generation_methods=['createCachedContent', 'generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-1.5-flash-8b-001',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Flash-8B 001',
-       description=('Stable version of Gemini 1.5 Flash-8B, our smallest and most cost effective '
-                    'Flash model, released in October of 2024.'),
-       input_token_limit=1000000,
-       output_token_limit=8192,
-       supported_generation_methods=['createCachedContent', 'generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-1.5-flash-8b-latest',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Flash-8B Latest',
-       description=('Alias that points to the most recent production (non-experimental) release '
-                    'of Gemini 1.5 Flash-8B, our smallest and most cost effective Flash model, '
-                    'released in October of 2024.'),
-       input_token_limit=1000000,
-       output_token_limit=8192,
-       supported_generation_methods=['createCachedContent', 'generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-1.5-flash-8b-exp-0827',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Flash 8B Experimental 0827',
-       description=('Experimental release (August 27th, 2024) of Gemini 1.5 Flash-8B, our '
-                    'smallest and most cost effective Flash model. Replaced by '
-                    'Gemini-1.5-flash-8b-001 (stable).'),
-       input_token_limit=1000000,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-1.5-flash-8b-exp-0924',
-       base_model_id='',
-       version='001',
-       display_name='Gemini 1.5 Flash 8B Experimental 0924',
-       description=('Experimental release (September 24th, 2024) of Gemini 1.5 Flash-8B, our '
-                    'smallest and most cost effective Flash model. Replaced by '
-                    'Gemini-1.5-flash-8b-001 (stable).'),
-       input_token_limit=1000000,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-2.0-flash-exp',
-       base_model_id='',
-       version='2.0',
-       display_name='Gemini 2.0 Flash Experimental',
-       description='Gemini 2.0 Flash Experimental',
-       input_token_limit=1048576,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens', 'bidiGenerateContent'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=40),
- Model(name='models/gemini-exp-1206',
-       base_model_id='',
-       version='exp_1206',
-       display_name='Gemini Experimental 1206',
-       description='Experimental release (December 6th, 2024) of Gemini.',
-       input_token_limit=2097152,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=64),
- Model(name='models/gemini-exp-1121',
-       base_model_id='',
-       version='exp-1121',
-       display_name='Gemini Experimental 1121',
-       description='Experimental release (November 21st, 2024) of Gemini.',
-       input_token_limit=32768,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=64),
- Model(name='models/gemini-exp-1114',
-       base_model_id='',
-       version='exp-1121',
-       display_name='Gemini Experimental 1121',
-       description='Experimental release (November 21st, 2024) of Gemini.',
-       input_token_limit=32768,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=64),
- Model(name='models/learnlm-1.5-pro-experimental',
-       base_model_id='',
-       version='001',
-       display_name='LearnLM 1.5 Pro Experimental',
-       description=('Alias that points to the most recent stable version of Gemini 1.5 Pro, our '
-                    'mid-size multimodal model that supports up to 2 million tokens.'),
-       input_token_limit=32767,
-       output_token_limit=8192,
-       supported_generation_methods=['generateContent', 'countTokens'],
-       temperature=1.0,
-       max_temperature=2.0,
-       top_p=0.95,
-       top_k=64),
- Model(name='models/embedding-001',
-       base_model_id='',
-       version='001',
-       display_name='Embedding 001',
-       description='Obtain a distributed representation of a text.',
-       input_token_limit=2048,
-       output_token_limit=1,
-       supported_generation_methods=['embedContent'],
-       temperature=None,
-       max_temperature=None,
-       top_p=None,
-       top_k=None),
- Model(name='models/text-embedding-004',
-       base_model_id='',
-       version='004',
-       display_name='Text Embedding 004',
-       description='Obtain a distributed representation of a text.',
-       input_token_limit=2048,
-       output_token_limit=1,
-       supported_generation_methods=['embedContent'],
-       temperature=None,
-       max_temperature=None,
-       top_p=None,
-       top_k=None),
- Model(name='models/aqa',
-       base_model_id='',
-       version='001',
-       display_name='Model that performs Attributed Question Answering.',
-       description=('Model trained to return answers to questions that are grounded in provided '
-                    'sources, along with estimating answerable probability.'),
-       input_token_limit=7168,
-       output_token_limit=1024,
-       supported_generation_methods=['generateAnswer'],
-       temperature=0.2,
-       max_temperature=None,
-       top_p=1.0,
-       top_k=40)]
+pip install --upgrade google-genai
 </pre>
 
-<p><code>models/</code> は省略できるようだ。</p>
-
-<p><code>'gemini-1.5-pro-latest'</code> を使って何か聞いてみよう：</p>
+<p>簡単な使い方は次の通りです。</p>
 
 <pre class="cell">
-model = genai.GenerativeModel('gemini-1.5-pro-latest')
+from google import genai
 
-response = model.generate_content("What is the meaning of life?")
+client = genai.Client()  # 環境変数にAPIキーが設定されていればこれでいい
+# client = genai.Client(api_key="...") # あるいは直接指定してもいい
+
+response = client.models.generate_content(
+    model="gemini-2.5-pro-exp-03-25",
+    contents="ここにプロンプトを書く"
+)
 print(response.text)
 </pre>
 
-<p>もし検閲に引っかかるようなら <code>response.prompt_feedback</code> を表示してみれば詳細がわかる。</p>
-
-<p>上の方法では一つしか質問できない。会話は、次のようにする。</p>
+<p>より実用的な使い方は次の通りです。</p>
 
 <pre class="cell">
-model = genai.GenerativeModel('gemini-1.5-pro-latest')
+from google import genai
+from google.genai import types
 
-chat = model.start_chat(history=[])
-response = chat.send_message("What is your knowledge cutoff?")
-print(response.text)
-response = chat.send_message("What are reputable news sources?")
-print(response.text)
-...
+client = genai.Client()
+chat = client.chats.create(
+    model="gemini-2.5-pro-exp-03-25",
+    config=types.GenerateContentConfig(temperature=0) # [0, 2]
+)
+
+prompt = '''
+最初のプロンプト
+'''
+
+response = chat.send_message_stream(prompt.strip())
+for chunk in response:
+    print(chunk.text, end="")
+
+prompt = '''
+次のプロンプト
+'''
+
+response = chat.send_message_stream(prompt.strip())
+for chunk in response:
+    print(chunk.text, end="")
 </pre>
 
-<p>会話全体は <code>chat.history</code> で参照できる。</p>
+<p>会話履歴は次のようにして取得できます。</p>
 
 <pre class="cell">
-for h in chat.history:
-    print(f"[{h.role}]\n{h.parts[0].text}")
-</pre>
-
-<p>温度（ランダムさの度合い）などを指定することもできる：</p>
-
-<pre class="cell">
-config = genai.GenerationConfig(temperature=0)
-model = genai.GenerativeModel('gemini-1.5-pro-latest',
-                              generation_config=config)
+for message in chat.get_history():
+    print(f'role - {message.role}', end=": ")
+    print(message.parts[0].text)
 </pre>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-12-15 12:45:12 JST</time></p>
+<p>Last modified: <time>2025-03-26 11:25:58 JST</time></p>
 </footer>
 </body>
 </html>
