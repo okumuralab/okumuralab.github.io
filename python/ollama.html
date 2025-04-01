@@ -18,7 +18,7 @@
 
 <h1>OllamaでローカルLLM</h1>
 
-<p>外部に出すのがはばかられる情報を扱う場合や、費用をかけたくない場合、再現性が必要な場合に、ローカルLLMは魅力的である。ここでは <a href="https://ollama.com">Ollama</a>（オラーマ）というツールを使ってコマンドラインまたはPythonからLLMを使う方法を説明する。</p>
+<p>外部に出すのがはばかられる情報を扱う場合や、費用をかけたくない場合、再現性が必要な場合、rate limitを気にせず大量ループ処理したい場合に、ローカルLLMは魅力的である。ここでは <a href="https://ollama.com">Ollama</a>（オラーマ）というツールを使ってコマンドラインまたはPythonからLLMを使う方法を説明する。</p>
 
 <p>ここではMacを使う。OllamaサイトよりバイナリのZIPファイルをダウンロードし、展開してOllama.appを/Applications（あるいは適当な場所）に移動し、起動すると、/Applications/Ollama.app/Contents/Resources/ollamaへのシンボリックリンクが/usr/local/binにできる。また、バックグラウンドのプロセスが起動し、メニューバーにOllamaアイコンが常駐する。利用はターミナルからollamaコマンドを使って行うか、後述するようにPythonなどを使ってバックグラウンドのプロセスのAPIを呼び出す。</p>
 
@@ -64,7 +64,7 @@ ans2 = ai("Please output as many random tokens as possible.")
 print(ans1 == ans2)
 </pre>
 
-<p>まったく同じである。</p>
+<p>まったく同じである（→ <a href="random_llm.html">ランダムな文字列をLLMに出力させる</a>）。</p>
 
 <p>簡単なプログラム例（ファイルの各行に収めた文章を分類する）：</p>
 
@@ -86,6 +86,8 @@ for line in lines:
     prompt = f"次の文章を○○○と×××に分類して、○○○なら「A」、×××なら「B」と答えてください。\n\n{line}"
     print(ai(prompt).strip())
 </pre>
+
+<p>このように、多数の文章を分類するような場合は、一つのプロンプトにまとめず、ループにする。</p>
 
 <p>より高度なプログラム例（ストリーミング使用、会話を続ける）：</p>
 
@@ -141,7 +143,7 @@ ai.chat('''
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-03-31 09:36:07 JST</time></p>
+<p>Last modified: <time>2025-03-31 14:31:16 JST</time></p>
 </footer>
 </body>
 </html>

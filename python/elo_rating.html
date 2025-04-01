@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/elo_rating.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eloレーティング</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Eloレーティング</h1>
+
+<p>Elo（イロ）レーティングは、対戦型ゲームのプレーヤーの評価アルゴリズムの一つである。物理学者にしてチェスのマスターだったEloという人が考えた。チェスのほか、種々の対戦ゲームに使われている。要は<a href="paired_comparison.html">一対比較法</a>と同じことだが、対戦したプレーヤー間だけで評価をやりとりするのが特徴である。</p>
+
+<p>Eloは最初は正規分布で考えたようだが、現在使われているのはロジスティック分布を使うものなので、そちらを説明する。</p>
+
+<p>プレーヤーAとBがいる。それぞれの評価（レーティング）を $R_A$、$R_B$ とする。AとBが対戦して、Aが勝てば1点、負ければ0点、引き分けならば0.5点という点数の付け方をするとき、Aの点数の期待値は</p>
+
+\[ E_A = \frac{1}{1 + 10^{(R_B - R_A)/400}} \]
+
+<p>で与えられると仮定する（そうなるように $R_A$、$R_B$ を定める）。引き分けがなければ $E_A$ はAが勝つ確率といってもよい。この式を変形すると、</p>
+
+\[ R_B - R_A = 400 \log_{10} \frac{1-E_A}{E_A} \]
+
+<p>となる。例えばAはBより強く、3/4の確率で勝ち、引き分けはないとしよう。これを上の $E_A$ に代入して計算すると、$R_B - R_A = -190.8$ となる。ここでさらに $R_A$、$R_B$ の初期値を1500と置くと、$R_A = 1500 + 190.8/2 = 1595.4$、$R_A = 1500 - 190.8/2 = 1404.6$ となる。</p>
+
+<p>しかし、AがBに3/4の確率で勝つということは、たくさんの試合をしないとわからない。そこで、次のような方法によって徐々に評価を更新していくことにする。</p>
+
+<p>初期値 $R_A = R_B = 1500$ から出発しよう。上の式に代入すれば $E_A = 0.5$ となる。ここでさらに定数 $K$ を導入する。これは任意の正の値でいいが、こでは $K = 32$ としておく。</p>
+
+<p>ここでAとBが対戦して、Aが勝てば $K(1 - E_A) = 16$、Aが負ければ $K(0 - E_A) = -16$、引き分けならば $K(0.5 - E_A) = 0$ だけ、Aは自分のレーティング $R_A$ を増やす。Bは同じだけ $R_B$ を減らす。例えば初戦でAが勝ったなら、$R_A = 1500 + 16 = 1516$、$R_B = 1500 - 16 = 1484$ となる。レーティングの平均値 1500 は変わらない。</p>
+
+<p>これがEloレーティングの計算方法である。実際にPythonでシミュレーションしてみよう。</p>
+
+<pre class="cell">
+import numpy as np
+import matplotlib.pyplot as plt
+
+rng = np.random.default_rng(20250401)
+
+K = 32  # 例えば
+RA = 1500
+RB = 1500
+x = range(101)
+y = [RA]
+
+for _ in x[1:]:
+    EA = 1 / (1 + 10**((RB - RA) / 400))
+    s = rng.choice([0, 1], p=[0.25, 0.75])
+    RA += K * (s - EA)
+    RB -= K * (s - EA)
+    y.append(RA)
+
+plt.plot(x, y, "o-")
+</pre>
+
+<p>実際にはAはBだけでなく多数の人と対戦する。いずれにしても、一方のEloレーティングが上がれば、他方は同じだけ下がる。全員の初期値が1500なら、対戦によって平均は1500のままで変わらない。新参者も初期値を1500とすれば、集団の平均は変わらない。しかし、レーティングの高い人が引退すれば、平均は下がる。</p>
+
+<p>以上が基本的な考え方である。実際は、評価機関が $K$ 値を定めたり、引退者により平均値が変わらないように全体に加算したり新参者の初期値を調整したりして、定期的に各プレーヤーのレーティングを発表することになる。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-04-01 16:44:59 JST</time></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/mlx_lm.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MLXでローカルLLM</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>MLXでローカルLLM</h1>
+
+<p><a href="https://opensource.apple.com/projects/mlx/">MLX</a> は Apple Silicon 専用のライブラリです。<a href="https://github.com/ml-explore/mlx-lm">MLX LM</a> は MLS で LLM をするパッケージです。Vision Language Model 用の <a href="https://github.com/Blaizzy/mlx-vlm">MLX-VLM</a> というパッケージもあります。</p>
+
+<p>MLX LM で Gemma 3 27B 8bit を使う例：</p>
+
+<pre class="cell">
+from mlx_lm import load, generate
+from mlx_lm.sample_utils import make_sampler
+
+model, tokenizer = load("mlx-community/gemma-3-27b-it-8bit")
+sampler = make_sampler(temp=0) # set temperature etc.
+
+prompt = '''
+プロンプト
+'''
+
+response = generate(model, tokenizer, prompt=prompt.strip(),
+                    max_tokens=1024, verbose=True, sampler=sampler)
+</pre>
+
+<p>速いのですが、ときどき <code>&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;...</code> みたいな無意味なものを延々と出力するバグがあるようです。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-03-31 16:40:20 JST</time></p>
+</footer>
+</body>
+</html>

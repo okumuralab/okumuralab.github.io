@@ -25,7 +25,7 @@
 
 <p>対戦ゲームの勝敗結果から、個々のプレーヤーに点数を付けるのも、同じ考え方が使える。プレーヤー $i$ がプレーヤー $j$ に勝った回数 $w_{ij}$ が与えられたとき、各プレーヤーの点数 $p_i$ はどう付ければいいか、という問題である。これについては有名なZermelo（ツェルメロ）が1929年に論じている。彼はThurstoneとは違って、$i$ が $j$ に勝つ確率が $p_i / (p_i + p_j)$ になるように $w_{ij}$ から $p_i$ を求めることを考えた。この考え方は1952年にBradleyとTerryにより再発見され、Bradley-Terryモデルと呼ばれるようになった。</p>
 
-<p>AIの歴史でAlphaGoなどについて調べた方は、棋士の強さをElo rating（イロ・レーティング）という数値で表すことをご存じであろう。これはEloという物理学者にしてチェスのマスターだった人が考案したものである。Eloは当初Thurstoneと同じ方法を考えたが、現在使われているのはBradley-Terryモデルに基づくもので、$p_i = \exp(R_i / 400)$ と置いた $R_i$ がElo ratingである。ただし $R_i$ の平均が1500になるように原点を定める。また、試合ごとに全プレーヤーの点数を再計算するのではなく、対戦者間で点数を更新する。</p>
+<p>AIの歴史でAlphaGoなどについて調べた方は、棋士の強さを<a href="elo_rating.html">Elo rating（イロ・レーティング）</a>という数値で表すことをご存じであろう。これはEloという物理学者にしてチェスのマスターだった人が考案したものである。Eloは当初Thurstoneと同じ方法を考えたが、現在使われているのはBradley-Terryモデルに基づくもので、$p_i = \exp(R_i / 400)$ と置いた $R_i$ がElo ratingである。ただし $R_i$ の平均が1500になるように原点を定める。また、試合ごとに全プレーヤーの点数を再計算するのではなく、対戦者間で点数を更新する。</p>
 
 <p><a href="https://lmarena.ai">Chatbot Arena</a> のリーダーボードのスコアは、かつてはElo ratingを用いていたが、現在はBradley-Terryモデルに基づいて毎回再計算している（<a href="https://arxiv.org/abs/2403.04132">Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference</a> 参照）。</p>
 
@@ -112,7 +112,7 @@ print(bradley_terry(w).argsort())
 <hr>
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-03-26 10:47:36 JST</time></p>
+<p>Last modified: <time>2025-04-01 16:47:51 JST</time></p>
 </footer>
 </body>
 </html>

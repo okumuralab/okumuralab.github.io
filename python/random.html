@@ -228,11 +228,59 @@ import mlx.core as mx
 
 <p>PyTorchでmpsを指定するよりかなり遅くなってしまいました。将来に期待。</p>
 
+<p>[2025-03-31追記] M4 Max の Mac Studio 128G を買ったので同じことを試してみた。Python 3.13、ほかすべて最新だがNumPyはNumbaのために2.2.4→2.1.3にダウングレード。やっぱり <code>torch.rand(N, device="mps")</code> が速い。</p>
+
+<pre>
+247 ms ± 1.62 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+
+<pre>
+32.7 ms ± 1.75 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<pre>
+19.8 ms ± 356 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<pre>
+30.9 ms ± 405 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+
+<pre>
+11.8 ms ± 2.51 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre>
+
+<pre>
+316 μs ± 4.62 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+</pre>
+
+<pre>
+1.04 ms ± 16.8 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+</pre>
+
+<pre>
+1.03 ms ± 13.1 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+</pre>
+
+<p>ついでにJAX（<code>pip install jax</code>）も：</p>
+
+<pre class="cell">
+import jax
+import jax.numpy as jnp
+
+key = jax.random.PRNGKey(0)
+%timeit jnp.sum(jax.random.uniform(key, shape=(N,)))
+</pre>
+
+<pre>
+10.7 ms ± 18.9 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-06-27 18:01:29 JST</time></p>
+<p>Last modified: <time>2025-03-31 15:53:06 JST</time></p>
 </footer>
 </body>
 </html>
