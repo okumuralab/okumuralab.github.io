@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/classification_by_llm.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLMによる分類</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>LLMによる分類</h1>
+
+<p>LLMなど生成AI（generative AI）の対義語は、識別AI（discriminative AI）、平たく言えば分類器（classifier）である。しかし、LLMも分類器として使えそうである。そこで、ちょっと試してみた。</p>
+
+<p>材料は、私も少しかかわった<a href="https://www.ipsj.or.jp/event/taikai/87/87PosterSession/ipsj_poster/index.html">第7回 中高生情報学研究コンテストポスター</a>を使う。130編のポスターがある。ポスターのPDFをそのまま使うのは難しそうなので、タイトルと説明文だけを使うことにする。</p>
+
+<p>どういう分類にすればいいかは生成AIに相談して、次の2分類にした。</p>
+
+<ul>
+  <li>開発系（Web・ロボティクス・処理系など）</li>
+  <li>分析系（統計・データ分析・機械学習・AI）</li>
+</ul>
+
+<p>130編を一つのプロンプトに列挙して開発系：分析系に分類させたところ、GPT-4oは83：47、Gemini 2.0 Flashは97：33、Claude 3.7 Sonnetは69：61に分類した（Gemini 2.5はまだ出ていなかった）。ローカルLLMのGemma 3 27Bでは130編まとめては無理だったようで、途中から全部同じ分類になってしまった。</p>
+
+<p>いずれにしても、一つのプロンプトに複数の内容を含めると、一定の基準で分類されない可能性があるので、一つずつ与えて分類させることにした。まずGPT-4o：</p>
+
+<pre class="cell">
+from openai import OpenAI
+client = OpenAI()
+
+def ai(prompt):
+    response = client.responses.create(
+        model="gpt-4o",
+        max_output_tokens=1024,  # min 16
+        temperature=0,
+        input=prompt.strip()
+    )
+    print(response.output_text.strip())
+
+with open("list.txt") as f:
+    lines = f.readlines()
+
+for line in lines:
+    ai(f"次の記述は、中高生情報学研究コンテストに応募された作品のタイトルと概要です。この作品を、開発系（Web・ロボティクス・処理系など）と分析系（統計・データ分析・機械学習・AI）に分類するとすれば、どちらになるでしょうか？ 開発系なら「D」、分析系なら「A」と答えてください。\n\n{line}")
+</pre>
+
+<p>最初DまたはAと答えてもらうつもりで <code>max_output_tokens=16</code> にしたのだが、いくつかについては「どっちとも考えられるが、強いて言えば…」みたいな長ったらしい回答をして、16トークンでは肝心の答えまでたどりつかなかったので、1024に増やした。これはプロンプトでD、Aどちらか以外は答えるなと指示すべきだった。</p>
+
+<p>結果は78：52で、全部まとめてプロンプトに入れた場合と若干違う。</p>
+
+<p>Gemma 3 27Bでもやってみた：</p>
+
+<pre class="cell">
+from ollama import chat
+
+def ai(prompt):
+    response = chat(
+        model="hf.co/unsloth/gemma-3-27b-it-GGUF:Q8_0",
+        messages=[{ 'role': 'user', 'content': prompt }],
+        options={ "temperature": 0, "num_ctx": 2048 }
+    )
+    return response['message']['content'].strip()
+
+with open("list.txt") as f:
+    lines = f.readlines()
+
+for line in lines:
+    ans = ai(f"次の記述は、中高生情報学研究コンテストに応募された作品のタイトルと概要です。この作品を、開発系（Web・ロボティクス・処理系など）と分析系（統計・データ分析・機械学習・AI）に分類するとすれば、どちらになるでしょうか？ 開発系なら「D」、分析系なら「A」と答えてください。\n\n{line}")
+    print(ans)
+</pre>
+
+<p>Gemma 3はすべてDまたはAだけで答えてくれたので集計が簡単であった。結果は95：35である。</p>
+
+<p>この時点で、データ取得時の都合でリストの各行の先頭に0〜129の番号とタブ（<code>\t</code>）が付いていることを思い出し、それをループの先頭で次のように消してから処理してみた。</p>
+
+<pre>
+    line = re.sub(r"^.*?\t", "", line)
+</pre>
+
+<p>内容は同じはずだが、番号を消したところ96：34になった。つまり開発系が一つ増えた。</p>
+
+<p>まとめると、生成AIによる分類は、人間による分類と同様に微妙である。どのモデルで処理してもほぼ同じ結果になるような明確なプロンプトが作れればいいのだが、難しそうだ。</p>
+
+<p>いくつか回答例（few-shot prompting）を与えるといいかもしれない：</p>
+
+<blockquote>
+<p>開発系（D）と分析系（A）に分類してください。</p>
+<br>
+<p>例<br>
+タイトル: ○○○<br>
+内容: ○○○<br>
+分類: D</p>
+<br>
+<p>例<br>
+タイトル: ○○○<br>
+内容: ○○○<br>
+分類: A</p>
+<br>
+<p>タイトル: ○○○<br>
+内容: ○○○<br>
+分類: </p>
+</blockquote>
+
+<p>さらに、CoT (Chain-of-Thought) prompting の考え方を使って、分類の前に理由を出力させると、さらに正確になるかもしれない。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-04-05 10:52:19 JST</time></p>
+</footer>
+</body>
+</html>

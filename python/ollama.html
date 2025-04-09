@@ -18,13 +18,17 @@
 
 <h1>OllamaでローカルLLM</h1>
 
-<p>外部に出すのがはばかられる情報を扱う場合や、費用をかけたくない場合、再現性が必要な場合、rate limitを気にせず大量ループ処理したい場合に、ローカルLLMは魅力的である。ここでは <a href="https://ollama.com">Ollama</a>（オラーマ）というツールを使ってコマンドラインまたはPythonからLLMを使う方法を説明する。</p>
+<p>外部に出すのがはばかられる情報を扱う場合や、費用をかけたくない場合、再現性が必要な場合、rate limitを気にせず大量ループ処理したい場合に、ローカルLLMは魅力的である。ここでは <a href="https://ollama.com">Ollama</a>（オラーマ）というツールを使ってコマンドラインまたはPythonからLLMを使う方法を説明する。Ollamaは <a href="https://github.com/ggml-org/llama.cpp">llama.cpp</a> から派生したたいへん使いやすいツールである。</p>
 
-<p>ここではMacを使う。OllamaサイトよりバイナリのZIPファイルをダウンロードし、展開してOllama.appを/Applications（あるいは適当な場所）に移動し、起動すると、/Applications/Ollama.app/Contents/Resources/ollamaへのシンボリックリンクが/usr/local/binにできる。また、バックグラウンドのプロセスが起動し、メニューバーにOllamaアイコンが常駐する。利用はターミナルからollamaコマンドを使って行うか、後述するようにPythonなどを使ってバックグラウンドのプロセスのAPIを呼び出す。</p>
+<aside>
+<p>[余談] llama.cppはMetaの <a href="https://www.llama.com">Llama</a> というオープン（）なLLMのための推論ツールをGeorgi Gerganov（GGさん）がC++で実装したもので、そのライブラリがGGMLで、ファイルフォーマットがGGUFである。Llama以外にもいろいろなモデルをGGUF形式に変換して使える。なお、GGさんはllama.cpp以前にもOpenAIの音声認識モデルWhisperをC++で実装した <a href="https://github.com/ggml-org/whisper.cpp">whisper.cpp</a> も作っている。ちなみにLlamaは <a href="https://research.facebook.com/publications/llama-open-and-efficient-foundation-language-models/">最初の発表</a>（<a href="https://arxiv.org/abs/2302.13971">arXiv</a>）ではLLaMAと表記されていた。LLM（大規模言語モデル）と動物のラマ（llama、🦙）を掛けた名前であろう。日本語ではラマだが英語ではラーマ /lɑ́ːmə/ と読む。Llama以外にも動物名のLLMは <a href="https://en.wikipedia.org/wiki/Chinchilla_(language_model)">Chinchilla</a> などいくつかある。</p>
+</aside>
+
+<p>ここではMacを使う。OllamaサイトよりバイナリのZIPファイルをダウンロードし、展開してOllama.appを /Applications（あるいは適当な場所）に移動し、起動すると /Applications/Ollama.app/Contents/Resources/ollama へのシンボリックリンクが /usr/local/bin にできる。また、バックグラウンドのプロセスが起動し、メニューバーにOllamaアイコンが常駐する。利用はターミナルからollamaコマンドを使って行うか、後述するようにPythonなどを使ってバックグラウンドのプロセスのAPIを呼び出す。</p>
 
 <p>まずは適当なモデルをダウンロードして動かす。ここではGoogleの <a href="https://blog.google/technology/developers/gemma-3/">Gemma 3</a>（ジェンマ・スリー）を使ってみる。</p>
 
-<p><a href="https://ollama.com/library/gemma3">OllamaのGemma 3のページ</a>を参考にして、4サイズのGemma 3のうち適当なものを選ぶ。メモリ8GのMacなら4B、メモリ16GのMacなら12B、それ以上なら27Bを使えばよかろう（Bはbillionつまり10億パラメータ）。12Bモデルなら</p>
+<p><a href="https://ollama.com/library/gemma3">OllamaのGemma 3のページ</a>を参考にして、デフォルトの4ビット量子化（Q4_K_M）された4サイズのGemma 3のうち適当なものを選ぶ。メモリ8GのMacなら4B、メモリ16GのMacなら12B、それ以上なら27Bを使えばよかろう（Bはbillionつまり10億パラメータ）。例えば12Bモデルなら</p>
 
 <pre>
 ollama run gemma3:12b
@@ -34,19 +38,65 @@ ollama run gemma3:12b
 
 <p>モデルは <code>~/.ollama</code> に入る。ドライブの容量が足りなければ、あとで外部ドライブにモデルを移動してシンボリックリンクを張ってもよい。</p>
 
-<p>これらのモデルは、Ollama用に用意された4ビット量子化（Q4_K_M）モデルである。私はメモリ128GのMac Studioを買ったので、4ビットでなくても8ビットでも16ビットでも大丈夫だが、8ビットあれば十分だ。そこで、Ollamaの対応するGGUFというフォーマットで提供されている27Bモデル <a href="https://huggingface.co/unsloth/gemma-3-27b-it-GGUF">hf.co/unsloth/gemma-3-27b-it-GGUF</a> の8ビット量子化版を使うことにした。コマンドは</p>
+<p>私はメモリ128GのMac Studioを買ったので、4ビットでなくても8ビットでも、おそらく16ビットでも大丈夫そうだが、8ビットあれば十分だ。ドロップダウンメニューの最後の「View all」から探すと、8ビット量子化の <a href="https://ollama.com/library/gemma3:27b-it-q8_0">gemma3:27b-it-q8_0</a> が見つかる。これを実行してみよう。</p>
 
+<pre>
+ollama run gemma3:27b-it-q8_0
+</pre>
+
+<p>モデルの詳細は <code>/show info</code> で調べられる：</p>
+
+<pre>
+&gt;&gt;&gt; /show info     
+  Model
+    architecture        gemma3    
+    parameters          27.4B     
+    context length      131072    
+    embedding length    5376      
+    quantization        Q8_0      
+
+  Capabilities
+    completion    
+    vision        
+
+  Parameters
+    top_p          0.95               
+    stop           "&lt;end_of_turn&gt;"    
+    temperature    1                  
+    top_k          64                 
+
+  License
+    Gemma Terms of Use                  
+    Last modified: February 21, 2024    
+</pre>
+
+<p>8ビット27Bなら27Gバイト＋αのメモリを使う。＋αの量はコンテキスト長（<code>num_ctx</code>）にも依存する。Gemma 3は128Kまで対応する（1Bモデルは32Kまで）。メモリ・CPUの使用率はMac標準のアクティビティモニタで表示できるが、GPUの使用率も含めてグラフィカルに表示できる <a href="https://github.com/context-labs/mactop">mactop</a> は便利である。</p>
+
+<aside>
+<p>OllamaはGGUFというフォーマットに対応するので、Ollama専用でなくてもHugging Faceなどで提供されているGGUF版が使える。実際、私は上記の8ビット量子化モデルより先に公開された <a href="https://huggingface.co/unsloth/gemma-3-27b-it-GGUF">hf.co/unsloth/gemma-3-27b-it-GGUF</a> の8ビット量子化版を使っていた。コマンドは</p>
 <pre>
 ollama run hf.co/unsloth/gemma-3-27b-it-GGUF:Q8_0
 </pre>
+<p>である。最後の <code>Q8_0</code> は <a href="https://huggingface.co/unsloth/gemma-3-27b-it-GGUF/tree/main">Files</a> にあるファイル名 <code>gemma-3-27b-it-Q8_0.gguf</code> にも含まれる8ビット量子化を意味するものである。同様に、</p>
+<pre>
+ollama run hf.co/unsloth/QwQ-32B-GGUF:Q8_0
+</pre>
+<p>あるいは</p>
+<pre>
+ollama run hf.co/Qwen/QwQ-32B-GGUF:Q8_0
+</pre>
+<p>のようにしてreasoningモデルQwQも試せる。</p>
+</aside>
 
-<p>である。最後の <code>Q8_0</code> は <a href="https://huggingface.co/unsloth/gemma-3-27b-it-GGUF/tree/main">Files</a> にあるファイル名 <code>gemma-3-27b-it-Q8_0.gguf</code> にも含まれる8ビット量子化を意味するものである。8ビット27Bなら27Gバイト＋αのメモリを使う。＋αの量はコンテキスト長（<code>num_ctx</code>、デフォルト2048トークン）にも依存する。Gemma 3は最大128Kまで上げられる（1Bモデルは32Kまで）。ただし出力は8Kまでのようだ。メモリ・CPU・GPUの利用率は例えば <a href="https://github.com/context-labs/mactop">mactop</a> というツールで表示できる。</p>
+<aside>
+<p>[2025-04-04] 本家Googleが <a href="https://huggingface.co/collections/google/gemma-3-qat-67ee61ccacbf2be4195c265b">Quantization Aware Trained (QAT) Gemma 3 checkpoints</a> を公開した。これは4ビット量子化でも性能がほとんど変わらないらしい。<a href="https://www.reddit.com/r/LocalLLaMA/comments/1jqnnfp/official_gemma_3_qat_checkpoints_3x_less_memory/">Redditでの議論</a>も参照。</p>
+</aside>
 
 <p>ちなみに、MacのメモリでGPUから使えるのはデフォルトでは3/4（64G以上のMac）または2/3（64G未満）に設定されているようだ（<a href="https://blog.peddals.com/ja/fine-tune-vram-size-of-mac-for-llm/">macOS でローカル LLM を使うときの VRAM 最適化設定</a>参照）。例えば128GのMacなら <code>sudo sysctl iogpu.wired_limit_mb=122880</code> と打ち込むと120Gまで使えるようになる。このあたりの事情は <a href="https://ml-explore.github.io/mlx/build/html/python/_autosummary/mlx.core.set_wired_limit.html">mlx.core.set_wired_limit</a> の説明にも書かれている。</p>
 
 <p>Ollamaは上記のようにコマンドラインで使うのが簡単だが、Pythonで使うこともできる。あらかじめ <a href="https://github.com/ollama/ollama-python">ollama-python</a> というパッケージ <code>pip install ollama</code> でインストールしておく。</p>
 
-<p>簡単なプログラム例（温度0でランダムな文字列を出力させ、比較する）：</p>
+<p>簡単なプログラム例（温度0でランダムな文字列を出力させ、比較する。モデル名は置き換えてください）：</p>
 
 <pre class="cell">
 from ollama import chat
@@ -139,11 +189,13 @@ ai.chat('''
 ''')
 </pre>
 
+<p>Emacsから使う方法は <a href="../misc/250407.html">こちら</a> に書いた。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-03-31 14:31:16 JST</time></p>
+<p>Last modified: <time>2025-04-08 15:00:55 JST</time></p>
 </footer>
 </body>
 </html>
