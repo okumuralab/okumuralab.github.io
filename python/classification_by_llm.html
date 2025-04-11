@@ -64,7 +64,7 @@ from ollama import chat
 
 def ai(prompt):
     response = chat(
-        model="hf.co/unsloth/gemma-3-27b-it-GGUF:Q8_0",
+        model="gemma3:27b-it-q8_0",
         messages=[{ 'role': 'user', 'content': prompt }],
         options={ "temperature": 0, "num_ctx": 2048 }
     )
@@ -86,7 +86,7 @@ for line in lines:
     line = re.sub(r"^.*?\t", "", line)
 </pre>
 
-<p>内容は同じはずだが、番号を消したところ96：34になった。つまり開発系が一つ増えた。</p>
+<p>内容は同じはずだが、番号を消したところ96：34になった。つまり開発系が一つ増えた、と思ったら、実際には3つ増えて2つ減っていた。けっこう微妙である。</p>
 
 <p>まとめると、生成AIによる分類は、人間による分類と同様に微妙である。どのモデルで処理してもほぼ同じ結果になるような明確なプロンプトが作れればいいのだが、難しそうだ。</p>
 
@@ -116,7 +116,7 @@ for line in lines:
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-04-05 10:52:19 JST</time></p>
+<p>Last modified: <time>2025-04-09 16:03:14 JST</time></p>
 </footer>
 </body>
 </html>

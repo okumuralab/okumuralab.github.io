@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/250407.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EmacsでLLMを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>EmacsでLLMを使う</h1>
+
+<p>EmacsでLLMを使うには <a href="https://github.com/xenodium/chatgpt-shell?tab=readme-ov-file">chatgpt-shell</a> が便利そうだ。インストールは <a href="https://melpa.org">melpa</a> でできる。</p>
+
+<p><code>~/.emacs.d/init.el</code> には例えば次のように書く（APIキーは環境変数 <code>OPENAI_API_KEY</code> に設定されているとする）：</p>
+
+<pre>
+(use-package chatgpt-shell
+  :ensure t
+  :custom
+  ((chatgpt-shell-openai-key (getenv "OPENAI_API_KEY"))))
+</pre>
+
+<p>私はさらにGoogleやAnthropicのAPI、さらには <a href="../python/ollama.html">Ollama</a> でローカルLLMのGemma 3のGGUF 8ビット版をデフォルトで使うために、次のようにした。</p>
+
+<pre>
+(use-package chatgpt-shell
+  :ensure t
+  :custom
+  ((chatgpt-shell-openai-key (getenv "OPENAI_API_KEY"))
+   (chatgpt-shell-google-key (getenv "GOOGLE_API_KEY"))
+   (chatgpt-shell-anthropic-key (getenv "ANTHROPIC_API_KEY"))
+   (chatgpt-shell-model-version "gemma3:27b-it-q8_0")
+   (chatgpt-shell-model-temperature 0) ; 0.0-2.0
+   (chatgpt-shell-system-prompt nil)
+   )
+  :config
+  (add-to-list 'chatgpt-shell-models
+               (chatgpt-shell-ollama-make-model
+                :version "gemma3:27b-it-q8_0"
+                :short-version "gemma3-27b-q8"
+                :token-width 8
+                :context-window 131072))
+  )
+</pre>
+
+<p>これで M-x chatgpt-shell する。</p>
+
+<p>話題を変えるときは clear と打ち込む。バッファが空になる（ただし undo できる）ので、必要なら clear する前に保存しておく。</p>
+
+<p>モデルを交換するには M-x chatgpt-shell-swap-model とする。Tabで一覧が出る。</p>
+
+<p>温度を変えるには M-x set-variable ⏎ chatgpt-shell-model-temperature ⏎ 0.7 ⏎ などとする。</p>
+
+<p>1行のプロンプトなら直接書き込んで ⏎ すればいいが、長いプロンプトの場合は別バッファに書いて範囲選択し、M-x chatgpt-shell-send-region するのが便利である。あるいは、C-c C-e (M-x chatgpt-shell-prompt-compose) でプロンプト編集用のバッファを開き、そこにプロンプトを書いて、C-c C-c で送る（または C-c C-k で送らずに閉じる）。</p>
+
+<p>セッションの保存は M-x chatgpt-shell-save-session-transcript リストアは M-x chatgpt-shell-restore-session-from-transcript でできる。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-04-08 16:54:30 JST</time></p>
+</footer>
+</body>
+</html>
