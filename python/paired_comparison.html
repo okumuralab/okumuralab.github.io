@@ -21,7 +21,7 @@
 
 <p>人間は何かに点数を付けるのは苦手である。基準がだんだん変わってくるし、複数の人で基準を統一するのはさらに難しい。しかし、AとBを比べてどちらが良いかを判断するのは比較的簡単である。そこで、比較の結果から数量化する方法がいろいろ考え出された。</p>
 
-<p>心理学の分野ではThurstoneが1927年に一対比較法（paired comparison）を提案した。AとBを比較したときに、どちらも分散が等しい正規分布でゆらぐとすれば、AがBより大きいと判断される確率はAとBの差によって定まる。複数の対象について、比較データをたくさん集めれば、最尤法でそれぞれの対象が数量化できる（原点と乗数は任意に定める）。この方法でハッカソンの採点をするツールとして <a href="https://github.com/anishathalye/gavel">Gavel</a>（ギャブル）がある（<a href="https://anishathalye.com/designing-a-better-judging-system/">Designing a Better Judging System</a> に背景が書かれている）。</p>
+<p>心理学の分野ではThurstoneが1927年に一対比較法（paired comparison）を提案した。AとBを比較したときに、どちらも分散が等しい正規分布でゆらぐとすれば、AがBより大きいと判断される確率はAとBの差によって定まる。複数の対象について、比較データをたくさん集めれば、最尤法でそれぞれの対象が数量化できる（原点と乗数は任意に定める）。この方法でハッカソンの採点をするツールとして <a href="https://github.com/anishathalye/gavel">Gavel</a>（ギャブル）がある（<a href="https://anishathalye.com/designing-a-better-judging-system/">Designing a Better Judging System</a> に背景が書かれている）。ただし、<a href="https://anishathalye.com/implementing-a-scalable-judging-system/">今の Gavel</a> はThurstoneの方法ではなくCrowd BTモデルに変更されている。</p>
 
 <p>対戦ゲームの勝敗結果から、個々のプレーヤーに点数を付けるのも、同じ考え方が使える。プレーヤー $i$ がプレーヤー $j$ に勝った回数 $w_{ij}$ が与えられたとき、各プレーヤーの点数 $p_i$ はどう付ければいいか、という問題である。これについては有名なZermelo（ツェルメロ）が1929年に論じている。彼はThurstoneとは違って、$i$ が $j$ に勝つ確率が $p_i / (p_i + p_j)$ になるように $w_{ij}$ から $p_i$ を求めることを考えた。この考え方は1952年にBradleyとTerryにより再発見され、Bradley-Terryモデルと呼ばれるようになった。</p>
 
@@ -112,7 +112,7 @@ print(bradley_terry(w).argsort())
 <hr>
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-04-10 16:02:31 JST</time></p>
+<p>Last modified: <time>2025-04-19 21:16:28 JST</time></p>
 </footer>
 </body>
 </html>

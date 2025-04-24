@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/250415.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EmacsでLLMを使う: gptel</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>EmacsでLLMを使う: gptel</h1>
+
+<p>[2025-04-16] gptelがgpt-4.1に対応したので一部削除しました。</p>
+
+<p><a href="250407.html">EmacsでLLMを使う: chatgpt-shell</a> の続編として、<a href="https://github.com/karthink/gptel">gptel</a> を試してみた。</p>
+
+<p>インストールはやはり <a href="https://melpa.org">melpa</a> でできる。念のため説明すると、~/.emacs.d/init.el に</p>
+
+<pre>
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+</pre>
+
+<p>と書いておいて、<code>M-x package-list-packages</code> で gptel の上で <code>I</code> を打ち、<code>x</code> でインストールを実行する。ついでに markdown-mode も入ってなければ入れておく。アップデートは、ときどき <code>M-x package-list-packages</code> してみて、アップデートの知らせがあれば <code>U</code> を打ち、<code>x</code> で実行する。</p>
+
+<p>インストールできたら ~/.emacs.d/init.el に例えば次を書き加える。ただしOpenAIのAPIキーが環境変数 <code>OPENAI_API_KEY</code> に設定されているとする。</p>
+
+<pre>
+(use-package gptel
+  :ensure t
+  :config
+  (setq gptel-api-key (getenv "OPENAI_API_KEY")))
+</pre>
+
+<p>次はもっと複雑な例で、<del>まだgptelに登録されていないgpt-4.1を含む</del>いくつかのモデルをメニューに加え、ローカルで動いているOllamaのモデルをデフォルトにする：</p>
+
+<pre>
+(use-package gptel
+  :ensure t
+  :config
+  (setq gptel-api-key (getenv "OPENAI_API_KEY"))
+  ;; (gptel-make-openai "OpenAI"
+  ;;   :key (getenv "OPENAI_API_KEY")
+  ;;   :models '(gpt-4.1)
+  ;;   :stream t)
+  (gptel-make-anthropic "Claude"
+    :key (getenv "ANTHROPIC_API_KEY")
+    :models '(claude-3-7-sonnet-20250219)
+    :stream t)
+  (gptel-make-gemini "Gemini"
+    :key (getenv "GOOGLE_API_KEY")
+    :models '(gemini-2.5-pro-preview-03-25)
+    :stream t)
+  (setq gptel-model 'gemma3:27b-it-q8_0)
+  (setq gptel-backend
+	(gptel-make-ollama "Ollama"
+	  :host "localhost:11434"
+	  :models '(gemma3:27b-it-q8_0)
+	  :stream t))
+  (setq gptel-temperature 0) ; default: 1.0
+  ;; (setq gptel-max-tokens 8192) ; max response tokens, default: nil
+  (setq gptel--system-message nil))
+</pre>
+
+<p><code>M-x gptel-menu</code> でメニューが出る。メニューにあるように <code>-m</code> でモデルが選択できる。</p>
+
+<p>通常は <code>M-x gptel-send</code> だけ覚えればよい。バッファの先頭からカーソル位置までがプロンプトになる。カーソル位置から返答が表示されるので、その後にさらに質問を書けば、さらにその後に答えが返る。過去のやりとりを編集することもできる。バッファの一部分だけをプロンプトにしたい場合は、範囲（リージョン）を指定してから <code>M-x gptel-send</code> する。</p>
+
+<p>もう一つの方法として、<code>M-x gptel</code> でチャット専用バッファを出して、そこで会話する。送信は <code>C-c RET</code> である。</p>
+
+<aside>
+<p>Ollamaを使う際には、gptelからはコンテキスト長（<code>num_ctx</code>、デフォルト4096）が変えられないので、環境変数で例えば <code>export OLLAMA_CONTEXT_LENGTH=131072</code> のように設定する（<a href="../python/ollama.html">OllamaでローカルLLM</a>参照）。あるいは、gptelの <code>gptel-ollama.el</code> を次のようにハックして <code>B</code>（バイトコンパイル）する：</p>
+<pre>
+    ;; backend/model-specific, use the global settings
+    (when (and gptel-temperature (not (plist-get options-plist :temperature)))
+      (setq options-plist
+            (plist-put options-plist :temperature gptel-temperature)))
+    (when (and gptel-max-tokens (not (plist-get options-plist :num_predict)))
+      (setq options-plist
+            (plist-put options-plist :num_predict gptel-max-tokens)))
+    ;; 次の2行を挿入して強制的にコンテキスト長を変える
+    (setq options-plist
+          (plist-put options-plist :num_ctx 131072)) ;; あるいは変数で変えられるように
+    (plist-put prompts-plist :options options-plist)))
+</pre>
+</aside>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-04-24 16:59:27 JST</time></p>
+</footer>
+</body>
+</html>
