@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/stat/assignment.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>代入は = か &lt;- か</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">統計・データ解析</a> &gt;
+</nav>
+
+<h1>代入は <code>=</code> か <code>&lt;-</code> か</h1>
+
+<p>要約: 本サイトでは代入に <code>=</code> を使っていますが、今は <code>&lt;-</code> を使う人が多数派です。気になったら <code>=</code> を <code>&lt;-</code> に読み替えてください。</p>
+
+<hr>
+
+<p>以下は詳しい話です。</p>
+
+<p>Rの代入（付値）は <code>x &lt;- 5</code> でも <code>x = 5</code> でもできます。</p>
+
+<pre>
+&gt; x = 1    # xに1を代入
+&gt; x &lt;- 1   # xに1を代入
+&gt; x&lt;-1     # xに1を代入
+&gt; x &lt; -1   # xが-1より小さいか
+</pre>
+
+<p>Rで <code>&lt;-</code> の代わりに <code>=</code> が使えるようになったのは<a href="https://developer.r-project.org/equalAssign.html">2001年から</a>のようです。Rの前身のSについては、<code>=</code> が使えるようになったのは1998年のVersion 4からで、John M. Chambers, <a href="https://books.google.co.jp/books?id=Km1IBFZCRPUC&amp;printsec=frontcover&amp;hl=ja&amp;source=gbs_ge_summary_r&amp;cad=0#v=onepage&amp;q&amp;f=false"><i>Programming with Data: A Guide to the S Language</i></a> (1998) では主に <code>=</code> が使われ、p.15で <code>&lt;-</code> も使えることが言及されています。<a href="https://blog.revolutionanalytics.com/2008/12/use-equals-or-arrow-for-assignment.html">Use = or &lt;- for assignment?</a> に歴史的な事情がいろいろ書いてあります。</p>
+
+<p>しかし、最近は <code>&lt;-</code> が優勢です。<a href="https://google.github.io/styleguide/Rguide.html">Google's R Style Guide</a> でも <code>&lt;-</code> が使ってあります。</p>
+
+<p>代入に <code>=</code> を使う人も、<code>&lt;-</code> が代入であることを意識していないと、とんでもないバグに陥ってしまうことがあります。例えば条件判断で</p>
+
+<pre>
+if (a &lt; -1) x = 1 else x = 2
+</pre>
+
+<p>をうっかり</p>
+
+<pre>
+if (a &lt;-1) x = 1 else x = 2
+</pre>
+
+<p>と書くと <code>a</code> に1を代入してしまい、1は「真」なので <code>x</code> はつねに1になってしまいます。</p>
+
+<p>このサイトでは、Pythonのコーディング規則 <a href="../python/pep8.html">PEP 8</a> に倣って、代入の <code>=</code> は両側にスペースを入れ、関数の引数では <code>=</code> の両側にスペースを入れない流儀を使っています：</p>
+
+<pre>
+x = sqrt(2)
+print(x, digits=16)
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-04-28 17:03:02 JST</time></p>
+</footer>
+</body>
+</html>

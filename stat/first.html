@@ -88,7 +88,7 @@
 </pre>
 
 <div class="note">
-<p>代入は <code>x = 1/3</code> のような書き方のほかに <code>x &lt;- 1/3</code> や <code>1/3 -&gt; x</code> のような書き方もできます。詳しくは下の方をご覧ください。</p>
+<p>代入は <code>x = 1/3</code> のような書き方のほかに <code>x &lt;- 1/3</code> や <code>1/3 -&gt; x</code> のような書き方もできます。詳しくは<a href="assignment.html">代入は <code>=</code> か <code>&lt;-</code> か</a>をご覧ください。</p>
 </div>
 
 <div class="note">
@@ -1103,56 +1103,6 @@ b = 5 - 3
 [1]  11 102  13 104  15 106
 </pre>
 
-<p>代入（付値）は、昔は <code>x &lt;- 5</code>
-のような書き方が専ら使われてきましたが、今では <code>x = 5</code>
-という書き方も使えます。このサイトでは代入に <code>=</code> を使っています。</p>
-
-<pre>
-&gt; x = 1    # xに1を代入
-&gt; x &lt;- 1   # xに1を代入
-&gt; x&lt;-1     # xに1を代入
-&gt; x &lt; -1   # xが-1より小さいか
-</pre>
-
-<div class="note">
-<p>Rで <code>&lt;-</code> の代わりに <code>=</code> が使えるようになったのは<a href="https://developer.r-project.org/equalAssign.html">2001年から</a>のようです。Rの前身のSについては、1998年のVersion 4からで、John M. Chambers, <a href="https://books.google.co.jp/books?id=Km1IBFZCRPUC&amp;printsec=frontcover&amp;hl=ja&amp;source=gbs_ge_summary_r&amp;cad=0#v=onepage&amp;q&amp;f=false"><i>Programming with Data: A Guide to the S Language</i></a> (1998) では主に <code>=</code> が使われ、p.15で <code>&lt;-</code> も使えることが言及されています。<a href="https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml#assignment">Google's R Style Guide</a> では <code>=</code> でなく <code>&lt;-</code> を使えと書いてあります。最終的には好みの問題でしょう（<a href="https://blog.revolutionanalytics.com/2008/12/use-equals-or-arrow-for-assignment.html">参考</a>）。</p>
-</div>
-
-<div class="note">
-<p>条件判断で</p>
-<pre>
-if (a &lt; -1) n = 1 else y = 2
-</pre>
-<p>を</p>
-<pre>
-if (a &lt;-1) n = 1 else y = 2
-</pre>
-<p>と書くと <code>a</code> に1を代入してしまいます。なお、これと同じことを</p>
-<pre>
-ifelse(a &lt; -1, n &lt;- 1, y &lt;- 2)
-</pre>
-<p>または</p>
-<pre>
-ifelse(a &lt; -1, {n = 1}, {y = 2})
-</pre>
-<p>と書くことができますが、</p>
-<pre>
-ifelse(a &lt; -1, n = 1, y = 2)
-</pre>
-<p>と書くと、関数 <code>ifelse(test, yes, no)</code>
-の仮引数 <code>no</code> に 1 を代入し、<code>yes</code>
-に 2 を代入するという意味になってしまいます。関数の引数リストの中で仮引数以外の変数に代入する際には注意が必要です。</p>
-</div>
-
-<!--
-<div class="note">
-<p>ESS（Emacsの中のR）で <code>_</code> を打つと <code>&lt;-</code>
-が入ります。2度続けて <code>_</code> を打つと <code>_</code>
-に戻ります。これがややこしければEmacsの初期設定ファイルに <code>(ess-toggle-underscore nil)</code>
-と書いておきます。</p>
-</div>
--->
-
 <h2>ライブラリとサンプルデータ</h2>
 
 <p>Rにはたくさんのライブラリが用意されています。ライブラリの管理はマウス操作でもできますが、以下ではコマンドで行う方法を説明します。</p>
@@ -1308,7 +1258,7 @@ nohup R CMD BATCH hoge.R &amp;
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-11-02 10:35:13 JST</time></p>
+<p>Last modified: <time>2025-04-28 16:22:28 JST</time></p>
 </footer>
 </body>
 </html>
