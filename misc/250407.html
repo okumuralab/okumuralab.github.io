@@ -61,20 +61,20 @@
 
 <p>話題を変えるときは clear と打ち込む。バッファが空になる（ただし undo できる）ので、必要なら clear する前に保存しておく。</p>
 
-<p>モデルを交換するには M-x chatgpt-shell-swap-model とする。Tabで一覧が出る。</p>
+<p>モデルを交換するには M-x chatgpt-shell-swap-model (C-c C-v) する。Tabで一覧が出る。</p>
 
 <p>温度を変えるには M-x set-variable ⏎ chatgpt-shell-model-temperature ⏎ 0.7 ⏎ などとする。</p>
 
 <p>1行のプロンプトなら直接書き込んで ⏎ すればいいが、長いプロンプトの場合は別バッファに書いて範囲選択し、M-x chatgpt-shell-send-region するのが便利である。あるいは、C-c C-e (M-x chatgpt-shell-prompt-compose) でプロンプト編集用のバッファを開き、そこにプロンプトを書いて、C-c C-c で送る（または C-c C-k で送らずに閉じる）。</p>
 
-<p>セッションの保存は M-x chatgpt-shell-save-session-transcript リストアは M-x chatgpt-shell-restore-session-from-transcript でできる。</p>
+<p>セッションの保存は M-x chatgpt-shell-save-session-transcript (C-x C-s)、リストアは M-x chatgpt-shell-restore-session-from-transcript でできる。</p>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-04-15 19:06:26 JST</time></p>
+<p>Last modified: <time>2025-04-26 17:19:49 JST</time></p>
 </footer>
 </body>
 </html>
