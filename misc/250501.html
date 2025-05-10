@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/250501.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Twitterでの検索</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>Twitterでの検索</h1>
+
+<p>Twitter（現X）での検索は <a href="https://x.com/explore">検索</a> または <a href="https://x.com/search-advanced">高度な検索</a> でできる。</p>
+
+<p>APIでの検索は、古い方式は <a href="https://developer.x.com/en/docs/x-api/v1/tweets/search/overview">Search Tweets: Standard v1.1</a>、新しい方式は <a href="https://docs.x.com/x-api/posts/search/introduction">Search: Introduction</a> 以下、特に <a href="https://docs.x.com/x-api/posts/search/integrate/build-a-query">Build a query</a> に詳しい。検索演算子の一部は <a href="https://x.com/explore">検索</a> でも使えるようだ。</p>
+
+<p>スペースで区切ればAND検索になる: <code>foo bar</code></p>
+
+<p>一つの語として扱う: <code>"foo bar"</code></p>
+
+<p>OR検索: <code>foo OR bar</code></p>
+
+<p>ANDとORを混ぜた検索: <code>(foo OR bar) baz</code></p>
+
+<p>NOT検索: <code>-foo</code></p>
+
+<p>ポストした人を指定: <code>from:h_okumura</code></p>
+
+<p>日時の範囲: <code>since:2011-03-11<code> <code>until:2022-11-20</code> <code>since:2011-03-11_14:46:00_JST</code></p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-05-01 16:42:32 JST</time></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/250429.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MacのTime Machineの整理</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>MacのTime Machineの整理</h1>
+
+<p>MacのTime Machineとして使っている4T SSD（APFSボリューム）が満杯になった。</p>
+
+<p>古いバックアップを削除するには、Finderで該当の日付のものを右クリックして削除を選ぶだけである。</p>
+
+<p>ターミナルでやるには、次のようにする。まずターミナルにフルディスクアクセス権がなければ付けておき、次のコマンドを打つ：</p>
+
+<pre>
+sudo tmutil listbackups -t
+</pre>
+
+<p>これでタイムスタンプがリストされる：</p>
+
+<pre>
+2024-12-13-073100
+2024-12-20-082804
+2024-12-27-083209
+...
+</pre>
+
+<p>Time Machine用SSDが <code>/Volumes/hoge</code> だとすると、次のようにして削除できる：</p>
+
+<pre>
+sudo tmutil delete -d /Volumes/hoge -t 2024-12-13-073100 
+sudo tmutil delete -d /Volumes/hoge -t 2024-12-20-082804
+sudo tmutil delete -d /Volumes/hoge -t 2024-12-27-083209
+...
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-04-29 21:36:32 JST</time></p>
+</footer>
+</body>
+</html>

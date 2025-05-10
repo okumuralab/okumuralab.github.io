@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/plamo_api.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PLaMoのAPIを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PLaMoのAPIを使う</h1>
+
+<p><a href="https://plamo.preferredai.jp">PLaMo</a> は <a href="https://www.preferred.jp">Preferred Networks</a>（プリファードネットワークス、PFN）による国産のLLMである。<a href="https://plamo.preferredai.jp/api">API</a> 料金は入力300円/Mトークン、出力1000円/Mトークンで、ほぼ GPT-4.1 並である。現在、登録すれば1000円分のクレジットがもらえる。</p>
+
+<p>登録するとAPIキーが発行されるので、環境変数に</p>
+
+<pre>
+export PLAMO_API_KEY="..."
+</pre>
+
+<p>のようにして登録しておくと便利である。OpenAIのChat Completions APIと互換性があるので、<a href="chatgpt_api.html">OpenAIのAPIを使う</a>のコードがそのまま利用できる：</p>
+
+<pre class="cell">
+chatbot = Chatbot(model="plamo-1.0-prime")
+chatbot.chat("まどマギでだれが好きですか？")
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-05-10 16:57:22 JST</time></p>
+</footer>
+</body>
+</html>

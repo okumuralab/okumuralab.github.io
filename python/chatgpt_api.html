@@ -18,6 +18,8 @@
 
 <h1>OpenAIのAPIを使う</h1>
 
+<p>[2025-03-?] OpenAIは新しいresponses APIに移行するつもりのようです。→ <a href="openai_responses_api.html">OpenAIのresponses APIを使う</a> 参照。</p>
+
 <p>[?] <a href="xai_api.html">xAIのAPI</a>も同じ方法で使えるようになりました。「ストリーミング」の下のコード参照。</p>
 
 <p>[2024-11-09] Googleの <a href="gemini_api.html">Gemini API</a> も同じ方法で使えるようになりました。「ストリーミング」の下のコード参照。</p>
@@ -149,6 +151,11 @@ class Chatbot:
                 api_key=os.getenv("XAI_API_KEY"),
                 base_url="https://api.x.ai/v1"
             )
+        elif "plamo" in model:
+            self.client = OpenAI(
+                api_key=os.getenv("PLAMO_API_KEY"),
+                base_url="https://platform.preferredai.jp/api/completion/v1",
+            )
         else:
             self.client = OpenAI()
         self.model = model
@@ -174,7 +181,10 @@ class Chatbot:
         if stream:
             ans = ""
             for chunk in res:
-                content = chunk.choices[0].delta.content or ""
+                if chunk.choices and hasattr(chunk.choices[0].delta, "content"):
+                    content = chunk.choices[0].delta.content or ""
+                else:
+                    content = ""
                 print(content, end="")
                 ans += content
         else:
@@ -286,7 +296,7 @@ enc = tiktoken.get_encoding("o200k_base")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-02-20 21:23:49 JST</time></p>
+<p>Last modified: <time>2025-05-10 16:53:05 JST</time></p>
 </footer>
 </body>
 </html>

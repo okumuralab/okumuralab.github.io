@@ -61,31 +61,49 @@
     :key (getenv "GOOGLE_API_KEY")
     :models '(gemini-2.5-pro-preview-03-25)
     :stream t)
+  (gptel-make-ollama "Qwen"
+    :host "localhost:11434"
+    :models '(qwen3:32b-q8_0)
+    :request-params '(:options (:num_ctx 32768))
+    :stream t)
+  (gptel-make-ollama "Llama4"
+    :host "localhost:11434"
+    :models '(llama4:scout)
+    :request-params '(:options (:num_ctx 1000000)) ; max 10485760
+    :stream t)
   (setq gptel-model 'gemma3:27b-it-q8_0)
-  (setq gptel-backend
-	(gptel-make-ollama "Ollama"
-	  :host "localhost:11434"
-	  :models '(gemma3:27b-it-q8_0 gemma3:27b-it-qat)
-	  :stream t
-	  :request-params
-	  '(:options (:num_ctx 131072)))) ; https://github.com/karthink/gptel/issues/330
+  (setq gptel-backend ; https://github.com/karthink/gptel/issues/330
+        (gptel-make-ollama "Ollama"
+          :host "localhost:11434"
+          :models '(gemma3:27b-it-q8_0)
+          :request-params '(:options (:num_ctx 131072) :keep_alive 86400)
+          :stream t))
   (setq gptel-temperature 0) ; default: 1.0
   ;; (setq gptel-max-tokens 8192) ; max response tokens, default: nil
   (setq gptel--system-message nil))
 </pre>
 
-<p><code>M-x gptel-menu</code> でメニューが出る。メニューにあるように <code>-m</code> でモデルが選択できる。</p>
+<aside>
+<p>上の例では <code>:request-params</code> でオプションを指定している。最後のOllamaの例では、コンテクスト長を131072にして、呼び出しが終わってもモデルを1日メモリに残しておく（デフォルトは5分）。メモリからモデルを解放したいときは、ターミナルで</p>
+<pre>
+curl http://localhost:11434/api/chat -d '{ "model": "モデル名", "keep_alive": 0 }'
+</pre>
+<p>と打ち込む。</p>
+<p>Ollamaのコンテクスト長のデフォルトは4192である。メモリの少ないマシンでは、デフォルトのままでよい。大きくしすぎるとOllamaが落ちるので注意。<code>:keep_alive</code> もデフォルトのままでよい。</p>
+</aside>
 
-<p>通常は <code>M-x gptel-send</code> だけ覚えればよい。バッファの先頭からカーソル位置までがプロンプトになる。カーソル位置から返答が表示されるので、その後にさらに質問を書けば、さらにその後に答えが返る。過去のやりとりを編集することもできる。バッファの一部分だけをプロンプトにしたい場合は、範囲（リージョン）を指定してから <code>M-x gptel-send</code> する。</p>
+<p>使い方は2通りある。一つは、<code>M-x gptel</code> でチャット専用バッファを出して、そこで会話する。送信は <code>C-c RET</code> (<code>C-c C-m</code>) である。</p>
 
-<p>もう一つの方法として、<code>M-x gptel</code> でチャット専用バッファを出して、そこで会話する。送信は <code>C-c RET</code> である。</p>
+<p>もう一つは、任意のバッファで <code>M-x gptel-send</code> する。バッファの先頭からカーソル位置までがプロンプトになる。カーソル位置から返答が表示されるので、その後にさらに質問を書けば、さらにその後に答えが返る。過去のやりとりを編集することもできる。バッファの一部分だけをプロンプトにしたい場合は、範囲（リージョン）を指定してから <code>M-x gptel-send</code> する。</p>
+
+<p>モデルを変更したいときは、<code>M-x gptel-menu</code> でメニューを出す。<code>-m</code> でモデルが選択できる。</p>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-04-28 14:46:16 JST</time></p>
+<p>Last modified: <time>2025-05-10 10:45:26 JST</time></p>
 </footer>
 </body>
 </html>

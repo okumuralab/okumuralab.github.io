@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/openai_responses_api.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenAIのresponses APIを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>OpenAIのresponses APIを使う</h1>
+
+<p>2025年3月、OpenAIは新しい <a href="https://platform.openai.com/docs/api-reference/responses">responses</a> APIを公開した。これを使うためのPythonのコード例：</p>
+
+<pre class="cell">
+import os
+from openai import OpenAI
+
+class Chatbot:
+    def __init__(self, model="gpt-4.1", instructions=None,
+                 previous_response_id=None, temperature=0):
+        # model: "chatgpt-4o-latest" "gpt-4.1" "o3" etc
+        self.client = OpenAI()
+        self.model = model
+        self.instructions = instructions
+        self.response_id = previous_response_id
+        self.temperature = temperature
+        self.response = None
+
+    def get_response():
+        return self.response
+
+    def chat(self, prompt, max_output_tokens=None):
+        args = {
+            "model": self.model,
+            "input": prompt.strip()
+        }
+        if self.instructions:
+            args["instructions"] = self.instructions
+        if self.response_id:
+            args["previous_response_id"] = self.response_id
+        if max_output_tokens:
+            args["max_output_tokens"] = max_output_tokens
+        if self.model[0] == "o":
+            args["reasoning"] = {
+                "effort": "high", # high/medium/low
+                "summary": "detailed"
+            }
+        else:
+            args["temperature"] = self.temperature
+        self.response = self.client.responses.create(**args)
+        self.response_id = self.response.id
+        print(self.response_id)
+        print(self.response.output_text)
+
+chatbot = Chatbot()
+chatbot.chat(r'''
+ここに質問を書く
+''')
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-05-07 14:38:31 JST</time></p>
+</footer>
+</body>
+</html>
