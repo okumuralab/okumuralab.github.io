@@ -115,6 +115,12 @@ ai.chat('''
 ''')
 </pre>
 
+<p>Ollama 0.7.0 以降は画像も含められる：</p>
+
+<pre>
+   {"role": "user", "content": "...", "images": ["./1.jpg", "./2.png"]}
+</pre>
+
 <p>コンテクスト長のデフォルトは環境変数でも設定できる。</p>
 
 <pre>
@@ -135,7 +141,7 @@ export OLLAMA_CONTEXT_LENGTH=131072
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-04-18 18:30:59 JST</time></p>
+<p>Last modified: <time>2025-05-18 12:06:05 JST</time></p>
 </footer>
 </body>
 </html>

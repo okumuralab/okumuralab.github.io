@@ -37,7 +37,11 @@
 ollama run gemma3:12b-it-qat
 </pre>
 
-<p>と打ち込むと、初回はモデルのダウンロードが始まり、それが終われば入力を受け付ける状態になるので、何か質問すれば、答えが返る。ヘルプは <code>/?</code>、終了は <code>/bye</code> である。</p>
+<p>と打ち込むと、初回はモデルのダウンロードが始まり、それが終われば入力を受け付ける状態になるので、何か質問すれば、答えが返る。ヘルプは <code>/?</code>、終了は <code>/bye</code> である。Ollama 0.7.0以降は画像も含められる。</p>
+
+<pre>
+&gt;&gt;&gt; OCRしてください。 ./test.jpg
+</pre>
 
 <p>ダウンロードしたモデルは <code>~/.ollama</code>（ホームディレクトリ🏠の <code>.ollama</code> フォルダ）に入る（Linuxでは <code>/usr/share/ollama/.ollama</code>）。ドライブの容量が足りなければ、あとで外部ドライブにモデルを移動してシンボリックリンクを張ってもよい。</p>
 
@@ -132,7 +136,7 @@ curl http://localhost:11434/api/chat -d '{ "model": "モデル名", "keep_alive"
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-05-04 13:03:56 JST</time></p>
+<p>Last modified: <time>2025-05-18 12:00:22 JST</time></p>
 </footer>
 </body>
 </html>

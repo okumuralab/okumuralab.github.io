@@ -48,6 +48,7 @@
 (use-package gptel
   :ensure t
   :config
+  (setq gptel-track-media t)  ; 画像も使えるように
   (setq gptel-api-key (getenv "OPENAI_API_KEY"))
   ;; (gptel-make-openai "OpenAI"
   ;;   :key (getenv "OPENAI_API_KEY")
@@ -75,7 +76,10 @@
   (setq gptel-backend ; https://github.com/karthink/gptel/issues/330
         (gptel-make-ollama "Ollama"
           :host "localhost:11434"
-          :models '(gemma3:27b-it-q8_0)
+          ;;; :models '(gemma3:27b-it-q8_0) ; 簡単な書き方
+	  :models '((gemma3:27b-it-q8_0     ; 画像も扱える書き方
+		     :capabilities (media url)
+		     :mime-types ("image/jpeg" "image/png")))
           :request-params '(:options (:num_ctx 131072) :keep_alive 86400)
           :stream t))
   (setq gptel-temperature 0) ; default: 1.0
@@ -97,13 +101,15 @@ curl http://localhost:11434/api/chat -d '{ "model": "モデル名", "keep_alive"
 <p>もう一つは、任意のバッファで <code>M-x gptel-send</code> する。バッファの先頭からカーソル位置までがプロンプトになる。カーソル位置から返答が表示されるので、その後にさらに質問を書けば、さらにその後に答えが返る。過去のやりとりを編集することもできる。バッファの一部分だけをプロンプトにしたい場合は、範囲（リージョン）を指定してから <code>M-x gptel-send</code> する。</p>
 
 <p>モデルを変更したいときは、<code>M-x gptel-menu</code> でメニューを出す。<code>-m</code> でモデルが選択できる。</p>
+
+<p>Ollama 0.7.0以降では画像も送れる。dired画面でファイルにカーソルを合わせて <code>M-x gptel-add</code> すると、その画像がプロンプトに含まれる。画像をプロンプトから削除するには <code>M-x gptel-context-remove-all</code> すればよい。</p>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-05-10 10:45:26 JST</time></p>
+<p>Last modified: <time>2025-05-18 12:15:13 JST</time></p>
 </footer>
 </body>
 </html>

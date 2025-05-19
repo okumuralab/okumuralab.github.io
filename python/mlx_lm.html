@@ -37,13 +37,55 @@ response = generate(model, tokenizer, prompt=prompt.strip(),
                     max_tokens=1024, verbose=True, sampler=sampler)
 </pre>
 
-<p>速いのですが、ときどき <code>&lt;pad&gt;&lt;pad&gt;&lt;pad&gt;...</code> みたいな無意味なものを延々と出力するバグがあるようです。</p>
+<p>上位3位までのトークンの確率分布を出力してみます：</p>
+
+<pre class="cell">
+import mlx.core as mx
+from mlx_lm import load, generate
+
+model, tokenizer = load("mlx-community/gemma-3-27b-it-8bit")
+
+def sampler(x):
+    a = mx.argsort(-x, axis=-1)[0]
+    s = mx.sum(mx.exp(x[0]))
+    for t in a[:3]:
+        i = int(t)
+        print(i, float(mx.exp(x[0][i])/s), repr(tokenizer.decode(i)))
+    return mx.argmax(x, axis=-1)
+
+response = generate(model,
+                    tokenizer,
+                    prompt="How many 'r's in strawberry? Answer with numbers only.",
+                    max_tokens=3,
+                    sampler=sampler,
+                    verbose=False)
+
+print(repr(response))
+</pre>
+
+<p>結果は次のようになり、「3」がほぼ確率1で出力されることがわかります。</p>
+
+<pre>
+107 0.73046875 '\n'
+108 0.2373046875 '\n\n'
+236743 0.0172119140625 ' '
+236800 1.0 '3'
+236812 0.0006256103515625 '4'
+236778 0.0002307891845703125 '2'
+107 0.984375 '\n'
+108 0.01239013671875 '\n\n'
+236743 0.00017642974853515625 ' '
+106 0.8515625 '&lt;end_of_turn&gt;'
+818 0.037353515625 'The'
+34318 0.029052734375 'Correct'
+'\n3\n'
+</pre>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-04-26 08:57:36 JST</time></p>
+<p>Last modified: <time>2025-05-19 11:16:16 JST</time></p>
 </footer>
 </body>
 </html>
