@@ -18,9 +18,25 @@
 
 <h1>PythonでOllamaを使う</h1>
 
-<p>[2025-04-18] Pythonに関係ないOllamaの使い方は <a href="../misc/250418.html">OllamaでローカルLLM</a> に移しました。まずそちらを読んでOllamaに慣れてからPythonでお使いください。</p>
+<p>[2025-04-18] Pythonに関係ないOllamaの使い方は <a href="../misc/250418.html">OllamaでローカルLLM</a> に移しました。</p>
 
 <p>Ollamaはコマンドラインで使うのが簡単だが、Pythonで使うこともできる。あらかじめ <a href="https://github.com/ollama/ollama-python">ollama-python</a> というパッケージを <code>pip install ollama</code> でインストールしておく。</p>
+
+<p>使用例：</p>
+
+<pre class="cell">
+from ollama import chat
+
+response = chat(
+    model="qwen3:32b-q8_0",
+    messages=[{ 'role': 'user', 'content': 'こんにちは' }],
+    think=True,  # reasoning model の場合
+    options={ "temperature": 0, "num_ctx": 512 }
+)
+
+print('Thinking:\n========\n\n' + response.message.thinking)
+print('\nResponse:\n========\n\n' + response.message.content)
+</pre>
 
 <p>簡単なプログラム例（温度0でランダムな文字列を出力させ、比較する。モデル名は置き換えてください）：</p>
 
@@ -141,7 +157,7 @@ export OLLAMA_CONTEXT_LENGTH=131072
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-05-18 12:06:05 JST</time></p>
+<p>Last modified: <time>2025-05-31 17:35:04 JST</time></p>
 </footer>
 </body>
 </html>

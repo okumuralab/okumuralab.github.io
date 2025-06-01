@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/llm_classify.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLMで分類</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>LLMで分類</h1>
+
+<p>朝日新聞の<a href="https://digital.asahi.com/articles/AST5W0SM2T5WUTFL01CM.html">「運動でがん治る」は誤り　SNSの情報を医師がファクトチェック</a>という記事の元になった <a href="https://formative.jmir.org/2023/1/e49452/">Fact-Checking Cancer Information on Social Media in Japan: Retrospective Study Using Twitter</a> という論文を教えていただいた。これはTwitterでがんに関する「いいね」トップ100ツイートのファクト度を1〜5のスケールで2人で評価したもので、44%が誤情報だというもの。</p>
+
+<p>上記論文ページのAppendix 2（Detail of the top 100 tweets）のExcelファイルに具体的なツイートと評価などが収められている。これをいただいてきて、ローカルLLM（ここではGemma 3 27B）で1（正しい）〜5（間違い）を5段階で評価させ、2人の専門家による評価と比べてみる。</p>
+
+<pre class="cell">
+import numpy as np
+import pandas as pd
+from ollama import chat
+
+def ai(prompt):
+    response = chat(
+        model="gemma3:27b-it-q8_0",
+        messages=[{ 'role': 'user', 'content': prompt }],
+        options={ "temperature": 0, "num_ctx": 2048 }
+    )
+    return response['message']['content']
+
+def find_first_1_to_5_digit(s):
+    for char in s:
+        if char in '12345':
+            return int(char)
+    return np.nan
+
+df = pd.read_excel("formative_v7i1e49452_app2.xlsx")
+df['AI'] = np.nan
+
+for index, row in df.iterrows():
+    prompt = f"次のメッセージの正しさを、1（まったく正しい）〜5（まったく間違い）の5段階で評価してください。1、2、3、4、5の数字だけで答えてください。\n\n{row['Text']}"
+    ans = find_first_1_to_5_digit(ai(prompt))
+    print(ans)
+    df.at[index, 'AI'] = ans
+
+print(df[['Q1-R１', 'Q1-R2', 'AI']].corr())
+</pre>
+
+<p>最後に出力されるのは、2人のレビューアーR1、R2とAIによる評価の相関行列である：</p>
+
+<pre>
+          Q1-R１     Q1-R2        AI
+Q1-R１  1.000000  0.699216  0.437922
+Q1-R2  0.699216  1.000000  0.522670
+AI     0.437922  0.522670  1.000000
+</pre>
+
+<p>2人のレビューアー間には0.699という高い相関があるが、AIと人間では0.438、0.523という中位の値になった。</p>
+
+<p>もっと賢いAIを使えばどうなるか、どなたかやってみてください。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-06-02 07:45:10 JST</time></p>
+</footer>
+</body>
+</html>

@@ -18,35 +18,13 @@
 
 <h1>OpenAIのAPIを使う</h1>
 
-<p>[2025-03-?] OpenAIは新しいresponses APIに移行するつもりのようです。→ <a href="openai_responses_api.html">OpenAIのresponses APIを使う</a> 参照。</p>
-
-<p>[?] <a href="xai_api.html">xAIのAPI</a>も同じ方法で使えるようになりました。「ストリーミング」の下のコード参照。</p>
-
-<p>[2024-11-09] Googleの <a href="gemini_api.html">Gemini API</a> も同じ方法で使えるようになりました。「ストリーミング」の下のコード参照。</p>
-
-<p>[2024-06-12] 旧<a href="openai_api.html">OpenAIのAPIを使う</a>と区別するために「ChatGPTのAPIを使う」という題名にしていましたが、「OpenAIのAPIを使う」に変更しました。</p>
-
-<p>[2024-05-14] <code>gpt-4o</code> (<code>gpt-4o-2024-05-13</code>) が出ました。半額・倍速。128Kコンテクスト、2023年10月の知識。</p>
-
-<p>[2024-04-10] <code>gpt-4-turbo-2024-04-09</code> が出ました。<code>gpt-4-turbo</code> は現時点ではこれを指します。</p>
-
-<p>[2024-01-26] <a href="https://openai.com/blog/new-embedding-models-and-api-updates">2024-01-25の新モデル</a>: 最新のプレビューモデル <code>"gpt-4-0125-preview"</code>、<code>"gpt-3.5-turbo-0125"</code> が出ました。<code>"gpt-4-turbo-preview"</code>、<code>"gpt-3.5-turbo"</code> と指定すれば最新のものが選ばれるようです。</p>
-
-<p>[2023-11-07] <a href="https://openai.com/blog/new-models-and-developer-products-announced-at-devday">DevDayで新しいモデル等が発表</a>されました: <code>"gpt-4-1106-preview"</code>、<code>"gpt-4-vision-preview"</code>、<code>"gpt-3.5-turbo-1106"</code></p>
-
-<p>[2023-06-14] 新しいモデル <code>"gpt-3.5-turbo-0613"</code>、<code>"gpt-3.5-turbo-16k-0613"</code>、<code>"gpt-4-0613"</code>、<code>"gpt-4-32k-0613"</code> が来ました。価格も若干改訂され、<a href="https://platform.openai.com/docs/guides/gpt/function-calling">function calling</a>（関数呼び出し）の機能が付きました。<a href="https://openai.com/blog/function-calling-and-other-api-updates">Function calling and other API updates</a> 参照。GPT-3.5の16k版はすぐに使えましたが、GPT-4の32k版はまだ私には降ってきていません。</p>
-  
-<p>[2023-03-18] GPT-4のAPIが私のところにも来ました。以下のコードで <code>"gpt-3.5-turbo"</code> を <code>"gpt-4"</code>（8192トークン版）あるいは <code>"gpt-4-32k"</code>（32768トークン版）にするだけで使えます。値段は1桁以上高くなって、入力は8k版が $0.03/1k、32k版が $0.06/1k、出力はその倍の値段です。</p>
-
-<p>[2023-03-02] [米国時間2023-03-01] <a href="https://openai.com">OpenAI</a> の <a href="https://openai.com/blog/chatgpt/">ChatGPT</a> の <a href="https://platform.openai.com">API</a> が公開されました（<a href="https://openai.com/blog/introducing-chatgpt-and-whisper-apis">Introducing ChatGPT and Whisper APIs</a>）。費用は従来の text-davinci-003 の1/10の0.0002ドル/1000トークンと、非常にお値打ちです。</p>
-
 <h2>はじめに</h2>
 
-<p>従来のAPIを使っていた人は何もせずに使えますが、そうでない場合は、まず<a href="https://platform.openai.com/signup/">こちら</a>で登録してAPIキーを発行してもらわなければなりません。</p>
+<p>このページではOpenAIのChat Completions APIについて解説します。OpenAIは新しいResponses APIに移行するつもりのようです（<a href="openai_responses_api.html">OpenAIのresponses APIを使う</a> 参照）。しかし、Chat Completionsは他社のAPIもお手本にする基本的な方法なので、使ってみて損はしません。</p>
+
+<p>まず<a href="https://platform.openai.com/signup/">こちら</a>で登録してAPIキーを発行してもらいます。サブスクのChatGPTと異なり、<a href="https://openai.com/pricing">料金</a>は従量制で、百万トークンあたり何ドルという具合に課金されます。値段の比較は<a href="llm_comparison.html">LLM API比較</a>がわかりやすいと思います。</p>
 
 <p>APIの概要はOpenAIの <a href="https://platform.openai.com">OpenAI developer platform</a> からドキュメンテーション、APIレファレンスなどをご覧ください。APIで送られたデータは学習用に使われることはありません。不正使用の監視のために30日間保持され、特に問題なければ消去されるようです。</p>
-
-<p>APIの<a href="https://openai.com/pricing">料金</a>は、2023-11-06の新モデル <code>gpt-4-1106-preview</code> については、入力1kトークンあたり $0.01、出力1kトークンあたり $0.03 です。初めは一番安い <code>gpt-3.5-turbo-1106</code>（入力1kトークンあたり $0.001、出力1kトークンあたり $0.002）で練習するのがいいでしょう。</p>
 
 <h2>使い方の基本</h2>
 
@@ -65,41 +43,41 @@ export OPENAI_API_KEY="sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 <pre class="cell">
 from openai import OpenAI
 
-client = OpenAI()
+client = OpenAI() # 環境変数からAPIキーを取得する場合
 
 # もし環境変数が使えないなら次のようにする：
 # client = OpenAI(api_key="sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 
 res = client.chat.completions.create(
-    model="gpt-3.5-turbo",
+    model="gpt-4.1",
     messages=[
         {"role": "system", "content": "あなたは賢いAIです。"},  # 役割設定（省略可）
         {"role": "user", "content": "1たす1は？"}               # 最初の質問
     ],
-    temperature=1  # 温度（0-2, デフォルト1）
+    temperature=0  # 温度（0-2, デフォルト1）
 )
 
 print(res.choices[0].message.content)  # 答えが返る
 </pre>
 
-<p>ChatGPTのAPIは、質問・応答の履歴を記憶しません。以前の質問・応答を前提としたい場合は、次のように履歴を与えた上で質問をします：</p>
+<p>Chat Completions APIは、質問・応答の履歴を記憶しません。以前の質問・応答を前提としたい場合は、次のように履歴を与えた上で質問をします：</p>
 
 <pre>
 res = client.chat.completions.create(
-    model="gpt-3.5-turbo",
+    model="gpt-4.1",
     messages=[
         {"role": "system", "content": "あなたは賢いAIです。"},  # 役割設定（省略可）
         {"role": "user", "content": "1たす1は？"},              # 最初の質問
         {"role": "assistant", "content": "2です。"},            # 最初の答え
         {"role": "user", "content": "それを3倍して。"}          # 次の質問
     ],
-    temperature=1
+    temperature=0
 )
 
 print(res.choices[0].message.content)  # 答えが返る
 </pre>
 
-<p>履歴と質問、答えを合わせたトークン数には上限（モデルによって違いますが、例えば4096トークン）があります。トークンはほぼ単語に相当するものです（後述）。トークン数を表示するには、次のようにします：</p>
+<p>履歴と質問、答えを合わせたトークン数には上限（モデルによって違いますが、<code>gpt-4.1</code> では100万トークン）があります。トークンはほぼ単語に相当するものです（後述）。トークン数を表示するには、次のようにします：</p>
 
 <pre class="cell">
 print(res.usage)
@@ -109,7 +87,7 @@ print(res.usage)
 CompletionUsage(completion_tokens=8, prompt_tokens=27, total_tokens=35)
 </pre>
 
-<p>トークン上限を超えて会話を続けるには、不要な履歴を削除する必要があります。削除も含めて、簡単な会話を続けるには、例えば次のようにすればいいでしょう：</p>
+<p>トークン上限を超えて会話を続けるには、不要な履歴を削除する必要があります。削除も含めて、簡単な会話を続けるには、例えば次のようにすればいいでしょう（通常はそんなに長い会話をしないでしょうけれど）：</p>
 
 <pre>
 from openai import OpenAI
@@ -122,18 +100,76 @@ while True:
     if prompt in ["quit", "exit"]:
         break
     msg.append({"role": "user", "content": prompt})
-    res = client.chat.completions.create(model="gpt-3.5-turbo", messages=msg)
+    res = client.chat.completions.create(model="gpt-4.1", messages=msg)
     ans = res.choices[0].message.content.strip()
     print(ans)
     msg.append({"role": "assistant", "content": ans})
-    if res.usage.total_tokens > 3000:
+    if res.usage.total_tokens > 900000:
         msg.pop(1)
         msg.pop(1)
 </pre>
 
+<h2>トークンごとの確信度の出力</h2>
+
+<p>LLMは次のトークンの「確率分布」（確信度）を計算し、それに従って実際の次のトークンをランダムに選びます。ただしそれは <code>temperature=1</code> あたりに設定したときで、<code>temperature=0</code> にすればつねに最大確率のトークンが選ばれます。「確率分布」（実際には確率の対数logprobs）は次のようにして調べることができます。</p>
+
+<pre class="cell">
+from openai import OpenAI
+client = OpenAI()
+
+res = client.chat.completions.create(
+    model="gpt-4.1",
+    messages=[
+        {
+            "role": "user",
+            "content": "Write a one-sentence bedtime story about a unicorn."
+        }
+    ],
+    logprobs=True,
+    top_logprobs=3,
+    temperature=0
+)
+
+print(res.choices[0].message.content)
+</pre>
+
+<pre>
+Under a blanket of twinkling stars, a gentle unicorn tiptoed through a moonlit meadow, leaving trails of sparkling dreams for all the sleeping children.
+</pre>
+
+<pre class="cell">
+for x in res.choices[0].logprobs.content[:5]:
+    print(repr(x.token))
+    for t in x.top_logprobs:
+        print("  ", repr(t.token), t.logprob)
+</pre>
+
+<pre>
+'Under'
+   'Under' -0.18204644322395325
+   'As' -1.9320464134216309
+   'B' -4.682046413421631
+' a'
+   ' a' -0.29004523158073425
+   ' the' -1.4150452613830566
+   'neath' -4.790045261383057
+' blanket'
+   ' blanket' -1.3965630531311035
+   ' sky' -1.7715630531311035
+   ' silver' -1.7715630531311035
+' of'
+   ' of' -6.704273118884885e-07
+   ' woven' -15.250000953674316
+   ' stitched' -15.375000953674316
+' tw'
+   ' tw' -0.0457843616604805
+   ' stars' -4.2957844734191895
+   ' shimmering' -4.2957844734191895
+</pre>
+
 <h2>ストリーミング</h2>
 
-<p>Web 版 ChatGPT のように文字単位（単語単位）で出力するようにしてみましょう。モデル名として Gemini のモデル（<code>"gemini-1.5-pro"</code> など）や xAI のモデル（<code>"grok-2-latest"</code> など）を与えてもいいようにしました（それぞれ環境変数 <code>GOOGLE_API_KEY</code>、<code>XAI_API_KEY</code> にAPIキーを入れておきます）。</p>
+<p>Web 版 ChatGPT のように文字単位（単語単位）で出力するようにしてみましょう。モデル名として Gemini のモデル（<code>"gemini-1.5-pro"</code> など）や xAI のモデル（<code>"grok-2-latest"</code> など）や PLaMo のモデルを与えてもいいようにしました（それぞれ環境変数 <code>GOOGLE_API_KEY</code>、<code>XAI_API_KEY</code>、<code>PLAMO_API_KEY</code> にAPIキーを入れておきます）。</p>
 
 <pre class="cell">
 import os
@@ -296,7 +332,7 @@ enc = tiktoken.get_encoding("o200k_base")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-05-10 16:53:05 JST</time></p>
+<p>Last modified: <time>2025-05-30 14:52:46 JST</time></p>
 </footer>
 </body>
 </html>

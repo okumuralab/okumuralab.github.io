@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/plamo_translate.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PLaMo翻訳</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PLaMo翻訳</h1>
+
+<p>2025年5月27日、<a href="https://www.preferred.jp/ja/news/pr20250527/">日本語の翻訳に特化した大規模言語モデルPLaMo翻訳を発売</a>というアナウンスが出た。<a href="https://translate-demo.plamo.preferredai.jp">PLaMo翻訳</a>のページで使うなら無料である。</p>
+
+<p>年商10億円未満の企業や個人はHugging Faceの <a href="https://huggingface.co/pfnet/plamo-2-translate">pfnet/plamo-2-translate</a> からモデルをダウンロードしてローカルで使うことができる。このページの例の vllm はMacではうまく動作しない。Mac用には <a href="https://huggingface.co/mlx-community/plamo-2-translate">mlx-community/plamo-2-translate</a> のほうを使うのがよい。あらかじめ <code>pip install mlx-lm numba</code> しておいて、ターミナルに例えば</p>
+
+<pre>
+python3 -m mlx_lm generate \
+  --model mlx-community/plamo-2-translate \
+  --extra-eos-token '&lt;|plamo:op|&gt;' \
+  --prompt 'あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。'
+</pre>
+
+<p>と打ち込むと、初回はモデルがダウンロードされ、翻訳結果が出力される。</p>
+
+<p>Pythonでプログラムを書いて使うには、例えば次のようにする。</p>
+
+<pre class="cell">
+from mlx_lm import load, generate
+
+model, tokenizer = load("mlx-community/plamo-2-translate",
+                        tokenizer_config={"trust_remote_code": True})
+tokenizer.add_eos_token("&lt;|plamo:op|&gt;")
+
+prompt = r'''&lt;|plamo:op|&gt;dataset
+translation
+&lt;|plamo:op|&gt;input lang=Japanese
+あのイーハトーヴォのすきとおった風、夏でも底に冷たさをもつ青いそら、うつくしい森で飾られたモリーオ市、郊外のぎらぎらひかる草の波。
+&lt;|plamo:op|&gt;output lang=English
+'''
+
+response = generate(
+    model, 
+    tokenizer, 
+    prompt=prompt,
+    max_tokens=1024,  # 生成する最大トークン数
+    verbose=True,     # 生成過程を表示
+)
+
+# print(response) # 翻訳結果を表示（verbose=Trueならすでに出力済み）
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-06-01 09:04:48 JST</time></p>
+</footer>
+</body>
+</html>

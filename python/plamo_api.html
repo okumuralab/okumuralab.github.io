@@ -18,7 +18,7 @@
 
 <h1>PLaMoのAPIを使う</h1>
 
-<p><a href="https://plamo.preferredai.jp">PLaMo</a> は <a href="https://www.preferred.jp">Preferred Networks</a>（プリファードネットワークス、PFN）による国産のLLMである。<a href="https://plamo.preferredai.jp/api">API</a> 料金は入力300円/Mトークン、出力1000円/Mトークンで、ほぼ GPT-4.1 並である。現在、登録すれば1000円分のクレジットがもらえる。</p>
+<p><a href="https://plamo.preferredai.jp">PLaMo</a> は <a href="https://www.preferred.jp">Preferred Networks</a>（プリファードネットワークス、PFN）による国産のLLMである。2025年5月22日、PLaMo 2.0 Primeが出て、古いPLaMo 1.0 Primeは提供終了になった。PLaMo 2.0 Primeの <a href="https://plamo.preferredai.jp/api">API</a> 料金は、入力60円/Mトークン、出力250円/Mトークンで、gpt-4.1-mini並である。現在、登録すれば1000円分のクレジットがもらえる。すべてのリクエストが日本国内のサーバーで処理される。</p>
 
 <p>登録するとAPIキーが発行されるので、環境変数に</p>
 
@@ -26,18 +26,20 @@
 export PLAMO_API_KEY="..."
 </pre>
 
-<p>のようにして登録しておくと便利である。OpenAIのChat Completions APIと互換性があるので、<a href="chatgpt_api.html">OpenAIのAPIを使う</a>のコードがそのまま利用できる：</p>
+<p>のようにして登録しておくと便利である。OpenAIのChat Completions APIと互換性があるので、<a href="chatgpt_api.html">OpenAIのAPIを使う</a>のコードがそのまま利用できる（エンドポイントは <code>https://api.platform.preferredai.jp/v1</code>）：</p>
 
 <pre class="cell">
-chatbot = Chatbot(model="plamo-1.0-prime")
+chatbot = Chatbot(model="plamo-2.0-prime")
 chatbot.chat("まどマギでだれが好きですか？")
 </pre>
+
+<p>詳しくは<a href="https://docs.plamo.preferredai.jp/ja/">ドキュメント</a>を参照されたい。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-05-10 16:57:22 JST</time></p>
+<p>Last modified: <time>2025-05-30 15:09:48 JST</time></p>
 </footer>
 </body>
 </html>

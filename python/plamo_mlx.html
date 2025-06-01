@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/plamo_mlx.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PLaMoをMLXで</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>PLaMoをMLXで</h1>
+
+<p><a href="https://huggingface.co/mlx-community?search_models=plamo">Hugging FaceのMLX PLaMoモデル</a>の中で、自分のメモリサイズに合ったモデルを試してみる。ここでは <a href="https://huggingface.co/mlx-community/plamo-2-8b-bf16">mlx-community/plamo-2-8b-bf16</a> を使う。</p>
+
+<pre>
+pip3 install --upgrade mlx_lm numba
+python3 -m mlx_lm generate \
+    --model mlx-community/plamo-2-8b-bf16 \
+    --prompt '## 美味しいカレーの作り方:\n' \
+    --ignore-chat-template \
+    --max-tokens 2048 \
+    --extra-eos-token '&lt;|plamo:bos|&gt;' \
+    --temp 0.7 \
+    --seed 0
+</pre>
+
+<p>と打ち込むと、カレーの作り方が詳しく表示される。</p>
+
+<p>Pythonでプログラムを書いて使うには、例えば次のようにする。</p>
+
+<pre class="cell">
+from mlx_lm import load, generate
+
+model, tokenizer = load("mlx-community/plamo-2-8b-bf16",
+                        tokenizer_config={"trust_remote_code": True})
+tokenizer.add_eos_token("&lt;|plamo:bos|&gt;")
+
+prompt = r'''## 美味しいカレーの作り方:
+'''
+
+response = generate(
+    model, 
+    tokenizer, 
+    prompt=prompt,
+    max_tokens=512,
+    verbose=True,
+)
+
+# print(repr(response))
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-06-01 09:58:41 JST</time></p>
+</footer>
+</body>
+</html>
