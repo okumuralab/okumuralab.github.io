@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/cs/piechart.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>円グラフ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">コンピュータと情報</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>円グラフ</h1>
+
+<h2>複数回答のグラフ</h2>
+
+<p>大学入試センターの<a href="https://www.dnc.ac.jp/kyotsu/daigakunyugakukibousyagakuryokuhyoka/pre-test/pre-test_h29_01.html">平成29年度試行調査_問題、正解表、解答用紙等</a>の国語の問題に、次のようなグラフがあります。</p>
+
+<figure><img src="img/kokugo_h29_graph.png" alt="平成29年度試行調査国語グラフ"></figure>
+
+<p>しかしこれは複数回答可のアンケートです。総回答数（総回答者数ではない）522のうち「部活動の充実」を挙げたのが274で、計算すると確かに52.5%になりますが、本文によると、この学校の生徒総数は477人です。回答者の何パーセントが「部活動の充実」を望んでいるのか、これだけではわかりません。仮に477人全員が答えたなら、274/477 = 57.4% です。</p>
+
+<p>このようなアンケートでは、回答数に対する割合ではなく、回答者に対する割合を求め、円グラフではなく棒グラフで表すのがよいでしょう。<a href="../stat/090507.html">グラフの例：アンケート（複数回答）</a>も参考にしてください。</p>
+
+<h2>合計して100%にならない？</h2>
+
+<p>毎日ことば <a href="https://salon.mainichi-kotoba.jp/archives/257710">100％にならない？</a> に、各項目のパーセンテージを四捨五入すると、合計が100%にならない場合のことが書かれています。記事では「四捨五入しているので、合計は必ずしも100％にならないことがある」と書くことを勧めています。</p>
+
+<p>このことを<a href="https://x.com/h_okumura/status/1930387677251285125">ツイート</a>したところ、いろいろなご意見をいただきました。東京都総務局統計部の <a href="https://www.toukei.metro.tokyo.lg.jp/manabou/tyuu/sirou2/tokutyou2/ma1206t24d.htm">まなぼう統計 / 統計を知ろう・学ぼう / データの特徴・変化をとらえよう - 割合を表す - 円グラフ</a> では「合計が100%にならないときは、割合の一番大きい部分か「その他」で調整します」と書かれていることも教えていただきました。</p>
+
+<p>各項目を四捨五入したら、その合計は必ずしも100%にならないことは自明なのですが、100%にならないと「間違っているのではないか」という問い合わせが来てわずらわしいので、調整して100%になるようにしてしまうことがあるようです。</p>
+
+<p>でも、数値の改ざんは良くないことですので、四捨五入した値は改ざんせず、「各項目の割合は四捨五入しているので、合計は必ずしも100％にならないことがある」と注記するのが妥協点でしょうか。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-06-06 09:57:55 JST</time></p>
+</footer>
+</body>
+</html>
