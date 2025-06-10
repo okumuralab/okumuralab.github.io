@@ -18,6 +18,12 @@
 
 <h1>PLaMo翻訳</h1>
 
+<p>2025年6月10日、<a href="https://tech.preferred.jp/ja/blog/plamo-translate-cli/">PLaMo翻訳CLI</a>が出て、簡単にPLaMo翻訳が使えるようになった。デフォルトでは4ビット量子化だが、<code>--precision bf16</code> オプションでbf16モデルが使える。</p>
+
+<p>以下は古い内容。</p>
+
+<hr>
+
 <p>2025年5月27日、<a href="https://www.preferred.jp/ja/news/pr20250527/">日本語の翻訳に特化した大規模言語モデルPLaMo翻訳を発売</a>というアナウンスが出た。<a href="https://translate-demo.plamo.preferredai.jp">PLaMo翻訳</a>のページで使うなら無料である。</p>
 
 <p>年商10億円未満の企業や個人はHugging Faceの <a href="https://huggingface.co/pfnet/plamo-2-translate">pfnet/plamo-2-translate</a> からモデルをダウンロードしてローカルで使うことができる。このページの例の vllm はMacではうまく動作しない。Mac用には <a href="https://huggingface.co/mlx-community/plamo-2-translate">mlx-community/plamo-2-translate</a> のほうを使うのがよい。あらかじめ <code>pip install mlx-lm numba</code> しておいて、ターミナルに例えば</p>
@@ -62,7 +68,7 @@ response = generate(
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-06-01 09:04:48 JST</time></p>
+<p>Last modified: <time>2025-06-10 17:14:52 JST</time></p>
 </footer>
 </body>
 </html>
