@@ -51,6 +51,10 @@ for k in range(256):
 print(np.sum(flg)) # 4006938
 </pre>
 
+<aside>
+<p>上では実験のためJPEG品質を最高 <code>quality=100</code> としたが、これは過剰な値（画質最高を望むならPNG推奨）。<a href="https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html">デフォルトは75</a>だが、より品質を良くしたいなら85が推奨。</p>
+</aside>
+
 <p>この実験では400万通りほどの色が再現された。1677万色の24%ほどである。22ビットくらいの情報量だ。</p>
 
 <p>パターンを変えると色数は変わるが、上限は400万よりそんなに大きくならないようだ。</p>
@@ -79,7 +83,7 @@ for k in range(16):
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-28 20:59:51 JST</time></p>
+<p>Last modified: <time>2025-06-11 18:08:11 JST</time></p>
 </footer>
 </body>
 </html>

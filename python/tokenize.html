@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/tokenize.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLMのトークン</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>LLMのトークン</h1>
+
+<p>LLM（大規模言語モデル）は文字ではなくトークン（token）というものを単位として処理します。トークンは単語に近いものですが、必ずしも単語とは一致しません。</p>
+
+<p>文字列をトークンに分割するツールをトークナイザ（tokenizer）といいます。OpenAIのLLMでは <a href="https://github.com/openai/tiktoken">tiktoken</a> というトークナイザが使われます。tiktoken はいくつかのエンコーディング（トークン分割方式）に対応しており、古くは cl100k_base というエンコーディングが使われていましたが、GPT 4oからは o200k_base に変わりました。</p>
+
+<p><code>pip install tiktoken</code> して試してみましょう：</p>
+
+<pre class="cell">
+import tiktoken
+
+enc = tiktoken.get_encoding("o200k_base")
+# または enc = tiktoken.encoding_for_model("gpt-4o")
+</pre>
+
+<p>次の例で試してみましょう（山本義隆『熱学思想の史的展開』（現代数学社，1987年）より）：</p>
+
+<pre style="white-space: pre-wrap">
+s = "「何人ものニュートンがいた（There were several Newtons）」と言ったのは，科学史家ハイルブロンである．同様にコーヘンは「ニュートンはつねに二つの貌を持っていた（Newton was always ambivalent）」と語っている．"
+</pre>
+
+<pre class="cell">
+e = enc.encode(s)
+for i in e:
+    c = enc.decode([i])
+    if len(c) == 1 and ord(c) == 65533:  # 65533は「�」
+        print(i, end="|")
+    else:
+        print(repr(c)[1:-1], end="|")
+print()
+</pre>
+
+<p>次のように67トークンに分割されていることがわかります：</p>
+
+<blockquote>
+<p>「|何|人|もの|ニュ|ート|ン|が|いた|（|There| were| several| Newton|s|）」|と言|った|の|は|，|科学|史|家|ハ|イル|ブ|ロン|で|ある|．|同|様|に|コ|ー�|246|ン|は|「|ニュ|ート|ン|は|つ|ね|に|二|つ|の|貌|を|持|って|いた|（|Newton| was| always| amb|ivalent|）」|と|語|って|いる|．|</p>
+</blockquote>
+
+<p>日本語は必ずしもUTF-8の文字の境界で切れるわけではなく、上の「コーヘン」のように文字の途中で切れることもあります。</p>
+
+<p>別の例です。これらは文字単位の処理が苦手なLLMの弱点を突くプロンプトとして有名なものです：</p>
+
+<blockquote>
+<p>How| many| r|'s| are| in| strawberry|?|</p>
+<p>「|いっぱい|」の|「|い|」を|「|お|」に|変|えて|ください|。|</p>  
+</blockquote>
+
+<p>このように、" strawberry" や "いっぱい" は1トークンになるので、その中にどういう文字が含まれるかは別に学習していないとこれらの問題は解けません。</p>
+
+<p>日本語ではどんなものがトークンとして登録されているのでしょうか。ちょっと調べてみました。</p>
+
+<pre class="cell">
+import tiktoken
+import re
+
+enc = tiktoken.get_encoding("o200k_base")
+
+japanese_re = re.compile('[\u3000-\u30ff\u4e00-\u9fff]')
+
+# 3000-30ff CJK記号と句読点、ひらがな、カタカナ
+# 4e00-9fff CJK統合漢字
+## 31f0-31ff カタカナ追加
+## 3220-325f, 3280-33ff CJK文字いろいろ
+# 3400-4dbf CJK統合漢字拡張A
+# f900-faff CJK互換漢字
+
+words = {}
+for i in range(199998):
+    s = enc.decode([i])
+    words[i] = s
+sorted_words = sorted(words.items(), key=lambda item: len(item[1]), reverse=True)
+for i, s in sorted_words[:100]:
+    print(i, s)
+
+for i, s in sorted_words[:100000]:
+    if japanese_re.search(s):
+        print(i, repr(s)[1:-1])
+</pre>
+
+<p>一部を抜き出します：</p>
+
+<pre>
+（前略）
+113862 ありがとうございました
+181081  微信公众号天天中彩票
+185118 _日本毛片免费视频观看
+93926 ありがとうございます
+147058 VIPがお送りします
+170996  微信上的天天中彩票
+187716  微信里的天天中彩票
+188394  天天中彩票大神推荐
+46669  天天中彩票app
+55935  彩神争霸大发快三
+（中略）
+77298 ＠お腹いっぱい
+（中略）
+87123 風吹けば名無し
+（中略）
+123086 がお送りします
+（中略）
+44948  名無しさん
+（後略）
+</pre>
+
+<p>何を学習させたのか想像がついてしまいます。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-06-12 08:52:07 JST</time></p>
+</footer>
+</body>
+</html>

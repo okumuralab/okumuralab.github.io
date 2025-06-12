@@ -276,63 +276,13 @@ chatbot.chat(prompt="Provide a long and detailed summary of what follows:\n\n" +
 
 <h2>トークン</h2>
 
-<p>トークンはほぼ単語に相当する概念で、gpt-3.5-turbo や gpt-4 では <a href="https://github.com/openai/tiktoken">tiktoken</a> の cl100k_base というエンコーディングが使われています（→ <a href="https://zenn.dev/microsoft/articles/3438cf410cc0b5">OpenAI 言語モデルごとのエンコーディング一覧</a>）。頻出単語は1トークン、そうでない単語は2トークン以上に分割されます。日本語の場合は、2〜3文字が1トークンになることも、逆に1文字が2〜3トークンに分割されることもあります。平均してトークンあたり日本語0.9170文字程度です（<a href="https://zenn.dev/microsoft/articles/dcf32f3516f013">OpenAI 言語モデルで日本語を扱う際のトークン数推定指標</a>）。</p>
-
-<p><code>pip install tiktoken</code> して試してみましょう：</p>
-
-<pre>
-import tiktoken
-
-enc = tiktoken.get_encoding("cl100k_base")
-</pre>
-
-<p>次の例で試してみましょう（山本義隆『熱学思想の史的展開』（現代数学社，1987年）より）：</p>
-
-<pre style="white-space: pre-wrap">
-s = "「何人ものニュートンがいた（There were several Newtons）」と言ったのは，科学史家ハイルブロンである．同様にコーヘンは「ニュートンはつねに二つの貌を持っていた（Newton was always ambivalent）」と語っている．"
-</pre>
-
-<pre>
-e = enc.encode(s)
-for i in e:
-    c = enc.decode([i])
-    if len(c) == 1 and ord(c) == 65533:  # 65533は「�」
-        print(i, end="|")
-    else:
-        print(c, end="|")
-print()
-</pre>
-
-<p>次のように88トークンに分割されていることがわかります：</p>
-
-<blockquote>
-「|何|人|も|の|ニ|ュ|ート|ン|が|い|た|（|There| were| several| Newton|s|）|」|と|言|っ|た|の|は|，|科|学|5877|110|家|2845|237|イ|ル|ブ|ロ|ン|で|あ|る|．|同|162|100|246|に|コ|ー�|246|ン|は|「|ニ|ュ|ート|ン|は|つ|2243|255|に|二|つ|の|80631|234|を|持|って|い|た|（|Newton| was| always| amb|ivalent|）|」|と|45918|252|って|い|る|．|
-</blockquote>
-
-<p>英語はだいたい1語1トークンですが、直前のスペースも含めてトークンになっていることがけっこうあります。日本語はだいたい1文字1トークンですが、「様」のようにUTF-8の3バイトがそれぞれトークンになっている場合や、「ーヘ」の「ヘ」の最初の2バイトが「ー」とくっついて1トークンになっているような場合もあります。平均して10トークンが日本語9文字少々という感じです。</p>
-
-<p>ちなみに、同じ文字列をOpenAIの <a href="https://platform.openai.com/tokenizer">Tokenizer</a> に入れると、GPT-3では120トークンになります。</p>
-
-<p>[2024-05-14追記] GPT-4o では新しいトークナイザで日本語のトークン数も減りました。tiktoken 0.7.0 以降で試せます：</p>
-
-<pre>
-enc = tiktoken.get_encoding("o200k_base")
-# または enc = tiktoken.encoding_for_model("gpt-4o")
-</pre>
-
-<p>上の例でトークン数は67です：</p>
-
-<blockquote>
-「|何|人|もの|ニュ|ート|ン|が|いた|（|There| were| several| Newton|s|）」|と言|った|の|は|，|科学|史|家|ハ|イル|ブ|ロン|で|ある|．|同|様|に|コ|ー�|246|ン|は|「|ニュ|ート|ン|は|つ|ね|に|二|つ|の|貌|を|持|って|いた|（|Newton| was| always| amb|ivalent|）」|と|語|って|いる|．|
-</blockquote>
-
-<p>「名無しさん」「転載は禁止」「VIPがお送りします」みたいなのがそれぞれ1トークンになるので、何を学習させたかの想像がついてしまいます。</p>
+<p><a href="tokenize.html">LLMのトークン</a>に移しました。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-05-30 14:52:46 JST</time></p>
+<p>Last modified: <time>2025-06-11 19:50:59 JST</time></p>
 </footer>
 </body>
 </html>
