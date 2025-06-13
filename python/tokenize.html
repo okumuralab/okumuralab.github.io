@@ -87,8 +87,8 @@ for i in range(199998):
     s = enc.decode([i])
     words[i] = s
 sorted_words = sorted(words.items(), key=lambda item: len(item[1]), reverse=True)
-for i, s in sorted_words[:100]:
-    print(i, s)
+# for i, s in sorted_words[:100]:
+#     print(i, s)
 
 for i, s in sorted_words[:100000]:
     if japanese_re.search(s):
@@ -122,11 +122,87 @@ for i, s in sorted_words[:100000]:
 
 <p>何を学習させたのか想像がついてしまいます。</p>
 
+<p>中国語のものは微信（WeChat）の宝くじ関係のものが多いようですが、アダルト関係も混ざっているようです。</p>
+
+<p>「_日本毛片免费视频观看」は「_日本ポルノ無料動画視聴」という意味ですが、不思議なことにChatGPTはこのトークンが読めないようです。「_日本毛片免费视频观看」を日本語に訳してくれと言っても何も見えないらしいのです。旧トークナイザでは「SolidGoldMagikarp」などがChatGPTが読めないトークンとして有名でしたが、新トークナイザでも同じようなことが起こっているのかもしれません。</p>
+
+<hr>
+
+<p><a href="https://tech.preferred.jp/ja/blog/plamo-2-tokenizer/">大規模言語モデル PLaMo 2 のためのトークナイザ性能改善</a>という記事を見て、PLaMo 2のトークナイザも試してみたくなりました。</p>
+
+<pre class="cell">
+from mlx_lm import load, generate
+
+model, tokenizer = load("mlx-community/plamo-2-8b-bf16",
+                        tokenizer_config={"trust_remote_code": True})
+tokenizer.add_eos_token("&lt;|plamo:bos|&gt;")
+s = "「何人ものニュートンがいた（There were several Newtons）」と言ったのは，科学史家ハイルブロンである．同様にコーヘンは「ニュートンはつねに二つの貌を持っていた（Newton was always ambivalent）」と語っている．"
+
+e = tokenizer.encode(s)
+for i in e:
+    c = tokenizer.decode(i)
+    print(repr(c)[1:-1], end="|")
+print()
+</pre>
+
+<pre style="white-space: pre-wrap">
+&lt;|plamo:bos|&gt;|「|何人|も|の|ニュー|トン|がいた|（|There were| several| Newton|s|）」|と言った|の|は，|科学|史|家|ハイ|ル|ブロン|である|．|同様に|コー|ヘン|は「|ニュー|トン|は|つねに|二つ|の|貌|を持っていた|（|Newton| was always| |ambi|valent|）|」と|語っている|．|
+</pre>
+
+<pre class="cell">
+words = {}
+for i in range(100000):
+    s = tokenizer.decode(i)
+    words[i] = s
+sorted_words = sorted(words.items(), key=lambda item: len(item[1]), reverse=True)
+# for i, s in sorted_words[:100]:
+#     print(i, s)
+for i, s in sorted_words[:10000]:
+    if japanese_re.search(s):
+        print(i, repr(s)[1:-1])
+</pre>
+
+<pre>
+58984 いただきありがとうございました。
+68757 あけましておめでとうございます。
+54912 いただきありがとうございます。
+66397 明けましておめでとうございます
+51379 お気軽にお問い合わせください
+59328 本当にありがとうございました
+63073 してみてはいかがでしょうか。
+74903 いつもありがとうございます。
+78833 いただきありがとうございます
+81104 ことができるようになります。
+85013 もいるのではないでしょうか。
+50286 よろしくお願いいたします。
+57225 させていただいております。
+64602 お気軽にお問い合わせ下さい
+70922 することをおすすめします。
+75898 できるようになっています。
+76399 というわけではありません。
+85032 いつもありがとうございます
+48448 ありがとうございました。
+58809 できるようになりました。
+58983 心よりお待ちしております
+61422 みてはいかがでしょうか。
+61959 するものではありません。
+65294 よろしくお願いいたします
+65859 お気軽にお問合せください
+66682 頂きありがとうございます
+68465 させていただきますので、
+70634 をさせていただきました。
+70678 YouTubeチャンネル
+75441 させていただいています。
+（後略）
+</pre>
+
+<p>OpenAIのものと比べて、とてもまともです。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-06-12 08:52:07 JST</time></p>
+<p>Last modified: <time>2025-06-12 15:59:48 JST</time></p>
 </footer>
 </body>
 </html>
