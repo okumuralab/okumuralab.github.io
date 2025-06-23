@@ -85,7 +85,7 @@ mdfind "kMDItemFinderComment == '*げほ*'"
 
 <p>mdlsで表示されるメタデータをすべてユーザが上書きできるわけではない。</p>
 
-<p>メタデータはrsyncで別Macに送れる。そのためのオプションは、Mac付属の /usr/bin/rsync では <code>-E</code>、本家（Homebrewで入るもの）では <code>-X</code> である。Homebrewで入る新しいrsyncはzlib圧縮に加えてzstd圧縮などができる（zstdがデフォルト）。</p>
+<p>メタデータはrsyncで別Macに送れる。そのためのオプションは、Mac付属の /usr/bin/rsync では <code>--extended-attributes</code>、本家（Homebrewで入るもの）では <code>--xattrs</code> (<code>-X</code>) である。Homebrewで入る新しいrsyncはzlib圧縮に加えてzstd圧縮などができる（zstdがデフォルト）。</p>
 
 <p>続編として<a href="240920.html">MacのFinderコメントを活用する</a>も書いた。</p>
 
@@ -101,7 +101,7 @@ mdfind "kMDItemFinderComment == '*げほ*'"
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-09-20 17:01:07 JST</time></p>
+<p>Last modified: <time>2025-06-17 17:41:35 JST</time></p>
 </footer>
 </body>
 </html>

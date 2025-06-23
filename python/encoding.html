@@ -148,7 +148,7 @@ with ZipFile(sys.argv[1]) as z:
 
 <h2>NFC，NFD</h2>
 
-<p>新しい macOS では APFS というファイルシステムが用いられるが，従来の Mac で用いられていた HFS+ というファイルシステムでは，ファイル名の Unicode 正規化がほぼ NFD という形式になっていた。例えばカレントディレクトリに「パンダ.txt」というファイルを作り，<a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> でファイル名を読み出す：</p>
+<p>新しい macOS では APFS というファイルシステムが用いられるが，従来の Mac で用いられていた HFS+ というファイルシステムでは，ファイル名の Unicode 正規化がほぼ NFD という形式になっていた（この「ほぼ NFD」、いわゆる UTF-8-MAC の詳細については <a href="https://qiita.com/ko1nksm/items/3a66197efd1c096a801f">誤解の多い「NFD問題とUTF-8-MAC問題」を解説する - macOSの濁点を含むファイル名の扱い</a> が参考になる）。例えば HFC+ ドライブ上のカレントディレクトリに「パンダ.txt」というファイルを作り，<a href="https://docs.python.org/3/library/pathlib.html">pathlib</a> でファイル名を読み出す：</p>
 
 <pre>
 !touch パンダ.txt  # カレントディレクトリに「パンダ.txt」を作る
@@ -216,7 +216,7 @@ In [ ]: list(unicodedata.normalize('NFD', 'é'))
 Out[ ]: ['e', '́']
 </pre>
 
-<p>たとえAPFSでも，過去のHFS+からコピーしたファイルはNFDになっていることがあるので，要注意。</p>
+<p>APFSはこのような正規化を行わないが，たとえAPFSでも，過去のHFS+からコピーしたファイルはNFDになっていることがあるので，要注意。また，FinderなどのmacOSアプリは一般にファイル名をNFD（またはUTF-8-MAC）に正規化する。zshは <code>ls</code> するとNFDでもそのまま表示するが <code>ls *</code> するとNFCに直る。</p>
 
 <p>カレントディレクトリ以下にあるすべてのファイルについて，ファイル名をNFCに直す。<code>XR8L0bKA6Ofb</code> は他と重ならないファイル名なら何でもいい。なぜか <code>os.rename(s, t)</code> ではうまくいかなかった。</p>
 
@@ -230,7 +230,7 @@ for x in pathlib.Path(".").glob("**/*"):
         os.rename("XR8L0bKA6Ofb", t)
 </pre>
 
-<p>Homebrewのrsyncは <code>--iconv=UTF8-MAC,UTF-8</code> というオプションでNFD→NFCにしてくれる。ただ，<code>-E</code> がmacOSのrsyncと違って "copy extended attributes, resource forks" の意味を持たないのが残念（<code>man -M /usr/share/man rsync</code> と <code>man -M /usr/local/share/man rsync</code> を比較）。</p>
+<p>Homebrewのrsyncは <code>--iconv=UTF-8-MAC,UTF-8</code> というオプションでほぼNFD→NFCにしてくれるようだ。両者にはほかにもいろいろ違いがあって、macOSのrsyncの <code>--extended-attributes</code> はHomebrewのrsyncの <code>--xattrs</code> (<code>-X</code>) に相当するようだ（<code>man -M /usr/share/man rsync</code> と <code>man -M /opt/homebrew/share/man rsync</code> を比較）。</p>
 
 <h2>「埼玉」と「埼⽟」</h2>
 
@@ -275,13 +275,15 @@ tbl = str.maketrans(
 
 <p>ものかのさんの<a href="https://tama-san.com/resolve-kanji/">やっかいな漢字 – CJK部首補助／康煕部首</a>が参考になる。</p>
 
+<p>康熙部首に化ける問題はGoogle Chromeがからんでいることが多いようだ。Chromeのバグについては<a href="https://x.com/MurakamiShinyu/status/1927256770440802514">村上真雄さんのおかげ</a>で<a href="https://x.com/MurakamiShinyu/status/1930544971226181699">Chrome 139で修正される予定</a>。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2024-06-02 16:48:42 JST</time>
+Last modified: <time>2025-06-17 21:26:18 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

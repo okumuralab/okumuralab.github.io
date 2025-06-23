@@ -27,7 +27,7 @@
 
 <p>ということで、まず <code>pip install pyobjc</code> して、次のようにすることにした。これでマルチスクリーンにも対応するはずである。</p>
 
-<p>Zoomのミーティングウィンドウは "Zoom Meeting" という名前であるが、同じ名前のウィンドウが二つできる。一方が全員の画面、もう一方が発表者の共有画面である。どうやって区別すればいいか、わからなかったが、たまたまうちでは全員の画面は縦長、共有画面は横長にしているので、幅と高さを比べて調べることにした。</p>
+<p>Zoomのミーティングウィンドウは <del>"Zoom Meeting"</del><ins>"Zoom ミーティング"</ins> という名前であるが、同じ名前のウィンドウが二つできる。一方が全員の画面、もう一方が発表者の共有画面である。どうやって区別すればいいか、わからなかったが、たまたまうちでは全員の画面は縦長、共有画面は横長にしているので、幅と高さを比べて調べることにした。</p>
 
 <p>ウィンドウの位置とサイズがわかれば、macOSの <code>screencapture</code> コマンドで画面キャプチャし、PNGファイルに保存する。これを開いて、<code>.convert("L")</code> でグレイスケールに変換する。これだけでもいいが、少しずれる可能性も考えて、Gaussian blur をかけている。</p>
 
@@ -59,12 +59,14 @@ while True:
     )
     captured = False
     for window in window_list:
-        if window.get("kCGWindowName", "") == "Zoom Meeting":
+        name = window.get("kCGWindowName", "")
+        if name[:5] == "Zoom ":
             bounds = window.get("kCGWindowBounds", {})
             x = int(bounds.get("X", 0))
             y = int(bounds.get("Y", 0))
             w = int(bounds.get("Width", 0))
             h = int(bounds.get("Height", 0))
+            # print(name, x, y, w, h)  # debug
             if w > h:
                 # print(f"screencapture -x -R {x},{y},{w},{h} {file}")
                 subprocess.call(["screencapture", "-x", "-R", f"{x},{y},{w},{h}", file])
@@ -92,7 +94,7 @@ while True:
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-12-28 16:03:58 JST</time></p>
+<p>Last modified: <time>2025-06-15 09:49:21 JST</time></p>
 </footer>
 </body>
 </html>

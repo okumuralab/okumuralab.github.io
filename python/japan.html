@@ -54,11 +54,13 @@ import pandas as pd
 
 df = pd.read_csv("https://okumuralab.org/~okumura/stat/data/gansokuhou2016.csv")
 x = df["年齢調整罹患率日本総数"][1:48]
-x = (x - min(x)) / (max(x) - min(x))
+norm = plt.Normalize(vmin=x.min(), vmax=x.max())
 cmap = plt.get_cmap("bwr")  # or "coolwarm" or "cividis_r" etc...
-
-d = {i: cmap(x[i], bytes=True) for i in range(1,48)}
-plt.imshow(jp.picture(d))
+fcol = lambda x: "#" + bytes(cmap(norm(x), bytes=True)[:3]).hex()
+pic = jp.picture(x.apply(fcol))
+plt.imshow(pic, cmap, norm)
+# または
+# plt.colorbar(plt.imshow(pic, cmap, norm))
 
 # 不要なティックやラベルを削除する
 plt.tick_params(bottom=False, top=False, left=False, right=False,
@@ -73,11 +75,11 @@ plt.savefig("190613a.png", bbox_inches="tight")
 
 <p>SVG の図を出力することもできます：</p>
 
-<pre>
+<pre class="cell">
 cmap = plt.get_cmap("coolwarm")
-cols = ["#%02X%02X%02X" % (cmap(x[i], bytes=True)[:3]) for i in range(1,48)]
-s = jp.pref_map(range(1,48), # qpqo=jp.get_data(move_okinawa=True),
-                cols=cols, tostr=True)
+fcol = lambda x: "#" + bytes(cmap(norm(x), bytes=True)[:3]).hex()
+s = jp.pref_map(range(1,48), # qpqo=jp.get_data(),
+                cols=x.apply(fcol).values, tostr=True)
 
 # 境界線を黒で描くには：
 # s = s.replace('&lt;path ', '&lt;path stroke="black" stroke-width="0.001" ')
@@ -88,11 +90,13 @@ with open("190613b.svg", "w") as f:
 
 <figure><img src="img/190613b.svg" width="500" height="500" alt="がんの分布"></figure>
 
+<p><code>qpqo=jp.get_data()</code> を生かせば北海道と沖縄を本来の位置に描きます（デフォルトは <code>jp.get_data(move_hokkaido=False, move_okinawa=False, rough=False)</code> です）。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-10 20:05:47 JST</time></p>
+<p>Last modified: <time>2025-06-21 21:27:34 JST</time></p>
 </footer>
 </body>
 </html>
