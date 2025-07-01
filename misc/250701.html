@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/250701.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MeCab</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>MeCab</h1>
+
+<p>今さらだが、形態素解析ツールMeCabを使う必要が生じたので、Macへのインストールの手順をまとめておく。</p>
+
+<p>といっても、Homebrewが入っていれば</p>
+
+<pre>
+brew install mecab
+brew install mecab-ipadic
+</pre>
+
+<p>で入る。試してみよう。標準のipadicでは次のようになる。</p>
+
+<pre>
+echo '外国人参政権' | mecab
+外国    名詞,一般,*,*,*,*,外国,ガイコク,ガイコク
+人参    名詞,一般,*,*,*,*,人参,ニンジン,ニンジン
+政権    名詞,一般,*,*,*,*,政権,セイケン,セイケン
+EOS
+</pre>
+
+<p>定評のある国立国語研究所の <a href="https://clrd.ninjal.ac.jp/unidic/">UniDic</a> を試してみよう。現代書き言葉、現代話し言葉、古文用UniDicがあるが、ここでは現代書き言葉のもの unidic-cwj-202302.zip をダウンロードする。</p>
+
+<pre>
+cd /opt/homebrew/lib/mecab/dic
+mkdir unidic-cwj
+cd unidic-cwj
+unzip ⋯/unidic-cwj-202302.zip
+</pre>
+
+<p>試してみる。</p>
+
+<pre>
+echo '外国人参政権' | mecab -d /opt/homebrew/lib/mecab/dic/unidic-cwj
+外国    名詞,普通名詞,一般,*,*,*,ガイコク,外国,外国,ガイコク,外国,ガイコク,漢,*,*,*,*,*,*,体,ガイコク,ガイコク,ガイコク,ガイコク,0,C2,*,2176766768718336,7919
+人参    名詞,普通名詞,一般,*,*,*,ニンジン,人参,人参,ニンジン,人参,ニンジン,漢,*,*,*,*,*,*,体,ニンジン,ニンジン,ニンジン,ニンジン,0,C2,*,7876360236311040,28654
+政権    名詞,普通名詞,一般,*,*,*,セイケン,政権,政権,セーケン,政権,セーケン,漢,*,*,*,*,*,*,体,セイケン,セイケン,セイケン,セイケン,0,C2,*,5434619721818624,19771
+EOS
+</pre>
+
+<p>最後に <a href="https://github.com/neologd/mecab-ipadic-neologd">NEologd</a> を。</p>
+
+<pre>
+git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git
+cd mecab-ipadic-neologd  
+./bin/install-mecab-ipadic-neologd -n
+</pre>
+
+<p>試してみる。</p>
+
+<pre>
+echo '外国人参政権' | mecab -d /opt/homebrew/lib/mecab/dic/mecab-ipadic-neologd
+外国人参政権    名詞,固有名詞,一般,*,*,*,外国人参政権,ガイコクジンサンセイケン,ガイコクジンサンセイケン
+EOS
+</pre>
+
+<p>なお、デフォルトの辞書（dicdir）などの設定は /opt/homebrew/etc/mecabrc で行う。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-07-01 21:06:38 JST</time></p>
+</footer>
+</body>
+</html>

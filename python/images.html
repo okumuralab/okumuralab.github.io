@@ -18,7 +18,7 @@
 
 <h1>画像テストページ</h1>
 
-<p>テスト環境：Mac mini (M1, 2020) macOS Monterey 12.5</p>
+<p>テスト環境：Mac Studio (Apple M4 Max, 2025) macOS Sequoia 15.5, Python 3.13.5, Matplotlib 3.10.3</p>
 
 <p>~/.matplitlib/matplotlibrc：</p>
 
@@ -37,31 +37,49 @@ plt.plot([-1, 1])
 plt.title("日本語タイトル")
 
 plt.savefig("filename.png", bbox_inches="tight")
+plt.savefig("filename.webp", bbox_inches="tight", pil_kwargs={"lossless": True})
 plt.savefig("filename.jpg", bbox_inches="tight")
-plt.savefig("filename.pdf", bbox_inches="tight")
 plt.savefig("filename.svg", bbox_inches="tight")
 plt.savefig("filename.svgz", bbox_inches="tight")
 </pre>
 
-<p>filename.png (24616バイト)</p>
+<p>filename.png (22905バイト)</p>
 
 <figure><img src="img/filename.png" alt="png"></figure>
+
+<p>filename.webp (6864バイト) (ロスレス)</p>
+
+<figure><img src="img/filename.webp" alt="webp"></figure>
 
 <p>filename.jpg (17292バイト)</p>
 
 <figure><img src="img/filename.jpg" alt="jpg"></figure>
 
-<p>filename.pdf (10880バイト)</p>
-
-<figure><img src="img/filename.pdf" alt="pdf"></figure>
-
-<p>filename.svg (23122バイト)</p>
+<p>filename.svg (24168バイト)</p>
 
 <figure><img src="img/filename.svg" alt="svg"></figure>
 
-<p>filename.svgz (6316バイト)</p>
+<p>filename.svgz (6355バイト)</p>
 
 <figure><img src="img/filename.svgz" alt="svgz"></figure>
+
+<p>PDFについては次で実験：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+
+plt.rcParams["font.family"] = ["Source Han Sans"]
+plt.rcParams["font.weight"] = "normal"
+
+plt.plot([-1, 1])
+plt.title("日本語タイトル")
+
+plt.savefig("filename.pdf", bbox_inches="tight")
+</pre>
+
+<p>filename.pdf (9124バイト)</p>
+
+<figure><img src="img/filename.pdf" alt="pdf"></figure>
 
 <p>フォントを埋め込まないSVG：</p>
 
@@ -78,7 +96,7 @@ plt.title("日本語タイトル")
 plt.savefig("filename2.svg", bbox_inches="tight")
 </pre>
 
-<p>filename2.svg (8612バイト)</p>
+<p>filename2.svg (11285バイト)</p>
 
 <figure><img src="img/filename2.svg" alt="svg"></figure>
 
@@ -102,7 +120,7 @@ AddEncoding gzip svgz
 
 <p>という行も必要である。httpd.conf の編集が難しい場合は，画像と同じディレクトリ（または親ディレクトリ）に .htaccess というファイルを作って，httpd.conf に書き込むべきことを書き込んでおく。</p>
 
-<p>PDFについては，MacではSafari以外ダメ，iPhoneではSafari，Chrome大丈夫，Windowsではすべてダメのようである。PDF以外はすべてOK。</p>
+<p>苦労して svgz にしなくても、svg のままでもたいていはサーバ・ブラウザ間で勝手に圧縮される。例えば okumuralab.org の場合は <a href="../misc/240919.html">Brotli圧縮</a> されるはずである。</p>
 
 <hr>
 
@@ -110,7 +128,7 @@ AddEncoding gzip svgz
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2022-08-18 20:24:14 JST</time>
+Last modified: <time>2025-06-28 21:32:22 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

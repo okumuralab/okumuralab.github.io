@@ -256,6 +256,7 @@ plt.title("日本語", fontfamily="Yu Gothic", fontsize=20, fontweight=700)
 
 <pre>
 plt.savefig("filename.png", bbox_inches="tight")  # デフォルト: dpi=100
+plt.savefig("filename.webp", bbox_inches="tight", pil_kwargs={"lossless": True})
 plt.savefig("filename.pdf", bbox_inches="tight")
 plt.savefig("filename.svg", bbox_inches="tight")
 plt.savefig("filename.svgz", bbox_inches="tight")
@@ -263,6 +264,10 @@ plt.savefig("filename.pgf", bbox_inches="tight")
 </pre>
 
 <p>→ <a href="images.html">画像テストページ</a></p>
+
+<div class="note">
+<p>ロスレス（可逆圧縮）WebPで保存する場合、オプションが面倒なので、デフォルトでロスレスにするためのパッケージ <a href="https://github.com/ragibson/matplotlib-lossless-webp">matplotlib-lossless-webp</a> があります。</p>
+</div>
 
 <p>最後のPGF（Portable Graphics Format）はTeXのTi<i>k</i>Zのベースとなるグラフィック言語です。これは次のような形のLaTeXファイルを <code>xelatex</code> か <code>lualatex</code> でコンパイルすることによってPDFに変換できます：</p>
 
@@ -497,7 +502,7 @@ ax.clear() # 図をクリアして次の図を描く
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-12-24 09:09:20 JST</time></p>
+<p>Last modified: <time>2025-06-28 17:47:10 JST</time></p>
 </footer>
 </body>
 </html>

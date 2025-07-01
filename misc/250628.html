@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/250628.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WebPを使おう</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>WebPを使おう</h1>
+
+<p>Webで使う画像は、可逆圧縮ならPNG、非可逆圧縮ならJPEG、アニメーションならGIFなどといわれてきた。しかし、現在は、すべてに対応するWebP（ウェッピー）という形式がある。性能はPNGやJPEGより良く、GIFのように256色に限定されない。主要ブラウザはすべてWebPに対応している。og:image や twitter:image も<a href="https://developer.x.com/en/docs/x-for-websites/cards/overview/markup">WebPが使える</a>。</p>
+
+<p>従来形式からの変換は <a href="https://imagemagick.org/script/webp.php">ImageMagick</a>（<code>magick</code> コマンド）が便利である。Homebrewの入ったMacなら <code>brew install imagemagick</code> で入る。</p>
+
+<p>PythonのMatplotlibでロスレスWebPを出力する方法は<a href="../python/plot.html">プロット</a>のページに書き加えた。<a href="../python/images.html">画像テストページ</a>にもロスレスWebPの例を追加した。</p>
+
+<h3>JPEGから非可逆WebPへの移行</h3>
+
+<pre>
+magick foo.jpg foo.webp
+</pre>
+
+<p>デフォルトでは元JPEGの品質が保たれるようだ。</p>
+
+<p>bash/zshでカレントディレクトリの全 *.jpg ファイルに適用するなら</p>
+
+<pre>
+for f in *.jpg; do magick "$f" "${f%.jpg}.webp"; done
+</pre>
+
+<p>とする。以下も同様。</p>
+
+<h3>PNGから可逆WebPへの移行</h3>
+
+<pre>
+magick foo.png -define webp:lossless=true -define webp:method=6 foo.webp
+</pre>
+
+<p>圧縮法を指定する数字は0〜6で、6が最高（ファイルサイズ最小）、デフォルトは4である。</p>
+
+<p><a href="https://imagemagick.org/script/compare.php">画質が劣化していないことを確認</a>するには <code>magick compare -metric AE foo.png foo.webp null:</code> と打ち込む。すべてのピクセルが一致していれば <code>0 (0)</code> と出力される（括弧内はピクセルあたりの差らしい）。</p>
+
+<h3>PNGから非可逆WebPへの移行</h3>
+
+<pre>
+magick foo.png -quality 85 foo.webp
+</pre>
+
+<p>品質のデフォルトは75のようだ。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-06-28 19:37:48 JST</time></p>
+</footer>
+</body>
+</html>
