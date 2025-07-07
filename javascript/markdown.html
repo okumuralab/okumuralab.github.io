@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/markdown.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markdownをそのまま表示する</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/md2html-math.js"></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+# Markdownをそのまま表示する
+
+HTMLファイルにMarkdownを書いてJavaScript（[marked](https://marked.js.org)）でHTML化して表示する仕組みである。Gemini CLI（gemini-2.5-pro）に作ってもらった（一部Geminiが混乱したのでChatGPT 4oにも手伝ってもらった）。使い方は `<header>` の中で [md2html.js](../js/md2html.js) または数式を含む場合は [md2html-math.js](../js/md2html-math.js) を読み込むだけである。
+
+最初 `<script type="text/markdown" id="md-content">` や `<noscript>` の中にMarkdownを書いていたが、それではGoogleにインデックスされないようなので、今は `<body>` の中にそのままMarkdownを書いて試している（最初 `<body>` だとうまくいかないところがあるように思ったがJavaScriptで何とかなった）。
+
+$E = mc^2$ のような本文中の数式や
+\[
+  \frac{\pi}{2} =
+  \left( \int_{0}^{\infty} \frac{\sin x}{\sqrt{x}} dx \right)^2 =
+  \sum_{k=0}^{\infty} \frac{(2k)!}{2^{2k}(k!)^2} \frac{1}{2k+1} =
+  \prod_{k=1}^{\infty} \frac{4k^2}{4k^2 - 1}
+\]
+のような別行立ての数式は[MathJax](mathjax.html)で表示する。
+
+箇条書き
+
+- 項目1
+- 項目2
+
+や、引用文
+
+> 吾輩は猫である
+
+や、コード
+
+```
+  let s1 = "";
+  for (let i = 1; i <= 100; i++) {
+    s1 += "羊が" + i + "匹，";
+  }
+  s1 += "ぐぅ";
+  document.getElementById("out1").textContent = s1;
+```
+
+などがMarkdownの書式で書ける。
+
+Pythonについては `​```python` とすれば
+
+```python
+for i in range(100):
+    print("羊が", i+1, "匹")
+```
+
+のようなGoogle Colab風の飾りがつくように工夫した。
+
+まだ十分テストできていないので、不具合があったら教えてください。
+
+---
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-07-07 15:00:09 JST</time></p>
+</footer>
+</body>
+</html>
