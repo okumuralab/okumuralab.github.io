@@ -8,9 +8,8 @@
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <script src="../js/md2html-math.js"></script>
-<script src="../js/copypre.js"></script>
 </head>
-<body>
+<script type="text/markdown" id="md-content">
 
 <nav id="breadcrumbs">
 <a href="../">ホーム</a> &gt;
@@ -21,7 +20,7 @@
 
 HTMLファイルにMarkdownを書いてJavaScript（[marked](https://marked.js.org)）でHTML化して表示する仕組みである。Gemini CLI（gemini-2.5-pro）に作ってもらった（一部Geminiが混乱したのでChatGPT 4oにも手伝ってもらった）。使い方は `<header>` の中で [md2html.js](../js/md2html.js) または数式を含む場合は [md2html-math.js](../js/md2html-math.js) を読み込むだけである。
 
-最初 `<script type="text/markdown" id="md-content">` や `<noscript>` の中にMarkdownを書いていたが、それではGoogleにインデックスされないようなので、今は `<body>` の中にそのままMarkdownを書いて試している（最初 `<body>` だとうまくいかないところがあるように思ったがJavaScriptで何とかなった）。
+Markdownは `<​script type="text/markdown" id="md-content">` の中に書いている。`<​body>` や `<​noscript>` に書く流儀も試したが、どの流儀もなかなかGoogleにインデックスしてもらえないようなのが悩みの種である。
 
 $E = mc^2$ のような本文中の数式や
 \[
@@ -69,7 +68,7 @@ for i in range(100):
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-07-07 15:00:09 JST</time></p>
+<p>Last modified: <time>2025-07-14 20:44:59 JST</time></p>
 </footer>
-</body>
+</script>
 </html>

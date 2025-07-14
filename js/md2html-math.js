@@ -19,10 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
   loadScript('https://cdn.jsdelivr.net/npm/marked/marked.min.js')
     .then(() => loadScript('https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js'))
     .then(() => {
-      let md = document.body.innerHTML;
-      md = md.replace(/\\/g, '\\\\').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-      let html = marked.parse(md);
-      html = html.replace(/<\/body>[\s\S]*$/, '');
+      let md = document.getElementById('md-content').innerText;
+      md = md.replace(/\\/g, '\\\\')
+      const html = marked.parse(md);
       document.body.innerHTML = html;
       document.querySelectorAll('pre > code.language-python').forEach(code => {
         code.parentElement.classList.add('cell');
@@ -32,5 +31,28 @@ document.addEventListener('DOMContentLoaded', () => {
       // const pre = document.createElement('pre');
       // document.body.appendChild(pre);
       // pre.innerText = html;
+    })
+    .then(() => {
+      const pres = document.querySelectorAll('pre');
+      function copyToClipboard(element) {
+        const text = element.innerText;
+        const tempTextArea = document.createElement("textarea");
+        document.body.appendChild(tempTextArea);
+        tempTextArea.value = text;
+        tempTextArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempTextArea);
+      }
+      pres.forEach(function(pre) {
+        pre.addEventListener('click', function() {
+          setTimeout(() => {
+            if (window.getSelection().toString()) {
+              return;
+            }
+            copyToClipboard(this);
+          }, 100);
+        });
+        pre.setAttribute('title', 'Click to copy');
+      });
     })
 });
