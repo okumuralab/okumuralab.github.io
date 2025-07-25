@@ -147,11 +147,31 @@ for k in range(4):
 
 <hr>
 
+<p>[2025-07-21 追記] <a href="https://www.soumu.go.jp/senkyo/27sansokuhou/index.html">参院選比例代表の結果</a>が出たので、得票数データを <a href="data/sangiin2025.csv">sangiin2025.csv</a> に置いておく。</p>
+
+<pre class="cell">
+import numpy as np
+import pandas as pd
+
+df = pd.read_csv("sangiin2025.csv")
+n = df['得票総数'].values
+r = 50  # 当選数
+h = np.zeros_like(n, dtype=int)  # 配分（最初はすべて0）
+for _ in range(r):
+    a = n / (h + 1)
+    h[np.argmax(a)] += 1
+
+df['当選数'] = h
+print(df)
+</pre>
+
+<hr>
+
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2025-07-06 10:08:13 JST</time>
+Last modified: <time>2025-07-23 10:43:28 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
