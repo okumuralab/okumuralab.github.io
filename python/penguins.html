@@ -118,14 +118,12 @@ sns.swarmplot(x="species", y="body_mass_g", data=penguins)
 
 <figure><img src="img/penguins_swarm.svg" alt="パーマーペンギン"></figure>
 
-<p>また、<code>pip install git+<a href="https://github.com/mparker2/seaborn_sinaplot">https://github.com/mparker2/seaborn_sinaplot</a>.git</code> してインポートすれば、シーナプロット <code>sinaplot.sinaplot()</code> も使えます：</p>
-
-<p><em>[追記]</em> seabornの新しいバージョンでは使えなくなっているようです。とりあえず作者に <a href="https://github.com/mparker2/seaborn_sinaplot/issues/3">issue</a> を送っておきましたが、なかなか対応してもらえないようです。とりあえず<a href="sinaplot.html">独自実装の簡単な関数</a>を作っておきました。</p>
+<p>また、<a href="sinaplot.html">Sinaplot（シーナプロット）</a>のページに挙げたコード <code>sinaplot.py</code> をカレントディレクトリに置いておけば、次のようなシーナプロットが描けます：</p>
 
 <pre class="cell">
-import sinaplot
+from sinaplot import sinaplot
 
-sinaplot.sinaplot(x="species", y="body_mass_g", data=penguins)
+sinaplot(x="species", y="body_mass_g", data=penguins)
 </pre>
 
 <figure><img src="img/penguins_sinaplot.svg" alt="パーマーペンギン"></figure>
@@ -156,7 +154,7 @@ plt.boxplot(x, labels=s)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-10-23 17:17:20 JST</time></p>
+<p>Last modified: <time>2025-07-28 11:00:02 JST</time></p>
 </footer>
 </body>
 </html>

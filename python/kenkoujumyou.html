@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/kenkoujumyou.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>都道府県ごとの健康寿命・平均自立期間</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>都道府県ごとの健康寿命・平均自立期間</h1>
+
+<p>健康寿命については、厚労省<a href="https://www.mhlw.go.jp/stf/newpage_47780.html">第４回　健康日本21（第三次）推進専門委員会　資料</a>にある<a href="https://www.mhlw.go.jp/content/10904750/001363069.pdf">健康寿命の令和４年値について</a>（PDF）に掲載されている。ここでの健康寿命は「日常生活に制限がない期間の平均」とされているが、あまり厳密な定義ではなさそうである。</p>
+
+<p>PDFからデータを拾い出して <a href="data/kenkoujumyou2022.csv">kenkoujumyou2022.csv</a> に収めた。男女ごとにプロットしてみよう。</p>
+
+<pre class="cell">
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("kenkoujumyou2022.csv")
+plt.scatter(df["men"], df["women"])
+plt.axis("scaled")
+plt.xlabel("健康寿命（男）")
+plt.ylabel("健康寿命（女）")
+for _, row in df.iterrows():
+    plt.text(row["men"], row["women"], row["kenmei"])
+</pre>
+
+<figure><img src="img/kenkoujumyou.svg" alt="健康寿命"></figure>
+
+<p>一方、国民健康保険中央会の<a href="https://www.kokuho.or.jp/statistics/heikinjiritukikan.html">平均自立期間</a>には「要介護2以上を不健康な状態とみなした場合」という注釈がある。</p>
+
+<pre class="cell">
+df2 = pd.read_excel("240624_3211_heikinjiritukikan-kenbetu_240624.xlsx", skiprows=7, nrows=47, header=None)
+plt.scatter(df2[2], df2[5])
+plt.axis("scaled")
+plt.xlabel("平均自立期間（男）")
+plt.ylabel("平均自立期間（女）")
+for i, j, k in zip(df2[2], df2[5], df["kenmei"]):
+    plt.text(i, j, k)
+</pre>
+
+<figure><img src="img/jiritsukikan.svg" alt="平均自立期間"></figure>
+
+<p>両者の関係は、<a href="https://x.com/Wataru__Inoue/status/1939148264269574531">こちら</a>で教えていただいた。</p>
+
+<p>男女を平均して両者の関係をプロット：</p>
+
+<pre class="cell">
+plt.scatter((df["men"]+df["women"])/2, (df2[2]+df2[5])/2)
+plt.axis("scaled")
+plt.xlabel("健康寿命")
+plt.ylabel("平均自立期間")
+for i, j, k in zip((df["men"]+df["women"])/2, (df2[2]+df2[5])/2, df["kenmei"]):
+    plt.text(i, j, k)
+</pre>
+
+<figure><img src="img/kenkou_jiritsu.svg" alt="健康寿命と平均自立期間"></figure>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2025-06-29 12:30:34 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

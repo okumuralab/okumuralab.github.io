@@ -96,14 +96,14 @@ plt.savefig("250725d.svg", bbox_inches="tight")
 
 <figure><img src="img/250725d.svg" alt="平均寿命の推移"></figure>
 
-<p>1995年は阪神・淡路大震災，2011年は東日本大震災の年である。2021〜2022年の減少はCOVID-19が原因のようだ。ただし2020年は逆に平均寿命の伸びが増えているように見える。<a href="COVID-deaths.html">COVID-19による死者数</a>を見てもわかるように、2020年はCOVID-19そのものによる死者は意外と少なく、皆が用心したために他の死因による死者が減ったためかもしれない。<a href="japandeaths.html">日本の超過死亡？</a>も参照されたい。</p>
+<p>1995年は阪神・淡路大震災，2011年は東日本大震災の年である。2021〜2022年の減少はCOVID-19が原因のようだ。ただし2020年は逆に平均寿命の伸びが増えているように見える。<a href="COVID-deaths.html">COVID-19による死者数</a>を見てもわかるように、2020年はCOVID-19そのものによる死者は意外と少なく、皆が用心したので他の死因による死者が減ったためかもしれない。<a href="japandeaths.html">日本の超過死亡？</a>も参照されたい。</p>
 
 <hr>
 
-<p><a href="https://minato.sip21c.org/im3r/20220129.html">中澤港先生に教えていただいた</a>のだが，平均寿命の男女差をプロットするとおもしろい。男女差はほぼ7歳近くまで開いたが，その後また6歳近くまで持ち直しているのだ。<a href="https://blog.goo.ne.jp/r-de-r/e/c60253cfa3f97f60635b5f11b2ace6f1">裏RjpWikiさん</a>，<a href="https://minato.sip21c.org/im3r/20220130.html">中澤先生</a>の考察を参照されたい。</p>
+<p><a href="https://minato.sip21c.org/im3r/20220129.html">中澤港先生に教えていただいた</a>のだが，平均寿命の男女差をプロットするとおもしろい。男女差はほぼ7歳近くまで開いたが，その後また6歳近くまで持ち直しているのだ。<a href="https://web.archive.org/web/20230325085632/https://blog.goo.ne.jp/r-de-r/e/c60253cfa3f97f60635b5f11b2ace6f1">裏RjpWikiさん（アーカイブ）</a>，<a href="https://minato.sip21c.org/im3r/20220130.html">中澤先生</a>の考察を参照されたい。</p>
 
 <pre class="cell">
-plt.plot(df3.Year, df3.Female - df3.Male, "o-")
+plt.plot(df2.Year, df2.Female - df2.Male, "-")
 plt.xlabel("年")
 plt.ylabel("平均寿命の男女差")
 plt.grid()
@@ -112,11 +112,13 @@ plt.savefig("250725e.svg", bbox_inches="tight")
 
 <figure><img src="img/250725e.svg" alt="平均寿命の推移"></figure>
 
+<p>男女のライフスタイルの違いの変化が影響しているのだろうけれど、特に<a href="https://doi.org/10.1093/eurpub/cku211">喫煙習慣で説明できる</a>という説を教えていただいた。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-07-25 18:52:13 JST</time></p>
+<p>Last modified: <time>2025-07-27 10:50:36 JST</time></p>
 </footer>
 </body>
 </html>

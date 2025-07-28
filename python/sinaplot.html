@@ -38,11 +38,33 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 
-def sinaplot(x, y, data, violin=True, max_width=0.8, title=None, show_grid=False):
+def sinaplot(x, y, data, violin=True, max_width=0.8, title=None,
+             show_grid=False, ax=None, random_seed=None):
+    """
+    Draws a sinaplot: a jittered dot plot with optional violin shape background.
+
+    Parameters:
+    - x: str. Categorical column name in data.
+    - y: str. Numerical column name in data.
+    - data: pandas.DataFrame. Input data.
+    - violin: bool. Whether to draw violin background. Default True.
+    - max_width: float. Maximum horizontal jitter width. Default 0.8.
+    - title: str or None. Plot title.
+    - show_grid: bool. Whether to show grid.
+    - ax: matplotlib.axes.Axes or None. Axes to plot into. If None, uses current Axes.
+    - random_seed: int or None. Seed for reproducibility of jitter.
+
+    Returns:
+    - ax: The matplotlib Axes used.
+    """
+    if random_seed is not None:
+        np.random.seed(random_seed)
+    fig = plt.gcf()
+    if ax is None:
+        ax = plt.gca()
     data = data.dropna(subset=[x, y])
     categories = np.sort(data[x].unique())
-
-    fig, ax = plt.subplots()
+    default_color = plt.rcParams['axes.prop_cycle'].by_key()['color'][0]
 
     def offset(category_index, data, scale=1.0):
         return np.array([category_index] * len(data)) + (scale * data)
@@ -51,37 +73,42 @@ def sinaplot(x, y, data, violin=True, max_width=0.8, title=None, show_grid=False
     for category in categories:
         values = data[data[x] == category][y].values
         n = len(values)
-        kde = gaussian_kde(values)
-        density_max = max(density_max, n * kde(values).max())
+        if n >= 2:
+            kde = gaussian_kde(values)
+            density_max = max(density_max, n * kde(values).max())
 
     for i, category in enumerate(categories):
         values = data[data[x] == category][y].values
         n = len(values)
+        if n < 2:
+            ax.scatter([i] * n, values, color=default_color, s=10, zorder=3)
+            continue
         kde = gaussian_kde(values)
         if violin:
             value_range = np.linspace(values.min(), values.max(), 50)
             density = kde(value_range)
             density = n * density / density_max * max_width / 2
             ax.fill_betweenx(value_range, offset(i, density), offset(i, -density),
-                             color="#E0E0E0", alpha=0.8)
+                             color=default_color, alpha=0.3, zorder=1)
         jitter = n * (np.random.random(n) * 2 - 1) * kde(values) / density_max * max_width / 2
-        ax.scatter(offset(i, jitter), values, color="black", s=10)
+        ax.scatter(offset(i, jitter), values, color=default_color, s=10, zorder=3)
 
     ax.set_xticks(range(len(categories)))
     ax.set_xticklabels(categories)
-    ax.set_xlim(-0.8, len(categories)-0.2)
+    ax.set_xlim(-0.8, len(categories) - 0.2)
     ax.set_xlabel(x)
     ax.set_ylabel(y)
     if title:
         ax.set_title(title)
     ax.grid(show_grid)
-    plt.show()
+    return ax  # just in case
 </pre>
 
-<p>パーマーペンギンのデータを使ってSinaplotを描きます：</p>
+<p>上のコードを <code>sinaplot.py</code> というファイル名で保存し、カレントディレクトリに置いておきます。これを使ってパーマーペンギンのSinaplotを描きます：</p>
 
 <pre class="cell">
 import seaborn as sns
+from sinaplot import sinaplot
 
 penguins = sns.load_dataset("penguins")
 sinaplot(x="species", y="body_mass_g", data=penguins)
@@ -92,7 +119,9 @@ sinaplot(x="species", y="body_mass_g", data=penguins)
 <p>実験用にランダムデータを生成して描きます：</p>
 
 <pre class="cell">
+import numpy as np
 import pandas as pd
+from sinaplot import sinaplot
 
 rng = np.random.default_rng()
 d = {
@@ -122,13 +151,15 @@ p.show()
 <figure><img src="img/plotnine_sinaplot.svg" alt="Sinaplot: パーマーペンギンの体重分布"></figure>
 
 <p>この実装では、ご覧のように、群ごとの点の密度が一定ではないようです。</p>
+
+<p><a href="https://docs.bokeh.org/en/latest/docs/examples/topics/stats/sinaplot.html">Bokehを使った例</a>もありましたのでご参考まで。
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-07-01 10:36:00 JST</time></p>
+<p>Last modified: <time>2025-07-28 10:51:07 JST</time></p>
 </footer>
 </body>
 </html>
