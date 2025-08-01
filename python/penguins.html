@@ -91,6 +91,17 @@ sns.boxplot(x="species", y="body_mass_g", data=penguins)
 
 <figure><img src="img/penguins1.svg" alt="パーマーペンギン"></figure>
 
+<p>ラベル類を日本語にするには、</p>
+
+<pre class="cell">
+ax = sns.boxplot(x="species", y="body_mass_g", data=penguins)
+ax.set_xlabel("種")  # 不要なら ax.set_xlabel("")
+ax.set_ylabel("体重 (g)")
+ax.set_xticks([0, 1, 2], ["アデリー\nペンギン", "ヒゲ\nペンギン", "ジェンツー\nペンギン"])
+</pre>
+
+<p>のようにすればいいでしょう。以下も同じです。</p>
+
 <p>箱ひげ図は、コンピュータグラフィックスがあまり進んでいない1970年代に、John Tukey によって提案されて普及したものです。今なら、同じスペースを使って、より多くの情報を表示することができます。</p>
 
 <p>例えば、図の幅を少し狭くして、箱ひげ図の色を白にし、外れ値を非表示にして、上からストリッププロット（左右にランダムなジッターを加えたドットプロット）をかぶせてみましょう：</p>
@@ -154,7 +165,7 @@ plt.boxplot(x, labels=s)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-07-28 11:00:02 JST</time></p>
+<p>Last modified: <time>2025-07-28 15:33:43 JST</time></p>
 </footer>
 </body>
 </html>

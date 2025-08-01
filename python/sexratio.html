@@ -20,15 +20,19 @@
 
 <h2>プロット</h2>
 
-<p>e-Statにある2020年の<a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000032118527">人口動態調査 / 人口動態統計 確定数 出生</a>から出生性比（出生数の男/女の比）をプロットしてみる：</p>
+<p>e-Statにある2020年の<a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000032118527">人口動態調査 / 人口動態統計 確定数 出生</a>および厚労省の<a href="https://www.mhlw.go.jp/toukei/list/81-1a.html">人口動態調査</a>にある「人口動態統計（確定数）の概況」（最新のものは「人口動態統計月報年計（概数）の概況」）から、出生性比（出生数の男/女の比）をプロットする：</p>
 
 <figure><img src="img/sexratio.svg" alt="日本の出生性比の推移"></figure>
 
 <p>1906年，1966年のピークは「ひのえうま」である。</p>
 
+<p>ついでに合計特殊出生率もプロットする：</p>
+
+<figure><img src="img/tfr.svg" alt="日本の合計特殊出生率の推移"></figure>
+
 <h2>詳細</h2>
 
-<p>e-StatのCSVファイルの先頭部分は次のようになっている。文字コードはShift JIS，行末はCRLFである。</p>
+<p>e-Statの<a href="https://www.e-stat.go.jp/stat-search/files?stat_infid=000032118527">人口動態調査 / 人口動態統計 確定数 出生</a>のCSVファイルの先頭部分は次のようになっている。文字コードはShift JIS，行末はCRLFである。</p>
 
 <pre>
 令和２年,人口動態統計,,
@@ -59,31 +63,37 @@
 
 <p>さらによく見ると2001年に全角空白が紛れ込んでいる。最初これに気づかなかったので「年」がすべて文字列扱いになってしまった（RやExcelはこの全角空白を読み飛ばすようだ）。ここでは下記のように <code>sep="\s*,"</code> で読み飛ばすことにした。</p>
 
-<p>結局，元データをそのまま読んで出生性比をプロットするには，次のようにすればよい。「出生性比」という冗長な項目は無視して，「出生数_男」を「出生数_女」で割って正確な出生性比を求めた。</p>
-
 <pre class="cell">
 import pandas as pd
-import matplotlib.pyplot as plt
 
 df = pd.read_csv("mb010000.csv", encoding="cp932", skiprows=11,
                  na_values="…", keep_default_na=False, sep="\s*,",
                  names=["年", "出生数_総数", "出生数_男", "出生数_女",
                         "出生率", "出生性比", "合計特殊出生率"])
+df1 = df[["年", "出生数_男", "出生数_女", "合計特殊出生率"]]
+df1.to_csv("births.csv", index=False, encoding="utf_8_sig", lineterminator="\r\n")
+</pre>
 
+<p>書き出されたCSVファイルに1944〜1946年の欠落部分を書き加え、2021年以上のデータは厚労省の<a href="https://www.mhlw.go.jp/toukei/list/81-1a.html">人口動態調査</a>にある「人口動態統計（確定数）の概況」（最新のものは「人口動態統計月報年計（概数）の概況」）から拾って書き加えたものを <a href="data/births.csv">births.csv</a> として置いておく。</p>
+
+<p>これを読んで出生性比をプロットするには，次のようにすればよい。</p>
+
+<pre class="cell">
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("https://okumuralab.org/~okumura/python/data/births.csv")
 plt.figure(figsize=(14, 4))
 plt.plot(df["年"], df["出生数_男"] / df["出生数_女"], "o-")
 plt.grid()
 </pre>
 
-<p>ただ，これでは1944〜1946年が欠測値なのに線で結んでしまう。1943年と1947年を結ぶ線を消すには，次のようにすればよい：</p>
+<p>合計特殊出生率も同様に描く：</p>
 
 <pre class="cell">
-df1 = pd.DataFrame({"年": [1944, 1945, 1946]})
-df2 = pd.merge(df1, df, how="outer", sort=True)
-plt.plot(df2["年"], df2["出生数_男"] / df2["出生数_女"], "o-")
+plt.plot(df["年"], df["合計特殊出生率"], "o-")
+plt.grid()
 </pre>
-
-<p>冒頭に掲げた図はこのようにして描いた。</p>
 
 <hr>
 
@@ -91,7 +101,7 @@ plt.plot(df2["年"], df2["出生数_男"] / df2["出生数_女"], "o-")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2021-11-08 16:32:26</time>
+Last modified: <time>2025-08-01 15:36:11 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
