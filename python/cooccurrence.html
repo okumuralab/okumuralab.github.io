@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/cooccurrence.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>共起ネットワーク</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/md2html.js"></script>
+</head>
+<script type="text/markdown" id="md-content">
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+# 共起ネットワーク
+
+自然言語処理（あるいはテキストマイニング）の文脈での共起ネットワーク（co-occurrence network）は、近くに現れる単語どうしを線で結んだ図です。例えば「吾輩は猫である」という文があれば、「吾輩」と「猫」は近くに現れるので、
+
+<svg width="200" height="50">
+  <line x1="25" y1="25" x2="175" y2="25" stroke="black" />
+  <circle cx="25" cy="25" r="22" fill="lightblue" />
+  <text x="25" y="30" text-anchor="middle">吾輩</text>
+  <circle cx="175" cy="25" r="22" fill="lightblue" />
+  <text x="175" y="30" text-anchor="middle">猫</text>
+</svg>
+
+のように線で結びます。
+
+「近くに現れる」は、同じ文の中であったり、同じ段落の中であったり、同じツイートの中であったり、単語間の距離が一定以下であったりと、いろいろな意味にとることができます。ここでは同じ文の中とします。
+
+以下では、「吾輩は猫である」の最初の5つの文を例に使います。
+
+```python
+docs = [
+    "吾輩は猫である。",
+    "名前はまだ無い。",
+    "どこで生れたかとんと見当がつかぬ。",
+    "何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。",
+    "吾輩はここで始めて人間というものを見た。"
+]
+```
+
+共起ネットワークを描くには、まず、それぞれの文を単語に分けます。その上で、名詞だけ、あるいは名詞と動詞と形容詞だけを拾います。
+
+単語に分けて、品詞をつけることを、形態素解析といいます。形態素解析のためのツールとしては [MeCab](https://taku910.github.io/mecab/)（和布蕪、めかぶ）などがありますが、ここではPythonだけで実装された [Janome](https://janome.mocobeta.dev/ja/)（蛇の目）というツールを使います。あらかじめ `pip install janome` でインストールしてください。
+
+```python
+from janome.tokenizer import Tokenizer
+
+tokenizer = Tokenizer()
+
+def tokenize(text):
+    return [token.base_form for token in tokenizer.tokenize(text)
+            if token.part_of_speech.split(',')[0] in {'名詞', '形容詞', '動詞'}]
+
+tokenized_docs = [tokenize(doc) for doc in docs]
+```
+
+これで `tokenized_docs` は次のようなリストのリストになります。
+
+```
+[['吾輩', '猫', '名前', '無い'],
+ ['どこ', '生れる', '見当', 'つく'],
+ ['何', '薄暗い', 'する', '所', 'ニャーニャー', '泣く', 'いた事', '記憶', 'する', 'いる'],
+ ['吾輩', 'ここ', '始める', '人間', 'もの', '見る']]
+```
+
+品詞は適当に制約してください。また、「する」「いる」のような平凡な単語はストップワードとして除去することも考えられます。
+
+```
+stopwords = set(["する", "いる", "ここ", "もの", "どこ"])  # 適宜拡張
+```
+
+これで `tokenize` のコードを次のようにすればストップワードが除去できます。
+
+```
+def tokenize(text):
+    return [token.base_form for token in tokenizer.tokenize(text)
+            if token.part_of_speech.split(',')[0] in {'名詞', '形容詞', '動詞'}
+            and token.base_form not in stopwords]
+```
+
+次に、文ごとに、共起ペアを数えます。
+
+```python
+from collections import Counter
+from itertools import combinations
+
+cooccurrence = Counter()
+
+for tokens in tokenized_docs:
+    for w1, w2 in combinations(sorted(set(tokens)), 2):
+        cooccurrence[(w1, w2)] += 1
+```
+
+これをもとにしてネットワークを描きます。
+
+```python
+import networkx as nx
+import matplotlib.pyplot as plt
+
+G = nx.Graph()
+for (w1, w2), weight in cooccurrence.items():
+    G.add_edge(w1, w2, weight=weight)
+
+centrality = nx.degree_centrality(G)
+
+pos = nx.spring_layout(G, k=0.7)  # Fruchterman-Reingold
+
+weights = [G[u][v]['weight'] for u, v in G.edges()]
+nx.draw_networkx_edges(G, pos, width=[w*2 for w in weights], alpha=0.6)
+nx.draw_networkx_nodes(G, pos, node_size=800, node_color='lightblue')
+nx.draw_networkx_labels(G, pos, font_family='IPAexGothic')  # または 'Hiragino Sans' など
+plt.axis('off')
+```
+
+![吾輩は猫である](img/wagahai.svg)
+
+実行するたびに配置が変わります。
+
+エッジ（線分）の重み（太さ）は、ここでは共起の回数を使いましたが、ほかにもいろいろな定義があります。一定未満の重みのエッジは描かないこともよく行われます。このような設定に応じて、描かれる図が大きく変わることもあります。そもそも「吾輩は猫である」と「吾輩は猫でない」は同じ図になります。共起ネットワークだけで何かを結論づけるのは難しそうです。
+
+---
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-08-03 17:25:10 JST</time></p>
+</footer>
+</script>
+</html>

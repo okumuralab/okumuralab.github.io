@@ -95,13 +95,29 @@ plt.plot(df["年"], df["合計特殊出生率"], "o-")
 plt.grid()
 </pre>
 
+<p>直近の性比の信頼区間はどれくらいか。</p>
+
+<pre class="cell">
+from scipy import stats
+
+m = int(df["出生数_男"].values[-1])
+f = int(df["出生数_女"].values[-1])
+print(m / f)
+ci = stats.binomtest(m, m+f).proportion_ci()
+print([ci.low / (1 - ci.low), ci.high / (1 - ci.high)])
+</pre>
+
+<p>95%信頼区間はだいたい ±0.005 ほどである。</p>
+
+<p>性比については <a href="https://www.science.org/doi/10.1126/sciadv.adu7402">Is sex at birth a biological coin toss? Insights from a longitudinal and GWAS analysis</a> のような話もあり、いろいろおもしろい。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2025-08-01 15:36:11 JST</time>
+Last modified: <time>2025-08-01 20:11:55 JST</time>
 <!-- hhmts end -->
 </p>
 </body>
