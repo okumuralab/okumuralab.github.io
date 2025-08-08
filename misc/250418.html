@@ -19,33 +19,66 @@
 </header>
 
 <main>
+  
 <h1>OllamaでローカルLLM</h1>
 
-<p>外部に出すのがはばかられる情報を扱う場合や、費用をかけたくない場合、再現性が必要な場合、rate limitを気にせず大量ループ処理したい場合に、ローカルLLMは魅力的である。ここでは <a href="https://ollama.com">Ollama</a>（オラーマ）というツールを使ってコマンドラインまたはPythonからLLMを使う方法を説明する。Ollamaは <a href="https://github.com/ggml-org/llama.cpp">llama.cpp</a> から派生したたいへん使いやすいツールである。</p>
+<aside>
+<p>[2025-08-07] GUI版Ollamaアプリが出たので更新。現状ではアプリの自動更新がうまくいってないような気がするので、ときどき <a href="https://github.com/ollama/ollama/releases">Ollama の Releases</a> をチェックして最新版をダウンロードして上書きインストールする。また、アプリがなかなかモデルをロードしない場合は、いったん⏹️で止めて再度聞くといいようだ。</p>
+</aside>
+
+<p>外部に出すのがはばかられる情報を扱う場合や、費用をかけたくない場合、再現性が必要な場合、rate limitを気にせず大量ループ処理したい場合に、ローカルLLMは魅力的である。ここでは <a href="https://ollama.com">Ollama</a>（オラーマ）というツールを使って、アプリまたはコマンドラインまたはPythonからLLMを使う方法を説明する。Ollamaは <a href="https://github.com/ggml-org/llama.cpp">llama.cpp</a> から派生したたいへん使いやすいツールである。Ollama以外の選択肢としては <a href="https://lmstudio.ai">LM Studio</a> がある。</p>
 
 <aside>
 <p>[余談] llama.cppはMetaの <a href="https://www.llama.com">Llama</a> というオープン（）なLLMのための推論ツールをGeorgi Gerganov（GGさん）がC++で実装したもので、そのライブラリがGGMLで、ファイルフォーマットがGGUFである。Llama以外にもいろいろなモデルをGGUF形式に変換して使える。なお、GGさんはllama.cpp以前にもOpenAIの音声認識モデルWhisperをC++で実装した <a href="https://github.com/ggml-org/whisper.cpp">whisper.cpp</a> も作っている。ちなみにLlamaは <a href="https://research.facebook.com/publications/llama-open-and-efficient-foundation-language-models/">最初の発表</a>（<a href="https://arxiv.org/abs/2302.13971">arXiv</a>）ではLLaMAと表記されていた。LLM（大規模言語モデル）と動物のラマ（llama、🦙）を掛けた名前であろう。日本語ではラマだが英語ではラーマ /lɑ́ːmə/ と読む。Llama以外にも動物名のLLMは <a href="https://en.wikipedia.org/wiki/Chinchilla_(language_model)">Chinchilla</a> などいくつかある。</p>
 </aside>
 
-<p>ここではMacを使う。OllamaサイトよりバイナリのZIPファイルをダウンロードし、展開してOllama.appを /Applications（あるいは適当な場所）に移動し、起動すると /Applications/Ollama.app/Contents/Resources/ollama へのシンボリックリンクが /usr/local/bin にできる。また、バックグラウンドのプロセスが起動し、メニューバーにOllamaアイコンが常駐する。利用はターミナルからollamaコマンドを使って行うか、後述するようにPythonなどを使ってバックグラウンドのプロセスのAPIを呼び出す。Emacsから使う方法は <a href="250407.html">こちら</a>、<a href="250415.html">こちら</a> に書いた。</p>
+<p>ここではMacを使う。Ollamaサイトよりdmgファイルをダウンロードし、開いて中に見えるOllama.appをApplicationsに移動する。アプリケーションの中のOllamaを起動すると、Ollamaアプリが立ち上がる。初回起動時に /Applications/Ollama.app/Contents/Resources/ollama へのシンボリックリンクが /usr/local/bin に作られる。また、バックグラウンドのプロセスが起動し、メニューバーにOllamaアイコンが常駐する。利用はOllamaアプリで行うのが簡単だが、ターミナルからollamaコマンドを使って行うことも、後述するようにPythonなどを使ってAPIを呼び出すこともできる。Emacsから使う方法は <a href="250407.html">こちら</a>、<a href="250415.html">こちら</a> に書いた。</p>
 
-<p>まずは適当なモデルをダウンロードして動かす。ここではGoogleの <a href="https://blog.google/technology/developers/gemma-3/">Gemma 3</a>（ジェンマ・スリー）を使ってみる。</p>
+<p>まずは適当なモデルをダウンロードして動かす。</p>
 
-<p><a href="https://ollama.com/library/gemma3">OllamaのGemma 3のページ</a>を参考にして、デフォルトの4ビット量子化（Q4_K_M）された4サイズのGemma 3のうち適当なもの、あるいは新しいQAT版（Quantization-Aware Trained版、名前の最後に <code>-it-qat</code> が付くもの）を選ぶ。メモリ8GのMacなら4B、メモリ16GのMacなら12B、それ以上なら27Bを使えばよかろう（Bはbillionつまり10億パラメータ）。例えば12BのQATモデルなら、ターミナルに</p>
+<p>私のメモリ128GのMac Studio（M4 Max、SSD 512G、553800円）では、OpenAIのgpt-oss-120b（Ollamaでの名前は <code>gpt-oss:120b</code>）が快適に使えた。モデルはOllamaアプリからも選べるが、ターミナルに</p>
 
 <pre>
-ollama run gemma3:12b-it-qat
+ollama pull gpt-oss:120b
 </pre>
 
-<p>と打ち込むと、初回はモデルのダウンロードが始まり、それが終われば入力を受け付ける状態になるので、何か質問すれば、答えが返る。ヘルプは <code>/?</code>、終了は <code>/bye</code> である。Ollama 0.7.0以降は画像も含められる。</p>
+<p>とすればモデルがダウンロードされる（すでにダウンロード済みであれば更新を確認し、更新されていれば再ダウンロードする）。あるいは</p>
+
+<pre>
+ollama run gpt-oss:120b
+</pre>
+
+<p>と打ち込めば、モデルがダウンロードされていなければダウンロードして、起動し、ターミナル上で対話できる。</p>
+
+<p>24GB以上あればgpt-oss-20bが使える。</p>
+
+<pre>
+ollama run gpt-oss:20b
+</pre>
+
+<p>16GBでもgpt-oss-20bは起動するが、メモリ不足で実用的でない。</p>
+
+<p>メモリが少ない場合は、いろいろ選択肢がある。例えばGoogleの <a href="https://blog.google/technology/developers/gemma-3/">Gemma 3</a>（ジェンマ・スリー）の場合、<a href="https://ollama.com/library/gemma3">OllamaのGemma 3のページ</a>を参考にして、<code>gemma3:1b</code>、<code>gemma3:4b</code>、<code>gemma3:12b</code>、<code>gemma3:27b</code> の中から適当なものを選ぶ。メモリ8GのMacなら<code>4b</code>、メモリ16GのMacなら<code>12b</code>、それ以上なら<code>27b</code>が使えそうである（<code>b</code>はbillionつまり10億パラメータ）。モデルのページのView allの中には、さらにいろいろなバリエーションがある。デフォルトは4ビット量子化（Q4_K_M）だが、名前の最後に <code>-it-qat</code> が付くものは新しいQAT版（Quantization-Aware Trained版）である。ちなみに Gemma /ʤémə/ は星の名前で、日本語名はゲンマである。</p>
+
+<p>他の選択肢としては、中国系の <a href="https://ollama.com/library/qwen3">Qwen 3</a>（クウェン・スリー）、<a href="https://ollama.com/library/deepseek-r1">DeepSeek-R1</a> などが人気である。</p>
+
+<p>アプリの使い方は直感的で、説明は不要であろう。</p>
+
+<p>コマンドで使う場合は、例えば <code>gemma3:12b</code> なら</p>
+
+<pre>
+ollama run gemma3:12b
+</pre>
+
+<p>と打ち込むと、初回はモデルのダウンロードが始まり、それが終われば入力を受け付ける状態になるので、何か質問すれば、答えが返る。ヘルプは <code>/?</code>、終了は <code>/bye</code> である。モデルが対応していれば、画像を含めることもできる。</p>
 
 <pre>
 &gt;&gt;&gt; OCRしてください。 ./test.jpg
 </pre>
 
-<p>ダウンロードしたモデルは <code>~/.ollama</code>（ホームディレクトリ🏠の <code>.ollama</code> フォルダ）に入る（Linuxでは <code>/usr/share/ollama/.ollama</code>）。ドライブの容量が足りなければ、あとで外部ドライブにモデルを移動してシンボリックリンクを張ってもよい。</p>
+<p>ダウンロードしたモデルは <code>~/.ollama</code>（ホームディレクトリ🏠の <code>.ollama</code> フォルダ）に入る（Linuxでは <code>/usr/share/ollama/.ollama</code>）。この位置はアプリの設定で変えられる（移動してシンボリックリンクを張ってもよい）。</p>
 
-<p>私はメモリ128GのMac Studio（M4 Max、SSD 512G、553800円）を買ったので、4ビットでなくても8ビットでも、おそらく16ビットでも大丈夫そうだが、8ビットあれば十分だろう。<a href="https://ollama.com/library/gemma3">OllamaのGemma 3のページ</a> のドロップダウンメニューの最後の「View all」（あるいは右の「🏷️ XX Tags」リンク）から探すと、8ビット量子化の <a href="https://ollama.com/library/gemma3:27b-it-q8_0">gemma3:27b-it-q8_0</a> が見つかる。これを実行してみよう。</p>
+<p>私は、OpenAIのgpt-ossが出る前は、Gemma 3 27Bの8ビット量子化版 <a href="https://ollama.com/library/gemma3:27b-it-q8_0">gemma3:27b-it-q8_0</a> を普段使いしていた。</p>
 
 <pre>
 ollama run gemma3:27b-it-q8_0
@@ -124,6 +157,10 @@ ollama run hf.co/Qwen/QwQ-32B-GGUF:Q8_0
 <aside>
 <p>OllamaをAPIで使う場合、モデルがメモリ中に5分だけ保持される。すぐに解放したければ</p>
 <pre>
+ollama stop "モデル名"
+</pre>
+<p>あるいは</p>
+<pre>
 curl http://localhost:11434/api/chat -d '{ "model": "モデル名", "keep_alive": 0 }'
 </pre>
 <p>と打ち込めばよい。最後の数値はメモリ中に保持する秒数で、大きな値にすれば長く保持され、次回の返事が早くなる。</p>
@@ -136,7 +173,7 @@ curl http://localhost:11434/api/chat -d '{ "model": "モデル名", "keep_alive"
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-05-18 12:00:22 JST</time></p>
+<p>Last modified: <time>2025-08-08 15:01:22 JST</time></p>
 </footer>
 </body>
 </html>

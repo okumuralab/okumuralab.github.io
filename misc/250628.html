@@ -58,11 +58,20 @@ magick foo.png -quality 85 foo.webp
 
 <p>品質のデフォルトは75のようだ。</p>
 
+<h3>PythonのPillowでの保存</h3>
+
+<p>Pillow (PIL) は拡張子で形式を判断してくれる。</p>
+
+<pre>
+image.save("foo.webp", quality=85)      # デフォルト品質80
+image.save("foo.webp", lossless=True, method=6) # ロスレス
+</pre>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-06-28 19:37:48 JST</time></p>
+<p>Last modified: <time>2025-08-06 20:57:24 JST</time></p>
 </footer>
 </body>
 </html>
