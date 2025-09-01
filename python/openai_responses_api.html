@@ -25,9 +25,8 @@ import os
 from openai import OpenAI
 
 class Chatbot:
-    def __init__(self, model="gpt-4.1", instructions=None,
+    def __init__(self, model="gpt-5", instructions=None,
                  previous_response_id=None, temperature=0):
-        # model: "chatgpt-4o-latest" "gpt-4.1" "o3" etc
         self.client = OpenAI()
         self.model = model
         self.instructions = instructions
@@ -49,13 +48,17 @@ class Chatbot:
             args["previous_response_id"] = self.response_id
         if max_output_tokens:
             args["max_output_tokens"] = max_output_tokens
-        if self.model[0] == "o":
+        if self.model[0] == "o" or self.model[:5] == "gpt-5":
             args["reasoning"] = {
                 "effort": "high", # high/medium/low
                 "summary": "detailed"
             }
         else:
             args["temperature"] = self.temperature
+        if self.model[:5] == "gpt-5":
+            args["text"] = {
+                "verbosity": "high" # high/medium/low
+            }
         self.response = self.client.responses.create(**args)
         self.response_id = self.response.id
         print(self.response_id)
@@ -67,11 +70,18 @@ chatbot.chat(r'''
 ''')
 </pre>
 
+<p>GPT-5については次を参照：</p>
+
+<ul>
+  <li><a href="https://platform.openai.com/docs/guides/latest-model">Using GPT-5</a></li>
+  <li><a href="https://cookbook.openai.com/examples/gpt-5/gpt-5_new_params_and_tools">GPT-5 New Params and Tools</a></li>
+</ul>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-05-07 14:38:31 JST</time></p>
+<p>Last modified: <time>2025-08-14 17:11:45 JST</time></p>
 </footer>
 </body>
 </html>

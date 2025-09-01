@@ -167,13 +167,25 @@ curl http://localhost:11434/api/chat -d '{ "model": "モデル名", "keep_alive"
 </aside>
 
 <p>Pythonから使う方法は <a href="../python/ollama.html">PythonでOllamaを使う</a> 参照。</p>
+
+<p>Ollamaアプリでの会話は次のようにしてテキストとして取り出せる。</p>
+
+<pre>
+cd ~/Library/Application\ Support/Ollama
+sqlite3 db.sqlite
+sqlite&gt; .headers on
+sqlite&gt; .mode tabs
+sqlite&gt; .output ollama.tsv
+sqlite&gt; select id, chat_id, role, content from messages;
+sqlite&gt; .quit
+</pre>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-08-08 15:01:22 JST</time></p>
+<p>Last modified: <time>2025-08-12 10:12:52 JST</time></p>
 </footer>
 </body>
 </html>

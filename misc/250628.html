@@ -38,12 +38,18 @@ magick foo.jpg foo.webp
 for f in *.jpg; do magick "$f" "${f%.jpg}.webp"; done
 </pre>
 
-<p>とする。以下も同様。</p>
+<p>とする。</p>
 
 <h3>PNGから可逆WebPへの移行</h3>
 
 <pre>
 magick foo.png -define webp:lossless=true -define webp:method=6 foo.webp
+</pre>
+
+<p>これもbash/zshでカレントディレクトリの全 *.png ファイルに適用するなら</p>
+
+<pre>
+for f in *.png; do magick "$f" -define webp:lossless=true -define webp:method=6 "${f%.png}.webp"; done
 </pre>
 
 <p>圧縮法を指定する数字は0〜6で、6が最高（ファイルサイズ最小）、デフォルトは4である。</p>
@@ -71,7 +77,7 @@ image.save("foo.webp", lossless=True, method=6) # ロスレス
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-08-06 20:57:24 JST</time></p>
+<p>Last modified: <time>2025-08-27 15:26:46 JST</time></p>
 </footer>
 </body>
 </html>

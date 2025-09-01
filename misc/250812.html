@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/250812.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LM Studio</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>LM Studio</h1>
+
+<p>ローカルLLMを動かすツールとして、今まで <a href="250418.html">Ollama</a> を使っていたが、OpenAI の gpt-oss を動かすためには <a href="https://lmstudio.ai">LM Studio</a> のほうが良さそうだということで、乗り換えてみた。</p>
+
+<p>インストールは <a href="https://lmstudio.ai">LM Studio</a> のサイトから簡単にできる。インストールすると、“Choose your level” と聞かれるので、Developer を選んだ。</p>
+
+<p>ダウンロードするモデルを聞かれるので、メモリ128GのMacがあれば gpt-oss-120b、メモリが24G程度なら gpt-oss-20b を選べばよかろう。あとは好みに応じて Context Length や Reasoning Effort を設定する。Ollama に比べて設定の自由度が大きい。私は Context Length を gpt-oss-120b の最大値 131072 に設定してみているが、さすがに長い出力では遅くなる。Reasoning Effort は medium で十分であろう。</p>
+
+<p>Mac Studio M4 Max 128GB で動かして mactop で見ると、Memory Usage 105GB/128GB ほど、GPU Usage 100% で、使用電力は30Wほど増え、筐体がほんのり暖かくなる。</p>
+
+<p>デフォルトではアプリでの動作だけだが、メニューバーからサーバを起動すれば http://127.0.0.1:1234 でAPIが使える。</p>
+
+<p>Emacs の gptel から使うには、例えば次のようにする。モデル名はここでは <code>lmstudio</code> としたが、実際には LM Studio 側で設定するので、ここでは何でもよい。</p>
+
+<pre>
+(use-package gptel
+  :ensure t
+  :config
+  ;; ...(他の設定)...
+  (setq gptel-model 'lmstudio)
+  (setq gptel-backend
+	(gptel-make-openai "lmstudio"
+	  :protocol "http"
+	  :host "localhost:1234"
+	  :models '((lmstudio))
+	  :stream t))
+  (setq gptel-temperature 0)
+  (setq gptel--system-message nil))
+</pre>
+
+<p>これで、ローカルで LM Studio を立ち上げるか、それともすでに LM Studio が立ち上がったマシン（例えば 192.168.1.123 とする）に <code>ssh -L 1234:localhost:1234 192.168.1.123</code> でログインすれば使える。<code>-L</code> はいわゆるsshトンネルを作るオプションである。</p>
+
+<p>あとは <a href="https://lmstudio.ai">LM Studio</a> サイトにあるドキュメント類を読んで使う。OpenAI Cookbook の <a href="https://cookbook.openai.com/articles/gpt-oss/run-locally-lmstudio">How to run gpt-oss locally with LM Studio</a> も参考になる。</p>
+
+<p>LM Studio を一度起動すると、~/.lmstudio 以下にいろいろファイルができる。特に ~/.lmstudio/bin の中には lms というCLI（コマンド）が入るので、パスに入れておく。また、デフォルトでは ~/.lmstudio/models 以下にモデル（巨大なファイル）が入るが、これは設定で変えられるので、容量に余裕のあるドライブに設定するとよい。</p>
+
+<p>Python から使うときは <code>pip install lmstudio</code> でパッケージを入れておく（APIはほぼOpenAI互換なので <code>openai</code> パッケージでもよい）。</p>
+
+<p>コマンドライン（lmsコマンド）でも<a href="https://huggingface.co/blog/yagilb/lms-hf">モデルのダウンロード</a>などができる。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-08-18 17:27:01 JST</time></p>
+</footer>
+</body>
+</html>

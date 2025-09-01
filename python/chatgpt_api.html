@@ -169,7 +169,7 @@ for x in res.choices[0].logprobs.content[:5]:
 
 <h2>ストリーミング</h2>
 
-<p>Web 版 ChatGPT のように文字単位（単語単位）で出力するようにしてみましょう。モデル名として Gemini のモデル（<code>"gemini-1.5-pro"</code> など）や xAI のモデル（<code>"grok-2-latest"</code> など）や PLaMo のモデルを与えてもいいようにしました（それぞれ環境変数 <code>GOOGLE_API_KEY</code>、<code>XAI_API_KEY</code>、<code>PLAMO_API_KEY</code> にAPIキーを入れておきます）。</p>
+<p>Web 版 ChatGPT のように文字単位（単語単位）で出力するようにしてみましょう。モデル名として Gemini のモデル（<code>"gemini-1.5-pro"</code> など）や xAI のモデル（<code>"grok-2-latest"</code> など）や PLaMo のモデルを与えてもいいようにしました（それぞれ環境変数 <code>GOOGLE_API_KEY</code>、<code>XAI_API_KEY</code>、<code>PLAMO_API_KEY</code> にAPIキーを入れておきます）。さらにモデル名が <code>lmstudio</code> を含めばローカルの LM Studio を呼び出すようにしました（この場合のモデルは LM Studio でロードされているものが使われます）。</p>
 
 <pre class="cell">
 import os
@@ -191,6 +191,10 @@ class Chatbot:
             self.client = OpenAI(
                 api_key=os.getenv("PLAMO_API_KEY"),
                 base_url="https://platform.preferredai.jp/api/completion/v1",
+            )
+        elif "lmstudio" in model:
+            self.client = OpenAI(
+                base_url="http://localhost:1234/v1"
             )
         else:
             self.client = OpenAI()
@@ -282,7 +286,7 @@ chatbot.chat(prompt="Provide a long and detailed summary of what follows:\n\n" +
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-06-11 19:50:59 JST</time></p>
+<p>Last modified: <time>2025-08-23 11:44:30 JST</time></p>
 </footer>
 </body>
 </html>

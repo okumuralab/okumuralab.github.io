@@ -20,7 +20,7 @@
 
 <p>LLM（大規模言語モデル）は文字ではなくトークン（token）というものを単位として処理します。トークンは単語に近いものですが、必ずしも単語とは一致しません。</p>
 
-<p>文字列をトークンに分割するツールをトークナイザ（tokenizer）といいます。OpenAIのLLMでは <a href="https://github.com/openai/tiktoken">tiktoken</a> というトークナイザが使われます。tiktoken はいくつかのエンコーディング（トークン分割方式）に対応しており、古くは cl100k_base というエンコーディングが使われていましたが、GPT 4oからは o200k_base に変わりました。</p>
+<p>文字列をトークンに分割するツールをトークナイザ（tokenizer）といいます。OpenAIのLLMでは <a href="https://github.com/openai/tiktoken">tiktoken</a> というトークナイザが使われます。tiktoken はいくつかのエンコーディング（トークン分割方式）に対応しており、古くは cl100k_base というエンコーディングが使われていましたが、GPT 4oからは o200k_base に変わりました。gpt-oss は o200k_harmony ですが、特殊トークンが増えた以外は o200k_base と変わりなさそうです。</p>
 
 <p><code>pip install tiktoken</code> して試してみましょう：</p>
 
@@ -83,7 +83,7 @@ japanese_re = re.compile('[\u3000-\u30ff\u4e00-\u9fff]')
 # f900-faff CJK互換漢字
 
 words = {}
-for i in range(199998):
+for i in range(enc.n_vocab):
     s = enc.decode([i])
     words[i] = s
 sorted_words = sorted(words.items(), key=lambda item: len(item[1]), reverse=True)
@@ -202,7 +202,7 @@ for i, s in sorted_words[:10000]:
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-06-12 15:59:48 JST</time></p>
+<p>Last modified: <time>2025-08-26 18:16:35 JST</time></p>
 </footer>
 </body>
 </html>

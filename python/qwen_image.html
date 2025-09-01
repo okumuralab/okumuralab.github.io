@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/qwen_image.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qwen-Image</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/md2html.js"></script>
+</head>
+<script type="text/markdown" id="md-content">
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+# Qwen-Image
+
+[Qwen-Image](https://huggingface.co/Qwen/Qwen-Image) は中国 [Alibaba Cloud](https://www.alibabacloud.com) の画像生成AIである。
+
+ここではM4 Mac Studio 128GBでPythonで動かす方法をメモしておく。一般には [Qwen-Image-gguf](https://huggingface.co/city96/Qwen-Image-gguf) を [ComfyUI](https://github.com/comfyanonymous/ComfyUI/) で動かすほうが楽のようだ。
+
+まずPyTorchはインストールしておく（`pip install torch`）。diffusersは最新のものが必要らしいので
+```
+pip install git+https://github.com/huggingface/diffusers
+```
+として入れる。すでに `pip install diffusers` で入っているものはアンインストールされる。
+
+あとは、サンプルコードを適宜書き直して使う。
+
+```python
+from diffusers import DiffusionPipeline
+import torch
+
+model_name = "Qwen/Qwen-Image"
+
+# Load the pipeline
+torch_dtype = torch.bfloat16
+device = "mps"
+
+pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype=torch_dtype)
+pipe = pipe.to(device)
+
+positive_magic = {
+    "en": "Ultra HD, 4K, cinematic composition.", # for english prompt
+    "zh": "超清，4K，电影级构图" # for chinese prompt
+}
+
+# Generate image
+# prompt = '''A coffee shop entrance features a chalkboard sign reading "Qwen Coffee 😊 $2 per cup," with a neon light beside it displaying "通义千问". Next to it hangs a poster showing a beautiful Chinese woman, and beneath the poster is written "π≈3.1415926-53589793-23846264-33832795-02384197". Ultra HD, 4K, cinematic composition'''
+
+prompt = "a cute Japanese girl. "  # プロンプト
+
+negative_prompt = " "
+
+# Generate with different aspect ratios
+aspect_ratios = {
+    "1:1": (1328, 1328),
+    "16:9": (1664, 928),
+    "9:16": (928, 1664),
+    "4:3": (1472, 1140),
+    "3:4": (1140, 1472)
+}
+
+# width, height = aspect_ratios["16:9"]
+width, height = (640, 640)  # 16の倍数
+
+image = pipe(
+    prompt=prompt + positive_magic["en"],
+    negative_prompt=negative_prompt,
+    width=width,
+    height=height,
+    num_inference_steps=50,
+    true_cfg_scale=4.0,
+    generator=torch.Generator(device=device)
+).images[0]
+
+image.save("example.webp", lossless=True, method=6)
+```
+
+640×640で3分ほどかかる。1664×928なら15分くらいかかる。画像生成しているとM4 Mac Studioの消費電力が60Wくらい増えて、ほんのり暖かくなる。
+
+---
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-08-07 21:37:38 JST</time></p>
+</footer>
+</script>
+</html>
