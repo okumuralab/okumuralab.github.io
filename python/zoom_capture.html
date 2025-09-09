@@ -88,13 +88,20 @@ while True:
 
 <p>上のプログラムではキャプチャ範囲を自動で取得してくれるが、手動で指定するには、Macでは command+shift+ctrl+4 でキャプチャ範囲を指定する過程で、始点 x、y、終点 w、h が取得できる。マルチスクリーン環境で <code>screencapture</code> コマンドの <code>-R x,y,w,h</code> での範囲指定はちょっと工夫が必要である。うちではメインディスプレイが縦置き（▯）1200×1920、2番目のディスプレイがその右側で横置き（▭）1920×1080で、底辺を揃えるように配置しているので、2番目のディスプレイの位置座標はxに1200を加え、yに1920-1080=840を加えた値になる。</p>
 
+<p>こうして作られたたくさんのPNGファイルについて、必要なら余分なところを切り取り、リサイズして、JPEGに変換したりして、最後にまとめて一つのPDFにまとめる。ImageMagickの <code>-crop</code> コマンドのオプション <code>幅x高さ+左上隅のx+左上隅のy</code> をうまく使う。例：</p>
+
+<pre>
+for x in zoom*.png; do magick "$x" -crop 2600x1500+20+300 -resize 40% "${x%.png}.jpg"; done
+magick zoom*.jpg all.pdf
+</pre>
+
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-06-15 09:49:21 JST</time></p>
+<p>Last modified: <time>2025-09-04 17:18:09 JST</time></p>
 </footer>
 </body>
 </html>

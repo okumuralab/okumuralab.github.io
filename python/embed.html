@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/embed.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>埋め込み</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>埋め込み</h1>
+
+<p>ここでいう埋め込み（embedding）とは、単語や文章を意味空間のベクトルとして表すことである。</p>
+
+<p>2025年9月にGoogleがEmbeddingGemma（エンベッディング・ジェンマ）というオープンな埋め込みモデルを公開した（<a href="https://developers.googleblog.com/en/introducing-embeddinggemma/">Introducing EmbeddingGemma: The Best-in-Class Open Model for On-Device Embeddings</a> 参照）。ここではそれを使って埋め込みの実験をしてみよう。</p>
+
+<p>モデルは <a href="https://huggingface.co/collections/google/embeddinggemma-68b9ae3a72a82f0562a80dc4">Hugging Face</a> で公開されている。4ビット量子化されたものはLM Studio用としても公開されているが、ここでは元の32ビット版 <a href="https://huggingface.co/google/embeddinggemma-300m">google/embeddinggemma-300m</a> を試す。パラメータ数300M（3億）の小さいモデルなので、32ビットでもファイルサイズは1.2Gバイトだ（300M×4=1.2G）。あらかじめ <a href="https://huggingface.co/google/embeddinggemma-300m">google/embeddinggemma-300m</a> をざっと読んで、（まだの場合は）使用許諾に了承しておく。</p>
+
+<p><a href="https://pytorch.org">PyTorch</a> はインストールされていると仮定する。<code>sentence-transformers</code> というパッケージを使う。あらかじめpipでインストールしておく。</p>
+
+<p>次のコードを実行すれば、初回にモデルが自動でダウンロードされるはずである。<code>device</code> は <code>"cuda"</code> か <code>"cpu"</code> か <code>"mps"</code> か <code>"npu"</code> を指定する。Macなら <code>"mps"</code> だ。</p>
+
+<pre class="cell">
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("google/embeddinggemma-300m", device="mps")
+</pre>
+
+<p>モデルは <code>~/.cache/huggingface/hub</code> の中に入る。</p>
+
+<p>さっそくいくつかの語をエンコードしてみよう。</p>
+
+<pre class="cell">
+words = ["man", "woman", "king", "queen"]
+embeddings = model.encode(words)
+print(embeddings.shape)  # (4, 768)
+</pre>
+
+<p>これを見てわかるように、各単語は768次元空間に埋め込まれる。<p>
+
+<pre class="cell">
+embeddings[0][:10]
+</pre>
+
+<pre>
+array([-0.21072112, -0.00405205,  0.0298054 , -0.00759131,  0.02110349,
+        0.0053321 , -0.03235268,  0.04000835,  0.02122785, -0.05387658],
+      dtype=float32)
+</pre>
+
+<pre class="cell">
+(embeddings[0] ** 2).sum()
+</pre>
+
+<pre>
+np.float32(1.0000001)
+</pre>
+
+<p>コサイン類似度を求める。</p>
+
+<pre class="cell">
+model.similarity(embeddings, embeddings)
+</pre>
+
+<pre>
+tensor([[1.0000, 0.9541, 0.9545, 0.9396],
+        [0.9541, 1.0000, 0.9476, 0.9474],
+        [0.9545, 0.9476, 1.0000, 0.9715],
+        [0.9396, 0.9474, 0.9715, 1.0000]])
+</pre>
+
+<p>さて、昔の word2vec というモデルでは woman - man ≒ queen - king のような線形の関係があることが知られている。これが今のモデルでも成り立つか。試してみよう。</p>
+
+<pre class="cell">
+model.similarity(embeddings[1] - embeddings[0], embeddings[3] - embeddings[2])
+</pre>
+
+<pre>
+tensor([[0.2036]])
+</pre>
+
+<p>あれ？ ちっとも近くない。</p>
+
+<p>そもそも word2vec と違って現代の埋め込みモデルはベクトルを足したり引いたりすることを想定していないようだ。</p>
+
+<p>現代の埋め込みモデルの主な用途はRAGであろう。具体的には、ユーザが入力したクエリに最も関連の深い文書を見つけることだ。</p>
+
+<p>そのためには、次のようなコードを使うことが推奨される。</p>
+
+<pre class="cell">
+documents = [
+    "文書1",
+    "文書2",
+    "文書3",
+    "文書4"
+]
+document_embeddings = model.encode_document(documents)
+
+query = "ユーザのクエリ"
+query_embeddings = model.encode_query(query)
+
+similarities = model.similarity(query_embeddings, document_embeddings)
+print(similarities)
+</pre>
+
+<p>クエリや文書の長さの上限はEmbeddingGemmaでは2048トークンである。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-09-09 21:29:35 JST</time></p>
+</footer>
+</body>
+</html>
