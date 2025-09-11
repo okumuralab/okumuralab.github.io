@@ -87,11 +87,67 @@ model.similarity(embeddings[1] - embeddings[0], embeddings[3] - embeddings[2])
 tensor([[0.2036]])
 </pre>
 
+<pre class="cell">
+model.similarity(embeddings[2] + embeddings[1] - embeddings[0], embeddings[3])
+</pre>
+
+<pre>
+tensor([[0.9433]])
+</pre>
+
 <p>あれ？ ちっとも近くない。</p>
 
-<p>そもそも word2vec と違って現代の埋め込みモデルはベクトルを足したり引いたりすることを想定していないようだ。</p>
+<p>念のため、別の指標でもやってみよう。<code>model.similarity_fn_name = "euclidean"</code> とすればユークリッド距離になる。<code>model.similarity_fn_name</code> には <code>"cosine"</code>、<code>"dot"</code>、<code>"euclidean"</code>、<code>"manhattan"</code> が設定できる。</p>
 
-<p>現代の埋め込みモデルの主な用途はRAGであろう。具体的には、ユーザが入力したクエリに最も関連の深い文書を見つけることだ。</p>
+<pre class="cell">
+model.similarity_fn_name = "euclidean"
+model.similarity(embeddings, embeddings)
+</pre>
+
+<pre>
+tensor([[-0.0000, -0.3028, -0.3016, -0.3476],
+        [-0.3028, -0.0000, -0.3237, -0.3244],
+        [-0.3016, -0.3237, -0.0000, -0.2386],
+        [-0.3476, -0.3244, -0.2386, -0.0000]])
+</pre>
+
+<pre class="cell">
+model.similarity(embeddings[1] - embeddings[0], embeddings[3] - embeddings[2])
+</pre>
+
+<pre>
+tensor([[-0.3453]])
+</pre>
+
+<pre class="cell">
+model.similarity(embeddings[2] + embeddings[1] - embeddings[0], embeddings[3])
+</pre>
+
+<pre>
+tensor([[-0.3453]])
+</pre>
+
+<p>なぜかユークリッド距離はすべて負になるようだが、絶対値は合っている。いずれにしても、ユークリッド距離で考えてもやはり woman - man ≒ queen - king は成り立たない。</p>
+
+<p>ということで、さらに調べてみると、実は word2vec でも king - man + woman は queen より king に近いし、他の例についても必ずしも宣伝されているような関係が成り立つわけではなさそうだ。<a href="https://blog.esciencecenter.nl/king-man-woman-king-9a7fd2935a85">King - Man + Woman = King ?</a> という記事を参照。（追記）自分でも試してみた→ <a href="word2vec.html">word2vec</a>。</p>
+
+<aside>
+<p>ただ、主成分分析（PCA）をしてみれば、何となくman、woman、king、queenが意味的な関係に近い位置にあることがわかる。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+
+x = PCA(n_components=2).fit_transform(embeddings)
+plt.scatter(x[:, 0], x[:, 1])
+for i, s in enumerate(["man", "woman", "king", "queen"]):
+    plt.text(x[i, 0], x[i, 1], s)
+</pre>
+
+<p><code>embeddings</code> の768次元を全部使うと計算が不安定になるらしく、ゼロ除算の警告がいくつか出る。無視していいと思うが、実はEmbeddingGemmaはマトリョーシカ表現になっていて、先頭の128、256、512要素だけでも埋め込みとして意味がある。そこで、<code>embeddings</code> の代わりに例えば <code>embeddings[:, :512] / np.linalg.norm(embeddings[:, :512], axis=1, keepdims=True)</code> を使うと、計算がより安定するらしく、警告が出ない。</p>
+</aside>
+
+<p>さて、現代の埋め込みモデルの主な用途はRAGであろう。具体的には、ユーザが入力したクエリに最も関連の深い文書を見つけることだ。</p>
 
 <p>そのためには、次のようなコードを使うことが推奨される。</p>
 
@@ -117,7 +173,7 @@ print(similarities)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-09 21:29:35 JST</time></p>
+<p>Last modified: <time>2025-09-11 13:56:11 JST</time></p>
 </footer>
 </body>
 </html>
