@@ -57,11 +57,14 @@ array([-0.21072112, -0.00405205,  0.0298054 , -0.00759131,  0.02110349,
 </pre>
 
 <pre class="cell">
-(embeddings[0] ** 2).sum()
+[(e ** 2).sum() for e in embeddings]
 </pre>
 
 <pre>
-np.float32(1.0000001)
+[np.float32(1.0000001),
+ np.float32(0.99999994),
+ np.float32(1.0),
+ np.float32(0.9999999)]
 </pre>
 
 <p>コサイン類似度を求める。</p>
@@ -88,14 +91,14 @@ tensor([[0.2036]])
 </pre>
 
 <pre class="cell">
-model.similarity(embeddings[2] + embeddings[1] - embeddings[0], embeddings[3])
+model.similarity(embeddings[2] + embeddings[1] - embeddings[0], embeddings)
 </pre>
 
 <pre>
-tensor([[0.9433]])
+tensor([[0.8752, 0.9569, 0.9565, 0.9433]])
 </pre>
 
-<p>あれ？ ちっとも近くない。</p>
+<p>あれ？ king + woman - man は queen よりむしろ woman や king に近い？！</p>
 
 <p>念のため、別の指標でもやってみよう。<code>model.similarity_fn_name = "euclidean"</code> とすればユークリッド距離になる。<code>model.similarity_fn_name</code> には <code>"cosine"</code>、<code>"dot"</code>、<code>"euclidean"</code>、<code>"manhattan"</code> が設定できる。</p>
 
@@ -120,18 +123,17 @@ tensor([[-0.3453]])
 </pre>
 
 <pre class="cell">
-model.similarity(embeddings[2] + embeddings[1] - embeddings[0], embeddings[3])
+model.similarity(embeddings[2] + embeddings[1] - embeddings[0], embeddings)
 </pre>
 
 <pre>
-tensor([[-0.3453]])
+tensor([[-0.5104, -0.3016, -0.3028, -0.3453]])
 </pre>
 
-<p>なぜかユークリッド距離はすべて負になるようだが、絶対値は合っている。いずれにしても、ユークリッド距離で考えてもやはり woman - man ≒ queen - king は成り立たない。</p>
+<p>なぜかユークリッド距離はすべて負になるようだが、絶対値は合っている。今度は king + woman - man は queen より man に近い！</p>
 
 <p>ということで、さらに調べてみると、実は word2vec でも king - man + woman は queen より king に近いし、他の例についても必ずしも宣伝されているような関係が成り立つわけではなさそうだ。<a href="https://blog.esciencecenter.nl/king-man-woman-king-9a7fd2935a85">King - Man + Woman = King ?</a> という記事を参照。（追記）自分でも試してみた→ <a href="word2vec.html">word2vec</a>。</p>
 
-<aside>
 <p>ただ、主成分分析（PCA）をしてみれば、何となくman、woman、king、queenが意味的な関係に近い位置にあることがわかる。</p>
 
 <pre class="cell">
@@ -142,8 +144,12 @@ x = PCA(n_components=2).fit_transform(embeddings)
 plt.scatter(x[:, 0], x[:, 1])
 for i, s in enumerate(["man", "woman", "king", "queen"]):
     plt.text(x[i, 0], x[i, 1], s)
+plt.axis("scaled")
 </pre>
 
+<figure><img src="img/embed.svg" alt="man、woman、king、queenをEmbeddingGemmaで埋め込んだベクトルをPCAで2次元にしたもの"></figure>
+
+<aside>
 <p><code>embeddings</code> の768次元を全部使うと計算が不安定になるらしく、ゼロ除算の警告がいくつか出る。無視していいと思うが、実はEmbeddingGemmaはマトリョーシカ表現になっていて、先頭の128、256、512要素だけでも埋め込みとして意味がある。そこで、<code>embeddings</code> の代わりに例えば <code>embeddings[:, :512] / np.linalg.norm(embeddings[:, :512], axis=1, keepdims=True)</code> を使うと、計算がより安定するらしく、警告が出ない。</p>
 </aside>
 
@@ -173,7 +179,7 @@ print(similarities)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-11 13:56:11 JST</time></p>
+<p>Last modified: <time>2025-09-13 11:10:07 JST</time></p>
 </footer>
 </body>
 </html>

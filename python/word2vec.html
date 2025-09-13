@@ -20,9 +20,18 @@
 
 <p><a href="https://code.google.com/archive/p/word2vec/">word2vec</a> は単語を意味空間のベクトルに変換するGoogleの古典的なアルゴリズムである。この空間では king - man + woman ≒ queen が成り立つなどと言われている。これを検証してみよう。</p>
 
-<p>まずは上記のページから学習済みのモデル GoogleNews-vectors-negative300.bin.gz をいただいてくる。</p>
+<p>まずは上記のページから学習済みのモデル GoogleNews-vectors-negative300.bin.gz をいただいてくる（約1.6GB）。これは約1000億語からなるGoogle Newsデータセットを学習したもので、300万の単語・熟語を300次元の空間に埋め込む。単語・熟語は大文字・小文字を区別し、熟語の場合はスペースを <code>_</code> で置き換えてある（例: <code>New_York</code>）。</p>
 
-<p>Pythonで扱うには <code>gensim</code> というパッケージを使う。これは今のところPython 3.12までしか対応していないようだ。pipでインストールしておく。</p>
+<aside>
+<p>以下のコードの最初の部分を次のようにすれば自動でモデルがダウンロードされるはずである：</p>
+<pre>
+import gensim.downloader as api
+
+model = api.load('word2vec-google-news-300')
+</pre>
+</aside>
+
+<p>Pythonで扱うには <a href="https://pypi.org/project/gensim/">gensim</a> というパッケージを使う。これは今のところPython 3.12までしか対応していないようだ。<code>pip install --upgrade gensim</code> でインストールすると、gensim-4.3.3 が入り、numpy-1.26.4 scipy-1.13.1 にダウングレードされた。</p>
 
 <pre class="cell">
 from gensim.models import KeyedVectors
@@ -58,27 +67,90 @@ query
 <pre class="cell">
 import numpy as np
 
-WORDS = ["man", "woman", "king", "queen"]
-vectors = [model[w] for w in WORDS]
-X = np.vstack(vectors)
-
-model.cosine_similarities(X[2] + X[1] - X[0], X)
+vec = model.get_vector("king", norm=True) + model.get_vector("woman", norm=True) - model.get_vector("man", norm=True)
+vec /= np.linalg.norm(vec)
+sims = model.get_normed_vectors() @ vec
+idx = np.argsort(-sims)
+[(model.index_to_key[i], sims[i]) for i in idx[:10]]
 </pre>
 
 <pre>
-array([0.12160636, 0.3916339 , 0.84493923, 0.73005164], dtype=float32)
+[('king', 0.7992598),
+ ('queen', 0.7118192),
+ ('monarch', 0.6189675),
+ ('princess', 0.5902431),
+ ('crown_prince', 0.54994607),
+ ('prince', 0.5377321),
+ ('kings', 0.5236844),
+ ('Queen_Consort', 0.52359456),
+ ('queens', 0.51811343),
+ ('sultan', 0.5098593)]
 </pre>
 
-<p>つまり king + woman - man とそれぞれの単語との類似度は、king が一番高く（0.84）、queen は次点（0.73）である。</p>
+<p>つまり king + woman - man とそれぞれの単語との類似度は、king が一番高く（0.799）、queen は次点（0.712）である。</p>
 
-<p>どうやら <code>model.most_similar</code> は与えられた単語以外しか調べないようだ。そのため、queen が一番近いように見えるが、実は king のほうが近い（king - woman + man ≒ king）。</p>
+<p>どうやら <code>model.most_similar()</code> は引数に与えた単語を除外してリストするようだ。そのため、queen が一番近いように見えるが、実は king のほうが近い（king - woman + man ≒ king）。</p>
 
-<p>ついでに主成分分析（PCA）で2次元に落としてプロットしてみる：</p>
+<p>なお、上のコードは <code>model.most_similar()</code> の結果と合わせるためベクトルを長さ1に正規化してから合計している。理屈からすれば合計する前に正規化するのは変なので、正規化しないで同じことをやってみる。</p>
+
+<pre class="cell">
+import numpy as np
+
+vec = model["king"] + model["woman"] - model["man"]
+vec /= np.linalg.norm(vec)
+sims = model.get_normed_vectors() @ vec
+idx = np.argsort(-sims)
+[(model.index_to_key[i], sims[i]) for i in idx[:10]]
+</pre>
+
+<pre>
+[('king', 0.8449392),
+ ('queen', 0.73005164),
+ ('monarch', 0.64546597),
+ ('princess', 0.6156251),
+ ('crown_prince', 0.5818677),
+ ('prince', 0.5777117),
+ ('kings', 0.5613663),
+ ('sultan', 0.53767765),
+ ('Queen_Consort', 0.5344247),
+ ('queens', 0.5289887)]
+</pre>
+
+<p>結果はほとんど同じで、やはり king のほうが近い。</p>
+
+<p>さらについでに、ユークリッド距離でも調べてみる：</p>
+
+<pre class="cell">
+vec = model["king"] + model["woman"] - model["man"]
+dist = np.linalg.norm(model.vectors - vec, axis=1)
+idx = np.argsort(dist)
+[(model.index_to_key[i], dist[i]) for i in idx[:10]]
+</pre>
+
+<pre>
+[('king', 1.727951),
+ ('queen', 2.298658),
+ ('Prince_Paras', 2.758862),
+ ('Princess_Sikhanyiso', 2.7791162),
+ ('Queen_Consort', 2.7801094),
+ ('very_pampered_McElhatton', 2.7926178),
+ ('King_Bhumipol', 2.8105414),
+ ('Savory_aromas_wafted', 2.8125243),
+ ('monarch_Gyanendra', 2.821101),
+ ('monarch', 2.8295388)]
+</pre>
+
+<p>やはり king のほうが近い。</p>
+
+<p>ついでに主成分分析（PCA）で2次元に落としてプロットする。こちらも正規化しないでやってみる。</p>
 
 <pre class="cell">
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
+WORDS = ["man", "woman", "king", "queen"]
+vecs = [model[w] for w in WORDS]
+X = np.vstack(vecs)
 pca = PCA(n_components=2, random_state=42)
 X2 = pca.fit_transform(X)
 
@@ -90,13 +162,29 @@ plt.axis("scaled")
 
 <figure><img src="img/word2vec.svg" alt="man、woman、king、queenをword2vecで埋め込んだベクトルをPCAで2次元にしたもの"></figure>
 
-<p>king + woman - man は queen まで届かず、king のほうに近いことが、この図からも伺える。</p>
+<p>コサイン類似度の行列も求めておく：</p>
+
+<pre class="cell">
+from sklearn.metrics.pairwise import cosine_similarity
+cosine_similarity(X)
+</pre>
+
+<pre>
+array([[1.0000002 , 0.76640147, 0.22942662, 0.166582  ],
+       [0.76640147, 1.0000001 , 0.12847976, 0.31618142],
+       [0.22942662, 0.12847976, 0.9999999 , 0.65109575],
+       [0.166582  , 0.31618142, 0.65109575, 1.0000002 ]], dtype=float32)
+</pre>
+
+<p>man と woman は非常に近いが、king と queen はそれほど近くなく、king に woman - man を加えても queen まで到達せずむしろ king に近いまま、とも解釈できる。</p>
+
+<p>ほかにも <code>model.similarity("king", "queen")</code> が 0.6510956 なのに <code>model.similarity("king", "King")</code> が 0.5158918 だとか <code>model.similarity("king", "KING")</code> が 0.17314966 だとか、言語感覚に合わない例がいくらでも見つかる。あまり意味空間のベクトルという意味を文字通り捉えないほうがいいかもしれない。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-11 13:52:14 JST</time></p>
+<p>Last modified: <time>2025-09-12 21:48:57 JST</time></p>
 </footer>
 </body>
 </html>

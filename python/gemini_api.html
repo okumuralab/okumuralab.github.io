@@ -18,8 +18,6 @@
 
 <h1>Gemini APIを使う</h1>
 
-<p>[2025-03-26] 書き直しました。</p>
-
 <p>Gemini APIは、かつては <code>pip install google-generativeai</code> で入れる <code>google.generativeai</code> パッケージで使いましたが、2024年末に <code>pip install google-genai</code> で入れる新しいパッケージが出ました。また、Gemini APIはOpenAIとの互換性があり（<a href="https://ai.google.dev/gemini-api/docs/openai">OpenAI compatibility</a>）、<a href="chatgpt_api.html">OpenAIのAPIを使う</a>の方法もそのまま使えます。</p>
 
 <p>まずは、<a href="https://aistudio.google.com/app/apikey">APIキー</a> を発行してもらいます。APIキーはコードに直接書き込むこともできますが、次のようにして環境変数に登録しておくと便利です。</p>
@@ -43,13 +41,13 @@ client = genai.Client()  # 環境変数にAPIキーが設定されていれば�
 # client = genai.Client(api_key="...") # あるいは直接指定してもいい
 
 response = client.models.generate_content(
-    model="gemini-2.5-pro-exp-03-25",
+    model="gemini-2.5-pro",
     contents="ここにプロンプトを書く"
 )
 print(response.text)
 </pre>
 
-<p>より実用的な使い方は次の通りです。</p>
+<p>より実用的な使い方は次の通りです。思考モデルの場合は <code>thinking_budget</code> が指定できますが、その範囲はモデルによって違います。</p>
 
 <pre class="cell">
 from google import genai
@@ -57,8 +55,12 @@ from google.genai import types
 
 client = genai.Client()
 chat = client.chats.create(
-    model="gemini-2.5-pro-exp-03-25",
-    config=types.GenerateContentConfig(temperature=0) # [0, 2]
+    model="gemini-2.5-pro",
+    config=types.GenerateContentConfig(
+        temperature=0, # 0-2
+        # thinking_config=types.ThinkingConfig(thinking_budget=32768) # 128-32768
+        # thinking_config=types.ThinkingConfig(thinking_budget=-1) # dynamic thinking (default)
+    )
 )
 
 prompt = '''
@@ -90,7 +92,7 @@ for message in chat.get_history():
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-03-26 11:25:58 JST</time></p>
+<p>Last modified: <time>2025-09-12 19:52:53 JST</time></p>
 </footer>
 </body>
 </html>
