@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <script src="../js/copypre.js"></script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -124,7 +125,7 @@ for i, s in sorted_words[:100000]:
 
 <p>中国語のものは微信（WeChat）の宝くじ関係のものが多いようですが、アダルト関係も混ざっているようです。</p>
 
-<p>「_日本毛片免费视频观看」は「_日本ポルノ無料動画視聴」という意味ですが、不思議なことにChatGPTはこのトークンが読めないようです。「_日本毛片免费视频观看」を日本語に訳してくれと言っても何も見えないらしいのです。旧トークナイザでは「SolidGoldMagikarp」などがChatGPTが読めないトークンとして有名でしたが、新トークナイザでも同じようなことが起こっているのかもしれません。</p>
+<p>「_日本毛片免费视频观看」は「_日本ポルノ無料動画視聴」という意味ですが、不思議なことにGPT-4oはこのトークンが読めないようです。「_日本毛片免费视频观看」を日本語に訳してくれと言っても何も見えないらしいのです（GPT-5で修正されました）。初期のChatGPTのトークナイザ p50k_base では「 SolidGoldMagikarp」などがChatGPTが読めないトークンとして有名でしたが、新トークナイザでも同じようなことが起こっているのかもしれません。</p>
 
 <hr>
 
@@ -197,6 +198,10 @@ for i, s in sorted_words[:10000]:
 </pre>
 
 <p>OpenAIのものと比べて、とてもまともです。</p>
+
+<blockquote class="twitter-tweet">
+  <p lang="ja" dir="ltr">PLaMo 2トークナイザは10万語彙すべて自分が目を通しているのでグリッチトークンはありません。秒間10語彙見れば半日で全部確認できるのに大手がそれをしていないのはちょっと手抜きでｈ（ｒｙ</p>&mdash; いもす (@imos) <a href="https://twitter.com/imos/status/1966886238448959855?ref_src=twsrc%5Etfw">September 13, 2025</a>
+</blockquote>
 
 <hr>
 
@@ -335,11 +340,13 @@ print("total_tokens:", total_tokens) # 2
 
 <p>おそらく &lt;bos&gt; が先頭に付くため 1 だけ多くなります。</p>
 
+<p>いろいろやってみると、Gemini 3のトークナイザと同じでないかという気がしてきました。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-13 19:19:30 JST</time></p>
+<p>Last modified: <time>2025-09-16 21:27:41 JST</time></p>
 </footer>
 </body>
 </html>

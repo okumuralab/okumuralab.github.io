@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/250916.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>グリッチトークン</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>グリッチトークン</h1>
+
+<p><a href="https://note.com/xcloche/n/n55938e706986">色違いのコイキングでLLMをバグらせろ：グリッチトークン入門</a>（xcloche、2025-08-09）という記事がきっかけで、グリッチトークン（glitch tokens）が再び話題になっている。「植物百科通」について聞くとGPT-5が壊れる（意味不明の回答をする）という話だ。「百科通」だけでも壊れる。</p>
+
+<p>上記記事には bagbogbo というグリッチトークンも紹介されている。これは2024-08-13から知られていたようだ。</p>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">and this... <a href="https://t.co/ZjlKIn1YcV">pic.twitter.com/ZjlKIn1YcV</a></p>&mdash; Yuchen Jin (@Yuchenj_UW) <a href="https://twitter.com/Yuchenj_UW/status/1823418800919994521?ref_src=twsrc%5Etfw">August 13, 2024</a></blockquote>
+
+<p>トークンとは、LLM（ChatGPTなどの生成AI）が扱う文字列の単位である。LLMは文字列をトークンに区切って処理する。区切り方はモデル（LLMの種類）による。以下ではトークンの区切りを縦棒 "|" で示すことにする。例えばGPT-5なら「昔々あるところにおじいさんとおばあさんがいました。」は「昔|々|ある|ところ|に|お|じ|い|さん|と|お|ば|あ|さん|が|いました|。|」と区切る。「昔々あるところに」まで出力したら次のトークン「お」をある確率で出力し、「昔々あるところにお」まで出力したら次のトークン「じ」をある確率で出力する、というわけだ。</p>
+
+<p>GPT-5のトークンは約20万通りある。つまり20万語が収録されている辞書を使って日常語をAIの言葉に翻訳しているわけだ。「ありがとうございました」のような頻繁に現れる文字列はそれだけで一つのトークンとして登録されている。「植物百科通」や「百科通」も1トークンだ。逆に、あまり現れない語は複数のトークンに分かれる。例えばGPT-5では「おじいさん」は「お|じ|い|さん」のように4トークンになる。もっと出現頻度の低い漢字などは、1文字が2つ以上のトークンに分かれることもある。例えば「嵐」は1文字で3トークンになる（UTF-8で表した3バイトE5 B5 90の各バイトが1トークンに対応する）。</p>
+
+<p>トークンに分割することをトークナイズ（tokenize）といい、トークナイズするためのツール（コンピュータのプログラム）をトークナイザ（tokenizer）という。</p>
+
+<p>ChatGPTのトークナイザを試すには <a href="https://platform.openai.com/tokenizer">OpenAI の Tokenizer ページ</a> または <a href="https://tiktokenizer.vercel.app">tiktokenizer.vercel.app</a> が便利だ。私の<a href="../python/tokenize.html">この記事</a>ではPythonで試す方法を解説している。</p>
+
+<p>ChatGPTは <a href="https://github.com/openai/tiktoken">tiktoken</a> というトークナイザを使っているが、これにもいくつかのモデルがあり、現行のGPT-5やGPT-4oで使われている「o200k_base」、一つ前のGPT-4無印やGPT-3.5 Turboで使われていた「cl100k_base」、さらに古い初期のGPT-3.5で使われていた「p50k_base」などがある。200k、100k、50k はだいたいのトークン数である（k = 1000）。o200k_base は約20万通りのトークンを含む。</p>
+
+<p>さて、トークナイザがp50k_baseのころは、「 SolidGoldMagikarp」（先頭の空白を含む）という意味不明のトークンがあった。これはGPT-2のころからあった。</p>
+
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">「AIのべりすと」のAIを訓練する際、トークナイザ（内部的な辞書）も新たに訓練しましたが、語彙は多いほど良いという訳でもなく、英語で定番のGPT-2トークナイザでは<br>「 SolidGoldMagiKarp」（ 純金コイキング）<br>とかいう物質が1ワード扱いにされてしまっている</p>&mdash; Sta @ Bit192 / Tone Sphere (@naclbbr) <a href="https://twitter.com/naclbbr/status/1449248994777989125?ref_src=twsrc%5Etfw">October 16, 2021</a></blockquote>
+
+<p>この文字列を与えるとChatGPTが混乱してわけのわからないことを言うというということで、2023-01-29あたりからTwitterで話題になった。</p>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">That is so weird!!!<br>I tried to get it to spell SolidGoldMagikarp and it went crazy... <a href="https://t.co/KNDmVS9WED">pic.twitter.com/KNDmVS9WED</a></p>&mdash; 🐍 Tal Weiss (@majortal) <a href="https://twitter.com/majortal/status/1619598946669842432?ref_src=twsrc%5Etfw">January 29, 2023</a></blockquote>
+
+<p>下の参考リンクの3番目「SolidGoldMagikarp III」で明らかにされたことによれば、SolidGoldMagikarp（「純金のコイキング」）はReddit（というSNS）への大量投稿で知られるユーザ名で、トークナイザを作る際に頻出語として一つのトークンに成り上がったが、肝心のGPT-3.5の学習データにはほとんどなかったので、宙ぶらりんのトークンになってしまったようだ。</p>
+
+<p>より新しいGPT-3.5 Turboで採用された cl100k_base では「 Solid|Gold|Mag|ik|arp」のように5トークンになり、グリッチトークンではなくなった。</p>
+
+<p>ほかにもLLMにおかしなふるまいをさせるグリッチトークンはいろいろある。o200k_baseで1トークンになる「_日本毛片免费视频观看」（「_日本ポルノ無料動画視聴」のような意味の中国語のスパム）は、GPT-4oでは読めなかったが、GPT-5では読めるようになったようである。</p>
+
+<p>「 SolidGoldMagikarp」や「_日本毛片免费视频观看」のようなトークンは、明らかに頻出語ではないので、ざっくりチェックすれば簡単に取り除けたはずだが、OpenAIは手を抜いたのだろう。</p>
+
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">PLaMo 2トークナイザは10万語彙すべて自分が目を通しているのでグリッチトークンはありません。秒間10語彙見れば半日で全部確認できるのに大手がそれをしていないのはちょっと手抜きでｈ（ｒｙ</p>&mdash; いもす (@imos) <a href="https://twitter.com/imos/status/1966886238448959855?ref_src=twsrc%5Etfw">September 13, 2025</a></blockquote>
+
+<p>ちなみに、GPT-5無印（即答モード）に「タツノオトシゴの絵文字を見せて」と聞くと混乱するが、これはグリッチトークンではなく、「タツノオトシゴの絵文字は存在する」と学習してしまっているのに実際にはそのようなものがないので混乱するのであろう。GPT-5 Thinking（熟考モード）なら大丈夫である。</p>
+
+<p>参考リンク</p>
+
+<ul>
+  <li><a href="https://www.lesswrong.com/posts/aPeJE8bSo6rAFoLqg/solidgoldmagikarp-plus-prompt-generation">SolidGoldMagikarp (plus, prompt generation)</a> (2023-02-06)</li>
+  <li><a href="https://www.lesswrong.com/posts/Ya9LzwEbfaAMY8ABo/solidgoldmagikarp-ii-technical-details-and-more-recent">SolidGoldMagikarp II: technical details and more recent findings</a> (2023-02-07)</li>
+  <li><a href="https://www.lesswrong.com/posts/8viQEp8KBg2QSW4Yc/solidgoldmagikarp-iii-glitch-token-archaeology">SolidGoldMagikarp III: Glitch token archaeology</a> (2023-02-14)</li>
+  <li><a href="https://arxiv.org/abs/2404.09894">Glitch Tokens in Large Language Models: Categorization Taxonomy and Effective Detection</a></li>
+  <li><a href="https://arxiv.org/abs/2405.05417">Fishing for Magikarp: Automatically Detecting Under-trained Tokens in Large Language Models</a></li>
+  <li><a href="https://arxiv.org/abs/2408.04905">GlitchProber: Advancing Effective Detection and Mitigation of Glitch Tokens in Large Language Models</a></li>
+  <li><a href="https://arxiv.org/abs/2410.15052">GlitchMiner: Mining Glitch Tokens in Large Language Models via Gradient-based Discrete Optimization</a></li>
+  <li>Andrej Karpathy: <a href="https://www.youtube.com/watch?v=zduSFxRajkE">Let's build the GPT Tokenizer</a></li>
+</ul>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-09-19 10:45:16 JST</time></p>
+</footer>
+</body>
+</html>

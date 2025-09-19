@@ -82,13 +82,13 @@ print(ans1 == ans2)
 
 <p>GPT-4の類が温度0でも再現性がないのは、GPUで並列処理するために計算順序によって誤差が異なるという説があったが、少なくともMac Studioでは（8ビット量子化のGemma 3 27Bに限り）そういうことはなさそうだ。</p>
 
-<p>MoEが原因だという説もある: <a href="https://152334h.github.io/blog/non-determinism-in-gpt-4/">Non-determinism in GPT-4 is caused by Sparse MoE</a></p>
+<p>MoEが原因だという説もあった（<a href="https://152334h.github.io/blog/non-determinism-in-gpt-4/">Non-determinism in GPT-4 is caused by Sparse MoE</a>）が、Horace He たちによる <a href="https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/">Defeating Nondeterminism in LLM Inference</a> によれば、バッチ不変性（batch invariance）の問題らしい。<a href="https://x.com/cHHillee/status/1966539470444130507">Horace He のこのツイート</a>も参照。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-03-31 13:42:57 JST</time></p>
+<p>Last modified: <time>2025-09-15 13:15:40 JST</time></p>
 </footer>
 </body>
 </html>
