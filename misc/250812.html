@@ -22,7 +22,7 @@
 
 <p>インストールは <a href="https://lmstudio.ai">LM Studio</a> のサイトから簡単にできる。インストールすると、“Choose your level” と聞かれるので、Developer を選んだ。</p>
 
-<p>ダウンロードするモデルを聞かれるので、メモリ128GのMacがあれば gpt-oss-120b、メモリが24G程度なら gpt-oss-20b を選べばよかろう。あとは好みに応じて Context Length や Reasoning Effort を設定する。Ollama に比べて設定の自由度が大きい。私は Context Length を gpt-oss-120b の最大値 131072 に設定してみているが、さすがに長い出力では遅くなる。Reasoning Effort は medium で十分であろう。</p>
+<p>ダウンロードするモデルを聞かれるので、メモリ128GのMacがあれば gpt-oss-120b、メモリが24G程度なら gpt-oss-20b を選べばよかろう。あとは好みに応じて Context Length や Reasoning Effort を設定する。Ollama に比べて設定の自由度が大きい。私は Context Length を gpt-oss-120b の最大値 131072 に設定してみているが、さすがに長い出力では遅くなる。Reasoning Effort は medium で十分であろう。あとは実験的に Flash Attention をオンにすると速くなるはずである。</p>
 
 <p>Mac Studio M4 Max 128GB で動かして mactop で見ると、Memory Usage 105GB/128GB ほど、GPU Usage 100% で、使用電力は30Wほど増え、筐体がほんのり暖かくなる。</p>
 
@@ -56,11 +56,13 @@
 
 <p>コマンドライン（lmsコマンド）でも<a href="https://huggingface.co/blog/yagilb/lms-hf">モデルのダウンロード</a>などができる。</p>
 
+<p>なお、gpt-ossについてはMLX版もある。<a href="https://huggingface.co/mlx-community/gpt-oss-20b-MXFP4-Q8">mlx-community/gpt-oss-20b-MXFP4-Q8</a> をPythonのmlx-lmパッケージで試してみたが、出力が途中でおかしくなることが多い。LM Studio標準のものがよさそうである。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-08-18 17:27:01 JST</time></p>
+<p>Last modified: <time>2025-09-20 15:18:49 JST</time></p>
 </footer>
 </body>
 </html>

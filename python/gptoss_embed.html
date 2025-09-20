@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/gptoss_embed.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPT-OSSの埋め込み</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>GPT-OSSの埋め込み</h1>
+
+<p><a href="embed.html">埋め込み</a>の続編。gpt-oss-20bの埋め込み空間で king - man + woman をやってみよう。</p>
+
+<p>モデルは <a href="https://huggingface.co/mlx-community/gpt-oss-20b-MXFP4-Q8">mlx-community/gpt-oss-20b-MXFP4-Q8</a> を使う。このモデルはあまり良くないようなので、要注意。</p>
+
+<pre class="cell">
+model, tokenizer = load("mlx-community/gpt-oss-20b-MXFP4-Q8")
+
+prompt = "queen"
+token_ids = tokenizer.encode(prompt)  # [153556]
+tokens = tokenizer.convert_ids_to_tokens(token_ids)  # ['queen']
+</pre>
+
+<p>トークン列を埋め込みベクトルに変換するための関数を探すために、Pythonに <code>model</code> と打ち込んでみる：</p>
+
+<pre>
+Model(
+  (model): GptOssMoeModel(
+    (embed_tokens): QuantizedEmbedding(201088, 2880, group_size=64, bits=8, mode=affine)
+    (norm): RMSNorm(2880, eps=1e-05)
+...以下略...
+</pre>
+
+<p>これから <code>model.model.embed_tokens</code> だと推量する：</p>
+
+<pre class="cell">
+embeddings = model.model.embed_tokens(token_ids)
+queen = embeddings[0]  # 2880次元のベクトル
+mx.linalg.norm(queen)  # array(123, dtype=bfloat16)
+</pre>
+
+<p>同じことを man、woman、king についても行う。</p>
+
+<pre class="cell">
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+
+X = np.vstack([man.astype(mx.float32),
+               woman.astype(mx.float32),
+               king.astype(mx.float32),
+               queen.astype(mx.float32),
+               (king - man + woman).astype(mx.float32)])
+cosine_similarity(X)
+</pre>
+
+<p>結果は次の通り：</p>
+
+<pre>
+array([[ 0.9999998 ,  0.43785974,  0.5198675 ,  0.35447446, -0.11281953],
+       [ 0.43785974,  0.9999999 ,  0.19880976,  0.4180091 ,  0.6151444 ],
+       [ 0.5198675 ,  0.19880976,  1.        ,  0.33824253,  0.4844749 ],
+       [ 0.35447446,  0.4180091 ,  0.33824253,  0.99999976,  0.30324462],
+       [-0.11281953,  0.6151444 ,  0.4844749 ,  0.30324462,  1.0000004 ]],
+      dtype=float32)
+</pre>
+
+<p>king - man + woman は queen より king に近く、それよりさらに woman に近い。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-09-20 17:11:48 JST</time></p>
+</footer>
+</body>
+</html>

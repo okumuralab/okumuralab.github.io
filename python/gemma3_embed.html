@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/gemma3_embed.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gemma 3の埋め込み</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Gemma 3の埋め込み</h1>
+
+<p><a href="embed.html">埋め込み</a>の続編。Gemma 3の埋め込み空間で king - man + woman をやってみよう。</p>
+
+<p>MacなのでMLXを使うことにする。モデルとトークナイザを取り出すのは簡単。例えば queen という語についてやってみよう。</p>
+
+<pre class="cell">
+model, tokenizer = load("mlx-community/gemma-3-27b-it-8bit")
+
+prompt = "queen"
+token_ids = tokenizer.encode(prompt)  # [2, 91024]
+tokens = tokenizer.convert_ids_to_tokens(token_ids)  # ['<bos>', 'queen']
+</pre>
+
+<p>トークン列を埋め込みベクトルに変換するための関数を探すために、Pythonに <code>model</code> と打ち込んでみる：</p>
+
+<pre>
+Model(
+  (language_model): Model(
+    (model): Gemma3Model(
+      (embed_tokens): QuantizedEmbedding(262208, 5376, group_size=64, bits=8, mode=affine)
+      (layers.0): TransformerBlock(
+...以下略...
+</pre>
+
+<p>これから <code>model.language_model.model.embed_tokens</code> だと推量する：</p>
+
+<pre class="cell">
+embeddings = model.language_model.model.embed_tokens(token_ids)
+queen = embeddings[1]  # 5376次元のベクトル
+mx.linalg.norm(queen)  # array(1.01562, dtype=bfloat16)
+# mx.save("queen.npy", queen)  # 念のため保存したいとき
+</pre>
+
+<p>同じことを man、woman、king についても行う。</p>
+
+<pre class="cell">
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+
+X = np.vstack([man.astype(mx.float32),
+               woman.astype(mx.float32),
+               king.astype(mx.float32),
+               queen.astype(mx.float32),
+               (king - man + woman).astype(mx.float32)])
+cosine_similarity(X)
+</pre>
+
+<p>結果は次の通り：</p>
+
+<pre>
+array([[ 1.000002  ,  0.27174592,  0.21292192,  0.10807453, -0.35068962],
+       [ 0.27174592,  1.0000023 ,  0.10984613,  0.18116248,  0.55315906],
+       [ 0.21292192,  0.10984613,  1.0000019 ,  0.32620484,  0.5962215 ],
+       [ 0.10807453,  0.18116248,  0.32620484,  1.0000018 ,  0.26477924],
+       [-0.35068962,  0.55315906,  0.5962215 ,  0.26477924,  1.000003  ]],
+      dtype=float32)
+</pre>
+
+<p>やはり king - man + woman は queen より king に近い。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-09-19 21:24:16 JST</time></p>
+</footer>
+</body>
+</html>

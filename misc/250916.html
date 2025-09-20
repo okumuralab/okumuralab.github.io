@@ -46,13 +46,17 @@
 
 <p>より新しいGPT-3.5 Turboで採用された cl100k_base では「 Solid|Gold|Mag|ik|arp」のように5トークンになり、グリッチトークンではなくなった。</p>
 
+<p>冒頭に挙げた「bagbogbo」もRedditのユーザ名が起源らしい。「 nigbagbogbo」（先頭にスペースあり）も1トークンで、GPT-5は正しく復唱できない。ヨルバ語nigbagbogboは「常に」という意味の一般的な語らしい。聞き方によってはGPT-5はこれらの語を出力したり説明したりできる。</p>
+
 <p>ほかにもLLMにおかしなふるまいをさせるグリッチトークンはいろいろある。o200k_baseで1トークンになる「_日本毛片免费视频观看」（「_日本ポルノ無料動画視聴」のような意味の中国語のスパム）は、GPT-4oでは読めなかったが、GPT-5では読めるようになったようである。</p>
 
 <p>「 SolidGoldMagikarp」や「_日本毛片免费视频观看」のようなトークンは、明らかに頻出語ではないので、ざっくりチェックすれば簡単に取り除けたはずだが、OpenAIは手を抜いたのだろう。</p>
 
 <blockquote class="twitter-tweet"><p lang="ja" dir="ltr">PLaMo 2トークナイザは10万語彙すべて自分が目を通しているのでグリッチトークンはありません。秒間10語彙見れば半日で全部確認できるのに大手がそれをしていないのはちょっと手抜きでｈ（ｒｙ</p>&mdash; いもす (@imos) <a href="https://twitter.com/imos/status/1966886238448959855?ref_src=twsrc%5Etfw">September 13, 2025</a></blockquote>
 
-<p>ちなみに、GPT-5無印（即答モード）に「タツノオトシゴの絵文字を見せて」と聞くと混乱するが、これはグリッチトークンではなく、「タツノオトシゴの絵文字は存在する」と学習してしまっているのに実際にはそのようなものがないので混乱するのであろう。GPT-5 Thinking（熟考モード）なら大丈夫である。</p>
+<p>ちなみに、GPT-5無印（即答モード）に「タツノオトシゴの絵文字を見せて」と聞くと混乱するが、これはグリッチトークンではなく、「タツノオトシゴの絵文字は存在する」と学習してしまっているのに実際にはそのようなものがないので混乱するのであろう。GPT-5 Thinking（熟考モード）なら大丈夫である。<a href="https://medium.com/@jasperhajonides/what-gpt-5s-seahorse-emoji-struggle-teaches-us-b2f3895e216a">What GPT-5’s Seahorse Emoji Struggle Teaches Us</a> 参照。</p>
+
+<p>なお、gpt-ossのトークナイザo200k_harmonyは実質o200k_baseと同じと考えてよい。やはり「植物百科通」「百科通」「bagbogbo」でおかしくなる。</p>
 
 <p>参考リンク</p>
 
@@ -71,7 +75,7 @@
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-19 10:45:16 JST</time></p>
+<p>Last modified: <time>2025-09-20 14:04:57 JST</time></p>
 </footer>
 </body>
 </html>
