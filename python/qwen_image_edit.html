@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/qwen_image_edit.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qwen-Image-Edit</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Qwen-Image-Edit</h1>
+
+<p><a href="https://huggingface.co/Qwen/Qwen-Image">Qwen-Image</a>、<a href="https://huggingface.co/Qwen/Qwen-Image-Edit">Qwen-Image-Edit</a> に続いて、最新の <a href="https://huggingface.co/Qwen/Qwen-Image-Edit-2509">Qwen-Image-Edit-2509</a> が出た。この最新版を使ってみる。</p>
+
+<p>2025-09-23時点のdiffusers-0.35.1ではうまく動かない。<code>pip install git+https://github.com/huggingface/diffusers</code> で開発版（diffusers-0.36.0.dev0）をインストールする。</p>
+
+<pre class="cell">
+import torch
+from PIL import Image
+from diffusers import QwenImageEditPlusPipeline
+
+pipeline = QwenImageEditPlusPipeline.from_pretrained("Qwen/Qwen-Image-Edit-2509", torch_dtype=torch.bfloat16)
+
+pipeline.to('mps')  # Macではmps
+pipeline.set_progress_bar_config(disable=None)
+image1 = Image.open("input1.png")
+image2 = Image.open("input2.png")
+prompt = "The magician bear is on the left, the alchemist bear is on the right, facing each other in the central park square."
+inputs = {
+    "image": [image1, image2],
+    "prompt": prompt,
+    "generator": torch.manual_seed(0),
+    "true_cfg_scale": 4.0,
+    "negative_prompt": " ",
+    "num_inference_steps": 40,
+    "num_images_per_prompt": 1,
+}
+with torch.inference_mode():
+    output = pipeline(**inputs)
+    output_image = output.images[0]
+    output_image.save("example.webp", quality=85)  # 非可逆
+    # output_image.save("example.webp", lossless=True, method=6) # 可逆
+</pre>
+
+<p>出力はJPEGでもPNGでもいいが、私は上の例のようにWebPの非可逆または可逆圧縮版をよく使っている。</p>
+
+<p>途中段階を出力するコードをGPT-5に書いてもらった。以下は変更点のみ。これを加えるとトータルでは少し遅くなる。40ステップのうち、20ステップまでは砂嵐、25ステップでやっとぼんやり見えてきて、30ステップでやっと適否が判断できる程度になる。</p>
+
+<pre>
+
+# --- live preview callback ---
+def on_step_end(pipe, i, t, kw):
+    tokens = kw["latents"]  # shape: [B, num_patches, 64]
+    with torch.no_grad():
+        # 1) unpack packed tokens -> VAE latent grid [B, z_dim(=16), T(=1), H, W]
+        lat = pipe._unpack_latents(tokens, height, width, pipe.vae_scale_factor)  # private helper used by the pipeline
+
+        # 2) match VAE dtype/device
+        lat = lat.to(pipe.vae.dtype, non_blocking=True)
+
+        # 3) un-normalize (pipeline does this right before decoding)
+        mean = torch.tensor(pipe.vae.config.latents_mean, device=lat.device, dtype=lat.dtype).view(1, pipe.vae.config.z_dim, 1, 1, 1)
+        stdinv = 1.0 / torch.tensor(pipe.vae.config.latents_std, device=lat.device, dtype=lat.dtype).view(1, pipe.vae.config.z_dim, 1, 1, 1)
+        lat = lat / stdinv + mean
+
+        # 4) decode and postprocess to a PIL image
+        frame = pipe.vae.decode(lat, return_dict=False)[0][:, :, 0]  # take temporal dim 0
+        pil = pipe.image_processor.postprocess(frame, output_type="pil")[0]
+
+        pil.save(f"step_{i:03d}.webp")  # or display in-notebook
+        print(f"[preview] step {i:02d} saved")
+
+    # IMPORTANT: return the (possibly updated) tensors for the sampler to continue
+    return {"latents": tokens}
+
+inputs = {
+    "image": [image1, image2],
+    "prompt": prompt,
+    "generator": torch.manual_seed(0),
+    "true_cfg_scale": 4.0,
+    "negative_prompt": " ",
+    "num_inference_steps": 40,
+    "num_images_per_prompt": 1,
+    "callback_on_step_end": on_step_end,
+    "callback_on_step_end_tensor_inputs": ["latents"],  # what we want passed into the callback
+}
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-09-23 17:33:49 JST</time></p>
+</footer>
+</body>
+</html>

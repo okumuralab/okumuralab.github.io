@@ -18,7 +18,11 @@
 
 <h1>PLaMo翻訳</h1>
 
-<p>2025年6月10日、<a href="https://tech.preferred.jp/ja/blog/plamo-translate-cli/">PLaMo翻訳CLI</a>が出て、簡単にPLaMo翻訳が使えるようになった。デフォルトでは4ビット量子化だが、<code>--precision 8bit</code> オプションで8ビットモデル、<code>--precision bf16</code> オプションでbf16モデルが使える。PLaMo翻訳モデルのベースはPLaMo2-8Bなので、4ビットなら4Gバイト＋α、8ビットなら8Gバイト＋α、bf16なら16Gバイト＋αのGPUメモリが必要である。</p>
+<p>[2025-09-21追記] YouTubeの<a href="https://www.youtube.com/watch?v=0XILJxjkhyc">“異様に流暢”な翻訳特化AIをどうやって作ったのか？【橋本幸治の理系通信】</a>でPLaMo翻訳の中の人（PFNの今城健太郎さん）が詳しく解説してくださっている（途中から有料）。</p>
+
+<hr>
+
+<p>2025年6月10日、<a href="https://tech.preferred.jp/ja/blog/plamo-translate-cli/">PLaMo翻訳CLI</a>が出て、簡単にPLaMo翻訳が使えるようになった。デフォルトでは <a href="https://huggingface.co/mlx-community/plamo-2-translate">4ビット量子化</a> だが、<code>--precision 8bit</code> オプションで <a href="https://huggingface.co/mlx-community/plamo-2-translate-8bit">8ビットモデル</a>、<code>--precision bf16</code> オプションで <a href="https://huggingface.co/mlx-community/plamo-2-translate-bf16">bf16モデル</a> が使える。PLaMo翻訳モデルのベースはPLaMo2-8Bなので、4ビットなら4Gバイト＋α、8ビットなら8Gバイト＋α、bf16なら16Gバイト＋αのGPUメモリが必要である。</p>
 
 <p>起動は重いので、何度も使うなら、サーバとして起動したままにしておくのが便利である：</p>
 
@@ -41,6 +45,8 @@ pbpaste | plamo-translate
 <p>とすれば、クリップボード（pasteboard）に入っているものを翻訳できる。</p>
 
 <p>ただ、数kB程度を超えると一部しか訳されないようである。</p>
+
+<hr>
 
 <p>以下は古い内容。</p>
 
@@ -90,7 +96,7 @@ response = generate(
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-06-16 17:15:19 JST</time></p>
+<p>Last modified: <time>2025-09-21 21:17:12 JST</time></p>
 </footer>
 </body>
 </html>
