@@ -48,9 +48,10 @@ model, tokenizer = load("mlx-community/gemma-3-27b-it-8bit")
 def sampler(x):
     a = mx.argsort(-x, axis=-1)[0]
     s = mx.sum(mx.exp(x[0]))
+    print(repr(tokenizer.decode(int(a[0]))))
     for t in a[:3]:
         i = int(t)
-        print(i, float(mx.exp(x[0][i])/s), repr(tokenizer.decode(i)))
+        print(f"  {mx.exp(x[0][i])/s:7.5f} {repr(tokenizer.decode(i))}")
     return mx.argmax(x, axis=-1)
 
 response = generate(model,
@@ -63,29 +64,71 @@ response = generate(model,
 print(repr(response))
 </pre>
 
+<p>本来は <code>sampler()</code> には確率の対数が渡るはずなので、合計 <code>s</code> で割る必要はないはずですが、誤差を減らすためにこうしてみました。</p>
+
 <p>結果は次のようになり、「3」がほぼ確率1で出力されることがわかります。</p>
 
 <pre>
-107 0.73046875 '\n'
-108 0.2373046875 '\n\n'
-236743 0.0172119140625 ' '
-236800 1.0 '3'
-236812 0.0006256103515625 '4'
-236778 0.0002307891845703125 '2'
-107 0.984375 '\n'
-108 0.01239013671875 '\n\n'
-236743 0.00017642974853515625 ' '
-106 0.8515625 '&lt;end_of_turn&gt;'
-818 0.037353515625 'The'
-34318 0.029052734375 'Correct'
+'\n'
+  0.71094 '\n'
+  0.26172 '\n\n'
+  0.01672 ' '
+'3'
+  1.00000 '3'
+  0.00063 '4'
+  0.00026 '2'
+'\n'
+  0.99219 '\n'
+  0.01105 '\n\n'
+  0.00018 ' '
+'&lt;end_of_turn&gt;'
+  0.85547 '&lt;end_of_turn&gt;'
+  0.03320 'Correct'
+  0.02930 'The'
 '\n3\n'
 </pre>
+
+<p>別の例でやってみましょう。</p>
+
+<pre class="cell">
+response = generate(model,
+                    tokenizer,
+                    prompt="Write a one-sentence bedtime story about a unicorn.",
+                    sampler=sampler,
+                    verbose=False)
+
+print(repr(response))
+</pre>
+
+<pre>
+'\n\n'
+  0.78516 '\n\n'
+  0.13770 ' '
+  0.01855 '\n'
+'Luna'
+  0.23535 'Luna'
+  0.20898 'With'
+  0.20898 'Cel'
+' the'
+  0.97656 ' the'
+  0.02600 ','
+  0.00002 ' was'
+' unicorn'
+  1.00000 ' unicorn'
+  0.00319 ' little'
+  0.00012 ' Unicorn'
+...(略)...
+
+'\n\nLuna the unicorn sprinkled stardust on all the sleeping flowers, wishing them sweet dreams and promising a rainbow tomorrow.\n'
+</pre>
+
+<p>改行やスペースを除けば23.5%がLunaで始まりますが、これは学習データの23.5%がLunaで始まっていたというわけではなく、このモデルとプロンプトの組合せではLunaで始まることが多いというだけです。<a href="chatgpt_api.html">こちら</a>の「トークンごとの確信度の出力」の節もご覧ください。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-05-19 11:16:16 JST</time></p>
+<p>Last modified: <time>2025-10-18 21:52:53 JST</time></p>
 </footer>
 </body>
 </html>

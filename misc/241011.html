@@ -52,7 +52,7 @@ Markdownでプレゼンテーションスライドを作るための仕組みで
 > 引用は `>` で始めます。
 
 このファイルがサンプルです。
-このファイルを `test.md` という名前で保存してお試しください。
+新しいフォルダにこのファイルを `index.md` という名前で保存してお試しください。
 
 ---
 
@@ -79,21 +79,21 @@ marp --version
 marp . --server
 ```
 
-ブラウザで http://localhost:8080/ を開き、`test.md` をクリックします。
+ブラウザで http://localhost:8080/ を開くだけです（`index.md` 以外の名前の場合はファイル名をクリックします）
 
 ---
 
 ## HTML/PDF/PowerPointファイルへの変換
 
 ```
-marp test.md --html
+marp index.md --html
 
-marp test.md --pdf
+marp index.md --pdf
 
-marp test.md --pptx
+marp index.md --pptx
 ```
 
-それぞれ `test.html`、`test.pdf`、`test.pptx` ができます。
+それぞれ `index.html`、`index.pdf`、`index.pptx` ができます。
 
 ---
 
@@ -114,7 +114,7 @@ HTMLの `img` タグも使えます。
 ローカルの画像を使ってPDF/PowerPointにするには `--allow-local-files` が必要です：
 
 ```
-marp test.md --pdf --allow-local-files
+marp index.md --pdf --allow-local-files
 ```
 
 ---
@@ -166,7 +166,7 @@ theme: gaia
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-03-11 12:04:21 JST</time></p>
+<p>Last modified: <time>2025-10-12 15:45:23 JST</time></p>
 </footer>
 </body>
 </html>

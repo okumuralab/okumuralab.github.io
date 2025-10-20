@@ -55,6 +55,7 @@ with torch.inference_mode():
 <p>途中段階を出力するコードをGPT-5に書いてもらった。以下は変更点のみ。これを加えるとトータルでは少し遅くなる。40ステップのうち、20ステップまでは砂嵐、25ステップでやっとぼんやり見えてきて、30ステップでやっと適否が判断できる程度になる。</p>
 
 <pre>
+height, width = 1024, 1024
 
 # --- live preview callback ---
 def on_step_end(pipe, i, t, kw):
@@ -89,6 +90,8 @@ inputs = {
     "negative_prompt": " ",
     "num_inference_steps": 40,
     "num_images_per_prompt": 1,
+    "height": height,
+    "width": width,
     "callback_on_step_end": on_step_end,
     "callback_on_step_end_tensor_inputs": ["latents"],  # what we want passed into the callback
 }
@@ -98,7 +101,7 @@ inputs = {
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-23 17:33:49 JST</time></p>
+<p>Last modified: <time>2025-09-23 18:13:25 JST</time></p>
 </footer>
 </body>
 </html>

@@ -7,86 +7,123 @@
 <title>Qwen-Image</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
-<script src="../js/md2html.js"></script>
+<script src="../js/copypre.js"></script>
 </head>
-<script type="text/markdown" id="md-content">
+<body>
 
 <nav id="breadcrumbs">
 <a href="../">ホーム</a> &gt;
 <a href="./">Python</a> &gt;
 </nav>
 
-# Qwen-Image
+<h1>Qwen-Image</h1>
 
-[Qwen-Image](https://huggingface.co/Qwen/Qwen-Image) は中国 [Alibaba Cloud](https://www.alibabacloud.com) の画像生成AIである。
+<p><a href="https://huggingface.co/Qwen/Qwen-Image">Qwen-Image</a> は中国 <a href="https://www.alibabacloud.com">Alibaba Cloud</a> の画像生成AIである。</p>
 
-ここではM4 Mac Studio 128GBでPythonで動かす方法をメモしておく。一般には [Qwen-Image-gguf](https://huggingface.co/city96/Qwen-Image-gguf) を [ComfyUI](https://github.com/comfyanonymous/ComfyUI/) で動かすほうが楽のようだ。
+<p>ここではM4 Max Mac Studio 128GBでPythonで動かす方法をメモしておく。一般には <a href="https://huggingface.co/city96/Qwen-Image-gguf">Qwen-Image-gguf</a> を <a href="https://github.com/comfyanonymous/ComfyUI/">ComfyUI</a> で動かすほうが楽のようだ。</p>
 
-まずPyTorchはインストールしておく（`pip install torch`）。diffusersは最新のものが必要らしいので
-```
-pip install git+https://github.com/huggingface/diffusers
-```
-として入れる。すでに `pip install diffusers` で入っているものはアンインストールされる。
+<p>まずPyTorchと最新のdiffusersをインストールしておく（<code>pip install torch diffusers</code>）。あとは、サンプルコードを適宜書き直して使う。</p>
 
-あとは、サンプルコードを適宜書き直して使う。
-
-```python
+<pre class="cell">
 from diffusers import DiffusionPipeline
 import torch
 
-model_name = "Qwen/Qwen-Image"
-
-# Load the pipeline
-torch_dtype = torch.bfloat16
 device = "mps"
-
-pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype=torch_dtype)
-pipe = pipe.to(device)
+pipe = DiffusionPipeline.from_pretrained("Qwen/Qwen-Image", torch_dtype=torch.bfloat16).to(device)
 
 positive_magic = {
-    "en": "Ultra HD, 4K, cinematic composition.", # for english prompt
-    "zh": "超清，4K，电影级构图" # for chinese prompt
+    "en": ", Ultra HD, 4K, cinematic composition.", # for english prompt
+    "zh": ", 超清，4K，电影级构图." # for chinese prompt
 }
 
-# Generate image
-# prompt = '''A coffee shop entrance features a chalkboard sign reading "Qwen Coffee 😊 $2 per cup," with a neon light beside it displaying "通义千问". Next to it hangs a poster showing a beautiful Chinese woman, and beneath the poster is written "π≈3.1415926-53589793-23846264-33832795-02384197". Ultra HD, 4K, cinematic composition'''
-
-prompt = "a cute Japanese girl. "  # プロンプト
-
-negative_prompt = " "
-
-# Generate with different aspect ratios
-aspect_ratios = {
-    "1:1": (1328, 1328),
-    "16:9": (1664, 928),
-    "9:16": (928, 1664),
-    "4:3": (1472, 1140),
-    "3:4": (1140, 1472)
-}
-
-# width, height = aspect_ratios["16:9"]
-width, height = (640, 640)  # 16の倍数
+prompt = "a Japanese anime girl"  # プロンプト
 
 image = pipe(
     prompt=prompt + positive_magic["en"],
-    negative_prompt=negative_prompt,
+    negative_prompt=" ",
+    width=640,
+    height=640,
+    num_inference_steps=50,
+    true_cfg_scale=4.0,
+    generator=torch.Generator(device=device).manual_seed(42),
+).images[0]
+
+image.save("example.webp", lossless=True, method=6)
+</pre>
+
+<p>保存はどんな形式でもよいが、上ではロスレスWebPとした。</p>
+
+<p>640×640で3分少々かかる。1664×928なら15分くらいかかる。画像生成しているとM4 Max Mac Studioの消費電力が60Wくらい増えて、ほんのり暖かくなる。</p>
+
+<p>拡散モデルの働きを理解するために、途中段階を書き出すコードをGPT-5に書いてもらった。追加部分のみ記す。</p>
+
+<pre>
+height, width = 640, 640
+
+# --- live preview callback ---
+def on_step_end(pipe, i, t, kw):
+    tokens = kw["latents"]  # shape: [B, num_patches, 64]
+    with torch.no_grad():
+        # 1) unpack packed tokens -> VAE latent grid [B, z_dim(=16), T(=1), H, W]
+        lat = pipe._unpack_latents(tokens, height, width, pipe.vae_scale_factor)  # private helper used by the pipeline
+
+        # 2) match VAE dtype/device
+        lat = lat.to(pipe.vae.dtype, non_blocking=True)
+
+        # 3) un-normalize (pipeline does this right before decoding)
+        mean = torch.tensor(pipe.vae.config.latents_mean, device=lat.device, dtype=lat.dtype).view(1, pipe.vae.config.z_dim, 1, 1, 1)
+        stdinv = 1.0 / torch.tensor(pipe.vae.config.latents_std, device=lat.device, dtype=lat.dtype).view(1, pipe.vae.config.z_dim, 1, 1, 1)
+        lat = lat / stdinv + mean
+
+        # 4) decode and postprocess to a PIL image
+        frame = pipe.vae.decode(lat, return_dict=False)[0][:, :, 0]  # take temporal dim 0
+        pil = pipe.image_processor.postprocess(frame, output_type="pil")[0]
+
+        pil.save(f"step_{i:03d}.webp")  # or display in-notebook
+        print(f"[preview] step {i:02d} saved")
+
+    # IMPORTANT: return the (possibly updated) tensors for the sampler to continue
+    return {"latents": tokens}
+
+image = pipe(
+    prompt=prompt + positive_magic["en"],
+    negative_prompt=" ",
     width=width,
     height=height,
     num_inference_steps=50,
     true_cfg_scale=4.0,
-    generator=torch.Generator(device=device)
+    generator=torch.Generator(device=device).manual_seed(42),
+    callback_on_step_end=on_step_end,
+    callback_on_step_end_tensor_inputs=["latents"],
 ).images[0]
+</pre>
 
-image.save("example.webp", lossless=True, method=6)
-```
+<p>できた50枚のWebPを結合して動画にしてみた（<code>ffmpeg -framerate 12 -i step_%03d.webp -c:v libx264 -pix_fmt yuv420p qwen_steps.mp4</code>）。</p>
 
-640×640で3分ほどかかる。1664×928なら15分くらいかかる。画像生成しているとM4 Mac Studioの消費電力が60Wくらい増えて、ほんのり暖かくなる。
+<video controls width="640" height="640">
+  <source src="img/qwen_steps.mp4" type="video/mp4">
+  お使いのブラウザは video タグに対応していません。
+</video>
 
----
+<p>次は <code>num_inference_steps</code> を1から25まで変えた結果である。こちらはanimated WebP形式にしてみた。</p>
+
+<figure><img src="img/qwen_image.webp" alt="Qwen Image"></figure>
+
+<p>最後のanimated WebPの作り方：</p>
+
+<pre>
+ffmpeg -framerate 5 -i example%03d.webp \
+  -vf "drawtext=: \
+       text='%{eif\:n+1\:d\:02}': \
+       x=10:y=10:fontsize=24:fontcolor=white:box=1:boxcolor=black@0.5" \
+  -c:v libwebp -lossless 0 -q:v 80 -loop 0 output.webp
+</pre>
+
+<hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-08-07 21:37:38 JST</time></p>
+<p>Last modified: <time>2025-09-24 10:19:23 JST</time></p>
 </footer>
-</script>
+</body>
 </html>

@@ -18,39 +18,42 @@
 
 <h1>NHKニュースのRSS</h1>
 
-<p>NHKオンラインはRSSでニュースを提供している（→<a href="https://www.nhk.or.jp/toppage/rss/index.html">RSSについて</a>）。これを定期的に読んで，気になるニュースを通知してみよう。</p>
+<p>NHKオンラインはRSSでニュースを提供している（→<a href="https://www.nhk.or.jp/toppage/rss/index.html">NHK ONEのニュースでは、RSS(Really Simple Syndication)による情報提供を実施しています。</a>）。これを定期的に読んで，気になるニュースを通知してみよう。あらかじめ <a href="https://pypi.org/project/feedparser/">feedparser</a> をpipで入れておく。</p>
 
 <p>まずは主要ニュースのフィードを読んで各項目のタイトルを表示するだけのコード：</p>
 
-<pre><code>import feedparser
+<pre>
+import feedparser
 
-d = feedparser.parse('https://www.nhk.or.jp/rss/news/cat0.xml')
+d = feedparser.parse('https://news.web.nhk/n-data/conf/na/rss/cat0.xml')
 for i in d['entries']:
     print(i['title'])
-</code></pre>
+</pre>
 
 <p>10分ごとに自動で読みに行って新着ニュースのタイトルを表示する：</p>
 
-<pre><code>import feedparser
+<pre>
+import feedparser
 import time
 
 s = set()   # 空集合
 
 while True:
-    d = feedparser.parse('https://www.nhk.or.jp/rss/news/cat0.xml')
+    d = feedparser.parse('https://news.web.nhk/n-data/conf/na/rss/cat0.xml')
     for i in d['entries']:
         x = i['title']
         if x not in s:
             print(x)
             s.add(x)
     time.sleep(600)  # 10分
-</code></pre>
+</pre>
 
 <p>Python で空集合は <code>set()</code> とすることに注意。<code>{}</code> では「空の辞書（dict）」になってしまう。</p>
 
 <p>あとは好きなように拡張すればよい。例えば時分秒を付けてタイトルに「東京」かつ「「感染」または「コロナ」」が含まれればMacの通知センターにも通知を表示する：</p>
 
-<pre><code>import feedparser
+<pre>
+import feedparser
 import time
 import os
 from dateutil.parser import parse
@@ -59,7 +62,7 @@ s = set()
 
 while True:
     try:
-        d = feedparser.parse('https://www.nhk.or.jp/rss/news/cat0.xml')
+        d = feedparser.parse('https://news.web.nhk/n-data/conf/na/rss/cat0.xml')
     except:
         print("Timeout")
     else:
@@ -72,22 +75,21 @@ while True:
                     x = x.replace("'", "").replace('"', '')
                     os.system(f"osascript -e 'display notification \"{x}\"'")
     time.sleep(300)
-</code></pre>
+</pre>
 
 <p>ほかにメールやLINEを送ったりツイートしたりすることもできる。メールを送るには postfix などが動いているマシンで次のようにする：</p>
 
-<pre><code>                os.system(f"echo '{x}' | mail hoge@example.com")</code></pre>
+<pre>
+                    os.system(f"echo '{x}' | mail hoge@example.com")
+</pre>
 
-<p>ちなみに，例えば三重県のニュース <a href="https://www3.nhk.or.jp/lnews/tsu/">https://www3.nhk.or.jp/lnews/tsu/</a> であれば <a href="https://www3.nhk.or.jp/lnews/tsu/toplist.xml">https://www3.nhk.or.jp/lnews/tsu/toplist.xml</a> のように最後に toplist.xml を付ければ地方版の RSS も得られることを教えていただいた。</p>
+<p>ちなみに，例えば三重県のニュース（旧URL https://www3.nhk.or.jp/lnews/tsu/）であれば <a href="https://news.web.nhk/lnews/tsu/toplist.xml">https://news.web.nhk/lnews/tsu/toplist.xml</a> のように最後に toplist.xml を付ければよさそうだ。</p>
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-01-06 13:39:34</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2025-10-01 17:53:42 JST</time></p>
+</footer>
 </body>
 </html>

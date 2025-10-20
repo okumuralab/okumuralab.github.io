@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/uv.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>uvを使おう</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>uvを使おう</h1>
+
+<p>今は仮想環境は <a href="venv.html">venv</a> 等ではなく <a href="https://docs.astral.sh/uv/">uv</a> を使うのが普通になった。</p>
+
+<h2>uvのインストール</h2>
+
+<p>Homebrewの入ったMac：</p>
+
+<pre>
+brew install uv
+</pre>
+
+<p>更新は <code>brew upgrade</code></p>
+
+<p>Windows：</p>
+
+<pre>
+winget install --id=astral-sh.uv -e
+</pre>
+
+<p>更新は <code>winget upgrade --all</code></p>
+
+<p>一般のMac/Linux：</p>
+
+<pre>
+curl -LsSf https://astral.sh/uv/install.sh | sh
+</pre>
+
+<p>更新は <code>uv self update</code></p>
+
+<h2>uvによるPythonのインストール（オプション）</h2>
+
+<p>すでにシステムにPythonが入っていればこれは飛ばしてよい。</p>
+
+<p>必要なバージョンを並べる。sudoは付けない。入るものは公式版と同じ。</p>
+
+<pre>
+uv python install 3.13 3.14
+</pre>
+
+<p><code>~/.local/bin</code> をPATHに登録すればこれらが直接使える。コマンド名は <code>python3.13</code> 等。</p>
+
+<p>あるいは <code>uv run --python 3.13 python</code> で <code>~/.local/bin/python3.13</code> が起動する。<code>uv run --python 3.13 python --version</code> でバージョン確認。</p>
+
+<p><code>uv run python</code> だけなら最新のものが起動する。<code>uv python pin 3.13</code> と打ち込めばカレントディレクトリに <code>.python-version</code> というものができ、そこに <code>3.13</code> と書き込まれ、そのディレクトリ以下では <code>uv run python</code> で3.13が起動するようになる。</p>
+
+<p>更新は <code>uv python upgrade 3.13</code></p>
+
+<p>削除は <code>uv python uninstall 3.13</code></p>
+
+<h2>uvによるパッケージのインストール</h2>
+
+<p>uvではグローバルにパッケージをインストールしないのが原則である。まずvenvを作らなければならない。</p>
+
+<pre>
+cd /path/to/work
+# uv python pin 3.13 (必要なら)
+uv venv
+uv pip install numpy pandas
+# あるいは uv pip install -r requirements.txt
+uv run python
+</pre>
+
+<p>これでパッケージは <code>.venv/lib/python3.13/site-packages</code> 以下にインストールされる。</p>
+
+<aside>
+<p><code>uv pip install --system numpy</code> などとすればシステムのPythonにパッケージをインストールしようとする。</p>
+</aside>
+
+<aside>
+<p>パッケージは <code>~/.cache/uv</code> 以下にキャッシュされ、そこから copy-on-write でクローンされる。もし <code>~/.cache</code> と作業ディレクトリが別ファイルシステムにあれば、次のような警告を出力するが、無視すればよい：</p>
+
+<pre>
+warning: Failed to clone files; falling back to full copy. This may lead to degraded performance.
+         If the cache and target directories are on different filesystems, reflinking may not be supported.
+         If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+</pre>
+</aside>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-10-20 15:01:37 JST</time></p>
+</footer>
+</body>
+</html>

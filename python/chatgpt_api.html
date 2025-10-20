@@ -118,7 +118,7 @@ from openai import OpenAI
 client = OpenAI()
 
 res = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-4.1",  # non-reasoning model
     messages=[
         {
             "role": "user",
@@ -134,38 +134,44 @@ print(res.choices[0].message.content)
 </pre>
 
 <pre>
-Under a blanket of twinkling stars, a gentle unicorn tiptoed through a moonlit meadow, leaving trails of sparkling dreams for all the sleeping children.
+Under a silver moon, a gentle unicorn tiptoed through a field of glowing flowers, sprinkling sweet dreams wherever her shimmering horn touched the petals.
 </pre>
 
 <pre class="cell">
+import numpy as np
+
 for x in res.choices[0].logprobs.content[:5]:
     print(repr(x.token))
     for t in x.top_logprobs:
-        print("  ", repr(t.token), t.logprob)
+        print(f"  {np.exp(t.logprob):7.5f} {repr(t.token)}")
 </pre>
 
 <pre>
 'Under'
-   'Under' -0.18204644322395325
-   'As' -1.9320464134216309
-   'B' -4.682046413421631
+  0.83356 'Under'
+  0.14485 'As'
+  0.00926 'A'
 ' a'
-   ' a' -0.29004523158073425
-   ' the' -1.4150452613830566
-   'neath' -4.790045261383057
-' blanket'
-   ' blanket' -1.3965630531311035
-   ' sky' -1.7715630531311035
-   ' silver' -1.7715630531311035
-' of'
-   ' of' -6.704273118884885e-07
-   ' woven' -15.250000953674316
-   ' stitched' -15.375000953674316
-' tw'
-   ' tw' -0.0457843616604805
-   ' stars' -4.2957844734191895
-   ' shimmering' -4.2957844734191895
+  0.74823 ' a'
+  0.24292 ' the'
+  0.00831 'neath'
+' silver'
+  0.25162 ' silver'
+  0.19596 ' blanket'
+  0.15261 ' shimmering'
+' moon'
+  0.99621 ' moon'
+  0.00150 ' cres'
+  0.00049 '-m'
+','
+  0.99924 ','
+  0.00063 'lit'
+  0.00008 'light'
 </pre>
+
+<p>詳しくはOpenAI Cookbookの <a href="https://cookbook.openai.com/examples/using_logprobs">Using logprobs</a> 参照。分類などで各選択肢の確信度を知りたいときに便利です。</p>
+
+<p>なお、このモデルの学習データの中の一角獣についての文章の83%が Under で始まっていたというような解釈をすべきではなく、このモデルではこのプロンプトで temperature = 1 で Under で始まる文章を83%生成するということに過ぎません。同じ例を<a href="mlx_lm.html">こちら</a>の最後でもやってみましたが、同じプロンプトでもモデルが違えばまったく違う分布になります。</p>
 
 <h2>ストリーミング</h2>
 
@@ -282,11 +288,23 @@ chatbot.chat(prompt="Provide a long and detailed summary of what follows:\n\n" +
 
 <p><a href="tokenize.html">LLMのトークン</a>に移しました。</p>
 
+<h2>ローカルLLMへの応用</h2>
+
+<p>上にもちょっと書いたように、<code>client = OpenAI()</code> を <code>client = OpenAI(base_url="http://localhost:1234/v1")</code> にすればローカルのLM Studioが使える。また、<code>client = OpenAI(base_url="http://localhost:8080/v1")</code> にすればローカルの llama-server が使える。</p>
+
+<p>ローカルモデルが gpt-oss-20b の場合、llama-server は例えば</p>
+
+<pre>
+llama-server -m /path/to/gpt-oss-20b-MXFP4.gguf --alias openai/gpt-oss-20b -c 8192 --jinja
+</pre>
+
+<p>のようにして起動しておく。詳しくは <a href="https://github.com/ggml-org/llama.cpp/discussions/15396">guide : running gpt-oss with llama.cpp #15396</a> 参照。PythonでのAPIの呼び出しは上と同じである。llama-serverの場合は上の「トークンごとの確信度の出力」で示したように各トークンの確信度も出力できるが、LM Studioでは <code>logprobs=True</code> は無視されるようだ。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-08-23 11:44:30 JST</time></p>
+<p>Last modified: <time>2025-10-18 21:50:55 JST</time></p>
 </footer>
 </body>
 </html>
