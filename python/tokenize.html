@@ -152,7 +152,7 @@ print()
 
 <pre class="cell">
 words = {}
-for i in range(100000):
+for i in range(len(tokenizer.vocab)):
     s = tokenizer.decode(i)
     words[i] = s
 sorted_words = sorted(words.items(), key=lambda item: len(item[1]), reverse=True)
@@ -234,8 +234,8 @@ import re
 japanese_re = re.compile('[\u3000-\u30ff\u4e00-\u9fff]')
 
 words = {}
-for i in range(262208):
-    s = tokenizer.decode([i])
+for i in range(len(tokenizer.vocab)):
+    s = tokenizer.decode(i)
     words[i] = s
 sorted_words = sorted(words.items(), key=lambda item: len(item[1]), reverse=True)
 for i, s in sorted_words[:100000]:
@@ -346,7 +346,7 @@ print("total_tokens:", total_tokens) # 2
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-19 21:30:25 JST</time></p>
+<p>Last modified: <time>2025-10-26 16:20:07 JST</time></p>
 </footer>
 </body>
 </html>

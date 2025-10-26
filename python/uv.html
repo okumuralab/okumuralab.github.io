@@ -85,7 +85,7 @@ uv run python
 <p>これでパッケージは <code>.venv/lib/python3.13/site-packages</code> 以下にインストールされる。</p>
 
 <aside>
-<p><code>uv pip install --system numpy</code> などとすればシステムのPythonにパッケージをインストールしようとする。</p>
+<p><code>uv pip install --system numpy</code> などとすればシステムのPythonにパッケージをインストールしようとする。ユーザに書き込み権限がなければ失敗する。</p>
 </aside>
 
 <aside>
@@ -96,6 +96,8 @@ warning: Failed to clone files; falling back to full copy. This may lead to degr
          If the cache and target directories are on different filesystems, reflinking may not be supported.
          If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
 </pre>
+
+<p>もし特定のファイルシステムでの作業が多いならば、<code>export UV_CACHE_DIR="/Volumes/SomeDisk/.uv-cache"</code> のようにしてそのファイルシステム上にキャッシュを置くとよい。</p>
 </aside>
 
 </main>
@@ -104,7 +106,7 @@ warning: Failed to clone files; falling back to full copy. This may lead to degr
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-10-20 15:01:37 JST</time></p>
+<p>Last modified: <time>2025-10-20 17:50:20 JST</time></p>
 </footer>
 </body>
 </html>
