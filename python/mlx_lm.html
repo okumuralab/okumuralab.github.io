@@ -18,7 +18,9 @@
 
 <h1>MLXでローカルLLM</h1>
 
-<p><a href="https://opensource.apple.com/projects/mlx/">MLX</a> は Apple Silicon 専用のライブラリです（<a href="https://zenn.dev/syun88/books/bdb1cd3830676b">MLXではじめる機械学習</a> が参考になります）。<a href="https://github.com/ml-explore/mlx-lm">MLX LM</a> は MLS で LLM をするパッケージです。Vision Language Model 用の <a href="https://github.com/Blaizzy/mlx-vlm">MLX-VLM</a> というパッケージもあります。</p>
+<p>[2025-10-27] 間違っていたので直しました。</p>
+
+<p><a href="https://opensource.apple.com/projects/mlx/">MLX</a> は Apple Silicon 専用のライブラリです（<a href="https://zenn.dev/syun88/books/bdb1cd3830676b">MLXではじめる機械学習</a> が参考になります）。<a href="https://github.com/ml-explore/mlx-lm">MLX LM</a> は MLX で LLM をするパッケージです。Vision Language Model 用の <a href="https://github.com/Blaizzy/mlx-vlm">MLX-VLM</a> というパッケージもあります。</p>
 
 <p>MLX LM で Gemma 3 27B 8bit を使う例：</p>
 
@@ -29,13 +31,50 @@ from mlx_lm.sample_utils import make_sampler
 model, tokenizer = load("mlx-community/gemma-3-27b-it-8bit")
 sampler = make_sampler(temp=0) # set temperature etc.
 
-prompt = '''
-プロンプト
-'''
+messages = [
+     {"role": "user", "content": "まどマギで好きな登場人物は？"}
+]
 
-response = generate(model, tokenizer, prompt=prompt.strip(),
+prompt = tokenizer.apply_chat_template(
+    messages,
+    tokenize=False,
+    add_generation_prompt=True,
+)
+
+response = generate(model, tokenizer, prompt=prompt,
                     max_tokens=1024, verbose=True, sampler=sampler)
 </pre>
+
+<br>
+
+<details>
+<summary>回答</summary>
+<pre style="color: black; white-space: pre-wrap">
+まどマギの登場人物はみんな魅力的で、誰か一人を選ぶのは難しいですね！
+
+それでもあえて言うなら、私は**鹿目まどか**が一番好きです。
+
+最初は普通の女の子に見えて、物語が進むにつれて、その優しさや誰かを守りたいという強い意志が明らかになっていく過程に心を打たれました。そして、最終的に彼女が選んだ道は、多くの人に希望と感動を与えたと思います。
+
+もちろん、ほむらやマミ、さやか、キュゥべえなど、他のキャラクターもそれぞれ深く掘り下げられていて、魅力的です。
+
+あなたは誰が好きですか？ 理由も教えていただけると嬉しいです！
+</pre>
+</details>
+
+<p><code>tokenizer.apply_chat_template()</code> で変換された <code>prompt</code> は</p>
+
+<pre>
+'&lt;bos&gt;&lt;start_of_turn&gt;user\nまどマギで好きな登場人物は？&lt;end_of_turn&gt;\n&lt;start_of_turn&gt;model\n'
+</pre>
+
+<p>となります。<code>add_generation_prompt=False</code> にすると</p>
+
+<pre>
+'&lt;bos&gt;&lt;start_of_turn&gt;user\nまどマギで好きな登場人物は？&lt;end_of_turn&gt;\n'
+</pre>
+
+<p>になります。<code>tokenize=True</code> にすると文字列ではなくトークン列になります。</p>
 
 <p>上位3位までのトークンの確率分布を出力してみます：</p>
 
@@ -54,10 +93,19 @@ def sampler(x):
         print(f"  {mx.exp(x[0][i])/s:7.5f} {repr(tokenizer.decode(i))}")
     return mx.argmax(x, axis=-1)
 
+messages = [
+     {"role": "user", "content": "Write a one-sentence bedtime story about a unicorn."}
+]
+
+prompt = tokenizer.apply_chat_template(
+    messages,
+    tokenize=False,
+    add_generation_prompt=True,
+)
+
 response = generate(model,
                     tokenizer,
-                    prompt="How many 'r's in strawberry? Answer with numbers only.",
-                    max_tokens=3,
+                    prompt=prompt,
                     sampler=sampler,
                     verbose=False)
 
@@ -69,23 +117,19 @@ print(repr(response))
 <p>結果は次のようになり、「3」がほぼ確率1で出力されることがわかります。</p>
 
 <pre>
-'\n'
-  0.71094 '\n'
-  0.26172 '\n\n'
-  0.01672 ' '
 '3'
   1.00000 '3'
-  0.00063 '4'
-  0.00026 '2'
-'\n'
-  0.99219 '\n'
-  0.01105 '\n\n'
-  0.00018 ' '
-'&lt;end_of_turn&gt;'
-  0.85547 '&lt;end_of_turn&gt;'
-  0.03320 'Correct'
-  0.02930 'The'
-'\n3\n'
+  0.00000 '2'
+  0.00000 '4'
+'<end_of_turn>'
+  0.99219 '<end_of_turn>'
+  0.00522 '\n'
+  0.00000 '\n\n\n\n'
+'<end_of_turn>'
+  0.87891 '<end_of_turn>'
+  0.11963 '\n'
+  0.00000 '<eos>'
+'3'
 </pre>
 
 <p>別の例でやってみましょう。</p>
@@ -101,34 +145,37 @@ print(repr(response))
 </pre>
 
 <pre>
-'\n\n'
-  0.78516 '\n\n'
-  0.13770 ' '
-  0.01855 '\n'
-'Luna'
-  0.23535 'Luna'
-  0.20898 'With'
-  0.20898 'Cel'
+'Cel'
+  0.91406 'Cel'
+  0.07520 'Luna'
+  0.01306 'With'
+'est'
+  0.50000 'est'
+  0.50000 'este'
+  0.00000 'esta'
+'ia'
+  1.00000 'ia'
+  0.00000 'ria'
+  0.00000 'ina'
 ' the'
-  0.97656 ' the'
-  0.02600 ','
-  0.00002 ' was'
+  1.00000 ' the'
+  0.00000 ','
+  0.00000 ' tw'
 ' unicorn'
   1.00000 ' unicorn'
-  0.00319 ' little'
-  0.00012 ' Unicorn'
+  0.00000 ' Unicorn'
+  0.00000 'unicorn'
 ...(略)...
-
-'\n\nLuna the unicorn sprinkled stardust on all the sleeping flowers, wishing them sweet dreams and promising a rainbow tomorrow.\n'
+'Celestia the unicorn sprinkled stardust over the sleeping forest, ensuring every creature dreamed sweet dreams filled with rainbows and magic, before gently closing her own eyes for the night.\n\n\n\n'
 </pre>
 
-<p>改行やスペースを除けば23.5%がLunaで始まりますが、これは学習データの23.5%がLunaで始まっていたというわけではなく、このモデルとプロンプトの組合せではLunaで始まることが多いというだけです。<a href="chatgpt_api.html">こちら</a>の「トークンごとの確信度の出力」の節もご覧ください。</p>
+<p>91.4%がCelest...、7.5%がLuna...で始まりますが、これは学習データの91.4%がCelest...で始まっていたというわけではなく、このモデルとプロンプトの組合せではCelest...で始まることが多いというだけです。<a href="chatgpt_api.html">こちら</a>の「トークンごとの確信度の出力」の節もご覧ください。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-10-18 21:52:53 JST</time></p>
+<p>Last modified: <time>2025-10-27 11:36:22 JST</time></p>
 </footer>
 </body>
 </html>
