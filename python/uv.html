@@ -53,7 +53,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 <p>すでにシステムにPythonが入っていればこれは飛ばしてよい。</p>
 
-<p>必要なバージョンを並べる。sudoは付けない。入るものは公式版と同じ。</p>
+<p>必要なバージョンを並べる。入るものは公式版と同じバイナリだが、ユーザ権限でインストールされる（<code>sudo</code> は付けない）。</p>
 
 <pre>
 uv python install 3.13 3.14
@@ -85,7 +85,11 @@ uv run python
 <p>これでパッケージは <code>.venv/lib/python3.13/site-packages</code> 以下にインストールされる。</p>
 
 <aside>
-<p><code>uv pip install --system numpy</code> などとすればシステムのPythonにパッケージをインストールしようとする。ユーザに書き込み権限がなければ失敗する。</p>
+<p>頭に <code>uv</code> を付けたコマンドを使う限り、環境は自動で見つけてくれるが、<code>uv run</code> を省略したいときは <code>source .venv/bin/activate</code> で環境をアクティベートする。<code>deactivate</code> で元に戻る。</p>
+</aside>
+
+<aside>
+<p><code>uv pip install --system numpy</code> などとすればシステムのPythonにパッケージをインストールしようとする。Macでpython.orgからインストールしたPythonなら、<code>/Library/Frameworks/Python.framework/</code> 以下に書き込もうとして失敗する。</p>
 </aside>
 
 <aside>
@@ -106,7 +110,7 @@ warning: Failed to clone files; falling back to full copy. This may lead to degr
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-10-20 17:50:20 JST</time></p>
+<p>Last modified: <time>2025-10-28 17:39:44 JST</time></p>
 </footer>
 </body>
 </html>

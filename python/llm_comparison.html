@@ -26,45 +26,27 @@ td, th { border: 1px solid; }
   <tr><th>Model</th><th>Context/Output</th><th>Knowledge Cutoff</th><th>$Input/1M</th><th>$Output/1M</th></tr>
   </thead>
   <tbody>
+  <tr><td><code>gpt-5.1</code></td><td>400k/128k</td><td>2024-09</td><td>1.25</td><td>10</td></tr>
+  <tr><td><code>gpt-5.1-codex</code></td><td>400k/128k</td><td>2024-09</td><td>1.25</td><td>10</td></tr>
+  <tr><td><code>gpt-5.1-codex-max</code></td><td>400k/128k</td><td>2024-09</td><td>1.25</td><td>10</td></tr>
+  <tr><td><code>gpt-5.1-codex-mini</code></td><td>400k/128k</td><td>2024-09</td><td>0.25</td><td>2</td></tr>
   <tr><td><code>gpt-5-pro</code></td><td>400k/272k</td><td>2024-09</td><td>15</td><td>120</td></tr>
   <tr><td><code>gpt-5</code></td><td>400k/128k</td><td>2024-09</td><td>1.25</td><td>10</td></tr>
-  <tr><td><code>gpt-5-chat-latest</code></td><td>128k/16k</td><td>2024-09</td><td>1.25</td><td>10</td></tr>
   <tr><td><code>gpt-5-codex</code></td><td>400k/128k</td><td>2024-09</td><td>1.25</td><td>10</td></tr>
   <tr><td><code>gpt-5-mini</code></td><td>400k/128k</td><td>2024-05</td><td>0.25</td><td>2</td></tr>
   <tr><td><code>gpt-5-nano</code></td><td>400k/128k</td><td>2024-05</td><td>0.05</td><td>0.4</td></tr>
-  <tr><td><code>o3-pro</code></td><td>200k/100k</td><td>2024-06</td><td>20</td><td>80</td></tr>
-  <tr><td><code>o3</code></td><td>200k/100k</td><td>2024-06</td><td>2</td><td>8</td></tr>
-  <tr><td><code>o4-mini</code></td><td>200k/100k</td><td>2024-06</td><td>1.1</td><td>4.4</td></tr>
   <tr><td><code>gpt-4.1</code></td><td>1M/32k</td><td>2024-06</td><td>2</td><td>8</td></tr>
-  <tr><td><code>gpt-4.1-mini</code></td><td>1M/32k</td><td>2024-06</td><td>0.4</td><td>1.6</td></tr>
-  <tr><td><code>gpt-4.1-nano</code></td><td>1M/32k</td><td>2024-06</td><td>0.1</td><td>0.4</td></tr>
-  <tr><td><code>o1-pro</code></td><td>200k/100k</td><td>2023-10</td><td>150</td><td>600</td></tr>
-  <tr><td><code>o1</code></td><td>200k/100k</td><td>2023-10</td><td>15</td><td>60</td></tr>
-  <tr><td><code>o1-mini</code></td><td>128k/64k</td><td>2023-10</td><td>3</td><td>12</td></tr>
-  <tr><td><code>o3-mini</code></td><td>200k/100k</td><td>2023-10</td><td>1.1</td><td>4.4</td></tr>
-  <tr><td><code>chatgpt-4o-latest</code></td><td>128k/16k</td><td>2023-10</td><td>5</td><td>15</td></tr>
-  <tr><td><code>gpt-4o</code></td><td>128k/16k</td><td>2023-10</td><td>2.5</td><td>10</td></tr>
-  <tr><td><code>gpt-4o-mini</code></td><td>128k/16k</td><td>2023-10</td><td>0.15</td><td>0.60</td></tr>
-  <tr><td><code>claude-sonnet-4-5-20250929</code></td><td>200k/64k</td><td>2025-07</td><td>3</td><td>15</td></tr>
-  <tr><td><code>claude-opus-4-1-20250805</code></td><td>200k/32k</td><td>2025-03</td><td>15</td><td>75</td></tr>
-  <tr><td><code>claude-opus-4-20250514</code></td><td>200k/32k</td><td>2025-03</td><td>15</td><td>75</td></tr>
-  <tr><td><code>claude-sonnet-4-20250514</code></td><td>200k/64k</td><td>2025-03</td><td>3</td><td>15</td></tr>
-  <tr><td><code>claude-3-7-sonnet-20250219</code></td><td>200k/8k<br>thinking:64k(128k)</td><td>2024-10</td><td>3</td><td>15</td></tr>
-  <tr><td><code>claude-3-5-sonnet-20241022</code></td><td>200k/8k</td><td>2024-04</td><td>3</td><td>15</td></tr>
-  <tr><td><code>claude-3-5-haiku-20241022</code></td><td>200k/8k</td><td>2024-07</td><td>1</td><td>5</td></tr>
-  <tr><td><code>claude-3-opus-20240229</code></td><td>200k/4k</td><td>2023-08</td><td>15</td><td>75</td></tr>
-  <tr><td><code>claude-3-sonnet-20240229</code></td><td>200k/4k</td><td>2023-08</td><td>3</td><td>15</td></tr>
-  <tr><td><code>claude-3-haiku-20240307</code></td><td>200k/4k</td><td>2023-08</td><td>0.25</td><td>1.25</td></tr>
-  <tr><td><code>gemini-2.5-pro</code></td><td>1M/64k</td><td>2025-01</td><td>1.25〜2.50</td><td>10〜15</td></tr>
+  <tr><td><code>claude-opus-4-5</code></td><td>200k/64k</td><td>2025-08</td><td>5</td><td>25</td></tr>
+  <tr><td><code>claude-sonnet-4-5</code></td><td>200k/64k</td><td>2025-07</td><td>3</td><td>15</td></tr>
+  <tr><td><code>claude-haiku-4-5</code></td><td>200k/64k</td><td>2025-07</td><td>1</td><td>5</td></tr>
+  <tr><td><code>gemini-3-pro-preview</code></td><td>1M/64k</td><td>2025-01</td><td>(2〜4)</td><td>(12〜18)</td></tr>
+  <tr><td><code>gemini-2.5-pro</code></td><td>1M/64k</td><td>2025-01</td><td>(1.25〜2.50)</td><td>(10〜15)</td></tr>
   <tr><td><code>gemini-2.5-flash</code></td><td>1M/64k</td><td>2025-01</td><td>(0.3)</td><td>(2.5)</td></tr>
-  <tr><td><code>gemini-2.5-flash-lite-preview-06-17</code></td><td>1M/64k</td><td>2025-01</td><td>(0.1)</td><td>(0.4)</td></tr>
+  <tr><td><code>gemini-2.5-flash-lite</code></td><td>1M/64k</td><td>2025-01</td><td>(0.1)</td><td>(0.4)</td></tr>
+  <tr><td><code>grok-4-1-fast-reasoning</code></td><td>2M</td><td>?</td><td>0.2</td><td>0.5</td></tr>
+  <tr><td><code>grok-4-1-fast-non-reasoning</code></td><td>2M</td><td>?</td><td>0.2</td><td>0.5</td></tr>
   <tr><td><code>grok-code-fast-1</code></td><td>256k</td><td>?</td><td>0.2</td><td>1.5</td></tr>
-  <tr><td><code>grok-4-fast-reasoning</code></td><td>2M</td><td>?</td><td>0.2</td><td>0.5</td></tr>
-  <tr><td><code>grok-4-fast-non-reasoning</code></td><td>2M</td><td>?</td><td>0.2</td><td>0.5</td></tr>
-  <tr><td><code>grok-4</code></td><td>256k</td><td>?</td><td>3</td><td>15</td></tr>
-  <tr><td><code>grok-3</code></td><td>128k</td><td>2024-07</td><td>3</td><td>15</td></tr>
-  <tr><td><code>grok-3-mini</code></td><td>128k</td><td>2024-07</td><td>0.3</td><td>0.5</td></tr>
-  <tr><td><code>plamo-2.0-prime</code></td><td>32k</td><td></td><td>60円</td><td>250円</td></tr>
+  <tr><td><code>plamo-2.1-prime</code></td><td>32k</td><td></td><td>60円</td><td>250円</td></tr>
   </tbody>
   <!-- <tfoot>
   <tr><td colspan="5" class="footnote">* gpt-4.5-previewは2025-07-14に終了予定</td></tr>
@@ -83,7 +65,7 @@ td, th { border: 1px solid; }
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-10-10 09:47:40 JST</time></p>
+<p>Last modified: <time>2025-12-08 11:25:43 JST</time></p>
 </footer>
 </body>
 </html>

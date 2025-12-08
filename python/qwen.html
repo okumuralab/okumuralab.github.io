@@ -95,7 +95,12 @@ from mlx_lm.sample_utils import make_sampler
 
 model, tokenizer = load("/Users/okumura/.lmstudio/lmstudio-community/Qwen3-VL-32B-Instruct-MLX-8bit")
 
-sampler = make_sampler(temp=0) # set temperature etc.
+sampler = make_sampler(
+    temp=0,    # temperature, > 0 for thinking mode
+    # top_p=0,
+    # min_p=0,
+    # top_k=0,
+)
 
 messages = [
     # {"role": "system", "content": "You are Qwen, created by Alibaba Cloud. You are a helpful assistant."},
@@ -224,7 +229,7 @@ for i, s in sorted_words:
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-10-26 19:51:44 JST</time></p>
+<p>Last modified: <time>2025-10-27 12:41:18 JST</time></p>
 </footer>
 </body>
 </html>

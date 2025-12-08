@@ -79,17 +79,20 @@ pandas.core.frame.DataFrame
 <p>デフォルトでは次の文字列が欠測値（<code>NaN</code>）と判断されます：</p>
 
 <pre>
-'', '#N/A', '#N/A N/A', '#NA', '-1.#IND', '-1.#QNAN', '-NaN', '-nan',
-'1.#IND', '1.#QNAN', '<NA>', 'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null'
+"", "#N/A", "#N/A N/A", "#NA", "-1.#IND", "-1.#QNAN", "-NaN", "-nan",
+"1.#IND", "1.#QNAN", "&lt;NA&gt;", "N/A", "NA", "NULL", "NaN", "None",
+"n/a", "nan", "null"
 </pre>
 
-<p>空文字列と <code>#N/A</code> はExcelでも欠測値と解釈されますが、<code>#</code> をコメント開始文字と設定している場合（<code>comment="#"</code>）には <code>"#N/A"</code> のようにダブルクォートで囲む必要があります。</p>
+<p>空文字列と <code>#N/A</code> はExcelでも欠測値と解釈されますが、<code>#</code> をコメント開始文字と設定している場合（<code>comment="#"</code>）には <code>"#N/A"</code> のようにダブルクォートで囲む必要があります。<code>#</code> を含まなければダブルクォートはあってもなくてもかまいません。</p>
 
 <p>これ以外の欠測値用文字列が必要なときは <code>na_values</code> と <code>keep_default_na</code>（デフォルトは <code>True</code>）で指定できます。空欄だけを欠測値としたい場合は次のようにします：</p>
 
 <pre>
 df = pd.read_csv("finename.csv", na_values="", keep_default_na=False)
 </pre>
+
+<p>文字データの際には <code>keep_default_na=False</code> とするのが安全のようです（→ <a href="https://zenn.dev/mierune/articles/014c283ecd2be6">Pandasで「野根（None）」という地名が欠損値（NaN）になってしまった話</a>）。</p>
 
 <div class="note">
 <p>以下の記述について、いま確認したら、結果は <code>0.0</code> つまり誤差は出ませんでした。改善されたのでしょう。念のため残しておきます：</p>
@@ -352,7 +355,7 @@ df = pd.read_csv(StringIO(r.text))
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2025-01-03 10:05:35 JST</time>
+Last modified: <time>2025-10-31 15:31:33 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

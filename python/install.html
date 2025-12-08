@@ -25,13 +25,11 @@
 <p><a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。</p>
 </div>
 
-<p>ここでは Python 3 の実行環境を一つだけインストールする方法を解説します。複数の Python 環境を切り替えて使う方法は <a href="venv.html">venvによる仮想環境</a> をご覧ください。</p>
+<p>ここでは Python 3 の実行環境を一つだけインストールする方法を解説します。複数の Python 環境を切り替えて使うには <a href="venv.html">venvによる仮想環境</a> を使う方法が用意されていますが、現在は <a href="uv.html">uv</a> というツールを使う方法をお薦めします。</p>
 
-<p>2025年2月現在、最新のものは Python 3.13.2 です。PyTorchも3.13に対応しましたので、そろそろ3.12ではなく3.13を使ってもよさそうです。以下で3.12とある箇所は3.13に読み替えてください。</p>
+<p>2025年12月現在、最新のものは Python 3.14.2 ですが、いろいろなパッケージとの互換性を考えれば、まだ 3.13.x を使うほうが安心です。パッケージによっては 3.12.x あるいはもっと古いものしか対応していないものもあります。</p>
 
-<p>なお、<a href="https://devguide.python.org/versions/">Status of Python versions</a> にあるように、現在3.9以上のバージョンがサポートされています。</p>
-
-<p>インストールしないで <a href="https://colab.research.google.com/">Google Colaboratory</a> で使う方法については<a href="run.html">実行</a>のページに移しました。</p>
+<p>なお、<a href="https://devguide.python.org/versions/">Status of Python versions</a> にあるように、現在3.10以上のバージョンがサポートされています。</p>
 
 <!--
 <div class="note">
@@ -44,6 +42,8 @@ defaults write org.python.python ApplePersistenceIgnoreState NO
 -->
 
 <p>ライブラリ名のタイポ（綴り間違い）を狙ってマルウェアをインストールさせる手口が見つかっています。ライブラリをインストールするコマンド <code>pip3 install 〜</code> を打ち込むときは、なるべく、正しい例をコピペしましょう。</p>
+
+<p>以下のインストール例は、いずれもやや古いものです。バージョン番号は適宜読み替えてください。</p>
 
 <h2>公式サイト Python.org からのインストール（Windows）</h2>
 
@@ -270,7 +270,7 @@ sudo apt upgrade
 <pre>
 sudo apt install python3-pip
 pip install --upgrade pip
-pip install matplotlib pandas jupyterlab japanize-matplotlib
+pip install matplotlib pandas jupyterlab
 </pre>
 
 <p>これで <code>python3</code> や <code>ipython</code> が使えます。</p>
@@ -375,7 +375,7 @@ apk add python3 py3-pip
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-02-07 14:05:45 JST</time></p>
+<p>Last modified: <time>2025-12-07 10:28:45 JST</time></p>
 </footer>
 </body>
 </html>

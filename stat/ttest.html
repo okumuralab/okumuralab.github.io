@@ -446,13 +446,15 @@ mean(p[1,] <= 0.05)
 mean(p[2,] <= 0.05)
 </code></pre>
 
-<p><code>t.test(x, y)</code> で優位な結果が得られる確率は0.3%ほどしかないのに，<code>t.test(x - y)</code> なら79%の確率で有意になります。</p>
+<p><code>t.test(x, y)</code> で有意な結果が得られる確率は0.3%ほどしかないのに，<code>t.test(x - y)</code> なら79%の確率で有意になります。</p>
 
 <p>このように，値が独立ではなくペアの関係があるなら，その情報を利用しないと損です。</p>
 
 <p>このような，対応がある場合の $t$ 検定は，プリテスト・ポストテストの差の分析のほか，一卵性双生児を使った実験にも使われます。また，何らかの指標が似ている人どうしで人為的なペアを作るということもしばしば行われますが，その場合は，その「何らかの指標」を含めたモデル化をすることも含めて，よく検討すべきかもしれません。</p>
 
 <p>なお，<code>t.test(X - Y)</code> の代わりに <code>t.test(X, Y, paired=TRUE)</code> としても同じことです。</p>
+
+<p>ちなみに、対応のあるデータは <a href="https://rpubs.com/schmettow/444100">before-after plot</a> で表すことがよくありますが、スパゲッティみたいになりがちなので、単に $(X_i, Y_i)$ を散布図にするか、あるいはそれを45度回転した $((X_i+Y_i)/2, (X_i-Y_i)/2)$ をプロットするのも便利です。横軸に平均、縦軸に差をとった $((X_i+Y_i)/2, X_i-Y_i)$ のプロットは <a href="https://en.wikipedia.org/wiki/Bland%E2%80%93Altman_plot">Bland-Altman plot</a> または Tukey の mean-difference plot (m-d plot) と呼ばれます。</p>
 
 <h2>3標本以上の平均が等しいかどうかの検定</h2>
 
@@ -499,7 +501,7 @@ mean(a)
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2019-01-09 10:24:48</time>
+Last modified: <time>2025-11-01 09:29:25 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -24,7 +24,7 @@
 
 <p>まず<a href="https://platform.openai.com/signup/">こちら</a>で登録してAPIキーを発行してもらいます。サブスクのChatGPTと異なり、<a href="https://openai.com/pricing">料金</a>は従量制で、百万トークンあたり何ドルという具合に課金されます。値段の比較は<a href="llm_comparison.html">LLM API比較</a>がわかりやすいと思います。</p>
 
-<p>APIの概要はOpenAIの <a href="https://platform.openai.com">OpenAI developer platform</a> からドキュメンテーション、APIレファレンスなどをご覧ください。APIで送られたデータは学習用に使われることはありません。不正使用の監視のために30日間保持され、特に問題なければ消去されるようです。</p>
+<p>APIの概要はOpenAIの <a href="https://platform.openai.com">OpenAI Platform</a> からドキュメンテーション、APIレファレンスなどをご覧ください。APIで送られたデータは学習用に使われることはありません。不正使用の監視のために30日間保持され、特に問題なければ消去されるようです。</p>
 
 <h2>使い方の基本</h2>
 
@@ -38,6 +38,18 @@ export OPENAI_API_KEY="sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 <p>と打ち込めば環境変数が設定されます。<code>.bashrc</code> か <code>.zshenv</code> 等に書き込んでおけばシェル起動時に設定されます。APIキーを書き込んだファイルは他人に見られないようにパーミッションを正しく設定しておきましょう。環境変数が使えないときは <a href="https://pypi.org/project/python-dotenv/">python-dotenv</a> が便利そうです。</p>
 
+<p>使えるモデルの一覧を新しい順に出力してみましょう。</p>
+
+<pre class="cell">
+from openai import OpenAI
+import datetime
+
+client = OpenAI()
+models = client.models.list()
+for m in sorted(models.data, key=lambda x: x.created, reverse=True):
+    print(datetime.datetime.fromtimestamp(m.created).strftime('%Y-%m-%d'), m.id)
+</pre>
+
 <p>使い方の基本は次の通りです（2023-11-07に大きく変わりました）：</p>
 
 <pre class="cell">
@@ -49,7 +61,7 @@ client = OpenAI() # 環境変数からAPIキーを取得する場合
 # client = OpenAI(api_key="sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 
 res = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-5",
     messages=[
         {"role": "system", "content": "あなたは賢いAIです。"},  # 役割設定（省略可）
         {"role": "user", "content": "1たす1は？"}               # 最初の質問
@@ -64,7 +76,7 @@ print(res.choices[0].message.content)  # 答えが返る
 
 <pre>
 res = client.chat.completions.create(
-    model="gpt-4.1",
+    model="gpt-5",
     messages=[
         {"role": "system", "content": "あなたは賢いAIです。"},  # 役割設定（省略可）
         {"role": "user", "content": "1たす1は？"},              # 最初の質問
@@ -111,14 +123,14 @@ while True:
 
 <h2>トークンごとの確信度の出力</h2>
 
-<p>LLMは次のトークンの「確率分布」（確信度）を計算し、それに従って実際の次のトークンをランダムに選びます。ただしそれは <code>temperature=1</code> あたりに設定したときで、<code>temperature=0</code> にすればつねに最大確率のトークンが選ばれます。「確率分布」（実際には確率の対数logprobs）は次のようにして調べることができます。</p>
+<p>LLMは次のトークンの「確率分布」（確信度）を計算し、それに従って実際の次のトークンをランダムに選びます。ただしそれは <code>temperature=1</code> あたりに設定したときで、<code>temperature=0</code> にすればつねに最大確率のトークンが選ばれます。「確率分布」（実際には確率の対数logprobs）は次のようにして調べることができます。使えるのはnon-reasoningモデルあるいはgpt-5.1のデフォルト（reasoningのeffort="none"）です。</p>
 
 <pre class="cell">
 from openai import OpenAI
 client = OpenAI()
 
 res = client.chat.completions.create(
-    model="gpt-4.1",  # non-reasoning model
+    model="gpt-5.1",  # non-reasoning model
     messages=[
         {
             "role": "user",
@@ -134,7 +146,7 @@ print(res.choices[0].message.content)
 </pre>
 
 <pre>
-Under a silver moon, a gentle unicorn tiptoed through a field of glowing flowers, sprinkling sweet dreams wherever her shimmering horn touched the petals.
+Under a sky sprinkled with sleepy stars, a gentle unicorn with a silver mane tiptoed through the moonlit forest, leaving a trail of soft, glowing dreams for every child already fast asleep.
 </pre>
 
 <pre class="cell">
@@ -148,30 +160,30 @@ for x in res.choices[0].logprobs.content[:5]:
 
 <pre>
 'Under'
-  0.83356 'Under'
-  0.14485 'As'
-  0.00926 'A'
+  0.45307 'Under'
+  0.27480 'As'
+  0.21402 'A'
 ' a'
-  0.74823 ' a'
-  0.24292 ' the'
-  0.00831 'neath'
-' silver'
-  0.25162 ' silver'
-  0.19596 ' blanket'
-  0.15261 ' shimmering'
-' moon'
-  0.99621 ' moon'
-  0.00150 ' cres'
-  0.00049 '-m'
-','
-  0.99924 ','
-  0.00063 'lit'
-  0.00008 'light'
+  0.99956 ' a'
+  0.00043 ' the'
+  0.00000 'neath'
+' sky'
+  0.79726 ' sky'
+  0.12226 ' silver'
+  0.03503 ' moon'
+' sprinkled'
+  0.92446 ' sprinkled'
+  0.03585 ' dust'
+  0.02464 ' stitched'
+' with'
+  1.00000 ' with'
+  0.00000 ' softly'
+  0.00000 ' thick'
 </pre>
 
 <p>詳しくはOpenAI Cookbookの <a href="https://cookbook.openai.com/examples/using_logprobs">Using logprobs</a> 参照。分類などで各選択肢の確信度を知りたいときに便利です。</p>
 
-<p>なお、このモデルの学習データの中の一角獣についての文章の83%が Under で始まっていたというような解釈をすべきではなく、このモデルではこのプロンプトで temperature = 1 で Under で始まる文章を83%生成するということに過ぎません。同じ例を<a href="mlx_lm.html">こちら</a>の最後でもやってみましたが、同じプロンプトでもモデルが違えばまったく違う分布になります。</p>
+<p>なお、このモデルの学習データの中の一角獣についての文章の45%が Under で始まっていたというような解釈をすべきではなく、このモデルではこのプロンプトで temperature = 1 で Under で始まる文章を45%生成するということに過ぎません。同じ例を<a href="mlx_lm.html">こちら</a>の最後でもやってみましたが、同じプロンプトでもモデルが違えばまったく違う分布になります。</p>
 
 <h2>ストリーミング</h2>
 
@@ -304,7 +316,7 @@ llama-server -m /path/to/gpt-oss-20b-MXFP4.gguf --alias openai/gpt-oss-20b -c 81
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-10-18 21:50:55 JST</time></p>
+<p>Last modified: <time>2025-11-18 11:30:19 JST</time></p>
 </footer>
 </body>
 </html>

@@ -18,7 +18,7 @@
 
 <h1>MLXでローカルLLM</h1>
 
-<p>[2025-10-27] 間違っていたので直しました。</p>
+<p>[2025-10-27] 大幅改訂。</p>
 
 <p><a href="https://opensource.apple.com/projects/mlx/">MLX</a> は Apple Silicon 専用のライブラリです（<a href="https://zenn.dev/syun88/books/bdb1cd3830676b">MLXではじめる機械学習</a> が参考になります）。<a href="https://github.com/ml-explore/mlx-lm">MLX LM</a> は MLX で LLM をするパッケージです。Vision Language Model 用の <a href="https://github.com/Blaizzy/mlx-vlm">MLX-VLM</a> というパッケージもあります。</p>
 
@@ -29,17 +29,22 @@ from mlx_lm import load, generate
 from mlx_lm.sample_utils import make_sampler
 
 model, tokenizer = load("mlx-community/gemma-3-27b-it-8bit")
-sampler = make_sampler(temp=0) # set temperature etc.
 
-messages = [
-     {"role": "user", "content": "まどマギで好きな登場人物は？"}
-]
-
-prompt = tokenizer.apply_chat_template(
-    messages,
-    tokenize=False,
-    add_generation_prompt=True,
+sampler = make_sampler(
+    temp=0,    # temperature
+    # top_p=0,
+    # min_p=0,
+    # top_k=0,
 )
+
+prompt = "まどマギで好きな登場人物は？"
+
+if tokenizer.chat_template is not None:
+    prompt = tokenizer.apply_chat_template(
+        [{"role": "user", "content": prompt}],
+        tokenize=False,
+        add_generation_prompt=True,
+    )
 
 response = generate(model, tokenizer, prompt=prompt,
                     max_tokens=1024, verbose=True, sampler=sampler)
@@ -48,7 +53,7 @@ response = generate(model, tokenizer, prompt=prompt,
 <br>
 
 <details>
-<summary>回答</summary>
+<summary>回答（クリックで表示）</summary>
 <pre style="color: black; white-space: pre-wrap">
 まどマギの登場人物はみんな魅力的で、誰か一人を選ぶのは難しいですね！
 
@@ -74,7 +79,7 @@ response = generate(model, tokenizer, prompt=prompt,
 '&lt;bos&gt;&lt;start_of_turn&gt;user\nまどマギで好きな登場人物は？&lt;end_of_turn&gt;\n'
 </pre>
 
-<p>になります。<code>tokenize=True</code> にすると文字列ではなくトークン列になります。</p>
+<p>になります。これでも答えてくれますが、鹿目まどかでなく美樹さやかになるなど、まったく違った答えになります。なお、<code>tokenize=True</code> にすると文字列ではなくトークン列になりますが、これは回答に影響しないようです。</p>
 
 <p>上位3位までのトークンの確率分布を出力してみます：</p>
 
@@ -93,15 +98,14 @@ def sampler(x):
         print(f"  {mx.exp(x[0][i])/s:7.5f} {repr(tokenizer.decode(i))}")
     return mx.argmax(x, axis=-1)
 
-messages = [
-     {"role": "user", "content": "Write a one-sentence bedtime story about a unicorn."}
-]
+prompt = "How many 'r's in strawberry? Answer with numbers only."
 
-prompt = tokenizer.apply_chat_template(
-    messages,
-    tokenize=False,
-    add_generation_prompt=True,
-)
+if tokenizer.chat_template is not None:
+    prompt = tokenizer.apply_chat_template(
+        [{"role": "user", "content": prompt}],
+        tokenize=False,
+        add_generation_prompt=True,
+    )
 
 response = generate(model,
                     tokenizer,
@@ -135,9 +139,18 @@ print(repr(response))
 <p>別の例でやってみましょう。</p>
 
 <pre class="cell">
+prompt = "Write a one-sentence bedtime story about a unicorn."
+
+if tokenizer.chat_template is not None:
+    prompt = tokenizer.apply_chat_template(
+        [{"role": "user", "content": prompt}],
+        tokenize=False,
+        add_generation_prompt=True,
+    )
+
 response = generate(model,
                     tokenizer,
-                    prompt="Write a one-sentence bedtime story about a unicorn.",
+                    prompt=prompt,
                     sampler=sampler,
                     verbose=False)
 
@@ -175,7 +188,7 @@ print(repr(response))
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-10-27 11:36:22 JST</time></p>
+<p>Last modified: <time>2025-10-27 16:28:41 JST</time></p>
 </footer>
 </body>
 </html>

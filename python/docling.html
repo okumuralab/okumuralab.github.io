@@ -18,24 +18,31 @@
 
 <h1>DoclingでPDFを読む</h1>
 
-<p>[2025-03-18 追記] <a href="https://huggingface.co/ds4sd/SmolDocling-256M-preview">SmolDocling</a> というOCRエンジンが追加されたようです。</p>
-
 <p><a href="https://github.com/DS4SD/docling">Docling</a> はPDF等を解釈してMarkdown/JSONにするツールです。IBMが開発しました。arXivの <a href="https://arxiv.org/abs/2408.09869">Docling Technical Report</a> に解説されています。Pythonから使えるほか、コマンド <code>docling</code> で使うこともできます。</p>
 
-<p><code>pip install docling</code> でインストールできますが、依存関係が複雑で、2025年10月26日にインストールしたときは lxml 6.0.2 → 5.4.0、numpy 2.3.4 → 2.2.6、pillow 12.0.0 → 11.3.0 にそれぞれダウングレードされました。再度 <code>pip install --upgrade lxml numpy pillow</code> して依存関係を壊してみましたが、特に問題なく動いているようです。</p>
+<p><code>pip install docling</code> でインストールできますが、依存関係が複雑なので、普段使いのPythonに入れるのではなく、例えばuvを使って</p>
 
-<p><code>docling --help</code> で詳しいヘルプが出ます。<code>docling example.pdf</code> で <code>example.md</code> が生成されます。ローカルのPDFファイルの代わりにURLを与えることもできます。初回実行時にHugging Faceからモデルがダウンロードされ、<code>~/.cache/huggingface/hub/models--ds4sd--docling-models</code> に入ります。モデルは全体で550Mバイトほどでした。</p>
+<pre>
+mkdir /path/to/docling
+cd /path/to/docling
+uv venv
+uv pip install docling
+</pre>
 
-<p>実行はかなり遅いので、最初は小さいファイルで試してみるのがよさそうです。日本語についてはやや難点が残っているようで、PDFバックエンドをオプション <code>--pdf-backend=pypdfium2</code> で <a href="pypdfium2.html">pypdfium2</a> などに変えるほうがよさそうです。</p>
+<p>として、<code>/path/to/docling/.venv/bin/docling</code> のようにして起動することにしました（<code>/path/to/</code> の部分は適宜変更してください）。Pythonは3.13で大丈夫でした。</p>
 
-<p>図は <code>![Image](data:image/png;base64,...)</code> のようにしてMarkdownに埋め込んでくれます。</p>
+<p><code>docling --help</code> で詳しいヘルプが出ます。<code>docling example.pdf</code> で <code>example.md</code> が生成されます。ローカルのPDFファイルの代わりにURLを与えることもできます。初回実行時にHugging Faceからモデルがダウンロードされ、<code>~/.cache/huggingface/hub</code> 以下に入ります。</p>
+
+<p>実行はかなり遅いので、最初は小さいファイルで試してみるのがよさそうです。日本語についてはPDFバックエンドをオプション <code>--pdf-backend=pypdfium2</code> で <a href="pypdfium2.html">pypdfium2</a> に変えるなどする方がいいかもしれません。</p>
+
+<p>図は <code>![Image](data:image/png;base64,...)</code> のようにbase64でMarkdownに埋め込んでくれます。</p>
 
 <p>MarkdownはMacでは <code>qlmanage -p *.md</code> でプレビューできます。</p>
 
 <hr>
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-10-26 20:26:08 JST</time></p>
+<p>Last modified: <time>2025-11-27 09:16:54 JST</time></p>
 </footer>
 </body>
 </html>

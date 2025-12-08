@@ -26,6 +26,10 @@
 <p>・・・はずであるが、普段使いのPython 3.12.8でうまくいかなかった。そもそもDeepFaceはTensorFlowに依存するのだが、久しぶりに使ったので少しトラブった。そもそも最近のTensorFlowは <code>pip install tensorflow</code> だけでなく <code>pip install tf-keras</code> も必要である。さらに、<code>import tensorflow as tf</code> すると AttributeError: 'NoneType' object has no attribute 'Rlocation' で落ちてしまう。これは <code>mesop</code> が悪さをしているようだ（<a href="https://github.com/tensorflow/tensorflow/issues/75288">Fail import tensorflow if rules_python is installed.</a>）。とりあえず <code>pip uninstall mesop</code> すれば動いた。</p>
 </aside>
 
+<aside>
+<p>[2025-11-18] Mac Studio 2025 M4 Max、Python 3.13.9 で問題なくインストールできたように思う。ただ、<code>DeepFace.represent()</code> が返ってこないことが増えたような気もする。</p>
+</aside>
+
 <p>使い方の基本は、</p>
 
 <pre>
@@ -126,7 +130,7 @@ plt.show()
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-12-30 16:10:57 JST</time></p>
+<p>Last modified: <time>2025-11-18 19:44:23 JST</time></p>
 </footer>
 </body>
 </html>

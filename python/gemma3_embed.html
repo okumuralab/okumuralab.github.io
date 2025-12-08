@@ -27,7 +27,7 @@ model, tokenizer = load("mlx-community/gemma-3-27b-it-8bit")
 
 prompt = "queen"
 token_ids = tokenizer.encode(prompt)  # [2, 91024]
-tokens = tokenizer.convert_ids_to_tokens(token_ids)  # ['<bos>', 'queen']
+tokens = tokenizer.convert_ids_to_tokens(token_ids)  # ['&lt;bos&gt;', 'queen']
 </pre>
 
 <p>トークン列を埋め込みベクトルに変換するための関数を探すために、Pythonに <code>model</code> と打ち込んでみる：</p>
@@ -81,7 +81,7 @@ array([[ 1.000002  ,  0.27174592,  0.21292192,  0.10807453, -0.35068962],
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-19 21:24:16 JST</time></p>
+<p>Last modified: <time>2025-10-27 16:46:18 JST</time></p>
 </footer>
 </body>
 </html>

@@ -27,6 +27,8 @@
 
 <p>Marp、Marpitの開発者は日本人の<a href="https://github.com/yhatt">服部雄輝さん</a>です。</p>
 
+<p>次の例を使って実験してみてください。</p>
+
 <pre>
 ---
 marp: true
@@ -59,15 +61,21 @@ Markdownでプレゼンテーションスライドを作るための仕組みで
 ## Mac/Homebrewでのインストール
 
 ```
-brew install node
-node -v
-npm -v
-
-npm install -g @marp-team/marp-cli
-marp --version
+brew install marp-cli
 ```
 
-アップデートは `npm update -g`
+更新は `brew update && brew upgrade`
+
+
+あるいは `brew install node` した環境で
+
+```
+npm install -g @marp-team/marp-cli
+```
+
+更新は `npm update -g`
+
+バージョン確認: `marp --version`
 
 ---
 
@@ -79,7 +87,7 @@ marp --version
 marp . --server
 ```
 
-ブラウザで http://localhost:8080/ を開くだけです（`index.md` 以外の名前の場合はファイル名をクリックします）
+ブラウザで http://localhost:8080/ を開きます（もしファイル名がリストされたらファイル名をクリックします）
 
 ---
 
@@ -166,7 +174,7 @@ theme: gaia
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-10-12 15:45:23 JST</time></p>
+<p>Last modified: <time>2025-12-03 14:22:26 JST</time></p>
 </footer>
 </body>
 </html>

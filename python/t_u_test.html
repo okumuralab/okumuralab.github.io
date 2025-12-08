@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/t_u_test.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>t検定とMann-WhitneyのU検定</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<main>
+<h1>$t$ 検定とMann-Whitneyの $U$ 検定</h1>
+
+<p>「$t$ 検定はデータが正規分布をしていないと使えない。正規分布でない場合はMann-Whitneyの $U$ 検定（<a href="../stat/wmw.html">Wilcoxon-Mann-Whitney検定</a>、Wilcoxonの順位和検定ともいう）を使え」とよく言われてきました。</p>
+
+<p>われわれが観測するデータは、詳しく見れば多少なりとも正規分布から外れているはずなので、それなら $t$ 検定を捨ててこっちを使えばいいのでしょうか？</p>
+
+<p>でもAndrew Gelman御大は <a href="http://andrewgelman.com/2015/07/13/dont-do-the-wilcoxon/">Don't do the Wilcoxon</a> なんてことを言っておられます。本当にややこしい。</p>
+
+<p>そもそも $t$ 検定が何を検定するかというと、データの平均値の差です。データがほとんどどんな分布をしていようと、データの平均値はほぼ正規分布になる（データの個数が増えると正規分布に近づく）という「中心極限定理」があるので、正規分布に基づく検定で大丈夫だ、というのが、ここで言いたいことです。もっと安心して $t$ 検定を使いましょう。</p>
+
+<p>それに、最近は「有意か、有意でないか」の2分割は批判されていて、平均値の差であれば具体的にどれくらい差があるかを信頼区間として示すことが求められるようになってきました。「薬Xは収縮期血圧を有意に下げた（p &lt 0.05）」というより「薬Xは収縮期血圧を10mmHg下げた（95%信頼区間 [5, 15]）」というほうが情報量がありますよね。一方、Wilcoxonのほうは、順位だけに基づくので、例えば2組のデータ $\{1,2,3,4\}$、$\{5,6,7,8\}$ の違いの $p$ 値と、2組のデータ $\{1,2,3,4\}$、$\{105,106,107,108\}$ の違いの $p$ 値とは、まったく同じです。</p>
+
+<aside>
+<p>平均値の差の信頼区間の求め方は<a href="ttest.html">t検定</a>のページをご覧ください。</p>
+</aside>
+
+<aside>
+<p>詳しくは<a href="../stat/wmw.html">Wilcoxon-Mann-Whitney検定</a>で説明しましたが、Wilcoxonはそもそも平均値が等しいことの検定ではなく、両群の分布が等しいという帰無仮説についてのノンパラメトリックな検定です。ノンパラメトリックな方法で信頼区間を求めたいなら、平均値ではなく中央値の差の信頼区間をBootstrap法などで求めることになるでしょう。なお、Rの <code>wilcox.test()</code> で <code>conf.int=TRUE</code> として求められる信頼区間は、中央値の差の信頼区間ではなく、両群から1個ずつ取った2値の差の中央値の信頼区間です。</p>
+</aside>
+
+<p>「安心して $t$ 検定を」といっても、どれくらい安心できるのか、具体的にわかったほうがいいので、ちょっとシミュレーションをしてみましょう。ある検定法で求めた $p$ 値がどれくらい妥当かを示す簡単な方法として、帰無仮説に従うサンプルをたくさん生成して検定して $p$ 値を求め、それが0から1までの区間で一様分布になっているかを調べる方法があります。一様分布なら例えば $p &lt; 0.05$ になる確率がちょうど 0.05 ですので、$p$ 値の性質を満たしています。</p>
+
+<p>まずはデータが正規分布に従う場合を考えましょう。標準正規分布（平均 0、分散 1 の正規分布）から $M = 10$ 個ずつ取った2つのサンプルを生成し、分散が等しいと仮定した $t$ 検定をして $p$ 値を求め、$p$ 値のヒストグラムを描きます。</p>
+
+<pre class="cell">
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+rng = np.random.default_rng()
+
+M = 10
+N = 100000
+
+def p_value():
+    data1 = rng.standard_normal(M)
+    data2 = rng.standard_normal(M)
+    _, p = stats.ttest_ind(data1, data2, equal_var=True)
+    return p
+
+p_values = [p_value() for _ in range(N)]
+plt.hist(p_values, color="lightgray", edgecolor="black",
+         bins=np.arange(21)/20, density=True)
+</pre>
+
+<figure><img src="img/251129g.svg" alt="M=10, standard_normal, equal_var=True"></figure>
+
+<p>理屈どおり、一様分布になっています。</p>
+
+<p>ではデータが正規分布でない場合はどうでしょうか。ここではデータが一様分布だとしてみます。上のコードの2箇所の <code>rng.standard_normal(M)</code> を <code>rng.random(M)</code> に変えるだけです。</p>
+
+<figure><img src="img/251129j.svg" alt="M=10, uniform, equal_var=True"></figure>
+
+<p>ほぼ一様分布ですね。</p>
+
+<p>現実のデータの検定では <code>equal_var=True</code> でなく <code>equal_var=False</code> とするほう（分散が等しいと仮定しない $t$ 検定、Welch検定）が、適用範囲が広がるので推奨されています。こちらをやってみましょう。</p>
+
+<figure><img src="img/251129a.svg" alt="M=10, uniform, equal_var=False"></figure>
+
+<p>こちらもほぼ一様分布ですね。</p>
+
+<p>なお、分散が等しいかどうかを $F$ 検定で調べて、等しければ分散が等しいと仮定する $t$ 検定、そうでなければ分散が等しいと仮定しない $t$ 検定を使いましょうと言われたこともありましたが、これは間違いです。分散が等しいかどうかわからない場合は、最初から分散が等しいと仮定しない $t$ 検定を使いましょう。詳しくは<a href="../stat/ttest.html">t検定</a>の下の方にあるシミュレーション結果をご参照ください。</p>
+
+<p>ここでMann-Whitneyの $U$ 検定（厳密版）にしてみましょう。<code>stats.ttest_ind(data1, data2, equal_var=...)</code> を <code>stats.mannwhitneyu(data1, data2, method="exact")</code> に変えるだけです。</p>
+
+<figure><img src="img/251130a.svg" alt="M=10, uniform, Mann-Whitney exact"></figure>
+
+<p>ガタガタの分布になってしまいました。厳密版を近似版（<code>method="asymptotic"</code>）にしてもほぼ同じです。順位を使うので離散分布になってヒストグラムの階級の取り方によってガタガタになってしまうのですが、慣らして考えても一様分布からの外れが見えます。</p>
+
+<p>以上はすべて $M = 10$ の場合でした。もっとサンプルサイズを小さくしたら、中心極限定理からの外れが大きくなって、誤差が出てくるはずです。やってみましょう。まず $M = 5$ です。少し一様分布からの系統的な外れが見えてきますが、それでも上のMann-Whitneyよりずっとマシです。</p>
+  
+<figure><img src="img/251129b.svg" alt="M=5, uniform, equal_var=False"></figure>
+
+<p>$M = 3$ です。</p>
+
+<figure><img src="img/251129c.svg" alt="M=3, uniform, equal_var=False"></figure>
+
+<p>外れがだんだん目立ってきます。やはり $M = 5$ 以上、できれば $M = 10$ 以上は欲しいところです。それより小さいサンプルの場合は、そもそも機械的に検定をするような状況でない場合が多いと思いますので、個々のデータ点をプロットするなりして、総合的に判断しましょう。</p>
+
+<p>結論として、Wilcoxon-Mann-Whitneyはあまりお薦めできないので、分散が等しいと仮定しない $t$ 検定（Welch検定）を使いましょう。そして、有意か有意でないかの2分割ではなく、具体的な $p$ 値を報告するか、さらに推奨される方法としては、どれくらい差があるかの具体的な値とその信頼区間を書くのがよいでしょう。</p>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-12-02 16:17:59 JST</time></p>
+</footer>
+</body>
+</html>

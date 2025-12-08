@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/facenet_pytorch.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>facenet-pytorch</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>facenet-pytorch</h1>
+
+<p><a href="https://github.com/timesler/facenet-pytorch">facenet-pytorch</a> はFaceNetをPyTorchで実装したものである。<code>pip install facenet-pytorch</code> でインストールする。</p>
+
+<pre class="cell">
+from facenet_pytorch import MTCNN, InceptionResnetV1
+from PIL import Image
+
+mtcnn = MTCNN() # オプションがいろいろあるがとりあえず
+resnet = InceptionResnetV1(pretrained='vggface2').eval()
+
+img = Image.open("face.jpg")
+img_cropped = mtcnn(img)
+img_embedding = resnet(img_cropped.unsqueeze(0)) # shape: (1,512)
+</pre>
+
+<p>ディレクトリに入っている画像の類似度の行列を表示する：</p>
+
+<pre class="cell">
+from torch.nn.functional import cosine_similarity
+import pathlib
+
+path = pathlib.Path("/path/to/folder")
+names = [p for p in path.iterdir() if p.match("*.jp*g")]  
+
+def encoding(name):
+    img = Image.open(name)
+    img_cropped = mtcnn(img)
+    return resnet(img_cropped.unsqueeze(0)).detach()
+
+for i in range(1, len(names)):
+    for j in range(i):
+        ei = encoding(names[i])
+        ej = encoding(names[j])
+        similarity = cosine_similarity(ei, ej).item()
+        if similarity > 0.6:
+            print(f" {similarity:4.2f}*", end="")
+        else:
+            print(f" {similarity:4.2f} ", end="")
+    print()
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2025-11-25 16:32:27 JST</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

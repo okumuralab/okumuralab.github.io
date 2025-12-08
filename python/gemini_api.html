@@ -26,10 +26,22 @@
 export GOOGLE_API_KEY="..."
 </pre>
 
-<p>次に、<a href="https://ai.google.dev/gemini-api/docs/quickstart?lang=python">Gemini API quickstart</a> に従って、Pythonパッケージをインストールします。</p>
+<p>次に、<a href="https://ai.google.dev/gemini-api/docs/quickstart?lang=python">Gemini API quickstart</a> に従って、<a href="https://github.com/googleapis/python-genai">Pythonパッケージ</a>をインストールします。</p>
 
 <pre>
 pip install --upgrade google-genai
+</pre>
+
+<p>使えるモデル一覧：</p>
+
+<pre class="cell">
+from google import genai
+
+client = genai.Client()  # 環境変数にAPIキーが設定されていればこれでいい
+# client = genai.Client(api_key="...") # あるいは直接指定してもいい
+
+for model in client.models.list():
+    print(model.name)
 </pre>
 
 <p>簡単な使い方は次の通りです。</p>
@@ -37,8 +49,7 @@ pip install --upgrade google-genai
 <pre class="cell">
 from google import genai
 
-client = genai.Client()  # 環境変数にAPIキーが設定されていればこれでいい
-# client = genai.Client(api_key="...") # あるいは直接指定してもいい
+client = genai.Client()
 
 response = client.models.generate_content(
     model="gemini-2.5-pro",
@@ -92,7 +103,7 @@ for message in chat.get_history():
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-12 19:52:53 JST</time></p>
+<p>Last modified: <time>2025-11-13 21:37:25 JST</time></p>
 </footer>
 </body>
 </html>

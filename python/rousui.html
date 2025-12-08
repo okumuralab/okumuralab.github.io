@@ -7,11 +7,6 @@
 <title>老衰による死亡率の推移</title>
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
-<script>
-window.onload = function() {
-  document.getElementById("dirurl").textContent = /^.*\//.exec(location.href)[0];
-}
-</script>
 <script src="../js/copypre.js"></script>
 </head>
 <body>
@@ -43,10 +38,10 @@ window.onload = function() {
 <p>そうこうしているうちに，<a href="https://www.e-stat.go.jp/">e-Stat</a>にもうちょっと完全なデータがあることに気づいた。e-Statを「人口動態調査」で検索し，「ファイル」をクリック，確定数→死亡→年次，2017年と進んで，5-14 死因年次推移分類別にみた性別年齢調整死亡率（人口10万対）のCSVをダウンロードする。ファイル名は mc140000.csv となる。これをまともなCSVにした <a href="data/mc140000a.csv">mc140000a.csv</a> を置いておく（文字コード：BOM付きUTF-8）。これをPythonでプロットする：</p>
 
 <pre>
-<code>import pandas as pd
+import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("<span id="dirurl">https://okumuralab.org/~okumura/python/</span>data/mc140000a.csv", comment="#")
+df = pd.read_csv("https://okumuralab.org/~okumura/python/data/mc140000a.csv", comment="#")
 df.head()   # 頭を表示して確認
 
 plt.plot(df['年'], df[['老衰男','老衰女']], "o-")
@@ -55,9 +50,15 @@ plt.ylabel('年齢調整死亡率（人口10万対）')
 plt.title('老衰による死亡率の推移')
 plt.legend(['男','女'])
 plt.savefig('190714c.png', bbox_inches="tight")
-</code></pre>
+</pre>
 
 <figure><img src="img/190714c.png" alt="老衰による死亡率の推移"></figure>
+
+<hr>
+
+<p>[2025-10-31追記] 最新のデータで描き直した。年齢調整死亡率の基準人口が昭和60年モデルから2015年（平成27年）モデルに変更されたことと、報告漏れを再集計したことで、数値がかなり変わっている。データはe-Statから取得したものを整理した <a href="data/mc140000b.csv">mc140000b.csv</a>（UTF-8 with BOM）を使った。</p>
+
+<figure><img src="img/251031a.svg" alt="老衰による死亡率の推移"></figure>
 
 <hr>
 
@@ -65,7 +66,7 @@ plt.savefig('190714c.png', bbox_inches="tight")
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2020-01-03 20:17:28</time>
+Last modified: <time>2025-10-31 15:52:34 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

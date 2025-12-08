@@ -18,43 +18,35 @@
 
 <h1>TensorFlow（Keras）による機械学習</h1>
 
-<p>[2024-12-30] 古い「TensorFlowによる機械学習」をとりあえず改訂しました。TensorflowからKerasが独立したので「Kerasによる・・・」という題名のほうが適切になりました。</p>
+<p>[2025-11-18] 大昔に書いた「TensorFlowによる機械学習」の修正版です。</p>
 
-<p><a href="https://www.tensorflow.org/">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。今は PyTorch のほうが流行りである。Tensorflow の一部であった <a href="https://keras.io">Keras</a> は独立して Keras 3 となったが、<code>tf-keras</code> を入れることで Keras 2 も使える。</p>
+<p><a href="https://www.tensorflow.org">TensorFlow</a>（テンサーフロー，テンソルフロー）は Google の機械学習ライブラリである。今は PyTorch のほうが流行りである。<a href="https://keras.io">Keras</a> はその上位のライブラリで、もともとは TensorFlow 以外にも対応していたが、Keras 2.4 からは Tensorflow の一部となった。今はまた独立して Keras 3 となり TensorFlow 以外に JAX や PyTorch もサポートするようになったが、<code>tf-keras</code> を入れることで Keras 2 も使える。</p>
 
-<p>インストールは、Apple Silicon を含め、</p>
+<p>以下は2025年11月18日現在、Mac（Apple Silicon）で試した内容である。</p>
 
 <pre>
 pip install tensorflow
 </pre>
 
-<p>でできるはずである。Keras 3 を入れるには</p>
-
-<pre>
-pip install keras
-</pre>
-
-<p>Keras 2 を入れるには</p>
+<p>とすると tensorflow-2.20.0、keras-3.12.0 が入る。古い Keras 2 を入れるには、さらに</p>
 
 <pre>
 pip install tf-keras
 </pre>
 
-<p>とする。</p>
+<p>とすれば tf-keras-2.20.1 が入る。</p>
 
 <aside>
-<p>Apple Silicon についての <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a> は古くなってしまった。今は <a href="https://pypi.org/project/tensorflow-metal/">tensorflow-metal</a> も更新されていないようである。</p>
+<p>Apple Silicon については <a href="https://developer.apple.com/metal/tensorflow-plugin/">Getting Started with tensorflow-metal PluggableDevice</a>、<a href="https://pypi.org/project/tensorflow-metal/">tensorflow-metal</a> で開発されていたが、現在の状況は把握していない。</p>
 </aside>
 
-<aside>
-<p><code>import tensorflow as tf</code> すると AttributeError: 'NoneType' object has no attribute 'Rlocation' で落ちることがある。これは <code>mesop</code> が悪さをしているようだ（<a href="https://github.com/tensorflow/tensorflow/issues/75288">Fail import tensorflow if rules_python is installed.</a>）。とりあえず <code>pip uninstall mesop</code> すれば動く。</p>
-</aside>
-
-<p>インポートする：</p>
+<p>さっそく使ってみよう。</p>
 
 <pre class="cell">
 import tensorflow as tf
 </pre>
+
+<p>UserWarning: Protobuf gencode version 5.28.3 is exactly one major version older than the runtime version 6.31.1 at tensorflow/core/protobuf/debug.proto. Please update the gencode to avoid compatibility violations in the next runtime release. という警告が出たが無視する。</p>
 
 <p>バージョンを確認する：</p>
 
@@ -63,7 +55,7 @@ tf.__version__
 </pre>  
 
 <pre>
-'2.18.0'
+'2.20.0'
 </pre>
 
 <p>Keras については、Keras 2 を使うなら</p>
@@ -75,7 +67,7 @@ keras.__version__
 </pre>  
 
 <pre>
-'2.18.0'
+'2.20.1'
 </pre>
 
 <p>Keras 3 を使うなら</p>
@@ -87,7 +79,7 @@ keras.__version__
 </pre>  
 
 <pre>
-'3.7.0'
+'3.12.0'
 </pre>
 
 <p>ごくごく簡単な例として，<a href="https://www.tensorflow.org/tutorials/">TensorFlow のチュートリアル</a>に昔あった最初の例をやってみる。データには有名な <a href="mnist.html">MNIST</a> を使う。これは28×28ピクセルの手書き画像で，ピクセル値は0から255までの整数である。</p>
@@ -125,34 +117,34 @@ model.compile(optimizer='adam',
 model.fit(x_train, y_train, epochs=5)
 </pre>
 
-<p>Keras 2 による経過の例（Mac mini (M1 2020)）：</p>
+<p>Keras 2 による経過の例（Mac Studio 2025, Apple M4 Max）：</p>
 
 <pre>
 Epoch 1/5
-1875/1875 [==============================] - 4s 2ms/step - loss: 0.2911 - accuracy: 0.9150
+1875/1875 [==============================] - 1s 385us/step - loss: 0.2960 - accuracy: 0.9140
 Epoch 2/5
-1875/1875 [==============================] - 4s 2ms/step - loss: 0.1432 - accuracy: 0.9571
+1875/1875 [==============================] - 1s 379us/step - loss: 0.1424 - accuracy: 0.9572
 Epoch 3/5
-1875/1875 [==============================] - 4s 2ms/step - loss: 0.1079 - accuracy: 0.9678
+1875/1875 [==============================] - 1s 378us/step - loss: 0.1107 - accuracy: 0.9665
 Epoch 4/5
-1875/1875 [==============================] - 4s 2ms/step - loss: 0.0869 - accuracy: 0.9736
+1875/1875 [==============================] - 1s 376us/step - loss: 0.0889 - accuracy: 0.9732
 Epoch 5/5
-1875/1875 [==============================] - 4s 2ms/step - loss: 0.0741 - accuracy: 0.9766
+1875/1875 [==============================] - 1s 380us/step - loss: 0.0773 - accuracy: 0.9755
 </pre>
 
 <p>Keras 3 による経過の例（Mac mini (M1 2020)）：</p>
 
 <pre>
 Epoch 1/5
-1875/1875 ━━━━━━━━━━━━━━━━━━━━ 2s 805us/step - accuracy: 0.8655 - loss: 0.4684
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 482us/step - accuracy: 0.9125 - loss: 0.2956
 Epoch 2/5
-1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 790us/step - accuracy: 0.9556 - loss: 0.1505
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 474us/step - accuracy: 0.9567 - loss: 0.1437
 Epoch 3/5
-1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 794us/step - accuracy: 0.9673 - loss: 0.1075
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 474us/step - accuracy: 0.9680 - loss: 0.1065
 Epoch 4/5
-1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 790us/step - accuracy: 0.9730 - loss: 0.0891
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 476us/step - accuracy: 0.9732 - loss: 0.0885
 Epoch 5/5
-1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 794us/step - accuracy: 0.9747 - loss: 0.0798
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 472us/step - accuracy: 0.9758 - loss: 0.0763
 </pre>
 
 <p>最後に評価：</p>
@@ -179,36 +171,36 @@ tf.math.confusion_matrix(y_test, y_pred)
 
 <pre>
 &lt;tf.Tensor: shape=(10, 10), dtype=int32, numpy=
-array([[ 969,    0,    1,    2,    2,    2,    2,    1,    1,    0],
-       [   0, 1118,    3,    1,    0,    1,    4,    1,    7,    0],
-       [   3,    2, 1011,    3,    1,    0,    2,    5,    5,    0],
-       [   0,    0,    5,  992,    0,    4,    0,    3,    4,    2],
-       [   2,    0,    5,    0,  954,    1,    4,    2,    2,   12],
-       [   3,    0,    0,   11,    2,  863,    5,    1,    6,    1],
-       [   5,    3,    1,    0,    1,    3,  944,    0,    1,    0],
-       [   1,    5,   11,    4,    0,    0,    0,  995,    2,   10],
-       [   2,    0,    3,    6,    5,    3,    2,    3,  948,    2],
-       [   2,    6,    0,    7,    9,    2,    1,    3,    4,  975]],
+array([[ 969,    0,    3,    2,    0,    1,    3,    1,    1,    0],
+       [   0, 1114,    3,    3,    0,    0,    4,    1,   10,    0],
+       [   5,    0, 1010,    2,    2,    0,    1,    6,    6,    0],
+       [   1,    0,    2,  999,    0,    0,    0,    4,    3,    1],
+       [   0,    0,    2,    1,  961,    0,    5,    3,    2,    8],
+       [   2,    0,    0,   16,    1,  862,    4,    2,    4,    1],
+       [   5,    2,    0,    1,    5,    5,  940,    0,    0,    0],
+       [   1,    1,    9,    4,    0,    0,    0, 1008,    0,    5],
+       [   2,    0,    4,    5,    3,    3,    3,    5,  946,    3],
+       [   0,    4,    0,   16,   13,    3,    1,    9,    5,  958]],
       dtype=int32)&gt;
 </pre>
 
 <p>学習済みのモデルをHDF5形式で保存する：</p>
 
 <pre class="cell">
-model.save("mymodel.h5")
+model.save("mymodel.keras")
 </pre>
 
 <p>保存したモデルは次のようにして読み出す：</p>
 
 <pre class="cell">
-model = keras.models.load_model("mymodel.h5")
+model = keras.models.load_model("mymodel.keras")
 </pre>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-12-30 22:05:02 JST</time></p>
+<p>Last modified: <time>2025-11-18 14:19:06 JST</time></p>
 </footer>
 </body>
 </html>

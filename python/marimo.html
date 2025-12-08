@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/marimo.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>marimo</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>marimo</h1>
+
+<p><a href="https://github.com/marimo-team/marimo">marimo</a>（マリモ）はJupyterに代わるPythonノートブックツールです。ファイルがJupyterの*.ipynbのようなJSONではなく、そのまま実行できる*.pyです。また、セルの実行順序がグローバル変数の依存関係によって自動的に定まります。</p>
+
+<p>インストールは</p>
+
+<pre>
+pip install marimo
+</pre>
+
+<p>または推奨パッケージも含めてインストールするなら</p>
+
+<pre>
+pip install "marimo[recommended]"
+</pre>
+
+<p>とします。インストールしたら</p>
+
+<pre>
+marimo edit test.py
+</pre>
+
+<p>と打ち込むと、カレントディレクトリの <code>test.py</code> に紐付けられたノートブックがデフォルトのブラウザで開きます。<code>test.py</code> が存在しないか空の場合は、ノートブックも空です。カレントディレクトリに <code>__marimo__</code> というディレクトリができて、その中にセッション情報が書き込まれます。</p>
+
+<p>最初は空のセルが一つあるはずですので、その中に例えば</p>
+
+<pre class="cell">
+3+4
+</pre>
+
+<p>のような計算式を書き込んで、Jupyter や Google Colaboratory と同様に <span class="keytop">Ctrl</span> + <span class="keytop">Enter</span>（Macでは <span class="keytop">⌘</span> + <span class="keytop">Enter</span>）すると、セルが実行され、計算結果 <code>7</code> が現れます。</p>
+
+<p>ノートブックの下には「PYTHON」「MARKDOWN」「SQL」「GENERATE WITH AI」というボタンがあります。「PYTHON」をクリックすると、Pythonコードを書き込むためのセルが追加されます（あるいは実行する際に <span class="keytop">Shift</span> + <span class="keytop">Enter</span> とすれば、実行後に新しいセルができ、そこにカーソルが移ります）。</p>
+
+<p>もう一つやってみましょう。</p>
+
+<pre class="cell">
+import sys
+
+sys.version
+</pre>
+
+<p>これを同様に実行すると、動いているPythonのバージョン情報が表示されます。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+
+plt.plot([-1, 1])
+plt.title("グラフ")
+</pre>
+
+<p>でグラフが出ます。日本語もちゃんと表示されることをご確認ください。</p>
+
+<p>セルに書き込んだ内容は、最初に指定した <code>test.py</code> に自動保存されるはずです（あるいは右側の下にある 💾 のアイコンをクリックすると保存されます）。上の例は、おおよそ次のような感じで保存されます。</p>
+
+<pre>
+import marimo
+
+__generated_with = "0.17.7"
+app = marimo.App(width="medium")
+
+@app.cell
+def _():
+    3+4
+    return
+
+@app.cell
+def _():
+    import sys
+
+    sys.version
+    return
+
+@app.cell
+def _():
+    import matplotlib.pyplot as plt
+
+    plt.plot([-1, 1])
+    plt.title("グラフ")
+    return
+
+if __name__ == "__main__":
+    app.run()
+</pre>
+
+<p>marimoの便利な機能として、次のようにスライダーが簡単に作れます。</p>
+
+<pre class="cell">
+import marimo as mo
+
+slider = mo.ui.slider(1, 10, value=1, label="n")
+slider
+</pre>
+
+<p>スライダーの値を他のセルで使うと、インタラクティブな図が作れます。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 2 * np.pi, 201)
+plt.plot(x, np.sin(slider.value * x))
+plt.title(f"sin {slider.value}x")
+</pre>
+
+<p>OpenAI APIなどを設定すると、AIにコードを書いてもらうこともできます。設定内容は、設定ファイル <code>~/.config/marimo/marimo.toml</code> に保存されます。</p>
+
+<aside>
+<p>ローカルLLMを使うには、例えばLM StudioならOpenAIを指定し、⚙️User settingsでBase URLに http://127.0.0.1:1234/v1 を設定すると良さそうです。</p>
+</aside>
+
+<p>終わったら、ノートブックの右上にある×ボタン（Shutdown）で閉じます。シャットダウンせずにブラウザのページを閉じた場合は、最初に打ち込んだコマンド <code>marimo edit test.py</code> は <span class="keytop">Ctrl</span> + <span class="keytop">C</span> で停止します。</p>
+
+<p>既存の*.ipynbファイルは <code>marimo convert foo.ipynb -o foo.py</code> でmarimo用Pythonファイルに変換できます。逆は <code>marimo export ipynb foo.py -o foo.ipynb</code> です。<code>marimo convert foo.py -o bar.py</code> で一般のPythonファイルをmarimo用Pythonファイルにすることもできます。</p>
+
+<p>グローバル変数はセルをまたいで意味を持ちますが、JupyterやGoogle Colabと違って、別のセルで再定義することはできません。例えば</p>
+
+<pre class="cell">
+x = 2
+x = x + 1
+</pre>
+
+<p>は大丈夫ですが、</p>
+
+<pre class="cell">
+x = 2
+</pre>
+
+<p>と</p>
+
+<pre class="cell">
+x = x + 1
+</pre>
+
+<p>が別のセルにあったらエラーになります。特にデータフレームを表す <code>df</code> などは少しずつ再定義することがよくあるので、注意が必要です。</p>
+
+<p><code>!pwd</code> など <code>!</code> や <code>%</code> で始まるコマンドは使えません。基本的にシェルコマンドは最下部のボタンでターミナルを開いて打ち込み、<code>%</code> で始まるマジックコマンドは <a href="https://docs.marimo.io/guides/coming_from/jupyter/">Coming from Jupyter</a> の指示に従って書き換える必要があります。</p>
+
+<p>最後にuv環境での利用について。uvのドキュメントの <a href="https://docs.astral.sh/uv/guides/integration/marimo/">Using uv with marimo</a> に詳しいのですが、簡単には</p>
+
+<pre>
+mkdir some_project
+cd some_project
+uv venv
+uv pip install 必要なパッケージ
+uv run --with marimo marimo edit notebook.py
+</pre>
+
+<p>のような感じで、marimoはこの環境にはインストールせずグローバルなものを使い、途中でプロジェクトに追加でパッケージを入れる必要ができたならば、marimoのUIで入れるのではなく、ターミナルで <code>uv pip install</code> するような感じでやればいいのではないかと思います。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-11-25 13:38:35 JST</time></p>
+</footer>
+</body>
+</html>
