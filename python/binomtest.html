@@ -49,17 +49,17 @@ math.factorial(10) // (math.factorial(3) * math.factorial(7))
 
 <p>ここで <code>//</code> は整数の除算を意味します。</p>
 
-<div class="note">
+<aside>
 <p>上の計算は <code>math.factorial(10) / (math.factorial(3) * math.factorial(7))</code> でも同じですが、<code>//</code> を使えば結果は <code>120</code> なのに対し、<code>/</code> を使えば結果は <code>120.0</code> になります。つまり <code>/</code> は分子・分母が整数でも浮動小数点数に直してから除算します。Python はどんな大きな整数でも正確に計算できるのに対し、浮動小数点数は CPU で決まった精度でしか計算できません。例えば <code>math.factorial(200) // 10</code> は正確に計算できますが <code>math.factorial(200) / 10</code> は分子が大きすぎて浮動小数点数に直せないのでエラーになります。</p>
-</div>
+</aside>
 
-<div class="note">
+<aside>
 <p>Python 3.8 以降では <code>math.comb(10, 3)</code> でも求められます。こちらのほうが高速です。ただ、Coogle Colaboratory がまだ Python 3.7 のようです。3.7 以前では次のようにして定義すると便利です。</p>
 <pre>
 def comb(n, r):
     return math.factorial(n) // (math.factorial(r) * math.factorial(n - r))
 </pre>
-</div>
+</aside>
 
 <p>投げると確率 0.4 で表が出る硬貨を10回投げて表が3回出る確率 $_{10}C_3 \cdot 0.4^3 \cdot 0.6^7$ は</p>
 
@@ -114,11 +114,13 @@ plt.bar(range(11), stats.binom.pmf(range(11), 10, 0.5))
 <p>確率なので、全部加えると 1 になります。</p>
 
 <pre class="cell">
-sum(stats.binom.pmf(range(11), 10, 0.5))
+import numpy as np
+
+np.sum(stats.binom.pmf(range(11), 10, 0.5))
 </pre>
 
 <pre>
-1.0000000000000004
+np.float64(1.0000000000000004)
 </pre>
 
 <p>ちなみに、<code>stats.binom.pmf()</code> の累積を求める <code>stats.binom.cdf()</code> という関数もあります。<code>cdf</code> は <span lang="en">cumulative distribution function</span> の意味です。</p>
@@ -135,9 +137,9 @@ array([9.76562500e-04, 1.07421875e-02, 5.46875000e-02, 1.71875000e-01,
 
 <h2>統計的検定の考え方</h2>
 
-<div class="note">
+<aside>
 <p>授業では<a href="../stat/binomp.html">JavaScriptのプログラム</a>も使って説明します。</p>
-</div>
+</aside>
 
 <p>硬貨を10回投げて表が2回しか出ませんでした。この硬貨は歪んでいるでしょうか。</p>
 
@@ -167,7 +169,7 @@ sum(stats.binom.pmf([0,1,2,8,9,10], 10, 0.5))
 </pre>
 
 <pre>
-0.1093750000000001
+np.float64(0.10937500000000018)
 </pre>
 
 <p>になります。同じことが</p>
@@ -190,13 +192,9 @@ stats.binomtest(2, 10, 0.5).pvalue
 0.109375
 </pre>
 
-<div class="note">
-<p>Python では SciPy に，$p$ 値を返すだけの古い <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom_test.html">scipy.stats.binom_test</a> と，2021-06-20 の <a href="https://scipy.github.io/devdocs/release.1.7.0.html">SciPy 1.7.0</a> で新しく追加された <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html">scipy.stats.binomtest</a> とがあります。計算量は，前者は $O(n)$，後者は2分探索を使うので $O(\log n)$ だそうです。古い方は次のように使います。</p>
-<pre>  
-stats.binom_test(2, 10, 0.5)
-</pre>
-<p><code>binom_test()</code> はSciPy 1.10.0の段階で「deprecated」で、1.12.0で削除される予定です。</p>
-</div>
+<aside>
+<p>古い SciPy には scipy.stats.binom_test がありましたが、SciPy 1.12.0 で廃止されました。2021-06-20 の <a href="https://scipy.github.io/devdocs/release.1.7.0.html">SciPy 1.7.0</a> で新しく追加された <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html">scipy.stats.binomtest</a> を使いましょう。計算量は，前者は $O(n)$，後者は2分探索を使うので $O(\log n)$ だそうです。</p>
+</aside>
 
 <p>つまり、表が2回出るという事象の $p$ 値は 0.1094 ほどです。したがって、有意水準を 0.05 とすれば、表裏の差は統計的に有意ではありませんし、アンケートであればこんなに少人数の結果から「賛成が少ない」という結論を導いてはいけないということになります。</p>
 
@@ -204,18 +202,35 @@ stats.binom_test(2, 10, 0.5)
 
 <p>これが、フィッシャー（<span lang="en">R. A. Fisher</span>、1890〜1962年）が「有意性の検定」（<span lang="en">tests of significance, significance tests<span lang="en">）と呼んだ方法の考え方です。</p>
 
-<div class="note">
+<aside>
 <p>ここでは、実際に生じた事象またはそれより珍しい事象の生じる確率の合計として $p$ 値を定義しました。これは2項分布のような山の形の分布では両側の部分の確率になりますので、両側検定といいます。一方、片側だけを考える片側検定もあります。例えば表が2回出た場合の（左側だけの）片側 $p$ 値は、表が0回・1回・2回出る確率の合計です。</p>
-  
+</aside>
+
+<aside>
+<p>二項分布などの離散分布 $p_i$ で、実験結果 $k$ が与えられたとき、その両側 $p$ 値は $p_i \leq p_k$ を満たす $p_i$ の和です。10枚の硬貨を投げる二項分布で $k$ 枚だけ表が出たとすると、$p$ 値は次のようにして求められるはずです。</p>
+<pre>
+a = stats.binom.pmf(range(11), 10, 0.5)
+for k in range(11):
+    print(k, a[a &lt;= a[k]].sum())
+</pre>
+<p>ところがこの結果をよく見ると、$k = 0$ と $k = 4$ で答えが違います。非常に小さな数、例えば <code>sys.float_info.epsilon</code> または同じことですが <code>np.finfo(np.float64).eps</code> を不等式の右辺に加えて</p>
+<pre>
+for k in range(11):
+    print(k, a[a &lt;= a[k] + sys.float_info.epsilon].sum())
+</pre>
+<p>のようにすればとりあえずうまくいきます。<code>a[k] + sys.float_info.epsilon</code> の代わりに <code>np.nextafter(a[k], np.inf)</code> とするのは許容がなさすぎて、$k = 4$ では正しくなりますが $k = 0$ では依然として正しくない値になります。逆に <code>a[(a < a[k]) | np.isclose(a, a[k])]</code> では緩すぎるかもしれません。数値計算の誤差に注意しなければならない例です。</p>
+</aside>
+
+<aside>
 <p>ICH（医薬品規制調和国際会議）の定める<a href="https://www.pmda.go.jp/int-activities/int-harmony/ich/0031.html">ICH E9</a>「臨床試験のための統計的原則」というガイドラインでは、「原則として片側仮説を検証する場合は2.5%、両側仮説の場合は5%とすること」とされています。</p>
-</div>
+</aside>
 
 <h2>区間推定</h2>
 
-<div class="note">
+<aside>
 <p>授業では<a href="../stat/binom.html">JavaScriptのプログラム</a>も使って説明します。</p>
 <p>なお、高校「数学B」では、2項分布 $B(n, \theta)$ の平均が $n\theta$、分散が $n\theta(1-\theta)$ であることを使って、同じ平均と分散を持つ正規分布で近似して扱うことが多いと思います（中心極限定理から $n \to \infty$ で正規分布になります）。</p>
-</div>
+</aside>
 
 <p>10回投げて2回表が出たとき、表が出る確率の95%信頼区間は次のようにして求めます。これは正規分布近似ではなく <span lang="en">Clopper-Pearson</span> の正確な方法を使っています。</p>
 
@@ -247,7 +262,7 @@ lo, hi = stats.binomtest(2, 10).proportion_ci()
 print(lo, hi)
 </pre>
 
-<div class="note">
+<aside>
 <p>信頼区間は <a href="https://www.statsmodels.org/dev/generated/statsmodels.stats.proportion.proportion_confint.html">statsmodels.stats.proportion.proportion_confint</a> でも求められます：</p>
 <pre class="cell">
 from statsmodels.stats.proportion import proportion_confint
@@ -258,7 +273,7 @@ proportion_confint(2, 10, method="beta")
 (0.02521072632683336, 0.5560954623076415)
 </pre>
 <p>ご覧のように末尾が若干異なります。こちらのほうは <code>proportion_confint([2, 3], [10, 12], method="beta")</code> のようにベクトルを与えることもできるので便利なことがあります。</p>
-</div>
+</aside>
 
 <h2>Rの <code>binom.test()</code> をPythonで実現</h2>
 
@@ -336,7 +351,7 @@ probability of success
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-10-14 09:50:08 JST</time></p>
+<p>Last modified: <time>2025-12-14 17:51:37 JST</time></p>
 </footer>
 </body>
 </html>

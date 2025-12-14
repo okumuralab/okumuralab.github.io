@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/Z-Image-Turbo.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qwen-Image</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Z-Image-Turbo</h1>
+
+<p><a href="https://tongyi-mai.com">Z-Image</a>という画像生成モデルが評判である。Qwenと同じAlibaba製だ。現在はZ-Image-Turboというモデルだけが公開されている。</p>
+
+<ul>
+  <li>GitHub: <a href="https://github.com/Tongyi-MAI/Z-Image">Tongyi-MAI/Z-Image</a></li>
+  <li>arXiv: <a href="https://arxiv.org/abs/2511.22699">Z-Image: An Efficient Image Generation Foundation Model with Single-Stream Diffusion Transformer</a></li>
+  <li>Hugging Face: <a href="https://huggingface.co/Tongyi-MAI/Z-Image-Turbo">Tongyi-MAI/Z-Image-Turbo</a></li>
+  <li>Blog: <a href="https://tongyi-mai.github.io/Z-Image-blog/">Z-Image</a></li>
+</ul>
+
+<p>PyTorchと最新のdiffusersをインストールしておく（<code>pip install --upgrade torch diffusers</code>）。あとは、サンプルコードを適宜書き直して使う。</p>
+
+<p>Macでも今はbfloat16がなんとか使えるようだ。もしうまくいかなければfloat32にする。float16は数値の範囲が狭いのでうまくいかなかった。</p>
+
+<pre class="cell">
+import torch
+from diffusers import ZImagePipeline
+
+pipe = ZImagePipeline.from_pretrained(
+    "Tongyi-MAI/Z-Image-Turbo",
+    torch_dtype=torch.bfloat16, # または torch.float32
+)
+pipe.to("mps")  # mps, cpu, cuda (Macはmps)
+
+prompt = "A Japanese anime girl"
+
+image = pipe(
+    prompt=prompt,
+    height=1024,
+    width=1024,
+    num_inference_steps=9,
+    guidance_scale=0.0,
+    generator=torch.Generator("mps").manual_seed(42),
+    max_sequence_length=1024,  # default: 512 tokens
+).images[0]
+image.save("out.png")
+</pre>
+
+<p>モデルは自動でダウンロードされる。デフォルトでは <code>~/.cache/huggingface/hub/models--Tongyi-MAI--Z-Image-Turbo</code> に入る。全部で33Gバイトほどあるので、メモリ48G〜64G以上のマシンが欲しい。Mac Studio M4 Maxでは1枚45秒（float32なら52秒）程度で生成できた。</p>
+
+<p>プロンプトと乱数を変えながら次々に生成するために、次のようにしてみた。プロンプトは <code>prompt.txt</code> というファイルに書く。このファイルの1行目が空なら停止する。</p>
+
+<pre class="cell">
+import hashlib
+import torch
+from diffusers import ZImagePipeline
+
+pipe = ZImagePipeline.from_pretrained(
+    "Tongyi-MAI/Z-Image-Turbo",
+    torch_dtype=torch.bfloat16,
+)
+pipe.to("mps")  # mps, cpu, cuda (Macはmps)
+
+while True:
+    with open("prompt.txt", "r") as f:
+        prompt = f.read()
+    if len(prompt) == 0 or prompt[0] == "\n":
+        break
+    hash = hashlib.md5(prompt.encode("utf-8")).hexdigest()[:8]
+    seed = torch.randint(0, 100000000, (1,)).item()
+    image = pipe(
+        prompt=prompt,
+        height=1024,
+        width=1024,
+        num_inference_steps=9,
+        guidance_scale=0.0,
+        generator=torch.Generator("mps").manual_seed(seed),
+        max_sequence_length=1024,  # default: 512 tokens
+    ).images[0]
+    image.save(f"img_{hash}_{seed:08}.png")
+</pre>
+
+<p><a href="https://huggingface.co/Tongyi-MAI/Z-Image-Turbo/discussions/8">PROMPTING GUIDE</a> にあるようにプロンプトはLLMでenhanceするとよい。<a href="https://www.reddit.com/r/StableDiffusion/comments/1p87xcd/zimage_prompt_enhancer/">Z-Image Prompt Enhancer</a> に解説とprompt enhancerの英訳があるので、まずは簡単なプロンプトを自分で書いてから、何らかのLLMを使ってenhanceしてから使うとよさそうである。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-12-13 19:37:07 JST</time></p>
+</footer>
+</body>
+</html>

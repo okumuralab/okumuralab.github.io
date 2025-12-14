@@ -69,17 +69,15 @@ uv python install 3.13 3.14
 
 <p>削除は <code>uv python uninstall 3.13</code></p>
 
-<h2>uvによるパッケージのインストール</h2>
-
-<p>uvではグローバルにパッケージをインストールしないのが原則である。まずvenvを作らなければならない。</p>
+<h2>従来プロジェクトでのuvの利用</h2>
 
 <pre>
-cd /path/to/work
+cd /path/to/project
 # uv python pin 3.13 (必要なら)
 uv venv
 uv pip install numpy pandas
 # あるいは uv pip install -r requirements.txt
-uv run python
+uv run python ...
 </pre>
 
 <p>これでパッケージは <code>.venv/lib/python3.13/site-packages</code> 以下にインストールされる。</p>
@@ -101,8 +99,20 @@ warning: Failed to clone files; falling back to full copy. This may lead to degr
          If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
 </pre>
 
-<p>もし特定のファイルシステムでの作業が多いならば、<code>export UV_CACHE_DIR="/Volumes/SomeDisk/.uv-cache"</code> のようにしてそのファイルシステム上にキャッシュを置くとよい。</p>
+<p>もし特定のファイルシステムでの作業が多いならば、<code>export UV_CACHE_DIR="/Volumes/SomeDisk/.uv-cache"</code> のようにしてそのファイルシステム上にキャッシュを置くとよい。ついでにツール用ディレクトリも <code>export UV_TOOL_DIR="/Volumes/SomeDisk/.uv-tools"</code> のように同じドライブに設定しておく。</p>
 </aside>
+
+<h2>新規プロジェクトでのuvの利用</h2>
+
+<p>次のような流れで行う。</p>
+
+<pre>
+uv init
+uv add ...
+uv run python ...
+</pre>
+
+<p>（未完）</p>
 
 </main>
 
@@ -110,7 +120,7 @@ warning: Failed to clone files; falling back to full copy. This may lead to degr
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-10-28 17:39:44 JST</time></p>
+<p>Last modified: <time>2025-12-14 21:57:22 JST</time></p>
 </footer>
 </body>
 </html>

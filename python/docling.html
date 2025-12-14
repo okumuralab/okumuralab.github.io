@@ -23,13 +23,10 @@
 <p><code>pip install docling</code> でインストールできますが、依存関係が複雑なので、普段使いのPythonに入れるのではなく、例えばuvを使って</p>
 
 <pre>
-mkdir /path/to/docling
-cd /path/to/docling
-uv venv
-uv pip install docling
+uv tool install docling@latest
 </pre>
 
-<p>として、<code>/path/to/docling/.venv/bin/docling</code> のようにして起動することにしました（<code>/path/to/</code> の部分は適宜変更してください）。Pythonは3.13で大丈夫でした。</p>
+<p>とすれば <code>~/.local/bin</code> にインストールされます（実体は UV_TOOL_DIR、デフォルトは <code>~/.local/share/uv/tools</code> に入ります）。Pythonは3.14で大丈夫でした。更新は <code>uv tool upgrade docling</code> です。</p>
 
 <p><code>docling --help</code> で詳しいヘルプが出ます。<code>docling example.pdf</code> で <code>example.md</code> が生成されます。ローカルのPDFファイルの代わりにURLを与えることもできます。初回実行時にHugging Faceからモデルがダウンロードされ、<code>~/.cache/huggingface/hub</code> 以下に入ります。</p>
 
@@ -42,7 +39,7 @@ uv pip install docling
 <hr>
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-11-27 09:16:54 JST</time></p>
+<p>Last modified: <time>2025-12-14 09:44:38 JST</time></p>
 </footer>
 </body>
 </html>

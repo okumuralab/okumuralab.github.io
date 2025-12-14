@@ -37,7 +37,7 @@
 
 <p>独立な $n$ 個の $p$ 値の合成の方法はFisherの <i>Statistical Methods for Research Workers</i> (1932) に書かれており、$p_i$ が独立に一様分布に従うとき $-2\sum\ln(p_i)$ が自由度 $2n$ のカイ2乗分布に従うことを使います（Fisherの方法）。$p_1 = p_2 = p_3 = 0.02$ の場合、Rで <code>pchisq(-2*log(0.02)*3, 2*3, lower.tail=FALSE)</code> を計算すると 0.00065 になります。Rのpoolrパッケージの <code>fisher(c(0.02, 0.02, 0.02))</code>、Pythonの <code>scipy.stats.combine_pvalues([0.02, 0.02, 0.02])</code> でも求められます。</p>
 
-<p>3つの実験について、$p$ 値でなく何らかの効果量の大きさと誤差（信頼区間）が求められていれば、Fisherの方法より妥当なメタアナリシスの方法で3つの実験結果を統合することがでます。</p>
+<p>3つの実験について、$p$ 値でなく何らかの効果量と誤差（信頼区間）が求められていれば、フォレストプロットを描いて、固定効果モデルや変量効果モデルで結果を統合する、一般的なメタアナリシスの方法が使えそうです。</p>
 </aside>
 
 <h2>Benjamini-Hochbergの方法</h2>
@@ -95,7 +95,7 @@
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-07 20:12:28 JST</time></p>
+<p>Last modified: <time>2025-12-08 17:42:49 JST</time></p>
 </footer>
 </body>
 </html>

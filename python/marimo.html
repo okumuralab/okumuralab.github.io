@@ -150,27 +150,29 @@ x = 2
 x = x + 1
 </pre>
 
-<p>が別のセルにあったらエラーになります。特にデータフレームを表す <code>df</code> などは少しずつ再定義することがよくあるので、注意が必要です。</p>
+<p>が別のセルにあったらエラーになります。データフレームを表す <code>df</code> なども少しずつ再定義することがよくあるので、要注意です。<code>for i in range(10):</code> のようなループ変数も、<code>i</code> がループ脱出後も残るグローバル変数ですので、別のセルの <code>i</code> とかぶることがよくあります。<code>_</code> で始まる変数はセル内のローカル変数として扱われますので、<code>for _ in range(10):</code> あるいは <code>for _i in range(10):</code> のようにすれば避けることができます。あるいは、次のようにしてコードを無理矢理ローカルに閉じ込めることもできます。</p>
 
-<p><code>!pwd</code> など <code>!</code> や <code>%</code> で始まるコマンドは使えません。基本的にシェルコマンドは最下部のボタンでターミナルを開いて打ち込み、<code>%</code> で始まるマジックコマンドは <a href="https://docs.marimo.io/guides/coming_from/jupyter/">Coming from Jupyter</a> の指示に従って書き換える必要があります。</p>
+<pre>
+def _():
+    # ローカルにしたいコード
+_()
+</pre>
+
+<p><code>!pwd</code> など <code>!</code> や <code>%</code> で始まるコマンドは使えません。基本的にシェルコマンドは最下部のボタンでターミナルを開いて打ち込み、<code>%</code> で始まるマジックコマンドは <a href="https://docs.marimo.io/guides/coming_from/jupyter/">Coming from Jupyter</a> の指示に従って書き換える必要があります。関数などのドキュメントの参照は <code>?</code> が使えないので <code>help(何々)</code> のようにします（たいていはマウスオーバーで簡単な説明が出ます）。</p>
 
 <p>最後にuv環境での利用について。uvのドキュメントの <a href="https://docs.astral.sh/uv/guides/integration/marimo/">Using uv with marimo</a> に詳しいのですが、簡単には</p>
 
 <pre>
-mkdir some_project
-cd some_project
-uv venv
-uv pip install 必要なパッケージ
 uv run --with marimo marimo edit notebook.py
 </pre>
 
-<p>のような感じで、marimoはこの環境にはインストールせずグローバルなものを使い、途中でプロジェクトに追加でパッケージを入れる必要ができたならば、marimoのUIで入れるのではなく、ターミナルで <code>uv pip install</code> するような感じでやればいいのではないかと思います。</p>
+<p>のようにするのがよさそうです。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-11-25 13:38:35 JST</time></p>
+<p>Last modified: <time>2025-12-14 18:03:39 JST</time></p>
 </footer>
 </body>
 </html>
