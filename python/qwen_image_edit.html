@@ -18,9 +18,11 @@
 
 <h1>Qwen-Image-Edit</h1>
 
+<p>[2025-12-24] <a href="https://huggingface.co/Qwen/Qwen-Image-Edit-2511">Qwen-Image-Edit-2511</a> が出た。下の 2509 を 2511 に書き直すだけで使える。古いのが不要なら（確認のため <code>hf cache ls</code> して）<code>hf cache rm model/Qwen/Qwen-Image-Edit-2509</code> すれば57.7Gバイト節約できる。</p>
+
 <p><a href="https://huggingface.co/Qwen/Qwen-Image">Qwen-Image</a>、<a href="https://huggingface.co/Qwen/Qwen-Image-Edit">Qwen-Image-Edit</a> に続いて、最新の <a href="https://huggingface.co/Qwen/Qwen-Image-Edit-2509">Qwen-Image-Edit-2509</a> が出た。この最新版を使ってみる。</p>
 
-<p>2025-09-23時点のdiffusers-0.35.1ではうまく動かない。<code>pip install git+https://github.com/huggingface/diffusers</code> で開発版（diffusers-0.36.0.dev0）をインストールする。</p>
+<p><code>pip install --upgrade diffusers</code> で最新の diffusers を入れる（それでうまくいかなければ <code>pip install git+https://github.com/huggingface/diffusers</code> で開発版をインストールする）。</p>
 
 <pre class="cell">
 import torch
@@ -101,7 +103,7 @@ inputs = {
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-23 18:13:25 JST</time></p>
+<p>Last modified: <time>2025-12-25 10:01:18 JST</time></p>
 </footer>
 </body>
 </html>

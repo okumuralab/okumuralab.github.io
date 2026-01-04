@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/numerical_error.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>数値計算の誤差</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>数値計算の誤差</h1>
+
+<p>表が出る確率が0.5の硬貨を10枚投げたとき、表が $r$ 枚出る確率 $q_r$ を $r = 0,1,2,\ldots,10$ について求めるには、次のようにします（<a href="binomtest.html">2項検定</a>参照）。</p>
+
+<pre class="cell">
+from scipy import stats
+
+stats.binom.pmf(range(11), 10, 0.5)
+</pre>
+
+<pre>
+array([0.00097656, 0.00976563, 0.04394531, 0.1171875 , 0.20507812,
+       0.24609375, 0.20507812, 0.1171875 , 0.04394531, 0.00976563,
+       0.00097656])
+</pre>
+
+<p>対称性 $q_r = q_{10-r}$ を満たしているようです。</p>
+
+<p>さて、「表が $r$ 枚出た」という事象の（両側）$p$ 値は、$q_i \leq q_r$ を満たすすべての $q_i$ の和と定義されます。これを $r = 0,1,2,\ldots,10$ について求めてみましょう。</p>
+
+<pre class="cell">
+import numpy as np
+
+q = stats.binom.pmf(range(11), 10, 0.5)
+np.array([q[q &lt;= q[r]].sum() for r in range(11)])
+</pre>
+
+<pre>
+array([9.76562500e-04, 2.14843750e-02, 1.09375000e-01, 3.43750000e-01,
+       5.48828125e-01, 1.00000000e+00, 7.53906250e-01, 3.43750000e-01,
+       1.09375000e-01, 2.14843750e-02, 1.95312500e-03])
+</pre>
+
+<p>あれ？ 対称であるはずの $p$ 値が対称でなくなってしまいました。</p>
+
+<p><code>np.array</code> にすると丸められた値が表示されるのですが、実際は数値計算の誤差があったのです。</p>
+
+<pre class="cell">
+list(q)
+</pre>
+
+<pre>
+[
+  0.0009765624999999993,
+  0.009765625000000009,
+  0.043945312500000076,
+  0.11718750000000004,
+  0.20507812499999997,
+  0.2460937500000002,
+  0.205078125,
+  0.11718750000000004,
+  0.043945312500000076,
+  0.009765625000000009,
+  0.0009765625
+]
+</pre>
+
+<p>このような状況で、<code>&lt;=</code> を使って比較することは危険です。ほんの少し違っていることも許容するように、右辺に非常に小さい値を加えましょう。よく使われる値は <code>np.finfo(np.float64).eps</code>（または同じことですが <code>sys.float_info.epsilon</code>）で、$2.22 \times 10^{-16}$ ほどの値です。</p>
+
+<pre class="cell">
+np.array([q[q &lt;= q[r] + np.finfo(np.float64).eps].sum() for r in range(11)])
+</pre>
+
+<pre>
+array([0.00195312, 0.02148438, 0.109375  , 0.34375   , 0.75390625,
+       1.        , 0.75390625, 0.34375   , 0.109375  , 0.02148438,
+       0.00195312])
+</pre>
+
+<p>うまくいきました。これが正しい値です。</p>
+
+<p>場合によっては、右辺をそれより大きい最小の値で置き換えることがあります。</p>
+
+<pre class="cell">
+np.array([q[q &lt;= np.nextafter(q[r], np.inf)].sum() for r in range(11)])
+</pre>
+
+<pre>
+array([9.7656250e-04, 2.1484375e-02, 1.0937500e-01, 3.4375000e-01,
+       7.5390625e-01, 1.0000000e+00, 7.5390625e-01, 3.4375000e-01,
+       1.0937500e-01, 2.1484375e-02, 1.9531250e-03])
+</pre>
+
+<p>でも、これでは一番最初の値が正しくありません。</p>
+
+<p>ちなみに、先ほどの <code>np.finfo(np.float64).eps</code> は1より大きい最小の値と1との差に相当し、機械エプシロン（machine epsilon、計算機エプシロン、マシンエプシロン）と呼ばれます。</p>
+
+<pre class="cell">
+np.nextafter(1, np.inf) - 1
+</pre>
+
+<pre>
+np.float64(2.220446049250313e-16)
+</pre>
+
+<p>さらに、2つの数が近いかどうかを判断する <code>np.isclose()</code> を使う方法もあります。</p>
+
+<pre class="cell">
+np.array([q[(q < q[r]) | np.isclose(q, q[r])].sum() for r in range(11)])
+</pre>
+
+<p>これでも正しい値が得られました。<code>np.isclose(a, b, rtol=1e-05, atol=1e-08)</code> は</p>
+
+<pre>
+np.absolute(a - b) &lt;= atol + rtol * np.absolute(b)
+</pre>
+
+<p>と同じ意味です。デフォルトの相対許容誤差 <code>rtol</code>、絶対許容誤差 <code>atol</code> は大きめに設定されているので、もっと小さくていいかもしれません。</p>
+
+<p>より具体的に、<code>q = stats.binom.pmf(range(n+1), n, 0.5)</code> が <code>q[i]</code> と <code>q[n-i]</code> でどれくらい違っているかを、横軸に <code>min(q[i], q[n-1])</code> を、縦軸に差の絶対値をとって、プロットしてみましょう。</p>
+
+<pre class="cell">
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+
+x = []
+y = []
+nary = list(range(2,100)) + list(range(100,1000,10)) + list(range(1000,10000,100))
+for n in nary:
+    q = stats.binom.pmf(range(n+1), n, 0.5)
+    for i in range(int((n+1)/2)):
+        a = min(q[i], q[n-i])
+        b = np.abs(q[i] - q[n-i])
+        if a > 1e-28 and b > 0:
+            x.append(a)
+            y.append(b)
+
+plt.plot(x, y, ".")
+plt.xscale("log")
+plt.yscale("log")
+xe = np.array([1e-28, 1])
+ye = xe * 3e-13
+plt.plot(xe, ye)
+plt.savefig("251217a.webp", bbox_inches="tight", pil_kwargs={"lossless": True})
+</pre>
+
+<figure><img src="img/251217a.webp" alt="2項係数の誤差"></figure>
+
+<p>どうやら絶対誤差より相対誤差を使うほうがよさそうです。先ほどの計算は</p>
+
+<pre class="cell">
+np.array([q[q <= q[r] * (1 + 3e-13)].sum() for r in range(11)])
+</pre>
+
+<p>くらいでいいのでしょう。ちなみに、<code>stats.binomtest()</code> は相対誤差 <code>1 + 1e-7</code> を使っているようです。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-12-17 21:22:18 JST</time></p>
+</footer>
+</body>
+</html>

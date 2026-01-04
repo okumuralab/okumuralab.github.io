@@ -31,7 +31,7 @@ model = api.load('word2vec-google-news-300')
 </pre>
 </aside>
 
-<p>Pythonで扱うには <a href="https://pypi.org/project/gensim/">gensim</a> というパッケージを使う。これは今のところPython 3.12までしか対応していないようだ。<code>pip install --upgrade gensim</code> でインストールすると、gensim-4.3.3 が入り、numpy-1.26.4 scipy-1.13.1 にダウングレードされた。</p>
+<p>Pythonで扱うには <a href="https://pypi.org/project/gensim/">gensim</a> というパッケージを使う。2025年10月18日に出たgensim 4.4.0はPython 3.13まで対応した。<code>pip install --upgrade gensim</code> でインストールする。</p>
 
 <pre class="cell">
 from gensim.models import KeyedVectors
@@ -184,7 +184,7 @@ array([[1.0000002 , 0.76640147, 0.22942662, 0.166582  ],
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-12 21:48:57 JST</time></p>
+<p>Last modified: <time>2025-12-30 16:51:09 JST</time></p>
 </footer>
 </body>
 </html>

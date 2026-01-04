@@ -104,15 +104,86 @@ warning: Failed to clone files; falling back to full copy. This may lead to degr
 
 <h2>新規プロジェクトでのuvの利用</h2>
 
-<p>次のような流れで行う。</p>
+<p>まずは新しいプロジェクト用のディレクトリを作り、その中に移動する。</p>
+
+<pre>
+mkdir myproj
+cd myproj
+</pre>
+
+<p>ここで次のようにしてプロジェクトを初期化する。</p>
 
 <pre>
 uv init
-uv add ...
-uv run python ...
+# Pythonのバージョンも指定するなら uv init -p 3.14
+# すでにuv initしたならuv python pin 3.14でPythonバージョンが固定される
 </pre>
 
-<p>（未完）</p>
+<p>プロジェクト内には <code>uv.lock</code> というロックファイルができる。これに合わせて仮想環境を同期する。</p>
+
+<pre>
+uv sync
+</pre>
+
+<p>サンプルの <code>main.py</code> を実行してみる。</p>
+
+<pre>
+uv run main.py
+# あるいは uv run python main.py
+</pre>
+
+<aside>
+<p><code>uv run xxx.py</code> は <code>xxx.py</code> をスクリプトとして実行するので、<a href="https://peps.python.org/pep-0723/">PEP 723</a> (Inline script metadata) が効く。一方、<code>uv run python xxx.py</code> は、拡張子が <code>.py</code> でなくても使え、<code>python</code> に <code>-m</code> や <code>-c</code> などのオプションを与えることもできる。</p>
+</aside>
+
+<p>必要なパッケージをaddする。ここではグラフを描いてみたいので、<code>matplotlib</code> を入れる。</p>
+
+<pre>
+uv add matplotlib
+</pre>
+
+<p><code>pyproject.toml</code>、<code>uv.lock</code> が更新されるので、それに合わせて環境を更新する。</p>
+
+<pre>
+uv sync
+</pre>
+
+<p>何かグラフを描いてみよう。例えば</p>
+
+<pre>
+import matplotlib.pyplot as plt
+
+plt.plot([-1, 1])
+plt.title("グラフ")
+plt.show()
+</pre>
+
+<p>と書き込んだ <code>plot.py</code> を作り、</p>
+
+<pre>
+uv run plot.py
+</pre>
+
+<p>として実験できる。対話的に実行するには <code>ipython</code> か <code>jupyter</code> を入れるか、あるいは最近流行の <a href="marimo.html">marimo</a> を使う。<code>marimo</code> はプロジェクトに入れてもよいが、別ツールとして管理するほうがいいかもしれない。それには</p>
+
+<pre>
+uv tool install marimo
+# 更新は uv tool upgrade marimo
+</pre>
+
+<p>のようにして別途入れておく。</p>
+
+<p><code>marimo</code> を使ってグラフを描いてみよう。</p>
+
+<pre>
+uv run --with marimo marimo edit notebook.py
+</pre>
+
+<p><code>notebook.py</code> というファイルが作られる。ブラウザが開き、Jupyter や Google Colaboratory と似た画面が現れる。セルに先ほどと同じプログラムを書き込み、Shift + Enter すると、グラフが現れるはずである。詳しくは <a href="marimo.html">marimo</a> 参照。</p>
+
+<h2>ちょっとした計算をどうするか？</h2>
+
+<p>uvはプロジェクトを作って運用するのが基本だが、ちょっとした計算はどうするか。<code>uv run --no-project</code> でプロジェクトを作らないという方法もある。あるいは、<code>work</code> や <code>scratch</code> みたいな一般的な名前で普段使いのプロジェクトを一つ作っておいて、依存関係で困らない標準的なパッケージだけを入れておき、その中で上と同じように作業する、という手もある。</p>
 
 </main>
 
@@ -120,7 +191,7 @@ uv run python ...
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-14 21:57:22 JST</time></p>
+<p>Last modified: <time>2025-12-16 15:59:18 JST</time></p>
 </footer>
 </body>
 </html>

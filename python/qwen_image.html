@@ -18,42 +18,60 @@
 
 <h1>Qwen-Image</h1>
 
-<p><a href="https://huggingface.co/Qwen/Qwen-Image">Qwen-Image</a> は中国 <a href="https://www.alibabacloud.com">Alibaba Cloud</a> の画像生成AIである。</p>
+<p><a href="https://huggingface.co/Qwen/Qwen-Image">Qwen-Image</a> は中国 <a href="https://www.alibabacloud.com">Alibaba Cloud</a> の画像生成AIである。2025-12-31に後継の <a href="https://huggingface.co/Qwen/Qwen-Image-2512">Qwen-Image-2512</a> が出たので本ページもそちらに合わせて改訂した。</p>
 
-<p>ここではM4 Max Mac Studio 128GBでPythonで動かす方法をメモしておく。一般には <a href="https://huggingface.co/city96/Qwen-Image-gguf">Qwen-Image-gguf</a> を <a href="https://github.com/comfyanonymous/ComfyUI/">ComfyUI</a> で動かすほうが楽のようだ。</p>
+<p>ここではMacでPythonで動かす方法をメモしておく（私のは M4 Max Mac Studio 128GB）。別の方法として、<a href="https://huggingface.co/unsloth/Qwen-Image-2512-GGUF">GGUF版</a>をComfyUIかstable-diffusion.cppで動かす手がある。</p>
 
-<p>まずPyTorchと最新のdiffusersをインストールしておく（<code>pip install torch diffusers</code>）。あとは、サンプルコードを適宜書き直して使う。</p>
+<p>まずPyTorchと最新のdiffusersをインストールしておく（<code>pip install torch diffusers</code>）。これでうまくいくはずだが、一般論として、diffusersがうまく動かないときは開発版を使う（<code>pip install git+https://github.com/huggingface/diffusers</code>）。あとは、サンプルコードを適宜書き直して使う。</p>
 
 <pre class="cell">
 from diffusers import DiffusionPipeline
 import torch
 
-device = "mps"
-pipe = DiffusionPipeline.from_pretrained("Qwen/Qwen-Image", torch_dtype=torch.bfloat16).to(device)
+model_name = "Qwen/Qwen-Image-2512"
 
-positive_magic = {
-    "en": ", Ultra HD, 4K, cinematic composition.", # for english prompt
-    "zh": ", 超清，4K，电影级构图." # for chinese prompt
+torch_dtype = torch.bfloat16 # torch.bfloat16/torch.float32
+device = "mps" # cuda/mps/cpu
+
+pipe = DiffusionPipeline.from_pretrained(model_name, torch_dtype=torch_dtype).to(device)
+
+prompt = '''A 20-year-old East Asian girl with delicate, charming features and large, bright brown eyes—expressive and lively, with a cheerful or subtly smiling expression. Her naturally wavy long hair is either loose or tied in twin ponytails. She has fair skin and light makeup accentuating her youthful freshness. She wears a modern, cute dress or relaxed outfit in bright, soft colors—lightweight fabric, minimalist cut. She stands indoors at an anime convention, surrounded by banners, posters, or stalls. Lighting is typical indoor illumination—no staged lighting—and the image resembles a casual iPhone snapshot: unpretentious composition, yet brimming with vivid, fresh, youthful charm.'''
+
+negative_prompt = "低分辨率，低画质，肢体畸形，手指畸形，画面过饱和，蜡像感，人脸无细节，过度光滑，画面具有AI感。构图混乱。文字模糊，扭曲。"
+
+aspect_ratios = {
+    "1:1": (1328, 1328),
+    "16:9": (1664, 928),
+    "9:16": (928, 1664),
+    "4:3": (1472, 1104),
+    "3:4": (1104, 1472),
+    "3:2": (1584, 1056),
+    "2:3": (1056, 1584),
 }
 
-prompt = "a Japanese anime girl"  # プロンプト
+width, height = aspect_ratios["16:9"] # 20分程度
+
+# width, height = 640, 640 # 4分程度
 
 image = pipe(
-    prompt=prompt + positive_magic["en"],
-    negative_prompt=" ",
-    width=640,
-    height=640,
+    prompt=prompt,
+    negative_prompt=negative_prompt,
+    width=width,
+    height=height,
     num_inference_steps=50,
     true_cfg_scale=4.0,
-    generator=torch.Generator(device=device).manual_seed(42),
+    generator=torch.Generator(device=device).manual_seed(42)
 ).images[0]
 
-image.save("example.webp", lossless=True, method=6)
+image.save("example.png")
+# image.save("example.webp", lossless=True, method=6)
 </pre>
 
-<p>保存はどんな形式でもよいが、上ではロスレスWebPとした。</p>
+<p>プロンプトは<a href="https://github.com/QwenLM/Qwen-Image/blob/main/src/examples/tools/prompt_utils_2512.py">このツール</a>で変換すると品質が高まる。</p>
 
-<p>640×640で3分少々かかる。1664×928なら15分くらいかかる。画像生成しているとM4 Max Mac Studioの消費電力が60Wくらい増えて、ほんのり暖かくなる。</p>
+<hr>
+
+<p>以下は<a href="https://huggingface.co/Qwen/Qwen-Image">Qwen-Image</a>（2512でないもの）を使って試したものである。</p>
 
 <p>拡散モデルの働きを理解するために、途中段階を書き出すコードをGPT-5に書いてもらった。追加部分のみ記す。</p>
 
@@ -123,7 +141,7 @@ ffmpeg -framerate 5 -i example%03d.webp \
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-09-24 10:19:23 JST</time></p>
+<p>Last modified: <time>2026-01-01 20:14:38 JST</time></p>
 </footer>
 </body>
 </html>

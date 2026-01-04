@@ -20,19 +20,7 @@
 
 <p><a href="https://github.com/marimo-team/marimo">marimo</a>（マリモ）はJupyterに代わるPythonノートブックツールです。ファイルがJupyterの*.ipynbのようなJSONではなく、そのまま実行できる*.pyです。また、セルの実行順序がグローバル変数の依存関係によって自動的に定まります。</p>
 
-<p>インストールは</p>
-
-<pre>
-pip install marimo
-</pre>
-
-<p>または推奨パッケージも含めてインストールするなら</p>
-
-<pre>
-pip install "marimo[recommended]"
-</pre>
-
-<p>とします。インストールしたら</p>
+<p>インストールは <code>pip install marimo</code> です。インストールしたら</p>
 
 <pre>
 marimo edit test.py
@@ -160,19 +148,27 @@ _()
 
 <p><code>!pwd</code> など <code>!</code> や <code>%</code> で始まるコマンドは使えません。基本的にシェルコマンドは最下部のボタンでターミナルを開いて打ち込み、<code>%</code> で始まるマジックコマンドは <a href="https://docs.marimo.io/guides/coming_from/jupyter/">Coming from Jupyter</a> の指示に従って書き換える必要があります。関数などのドキュメントの参照は <code>?</code> が使えないので <code>help(何々)</code> のようにします（たいていはマウスオーバーで簡単な説明が出ます）。</p>
 
-<p>最後にuv環境での利用について。uvのドキュメントの <a href="https://docs.astral.sh/uv/guides/integration/marimo/">Using uv with marimo</a> に詳しいのですが、簡単には</p>
+<p>従来のipynbファイルをmarimo形式のPythonファイルに変換するには</p>
+
+<pre>
+marimo convert notebook.ipynb > notebook.py
+</pre>
+
+<p>とします。</p>
+
+<p>最後にuv環境での利用について。uvのドキュメントの <a href="https://docs.astral.sh/uv/guides/integration/marimo/">Using uv with marimo</a> に詳しいのですが、marimoはプロジェクトに含めずツールとしてインストール（<code>uv tool install marimo</code>）しておいて</p>
 
 <pre>
 uv run --with marimo marimo edit notebook.py
 </pre>
 
-<p>のようにするのがよさそうです。</p>
+<p>のようにするのが一つの方法です。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-14 18:03:39 JST</time></p>
+<p>Last modified: <time>2025-12-16 22:04:16 JST</time></p>
 </footer>
 </body>
 </html>

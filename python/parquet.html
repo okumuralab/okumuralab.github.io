@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/parquet.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apache Parquet（データ形式）</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Apache Parquet（データ形式）</h1>
+
+<p>Apache（アパッチ）の <a href="https://parquet.apache.org">Parquet</a>（パルケ）は効率の良いデータ格納形式です。フランス語 <span lang="fr">parquet [paʀ-kε]</span> は床の<a href="https://ja.wikipedia.org/wiki/%E5%AF%84%E6%9C%A8%E5%BC%B5%E3%82%8A">寄せ木張り</a>のことです。Parquetのマークがそれを表しています。英語（フランス語）でしゃべるなら「パルケ」より「ぱぁケー」と発音すればわかりやすいと思います。</p>
+
+<p>Parquet形式のファイルを読むには、pandasでは次のようにします。</p>
+
+<pre class="cell">
+import pandas as pd
+
+df = pd.read_parquet("filename.parquet")
+</pre>
+
+<p>デフォルトではpyarrowというエンジンを使いますので、pandas以外にpyarrowもインストールが必要です（<code>pip install pyarrow</code>）。さらにfastparquetも使うことができます（<code>pip install fastparquet</code>）。こちらを使うには次のようにします。</p>
+
+<pre class="cell">
+df = pd.read_parquet("filename.parquet", engine="fastparquet")
+</pre>
+
+<p>Parquetは内部では列ごとにデータが並んでいますので、次のように、特定の列だけ読み出すことが効率よくできます。</p>
+
+<pre class="cell">
+df = pd.read_parquet("filename.parquet", columns=["foo", "bar"])
+</pre>
+
+<p>書き出しは次のようにします。</p>
+
+<pre class="cell">
+df.to_parquet("filename.parquet")
+</pre>
+
+<p>オプションとして、先ほどの <code>engine</code> 以外に、圧縮方式 <code>compression</code> が指定できます。デフォルトの圧縮 <code>snappy</code> 以外に、<code>gzip</code>、<code>brotli</code>、<code>lz4</code>、<code>zstd</code> が使えます。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>
+<!-- hhmts start -->
+Last modified: <time>2025-12-29 21:53:44 JST</time>
+<!-- hhmts end -->
+</p>
+</footer>
+</body>
+</html>

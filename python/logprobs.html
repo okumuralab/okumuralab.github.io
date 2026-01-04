@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/logprobs.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLMの出力の確信度</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>LLMの出力の確信度</h1>
+
+<p>多くのLLMには出力トークンの確信度の対数 logprobs を出力する機能があります。この使い方を説明します。</p>
+
+<p>簡単のため、1トークンで答えられる質問を用意します。ここでは三重県にある霊山という山の標高を聞きます。3桁メートルなので、1トークンで答えられます。</p>
+
+<pre class="cell">
+import math
+from openai import OpenAI
+
+client = OpenAI()
+
+prompt = "三重県にある霊山の標高は何メートルですか？ わからなくても当てずっぽうでかまいません。答えは数字3桁で答えてください。数字以外は出力しないでください。"
+
+res = client.chat.completions.create(
+    model="gpt-5.2",  # non-reasoning model
+    messages=[
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ],
+    logprobs=True,
+    top_logprobs=3,
+    temperature=0
+)
+
+print(res.choices[0].message.content)
+
+for x in res.choices[0].logprobs.content:
+    print(repr(x.token))
+    for t in x.top_logprobs:
+        print(f"  {math.exp(t.logprob):7.5f} {repr(t.token)}")
+</pre>
+
+<p>出力は次のようになりました。</p>
+
+<pre>
+'766'
+  0.36807 '766'
+  0.04981 '745'
+  0.03879 '555'
+</pre>
+
+<p>766メートルで正解なのですが、確信度は36.8%で、5.0%は745、3.9%は555などという答えになることがわかります。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-12-22 09:55:20 JST</time></p>
+</footer>
+</body>
+</html>

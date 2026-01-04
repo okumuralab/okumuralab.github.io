@@ -24,16 +24,16 @@
 
 <h1>国立大学運営費交付金の推移</h1>
 
-<p>Rで描いた<a href="../stat/090503d.html">国立大学運営費交付金</a>のPython版である。</p>
+<p>Rで描いた<a href="../stat/090503d.html">国立大学運営費交付金</a>のPython版である。2026年度は10971億円に増額されそうなので、フライングで掲載。</p>
 
-<pre>
+<pre class="cell">
 import matplotlib.pyplot as plt
 
 # 2004年〜2025年の運営費交付金
 運営費交付金 = [12415, 12317, 12214, 12043, 11813, 11695, 11585,
                 11528, 11366, 10792, 11123, 10945, 10945, 10971,
                 10971, 10971, 10807, 10790, 10786, 10784, 10784,
-                10784]
+                10784, 10971]
 年 = list(range(2004, 2004+len(運営費交付金)))
 plt.figure(figsize=(8, 4.8))
 plt.bar(年, 運営費交付金, color="lightgray")
@@ -49,7 +49,7 @@ plt.text(2002.1, 12200, '億円', ha='right', va='bottom') # , fontsize=12) # , 
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-12-28 11:29:39 JST</time></p>
+<p>Last modified: <time>2025-12-25 07:23:46 JST</time></p>
 </footer>
 </body>
 </html>

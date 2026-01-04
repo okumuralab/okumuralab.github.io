@@ -207,18 +207,7 @@ stats.binomtest(2, 10, 0.5).pvalue
 </aside>
 
 <aside>
-<p>二項分布などの離散分布 $p_i$ で、実験結果 $k$ が与えられたとき、その両側 $p$ 値は $p_i \leq p_k$ を満たす $p_i$ の和です。10枚の硬貨を投げる二項分布で $k$ 枚だけ表が出たとすると、$p$ 値は次のようにして求められるはずです。</p>
-<pre>
-a = stats.binom.pmf(range(11), 10, 0.5)
-for k in range(11):
-    print(k, a[a &lt;= a[k]].sum())
-</pre>
-<p>ところがこの結果をよく見ると、$k = 0$ と $k = 4$ で答えが違います。非常に小さな数、例えば <code>sys.float_info.epsilon</code> または同じことですが <code>np.finfo(np.float64).eps</code> を不等式の右辺に加えて</p>
-<pre>
-for k in range(11):
-    print(k, a[a &lt;= a[k] + sys.float_info.epsilon].sum())
-</pre>
-<p>のようにすればとりあえずうまくいきます。<code>a[k] + sys.float_info.epsilon</code> の代わりに <code>np.nextafter(a[k], np.inf)</code> とするのは許容がなさすぎて、$k = 4$ では正しくなりますが $k = 0$ では依然として正しくない値になります。逆に <code>a[(a < a[k]) | np.isclose(a, a[k])]</code> では緩すぎるかもしれません。数値計算の誤差に注意しなければならない例です。</p>
+<p>$p$ 値を計算する際の誤差の問題は <a href="numerical_error.html">数値計算の誤差</a> に移しました。</p>
 </aside>
 
 <aside>
@@ -351,7 +340,7 @@ probability of success
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-14 17:51:37 JST</time></p>
+<p>Last modified: <time>2025-12-15 15:39:09 JST</time></p>
 </footer>
 </body>
 </html>

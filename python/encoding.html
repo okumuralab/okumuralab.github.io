@@ -104,7 +104,7 @@ b'\xad\xf4'.decode('euc_jis_2004')  # UnicodeDecodeError
 
 <h2>ZIPアーカイブのファイル名文字化け対策</h2>
 
-<p>ZIP アーカイブの操作は <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> パッケージでできる。ただ，日本語環境の Windows で作成したアーカイブは，ファイル名が CP932（Shift JIS の Microsoft 拡張）になっている。これを Mac や Linux で展開するには，UTF-8 に変換しなければならない。</p>
+<p>ZIP アーカイブの操作は標準ライブラリの <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> モジュールでできる。ただ，日本語環境の Windows で作成したアーカイブは，ファイル名が CP932（Shift JIS の Microsoft 拡張）になっている。これを Mac や Linux で展開するには，UTF-8 に変換しなければならない。</p>
 
 <p>Python 3 の zipfile モジュール（zipfile.py）では</p>
 
@@ -285,7 +285,7 @@ tbl = str.maketrans(
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2025-07-19 10:18:12 JST</time>
+Last modified: <time>2026-01-04 10:22:40 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

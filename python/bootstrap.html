@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/bootstrap.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ブートストラップ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ブートストラップ</h1>
+
+<p>ブートストラップ（bootstrap）とは、ブーツ（boot）のストラップ（strap）、つまり靴ひものことです。英語に <span lang="en">“pull oneself up by one’s bootstraps”</span> という成句があります。自分の靴ひもを引っ張って自分自身を持ち上げるという意味で、有名な『ほら吹き男爵の冒険』の主人公ミュンヒハウゼン男爵が自分の髪の毛を引っ張って沼から脱出したという逸話の別バージョンのようです。</p>
+
+<p>ここでいうブートストラップは、1979年に米国の統計学者エフロン（Bradley Efron, 1938--）が考えた方法です。大きさ $n$ の一つのサンプルから、復元抽出で大きさ $n$ のサンプルをたくさん作り出し、それでサンプル誤差などを推測します。母集団が正規分布から大きく外れていても使える方法です。</p>
+
+<p>正規分布から大きく外れる分布のデータを用意します。よく例として使われるのが対数正規分布です。これは $\log X \sim N(\mu, \sigma^2)$ に従う $X$ の分布で、Python では例えば</p>
+
+<pre class="cell">
+import numpy as np
+
+rng = np.random.default_rng()
+n = 100
+x = rng.lognormal(mean=0, sigma=1, size=n)
+</pre>
+
+<p>で生成できます。平均値は $\exp(\mu + \sigma^2/2)$ になります。右裾が長く伸びた分布です。</p>
+
+<p>一方で、教育統計などで使うデータは、テストの点数にせよLikertデータにせよ、裾は有限です。左右対称に近ければサンプル平均は $t$ 分布が良い近似になりますが、ここでは左右対称でない極端な例として、次のような ◺ 型の分布を考えます。</p>
+
+<pre class="cell">
+import numpy as np
+
+rng = np.random.default_rng(20251220)
+n = 100
+x = np.abs(rng.random(n) - rng.random(n))
+</pre>
+
+<p>密度関数は $-2x+2$ ($0 \leq x \leq 1$) です。$x$ の平均は 1/3、分散は 1/18 になるはずです。</p>
+
+<p>まずは $x$ の平均値の分布を $t$ 分布で近似し、95%信頼区間を求めてみましょう。</p>
+
+<pre class="cell">
+from scipy import stats
+
+a, b = stats.ttest_1samp(x, 0).confidence_interval()
+print(a, b)
+</pre>
+
+<pre>
+0.268701576150326 0.36325204150481255
+</pre>
+
+<p>平均値の95%信頼区間は $[0.269, 0.363]$ です。</p>
+
+<p>この <code>x</code> からブートストラップサンプルを一つ生成するには、<code>rng.choice(x, n, replace=True)</code> または同じことですが <code>x[rng.integers(0, n, size=n)]</code> とします。後者のほうがやや速いはずです。このサンプルから平均を求めることを <code>B</code> 回繰り返し、その結果を配列 <code>boot</code> に代入します。リストでよければ</p>
+
+<pre class="cell">
+B = 10000
+boot = [np.mean(x[rng.integers(0, n, size=n)]) for _ in range(B)]
+</pre>
+
+<p>NumPy配列にするには右辺を <code>np.array()</code> で囲んでもいいのですが、より効率的な次のような書き方もできます。</code>
+
+<pre class="cell">
+B = 10000
+boot = np.fromiter((np.mean(x[rng.integers(0, n, size=n)]) for _ in range(B)), float, B)
+</pre>
+
+<p>これで</p>
+
+<pre class="cell">
+a, b = np.quantile(boot, [0.025, 0.975])
+print(a, b)
+</pre>
+
+<pre>
+0.26856405025665725 0.3623282666882384
+</pre>
+
+<p>平均値の95%信頼区間は $[0.269, 0.362]$ です。この方法をパーセンタイル信頼区間（percentile confidence interval, percentile CI）といいます。</p>
+
+<p>実は、これより少し良い次の方法があります。</p>
+
+<pre class="cell">
+a, b = np.quantile(boot, [0.025, 0.975])
+m = np.mean(boot)  
+print(2 * m - b, 2 * m - a)
+</pre>
+
+<pre>
+0.2693755468507872 0.36313976328236836
+</pre>
+
+<p>平均値の95%信頼区間は $[0.269, 0.363]$ です。この方法をベーシック信頼区間（basic CI）または反転パーセンタイル信頼区間（reverse percentile CI）といいます。</p>
+
+<aside>
+<p>どうしてこちらのほうが少しだけ良いかを簡単に説明しておきます。</p>
+<p>われわれの知りたいのは母集団の統計量 $\theta$ です。サンプルの統計量 $\hat\theta$ は $\theta$ の周りに分布していると考えられます。</p>
+<p>同様にして、サンプルから再びサンプルしたブートストラップサンプルの統計量 $\hat\theta^*$ は $\hat\theta$ の周りに分布していると考えられます。$\theta$ の周りの $\hat\theta$ の分布は、$\hat\theta$ の周りの $\hat\theta^*$ の分布と似ていると考えられそうです。つまり、$\theta - \hat\theta$ の分布は $\hat\theta - \hat\theta^*$ の分布で近似できると考えられそうです。</p>
+<p>ブートストラップサンプルの統計量 $\hat\theta^*$ の2.5%点を $\hat\theta^*_L$、97.5%点を $\hat\theta^*_U$ としましょう。つまり、</p>
+\[ \hat\theta^*_L \leq \hat\theta^* \leq \hat\theta^*_U \]
+<p>の確率は95%です。この各辺を $\hat\theta$ から引くと、</p>
+\[ \hat\theta - \hat\theta^*_L \geq \hat\theta - \hat\theta^* \geq \hat\theta - \hat\theta^*_U \]
+<p>となります。ここで前述したように $\theta - \hat\theta$ の分布は $\hat\theta - \hat\theta^*$ の分布で近似できるとすると、</p>
+\[ \hat\theta - \hat\theta^*_L \geq \theta - \hat\theta \geq \hat\theta - \hat\theta^*_U \]
+<p>となり、この各辺に $\hat\theta$ を加えると、</p>
+\[ 2\hat\theta - \hat\theta^*_L \geq \theta \geq 2\hat\theta - \hat\theta^*_U \]
+<p>となります。つまり、母集団の統計量 $\theta$ の95%信頼区間は $2\hat\theta - \hat\theta^*_U$ 以上 $2\hat\theta - \hat\theta^*_L$ 以下となることがわかります。</p>
+</aside>
+
+<p>さらに改良したものとして、BCa (Bias-Corrected and accelerated) と呼ばれる方法や、Studentized bootstrap (bootstrap-$t$) と呼ばれる方法があります。</p>
+
+<p>一方で、このような非対称な分布でも、最初の $t$ 分布による方法が十分頑健であることもわかります。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2025-12-25 06:51:12 JST</time></p>
+</footer>
+</body>
+</html>
