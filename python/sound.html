@@ -131,6 +131,19 @@ wavfile.write("right.wav", samplerate, np.round(right).astype("int16"))
 
 <p>C10を超える17000Hz以上の音（モスキート音）は若者にしか聞こえません。若者を寄せ付けないために大音量のモスキート音を使うことがあるようです。</p>
 
+<p>[2026-01-09追記] <a href="https://www.pnas.org/doi/10.1073/pnas.2529565123">40Hzの音でサルのアルツハイマー病を治すPNAS論文</a>が話題になっていました。ただし40Hzの純音ではなく1kHzの純音を1ms（1サイクル）ずつ毎秒40回鳴らすようです（音圧60dB）。この音を作ってみました（<a href="https://x.com/h_okumura/status/2009485486751125611">このツイート</a>から始まるスレッド参照）。</p>
+
+<pre class="cell">
+import numpy as np
+from scipy.io import wavfile
+
+samplerate = 48000
+data = [int(np.round(10000 * np.sin(2 * np.pi * 1000 * t / samplerate))) for t in range(48)]
+data = data + [0] * (samplerate // 40 - 48)
+data = data * 40 * 5  # 5秒
+wavfile.write("40hz.wav", samplerate, np.array(data).astype("int16"))
+</pre>
+
 <h2>音楽を作る</h2>
 
 <p><a href="https://pypi.org/project/musicpy/">musicpy</a> が楽しそうです（そのうち書きます）。</p>
@@ -139,7 +152,7 @@ wavfile.write("right.wav", samplerate, np.round(right).astype("int16"))
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-08-25 12:17:48 JST</time></p>
+<p>Last modified: <time>2026-01-09 16:20:38 JST</time></p>
 </footer>
 </body>
 </html>

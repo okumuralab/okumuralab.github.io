@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/x_api.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>X API</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>X API</h1>
+
+<p>X（Twitter）のAPIを使って投稿を読んだり書いたりする方法を説明します。</p>
+
+<p><a href="https://docs.x.com/x-api/introduction">X API</a> のページを見ると、無料でも月に100件読め、500件書けるようです。100件読めてもあまりうれしくありませんし、連続して試そうとするとすぐエラー（HTTPError: 429 Client Error: Too Many Requests for url）になるので使い勝手が悪いのですが、アプリには表示されない情報（秒単位の時刻、投票結果の票数など）を見たいときなどは役に立ちます（これらは別の手段でも取得できますが）。500件書ける方は、自動投稿に役に立ちます。</p>
+
+<p>まずは先ほどのページから登録し、一連のAPIキーを発行してもらう必要があります。使用状況は<a href="https://developer.x.com/en/portal/dashboard">ダッシュボード</a>で確認できます。</p>
+
+<p>公式のパッケージ <a href="https://pypi.org/project/xdk/">xdk</a> が公開されており、コード例が <a href="https://github.com/xdevplatform/samples/tree/main/python">X API v2 - Python Examples</a> にいろいろ載っています。しかし、いまいち動作がわからないところがあるので、以下では汎用のパッケージを使う方法を示しました。あらかじめ <code>pip install requests requests-oauthlib</code> しておきます。</p>
+
+<p>書く方は簡単です。課金していれば長文投稿もできます。</p>
+
+<pre>
+import requests
+from requests_oauthlib import OAuth1
+
+API_KEY = "..."
+API_SECRET = "..."
+ACCESS_TOKEN = "..."
+ACCESS_TOKEN_SECRET = "..."
+
+auth = OAuth1(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+
+text = "こんにちは！"
+
+r = requests.post(
+    "https://api.x.com/2/tweets",
+    auth=auth,
+    json={"text": text},
+    timeout=30,
+)
+print(r.status_code, r.text)
+r.raise_for_status()
+tweet_id = r.json()["data"]["id"]
+print("Posted:", tweet_id)
+</pre>
+
+<p>読む方は <a href="https://docs.x.com/x-api/posts/get-post-by-id">Get Post by ID</a> または <a href="https://docs.x.com/x-api/posts/get-posts-by-ids">Get Posts by IDs</a> に書いてありますが、Bearer token を使う方法（OAuth 2.0 App-only）、API key/secret + access token/secret を使う方法（OAuth 1.0a）があります（ほかにもありますが省略）。前者はログインなしで読む方法、後者はログインして読む方法に対応します。まず前者（<code>params</code> については後述）：</p>
+
+<pre>
+import json
+import requests
+
+BEARER_TOKEN = "..."
+
+TWEET_ID = 2009093270044069950
+
+url = f"https://api.x.com/2/tweets/{TWEET_ID}"
+
+r = requests.get(
+    url,
+    headers={"Authorization": f"Bearer {BEARER_TOKEN}"},
+    # params=params,
+    timeout=30
+)
+
+print("Status:", r.status_code)
+r.raise_for_status()
+payload = r.json()
+print(json.dumps(payload, indent=2, ensure_ascii=False))
+</pre>
+
+<p>後者：</p>
+
+<pre>
+import json
+import requests
+from requests_oauthlib import OAuth1
+
+API_KEY = "..."
+API_SECRET = "..."
+ACCESS_TOKEN = "..."
+ACCESS_TOKEN_SECRET = "..."
+
+TWEET_ID = 2009093270044069950
+
+url = f"https://api.x.com/2/tweets/{TWEET_ID}"
+auth = OAuth1(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+
+r = requests.get(
+    url,
+    auth=auth,
+    # params=params,
+    timeout=30,
+)
+
+print("Status:", r.status_code)
+r.raise_for_status()
+payload = r.json()
+print(json.dumps(payload, indent=2, ensure_ascii=False))
+</pre>
+
+<p>パラメータをいろいろ指定できます。<code># params=params</code> の頭の <code>#</code> を取って、パラメータをあらかじめ次のような感じで指定します。不要な項目は <code>#</code> で消してください。</p>
+
+<pre>
+params = {
+    "tweet.fields": ",".join([
+        "article",
+        "attachments",
+        "author_id",
+        "card_uri",
+        "community_id",
+        "context_annotations",
+        "conversation_id",
+        "created_at",
+        "display_text_range",
+        "edit_controls",
+        "edit_history_tweet_ids", # default
+        "entities",
+        "geo",
+        "id",  # default
+        "in_reply_to_user_id",
+        "lang",
+        "media_metadata",
+        # "non_public_metrics",  # 指定するとエラーになることが多い
+        "note_tweet",  # long-form post
+        # "organic_metrics",  # 指定するとエラーになることが多い
+        "possibly_sensitive",
+        # "promoted_metrics",  # 指定するとエラーになることが多い
+        "public_metrics",
+        "referenced_tweets",
+        "reply_settings",
+        "scopes",
+        "source",
+        "suggested_source_links",
+        "suggested_source_links_with_counts",
+        "text",  # default
+        "withheld"
+    ]),
+    "expansions": ",".join([
+        "author_id",
+        "referenced_tweets.id",
+        "edit_history_tweet_ids",
+        "in_reply_to_user_id",
+        "attachments.media_keys",
+        "attachments.poll_ids",
+        "geo.place_id",
+        "entities.mentions.username",
+        "referenced_tweets.id.author_id",
+    ]),
+    "user.fields": ",".join([
+        "id", "name", "username",  # defaults
+        # "affiliation", "confirmed_email",
+        # "connection_status", "created_at", "description", "entities",
+        # "is_identity_verified", "location", "most_recent_tweet_id",
+        # "parody", "pinned_tweet_id", "profile_banner_url",
+        # "profile_image_url", "protected", "public_metrics",
+        # "receives_your_dm", "subscription", "subscription_type",
+        # "url", "verified", "verified_followers_count",
+        # "verified_type", "withheld",
+    ]),
+    "media.fields": ",".join([
+        "media_key", "type",  # defaults
+        # "url", "duration_ms", "height",
+        # "preview_image_url", "public_metrics",
+        # "width", "alt_text", "variants"
+    ]),
+    "poll.fields": ",".join([
+        "id", "options",  # defaults
+        "duration_minutes", "end_datetime", "voting_status",
+    ]),
+    "place.fields": ",".join([
+        "full_name", "id",  # defaults
+        "contained_within",
+        "country", "country_code", "geo", "name", "place_type",
+    ]),
+}
+</pre>
+
+<p>パラメータを指定しても取得できないものもあり、よくわかりません。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-01-10 09:33:44 JST</time></p>
+</footer>
+</body>
+</html>

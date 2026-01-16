@@ -19,7 +19,7 @@
 
 <p><a href="https://azookey.com">azooKey</a>（あずーきー、あずき）はオープンソースのAIかな漢字変換（IME）ツールです。iOS用のほかに<a href="https://azookey.com/macOS">macOS版</a>もありますので、Macにインストールしてみました。デフォルトの設定でもMac標準のIMEよりずっと賢いので、お薦めします。</p>
 
-<p><a href="https://azookey.com/macOS">macOS版</a>の「Download for macOS」をクリックして <code>azooKey-release-signed.pkg</code> をダウンロードし、ダブルクリックしてインストールした後、</p>
+<p><a href="https://azookey.com/macOS">macOS版</a>の「Download for macOS」（またはGitHubの<a href="https://github.com/azooKey/azooKey-Desktop">azooKey on macOS</a>のリリース）をクリックして <code>azooKey-release-signed.pkg</code> をダウンロードし、ダブルクリックしてインストールした後、</p>
 
 <ul>
   <li>林檎メニューの一番下「○○○○をログアウト…」でログアウトし、再ログイン</li>
@@ -27,13 +27,14 @@
   <li>メニューバーアイコンからazooKeyを選択</li>
 </ul>
 
-<p>すれば動きます（最初の1文字の変換は少し時間がかかりました）。</p>
+<p>すれば動きます（最初の1文字の変換は少し時間がかかりました）。更新時にもログアウトは必要なようです。ちなみに「+」ボタン＞「英語」で azookey (English) も追加しておくと、英数モードでも下記「いい感じ変換」が使えます。</p>
 
 <p>メニューバーから開くメニューで設定ができます。AIの力を発揮するにはライブ変換がおすすめですが、慣れもありますのでお好きな設定にしてください。細かい設定や単語登録は、メニューバーから開くメニューの「設定…」の中で行います。</p>
 
-<p>「きょう」で 2025/11/11 などへの変換ができますが、自分好みの日付形式に変換するには、例えば次のようにazooKeyユーザ辞書に登録しておきます：</p>
+<p>「きょう」「いま」の変換機能はデフォルトでサポートされました。<del>「きょう」で 2025/11/11 などへの変換ができますが、自分好みの日付形式に変換するには、例えば次のようにazooKeyユーザ辞書に登録しておきます：</del></p>
 
 <pre>
+<del>
 &lt;date format="yyyy-MM-dd" type="western" language="ja_JP" delta="0" deltaunit="1"&gt;
 きょう
 日付
@@ -41,21 +42,20 @@
 &lt;date format="HH:mm:ss" type="western" language="ja_JP" delta="0" deltaunit="1"&gt;
 いま
 日付
+</del>
 </pre>
 
-<p>GitHubの<a href="https://github.com/azooKey/azooKey-Desktop">azooKey on macOS</a>にソースコードや技術的な情報が載っています。</p>
+<p>さて、これでMac標準のIMEより賢い変換ができるようになったと思いますが、メニューバーから開くメニューの「設定…」の下のほうには「いい感じ変換」という項目があります。OpenAIのAPIキーを持っている人はここでAPIキーとお好きなモデル名を設定しておけば、azooKeyの中からGPTモデルが呼び出せます。例えば「吾輩は猫である。[確定][Ctrl-S]」とすれば「吾輩は猫である。」の続きをChatGPTに考えてもらうことができます。あるいは「遅刻しました。[確定]いいわけ[Ctrl-S]」で遅刻の言い訳を考えてもらうことができます。他社のAPIでもOpenAI互換であれば設定できます。</p>
 
-<hr>
+<p>API料金が発生するのは嫌な場合は、macOSのApple Intelligenceを設定していれば、OSのFoundation Modelsが使えます。より賢くするために、私はローカルのLM Studioで適当なモデルを動かし、OpenAI APIとしてはダミーの文字列（例えば <code>sk-xxxxxx</code>）を入れ、OpenAI Model Nameにも適当なダミー（例えば <code>lmstudio</code>）を入れ、API Endpointとしては <code>http://127.0.0.1:1234/v1/chat/completions</code> を設定しました。</p>
 
-<p>さて、これでMac標準のIMEより賢い変換ができるようになったと思いますが、メニューバーから開くメニューの「設定…」の下のほうには「OpenAI APIキーの利用」というおもしろそうなチェックボックスがあります。OpenAIのAPIキーを持っている人はこれをチェックして、APIキーとお好きなモデル名を設定しておけば、azooKeyの中からGPTモデルが呼び出せます。例えば「吾輩は猫である。[確定]つづき[Ctrl-S]」とすれば「吾輩は猫である」の続きをChatGPTに考えてもらうことができます。あるいは「遅刻しました。[確定]いいわけ[Ctrl-S]」で遅刻の言い訳を考えてもらうことができます。他社のAPIでもOpenAI互換であれば設定できます。</p>
+<p>残念ながらEmacsやGhosttyでは左側の文字列が取得できないので「吾輩は猫である。[確定][Ctrl-S]」などはうまくいきませんでした。「ブチギレ[確定]えもじ[Ctrl-S]」もうまくいかないので、ブチギレした顔の絵文字を出したければ、「ぶちぎれかおえもじ[Ctrl-S]」のように、入力済みの文字列を参照しなくてもいい入力をして、確定前にCtrl-Sを押せば、うまくいくようです。</p>
 
-<p>API料金が発生するのは嫌なので、私はローカルのLM Studioで適当なモデル（例えばopenai/gpt-oss-20b）を動かし、OpenAI APIとしてはダミーの文字列（例えば <code>sk-xxxxxx</code>）を入れ、OpenAI Model Nameにも適当なダミー（例えば <code>lmstudio</code>）を入れ、API Endpointとしては <code>http://127.0.0.1:1234/v1/chat/completions</code> を設定しました。</p>
+<p>ほかに、文字列を選択してCtrl-Sすれば選択範囲を一括処理できるMagic Conversion機能があり、リライトや翻訳に便利です。azooKey (English) も設定しているなら、英数キーを2回押すだけで英語翻訳になります。これもEmacsでは使えないようです。</p>
 
-<p>残念ながらEmacsやGhosttyでは左側の文字列が取得できないので「吾輩は猫である。[確定]つづき[Ctrl-S]」などはうまくいきませんでした。「ブチギレ[確定]えもじ[Ctrl-S]」もうまくいかないので、ブチギレした顔の絵文字を出したければ、「ぶちぎれかおえもじ[Ctrl-S]」のように、入力済みの文字列を参照しなくてもいい入力をして、確定前にCtrl-Sを押せば、うまくいくようです。</p>
+<p>当然ながら、Ctrl-Sで出てくる候補はLLMモデルに依存します。openai/gpt-oss-*のほか、qwen/qwen3-vl-32b-instructやmistralai/devstral-small-2-2512も賢いので常用しています。</p>
 
-<p>ほかに、文字列を選択してCtrl-Sすれば選択範囲を一括処理できるMagic Conversion機能があり、リライトや翻訳に便利です。これもEmacsでは使えないようです。</p>
-
-<p>当然ながら、Ctrl-Sで出てくる候補はLLMモデルに依存します。openai/gpt-oss-*のほか、qwen/qwen3-vl-32b-instructも賢いので常用しています。</p>
+<p>Emacsで例えばバッファを保存しようとしてCtrl-X Ctrl-Sとすると、IMEがオンになっているとCtrl-SをazooKeyの方に取られてしまいます。azooKey 0.1.3以降ではCtrl-S以外のキーを割り当てることができます。システム設定→キーボード→キーボードショートカット→アプリのショートカット→「+」で、アプリケーションは「すべてのアプリケーション」のまま、メニュータイトルに「いい感じ変換」と入れ、キーボードショートカットのところで望みのキーを入力します（例えばctrl+i、^Iと入る）。</p>
 
 <p>「設定…」には「（開発者用）デバッグウィンドウを有効化」というチェックボックスもあります。有効にしておけば、d でデバッグモードに入り、Shift-d で抜けます。</p>
 
@@ -71,7 +71,7 @@
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-11-30 09:29:52 JST</time></p>
+<p>Last modified: <time>2026-01-12 15:04:54 JST</time></p>
 </footer>
 </body>
 </html>

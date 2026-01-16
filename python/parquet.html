@@ -48,13 +48,34 @@ df.to_parquet("filename.parquet")
 
 <p>オプションとして、先ほどの <code>engine</code> 以外に、圧縮方式 <code>compression</code> が指定できます。デフォルトの圧縮 <code>snappy</code> 以外に、<code>gzip</code>、<code>brotli</code>、<code>lz4</code>、<code>zstd</code> が使えます。</p>
 
+<p>より高速な <a href="polars.html">Polars</a> で読むには次のようにします。</p>
+
+<pre class="cell">
+import polars as pl
+
+df = pl.read_parquet("filename.parquet")
+print(df)
+</pre>
+
+<p>デフォルトではRust製のエンジンを使いますが、オプション <code>use_pyarrow=True</code> でC++のPyArrowを使います。<code>colums=[...]</code> で、指定した列だけを読みます。</p>
+
+<p>書き出しは次のようにします。</p>
+
+<pre class="cell">
+df.write_parquet("filename.parquet")
+</pre>
+
+<p>こちらもオプション <code>use_pyarrow=True</code> でC++のPyArrowを使います。圧縮は <code>compression="zstd"</code> がデフォルトですが、<code>snappy</code>、<code>gzip</code>、<code>brotli</code>、<code>lz4</code>、<code>uncompressed</code> が使えます。</p>
+
+<p>pandasと違って、<code>compression_level=整数</code> で圧縮レベルを指定できます。gzipは0〜9（デフォルト6）、brotliは0〜11（デフォルト1）、zstdは1〜22（デフォルト3）です。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2025-12-29 21:53:44 JST</time>
+Last modified: <time>2026-01-04 14:51:18 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

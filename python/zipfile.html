@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/zipfile.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZIPファイル</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>ZIPファイル</h1>
+
+<p>ZIPファイルを扱うには、Python標準ライブラリの <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> モジュールを使います（Python 3.11までは <code>zipfile.py</code> という一つのファイルからなるモジュールでしたが、Python 3.12以降は <code>zipfile</code> ディレクトリ以下の複数のファイルで構成されたパッケージです）。</p>
+
+<p>ZIPファイル形式で厄介なのがファイル名のエンコーディングです。元々はIBM PCの8ビット文字コード（Code Page 437、CP437）しかサポートされていませんでしたが、MS-DOSやWindows上のZIPでは、日本語ファイル名はCP932（Shift JISに「機種依存文字」を加えたもの）をそのまま入れていました。一方、Unicode化されたMacやLinuxではUTF-8のバイト列をそのまま入れました。CP437とUTF-8の区別をするために、ZIPファイル中の2バイトの汎用フラグのビット11が当てられましたが、macOSの <code>/usr/bin/zip</code> やFinderのZIP圧縮機能は今もこのビットを立てないようです（さらにFinderで圧縮するとファイル名がUTF-8-MAC（ほぼNFD）になるがこれはOSのバージョンによるかも）。そのため、Macで作ったZIPファイルをWindowsの機能で展開するとファイル名が化けることがあるようです。</p>
+
+<p>次は最低限の機能を備えたZIP展開ツールです（DoraTeXさんの<a href="https://gist.github.com/doraTeX/0d79d8ff35710a27bc3e5176cc646b60">unzip.py</a>を参考にしました）。最低限の文字化け・ディレクトリトラバーサル脆弱性の対策をしました。</p>
+
+<pre>
+#! /usr/bin/env python3
+
+import sys
+from zipfile import ZipFile
+from pathlib import Path
+from getpass import getpass
+import unicodedata
+
+def is_safe_path(path):
+    cur = Path(".").resolve()
+    path = Path(path).resolve()
+    return path.is_relative_to(cur)
+
+with ZipFile(sys.argv[1]) as z:
+    for zinfo in z.infolist():
+        if zinfo.flag_bits &amp; 0x1:
+            password = getpass('PASSWORD: ')
+            z.setpassword(password.encode('utf-8'))
+        if not zinfo.flag_bits &amp; 0x800:
+            try:
+                name = zinfo.filename.encode('cp437').decode('cp932')
+            except UnicodeDecodeError:
+                name = "\x00"
+            if not name.isprintable():
+                name = zinfo.filename.encode('cp437').decode('utf-8', errors="ignore")
+            zinfo.filename = name
+        zinfo.filename = unicodedata.normalize('NFC', zinfo.filename)
+        if is_safe_path(zinfo.filename):
+            print("Extracting", zinfo.filename)
+            z.extract(zinfo)
+        else:
+            print("Skipping", zinfo.filename)
+</pre>
+
+<p>このファイルを <code>unzip.py</code> という名前で作成して実行可能にしておけば、<code>./unzip.py アーカイブ名.zip</code> で展開できます。</p>
+
+<p>なお、現在のZIPファイルは、標準のDeflate圧縮以外に、bzip2、LZMA、Zstandard圧縮に対応しています。ZIPファイル仕様書 <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">APPNOTE.TXT - .ZIP File Format Specification</a> によれば、bzip2は2001年、LZMAは2006年、Zstandardは2020年にサポートされたようです。これらの圧縮形式は、zipfileモジュール以外に、<a href="https://docs.python.org/3/library/zlib.html">zlib</a> / <a href="https://docs.python.org/3/library/gzip.html">gzip</a>、<a href="https://docs.python.org/3/library/bz2.html">bz2</a>、<a href="https://docs.python.org/3/library/lzma.html">lzma</a>、<a href="https://docs.python.org/3/library/compression.zstd.html">compression.zstd</a> の各モジュールでも扱えます。bzip2とLZMAはPython 3.3、ZstandardはPython 3.14でサポートされました。</p>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2026-01-06 09:37:37 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

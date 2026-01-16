@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/openresponses.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open Responses APIを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Open Responses APIを使う</h1>
+
+<p>2025年3月、OpenAIは新しい <a href="https://platform.openai.com/docs/api-reference/responses">responses</a> APIを公開した。これに基づいて、2026年1月に <a href="https://www.openresponses.org">Open Responses</a> というオープンなAPI規格が作られた。<a href="https://lmstudio.ai">LM Studio</a> もさっそくこれに対応した（<a href="https://lmstudio.ai/blog/openresponses">Open Responses with local models via LM Studio</a>）。</p>
+
+<p>ここではこれを使ってLM StudioをPythonから操作し、さらにLM StudioのOpen Responses APIに実装されたlogprobsの仕組みを使ってLLMの回答の確信度を調べる方法を解説する。</p>
+
+<p>まずはLM Studioをインストールし、適当なモデルをダウンロードする。ここでは <code>qwen/qwen3-vl-32b-instruct</code> を例として使う。Pythonのパッケージとして <code>openai</code> を使う。</p>
+
+<pre class="cell">
+from openai import OpenAI
+
+client = OpenAI(base_url="http://localhost:1234/v1")
+response = client.responses.create(
+    model="qwen/qwen3-vl-32b-instruct",
+    input="Tell me the secret of life in one word (without `**` or `*`).",
+)
+print(response.output[0].content[0].text)
+</pre>
+
+<p>やってみたところ、“Love” という1語が返された。追加で質問してみよう。追加の質問には次のように <code>previous_response_id=response.id</code> のオプションを付ける。</p>
+
+<pre class="cell">
+response = client.responses.create(
+    model="qwen/qwen3-vl-32b-instruct",
+    previous_response_id=response.id,
+    input="Why?"
+)
+print(response.output[0].content[0].text)
+</pre>
+
+<p>“Because love connects, heals, inspires, ...” といった解答が出力された。さらに何回でも追加の質問をつなげることができる。もちろん日本語にも対応しているので、日本語で質問してもよい。</p>
+
+<p>さて、ここでわざわざ1語で答えてもらったのは、その確信度を調べたかったためである。確信度を出力するには、最初の質問を次のようにする。</p>
+
+<pre class="cell">
+import numpy as np
+from openai import OpenAI
+
+client = OpenAI(base_url="http://localhost:1234/v1")
+response = client.responses.create(
+    model="qwen/qwen3-vl-32b-instruct",
+    input="Tell me the secret of life in one word (without `**` or `*`).",
+    include=["message.output_text.logprobs"],
+    top_logprobs=3  # 上位3個まで出力
+)
+print(response.output[0].content[0].text)
+
+for x in response.output[0].content[0].logprobs[:5]:
+    print(repr(x.token))
+    for y in x.top_logprobs:
+        print(f"  {np.exp(y.logprob):7.5f} {repr(y.token)}")
+</pre>
+
+<pre>
+Love
+'Love'
+  0.96847 'Love'
+  0.00990 'Peace'
+  0.00895 'Joy'
+</pre>
+
+<p>Loveが約97%、PeaceやJoyは1%未満である。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-01-16 17:05:52 JST</time></p>
+</footer>
+</body>
+</html>
