@@ -18,6 +18,50 @@
 
 <h1>ツイッターのフォロワー数の推移をプロット</h1>
 
+<p>[2026-03-31] Togetterの形式が変わっていたので全面的に書き直した。</p>
+
+<p><a href="https://twilog.togetter.com/">Twilog</a> の該当者（ここでは<a href="https://twilog.togetter.com/h_okumura/">私</a>）のページの「Stats」をクリックし，ページのソースを <code>stats.html</code> という名前で保存する。</p>
+
+<p>この中に <code>{"date":"2026-03-31","timestamp":1774924064,"followee":765,"follower":38849,"statuses":137075}</code> のような形式でデータが詰まっている。これをまず切り出してCSVファイルに収める。そのためのPythonコードは特に難しくないが、面倒なのでCodexに書いてもらったのが <a href="code/extract_stats_csv.py">extract_stats_csv.py</a> である。</p>
+
+<p>結果は次のようなCSVファイル。</p>
+
+<pre>
+date,timestamp,followee,follower,statuses
+2026-03-31,1774924064,765,38849,137075
+2026-03-30,1774837664,765,38846,137074
+2026-03-29,1774751264,766,38627,137049
+2026-03-28,1774664864,766,38628,137040
+2026-03-27,1774578464,766,38635,137010
+2026-03-26,1774492064,766,38636,136980
+...(後略)...
+</pre>
+
+<p>これをグラフにする。これも最初はCodexに書いてもらったのだが、無駄が多いので、最初から自分で書いた。というか、3行で書けてしまう。</p>
+
+<pre class="cell">
+import pandas as pd
+
+df = pd.read_csv('stats.csv', index_col='date', parse_dates=['date'])
+df['follower'].plot()
+</pre>
+
+<figure><img src="img/followers26.svg" alt="followers"></figure>
+
+<p>特に今月になってからの動きが知りたい。</p>
+
+<pre class="cell">
+df['follower'][df.index >= "2026-03-01"].plot(marker="o")
+</pre>
+
+<figure><img src="img/followers2603.svg" alt="followers"></figure>
+
+<p>月末に急増しているが、これは日本語のツイートが自動で英訳されて海外の人のタイムラインにも流されるようになったためらしい。</p>
+
+<hr>
+
+<p>以下は古い内容</p>
+
 <p>[2023-05-24] TwilogをTogetterさんが統合・再開してくださった。感謝！</p>
 
 <p>[2023-04-06] 2023-04-05の朝、Twilog更新が終了した。今後はフォロワー数も更新されないので、2023-04-05までのデータを使って更新した。</p>
@@ -134,7 +178,7 @@ fig.savefig('followers.svg', bbox_inches="tight")
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-02-01 10:47:37 JST</time></p>
+<p>Last modified: <time>2026-03-31 19:40:18 JST</time></p>
 </footer>
 </body>
 </html>

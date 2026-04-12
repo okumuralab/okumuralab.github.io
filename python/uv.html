@@ -181,9 +181,47 @@ uv run --with marimo marimo edit notebook.py
 
 <p><code>notebook.py</code> というファイルが作られる。ブラウザが開き、Jupyter や Google Colaboratory と似た画面が現れる。セルに先ほどと同じプログラムを書き込み、Shift + Enter すると、グラフが現れるはずである。詳しくは <a href="marimo.html">marimo</a> 参照。</p>
 
+<p>プロジェクトで使ったパッケージ群を（<code>pyproject.toml</code> の制約内で）更新するには <code>uv lock --upgrade</code> とする。特定のパッケージだけ更新するには <code>uv lock --upgrade-package matplotlib</code> などとする。</p>
+
 <h2>ちょっとした計算をどうするか？</h2>
 
-<p>uvはプロジェクトを作って運用するのが基本だが、ちょっとした計算はどうするか。<code>uv run --no-project</code> でプロジェクトを作らないという方法もある。あるいは、<code>work</code> や <code>scratch</code> みたいな一般的な名前で普段使いのプロジェクトを一つ作っておいて、依存関係で困らない標準的なパッケージだけを入れておき、その中で上と同じように作業する、という手もある。</p>
+<p>uvはプロジェクトを作って運用するのが基本だが、ちょっとした計算を例えばipythonで行いたい場合にどうするか。一番簡単なのが作業用の仮想環境を作ることである。以下ではPython 3.14を使うための <code>~/python314</code> という作業用ディレクトリを作る。</p>
+
+<pre>
+mkdir ~/python314
+cd ~/python314
+uv python pin 3.14
+uv venv
+uv pip install ipython matplotlib
+</pre>
+
+<p>これで計算したいときに、どこからでもいいので</p>
+
+<pre>
+source ~/python314/.venv/bin/activate
+</pre>
+
+<p>としてこの仮想環境をactivateしてから普通に <code>ipython</code> と打ち込めばよい（あるいは仮想環境をactivateした状態のシェルで <code>open -a Emacs</code> などとしてEmacsを立ち上げて <code>M-x run-python</code> でipythonを起動する）。パッケージを追加インストールしたいときはipythonの中で</p>
+
+<pre>
+!uv pip install numpy
+</pre>
+
+<p>などとするのが簡単だ。パッケージ群の更新は通常通り</p>
+
+<pre>
+uv pip list --outdated
+</pre>
+
+<p>で確認して</p>
+
+<pre>
+uv pip install --upgrade numpy
+</pre>
+
+<p>などとすればよい。</p>
+
+<p>activateされた仮想環境を解除するには単に <code>deactivate</code> と打ち込む。</p>
 
 </main>
 
@@ -191,7 +229,7 @@ uv run --with marimo marimo edit notebook.py
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-16 15:59:18 JST</time></p>
+<p>Last modified: <time>2026-02-15 14:10:41 JST</time></p>
 </footer>
 </body>
 </html>

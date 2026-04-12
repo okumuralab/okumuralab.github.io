@@ -239,13 +239,27 @@ tbl = str.maketrans(
 
 <p>[追記] <a href="https://github.com/yamamaya/radicalchar">radicalchar</a> というパッケージがあった。</p>
 
+<h2>何でもNFCにしていいか？</h2>
+
+<p><a href="https://tama-san.com/unicode-nfc/">普通のUnicodeはNFCなのか</a>にあるように、NFC（あるいはより強いNFKC）にすると字体が変わってしまう場合がある。例：</p>
+
+<pre class="cell">
+unicodedata.normalize("NFC", "羽")
+</pre>
+
+<pre>
+'羽'
+</pre>
+
+<p>人名など字体が重要な場合には気をつけなければならない。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2026-01-05 12:00:02 JST</time>
+Last modified: <time>2026-01-17 19:02:32 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

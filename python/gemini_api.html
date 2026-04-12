@@ -52,13 +52,13 @@ from google import genai
 client = genai.Client()
 
 response = client.models.generate_content(
-    model="gemini-2.5-pro",
+    model="gemini-3-pro-preview",
     contents="ここにプロンプトを書く"
 )
 print(response.text)
 </pre>
 
-<p>より実用的な使い方は次の通りです。思考モデルの場合は <code>thinking_budget</code> が指定できますが、その範囲はモデルによって違います。</p>
+<p>より実用的な使い方は次の通りです。思考モデルの場合は <code>thinking_level</code>（Gemini 2.5 までは <code>thinking_budget</code>）が指定できます。</p>
 
 <pre class="cell">
 from google import genai
@@ -66,11 +66,10 @@ from google.genai import types
 
 client = genai.Client()
 chat = client.chats.create(
-    model="gemini-2.5-pro",
+    model="gemini-3-pro-preview",
     config=types.GenerateContentConfig(
         temperature=0, # 0-2
-        # thinking_config=types.ThinkingConfig(thinking_budget=32768) # 128-32768
-        # thinking_config=types.ThinkingConfig(thinking_budget=-1) # dynamic thinking (default)
+        # thinking_config=types.ThinkingConfig(thinking_level="high") # default
     )
 )
 
@@ -103,7 +102,7 @@ for message in chat.get_history():
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-11-13 21:37:25 JST</time></p>
+<p>Last modified: <time>2026-01-23 17:09:44 JST</time></p>
 </footer>
 </body>
 </html>

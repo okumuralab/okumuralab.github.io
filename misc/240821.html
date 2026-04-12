@@ -23,21 +23,15 @@
 
 <p><a href="190715.html">Macでファイルにタグを付ける</a>でも書いたが、Macのファイルにはいろいろメタデータが付いていて、それを使って高速に検索できる。これはGUIのSpotlightで使われているが、コマンドでもできる。</p>
 
-<p>まず、ファイルのメタデータを表示するコマンド：</p>
+<p>ファイルのメタデータを表示するコマンドは <code>mdls</code>、検索するコマンドは <code>mdfind</code> である。</p>
 
-<pre>
-mdls <i>filename</i>
-</pre>
-
-<p>2019年6月16日の写真（必ずしも写真ライブラリに入っていない）を検索したいというのが目的。とりあえず写真という条件は省いて、Linuxなら</p>
+<p>例：2019年6月16日の写真（必ずしも写真ライブラリに入っていない）を探したい。とりあえず写真という条件は省いて、Linuxなら</p>
 
 <pre>
 find / -type f -newermt 2019-06-16 ! -newermt 2019-06-17
 </pre>
 
-<p>でできる。ただし、ファイルシステム全体を検索するのは時間がかかる。</p>
-
-<p>mdfindを使うなら</p>
+<p>でできる。ただし、ファイルシステム全体を検索するのは時間がかかる。mdfindを使うなら</p>
 
 <pre>
 mdfind 'kMDItemFSCreationDate < $time.iso(2019-06-17) && kMDItemFSCreationDate >= $time.iso(2019-06-16)'
@@ -51,43 +45,47 @@ mdfind 'kMDItemFSCreationDate < $time.iso(2019-06-17) && kMDItemFSCreationDate >
 
 <p>写真（RAWフォーマットの <code>CR2</code> も含める）だけを表示するには、メタデータの検索式を書くよりも、これらのコマンドの最後に <code>| egrep -i '\.(jpg|jpeg|cr2|heic)$'</code> を付けるほうが簡単そうだ。</p>
 
-<p>メタデータを編集するには <a href="https://github.com/RhetTbull/osxmetadata">osxmetadata</a> というPythonパッケージ兼コマンドラインツールが便利そうである。<code>pip3 install osxmetadata</code> でインストールできる。</p>
+<p>メタデータには、ファイルの中身やタイムスタンプから設定されるものと、自由に設定できるものがある。上で使った <code>kMDItemFSCreationDate</code> はタイムスタンプから決まる。自由に設定して特に便利なのはFinderコメント <code>kMDItemFinderComment</code> で、これはFinderの「情報を見る」の「コメント」で編集できる。コマンドで編集するには、以前はこのページで <a href="https://github.com/RhetTbull/osxmetadata">osxmetadata</a> というPythonパッケージ兼コマンドラインツールを紹介していたが、Mac固有のosascriptを呼び出す簡単なシェルスクリプトを使うほうが確実なので、続編 <a href="240920.html">MacのFinderコメントを活用する</a> にやり方を詳しく書いた。</p>
+
+<p>具体例としてPDFのタイトルを検索することを考えよう。PDFにタイトルなどメタ情報が設定されていれば、それらはファイル先頭近くにテキストで書かれており、Popplerの <code>pdfinfo</code> コマンドやExiftoolなどで表示できる。Macではこのメタデータを拾って <code>kMDItemTitle</code> メタデータとして設定されているはずである。設定されていれば</p>
 
 <pre>
-osxmetadata --get findercomment <i>filename</i>
+mdls -name kMDItemTitle <i>filename</i>
 </pre>
 
-<p>または</p>
+<p>とすれば <code>kMDItemTitle = "タイトル"</code> の形で表示される。あるいは</p>
 
 <pre>
-osxmetadata --get kMDItemFinderComment <i>filename</i>
+mdls -raw -name kMDItemTitle <i>filename</i>
 </pre>
 
-<p>でFinderの「情報を見る」でセットできるコメントがゲットでき、</p>
+<p>とすればタイトルだけ出力される（最後に改行もつかない）。</p>
+
+<p>もし <code>kMDItemTitle</code> がないか、あってもさらに補足の情報を追加したければ、上述のFinderコメントを使うことになる（続編 <a href="240920.html">MacのFinderコメントを活用する</a> 参照）。これら2つの情報を表示するには</p>
 
 <pre>
-osxmetadata --set findercomment 'ほげほげ' <i>filename</i>
+mdls -name kMDItemTitle -name kMDItemFinderComment <i>filename</i>
 </pre>
 
-<p>または</p>
+<p>とすればよい。<code>-raw</code> も付ければ2つの情報を <code>\0</code> で結合したものが出力される。表示順はFinderコメントが先になる。</p>
+
+<p>検索は続編でも書いたが、簡単には例えば</p>
 
 <pre>
-osxmetadata --set kMDItemFinderComment 'ほげほげ' <i>filename</i>
+mdfind "kMDItemFinderComment == 'attention is*'cd"
 </pre>
 
-<p>でセットでき、</p>
+<p>のようにすればよい（最後の <code>cd</code> は大文字小文字を区別せず文字装飾を無視する意）。</p>
 
+<p>このように設定したメタデータはrsyncで別Macに送れる。そのためのオプションは、Mac付属の /usr/bin/rsync では <code>--extended-attributes</code>、本家（Homebrewで入るもの）では <code>--xattrs</code> (<code>-X</code>) である。Homebrewで入る新しいrsyncはzlib圧縮に加えてzstd圧縮などができる（zstdがデフォルト）。</p>
+
+<aside>
+<p>LaTeXでPDFにTitleなどのメタ情報を入れるにはプリアンブルに例えば次のように書いておけばよい：</p>
 <pre>
-mdfind "kMDItemFinderComment == '*げほ*'"
+\usepackage[pdftitle={タイトル},pdfauthor={著者名}]{hyperref}
 </pre>
-
-<p>で検索できる。</p>
-
-<p>mdlsで表示されるメタデータをすべてユーザが上書きできるわけではない。</p>
-
-<p>メタデータはrsyncで別Macに送れる。そのためのオプションは、Mac付属の /usr/bin/rsync では <code>--extended-attributes</code>、本家（Homebrewで入るもの）では <code>--xattrs</code> (<code>-X</code>) である。Homebrewで入る新しいrsyncはzlib圧縮に加えてzstd圧縮などができる（zstdがデフォルト）。</p>
-
-<p>続編として<a href="240920.html">MacのFinderコメントを活用する</a>も書いた。</p>
+<p>日本語が文字化けする場合は <code>unicode</code> オプションを入れたり <code>pxjahyper</code> パッケージを併用したりするなどの工夫が必要かもしれない。</p>
+</aside>
 
 <p>参考</p>
 
@@ -102,7 +100,7 @@ mdfind "kMDItemFinderComment == '*げほ*'"
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-08 09:34:10 JST</time></p>
+<p>Last modified: <time>2026-02-11 17:56:19 JST</time></p>
 </footer>
 </body>
 </html>

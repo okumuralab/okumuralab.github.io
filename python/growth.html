@@ -20,7 +20,7 @@
 
 <p>利息の増え方（複利計算）</p>
 
-<pre><code>預金 = 100000
+<pre class="cell"><code class="language-py">預金 = 100000
 利率 = 0.05
 for i in range(11):
     print(i, 預金)
@@ -29,7 +29,7 @@ for i in range(11):
 
 <p>あるいは</p>
 
-<pre><code>預金 = [100000]
+<pre class="cell"><code class="language-py">預金 = [100000]
 利率 = 0.05
 for i in range(10):
     預金.append((1 + 利率) * 預金[-1])
@@ -38,16 +38,16 @@ for i in range(10):
 
 <p>プロットするなら</p>
 
-<pre><code>import matplotlib.pyplot as plt
+<pre class="cell"><code class="language-py">import matplotlib.pyplot as plt
 
 plt.plot(預金, "o-")
 </code></pre>
 
 <p>100年くらい預けたらいくらになるか。</p>
 
-<p>生物も（少なくとも最初は）同じような増え方をする。</p>
+<p>生物も（少なくとも最初は）同じような増え方をする（ここで <code>x[-1]</code> は配列 <code>x</code> の最後の要素）。</p>
 
-<pre><code>x = [1]
+<pre class="cell"><code class="language-py">x = [1]
 r = 0.05
 for i in range(100):
     x.append(x[-1] * (1 + r))
@@ -56,7 +56,7 @@ plt.plot(x, "o-")
 
 <p>しかし，そのうちに上限に達し，それ以上増えなくなる。</p>
 
-<pre><code>xmax = 10
+<pre class="cell"><code class="language-py">xmax = 10
 x = [1]
 r = 0.05
 for i in range(100):
@@ -68,12 +68,9 @@ plt.plot(x, "o-")
 
 <hr>
 
+<footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-
-<p>
-<!-- hhmts start -->
-Last modified: <time>2021-01-23 09:16:20</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2026-02-15 10:14:14 JST</time></p>
+</footer>
 </body>
 </html>

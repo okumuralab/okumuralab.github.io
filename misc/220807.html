@@ -55,11 +55,13 @@ magick in.png -crop 256x256+500+600 out.png # (500,600)を左上隅とする256x
 magick in.jpg -colorspace Gray -auto-level -lat 25x25-5% out.png # 2値化
 </pre>
 
+<p>すべての<a href="../cs/exif.html">Exif情報</a>を消すには <code>mogrify -strip *.jpg</code> とできますが、これについては <a href="https://exiftool.org">Exiftool</a> で <code>exiftool -overwrite_original -all= *.jpg</code> とする方が再エンコードされないのでよさそうです。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-31 15:36:18 JST</time></p>
+<p>Last modified: <time>2026-02-10 08:05:37 JST</time></p>
 </footer>
 </body>
 </html>

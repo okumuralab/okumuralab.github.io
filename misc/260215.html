@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/260215.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SSHを活用しよう</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>SSHを活用しよう</h1>
+
+<p>SSH（secure shell）は安全に他のコンピュータと通信するためのツールである（コマンドは <code>ssh</code>）。MacやLinuxなどUNIX系OSはもとより、今はWindowsにも標準で入っているはず。</p>
+
+<pre><code class="language-sh">ssh <i>相手のコンピュータの名前かIPアドレス</i></code></pre>
+
+<p>と打ち込めば、相手のコンピュータにつながる。</p>
+
+<p>相手のコンピュータではSSHサーバ（SSHデーモン、<code>sshd</code>）が動いていなければならない。Macならシステム設定の「一般」→「リモートログイン」をオンにすればいい。</p>
+
+<p>SSHサーバのデフォルトポートは22であるが、インターネットに全開のコンピュータなら、ポートを変更しておくと外部からの攻撃が激減する。ポート設定は <code>/etc/ssh/sshd_config</code> に <code>Port XXXX</code> などと書けばよい（XXXXは1024超の任意の番号）。以下では <code>example.jp</code> のSSHサーバのポートがXXXXであるとする。この場合</p>
+
+<pre><code class="language-sh">ssh -p XXXX example.jp</code></pre>
+
+<p>で接続する。</p>
+
+<p>SSHで接続しようとすると、デフォルトではログインパスワードを聞かれる。いちいちパスワードを打つのは面倒だしセキュリティ的にも心配なので、<a href="211209.html">パスワードなしのログイン</a>の設定をしておくのが推奨である。</p>
+
+<p>SSHの便利な点は、単にリモートマシンにログインしてコマンドを打つだけではなく、ローカルマシンのポートをリモートマシンにフォワード（転送）できる点にある。例えば</p>
+
+<pre><code class="language-sh">ssh -L 1234:localhost:1234 -p XXXX example.jp</code></pre>
+
+<p>と打ち込めば、ローカルのポート1234（←）をリモートの1234（→）にフォワードする。リモートで走っているLM Studioをローカルから使うのに便利である（追記: 今は <a href="https://lmstudio.ai/link">LM Link</a> という機能で以下に書いたことも含めて簡単にできるようになった）。</p>
+
+<p>リモートマシンが自宅のNATルータの内側にあるマシンで、出張先から別のPCで接続したいときには、NATルータの設定で特定のポートだけ内側の特定のマシンに転送するように設定することもできるが、セキュリティ的に心配である。ルータの設定を変えずにルータ越えするには、次のようにして逆向きSSHトンネルを一時的に掘ればよい。ただし、どちらからも接続できる第三のサーバが必要になる。</p>
+
+<p>まず、自宅のマシンから次のように第三のサーバ example.jp に接続する。自宅のマシンのSSHポートは22のままとする。</p>
+
+<pre><code class="language-sh">ssh -N -R 127.0.0.1:YYYY:localhost:22 -p XXXX example.jp</code></pre>
+
+<p>ここで <code>-N</code> はサーバ example.jp でシェルを起動しないオプションであるが、これは省略してもよい。</p>
+
+<p>外出先からは</p>
+
+<pre><code class="language-sh">ssh -p XXXX example.jp</code></pre>
+
+<p>で第三のサーバに接続し、そこからさらに</p>
+
+<pre><code class="language-sh">ssh -p YYYY localhost</code></pre>
+
+<p>とすると自宅に接続できる。あるいはこの2つをまとめて</p>
+
+<pre><code class="language-sh">ssh -J -p XXXX example.jp -p YYYY localhost</code></pre>
+
+<p>ともできる。先ほどのポート1234をフォワードすることも含めれば</p>
+
+<pre><code class="language-sh">ssh -L 127.0.0.1:1234:127.0.0.1:1234 -J -p XXXX example.jp -p YYYY localhost</code></pre>
+
+<p>とすればよい。</p>
+
+<p>最初の自宅から第三のサーバへのSSH接続が出張中に切れてしまうと困るので、自動的に再接続するために autossh というツールを使うと便利である。Mac（Homebrew）なら <code>brew install autossh</code> でインストールできる。これを使うやり方：</p>
+
+<pre><code class="language-sh">autossh -M 0 -N -o "ServerAliveInterval 60" -o "ServerAliveCountMax 3" -R 127.0.0.1:YYYY:localhost:22 -p XXXX example.jp</code></pre>
+
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-03-03 08:10:52 JST</time></p>
+</footer>
+</body>
+</html>

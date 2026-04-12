@@ -44,21 +44,23 @@ sum(x) / len(x)
 
 <h2>statistics モジュール</h2>
 
-<p>次に、Python 標準ライブラリの <a href="https://docs.python.org/ja/3/library/statistics.html"><code>statistics</code></a> モジュールを使ってみます。短縮名でインポートする際は <code>st</code> や <code>stat</code> が使われるようです。</p>
+<p>次に、Python 標準ライブラリの <a href="https://docs.python.org/ja/3/library/statistics.html"><code>statistics</code></a> モジュールを使ってみます。短縮名で <code>import statistics as st</code> などとインポートしていたこともあったのですが、最近は <a href="https://pypi.org/project/streamlit/">streamlit</a> も <code>st</code> を使うので、短縮名を諦めるか、あるいはむしろ <code>from statistics import mean, median</code> のように関数そのものをインポートするのでもいいかと思っています。</p>
 
 <pre>
-import statistics as st
+import statistics
 
-st.mean(x)      # 平均
-st.fmean(x)     # 平均の高速版（3.8以降）
-st.median(x)    # 中央値
-st.variance(x)  # n-1 で割る方式の分散
-st.pvariance(x) # n で割る方式の分散
-st.stdev(x)     # n-1 で割る方式の標準偏差
-st.pstdev(x)    # n で割る方式の標準偏差
+statistics.mean(x)      # 平均（整数・浮動小数点数）
+statistics.fmean(x)     # 平均（浮動小数点数に特化した高速版、3.8以降）
+statistics.median(x)    # 中央値
+statistics.variance(x)  # n-1 で割る方式の分散
+statistics.pvariance(x) # n で割る方式の分散
+statistics.stdev(x)     # n-1 で割る方式の標準偏差
+statistics.pstdev(x)    # n で割る方式の標準偏差
 </pre>
 
-<p>あまり使われないモジュールでしたが、Python 3.10 で <code>correlation()</code>、<code>covariance()</code>、<code>linear_regression()</code> が追加されました。</p>
+<p><code>mean()</code> は結果が整数になるなら多倍長整数演算を使います。<code>fmean()</code> はつねに浮動小数点で計算し、より高速です。</p>
+
+<p>Python 3.10 で <code>correlation()</code>、<code>covariance()</code>、<code>linear_regression()</code> が追加されました。</p>
 
 <h2>NumPy パッケージ</h2>
 
@@ -92,19 +94,15 @@ x = np.array([2, 3, 4, 5])
 x.mean()   # np.mean(x) と同じ
 </pre>
 
-<p>のような書き方もできます。これだけならどうでもいいことですが、</p>
+<p>のような書き方もできます。</p>
 
-<pre>
-np.sqrt(x)  # x の一つ一つの要素について平方根を求める
-</pre>
-
-<p>のように、ベクトルや行列の個々の要素に対する計算が一度にできます。</p>
-
-<p>NumPy の機能を視覚的にまとめた <a href="https://jalammar.github.io/visual-numpy/">A Visual Intro to NumPy and Data Representation</a> も参考になります（邦訳<a href="https://note.mu/sayajewels/n/n95edaedb0fc5">図解でわかるNumPyとデータ表現</a>が出ました）。</p>
+<p>NumPy の機能を視覚的にまとめた <a href="https://jalammar.github.io/visual-numpy/">A Visual Intro to NumPy and Data Representation</a> も参考になります。</p>
 
 <h2>SciPy パッケージ</h2>
 
-<p><a href="https://www.scipy.org">SciPy</a> は科学計算用の巨大なパッケージです。統計計算用の関数はこの中の <code>stats</code> に含まれています。NumPy と被らないようにという趣旨なのか、頭に <code>t</code> が付いた trimmed なバージョン（オプションで <code>limits=[a,b]</code> と与えればその範囲だけの値を対象にする）になっています。</p>
+<p><a href="https://www.scipy.org">SciPy</a> は科学計算用の巨大なパッケージです。統計計算用の関数はこの中の <code>stats</code> に含まれています。</p>
+
+<p>NumPy と被らないようにという趣旨なのか、頭に <code>t</code> が付いた trimmed なバージョン（オプションで <code>limits=[a,b]</code> と与えればその範囲だけの値を対象にする）になっています。</p>
 
 <pre>
 from scipy import stats
@@ -115,6 +113,17 @@ stats.tvar(x, ddof=0)  # nで割る方式の分散
 stats.tstd(x)          # n-1で割る方式の標準偏差
 stats.tstd(x, ddof=0)  # nで割る方式の標準偏差
 </pre>
+
+<p>これら以外に、<code>stats.describe(x)</code> という関数は次のものをまとめて求めます：</p>
+
+<ul>
+  <li><code>nobs</code> 長さ</li>
+  <li><code>minmax</code> 最小値、最大値</li>
+  <li><code>mean</code> 平均</li>
+  <li><code>variance</code> 分散（オプション <code>ddof</code> は同上）</li>
+  <li><code>skewness</code> 歪度</li>
+  <li><code>kurtosis</code> 尖度</li>
+</ul>
 
 <h2>pandas パッケージ</h2>
 
@@ -135,14 +144,17 @@ s.var()       # n-1 で割る方式の分散
 s.var(ddof=0) # n で割る方式の分散
 s.std()       # n-1 で割る方式の標準偏差
 s.std(ddof=0) # n で割る方式の標準偏差
-s.quantile(x, [0, 0.25, 0.5, 0.75, 1])  # 四分位数など
+s.quantile([0, 0.25, 0.5, 0.75, 1])  # 四分位数など
+s.describe()  # 基本統計量をまとめて求める
 </pre>
+
+<p>最後の <code>s.describe()</code> は便利ですが、標準偏差はn-1で割る方式に固定されます（それで問題ありませんが）。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-24 14:10:24 JST</time></p>
+<p>Last modified: <time>2026-03-07 10:27:53 JST</time></p>
 </footer>
 </body>
 </html>

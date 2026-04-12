@@ -57,12 +57,14 @@
       <a href="hist-median.html">ヒストグラムから中央値・分位数とその信頼区間を求める</a> /
       <a href="2axis.html">2軸グラフ</a> /
       <a href="unhcr.html">UNHCRのグラフィックス</a></li>
+  <li><a href="line_or_dot.html">折れ線かドットか</a></li>
   <li><a href="basicstats.html">基本統計量</a> /
       <a href="binomtest.html">2項検定</a> /
       <a href="normal.html">正規分布</a>（中心極限定理も） /
       <a href="dice.html">さいころと中心極限定理</a> /
       <a href="ttest.html"><i lang="en">t</i> 検定</a> /
       <a href="fishertest.html">Fisherの検定</a> /
+      <a href="u_test.html">Mann-WhitneyのU検定</a> /
       <a href="t_u_test.html">t検定とMann-WhitneyのU検定</a> /
       <a href="bootstrap.html">ブートストラップ</a></li>
   <li><a href="numerical_error.html">数値計算の誤差</a></li>
@@ -89,7 +91,8 @@
   <li><a href="iris.html">あやめ（iris）</a>（主成分分析・決定木） /
       <a href="svd.html">特異値分解と主成分分析</a></li>
   <li><a href="penguins.html">パーマーペンギン（palmerpenguins）</a>（箱ひげ図、ストリッププロット、バイオリンプロット、スウォームプロット、シーナプロット）</li>
-  <li><a href="sinaplot.html">Sinaplot（シーナプロット）</a></li>
+  <li><a href="sinaplot.html">Sinaplot（シーナプロット）</a> /
+      <a href="stacked_dotplot.html">積み重ねドットプロット</a></li>
   <li><a href="roc-pr.html">ROC曲線とPR曲線</a></li>
   <li><a href="followers.html">ツイッターのフォロワー数の推移をプロット</a></li>
   <li><a href="mexican.html">メキシカンハット（3Dグラフ、等高線）</a> /
@@ -254,7 +257,8 @@
       <a href="tokenize.html">LLMのトークン</a></li>
   <li><a href="intransitive_dice.html">非推移的さいころ</a></li>
   <li><a href="polars.html">Polars（pandasより高速なライブラリ）</a></li>
-  <li><a href="ocr.html">PythonでOCR</a></li>
+  <li><a href="ocr.html">PythonでOCR</a> /
+      <a href="glm-ocr.html">GLM-OCR</a></li>
   <li><a href="johobooks.html">情報科全教科書用語</a></li>
   <li><a href="wealth.html">富の分布</a></li>
   <li><a href="watch.html">Webページ監視</a></li>
@@ -283,21 +287,23 @@
       <a href="classification_by_llm.html">LLMによる分類</a> /
       <a href="logprobs.html">LLMの出力の確信度</a></li>
   <li><a href="openresponses.html">Open Responses APIを使う</a></li>
-  <li><a href="qwen.html">Qwen</a> / <a href="qwen_image.html">Qwen-Image</a> /
+  <li><a href="qwen.html">Qwen</a> / <a href="qwen3_5.html">Qwen3.5</a></li>
+  <li><a href="qwen_image.html">Qwen-Image</a> /
       <a href="qwen_image_edit.html">Qwen-Image-Edit</a></li>
   <li><a href="Z-Image-Turbo.html">Z-Image-Turbo</a></li>
   <li><a href="embed.html">埋め込み</a> /
       <a href="word2vec.html">word2vec</a> /
       <a href="gemma3_embed.html">Gemma 3の埋め込み</a> /
       <a href="gptoss_embed.html">GPT-OSSの埋め込み</a></li>
+  <li><a href="yolo.html">YOLO</a></li>
+  <li><a href="unsloth_studio.html">Unsloth Studio</a></li>
 </ul>
 
 <h2>リンク</h2>
 
 <ul>
   <li><a href="https://docs.python.org/3/">Python 3.x documentation</a></li>
-  <li><a href="https://matplotlib.org">Matplotlib</a> /
-      <a href="https://pandas.pydata.org">pandas</a> /
+  <li><a href="https://pandas.pydata.org">pandas</a> /
       <a href="https://www.numpy.org">NumPy</a> /
       <a href="https://www.scipy.org">SciPy</a> /
       <a href="https://www.sympy.org">SymPy</a> /
@@ -305,6 +311,14 @@
       <a href="https://scikit-learn.org/">scikit-learn</a> /
       <a href="https://www.tensorflow.org">TensorFlow</a> /
       <a href="https://pytorch.org">PyTorch</a></li>
+  <li><a href="https://matplotlib.org">Matplotlib</a> /
+      <a href="https://seaborn.pydata.org">Seaborn</a> /
+      <a href="https://plotnine.org">Plotnine</a> /
+      <a href="https://lets-plot.org">Lets-Plot</a> /
+      <a href="https://altair-viz.github.io">Vega-Altair</a> /
+      <a href="https://plotly.com/python-api-reference/">Plotly</a> /
+      <a href="https://docs.bokeh.org">Bokeh</a> /
+      <a href="https://hvplot.holoviz.org">hvPlot</a></li>
   <li>文科省<a href="https://www.mext.go.jp/a_menu/shotou/zyouhou/detail/1416746.htm">高等学校情報科</a>の情報I・情報IIの教員研修用教材（本編）はPythonを使っています（必ずしもお手本となるようなPythonコードばかりではありません…かなり酷いです）</li>
   <li><a href="http://hdl.handle.net/2433/285599">プログラミング演習 Python 2023</a>（京大 喜多先生ほか）</li>
   <li><a href="https://utokyo-ipp.github.io">Pythonプログラミング入門</a>（東大 数理・情報教育研究センター）</li>
@@ -330,7 +344,7 @@
 
 <footer>
 <p><a href="http://creativecommons.org/licenses/by/4.0/" rel="license"><img src="../img/88x31.png" alt="Creative Commons License" style="border:none; position:relative; top:3px" width="88" height="31"></a>  <a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-01-16 17:07:57 JST</time></p>
+<p>Last modified: <time>2026-03-29 15:37:18 JST</time></p>
 </footer>
 </body>
 </html>

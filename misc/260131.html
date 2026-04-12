@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/260131.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenAI PrismのLaTeXで日本語を使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>OpenAI PrismのLaTeXで日本語を使う</h1>
+
+<p>OpenAIの<a href="https://prism.openai.com">Prism</a>はオンラインでLaTeXが使えるサービスである。<a href="https://cloudlatex.io">Cloud LaTeX</a>や<a href="https://www.overleaf.com">Overleaf</a>と似た仕組みであるが、無料で制約なく使えて、ChatGPTと統合されていて、AIに頼むと文書作成を手伝ってもらえる。</p>
+
+<p>まだリリースされたばかりで不具合が残る。特に日本語関係に弱い。ChatGPTも日本語LaTeXに関してはあまり賢くない。</p>
+
+<p>日本語の文書で、特にドキュメントクラスを指定されていない場合は、次のようにしてLuaLaTeXを使うとよい（コンパイルが遅いのが欠点である）。</p>
+
+<pre>
+% !TEX program = lualatex
+\documentclass{ltjsarticle}
+\begin{document}
+
+\title{数学レポート}
+\author{ピエール・ド・フェルマー}
+\maketitle
+
+\section{はじめに}
+
+このレポートでは、3以上の整数 $n$ について、
+\[ x^n + y^n = z^n \]
+を満たす正の整数の組 $(x, y, z)$ は存在しないことを示す。
+
+\end{document}
+</pre>
+
+<p><code>ltjsarticle</code> となっている部分は <code>ltjsbook</code> あるいは <code>jlreq</code> でもよい。</p>
+
+<p>pLaTeXを使わなければならない場合には、まず次のような <code>.latexmkrc</code> ファイルを作っておく。<code>$pdflatex = ...</code> とするのがキモである（PrismはデフォルトでpdfLaTeXを起動するので）。</p>
+
+<pre>
+$ENV{'TZ'} = 'Asia/Tokyo';
+$pdflatex = 'platex %O %S';
+$bibtex = 'pbibtex %O %S';
+$dvipdf = 'dvipdfmx %O -o %D %S';
+$makeindex = 'mendex %O -o %D %S';
+$pdf_mode = 3;
+</pre>
+
+<p>upLaTeXの場合は次のようにする。</p>
+
+<pre>
+$ENV{'TZ'} = 'Asia/Tokyo';
+$pdflatex = 'uplatex %O %S';
+$bibtex = 'upbibtex %O %S';
+$dvipdf = 'dvipdfmx %O -o %D %S';
+$makeindex = 'upmendex %O -o %D %S';
+$pdf_mode = 3;
+</pre>
+
+<p>これで普通にpLaTeX、upLaTeXの文書を作ればよい。ただ、今のところブラウザ内で日本語フォントがうまく表示されない（ダウンロードしてPDFビューアで開けば表示される）。ブラウザ内で日本語を表示するには、次のように <code>pxchfon</code> を使う（<a href="https://x.com/zr_tex8r/status/2017445009147236784">ZR氏のご指摘</a>）。</p>
+
+<pre>
+\documentclass{jsarticle}
+\usepackage[unicode,ipaex]{pxchfon}
+\begin{document}
+
+\title{数学レポート}
+\author{ピエール・ド・フェルマー}
+\maketitle
+
+\section{はじめに}
+
+このレポートでは、3以上の整数 $n$ について、
+\[ x^n + y^n = z^n \]
+を満たす正の整数の組 $(x, y, z)$ は存在しないことを示す。
+
+\end{document}
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-01-31 20:03:39 JST</time></p>
+</footer>
+</body>
+</html>

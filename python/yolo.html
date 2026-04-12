@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/yolo.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YOLO</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>YOLO</h1>
+
+<p>YOLOは英語で “You Only Live Once” つまり人生は一度しかないので楽しもうという意味の略語です。発音は /yóᴜloᴜ/（ヨーロー）です。YOLO（ヨロ）というファッション通販サイトもあるようです。</p>
+
+<p>ここでいうYOLOは “You Only Live Once” のYOLOをもじった “You Only Look Once”（一度見るだけでよい）という物体検出・画像セグメンテーションモデルの名前です。</p>
+
+<p>最初のYOLO（YOLOv1）は2015年に作られました。YOLOv4以降はいろいろな研究者によって作られています。2026年の最新版は <a href="https://www.ultralytics.com">Ultralytics</a> という会社によるYOLO26です（バージョンは通番ではなく年号になったようです）。</p>
+
+<p>まずは <code>pip install ultralytics</code> でパッケージをインストールします。多数のパッケージに依存していますので、やや厄介です。<code>yolo</code> というコマンドラインツールもインストールされます。</p>
+
+<p>サンプルのバスの画像を読み込んで、YOLOにかけてみましょう。</p>
+
+<pre class="cell">
+from ultralytics import YOLO
+
+model = YOLO("yolo26n.pt")  # Load an official Detect model
+results = model("https://ultralytics.com/images/bus.jpg")
+results[0].show()
+</pre>
+
+<p>カレントディレクトリに5Mバイトほどの <code>yolo26n.pt</code> モデルがダウンロードされます。</p>
+
+<p><code>model()</code> に <code>show=True</code> オプションを与えることでも画面表示できますが、OpenCVを使うためか、環境によっては画面操作がうまくいかないことがあるようです。</p>
+
+<p>あとは<a href="https://docs.ultralytics.com">英語のドキュメント</a>または<a href="https://docs.ultralytics.com/ja/">日本語のドキュメント</a>を読んでいろいろ試してください。</p>
+
+<p>[追記] <a href="https://github.com/roboflow/rf-detr">RF-DETR</a> というモデルが <a href="https://x.com/skalskip92/status/2013376741385949351">YOLO26より良い</a> らしいです。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-01-20 14:46:00 JST</time></p>
+</footer>
+</body>
+</html>

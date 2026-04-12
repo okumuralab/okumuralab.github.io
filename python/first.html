@@ -8,8 +8,26 @@
 <link rel="stylesheet" href="style.css">
 <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <style>
-table { border-collapse: collapse; }
-td { border: 1px solid; text-align: left; }
+.v-table {
+    display: grid;
+    /* 列数は引数から指定 */
+    grid-template-columns: repeat(4, 1fr);
+    /* 行数は計算結果を指定 */
+    grid-template-rows: repeat(18, auto);
+    grid-auto-flow: column; /* ここが縦並びの肝 */
+     gap: 0;
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+    width: fit-content;
+    /* font-family: sans-serif; */
+}
+.v-cell {
+    padding: 0.2em 0.7em;
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+    text-align: left;
+    /* min-width: 100px; */
+}
 </style>
 <script src="../js/copypre.js"></script>
 <script src="../js/copypre.js"></script>
@@ -70,11 +88,13 @@ td { border: 1px solid; text-align: left; }
 
 <p>最後の <code>e+23</code> は「×10<sup>23</sup>」の意味です。実数（浮動小数点数）の表示は上に示すように微妙に誤差が出ますが、これはコンピュータが内部で10進法ではなく2進法を使っているためです。</p>
 
+<aside>
 <p>Python 2 では、C言語などと同様に、整数の割り算は整数に切り捨てましたが、Python 3 では <code>/</code> は実数（浮動小数点数）の範囲で計算します。整数の除算には <code>//</code> を使います。除算の余りは <code>%</code> です。例えば <code>7 // 3</code> は 2 になり、<code>7 % 3</code> は 1 になります。</p>
+</aside>
 
-<div class="note">
+<aside>
 <p>Python の浮動小数点数は一般的な IEEE 754 仕様ですが、整数は上限がありません（いわゆるbignum）。ただし、Python 3.10.7 から、DoS対策のため、10進変換などはデフォルト4300桁に制限されます。この制限を外すには環境変数 <code>PYTHONINTMAXSTRDIGITS</code> を 0 に設定するなどの方法があります（<a href="https://docs.python.org/3/library/stdtypes.html">Built-in Types</a> 参照）。</p>
-</div>
+</aside>
 
 <p>おもしろいことに、文字列を足し算、掛け算することもできます。文字列はダブルクオート <code>"</code> またはシングルクオート <code>'</code> で囲んで表します：</p>
 
@@ -154,28 +174,84 @@ print("Hello")
 Hello
 </pre>
 
-<p>関数は <code>print()</code> 以外に、数値のリストの和を求める <code>sum()</code>、最大値や最小値を求める <code>max()</code> や <code>min()</code> などが定義されています。念のため組み込み関数のリストを挙げておきますが、覚える必要はありません。</p>
+<p>関数は <code>print()</code> 以外に、数値のリストの和を求める <code>sum()</code>、最大値や最小値を求める <code>max()</code> や <code>min()</code> などが定義されています。念のため組み込み関数のリストを挙げておきますが、覚える必要はありません。詳しくは<a href="https://docs.python.org/ja/3/library/functions.html">こちら</a>をみてください。</p>
 
-<table>
-<tbody>
-<tr><td><code>abs()</code></td><td><code>delattr()</code></td><td><code>hash()</code></td><td><code>memoryview()</code></td><td><code>set()</code></td></tr>
-<tr><td><code>all()</code></td><td><code>dict()</code></td><td><code>help()</code></td><td><code>min()</code></td><td><code>setattr()</code></td></tr>
-<tr><td><code>any()</code></td><td><code>dir()</code></td><td><code>hex()</code></td><td><code>next()</code></td><td><code>slice()</code></td></tr>
-<tr><td><code>ascii()</code></td><td><code>divmod()</code></td><td><code>id()</code></td><td><code>object()</code></td><td><code>sorted()</code></td></tr>
-<tr><td><code>bin()</code></td><td><code>enumerate()</code></td><td><code>input()</code></td><td><code>oct()</code></td><td><code>staticmethod()</code></td></tr>
-<tr><td><code>bool()</code></td><td><code>eval()</code></td><td><code>int()</code></td><td><code>open()</code></td><td><code>str()</code></td></tr>
-<tr><td><code>breakpoint()</code></td><td><code>exec()</code></td><td><code>isinstance()</code></td><td><code>ord()</code></td><td><code>sum()</code></td></tr>
-<tr><td><code>bytearray()</code></td><td><code>filter()</code></td><td><code>issubclass()</code></td><td><code>pow()</code></td><td><code>super()</code></td></tr>
-<tr><td><code>bytes()</code></td><td><code>float()</code></td><td><code>iter()</code></td><td><code>print()</code></td><td><code>tuple()</code></td></tr>
-<tr><td><code>callable()</code></td><td><code>format()</code></td><td><code>len()</code></td><td><code>property()</code></td><td><code>type()</code></td></tr>
-<tr><td><code>chr()</code></td><td><code>frozenset()</code></td><td><code>list()</code></td><td><code>range()</code></td><td><code>vars()</code></td></tr>
-<tr><td><code>classmethod()</code></td><td><code>getattr()</code></td><td><code>locals()</code></td><td><code>repr()</code></td><td><code>zip()</code></td></tr>
-<tr><td><code>compile()</code></td><td><code>globals()</code></td><td><code>map()</code></td><td><code>reversed()</code></td><td><code>__import__()</code></td></tr>
-<tr><td><code>complex()</code></td><td><code>hasattr()</code></td><td><code>max()</code></td><td><code>round()</code></td><td><code></code></td></tr>
-</tbody>
-</table>
+<div class="v-table">
+    <div class="v-cell"><code>abs()</code></div>
+    <div class="v-cell"><code>aiter()</code></div>
+    <div class="v-cell"><code>all()</code></div>
+    <div class="v-cell"><code>anext()</code></div>
+    <div class="v-cell"><code>any()</code></div>
+    <div class="v-cell"><code>ascii()</code></div>
+    <div class="v-cell"><code>bin()</code></div>
+    <div class="v-cell"><code>bool()</code></div>
+    <div class="v-cell"><code>breakpoint()</code></div>
+    <div class="v-cell"><code>bytearray()</code></div>
+    <div class="v-cell"><code>bytes()</code></div>
+    <div class="v-cell"><code>callable()</code></div>
+    <div class="v-cell"><code>chr()</code></div>
+    <div class="v-cell"><code>classmethod()</code></div>
+    <div class="v-cell"><code>compile()</code></div>
+    <div class="v-cell"><code>complex()</code></div>
+    <div class="v-cell"><code>delattr()</code></div>
+    <div class="v-cell"><code>dict()</code></div>
+    <div class="v-cell"><code>dir()</code></div>
+    <div class="v-cell"><code>divmod()</code></div>
+    <div class="v-cell"><code>enumerate()</code></div>
+    <div class="v-cell"><code>eval()</code></div>
+    <div class="v-cell"><code>exec()</code></div>
+    <div class="v-cell"><code>filter()</code></div>
+    <div class="v-cell"><code>float()</code></div>
+    <div class="v-cell"><code>format()</code></div>
+    <div class="v-cell"><code>frozenset()</code></div>
+    <div class="v-cell"><code>getattr()</code></div>
+    <div class="v-cell"><code>globals()</code></div>
+    <div class="v-cell"><code>hasattr()</code></div>
+    <div class="v-cell"><code>hash()</code></div>
+    <div class="v-cell"><code>help()</code></div>
+    <div class="v-cell"><code>hex()</code></div>
+    <div class="v-cell"><code>id()</code></div>
+    <div class="v-cell"><code>input()</code></div>
+    <div class="v-cell"><code>int()</code></div>
+    <div class="v-cell"><code>isinstance()</code></div>
+    <div class="v-cell"><code>issubclass()</code></div>
+    <div class="v-cell"><code>iter()</code></div>
+    <div class="v-cell"><code>len()</code></div>
+    <div class="v-cell"><code>list()</code></div>
+    <div class="v-cell"><code>locals()</code></div>
+    <div class="v-cell"><code>map()</code></div>
+    <div class="v-cell"><code>max()</code></div>
+    <div class="v-cell"><code>memoryview()</code></div>
+    <div class="v-cell"><code>min()</code></div>
+    <div class="v-cell"><code>next()</code></div>
+    <div class="v-cell"><code>object()</code></div>
+    <div class="v-cell"><code>oct()</code></div>
+    <div class="v-cell"><code>open()</code></div>
+    <div class="v-cell"><code>ord()</code></div>
+    <div class="v-cell"><code>pow()</code></div>
+    <div class="v-cell"><code>print()</code></div>
+    <div class="v-cell"><code>property()</code></div>
+    <div class="v-cell"><code>range()</code></div>
+    <div class="v-cell"><code>repr()</code></div>
+    <div class="v-cell"><code>reversed()</code></div>
+    <div class="v-cell"><code>round()</code></div>
+    <div class="v-cell"><code>set()</code></div>
+    <div class="v-cell"><code>setattr()</code></div>
+    <div class="v-cell"><code>slice()</code></div>
+    <div class="v-cell"><code>sorted()</code></div>
+    <div class="v-cell"><code>staticmethod()</code></div>
+    <div class="v-cell"><code>str()</code></div>
+    <div class="v-cell"><code>sum()</code></div>
+    <div class="v-cell"><code>super()</code></div>
+    <div class="v-cell"><code>tuple()</code></div>
+    <div class="v-cell"><code>type()</code></div>
+    <div class="v-cell"><code>vars()</code></div>
+    <div class="v-cell"><code>zip()</code></div>
+    <div class="v-cell"><code>__import__()</code></div>
+    <div class="v-cell"></div>
+</div>
 
-<p></p>
+<p>例：</p>
 
 <pre class="cell">
 sum([1, 2, 3, 4, 5])
@@ -230,9 +306,9 @@ NameError: name 'sin' is not defined
 
 <p>数学関数はいくつかのライブラリで定義されています（標準ライブラリの <a href="https://docs.python.org/3/library/math.html">math</a>、サードパーティ（外部）ライブラリの <a href="https://www.numpy.org">NumPy</a>、<a href="https://www.scipy.org">SciPy</a>）。ライブラリ（library）とは図書館のことですが、コンピュータのライブラリは、いろいろな関数などが定義されている場所を意味します。</p>
 
-<div class="note">
+<aside>
 <p>より技術的には、Python では、一つのファイルで構成されるものをモジュール、複数のファイルを含むディレクトリで構成されるものをパッケージと呼びます。ライブラリは、<a href="https://docs.python.org/3/library/index.html">Python 標準ライブラリ</a>のようにモジュールやパッケージの集合を指すために使われますが、その意味はあいまいです。いずれにしても、読み込む際には以下で説明する <code>import</code> を使うので、ユーザから見た区別はありません。</p>
-</div>
+</aside>
 
 <p>ここでは Python の標準ライブラリの <code>math</code> モジュールを使います。そのためには、まず、次のように打ち込みます：</p>
 
@@ -288,16 +364,16 @@ math.sin(math.pi)
 
 <p>数値計算の誤差のため sin(π) は 0 にならず、1.22 × 10<sup>-16</sup> という小さな値になりました。</p>
 
-<div class="note">
+<aside>
 <p><code>import math</code> の逆は <code>del math</code> です。</p>
-</div>
+</aside>
 
-<div class="note">
+<aside>
 <p>いちいち <code>math.sin(math.pi / 2)</code> などと書くのが面倒なら、<code>from math import pi, sin, cos</code> などと打ち込んでおけば、単に <code>sin(pi / 2)</code> と書くことができます。この逆は <code>del pi, sin, cos</code> です。</p>
-</div>
+</aside>
 
-<div class="note">
-<p>さらに極端に、<code>math</code> モジュールで定義されているものをすべてインポートする <code>from math import *</code> という命令もありますが、あまり推奨されていません。この逆は、いったん <code>import math</code> してから</p>
+<aside>
+<p>さらに極端に、<code>math</code> モジュールで定義されているものをすべてインポートする <code>from math import *</code> という命令もありますが、これは推奨されていません。この逆は、いったん <code>import math</code> してから</p>
 <pre>
 for x in dir(math):
     if not x.startswith("_"):
@@ -310,9 +386,9 @@ for x in dir():
         del globals()[x]
 </pre>
 <p>とします。</p>
-</div>
+</aside>
 
-<div class="note">
+<aside>
 <p>REPL（1行ごとに結果を返してくれる対話型環境）限定の話ですが、関数の括弧を閉じないとどうなるでしょうか。</p>
 <pre>
 &gt;&gt;&gt; math.sin(math.pi / 2
@@ -320,7 +396,7 @@ for x in dir():
 1.0
 </pre>
 <p>このように、続きの入力を促すプロンプト <code>...</code> が出ますので、入れ忘れた <code>)</code> を入力して <span class="keytop">Enter</span> を押します。あるいは、わけがわからなくなったなら <span class="keytop">Ctrl</span> + <span class="keytop">C</span> で止まります（Emacs中では <span class="keytop">Ctrl</span> + <span class="keytop">C</span> を2回）。</p>
-</div>
+</aside>
 
 <h2>ヘルプを読む</h2>
 
@@ -414,7 +490,7 @@ def hitsuji(n):
 
 <p>これで <code>hitsuji(100)</code> と打てば、ひつじが100ひき数えられます。</p>
 
-<div class="note">
+<aside>
 <p>文字列に値を割り込ませる方法はいろいろあります。例えば</p>
 <pre>
 for i in range(1, 11):
@@ -426,7 +502,7 @@ for i in range(1, 11):
     print(f"ひつじが {i:2d} ひき")
 </pre>
 <p>と書けます。<code>print("ひつじが %2d ひき" % i)</code> のような古い<a href="https://docs.python.org/3/library/stdtypes.html#old-string-formatting">C言語スタイルの書式指定</a>もできます。</p>
-</div>
+</aside>
 
 <h2>フィボナッチ数列</h2>
 
@@ -464,9 +540,9 @@ File:      ...
 Type:      function
 </pre>
 
-<div class="note">
+<aside>
 <p><code>"""..."""</code> または <code>'''...'''</code> は途中で改行が入ることを許す文字列です。説明（docstring）は途中で改行が入ることが多いので、一般に <code>"""..."""</code> が使われます。ただ、上の例のように1行だけの場合は、<code>"..."</code> でもかまいません。</p>
-</div>
+</aside>
 
 <p>実行してみます：</p>
 
@@ -496,7 +572,7 @@ def fibn(n):
 [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
 </pre>
 
-<div class="note">
+<aside>
 <p>他の言語のように、最初に一定の長さの配列を宣言しておきたい場合は、次のように、あらかじめ（例えば）<code>0</code> を100個並べたものを作っておくことができます：</p>
 <pre>
 a = [0] * 100
@@ -505,11 +581,11 @@ for i in range(2, 100):
     a[i] = a[i-2] + a[i-1]
 </pre>
 <p><code>0</code> の代わりに、未定義であることを示す <code>None</code> を使うほうがいいかもしれません。</p>
-</div>
+</aside>
 
-<div class="note">
+<aside>
 <p>高速な数値計算には <a href="https://www.numpy.org">NumPy</a>（ナムパイ）というライブラリを使います（<code>pip install numpy</code> でインストールします）。NumPy は <code>import numpy as np</code> のようにして省略名 <code>np</code> でインポートします（この逆は <code>del np</code> です）。よく使うライブラリには<a href="https://import-as.github.io">伝統的な省略名がある</a>ので，それに従いましょう。NumPy を使えば、例えば 0 で初期化した長さ 100 の浮動小数点数の配列なら <code>a = np.zeros(100)</code>、同じく整数の配列なら <code>a = np.zeros(3, dtype=int)</code> のようにして作成・初期化できます。</p>
-</div>
+</aside>
 
 <hr>
 
@@ -517,7 +593,7 @@ for i in range(2, 100):
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2024-04-07 19:54:10 JST</time>
+Last modified: <time>2026-01-22 19:26:27 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

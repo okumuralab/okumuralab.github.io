@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/u_test.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mann-WhitneyのU検定</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<main>
+<h1>Mann-Whitneyの $U$ 検定</h1>
+
+<p>ここでいうMann-Whitneyの $U$ 検定は、統計のところで書いた<a href="../stat/wmw.html">Wilcoxon-Mann-Whitney検定</a>（順位和検定）と同じものです。PythonではSciPyの <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mannwhitneyu.html">stats.mannwhitneyu</a> で行うことが多いので、こういう名前の見出しにしました。</p>
+
+<aside>
+<p>ちなみに、SciPyの <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wilcoxon.html">stats.wilcoxon</a> はWilcoxonの符号つき順位検定だけをする関数です。<code>stats.wilcoxon(x, y)</code> のようにしても単に <code>stats.wilcoxon(x - y)</code> と解釈されるだけです。一方で、Rでは <code>wilcox.test(x)</code> で符号つき順位検定、<code>wilcox.test(x, y)</code> でMann-Whitney検定（順位和検定）になります。</p>
+</aside>
+
+<p><a href="../stat/wmw.html">Wilcoxon-Mann-Whitney検定</a>と同じ問題を解いてみましょう。Rでは、正規分布近似で $p = 0.007741$、厳密な検定で $p = 0.00669$ でした。</p>
+
+<p>まずは正規分布近似です：</p>
+
+<pre class="cell">
+import numpy as np
+from scipy import stats
+
+x = [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1]
+y = [3, 3, 4, 3, 1, 2, 3, 1, 1, 5, 4]
+
+stats.mannwhitneyu(x, y)
+</pre>
+
+<pre>
+MannwhitneyuResult(statistic=np.float64(32.5), pvalue=np.float64(0.007740786705107166))
+</pre>
+
+<p>$U = 32.5$、$p = 0.007741$ で、Rと同じ結果になりました。</p>
+
+<p>厳密なテストをしてみましょう。でも、これは間違いです：</p>
+
+<pre class="cell">
+stats.mannwhitneyu(x, y, method="exact")
+</pre>
+
+<pre>
+MannwhitneyuResult(statistic=np.float64(32.5), pvalue=np.float64(0.015207520078969802))
+</pre>
+
+<p>紛らわしいのですが、<code>method="exact"</code> はタイがないときにしか使えません。タイがあるときに使うと警告もなく間違った答えを返してしまいます💢。ちなみにデフォルトは、片方の大きさが8以下かつタイのないときに厳密な方法を使い、それ以外は正規分布近似になります。</p>
+
+<p>この問題はタイがあるので <code>method="exact"</code> は使えず、次のように permutation test を使います。<code>n_resamples=np.inf</code> で全部の置換を試すので厳密になります。</p>
+
+<pre class="cell">
+stats.mannwhitneyu(x, y, method=stats.PermutationMethod(n_resamples=np.inf))
+</pre>
+
+<pre>
+MannwhitneyuResult(statistic=np.float64(32.5), pvalue=np.float64(0.00872571454210975))
+</pre>
+
+<p>あれ？ Rの結果 $p = 0.00669$ と少し違いますね。</p>
+
+<p>片側検定にしてみましょう：</p>
+
+<pre class="cell">
+stats.mannwhitneyu(x, y, alternative="less",
+                   method=stats.PermutationMethod(n_resamples=np.inf))
+</pre>
+
+<pre>
+MannwhitneyuResult(statistic=np.float64(32.5), pvalue=np.float64(0.004362857271054875))
+</pre>
+
+<p>ちょうど先ほどの $p=0.00872571454210975$ の半分の結果となりました。つまり、<code>stats.mannwhitneyu()</code> の両側検定は単に片側検定を2倍にしているだけです。一方で、Rは $|U - E(U)| \geq |U_{\text{obs}} - E(U)|$ となる確率を求めます（詳細は<a href="../stat/wmw.html">Wilcoxon-Mann-Whitney検定</a>参照）。</p>
+
+<aside>
+<p>元をたどるとSciPyの <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.permutation_test.html">stats.permutation_test</a> でこのようになっており、“The convention used for two-sided p-values is not universal; the observed test statistic and null distribution are returned in case a different definition is preferred.” という断り書きがあります。</p>
+</aside>
+
+<p>両側検定の定義の問題を避けたいなら、片側検定をして、$p$ 値を 0.05 でなく 0.025 と比較するのもよさそうです。</p>
+
+<p>なお、両群のサイズが大きいと <code>n_resamples=np.inf</code> は使えません。適当な値にしてください。</p>
+
+<pre class="cell">
+rng = np.random.default_rng(12345)
+
+stats.mannwhitneyu(x, y, method=stats.PermutationMethod(n_resamples=100000, rng=rng))
+</pre>
+
+<br>
+
+<hr>
+
+<p>PythonでRと同じ両側検定をする例（GPT-5.4作）：</p>
+
+<pre class="cell">
+import numpy as np
+from scipy.stats import permutation_test, rankdata
+
+x = np.array([1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1], dtype=float)
+y = np.array([3, 3, 4, 3, 1, 2, 3, 1, 1, 5, 4], dtype=float)
+
+def mann_whitney_u(a, b):
+    z = np.r_[a, b]
+    r = rankdata(z, method="average")   # average ranks for ties
+    n1 = len(a)
+    return r[:n1].sum() - n1 * (n1 + 1) / 2
+
+# exact permutation distribution under H0
+res = permutation_test(
+    (x, y),
+    mann_whitney_u,
+    permutation_type="independent",
+    n_resamples=np.inf,   # exact
+    alternative="less"    # ignored for our manual two-sided calculation
+)
+
+u_obs = res.statistic
+u_null = res.null_distribution
+u_mean = len(x) * len(y) / 2
+
+# R-style / exactRankTests-style two-sided p-value
+p_r_style = np.mean(np.abs(u_null - u_mean) >= np.abs(u_obs - u_mean))
+
+print("U =", u_obs)
+print("R-style exact two-sided p =", p_r_style)
+</pre>
+
+<br>
+
+<hr>
+
+<p>SciPyに依存しないR互換の実装例（GPT-5.4作）：</p>
+
+<pre class="cell">
+from math import comb
+from collections import defaultdict, namedtuple
+
+
+MannWhitneyURStyleResult = namedtuple(
+    "MannWhitneyURStyleResult",
+    ["statistic", "pvalue"]
+)
+
+
+def _average_scaled_ranks(values):
+    """
+    values の average rank を 2 倍した整数で返す。
+    例: rank 3.5 -&gt; 7
+    """
+    n = len(values)
+    order = sorted(range(n), key=lambda i: values[i])
+    ranks2 = [None] * n
+
+    i = 0
+    while i &lt; n:
+        j = i + 1
+        v = values[order[i]]
+        while j &lt; n and values[order[j]] == v:
+            j += 1
+
+        # 1-based ranks: i+1, ..., j
+        # その平均 rank の 2 倍
+        avg_rank_times_2 = (i + 1) + j
+
+        for k in range(i, j):
+            ranks2[order[k]] = avg_rank_times_2
+
+        i = j
+
+    return ranks2
+
+
+def _exact_rank_sum_distribution(x, y):
+    """
+    帰無仮説の下での exact な rank-sum 分布を返す。
+    ties は average rank を使って条件付き exact 分布として扱う。
+
+    Returns
+    -------
+    dist_w2 : dict
+        key   = 2 * W (W は x 側の rank sum)
+        value = その値をとる組合せ数
+    ranks2 : list[int]
+        pooled data の各要素の 2 * average rank
+    """
+    x = list(x)
+    y = list(y)
+    pooled = x + y
+    n1 = len(x)
+
+    ranks2 = _average_scaled_ranks(pooled)
+
+    # 同じ rank 値ごとにまとめる
+    multiplicities = defaultdict(int)
+    for r2 in ranks2:
+        multiplicities[r2] += 1
+
+    # DP:
+    # dp[k][s] = 「ここまで見た rank 群から k 個選んで rank-sum(×2)=s にする方法数」
+    dp = [defaultdict(int) for _ in range(n1 + 1)]
+    dp[0][0] = 1
+
+    seen = 0
+    for r2, count in sorted(multiplicities.items()):
+        new_dp = [defaultdict(int) for _ in range(n1 + 1)]
+
+        for k_prev in range(min(n1, seen) + 1):
+            for s_prev, ways_prev in dp[k_prev].items():
+                max_take = min(count, n1 - k_prev)
+                for q in range(max_take + 1):
+                    new_dp[k_prev + q][s_prev + q * r2] += ways_prev * comb(count, q)
+
+        dp = new_dp
+        seen += count
+
+    return dp[n1], ranks2
+
+
+def mannwhitneyu_rstyle(x, y, alternative="two-sided"):
+    """
+    R-style exact Mann-Whitney / Wilcoxon rank-sum test.
+
+    Parameters
+    ----------
+    x, y : sequence of numbers
+        2標本
+    alternative : {"two-sided", "less", "greater"}
+        - "less"    : x が y より小さい方向
+        - "greater" : x が y より大きい方向
+        - "two-sided": R-style の central two-sided exact p-value
+
+    Returns
+    -------
+    MannWhitneyURStyleResult(statistic, pvalue)
+        statistic は x 側の U
+    """
+    x = list(x)
+    y = list(y)
+
+    if len(x) == 0 or len(y) == 0:
+        raise ValueError("x and y must both be non-empty")
+    if alternative not in {"two-sided", "less", "greater"}:
+        raise ValueError("alternative must be 'two-sided', 'less', or 'greater'")
+
+    n1 = len(x)
+    n2 = len(y)
+
+    dist_w2, ranks2 = _exact_rank_sum_distribution(x, y)
+
+    # 観測された x 側の rank sum W と U
+    w2_obs = sum(ranks2[:n1])          # 2 * W
+    u2_obs = w2_obs - n1 * (n1 + 1)    # 2 * U
+
+    total = comb(n1 + n2, n1)
+
+    if alternative == "less":
+        p = sum(count for w2, count in dist_w2.items() if w2 &lt;= w2_obs) / total
+
+    elif alternative == "greater":
+        p = sum(count for w2, count in dist_w2.items() if w2 &gt;= w2_obs) / total
+
+    else:
+        # R-style two-sided:
+        # P(|U - E[U]| &gt;= |u_obs - E[U]|)
+        mean_u2 = n1 * n2              # 2 * E[U]
+        dev_obs = abs(u2_obs - mean_u2)
+
+        p = sum(
+            count
+            for w2, count in dist_w2.items()
+            if abs((w2 - n1 * (n1 + 1)) - mean_u2) &gt;= dev_obs
+        ) / total
+
+    return MannWhitneyURStyleResult(statistic=u2_obs / 2, pvalue=p)
+</pre>
+
+<p>実行例：</p>
+
+<pre class="cell">
+x = [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1]
+y = [3, 3, 4, 3, 1, 2, 3, 1, 1, 5, 4]
+
+print(mannwhitneyu_rstyle(x, y))
+print(mannwhitneyu_rstyle(x, y, alternative="less"))
+print(mannwhitneyu_rstyle(x, y, alternative="greater"))
+</pre>
+
+<pre>
+MannWhitneyURStyleResult(statistic=32.5, pvalue=0.006690222999955131)
+MannWhitneyURStyleResult(statistic=32.5, pvalue=0.004362857271054875)
+MannWhitneyURStyleResult(statistic=32.5, pvalue=0.9978420155247454)
+</pre>
+
+<hr>
+
+<p><a href="../stat/wmw.html">Wilcoxon-Mann-Whitney検定</a>で紹介した漸化式（タイのない場合に厳密）：</p>
+
+<pre class="cell">
+def p(n, m, u):
+    if n * m == 0:
+        return int(u == 0)
+    else:
+        return (n * p(n-1, m, u-m) + m * p(n, m-1, u)) / (n+m)
+</pre>
+
+<p>正規分布との比較：</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+from scipy import stats
+import numpy as np
+
+n = 9
+m = 9
+x = np.arange(n * m + 1)
+a = [p(n, m, u) for u in x]
+b = stats.norm.pdf(x, loc=n*m/2, scale=np.sqrt(n*m*(n+m+1)/12))
+
+plt.plot(x, a)  # 漸化式
+plt.plot(x, b)  # 正規分布近似
+</pre>
+
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-03-30 17:22:03 JST</time></p>
+</footer>
+</body>
+</html>

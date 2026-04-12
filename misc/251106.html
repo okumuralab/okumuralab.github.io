@@ -47,15 +47,15 @@
 
 <p>さて、これでMac標準のIMEより賢い変換ができるようになったと思いますが、メニューバーから開くメニューの「設定…」の下のほうには「いい感じ変換」という項目があります。OpenAIのAPIキーを持っている人はここでAPIキーとお好きなモデル名を設定しておけば、azooKeyの中からGPTモデルが呼び出せます。例えば「吾輩は猫である。[確定][Ctrl-S]」とすれば「吾輩は猫である。」の続きをChatGPTに考えてもらうことができます。あるいは「遅刻しました。[確定]いいわけ[Ctrl-S]」で遅刻の言い訳を考えてもらうことができます。他社のAPIでもOpenAI互換であれば設定できます。</p>
 
-<p>API料金が発生するのは嫌な場合は、macOSのApple Intelligenceを設定していれば、OSのFoundation Modelsが使えます。より賢くするために、私はローカルのLM Studioで適当なモデルを動かし、OpenAI APIとしてはダミーの文字列（例えば <code>sk-xxxxxx</code>）を入れ、OpenAI Model Nameにも適当なダミー（例えば <code>lmstudio</code>）を入れ、API Endpointとしては <code>http://127.0.0.1:1234/v1/chat/completions</code> を設定しました。</p>
+<p>API料金が発生するのは嫌な場合は、macOSのApple Intelligenceを設定していれば、OSのFoundation Modelsが使えます。より賢くするためには、ローカルのLM Studioで適当なモデルを動かし、OpenAI APIとしてはダミーの文字列（例えば <code>sk-xxxxxx</code>）を入れ、OpenAI Model Nameにも適当なダミー（例えば <code>lmstudio</code>）を入れ、API Endpointとしては <code>http://127.0.0.1:1234/v1/chat/completions</code> を設定します。</p>
 
 <p>残念ながらEmacsやGhosttyでは左側の文字列が取得できないので「吾輩は猫である。[確定][Ctrl-S]」などはうまくいきませんでした。「ブチギレ[確定]えもじ[Ctrl-S]」もうまくいかないので、ブチギレした顔の絵文字を出したければ、「ぶちぎれかおえもじ[Ctrl-S]」のように、入力済みの文字列を参照しなくてもいい入力をして、確定前にCtrl-Sを押せば、うまくいくようです。</p>
 
 <p>ほかに、文字列を選択してCtrl-Sすれば選択範囲を一括処理できるMagic Conversion機能があり、リライトや翻訳に便利です。azooKey (English) も設定しているなら、英数キーを2回押すだけで英語翻訳になります。これもEmacsでは使えないようです。</p>
 
-<p>当然ながら、Ctrl-Sで出てくる候補はLLMモデルに依存します。openai/gpt-oss-*のほか、qwen/qwen3-vl-32b-instructやmistralai/devstral-small-2-2512も賢いので常用しています。</p>
+<p>当然ながら、Ctrl-Sで出てくる候補はLLMモデルに依存します。あまり大きなモデルでなくていいので、適当なものを設定します。</p>
 
-<p>Emacsで例えばバッファを保存しようとしてCtrl-X Ctrl-Sとすると、IMEがオンになっているとCtrl-SをazooKeyの方に取られてしまいます。azooKey 0.1.3以降ではCtrl-S以外のキーを割り当てることができます。システム設定→キーボード→キーボードショートカット→アプリのショートカット→「+」で、アプリケーションは「すべてのアプリケーション」のまま、メニュータイトルに「いい感じ変換」と入れ、キーボードショートカットのところで望みのキーを入力します（例えばctrl+i、^Iと入る）。</p>
+<p>Emacsで例えばバッファを保存しようとしてCtrl-X Ctrl-Sとすると、IMEがオンになっているとCtrl-SをazooKeyの方に取られてしまいます。azooKey 0.1.3以降ではCtrl-S以外のキーを割り当てることができます。システム設定→キーボード→キーボードショートカット→アプリのショートカット→「+」で、アプリケーションは「すべてのアプリケーション」のまま、メニュータイトルに「いい感じ変換」と入れ、キーボードショートカットのところで望みのキーを入力します（例えばctrl+t、^Tと入る）。</p>
 
 <p>「設定…」には「（開発者用）デバッグウィンドウを有効化」というチェックボックスもあります。有効にしておけば、d でデバッグモードに入り、Shift-d で抜けます。</p>
 
@@ -71,7 +71,7 @@
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-01-12 15:04:54 JST</time></p>
+<p>Last modified: <time>2026-03-31 10:57:11 JST</time></p>
 </footer>
 </body>
 </html>

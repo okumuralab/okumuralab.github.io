@@ -18,24 +18,22 @@
 
 <h1>X API</h1>
 
-<p>X（Twitter）のAPIを使って投稿を読んだり書いたりする方法を説明します。</p>
+<p>X（Twitter）のAPIを使って自動投稿・取得する方法を説明します。</p>
 
-<p><a href="https://docs.x.com/x-api/introduction">X API</a> のページを見ると、無料でも月に100件読め、500件書けるようです。100件読めてもあまりうれしくありませんし、連続して試そうとするとすぐエラー（HTTPError: 429 Client Error: Too Many Requests for url）になるので使い勝手が悪いのですが、アプリには表示されない情報（秒単位の時刻、投票結果の票数など）を見たいときなどは役に立ちます（これらは別の手段でも取得できますが）。500件書ける方は、自動投稿に役に立ちます。</p>
+<p>2026年2月ごろから、無料ではできなくなりました。詳しくは<a href="https://developer.x.com">Developer</a>のページを参照してください。支払いの設定ができたら、<a href="https://console.x.com">コンソール</a>から新たにPay Per Useのアプリを作ります。1回の投稿に0.01ドル、取得に0.005ドルかかるようです。とりあえずOAuth 1.0キーが必要です。</p>
 
-<p>まずは先ほどのページから登録し、一連のAPIキーを発行してもらう必要があります。使用状況は<a href="https://developer.x.com/en/portal/dashboard">ダッシュボード</a>で確認できます。</p>
+<figure><img src="img/260311a.png" alt="X Developer Console"></figure>
 
-<p>公式のパッケージ <a href="https://pypi.org/project/xdk/">xdk</a> が公開されており、コード例が <a href="https://github.com/xdevplatform/samples/tree/main/python">X API v2 - Python Examples</a> にいろいろ載っています。しかし、いまいち動作がわからないところがあるので、以下では汎用のパッケージを使う方法を示しました。あらかじめ <code>pip install requests requests-oauthlib</code> しておきます。</p>
+<p>公式のパッケージ <a href="https://pypi.org/project/xdk/">xdk</a> が公開されており、コード例が <a href="https://github.com/xdevplatform/samples/tree/main/python">X API v2 - Python Examples</a> にいろいろ載っていますが、以下では汎用のパッケージを使う方法を示しました。あらかじめ <code>pip install requests requests-oauthlib</code> しておきます。</p>
 
-<p>書く方は簡単です。課金していれば長文投稿もできます。</p>
-
-<pre>
+<pre class="cell">
 import requests
 from requests_oauthlib import OAuth1
 
-API_KEY = "..."
-API_SECRET = "..."
-ACCESS_TOKEN = "..."
-ACCESS_TOKEN_SECRET = "..."
+API_KEY = "..."             # OAuth 1.0 コンシューマーキー
+API_SECRET = "..."          # OAuth 1.0 シークレット
+ACCESS_TOKEN = "..."        # OAuth 1.0 アクセストークン
+ACCESS_TOKEN_SECRET = "..." # OAuth 1.0 アクセストークンシークレット
 
 auth = OAuth1(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
 
@@ -55,13 +53,13 @@ print("Posted:", tweet_id)
 
 <p>読む方は <a href="https://docs.x.com/x-api/posts/get-post-by-id">Get Post by ID</a> または <a href="https://docs.x.com/x-api/posts/get-posts-by-ids">Get Posts by IDs</a> に書いてありますが、Bearer token を使う方法（OAuth 2.0 App-only）、API key/secret + access token/secret を使う方法（OAuth 1.0a）があります（ほかにもありますが省略）。前者はログインなしで読む方法、後者はログインして読む方法に対応します。まず前者（<code>params</code> については後述）：</p>
 
-<pre>
+<pre class="cell">
 import json
 import requests
 
 BEARER_TOKEN = "..."
 
-TWEET_ID = 2009093270044069950
+TWEET_ID = 2031524952067977685
 
 url = f"https://api.x.com/2/tweets/{TWEET_ID}"
 
@@ -80,7 +78,7 @@ print(json.dumps(payload, indent=2, ensure_ascii=False))
 
 <p>後者：</p>
 
-<pre>
+<pre class="cell">
 import json
 import requests
 from requests_oauthlib import OAuth1
@@ -90,7 +88,7 @@ API_SECRET = "..."
 ACCESS_TOKEN = "..."
 ACCESS_TOKEN_SECRET = "..."
 
-TWEET_ID = 2009093270044069950
+TWEET_ID = 2031524952067977685
 
 url = f"https://api.x.com/2/tweets/{TWEET_ID}"
 auth = OAuth1(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
@@ -110,7 +108,7 @@ print(json.dumps(payload, indent=2, ensure_ascii=False))
 
 <p>パラメータをいろいろ指定できます。<code># params=params</code> の頭の <code>#</code> を取って、パラメータをあらかじめ次のような感じで指定します。不要な項目は <code>#</code> で消してください。</p>
 
-<pre>
+<pre class="cell">
 params = {
     "tweet.fields": ",".join([
         "article",
@@ -191,7 +189,7 @@ params = {
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-01-10 09:33:44 JST</time></p>
+<p>Last modified: <time>2026-03-12 17:30:38 JST</time></p>
 </footer>
 </body>
 </html>

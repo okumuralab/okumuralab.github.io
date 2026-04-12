@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/qwen3_5.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qwen3.5</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Qwen3.5</h1>
+
+<p>2026年2月末、中国 <a href="https://www.alibabacloud.com">Alibaba Cloud</a> の <a href="https://qwen.ai">Qwen</a> 3.5の中型版が出た。MoEの122B A10Bと35B A3B、denseの27Bがある。MoEの方が高速だが、VRAMが大きいMacならdense 27Bが強力だ。私のMac Studio M4 Max 128Gなら16ビットのbf16版が使える。</p>
+
+<p>視覚を備えたVLMなので、画面の一部をコピーしてLM Studioに貼り付けてOCR・翻訳・解説してもらうのに便利だ。</p>
+
+<p>デフォルトはReasoningモデルなので、考え込んで、なかなか答えてくれないことがある。そのほうが賢いのだが、待たされるのが嫌だ。Reasoningを省略させるには、LM StudioのMy Modelsから該当のモデルを選び、右ペインのInferenceの下の方のPrompt TemplateのTemplate (Jinja)の頭に次の1行を入れる。</p>
+
+<pre>
+{%- set enable_thinking = false %}
+</pre>
+
+<p>以下では <a href="https://lmstudio.ai">LM Studio</a> でダウンロードしたMLX版をPythonの <a href="https://pypi.org/project/mlx-vlm/">mlx-vlm</a> パッケージで使ってみる。</p>
+
+<pre class="cell">
+import mlx.core as mx
+from mlx_vlm import load, generate
+from mlx_vlm.prompt_utils import apply_chat_template
+from mlx_vlm.utils import load_config
+
+model_path = "/Users/okumura/.lmstudio/mlx-community/Qwen3.5-27B-bf16"
+model, processor = load(model_path)
+config = load_config(model_path)
+
+image = ["http://images.cocodataset.org/val2017/000000039769.jpg"]
+# image = [Image.open("...")] can also be used with PIL.Image.Image objects
+prompt = "Describe this image."
+
+formatted_prompt = apply_chat_template(
+    processor, config, prompt, num_images=len(image)
+)
+
+output = generate(model, processor, formatted_prompt, image,
+                  max_tokens=4096, verbose=True)
+# print(output)
+</pre>
+
+<p><a href="tokenize.html">トークナイズ</a>の様子も調べてみた。</p>
+
+<pre class="cell">
+s = "昔々あるところにおじいさんとおばあさんがいました。"
+
+e = processor.tokenizer.encode(s)
+for i in e:
+    c = processor.tokenizer.decode(i)
+    if len(c) == 1 and ord(c) == 65533:  # 65533は「�」
+        print(i, end="|")
+    else:
+        print(repr(c)[1:-1], end="|")
+print()
+</pre>
+
+<pre>
+昔|々|ある|ところ|にお|じ|い|さん|とお|ば|あ|さんが|いました|。|
+</pre>
+
+<p>日本語っぽい長いトークンを列挙してみる。</p>
+
+<pre class="cell">
+import re
+
+japanese_re = re.compile('[\u3000-\u30ff\u4e00-\u9fff]')
+
+japanese_words = [(i, processor.tokenizer.decode(i))
+                  for i in range(processor.tokenizer.vocab_size)
+                  if japanese_re.search(processor.tokenizer.decode(i))]
+sorted_japanese_words = sorted(japanese_words, key=lambda x: len(x[1]), reverse=True)
+
+for k, v in sorted_japanese_words[:30]:
+    print(k, repr(v))
+</pre>
+
+<pre>
+138563 '承担一切因您的行为而直接或间接'
+142608 '转载请附上原文出处链接和本声明'
+143132 '加倍支付迟延履行期间的债务利息'
+147126 '摘编或利用其它方式使用上述作品'
+147476 '凭营业执照依法自主开展经营活动'
+126902 '开通天眼生意通银牌及以上会员'
+135049 '并不意味着赞同其观点或证实其'
+112978 '新时代中国特色社会主义思想'
+124399 '赞同其观点和对其真实性负责'
+137548 '以习近平同志为核心的党中央'
+141786 '可通过二维码转账支持公众号'
+145667 '该楼层疑似违规已被系统折叠'
+113694 '中华人民共和国民事诉讼法'
+128054 '中华人民共和国居民身份证'
+130797 '转载目的在于传递更多信息'
+140391 '这样您就可以继续免费收到'
+140453 '转贴或以其他方式复制发表'
+144599 '本网将追究其相关法律责任'
+144742 '判决书送达之日起十五日内'
+213283 'よろしくお願いいたします'
+246017 ' ありがとうございました'
+105600 '新时代中国特色社会主义'
+107597 '摘编或利用其它方式使用'
+107619 '转载请附上原文出处链接'
+128510 '或许有别人想知道的答案'
+128904 '出于传递更多信息之目的'
+138915 '转载至本站只是为了宣传'
+140050 '增值电信业务经营许可证'
+140133 '人民代表大会常务委员会'
+143260 '全面建设社会主义现代化'
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-03-01 21:46:45 JST</time></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/glm-ocr.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GLM-OCR</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>GLM-OCR</h1>
+
+<p><a href="https://huggingface.co/zai-org/GLM-OCR">GLM-OCR</a>はオープンな（MITライセンスの）OCRモデルです。Pythonで簡単に使えます。日本語の縦書きにも対応しています。詳しくは <a href="https://arxiv.org/abs/2603.10910">GLM-OCR Technical Report</a> を参照してください。</p>
+
+<p>動かすにはPyTorchとTransformersが必要です（<code>pip install --upgrade torch transformers</code>）。後者は最新のものを入れてもエラーになる場合は <code>pip install git+https://github.com/huggingface/transformers.git</code> で開発版を入れます。</p>
+
+<pre class="cell">
+from transformers import AutoProcessor, AutoModelForImageTextToText
+import torch
+
+MODEL_PATH = "zai-org/GLM-OCR"
+processor = AutoProcessor.from_pretrained(MODEL_PATH)
+model = AutoModelForImageTextToText.from_pretrained(
+    pretrained_model_name_or_path=MODEL_PATH,
+    torch_dtype="auto",
+    device_map="auto",
+)
+
+url = "画像ファイルへのパス"
+
+messages = [
+    {
+        "role": "user",
+        "content": [
+            { "type": "image", "url": url },
+            { "type": "text", "text": "Text Recognition:" },
+        ],
+    }
+]
+inputs = processor.apply_chat_template(
+    messages,
+    tokenize=True,
+    add_generation_prompt=True,
+    return_dict=True,
+    return_tensors="pt"
+).to(model.device)
+inputs.pop("token_type_ids", None)
+generated_ids = model.generate(**inputs, max_new_tokens=8192)
+output_text = processor.decode(
+    generated_ids[0][inputs["input_ids"].shape[1]:],
+    skip_special_tokens=True
+)
+print(output_text)
+</pre>
+
+<hr>
+
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+
+<p>
+<!-- hhmts start -->
+Last modified: <time>2026-03-15 08:24:22 JST</time>
+<!-- hhmts end -->
+</p>
+</body>
+</html>

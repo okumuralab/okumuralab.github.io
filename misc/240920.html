@@ -41,22 +41,26 @@ path=`realpath "$1"`
 osascript -e "tell application \"Finder\" to set comment of (POSIX file \"$path\" as alias) to \"$2\""
 </pre>
 
-<p>Finderコメントを検索する <code>findcomment.sh</code>:</p>
+<p>Finderコメントを検索する <code>findcomment.sh</code>（ついでにPDFのタイトルが入っていることが多い <code>kMDItemTitle</code> も検索）</p>
 
 <pre>
 #!/bin/bash
 
-mdfind "kMDItemFinderComment == \"$1\""
+mdfind "kMDItemFinderComment == \"$1\"cd || kMDItemTitle == \"$1\"cd"
 </pre>
 
 <p>部分一致なら <code>findcomment.sh '*hoge*'</code> のように、前か後か両方に <code>*</code> を付ける。</p>
+
+<p>[追記] <a href="https://developer.apple.com/library/archive/documentation/Carbon/Conceptual/SpotlightQuery/Concepts/QueryFormat.html">File Metadata Query Expression Syntax</a> によれば <code>==[cd]</code> でcase insensitive、insensitive to diacritical marksな検索ができるはずだがうまくいかない。式の最後に <code>cd</code> を持っていくといいようだ。</p>
+
+<p>[追記] ファイルシステムをまたいで <code>mv</code> すると <code>mdls</code> で表示されるメタ情報が一時的にアクセスできなくなるようだが、<code>mdimport ファイル名</code> とすると直る。あるいはPreviewで開くだけでも直るようだ。</p>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-08 13:25:33 JST</time></p>
+<p>Last modified: <time>2026-02-10 16:22:22 JST</time></p>
 </footer>
 </body>
 </html>

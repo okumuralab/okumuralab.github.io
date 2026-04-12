@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/unsloth_studio.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unsloth Studio</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Unsloth Studio</h1>
+
+<p>Unsloth StudioはWebブラウザでローカルLLMを使うための仕組みです。</p>
+
+<ul>
+  <li><a href="https://github.com/unslothai/unsloth">https://github.com/unslothai/unsloth</a></li>
+  <li><a href="https://unsloth.ai/docs/new/studio">Introducing Unsloth Studio</a></li>
+</ul>
+
+<p>推奨インストールの仕方は何度も変わっています。上記最初のリンクを参照してください。以下は開発者用のインストールの仕方です:</p>
+
+<pre>
+git clone https://github.com/unslothai/unsloth
+cd unsloth
+# 不安定版: git checkout nightly
+./install.sh --local
+</pre>
+
+<p>更新:</p>
+
+<pre>
+cd unsloth
+git pull
+unsloth studio update --local
+</pre>
+
+<p>サーバ起動:</p>
+
+<pre>
+unsloth studio -H 0.0.0.0 -p 8888 &amp;
+</pre>
+
+<p>ブラウザで <a href="http://localhost:8888">http://localhost:8888</a> を開くとUnsloth Studioの画面が現れます。Select model... からQwen3.5-4B-GGUFを選んで実行してみましょう。うまくいったら、もっと大きいモデルを試してみましょう。</p>
+
+<aside>
+<p>私の環境だけの問題かもしれませんが、外付けのやや遅いSSDを使っているためか、大きいモデルを選ぶとタイムアウトしてしまうことがありました。再度試してもうまくいかないなら、ターミナルのメッセージに <code>~/.unsloth/llama.cpp/build/bin/llama-server</code> を実行するコマンドが表示されますので、そのコマンドだけ打ち込んで単独で実行し、うまくいけば Control-C で止めます。これでキャッシュされて、次回は速くロードされ、うまくいきます。</p>
+
+<p>コードを書き換えてタイムアウト値を大きくするには、<code>studio/backend/core/inference/llama_cpp.py</code> の <code>if not self._wait_for_health(timeout = 120.0):</code> の値を増やし、さらには <code>studio/backend/core/inference/orchestrator.py</code> の <code>resp = self._wait_response("loaded", timeout = 180)</code> の値を増やすと良さそうです。ソースは頻繁に更新されますので、うまくいかなければコーディングエージェントに聞いてください。</p>
+</aside>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-03-29 07:56:32 JST</time></p>
+</footer>
+</body>
+</html>

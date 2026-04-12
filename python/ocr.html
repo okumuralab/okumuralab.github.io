@@ -18,7 +18,9 @@
 
 <h1>PythonでOCR</h1>
 
-<p>昔から <a href="https://github.com/tesseract-ocr/tesseract">tesseract</a> というオープンソースのOCRエンジンが有名です。Pythonからは <a href="https://github.com/madmaze/pytesseract">pytesseract</a> で使えます。ここではより新しい EasyOCR と、Mac限定ですがmacOSのOCRエンジンを使う方法を解説します。</p>
+<p>昔から <a href="https://github.com/tesseract-ocr/tesseract">tesseract</a> というオープンソースのOCRエンジンが有名です。Pythonからは <a href="https://github.com/madmaze/pytesseract">pytesseract</a> で使えます。しかし、さすがに古くなってしまいました。性能もいまいちです。ここではより新しい方法をいくつか紹介します。</p>
+
+<p>これら以外に、VLM（視覚機能を持ったLLM）をLM Studioなどでローカルで動かしておいて、そこにコピペまたはドラッグ＆ドロップするという手もあります。OCR＋翻訳＋解説までやってくれるので便利です。</p>
 
 <h2>EasyOCR</h2>
 
@@ -63,13 +65,76 @@ print(" ".join([a[0] for a in annotations]))
 
 <p>同様のものとして <a href="https://rio.st/2025/02/16/macosでocrしたい（macocrコマンドにした）/">macocr</a> というものも見つけました。Python以外では <a href="https://github.com/schappim/macOCR">macOCR</a>、<a href="https://github.com/xulihang/macOCR">macOCR</a> が検索で見つかります（試していません。前者のmacOCRは <a href="https://notepm.jp/blog/21760">【2025年版】無料オープンソースのOCRソフトウェア10選を徹底比較！（PDFや画像からテキスト情報を抽出）</a> でも紹介されています。この記事には <a href="https://github.com/mittagessen/kraken">kraken</a> というものも紹介されています）。</p>
 
+<h2>YomiToku</h2>
+
+<p><a href="https://github.com/kotaro-kinoshita/yomitoku">YomiToku</a> は日本語文書画像解析に特化したPythonパッケージです。非商用での個人利用・研究目的での利用は自由です。</p>
+
+<p>今のところPython 3.13まで対応しているようです（Python 3.14は不可）。<code>pip install yomitoku</code> でインストールできます。コマンド <code>yomitoku</code> がインストールされます。</p>
+
+<pre>
+yomitoku 入力ファイル -f md -o results -v --figure
+</pre>
+
+<p>とすれば <code>results</code> というフォルダを作ってその中にMarkdown形式で出力します。<code>-v</code> は解析結果を可視化した画像を出力するオプションです。<code>--figure</code> は検出した図、画像を出力ファイルにエクスポートするオプションです。</p>
+
+<p><code>base.py</code> を次のようにすればオプション <code>-d mps</code> でMacのGPU（mps）が使えるようになります（すでにpull requestがあるようですので近々このようになるはずです）。</p>
+
+<pre>
+    @device.setter
+    def device(self, device):
+        if "cuda" in device:
+            if torch.cuda.is_available():
+                self._device = torch.device(device)
+            else:
+                self._device = torch.device("cpu")
+                logger.warning("CUDA is not available. Use CPU instead.")
+        elif "mps" in device: # for apple silicon
+            if torch.mps.is_available():
+                self._device = torch.device("mps")
+            else:
+                self._device = torch.device("cpu")
+                logger.warning("MPS is not available. Use CPU instead.")
+        else:
+            self._device = torch.device("cpu")
+</pre>
+
+<h2>GLM-OCR</h2>
+
+<p><a href="glm-ocr.html">GLM-OCR</a> をご覧ください。</p>
+
+<h2>NDLOCR-Lite</h2>
+
+<p>国立国会図書館の <a href="https://github.com/ndl-lab/ndlocr-lite">NDLOCR-Lite</a> が公開されました。デスクトップアプリケーションもありますが、ここではコマンドで実行してみます。私の普段使いのPython 3.14ではうまくいかず、3.13にして試しました。頻繁に更新されるようなので <code>-e</code> を付けてインストールすると <code>git pull</code> がすぐ反映されます。</p>
+
+<pre>
+git clone https://github.com/ndl-lab/ndlocr-lite
+cd ndlocr-lite
+uv tool install --python 3.13 -e .
+</pre>
+
+<p>これで <code>~/.local/bin/ndlocr-lite</code> がインストールされますので、パスを通しておけばどこでも実行できます。</p>
+
+<p>使い方の例：</p>
+
+<pre>
+ndlocr-lite --sourceimg x.png --output outdir --viz True
+</pre>
+
+<p>または（<code>srcdir</code> に複数の画像が入っているとき）</p>
+
+<pre>
+ndlocr-lite --sourcedir srcdir --output outdir --viz True
+</pre>
+
+<p>出力先のディレクトリ（上の例では <code>outdir</code>）はあらかじめ作っておきます。結果の視覚化 <code>--viz True</code> はなくてもかまいません。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2025-02-17 18:10:23 JST</time>
+Last modified: <time>2026-02-26 20:10:51 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

@@ -18,70 +18,345 @@
 
 <h1>OpenAIのresponses APIを使う</h1>
 
-<p>2025年3月、OpenAIは新しい <a href="https://platform.openai.com/docs/api-reference/responses">responses</a> APIを公開した。これを使うためのPythonのコード例：</p>
+<p>2025年3月、OpenAIは新しい <a href="https://platform.openai.com/docs/api-reference/responses">responses</a> APIを公開した。ここではその使い方をまとめておく。</p>
+
+<p>まだの場合は <a href="https://platform.openai.com">OpenAI Platform</a> でクレジットカードを登録し、APIキーを発行してもらう。<code>export OPENAI_API_KEY="sk-XXXXXXXXXX"</code> のように環境変数にセットしておくと便利。あと、<code>pip install openai</code> しておく。</p>
+
+<p>一番簡単な例：</p>
+
+<pre class="cell">
+from openai import OpenAI
+
+client = OpenAI() # 環境変数が使える場合
+# client = OpenAI(api_key="sk-XXXXXXXXXX") # 環境変数が使えない場合
+
+response = client.responses.create(
+    model="gpt-5-nano",
+    input="絵文字🙏の意味を教えて。",
+)
+print(response.output_text)
+</pre>
+
+<p>答えが出力される。続けて聞く場合は次のようにする。</p>
+
+<pre class="cell">
+response = client.responses.create(
+    model="gpt-5-nano",
+    previous_response_id=response.id,  # 会話を続ける場合
+    input="ハイタッチじゃないんですか？",
+)
+print(response.output_text)
+</pre>
+
+<p>ストリーミング例：</p>
+
+<pre class="cell">
+from openai import OpenAI
+
+client = OpenAI()
+
+stream = client.responses.create(
+    model="gpt-5-nano",
+    # previous_response_id=event.response.id,  # 2回目以降
+    input="絵文字🙏の意味を教えて。",
+    stream=True,
+)
+
+for event in stream:
+    if hasattr(event, "delta"):
+        print(event.delta, end="")
+print()
+</pre>
+
+<p>より複雑な呼び出し方：</p>
+
+<pre class="cell">
+from openai import OpenAI
+
+client = OpenAI()
+
+response = client.responses.create(
+    model="gpt-5.2-pro",
+    # previous_response_id=response.id,  # 2回目以降
+    tools=[{"type": "web_search"}],
+    reasoning={
+        "effort": "high",  # none|minimal|low|medium|high|xhigh
+        "summary": "detailed"  # auto|concise|detailed
+    },
+    text={
+        "verbosity": "low"  # low|medium|high
+    },
+    # temperature=0,  # reasoning.effort=noneのとき
+    input="Prove or disprove the Collatz conjecture.",
+)
+print(response.output_text)
+</pre>
+
+<p>よりまともなアプリ例（GPT-5.2 Thinkingに書いてもらった）：</p>
 
 <pre class="cell">
 import os
+import sys
+import time
+import random
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
+
+import openai
 from openai import OpenAI
 
+
+def _get(obj: Any, key: str, default: Any = None) -&gt; Any:
+    """Safely read attribute or dict key from SDK event/item objects."""
+    if obj is None:
+        return default
+    if isinstance(obj, dict):
+        return obj.get(key, default)
+    return getattr(obj, key, default)
+
+
+def _is_retriable_status(status_code: Optional[int]) -&gt; bool:
+    return status_code in {408, 409, 429} or (status_code is not None and status_code &gt;= 500)
+
+
 class Chatbot:
-    def __init__(self, model="gpt-5.1", instructions=None,
-                 previous_response_id=None, temperature=0):
-        self.client = OpenAI()
+    """
+    Streaming chatbot using the OpenAI Responses API.
+    - Supports reasoning controls and web search tool.
+    - Maintains previous_response_id for multi-turn continuity.
+    """
+
+    def __init__(
+        self,
+        model: str = "gpt-5.2-pro",
+        instructions: Optional[str] = None,
+        previous_response_id: Optional[str] = None,
+        text_verbosity: str = "medium",  # "low" | "medium" | "high"
+        reasoning_effort: str = "medium",  # "none" | "low" | "medium" | "high" | "xhigh"
+        reasoning_summary: Optional[str] = None,  # "auto" | "concise" | "detailed" | None
+        enable_web_search: bool = True,
+        allowed_domains: Optional[List[str]] = None,
+        include_web_sources: bool = True,
+        timeout_s: float = 60.0,
+        max_retries: int = 2,
+        api_key: Optional[str] = None,
+    ):
+        self.client = OpenAI(
+            api_key=api_key or os.environ.get("OPENAI_API_KEY"),
+            timeout=timeout_s,
+            max_retries=max_retries,  # SDK also retries some transient errors by default
+        )
         self.model = model
         self.instructions = instructions
-        self.response_id = previous_response_id
-        self.temperature = temperature
-        self.response = None
+        self.previous_response_id = previous_response_id
 
-    def get_response():
-        return self.response
+        self.text_verbosity = text_verbosity
+        self.reasoning_effort = reasoning_effort
+        self.reasoning_summary = reasoning_summary
 
-    def chat(self, prompt, max_output_tokens=None):
-        args = {
+        self.enable_web_search = enable_web_search
+        self.allowed_domains = allowed_domains
+        self.include_web_sources = include_web_sources
+
+        self.last_response = None  # populated after a call completes
+
+    def get_response(self):
+        return self.last_response
+
+    def _build_args(self, prompt: str, max_output_tokens: Optional[int]) -&gt; Dict[str, Any]:
+        prompt = prompt.strip()
+
+        args: Dict[str, Any] = {
             "model": self.model,
-            "input": prompt.strip()
+            # Using the message-style input is handy for future extension (multi-part, etc.)
+            "input": [{"role": "user", "content": prompt}],
+            "text": {"verbosity": self.text_verbosity},
         }
+
+        if max_output_tokens is not None:
+            args["max_output_tokens"] = max_output_tokens
+
         if self.instructions:
             args["instructions"] = self.instructions
-        if self.response_id:
-            args["previous_response_id"] = self.response_id
-        if max_output_tokens:
-            args["max_output_tokens"] = max_output_tokens
-        if self.model[0] == "o" or self.model[:5] == "gpt-5":
-            args["reasoning"] = {
-                "effort": "high", # high/medium/low/none (none for gpt-5.1)
-                "summary": "detailed"
-            }
-        else:
-            args["temperature"] = self.temperature
-        if self.model[:5] == "gpt-5":
-            args["text"] = {
-                "verbosity": "high" # high/medium/low
-            }
-        self.response = self.client.responses.create(**args)
-        self.response_id = self.response.id
-        print(self.response_id)
-        print(self.response.output_text)
 
-chatbot = Chatbot()
-chatbot.chat(r'''
-ここに質問を書く
-''')
+        if self.previous_response_id:
+            args["previous_response_id"] = self.previous_response_id
+
+        # Reasoning controls
+        # Note: for GPT-5.2, temperature/top_p/etc. are only supported when reasoning.effort == "none".
+        # (So we avoid mixing those here.) :contentReference[oaicite:1]{index=1}
+        if self.reasoning_effort:
+            reasoning: Dict[str, Any] = {"effort": self.reasoning_effort}
+            if self.reasoning_summary is not None:
+                reasoning["summary"] = self.reasoning_summary
+            args["reasoning"] = reasoning
+
+        # Web search tool
+        if self.enable_web_search:
+            tool: Dict[str, Any] = {"type": "web_search"}
+            if self.allowed_domains:
+                tool["filters"] = {"allowed_domains": self.allowed_domains}
+            args["tools"] = [tool]
+            args["tool_choice"] = "auto"
+            if self.include_web_sources:
+                # Include full URL list consulted by the search tool (not just inline citations)
+                args["include"] = ["web_search_call.action.sources"] # :contentReference[oaicite:2]{index=2}
+
+        return args
+
+    def chat(
+        self,
+        prompt: str,
+        *,
+        max_output_tokens: Optional[int] = None,
+        stream: bool = True,
+        print_to_stdout: bool = True,
+        max_attempts: int = 3,
+    ) -&gt; Tuple[str, List[Dict[str, Any]]]:
+        """
+        Returns: (final_text, web_sources)
+        web_sources is a list of source objects (if include_web_sources=True and web_search was used).
+        """
+        if not stream:
+            args = self._build_args(prompt, max_output_tokens)
+            try:
+                resp = self.client.responses.create(**args)
+                self.last_response = resp
+                self.previous_response_id = resp.id
+                return resp.output_text, []
+            except Exception:
+                raise
+
+        attempt = 0
+        while True:
+            attempt += 1
+            try:
+                return self._chat_streaming(prompt, max_output_tokens, print_to_stdout)
+            except openai.APIStatusError as e:
+                # Retriable HTTP status codes (429, 5xx, etc.)
+                if attempt &lt; max_attempts and _is_retriable_status(getattr(e, "status_code", None)):
+                    self._backoff_sleep(attempt)
+                    continue
+                raise
+            except (openai.APIConnectionError, openai.APITimeoutError, openai.InternalServerError) as e:
+                if attempt &lt; max_attempts:
+                    self._backoff_sleep(attempt)
+                    continue
+                raise
+            except openai.RateLimitError as e:
+                if attempt &lt; max_attempts:
+                    self._backoff_sleep(attempt)
+                    continue
+                raise
+
+    def _backoff_sleep(self, attempt: int) -&gt; None:
+        # simple exponential backoff with jitter
+        base = min(8.0, 0.5 * (2 ** (attempt - 1)))
+        jitter = random.random() * 0.25
+        time.sleep(base + jitter)
+
+    def _chat_streaming(
+        self,
+        prompt: str,
+        max_output_tokens: Optional[int],
+        print_to_stdout: bool,
+    ) -&gt; Tuple[str, List[Dict[str, Any]]]:
+        args = self._build_args(prompt, max_output_tokens)
+        args["stream"] = True
+
+        text_chunks: List[str] = []
+        web_sources: List[Dict[str, Any]] = []
+        final_response = None
+
+        stream = self.client.responses.create(**args)
+
+        for event in stream:
+            etype = _get(event, "type")
+
+            # Stream assistant text deltas
+            if etype == "response.output_text.delta":
+                delta = _get(event, "delta", "")
+                if delta:
+                    text_chunks.append(delta)
+                    if print_to_stdout:
+                        print(delta, end="", flush=True)
+
+            # If you want to detect web search calls happening mid-stream
+            elif etype == "response.output_item.done":
+                item = _get(event, "item")
+                if _get(item, "type") == "web_search_call":
+                    action = _get(item, "action")
+                    sources = _get(action, "sources", [])
+                    # normalize to plain dicts if needed
+                    if sources:
+                        for s in sources:
+                            web_sources.append(s if isinstance(s, dict) else getattr(s, "model_dump", lambda: {})())
+
+            # Terminal success
+            elif etype == "response.completed":
+                final_response = _get(event, "response")
+
+            # Terminal failure (stream-level)
+            elif etype == "response.failed":
+                resp = _get(event, "response", {})
+                err = _get(resp, "error", {})
+                code = _get(err, "code", "unknown_error")
+                msg = _get(err, "message", "Response failed.")
+                raise RuntimeError(f"{code}: {msg}")
+
+            # Some SDKs may surface a generic error event
+            elif etype == "error":
+                err = _get(event, "error", {})
+                raise RuntimeError(_get(err, "message", "Stream error"))
+
+        if print_to_stdout:
+            print()
+
+        final_text = "".join(text_chunks)
+
+        # Update conversation state if we got a completed response object
+        if final_response is not None:
+            self.last_response = final_response
+            self.previous_response_id = _get(final_response, "id", self.previous_response_id)
+
+        return final_text, web_sources
+
+
+bot = Chatbot(
+    # model="gpt-5.2-pro",
+    model="gpt-5-nano",
+    instructions="Be clear and cite sources when you use web search.",
+    text_verbosity="high",
+    reasoning_effort="high",
+    reasoning_summary="auto",
+    enable_web_search=True,
+    include_web_sources=True,
+    # allowed_domains=["openai.com", "platform.openai.com"],  # optional allow-list
+)
+
+answer, sources = bot.chat(r"""
+（ここに質問を書く）
+""")
+
+# 最後にURLをまとめたければ:
+if sources:
+    print("\n\n---\nSources consulted (web_search_call.action.sources):")
+    for s in sources[:10]:
+        title = s.get("title") or "(no title)"
+        url = s.get("url") or "(no url)"
+        print(f"- {title}: {url}")
 </pre>
 
-<p>GPT-5.1については次を参照：</p>
+<p>参照：</p>
 
 <ul>
-  <li><a href="https://platform.openai.com/docs/guides/latest-model">Using GPT-5.1</a></li>
-  <li><a href="https://cookbook.openai.com/examples/gpt-5/gpt-5-1_prompting_guide">GPT-5.1 Prompting Guide</a></li>
+  <li><a href="https://platform.openai.com/docs/guides/latest-model">Using GPT-5.2</a></li>
 </ul>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-11-14 10:03:14 JST</time></p>
+<p>Last modified: <time>2026-01-18 10:32:24 JST</time></p>
 </footer>
 </body>
 </html>

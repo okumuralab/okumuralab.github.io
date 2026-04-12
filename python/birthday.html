@@ -53,6 +53,8 @@ plt.ylabel("同じ誕生日の人がいる確率")
 
 <p>オレンジの線が指数関数を使った近似式です。</p>
 
+<p>$n = \sqrt{N}$ で確率が $1 - e^{-1/2} \approx 0.4$ になります。もっと大雑把な議論をすれば、$n$ 人いれば $n(n-1)/2 \approx n^2/2$ のペアができ、各ペアの誕生日が同じ確率は $1/N$ なので、どれかのペアの誕生日が同じ確率はおよそ $n^2/2 \times 1/N$、これが $1/2$ になるのは $n = \sqrt{N}$ のときだということもできます。つまり、かなりの確率で $N$ 通りのものがぶつかるには $n = \sqrt{N}$ 個ほどあればいいことになります。</p>
+
 <h2>接種券番号の問題</h2>
 
 <p>2021年に新型コロナ感染症ワクチン接種券が配られました。ところが接種券を発行するのは各自治体だったため、10桁の接種券番号も自治体ごとに付番されました。その後、自治体の枠を越えた大規模接種センターがつくられましたが、当初の予約システムでは接種券番号をユニークキーとしていたらしく、同じ接種券番号の人がいると予約できないという問題が発生しました。仮に番号がランダムだったとして、番号の衝突（重複）が起こる確率はどれくらいでしょうか。</p>
@@ -71,11 +73,11 @@ plt.ylabel("同じ誕生日の人がいる確率")
 
 <h2>UUID</h2>
 
-<p>128ビットのランダムな値を表す <a href="https://ja.wikipedia.org/wiki/UUID">UUID</a>（Universally Unique Identifier）というものが <a href="https://www.rfc-editor.org/rfc/rfc4122.html">RFC 4122</a> で定められています。</p>
+<p>128ビットのランダムな値を表す <a href="https://ja.wikipedia.org/wiki/UUID">UUID</a>（Universally Unique Identifier）というものが <a href="https://www.rfc-editor.org/rfc/rfc4122.html">RFC 4122</a> で定められていま<del>す。</del><ins>したが、改訂されて、現在は <a href="https://www.rfc-editor.org/rfc/rfc9562">RFC 9562</a> が最新のドキュメントです。</p>
 
 <p>UUIDにはいくつかのバージョンがありますが、よく使われているのは、乱数ベースのバージョン4のUUIDです。128ビットですが、そのうち6ビットは固定値です。</p>
 
-<p>Pythonには <a href="https://docs.python.org/ja/3/library/uuid.html">uuid</a> という標準ライブラリがあります。</p>
+<p>Pythonの標準ライブラリには <a href="https://docs.python.org/ja/3/library/uuid.html">uuid</a> というモジュールがあります。</p>
 
 <pre class="cell">
 import uuid
@@ -91,13 +93,15 @@ UUID('3585b7a9-e35a-433b-be8e-3916c75f6240')
 
 <p>LinuxやMacには <code>uuidgen</code> というコマンドがあります。Macのものはバージョン4固定です。Linuxのものはオプション <code>-r</code> でバージョン4（乱数ベース）、オプション <code>-t</code> でバージョン1（時刻ベース）になります。デフォルトは通常はバージョン4です。</p>
 
-<p>いまUUIDバージョン6〜8のドラフトが起草されつつあるようです（<a href="https://www.ietf.org/archive/id/draft-ietf-uuidrev-rfc4122bis-00.html">IETFのこのページ</a>参照）。LiosKさんによるTwitterの<a href="https://twitter.com/LiosK/status/1588116287422877697">このスレッド</a>が参考になります。</p>
+<p>RFC 4122ではバージョン1〜5のUUIDが定められていましたが、RFC 9562ではバージョン6〜8が追加されました。バージョン7の先頭48ビットはタイムスタンプ（1970年元旦からのミリ秒）です。今後はランダムなバージョン4か時刻ベースのバージョン7のどちらかを選ぶと良さそうです。Pythonのuuidモジュールではバージョン7のUUIDは <code>uuid.uuid7()</code> で求められます。</p>
+
+<p>バージョン4のUUIDは $N = 2^{122}$ 通りあります。ランダムに生成して衝突が起こる（同じUUIDが発生する）には $n = \sqrt{N} = 2^{61}$ 個ほどのUUIDが必要です。毎秒1000個のUUIDを作れば7千万年くらいで衝突が起きるでしょう。大きな天体が地球に衝突するのとどちらが早いでしょうか。</p>
 
 <h2>ULID</h2>
 
 <p><a href="https://github.com/ulid/spec">ULID</a>（Universally Unique Lexicographically Sortable Identifier）はUUIDを改良したもので、UUIDと同じ128ビットでありながら、UUIDは36文字ですが、ULIDは26文字で表されます。128ビットのうち、先頭の48ビットはタイムスタンプで、UNIX時刻をミリ秒の単位で表したものです。10889年まで桁あふれしません。残りの80ビットがランダムな部分です。文字列としてソートすると、時刻順に並びます（lexicographically sortable）。</p>
 
-<p>Pythonではいくつかのライブラリがありますが、ここでは <a href="https://pypi.org/project/python-ulid/">python-ulid</a> を使ってみます。<code>pip install python-ulid</code> でインストールします（余分なものが入らないのでconda環境でもpipでインストールして大丈夫です）。</p>
+<p>Pythonではいくつかのライブラリがありますが、ここでは <a href="https://pypi.org/project/python-ulid/">python-ulid</a> を使ってみます。<code>pip install python-ulid</code> でインストールします</p>
 
 <pre class="cell">
 from ulid import ULID
@@ -119,7 +123,7 @@ ULID(01F63ZWFQGSMGM3XGXBE8CTRDT)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-07-26 11:32:47 JST</time></p>
+<p>Last modified: <time>2026-03-23 21:44:59 JST</time></p>
 </footer>
 </body>
 </html>
