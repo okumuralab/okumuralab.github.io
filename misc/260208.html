@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/260208.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ripgrep</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>ripgrep</h1>
+
+<p><a href="https://github.com/BurntSushi/ripgrep">ripgrep</a>（コマンド <code>rg</code>）は多数のファイルを一括検索するためのツールです。昔からある <code>grep</code> というツールの強化版です。</p>
+
+<p>Homebrewの入ったMacでのインストールは</p>
+
+<pre>
+brew install ripgrep
+</pre>
+
+<p>Windowsでのインストールは</p>
+
+<pre>
+winget install BurntSushi.ripgrep.MSVC
+</pre>
+
+<p>です。</p>
+
+<p>昔からある <code>grep</code> と同様に使えます。例えば</p>
+
+<pre>
+rg ほげ *.txt
+</pre>
+
+<p>とすれば、<code>*.txt</code> から「ほげ」のある行をリストしてくれます。<code>grep</code> と違って、マッチ部分に色が着くので、見やすいと思います。</p>
+
+<p>パイプで例えば <code>rg ほげ *.txt | less</code> のようにすれば <code>grep</code> と同じ出力になりますが色も着かなくなります。パイプなしで行番号を消したいなら <code>-N</code>、ファイル名を同じ行にしたいなら <code>--no-heading</code> のオプションを付けます（<code>rg -N --no-heading ほげ *.txt</code>）。これをデフォルトにしたければ、まず例えば <code>export RIPGREP_CONFIG_PATH=/Users/okumura/.ripgreprc</code> のように設定ファイルのパスを環境変数で設定してから、その設定ファイルに</p>
+
+<pre>
+-N
+--no-heading
+</pre>
+
+<p>のようにオプションを行ごとに並べます。</p>
+
+<p>よく使うオプション：</p>
+
+<ul>
+ <li><code>-i</code> 大文字・小文字を区別しない</li>
+</ul>
+
+<p>さて、ripgrep の特徴はデフォルトで再起検索することです。例えば</p>
+
+<pre>
+rg ほげ
+</pre>
+
+<p>だけで、カレントディレクトリ以下のすべてのファイルについて「ほげ」を検索します。ディレクトリ名を指定すれば、そのディレクトリ以下について検索します。</p>
+
+<p>カレントディレクトリ以下の特定の種類のファイル、例えばPythonファイル（<code>*.py</code> または <code>*.pyi</code>）だけ検索するには</p>
+
+<pre>
+rg --type py ほげ
+</pre>
+
+<p>のようにします。種類の指定の仕方は <code>rg --type-list</code> と打つと表示されます。</p>
+
+<p>ripgrep のもう一つの特徴は、前処理です。例として、PDFファイルのタイトルを検索することを考えます。<a href="240821.html">Macのmdfindを活用する</a>で書いたように、Macであれば <code>kMDItemTitle</code> にPDFのタイトルが入ることが多く、もし入らなかったらFinderコメント <code>kMDItemFinderComment</code> に書き込んでおくことにします。これらの情報を取り出すシェルスクリプトは次のようになります：</p>
+
+<pre>
+#!/bin/sh
+exec mdls -name kMDItemFinderComment -name kMDItemTitle "$@"
+</pre>
+
+<p>これを例えば <code>pdftitle</code> という名前で保存して実行できるようにしておけば、</p>
+
+<pre>
+rg -i --type pdf --pre pdftitle hoge
+</pre>
+
+<p>でタイトルにhogeやHogeやHOGEが含まれるものを検索できます。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-02-10 20:24:28 JST</time></p>
+</footer>
+</body>
+</html>
