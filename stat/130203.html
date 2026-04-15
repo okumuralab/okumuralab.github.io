@@ -196,6 +196,8 @@ Year/Month,Male,Female
 <p>CSV形式の欠点は，データに型が指定できないことである。特にExcelでダブルクリックで開く場合にこの欠点が顕在化し，例えば <code>"001"</code> は数値 1 に，<code>"1-2-3"</code> は日付 2001/2/3 に，<code>"1E3"</code> は指数表示の数 1.00E+03 に，STAP細胞で有名になった遺伝子名 <code>"Oct4"</code> は日付 4-Oct になる（これらはExcelに手入力した場合と同じ振舞いである）。遺伝子関係の論文の2割くらいがこの罠に引っかかっているそうである（<a href="http://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1044-7">Gene name errors are widespread in the scientific literature</a>，<a href="https://doi.org/10.1038/d41586-021-02211-4">Autocorrect errors in Excel still creating genomics headache</a>）。対策としては，拡張子をtxtに変えてExcelの「開く」メニューで開き，ウィザードで各列の「データ形式」を「文字列」に指定する。あるいは <code>="001"</code> のように <code>="…"</code> で囲むという奥の手もある。</p>
 
 <p><em>[2018-08-11]</em> Excelで遺伝子はOct4に限らずFeb，Mar，Apr，Jun，Aug，Sep，Oct，Nov，Decが危ないとのこと。あと化学のCASナンバーや，住所の「番地」でも問題が生じ得る。電話番号やクレジットカード番号は数値と解釈されて先頭の0が落ちたり16桁を超えると右の桁が0になったりする。</p>
+
+<p><em>[追記]</em> 2020年: <a href="https://gigazine.net/news/20200807-genes-rename-microsoft-excel/">「Excelのおせっかい」のせいで人間の遺伝子の名前が変更を余儀なくされる</a> “all symbols that autoconverted to dates in Microsoft Excel have been changed (for example, SEPT1 is now SEPTIN1; MARCH1 is now MARCHF1)” (<a href="https://www.nature.com/articles/s41588-020-0669-3">Guidelines for human gene nomenclature</a>)</p>
 </div>
 
 <div class="note">
@@ -357,7 +359,7 @@ DATE,TIME,当日実績(万kW),予測値（万kW)
 <p><a href="../" rel="author">奥村 晴彦</a> (<a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY</a>)</p>
 <p>
 <!-- hhmts start -->
-Last modified: <time>2023-10-13 20:10:17 JST</time>
+Last modified: <time>2026-04-14 10:39:03 JST</time>
 <!-- hhmts end -->
 </p>
 </footer>

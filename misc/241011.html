@@ -31,8 +31,8 @@
 
 <pre>
 ---
-marp: true
 paginate: true
+style: strong { color: #F30; }
 ---
 
 # Marp入門
@@ -48,6 +48,7 @@ Markdownでプレゼンテーションスライドを作るための仕組みで
 
 - 箇条書きは `-` または数字で始めます。
   - スペース2個でネストできます。
+  - `*` で始めると1個ずつ表示されます。
 
 1〜3個の `*` で囲んで *Italic*、**Bold**、***Bold Italic*** にできます。
 
@@ -130,10 +131,12 @@ marp index.md --pdf --allow-local-files
 ## 表
 
 |中央揃え|左揃え|右揃え|
-|:-:|-|-:|
+|:-:|:-|-:|
 |1|A|B|
 |2|C|D|
 |3|E|F|
+
+`:` がなければタイトル中央揃え・本体左揃え
 
 ---
 
@@ -153,7 +156,6 @@ $$ \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty} e^{-x^2/2} dx = 1 $$
 
 ```
 ---
-marp: true
 paginate: true
 theme: gaia
 ---
@@ -174,7 +176,7 @@ theme: gaia
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-03 14:22:26 JST</time></p>
+<p>Last modified: <time>2026-04-12 19:59:25 JST</time></p>
 </footer>
 </body>
 </html>
