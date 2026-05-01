@@ -890,6 +890,16 @@ title(main="正規分布", family="HiraginoSans-W3", font.main=1)
 </div>
 
 <div class="note">
+<p>システムにインストールされているフォント一覧は次のようにして表示できます。</p>
+<pre>
+install.packages("systemfonts")
+library(systemfonts)
+fonts = system_fonts()
+fonts[, c("family", "name", "style")]
+</pre>
+</div>
+
+<div class="note">
 <p>「正規分布」という文字の位置や大きさも直したいところですが、論文に入れる図の場合は、図の側にタイトルを入れるのではなく、本文のキャプションの側に入れるので、ここでは日本語が正しく出るかのテストだと割り切って、細かいところは気にしないことにします。</p>
 </div>
 
@@ -1258,7 +1268,7 @@ nohup R CMD BATCH hoge.R &amp;
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-04-28 16:22:28 JST</time></p>
+<p>Last modified: <time>2026-04-27 11:01:41 JST</time></p>
 </footer>
 </body>
 </html>
