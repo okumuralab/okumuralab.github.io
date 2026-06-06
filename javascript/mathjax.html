@@ -101,13 +101,22 @@ window.MathJax = {
 <p><code>&lt;meta name="viewport" content="width=device-width"&gt;</code> と書いているところは <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code> としないとページ幅がおかしくなることがあるようです。</p>
 </div>
 
+<p>[追記] モダンブラウザはMathMLもサポートしているので、比較のためMathMLで同じ数式を書いておきます：</p>
+
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mi>π</mi><mn>2</mn></mfrac><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mo>∫</mo><mn>0</mn><mi>∞</mi></msubsup><mfrac><mrow><mrow><mi mathvariant="normal">sin</mi><mo>&#8289;</mo></mrow><mi>x</mi></mrow><msqrt><mi>x</mi></msqrt></mfrac><mi>d</mi><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mo accent="false">∞</mo></munderover><mfrac><mrow><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mi>!</mi></mrow><mrow><msup><mn>2</mn><mrow><mn>2</mn><mi>k</mi></mrow></msup><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mi>!</mi><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup></mrow></mfrac><mfrac><mn>1</mn><mrow><mn>2</mn><mi>k</mi><mo>+</mo><mn>1</mn></mrow></mfrac><mo>=</mo><munderover><mo>∏</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mo accent="false">∞</mo></munderover><mfrac><mrow><mn>4</mn><msup><mi>k</mi><mn>2</mn></msup></mrow><mrow><mn>4</mn><msup><mi>k</mi><mn>2</mn></msup><mo>−</mo><mn>1</mn></mrow></mfrac></mrow><annotation encoding="application/x-tex">\frac{\pi}{2} =
+  \left( \int_{0}^{\infty} \frac{\sin x}{\sqrt{x}} dx \right)^2 =
+  \sum_{k=0}^{\infty} \frac{(2k)!}{2^{2k}(k!)^2} \frac{1}{2k+1} =
+  \prod_{k=1}^{\infty} \frac{4k^2}{4k^2 - 1}</annotation></semantics></math></p>
+
+<p>これはLaTeX数式から <code>pandoc input.tex -f latex -t html5 --mathml -o output.html</code> のようにして生成したものです。</p>
+
 <hr>
 
 <p><a href="../" rel="author">奥村 晴彦</a></p>
 
 <p>
 <!-- hhmts start -->
-Last modified: <time>2024-06-26 15:23:38 JST</time>
+Last modified: <time>2026-05-08 21:55:44 JST</time>
 <!-- hhmts end -->
 </p>
 </body>

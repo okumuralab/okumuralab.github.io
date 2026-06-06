@@ -56,13 +56,76 @@ print(msg.as_string())
 </pre>
 
 <p><code>smtp.starttls()</code> がうまくいくと <code>(220, b'2.0.0 Ready to start TLS')</code> が返る。さらに <code>smtp.login()</code> がうまくいくと <code>(235, b'2.7.0 Authentication successful')</code> が返る。ユーザ名かパスワードが間違っていると <code>SMTPAuthenticationError: (535, b'5.7.8 Error: authentication failed')</code> が返る。メールを送り終わると <code>(221, b'2.0.0 Bye')</code> が返る。</p>
+
+<p>ループで多人数に送る場合は次のようになりそうである。</p>
+
+<pre>
+from email.message import EmailMessage
+import smtplib
+import ssl
+import time
+
+# 1. 送信先リスト（実際はCSVやDBから読み込むのがよさそう）
+# (名前, メールアドレス) のタプル形式
+recipients = [
+    ("山田 太郎", "yamada@example.com"),
+    ("佐藤 花子", "sato@example.com"),
+    # ...
+]
+
+FROM_ADDRESS = "user@icloud.com"
+PASSWORD = "password"
+
+# 2. SSL/TLSのコンテキスト準備
+context = ssl.create_default_context()
+
+# 3. SMTP接続をループの外で確立
+print("SMTPサーバーに接続中...")
+with smtplib.SMTP("smtp.mail.me.com", 587) as smtp:
+    smtp.starttls(context=context)
+    smtp.login(FROM_ADDRESS, PASSWORD)
+    print("ログイン成功。配信を開始します。")
+
+    # 4. ループ処理で1人ずつ送信
+    for name, to_address in recipients:
+        try:
+            # メールの組み立て
+            msg = EmailMessage()
+            msg['From'] = FROM_ADDRESS
+            msg['To'] = to_address
+            msg['Subject'] = "【重要】大切なお知らせ"
+            
+            # 本文に名前を差し込む
+            body = f"""{name} 様
+
+いつも大変お世話になっております。
+（ここにメールの本文を記述）
+"""
+            msg.set_content(body)
+
+            # 送信
+            smtp.send_message(msg)
+            print(f"送信成功: {to_address}")
+
+            # 5. 送信間隔を空ける
+            time.sleep(2)  # 2〜5秒
+
+        except Exception as e:
+            # エラーが発生しても止めず、ログに残して次へ進む
+            print(f"【エラー】送信失敗: {to_address} - 理由: {e}")
+            continue
+
+print("すべての送信処理が完了しました。")
+</pre>
+
+<p>1日あたり1000人まで・1000通まで、1通あたり50人までが限度。それ以上は外部サービスを利用するのがよい。</p>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-08 22:09:38 JST</time></p>
+<p>Last modified: <time>2026-05-16 13:56:59 JST</time></p>
 </footer>
 </body>
 </html>

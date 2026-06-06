@@ -18,6 +18,8 @@
 
 <h1>接種率とコロナ</h1>
 
+<p>[2026-05-23] 一部追記・修正しました。</p>
+
 <p>以下は2022-08-12の一連のツイートをまとめたものである。データは2022-08-13朝に再取得し、人口密度などのデータは2020年国勢調査に統一したので、ツイートとは若干異なるかもしれない。</p>
 
 <p><a href="https://web.sapmed.ac.jp">札幌医科大学</a>の<a href="https://web.sapmed.ac.jp/canmol/">ゲノム医科学部門</a>に<a href="https://web.sapmed.ac.jp/canmol/coronavirus/">人口あたりの新型コロナウイルス感染者数の推移【世界・国別】</a>という便利なページがある。その下に<a href="https://web.sapmed.ac.jp/canmol/coronavirus/japan.html">【都道府県別】人口あたりの新型コロナウイルス感染者数の推移</a>、<a href="https://web.sapmed.ac.jp/canmol/coronavirus/japan_vaccine.html">【都道府県別】新型コロナウイルスワクチン接種率の推移</a>などがあり、最新データをダウンロードできる（ちょっとわかりづらい）。</p>
@@ -31,21 +33,37 @@ egrep '^....?,[0-9.]*$' 都道府県別ワクチン追加接種率*.csv > df2.cs
 
 <p>これ以降はPythonで処理する。データを読み込み、マージして、散布図を描く：</p>
 
-<pre>
+<pre class="cell">
 import matplotlib.pyplot as plt
 import pandas as pd
 
 df1 = pd.read_csv("df1.csv", names=["都道府県", "人口あたり感染者数"])
 df2 = pd.read_csv("df2.csv", names=["都道府県", "接種率"])
 df = pd.merge(df1, df2)
+</pre>
 
+<p>この段階でデータを念のため <a href="data/220813.csv">220813.csv</a> という名前で保存しておく。</p>
+
+<pre>
+df.to_csv("220813.csv", index=False, encoding="utf_8_sig", lineterminator="\r\n")
+</pre>
+
+<p>以下を再開する場合は</p>
+
+<pre>
+df = pd.read_csv("https://okumuralab.org/~okumura/python/data/220813.csv")
+</pre>
+
+<p>で読んでから行う。</p>
+
+<pre class="cell">
 plt.plot("接種率", "人口あたり感染者数", "o", data=df)
-for i, r in df.iterrows():
-    plt.text(r[2], r[1], r[0])
+for r in df.itertuples():
+    plt.text(r[3], r[2], r[1])
 plt.xlabel("ワクチン追加接種率（3回目）")
 plt.ylabel("人口100万人あたりの感染者数")
 plt.savefig('220813a.svg', bbox_inches="tight")
-df.corr()  # 相関係数 -0.859
+df[["接種率", "人口あたり感染者数"]].corr()  # 相関係数 -0.859
 </pre>
 
 <figure><img src="img/220813a.svg" alt="都道府県ごとのワクチン追加接種率（3回目）と人口100万人あたりの感染者数"></figure>
@@ -62,8 +80,8 @@ df = pd.merge(df, census)
 <pre>
 plt.plot("人口密度", "人口あたり感染者数", "o", data=df)
 plt.xscale("log")
-for i, r in df[["人口密度", "人口あたり感染者数", "都道府県"]].iterrows():
-    plt.text(r[0], r[1], r[2])
+for r in df[["人口密度", "人口あたり感染者数", "都道府県"]].itertuples():
+    plt.text(r[1], r[2], r[3])
 plt.xlabel("人口密度")
 plt.ylabel("人口100万人あたりの感染者数")
 plt.savefig('220813b.svg', bbox_inches="tight")
@@ -76,8 +94,8 @@ df[["人口密度", "人口あたり感染者数"]].corr()  # 相関係数 0.522
 
 <pre>
 plt.plot("平均年齢", "人口あたり感染者数", "o", data=df)
-for i, r in df[["平均年齢", "人口あたり感染者数", "都道府県"]].iterrows():
-    plt.text(r[0], r[1], r[2])
+for r in df[["平均年齢", "人口あたり感染者数", "都道府県"]].itertuples():
+    plt.text(r[1], r[2], r[3])
 plt.xlabel("平均年齢")
 plt.ylabel("人口100万人あたりの感染者数")
 plt.savefig('220813c.svg', bbox_inches="tight")
@@ -99,7 +117,7 @@ df[["平均年齢", "人口あたり感染者数"]].corr()  # 相関係数 -0.76
 plt.plot(可住地人口密度, df["人口あたり感染者数"], "o")
 plt.xscale("log")
 for i, r in df[["人口あたり感染者数", "都道府県"]].iterrows():
-    plt.text(可住地人口密度[i], r[0], r[1])
+    plt.text(可住地人口密度[i], r.iloc[0], r.iloc[1])
 plt.xlabel("可住地人口密度")
 plt.ylabel("人口100万人あたりの感染者数")
 plt.savefig('220813d.svg', bbox_inches="tight")
@@ -123,7 +141,7 @@ x20210228 = [3654.4327, 659.1361, 457.6493, 1574.286, 280.3538,
 plt.plot(可住地人口密度, x20210228, "o")
 plt.xscale("log")
 for i, r in df[["都道府県"]].iterrows():
-    plt.text(可住地人口密度[i], x20210228[i], r[0])
+    plt.text(可住地人口密度[i], x20210228[i], r.iloc[0])
 plt.xlabel("可住地人口密度")
 plt.ylabel("人口100万人あたりの感染者数（2021-02-28まで）")
 plt.savefig('220813e.svg', bbox_inches="tight")
@@ -143,7 +161,7 @@ NHK = [70.4, 92.5, 94.6, 84.4, 97.9, 93.5, 87.6, 84.3, 85.7, 83.8,
 
 plt.plot(NHK, df["人口あたり感染者数"], "o")
 for i, r in df[["人口あたり感染者数", "都道府県"]].iterrows():
-    plt.text(NHK[i], r[0], r[1])
+    plt.text(NHK[i], r.iloc[0], r.iloc[1])
 plt.xlabel("NHK世帯支払率")
 plt.ylabel("人口100万人あたりの感染者数")
 plt.savefig('220813f.svg', bbox_inches="tight")
@@ -162,7 +180,7 @@ df[["人口あたり感染者数"]].assign(NHK=NHK).corr()  # 相関係数 -0.89
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2022-08-19 13:16:48 JST</time></p>
+<p>Last modified: <time>2026-05-23 09:41:30 JST</time></p>
 </footer>
 </body>
 </html>

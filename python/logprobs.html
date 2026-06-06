@@ -64,9 +64,49 @@ for x in res.choices[0].logprobs.content:
 
 <hr>
 
+<p>上は2025-12-22に書いたものですが、今日（2026-05-09）やり直してみたら（<code>top_logprobs=5</code>）次のようになりました。</p>
+
+<pre>
+'766'
+  0.63307 '766'
+  0.05197 '610'
+  0.03152 '745'
+  0.01912 '900'
+  0.01489 '821'
+</pre>
+
+<p>さらにGPT-5.5で</p>
+
+<pre class="cell">
+res = client.chat.completions.create(
+    model="gpt-5.5",
+    messages=[
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ],
+    reasoning_effort="none",
+    logprobs=True,
+    top_logprobs=5,
+    temperature=0
+)
+</pre>
+
+<p>としてみたところ、</p>
+
+<pre>
+'766'
+  0.98840 '766'
+</pre>
+
+<p>だけしか出力されませんでした。しっかり学習できたのでしょう。</p>
+
+<hr>
+
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-22 09:55:20 JST</time></p>
+<p>Last modified: <time>2026-05-09 17:55:52 JST</time></p>
 </footer>
 </body>
 </html>

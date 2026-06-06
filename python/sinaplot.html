@@ -27,15 +27,19 @@
 <p>Sina（シーナ）は英語圏では女性名ですが、イスラーム圏では昔の偉人Ibn Sina（イブン・スィーナー、イブン・シーナ）にあやかった男性名です。ここでは後者です。</p>
 </aside>
 
+<p>これは<a href="penguins.html">パーマーペンギン</a>の体重分布のSinaplotです（バイオリンプロットを薄く重ね書きしていますが <code>violin=False</code> で消せます。バイオリンの両端をもう少し伸ばす方法は下のソースにコメントで書いてあります）。</p>
+
 <figure><img src="img/sinaplot_penguins.svg" alt="Sinaplot: パーマーペンギンの体重分布"></figure>
 
-<p>上は<a href="penguins.html">パーマーペンギン</a>の体重分布のSinaplotです（バイオリンプロットを薄く重ね書きしています）。</p>
+<p>上のものは通常の乱数を使ったもの、次のものは点をなるべく一様に分布させたものです（<code>jitter_method="even"</code>）。</p>
+
+<figure><img src="img/sinaplot_penguins_even.svg" alt="Sinaplot: パーマーペンギンの体重分布（一様版）"></figure>
 
 <p>オリジナルの著者たちによる <a href="https://cran.r-project.org/web/packages/sinaplot/vignettes/SinaPlot.html">sinaplot</a> パッケージがR用に作られています。Rのggplot2でもsinaplotが描けます。</p>
 
 <p>後で例を挙げますが、Python用にはRのggplot2を模した <a href="https://plotnine.org">plotnine</a> パッケージでsinaplotが描けます。Seabornを拡張した <a href="https://github.com/mparker2/seaborn_sinaplot">seaborn_sinaplot</a> パッケージもありましたが、最新のSeabornでは使えなくなっています（Seaborn 0.12.2までなら動きますが、新しめのNumPyで使うには2箇所の <code>np.bool</code> を <code>bool</code> に書き換える必要があります）。</p>
 
-<p>このページの図は、独自実装の次のモジュール <code>sinaplot.py</code> を使って描きました（ChatGPT-4oに手伝ってもらいました）：</p>
+<p>このページの図は、独自実装の次のモジュール <code>sinaplot.py</code> を使って描きました（GPT-5.5 HighとGemini 3.1 Pro (High)に手伝ってもらいました。<code>jitter_method="even"</code> で点をほぼ一様に並べます。以前のChatGPT-4oに手伝ってもらったものは<a href="code/sinaplot.py">こちら</a>です）：</p>
 
 <pre class="cell">
 import numpy as np
@@ -43,7 +47,8 @@ import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 
 def sinaplot(x, y, data, violin=True, max_width=0.8, title=None,
-             show_grid=False, ax=None, random_seed=None):
+             show_grid=False, ax=None, random_seed=None,
+             jitter_method="random", point_size=10):
     """
     Draws a sinaplot: a jittered dot plot with optional violin shape background.
 
@@ -56,14 +61,19 @@ def sinaplot(x, y, data, violin=True, max_width=0.8, title=None,
     - title: str or None. Plot title.
     - show_grid: bool. Whether to show grid.
     - ax: matplotlib.axes.Axes or None. Axes to plot into. If None, uses current Axes.
-    - random_seed: int or None. Seed for reproducibility of jitter.
+    - random_seed: int or None.
+    - jitter_method: {"even", "random"}.
+    - point_size: float. Marker size passed to matplotlib scatter.
 
     Returns:
     - ax: The matplotlib Axes used.
     """
-    if random_seed is not None:
-        np.random.seed(random_seed)
-    fig = plt.gcf()
+    if max_width <= 0:
+        raise ValueError("max_width must be positive")
+    if jitter_method not in {"even", "random"}:
+        raise ValueError("jitter_method must be 'even' or 'random'")
+
+    rng = np.random.default_rng(random_seed)
     if ax is None:
         ax = plt.gca()
     data = data.dropna(subset=[x, y])
@@ -71,41 +81,152 @@ def sinaplot(x, y, data, violin=True, max_width=0.8, title=None,
     default_color = plt.rcParams['axes.prop_cycle'].by_key()['color'][0]
 
     def offset(category_index, data, scale=1.0):
-        return np.array([category_index] * len(data)) + (scale * data)
+        return category_index + scale * data
+
+    def make_kde(values):
+        if len(values) < 2 or np.ptp(values) == 0:
+            return None
+        return gaussian_kde(values)
+
+    def random_jitter(widths):
+        return (rng.random(len(widths)) * 2 - 1) * widths
+
+    def even_jitter(values, widths, category_index,
+                    iterations=8, candidate_count=31):
+        """
+        Start from random jitter, then repeatedly minimize each point's
+        pixel-space inverse-square-distance energy inside the violin.
+        """
+        values = np.asarray(values, dtype=float)
+        widths = np.asarray(widths, dtype=float)
+        n = len(values)
+        jitter = random_jitter(widths)
+        if n < 2:
+            return jitter
+
+        x0_pixel = ax.transData.transform((category_index, values[0]))[0]
+        x1_pixel = ax.transData.transform((category_index + 1, values[0]))[0]
+        x_pixels_per_data = x1_pixel - x0_pixel
+        y_pixels = ax.transData.transform(
+            np.column_stack([np.full(n, category_index), values])
+        )[:, 1]
+        pixel_softening = max(float(np.sqrt(point_size)) * 0.6, 1.0)
+
+        dy = y_pixels[:, None] - y_pixels[None, :]
+        dy_sq = dy * dy + pixel_softening * pixel_softening
+        np.fill_diagonal(dy_sq, np.inf)
+
+        def candidate_scores(i, candidates):
+            dx = (candidates[:, None] - jitter) * x_pixels_per_data
+            distance2 = dx * dx + dy_sq[i]
+            repulsion = np.sum(1 / distance2, axis=1)
+            relative_x = np.abs(candidates) / widths[i]
+            wall_penalty = 0.5 * np.median(repulsion) * relative_x ** 4
+            return repulsion + wall_penalty
+
+        for _ in range(iterations):
+            for i in range(n):
+                if widths[i] <= 0:
+                    continue
+
+                lo, hi = -widths[i], widths[i]
+                candidates = np.linspace(lo, hi, candidate_count)
+                candidates = np.unique(np.r_[candidates, jitter[i], 0.0])
+
+                for _ in range(2):
+                    scores = candidate_scores(i, candidates)
+                    best = candidates[np.argmin(scores)]
+                    step = ((candidates[1] - candidates[0])
+                            if len(candidates) > 1 else widths[i])
+                    lo = max(-widths[i], best - step)
+                    hi = min(widths[i], best + step)
+                    candidates = np.linspace(lo, hi, 11)
+
+                scores = candidate_scores(i, candidates)
+                best = candidates[np.argmin(scores)]
+                jitter[i] = best
+
+        return jitter
 
     density_max = 0
+    kdes = {}
+    values_by_category = {}
     for category in categories:
         values = data[data[x] == category][y].values
+        values_by_category[category] = values
         n = len(values)
-        if n >= 2:
-            kde = gaussian_kde(values)
+        kde = make_kde(values)
+        if kde is not None:
+            kdes[category] = kde
             density_max = max(density_max, n * kde(values).max())
+    if density_max == 0:
+        density_max = 1
+
+    ax.set_xlim(-0.8, len(categories) - 0.2)
+    if values_by_category and ax.get_autoscaley_on():
+        all_values = np.concatenate(list(values_by_category.values()))
+        y_min, y_max = np.min(all_values), np.max(all_values)
+        y_span = y_max - y_min
+        if y_span == 0:
+            y_margin = 0.5 if y_min == 0 else abs(y_min) * 0.05
+        else:
+            y_margin = y_span * 0.05
+        ax.set_ylim(y_min - y_margin, y_max + y_margin)
 
     for i, category in enumerate(categories):
-        values = data[data[x] == category][y].values
+        values = values_by_category[category]
         n = len(values)
-        if n < 2:
-            ax.scatter([i] * n, values, color=default_color, s=10, zorder=3)
+        if n == 0:
             continue
-        kde = gaussian_kde(values)
+
+        kde = kdes.get(category)
+        if kde is None:
+            widths = np.full(n, max_width / 2)
+            if violin:
+                ax.hlines(values[0], i - max_width / 2, i + max_width / 2,
+                          color=default_color, alpha=0.3, linewidth=2,
+                          zorder=1)
+            if n > 1:
+                if jitter_method == "random":
+                    jitter = random_jitter(widths)
+                else:
+                    jitter = even_jitter(values, widths, i)
+            else:
+                jitter = np.zeros(n)
+            ax.scatter(offset(i, jitter), values, color=default_color,
+                       s=point_size, zorder=3)
+            continue
+
         if violin:
-            value_range = np.linspace(values.min(), values.max(), 50)
+            # 次の3行のコメントを外せばバイオリンの端が少し伸びる
+            # bw = np.sqrt(kde.covariance[0, 0])
+            vmin = values.min() # - 2 * bw
+            vmax = values.max() # + 2 * bw
+            value_range = np.unique(np.concatenate([
+                np.linspace(vmin, vmax, 200),
+                values,
+            ]))
             density = kde(value_range)
             density = n * density / density_max * max_width / 2
             ax.fill_betweenx(value_range, offset(i, density), offset(i, -density),
                              color=default_color, alpha=0.3, zorder=1)
-        jitter = n * (np.random.random(n) * 2 - 1) * kde(values) / density_max * max_width / 2
-        ax.scatter(offset(i, jitter), values, color=default_color, s=10, zorder=3)
+
+        widths = n * kde(values) / density_max * max_width / 2
+        if jitter_method == "random":
+            jitter = random_jitter(widths)
+        else:
+            jitter = even_jitter(values, widths, i)
+        ax.scatter(offset(i, jitter), values, color=default_color,
+                   s=point_size, zorder=3)
 
     ax.set_xticks(range(len(categories)))
     ax.set_xticklabels(categories)
-    ax.set_xlim(-0.8, len(categories) - 0.2)
     ax.set_xlabel(x)
     ax.set_ylabel(y)
     if title:
         ax.set_title(title)
     ax.grid(show_grid)
-    return ax  # just in case
+    return ax
 </pre>
 
 <p>上のコードを <code>sinaplot.py</code> というファイル名で保存し、カレントディレクトリに置いておきます。これを使ってパーマーペンギンのSinaplotを描きます：</p>
@@ -116,6 +237,12 @@ from sinaplot import sinaplot
 
 penguins = sns.load_dataset("penguins")
 sinaplot(x="species", y="body_mass_g", data=penguins)
+</pre>
+
+<p>点をなるべく一様に並べるには次のようにします。</p>
+
+<pre class="cell">
+sinaplot(x="species", y="body_mass_g", data=penguins, jitter_method="even")
 </pre>
 
 <p>ラベル類を日本語にするには次のようにします：</p>
@@ -172,7 +299,7 @@ p.show()
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-07-28 15:14:04 JST</time></p>
+<p>Last modified: <time>2026-05-05 16:41:11 JST</time></p>
 </footer>
 </body>
 </html>

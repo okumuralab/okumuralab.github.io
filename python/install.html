@@ -22,12 +22,14 @@
 <h1>Python 3 インストール</h1>
 
 <div class="note">
-<p><a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。</p>
+<p><a href="https://www.python.org/dev/peps/pep-0373/">Python 2.7 は2020年1月1日をもってサポート終了</a>しました（ただし2020年4月に最後のバージョン2.7.18が出ました）。<a href="https://www.python.org/dev/peps/pep-0404/">Python 2.8 は出ません</a>。以下では Python 3 について解説します。なお、<a href="https://devguide.python.org/versions/">Status of Python versions</a> にあるように、現在 Python 3.10 以上のバージョンがサポートされています。</p>
 </div>
 
-<p>Python の学習のためなら、最新の Python 3.14.x を入れるのがいいでしょう。私は Python 3.14.x、3.13.x、3.12.x のそれぞれ最新のものをインストールし、3.14.x を普段使いしていますが、使うパッケージによっては 3.13.x あるいは 3.12.x に切り替えています。複数の Python 環境を切り替えるには <a href="uv.html">uv</a> というツールを使う方法がお薦めです。</p>
+<p>ここでは Python 入門のために自分のパソコンに Python をインストールし、環境を一つだけ設定する方法を解説しています。</p>
 
-<p>なお、<a href="https://devguide.python.org/versions/">Status of Python versions</a> にあるように、現在3.10以上のバージョンがサポートされています。</p>
+<p>複数の Python 環境が必要な開発者には <a href="uv.html">uv</a> というツールを使う方法が今のところお薦めです。</p>
+
+<p>自分のパソコンにインストールするのが面倒な方には <a href="colab.html">Google Colaboratory</a> をお勧めします。</p>
 
 <!--
 <div class="note">
@@ -39,15 +41,13 @@ defaults write org.python.python ApplePersistenceIgnoreState NO
 </div>
 -->
 
-<p>ライブラリ名のタイポ（綴り間違い）を狙ってマルウェアをインストールさせる手口が見つかっています。ライブラリをインストールするコマンド <code>pip3 install 〜</code> を打ち込むときは、なるべく、正しい例をコピペしましょう。</p>
-
-<p>以下のインストール例は、いずれもやや古いものです。バージョン番号は適宜読み替えてください。</p>
+<p>ライブラリ名のタイポ（綴り間違い）を狙ってマルウェアをインストールさせる手口が見つかっています。ライブラリをインストールするコマンド <code>pip3 install 〜</code> を打ち込むときは、正しい例をコピペしましょう。</p>
 
 <h2>公式サイト Python.org からのインストール（Windows）</h2>
 
 <p>まず、初心者のかたで、今までどこかで Python をインストールしたけれどうまく設定できていないという場合は、［スタートボタン］→［⚙設定］→［アプリ］で、それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
 
-<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> から最新版をダウンロードし、開きます。「Install Now」をクリックする前に、特に初心者のかたは、インストーラの最初の画面で「Add Python 3.12 to PATH」にチェックを付けるほうが楽だと思います。また、「Install Now」のすぐ下に、インストールされるパスが表示されます。私の場合、<code>C:\Users\okumu\AppData\Local\Programs\Python\Python312</code> と表示されました。ここが全角だったり文字化けしていたりする場合は、下の説明を見てください。問題なければ「Install Now」をクリックします。ユーザーアカウント制御「このアプリがデバイスに変更を加えることを許可しますか？」が出ますので「はい」をクリックするとインストールが始まります。インストールが無事終われば「Close」をクリックします。</p>
+<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> から最新版をダウンロードし、開きます。「Install Now」をクリックする前に、特に初心者のかたは、インストーラの最初の画面で「Add Python 3.14 to PATH」にチェックを付けるほうが楽だと思います。また、「Install Now」のすぐ下に、インストールされるパスが表示されます。私の場合、<code>C:\Users\okumu\AppData\Local\Programs\Python\Python314</code> と表示されました。ここが全角だったり文字化けしていたりする場合は、下の説明を見てください。問題なければ「Install Now」をクリックします。ユーザーアカウント制御「このアプリがデバイスに変更を加えることを許可しますか？」が出ますので「はい」をクリックするとインストールが始まります。インストールが無事終われば「Close」をクリックします。</p>
 
 <div class="note">
 <p>インストールされるパスが全角だったり文字化していたりする場合は、インストーラが起動した画面で「Customize installation」をクリックし、「Next」をクリックし、「Customize install location」の右の「Browse」をクリックし、「PC」→「C:」を選び、「新しいフォルダーの作成」で例えば <code>Python</code> というフォルダを作り、それをインストール場所に設定します。このあたりは実験が不十分なので、情報があれば教えてください。</p>
@@ -62,7 +62,7 @@ where.exe python
 <p>と打ち込んで、正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell ではうまくいかないようです）。うまくいっていれば</p>
 
 <pre>
-C:\Users\ユーザ名\AppData\Local\Programs\Python\Python312\python.exe
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python314\python.exe
 C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 </pre>
 
@@ -71,7 +71,7 @@ C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
 <p>同様に <code>pip</code> も確認します。</p>
 
 <pre>
-C:\Users\ユーザ名\AppData\Local\Programs\Python\Python312\Scripts\pip.exe
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python314\Scripts\pip.exe
 </pre>
 
 <p>ほかに <a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされますが、ここでは使いません。</p>
@@ -104,21 +104,21 @@ pip install matplotlib pandas jupyterlab
 
 <h2>公式サイト Python.org からのインストール（Mac）</h2>
 
-<p><a href="https://www.python.org/download/">Download Python</a> からインストーラをダウンロードし、インストールします。Universal バイナリですので、Intel でも Apple Silicon でも使えます。<code>/Library/Frameworks/Python.framework/Versions/3.12/bin</code> に <code>python3</code> などのバイナリが入ります。また、<code>/usr/local/bin</code> に
+<p><a href="https://www.python.org/download/">Download Python</a> からインストーラをダウンロードし、インストールします。Universal バイナリですので、Intel でも Apple Silicon でも使えます。<code>/Library/Frameworks/Python.framework/Versions/3.14/bin</code> に <code>python3</code> などのバイナリが入ります。また、<code>/usr/local/bin</code> に
 <code>2to3</code>,
-<code>2to3-3.12</code>,
+<code>2to3-3.14</code>,
 <code>idle3</code>,
-<code>idle3.12</code>,
+<code>idle3.14</code>,
 <code>pip3</code>,
-<code>pip3.12</code>,
+<code>pip3.14</code>,
 <code>pydoc3</code>,
-<code>pydoc3.12</code>,
+<code>pydoc3.14</code>,
 <code>python3</code>,
 <code>python3-config</code>,
 <code>python3-intel64</code>,
-<code>python3.12</code>,
-<code>python3.12-config</code>,
-<code>python3.12-intel64</code>
+<code>python3.14</code>,
+<code>python3.14-config</code>,
+<code>python3.14-intel64</code>
 というシンボリックリンクができます。</p>
 
 <p>以下では、ホームディレクトリ（例えば私なら <code>/Users/okumura</code>）を <code>~</code> と略記しています。</p>
@@ -126,9 +126,9 @@ pip install matplotlib pandas jupyterlab
 <p>インストールすると、Mac では（bash を使っていれば）<code>~/.bash_profile</code> または（zsh を使っていれば）<code>~/.zprofile</code> の最後にパスが付け加えられます：</p>
 
 <pre>
-# Setting PATH for Python 3.12
+# Setting PATH for Python 3.14
 # The original version is saved in .zprofile.pysave
-PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
+PATH="/Library/Frameworks/Python.framework/Versions/3.14/bin:${PATH}"
 export PATH
 </pre>
 
@@ -141,7 +141,7 @@ export PATH
 <p>以上ができたら、ターミナルに <code>which python3</code> と打ち込んで、次のように表示されるか確認します：</p>
 
 <pre>
-/Library/Frameworks/Python.framework/Versions/3.12/bin/python3
+/Library/Frameworks/Python.framework/Versions/3.14/bin/python3
 </pre>
 
 <p>いろいろなパッケージのインストールは <code>pip3</code> コマンド（または <code>python3 -m pip</code>）を使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。まずは、一般ユーザで</p>
@@ -188,20 +188,20 @@ pip3 list --outdated
 
 <p>と打ち込むと、すでに更新が必要なパッケージがあるかもしれませんが、<code>pip</code> そのもの、あるいは普段使いの <code>matplotlib</code> や <code>pandas</code> などが古い場合を除き、下手に更新すると依存関係を崩すので、更新の必要はありません。もし依存関係が崩れたら、必要なパッケージを再更新すれば直ります。例えば <code>numpy</code> を更新しすぎために <code>numba</code> に不具合が生じたならば、<code>pip3 install --upgrade numba</code> とすれば、<code>numba</code> が動くように <code>numpy</code> をダウングレードしてくれるはずです。</p>
 
-<p>なお、このとき “Defaulting to user installation because normal site-packages is not writeable” というメッセージが出ますが、これはシステムの <code>site-packages</code> ディレクトリは管理者権限がないと書き込めないので <code>~/Library/Python/3.12/lib/python/site-packages</code> にインストールしたということを意味します。また、実行ファイルが <code>~/Library/Python/3.12/bin</code> にインストールされますので、こちらにもパスを通しておきます。具体的には <code>~/.bash_profile</code> または <code>~/.zprofile</code> にさきほど追加されたものを</p>
+<p>なお、このとき “Defaulting to user installation because normal site-packages is not writeable” というメッセージが出ますが、これはシステムの <code>site-packages</code> ディレクトリは管理者権限がないと書き込めないので <code>~/Library/Python/3.14/lib/python/site-packages</code> にインストールしたということを意味します。また、実行ファイルが <code>~/Library/Python/3.14/bin</code> にインストールされますので、こちらにもパスを通しておきます。具体的には <code>~/.bash_profile</code> または <code>~/.zprofile</code> にさきほど追加されたものを</p>
 
 <pre>
-PATH="/Library/Frameworks/Python.framework/Versions/3.12/bin:${PATH}"
-PATH="${HOME}/Library/Python/3.12/bin:${PATH}"
+PATH="/Library/Frameworks/Python.framework/Versions/3.14/bin:${PATH}"
+PATH="${HOME}/Library/Python/3.14/bin:${PATH}"
 export PATH
 </pre>
 
 <p>のように書き直して、読み込み直します。</p>
 
 <div class="note">
-<p>Python 3.12.<i>x</i> をインストールすると、システムの「アプリケーション」に Python 3.12 というフォルダ（<code>/Applications/Python 3.12</code>）が作られます。この中に <code>Install Certificates.command</code> というシェルスクリプトがあります。これはPythonからWebをアクセスする際のSSL/TLSルート証明書をインストールするためのものです。管理者権限でこれを実行しておきましょう：</p>
+<p>Python 3.14.<i>x</i> をインストールすると、システムの「アプリケーション」に Python 3.14 というフォルダ（<code>/Applications/Python 3.14</code>）が作られます。この中に <code>Install Certificates.command</code> というシェルスクリプトがあります。これはPythonからWebをアクセスする際のSSL/TLSルート証明書をインストールするためのものです。管理者権限でこれを実行しておきましょう：</p>
 <pre>
-cd /Applications/Python\ 3.12
+cd /Applications/Python\ 3.14
 sudo ./Install\ Certificates.command  
 </pre>
 </div>
@@ -373,7 +373,7 @@ apk add python3 py3-pip
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-11 15:34:17 JST</time></p>
+<p>Last modified: <time>2026-05-12 21:07:55 JST</time></p>
 </footer>
 </body>
 </html>

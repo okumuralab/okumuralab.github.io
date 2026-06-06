@@ -59,16 +59,11 @@ Markdownでプレゼンテーションスライドを作るための仕組みで
 
 ---
 
-## Mac/Homebrewでのインストール
+## インストール
 
-```
-brew install marp-cli
-```
+Macでは `brew install marp-cli` でもできるが、`npm` 経由が良さそう。
 
-更新は `brew update && brew upgrade`
-
-
-あるいは `brew install node` した環境で
+`npm` がなければ `brew install node` しておく。
 
 ```
 npm install -g @marp-team/marp-cli
@@ -77,6 +72,8 @@ npm install -g @marp-team/marp-cli
 更新は `npm update -g`
 
 バージョン確認: `marp --version`
+
+アンインストールは `npm uninstall -g @marp-team/marp-cli`
 
 ---
 
@@ -176,7 +173,7 @@ theme: gaia
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-04-12 19:59:25 JST</time></p>
+<p>Last modified: <time>2026-05-24 09:06:52 JST</time></p>
 </footer>
 </body>
 </html>

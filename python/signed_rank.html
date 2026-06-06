@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/signed_rank.html">
+<meta charset="UTF-8">
+<title>Wilcoxonの符号付き順位検定</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Wilcoxonの符号付き順位検定</h1>
+
+<p>Rの<a href="../stat/signtest.html">符号検定とWilcoxonの符号付き順位検定</a>のWilcoxonの符号付き順位検定をPythonにしたものです。</p>
+
+<p>10人の患者にある睡眠薬を飲ませたところ，睡眠時間がそれぞれ次の時間だけ増えました
+(Arthur R. Cushny and A. Roy Peebles, <i>The Journal of Physiology</i> <b>32</b>, 501-510 (1905)):</p>
+
+<blockquote>
+<p>1.9,  0.8,  1.1,  0.1, -0.1,  4.4,  5.5,  1.6,  4.6,  3.4</p>
+</blockquote>
+
+<p>このデータで，絶対値の順序関係</p>
+
+\[ 0.1 = 0.1 < 0.8 < 1.1 < 1.6 < 1.9 < 3.4 < 4.4 < 4.6 < 5.5 \]
+
+<p>に意味があるのであれば，順位（同順位があれば順位の平均をとります）</p>
+
+\[ 1.5, 1.5, 3, 4, 5, 6, 7, 8, 9, 10 \]
+
+<p>に変換してから，符号を戻して，合計した値</p>
+
+\[ -1.5 + 1.5 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 = 52 \]
+
+<p>を考えます。この符号の付け方は $2^{10} = 1024$
+通りありますが，順位和が 52 以上になるのは全部 $+$ にした場合と二つの $1.5$ のどちらかに $-$
+を付けた場合の3通りです。同様に，順位和が $-52$
+以下になるのも3通りですので，偶然で順位和が $\pm 52$
+またはそれより極端な値になる確率は $p = 6/1024 = 0.005859$
+です。これがWilcoxon（ウィルコクソン）の符号付き順位検定（符号付き順位和検定，Wilcoxon signed-rank test）です。</p>
+
+<p>PythonでWilcoxonの符号つき順位検定をするには次のようにします。</p>
+
+<pre class="cell">
+from scipy.stats import wilcoxon
+
+x = [1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4]
+wilcoxon(x, method="exact")   # or "asymptotic"
+</pre>
+
+<pre>
+WilcoxonResult(statistic=np.float64(1.5), pvalue=np.float64(0.005859375))
+</pre>
+
+<p>$p = 0.005859$ が得られました。</p>
+
+<p><code>method="exact"</code> が遅い場合は <code>method="asymptotic"</code> にします。</p>
+
+<p><a href="brunner-munzel.html">Brunner-Munzel検定</a>で紹介した <a href="https://pypi.org/project/permutations-stats/">permutations-stats</a> パッケージを使ってもできます。あらかじめ <code>pip install permutations-stats</code> しておきます。こちらの方は2群を比較する場合が想定されているようで、1群の場合は全部0の列を補います。</p>
+
+<pre class="cell">
+import numpy as np
+from permutations_stats.permutations import repeated_permutation_test
+
+x = [1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4]
+y = [0] * len(x)
+
+data = np.stack((x, y), axis=1)
+
+repeated_permutation_test(data, test="wilcoxon")
+</pre>
+
+<pre>
+PermutationsResults(statistic=52.0, pvalue=0.005859375, permutations=1024, test='wilcoxon', alternative='TWO_SIDED', method='exact')
+</pre>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-06-05 17:56:19 JST</time></p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/brunner-munzel.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brunner-Munzel検定</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Brunner-Munzel検定</h1>
+
+<h2>はじめに</h2>
+
+<p>ノンパラメトリックな<a href="u_test.html">Mann-WhitneyのU検定</a>は、パラメトリックな場合の $t$ 検定に相当するもので、二つの確率変数が同じ分布に従うという帰無仮説を検定するものでした。一方、Brunner（ブルンナー）とMunzel（ムンツェル）によるBrunner-Munzel検定（Brunner-Munzel test）は、同じ分布という仮定をせずに</p>
+
+\[ P(X_1 < X_2) + \frac{1}{2}P(X_1 = X_2) = 1/2 \]
+
+<p>を検定するもので、ざっくり言えば、パラメトリックな場合のWelchの検定（等分散を仮定しない $t$ 検定）に相当します。</p>
+
+<p>ちょっと強い言葉を使えば、分布が同じと仮定できない限り、つまり実質的にほぼすべての場合に、Mann-WhitneyのU検定ではなく、Brunner-Munzel検定を使うべきです。</p>
+
+<p>理論的な説明についてはR版の<a href="../stat/brunner-munzel.html">Brunner-Munzel検定</a>をご覧ください。ここではPythonを使った計算だけについて説明します。</p>
+
+<h2>Pythonでの計算</h2>
+
+<p>Pythonには SciPy パッケージに <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.brunnermunzel.html"><code>scipy.stats.brunnermunzel()</code></a> があります。<a href="ttest.html">t検定</a>で使った Lumley (1996) のデータで試してみましょう。</p>
+
+<pre class="cell">
+from scipy.stats import brunnermunzel
+
+x = [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1]
+y = [3, 3, 4, 3, 1, 2, 3, 1, 1, 5, 4]
+brunnermunzel(x, y)
+</code></pre>
+
+<p>結果は次のようになりました：</p>
+
+<pre>
+BrunnerMunzelResult(statistic=np.float64(3.1374674823029505), pvalue=np.float64(0.005786208666151469))
+</pre>
+
+<p>つまり $p = 0.006$ 程度です。</p>
+
+<h2>並べ替えBrunner-Munzel検定</h2>
+
+<p>サンプルが小さい場合には，並べ替え検定を使えば，厳密な計算ができます。</p>
+
+<p>Pythonでは <a href="https://pypi.org/project/permutations-stats/">permutations-stats</a> パッケージが使えます。あらかじめ <code>pip install permutations-stats</code> しておきます。パッケージのGitHubリポジトリは <a href="https://github.com/trevismd/permutations-stats">ここ</a> にあります。純Pythonで書かれていながら、JITコンパイラ <a href="numba.html">numba</a> を使っているので高速です。</p>
+
+<p>さきほどと同じデータでやってみましょう。</p>
+
+<pre class="cell">
+from permutations_stats.permutations import permutation_test
+
+x = [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1]
+y = [3, 3, 4, 3, 1, 2, 3, 1, 1, 5, 4]
+
+permutation_test(x, y, test="brunner_munzel")
+</pre>
+
+<p>結果は次のようになりました。</p>
+
+<pre>
+PermutationsResults(statistic=3.1374674823029505, pvalue=0.008037645264055279, permutations=4457400, test='brunner_munzel', alternative='TWO_SIDED', method='exact')
+</pre>
+
+<p>つまり $p = 0.008$ 程度です。</p>
+
+<p>この <code>permutation_test</code> の仕様をまとめておきます。</p>
+
+<pre>
+permutation_test(
+    x,
+    y,
+    test="brunner_munzel",
+    stat_func_dict=None,
+    alternative="two-sided",
+    method="exact",
+    n_iter=1e4,
+    force_simulations=False,
+    seed=None,
+)
+</pre>
+
+<p><code>test="mann_whitney"</code> で厳密なMann-WhitneyのU検定も行えます。</p>
+
+<p><code>alternative</code> は <code>"greater"</code> や <code>"less"</code> も指定できます。</p>
+
+<p><code>method</code> は <code>"simulation"</code> とすると <code>n_iter</code> 回のシミュレーションをします。ただし、シミュレーション数が全組合せ数以上になれば、デフォルトでは exact な計算になりますが、<code>force_simulations=True</code> でシミュレーション強制になります。</p>
+
+<p>Friedman検定やWilcoxonの符号つき順位検定のための <code>repeated_permutation_test</code> という関数も用意されています：</p>
+
+<pre>
+repeated_permutation_test(
+    x,
+    test="friedman",
+    stat_func_dict=None,
+    alternative="two-sided",
+    method="exact",
+    n_iter=1e4,
+    force_simulations=False,
+    seed=None,
+)
+</pre>
+
+<p><code>x</code> は2次元NumPy配列で、各列が処理・条件、各行が測定（被験者）です。</p>
+
+<p><code>test</code> は <code>"friedman"</code>、<code>"friedman_t2"</code>、<code>"wilcoxon"</code> が指定できます。それぞれFriedman検定、タイがある場合にConoverのT2統計量を使うFriedman検定、Wilcoxonの符号つき順位検定です。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-06-05 17:36:00 JST</time></p>
+</footer>
+</body>
+</html>

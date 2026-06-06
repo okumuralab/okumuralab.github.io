@@ -46,7 +46,28 @@ MannwhitneyuResult(statistic=np.float64(32.5), pvalue=np.float64(0.0077407867051
 
 <p>$U = 32.5$、$p = 0.007741$ で、Rと同じ結果になりました。</p>
 
-<p>厳密なテストをしてみましょう。でも、これは間違いです：</p>
+<p>厳密なテストをするためには、<a href="brunner-munzel.html">Brunner-Munzel検定</a>でも紹介した <a href="https://pypi.org/project/permutations-stats/">permutations-stats</a> パッケージを使います。あらかじめ <code>pip install permutations-stats</code> しておきます。</p>
+
+<pre class="cell">
+from permutations_stats.permutations import permutation_test
+
+permutation_test(x, y, test="mann_whitney")
+</pre>
+
+<p>結果は</p>
+
+<pre>
+PermutationsResults(statistic=32.5, pvalue=0.006690222999955131, permutations=4457400, test='mann_whitney', alternative='TWO_SIDED', method='exact')
+</pre>
+
+<p>となり、Rの結果と一致します。</p>
+
+<p>このパッケージの詳細は<a href="brunner-munzel.html">Brunner-Munzel検定</a>をご覧ください。</p>
+
+<p>本編の内容は以上です。以下は蛇足です。</p>
+
+<aside>
+<p>SciPyで厳密なテストをしようとして次のようにやりがちですが、これは間違いです：</p>
 
 <pre class="cell">
 stats.mannwhitneyu(x, y, method="exact")
@@ -97,9 +118,9 @@ rng = np.random.default_rng(12345)
 stats.mannwhitneyu(x, y, method=stats.PermutationMethod(n_resamples=100000, rng=rng))
 </pre>
 
-<br>
+</aside>
 
-<hr>
+<aside>
 
 <p>PythonでRと同じ両側検定をする例（GPT-5.4作）：</p>
 
@@ -138,8 +159,9 @@ print("R-style exact two-sided p =", p_r_style)
 
 <br>
 
-<hr>
+</aside>
 
+<aside>
 <p>SciPyに依存しないR互換の実装例（GPT-5.4作）：</p>
 
 <pre class="cell">
@@ -302,8 +324,9 @@ MannWhitneyURStyleResult(statistic=32.5, pvalue=0.004362857271054875)
 MannWhitneyURStyleResult(statistic=32.5, pvalue=0.9978420155247454)
 </pre>
 
-<hr>
+</aside>
 
+<aside>
 <p><a href="../stat/wmw.html">Wilcoxon-Mann-Whitney検定</a>で紹介した漸化式（タイのない場合に厳密）：</p>
 
 <pre class="cell">
@@ -331,13 +354,14 @@ plt.plot(x, a)  # 漸化式
 plt.plot(x, b)  # 正規分布近似
 </pre>
 
+</aside>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-03-30 17:22:03 JST</time></p>
+<p>Last modified: <time>2026-06-05 09:33:44 JST</time></p>
 </footer>
 </body>
 </html>

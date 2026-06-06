@@ -47,7 +47,7 @@ math.comb(10, 3)
 120
 </pre>
 
-<p>あるいは階乗 <code>math.factorial()</code> を使っても求めます。</p>
+<p>あるいは階乗 <code>math.factorial()</code> を使っても求められます。</p>
 
 <pre class="cell">
 math.factorial(10) // (math.factorial(3) * math.factorial(7))
@@ -61,6 +61,10 @@ math.factorial(10) // (math.factorial(3) * math.factorial(7))
 
 <aside>
 <p>上の計算は <code>math.factorial(10) / (math.factorial(3) * math.factorial(7))</code> でも同じですが、<code>//</code> を使えば結果は <code>120</code> なのに対し、<code>/</code> を使えば結果は <code>120.0</code> になります。つまり <code>/</code> は分子・分母が整数でも浮動小数点数に直してから除算します。Python はどんな大きな整数でも正確に計算できるのに対し、浮動小数点数は CPU で決まった精度でしか計算できません。例えば <code>math.factorial(200) // 10</code> は正確に計算できますが <code>math.factorial(200) / 10</code> は分子が大きすぎて浮動小数点数に直せないのでエラーになります。</p>
+</aside>
+
+<aside>
+<p>組合せの数は <code>math.comb()</code> 以外に <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.comb.html"><code>scipy.special.comb()</code></a> でも求められます（<code>from scipy.special import comb</code>）。こちらはデフォルトでは浮動小数点で計算します。</p>
 </aside>
 
 <p>投げると確率 0.4 で表が出る硬貨を10回投げて表が3回出る確率 $_{10}C_3 \cdot 0.4^3 \cdot 0.6^7$ は</p>
@@ -342,7 +346,7 @@ probability of success
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-04-12 10:58:41 JST</time></p>
+<p>Last modified: <time>2026-05-17 11:18:04 JST</time></p>
 </footer>
 </body>
 </html>

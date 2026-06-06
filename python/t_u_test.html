@@ -18,17 +18,25 @@
 </nav>
 
 <main>
-<h1>$t$ 検定とMann-Whitneyの $U$ 検定</h1>
+<h1>$t$ 検定とMann-Whitneyの $U$ 検定（とBrunner-Munzel検定）</h1>
 
-<p>「$t$ 検定はデータが正規分布をしていないと使えない。正規分布でない場合はMann-Whitneyの $U$ 検定（<a href="../stat/wmw.html">Wilcoxon-Mann-Whitney検定</a>、Wilcoxonの順位和検定ともいう）を使え」とよく言われてきました。</p>
+<p>「$t$ 検定はデータが正規分布をしていないと使えない。正規分布でない場合はMann-Whitneyの $U$ 検定（<a href="../stat/wmw.html">Wilcoxon-Mann-Whitney検定</a>、Wilcoxonの順位和検定ともいう）のようなノンパラメトリックな（順位だけに基づいた）検定を使え」とよく言われてきました。</p>
 
 <p>われわれが観測するデータは、詳しく見れば多少なりとも正規分布から外れているはずなので、それなら $t$ 検定を捨ててこっちを使えばいいのでしょうか？</p>
 
 <p>でもAndrew Gelman御大は <a href="http://andrewgelman.com/2015/07/13/dont-do-the-wilcoxon/">Don't do the Wilcoxon</a> なんてことを言っておられます。本当にややこしい。</p>
 
-<p>そもそも $t$ 検定が何を検定するかというと、データの平均値の差です。データがほとんどどんな分布をしていようと、データの平均値はほぼ正規分布になる（データの個数が増えると正規分布に近づく）という「中心極限定理」があるので、正規分布に基づく検定で大丈夫だ、というのが、ここで言いたいことです。もっと安心して $t$ 検定を使いましょう。</p>
+<p>そもそも $t$ 検定が何を検定するかというと、データの平均値の差です。データがほとんどどんな分布をしていようと、データの平均値はほぼ正規分布になる（データの個数が増えると正規分布に近づく）という「中心極限定理」があるので、正規分布に基づく検定で近似して大丈夫だ、というのが、ここで言いたいことです。もっと安心して $t$ 検定を使いましょう。</p>
 
 <p>それに、最近は「有意か、有意でないか」の2分割は批判されていて、平均値の差であれば具体的にどれくらい差があるかを信頼区間として示すことが求められるようになってきました。「薬Xは収縮期血圧を有意に下げた（p &lt 0.05）」というより「薬Xは収縮期血圧を10mmHg下げた（95%信頼区間 [5, 15]）」というほうが情報量がありますよね。一方、Wilcoxonのほうは、順位だけに基づくので、例えば2組のデータ $\{1,2,3,4\}$、$\{5,6,7,8\}$ の違いの $p$ 値と、2組のデータ $\{1,2,3,4\}$、$\{105,106,107,108\}$ の違いの $p$ 値とは、まったく同じです。</p>
+
+<p>もう一つ例を挙げましょう。アンケートで、赤組は全員「ほぼほぼ賛成」、青組は半分が「大賛成」、残りが「大反対」と答えたとしましょう。</p>
+
+<figure>反対<img src="img/260606a.svg" alt="Likert scale" style="width: 300px; transform: translateY(10px);">賛成</figure>
+
+<p>「ほぼほぼ賛成」（目盛6）が「大賛成」（目盛7）に近いと考えれば赤組の方が賛成に偏っていると言えますが、ノンパラメトリックな方法では順位だけしか考えませんので両群の差は見えません。</p>
+
+<p>これは正規分布かどうかというよりは、アンケート結果の1〜7の目盛を近似的に間隔尺度として扱うか、あるいは間隔を無視して順序尺度として扱うかの違いです。データの解釈の問題で、どちらが正しいということは言えません。</p>
 
 <aside>
 <p>平均値の差の信頼区間の求め方は<a href="ttest.html">t検定</a>のページをご覧ください。</p>
@@ -55,8 +63,7 @@ N = 100000
 def p_value():
     data1 = rng.standard_normal(M)
     data2 = rng.standard_normal(M)
-    _, p = stats.ttest_ind(data1, data2, equal_var=True)
-    return p
+    return stats.ttest_ind(data1, data2, equal_var=True).pvalue
 
 p_values = [p_value() for _ in range(N)]
 plt.hist(p_values, color="lightgray", edgecolor="black",
@@ -79,9 +86,9 @@ plt.hist(p_values, color="lightgray", edgecolor="black",
 
 <p>こちらもほぼ一様分布ですね。</p>
 
-<p>なお、分散が等しいかどうかを $F$ 検定で調べて、等しければ分散が等しいと仮定する $t$ 検定、そうでなければ分散が等しいと仮定しない $t$ 検定を使いましょうと言われたこともありましたが、これは間違いです。分散が等しいかどうかわからない場合は、最初から分散が等しいと仮定しない $t$ 検定を使いましょう。詳しくは<a href="../stat/ttest.html">t検定</a>の下の方にあるシミュレーション結果をご参照ください。</p>
+<p>なお、分散が等しいかどうかを $F$ 検定で調べて、等しければ分散が等しいと仮定する $t$ 検定、そうでなければ分散が等しいと仮定しない $t$ 検定を使いましょうと言われたこともありましたが、これは間違いです。分散が等しいかどうかわからない場合は、最初から分散が等しいと仮定しない $t$ 検定を使いましょう。詳しくは<a href="../stat/ttest.html">t検定</a>の下の方にある解説とシミュレーション結果をご参照ください。</p>
 
-<p>ここでMann-Whitneyの $U$ 検定（厳密版）にしてみましょう。<code>stats.ttest_ind(data1, data2, equal_var=...)</code> を <code>stats.mannwhitneyu(data1, data2, method="exact")</code> に変えるだけです。</p>
+<p>ここでMann-Whitneyの $U$ 検定（厳密版）にしてみましょう。<code>stats.ttest_ind(data1, data2, equal_var=...)</code> を <code>stats.mannwhitneyu(data1, data2, method="exact")</code> に変えるだけです（<a href="u_test.html">Mann-WhitneyのU検定</a>に書いたように、これはタイがない場合にしか使えない方法です）。</p>
 
 <figure><img src="img/251130a.svg" alt="M=10, uniform, Mann-Whitney exact"></figure>
 
@@ -97,7 +104,13 @@ plt.hist(p_values, color="lightgray", edgecolor="black",
 
 <p>外れがだんだん目立ってきます。やはり $M = 5$ 以上、できれば $M = 10$ 以上は欲しいところです。それより小さいサンプルの場合は、そもそも機械的に検定をするような状況でない場合が多いと思いますので、個々のデータ点をプロットするなりして、総合的に判断しましょう。</p>
 
-<p>結論として、Wilcoxon-Mann-Whitneyはあまりお薦めできないので、分散が等しいと仮定しない $t$ 検定（Welch検定）を使いましょう。そして、有意か有意でないかの2分割ではなく、具体的な $p$ 値を報告するか、さらに推奨される方法としては、どれくらい差があるかの具体的な値とその信頼区間を書くのがよいでしょう。</p>
+<p>結論として、Wilcoxon-Mann-Whitneyはあまりお薦めできないので、分散が等しいと仮定しない $t$ 検定（Welch検定）を使いましょう。そして、有意か有意でないかの2分割ではなく、どれくらい差があるかの具体的な値とその信頼区間を書くのがよいでしょう。</p>
+
+<p>[追記] <a href="brunner-munzel.html">Brunner-Munzel検定</a>（厳密版）でもやってみました。<code>from permutations_stats.permutations import permutation_test</code> してから <code>permutation_test(data1, data2, test="brunner_munzel").pvalue</code> を返すように直すだけです。数時間かかりました。Wilcoxon-Mann-Whitneyよりずっと一様分布に近い $p$ 値になりました。</p>
+
+<figure><img src="img/260606b.svg" alt="exact Brunner-Munzel"></figure>
+
+<p>$t$ 検定でよいという結論は変わりませんが、ノンパラメトリックにするならBrunner-Munzel検定の方がよさそうです。</p>
 
 </main>
 
@@ -105,7 +118,7 @@ plt.hist(p_values, color="lightgray", edgecolor="black",
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-02 16:17:59 JST</time></p>
+<p>Last modified: <time>2026-06-06 17:00:17 JST</time></p>
 </footer>
 </body>
 </html>

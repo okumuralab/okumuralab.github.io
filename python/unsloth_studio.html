@@ -25,42 +25,160 @@
   <li><a href="https://unsloth.ai/docs/new/studio">Introducing Unsloth Studio</a></li>
 </ul>
 
-<p>推奨インストールの仕方は何度も変わっています。上記最初のリンクを参照してください。以下は開発者用のインストールの仕方です:</p>
+<p>インストールは、LinuxやMacではターミナルに次のように打ち込むだけです：</p>
 
 <pre>
-git clone https://github.com/unslothai/unsloth
-cd unsloth
-# 不安定版: git checkout nightly
-./install.sh --local
+curl -fsSL https://unsloth.ai/install.sh | sh
 </pre>
 
-<p>更新:</p>
+<p>すると、Macなら次のようなメッセージが現れます：</p>
 
 <pre>
-cd unsloth
-git pull
-unsloth studio update --local
+  🦥 Unsloth Studio Installer
+  ────────────────────────────────────────────────────
+
+  platform       macos
+  deps           all system dependencies found
+                 preserving existing environment for rollback...
+                 previous environment preserved for rollback
+  venv           creating Python 3.13 virtual environment
+                 /Users/okumura/.unsloth/studio/unsloth_studio
+  venv           using environment
+                 /Users/okumura/.unsloth/studio/unsloth_studio
+  gpu            none (CPU-only)
+                 installing PyTorch (https://download.pytorch.org/whl/cpu)...
+                 installing unsloth (this may take a few minutes)...
+  setup          running unsloth studio update...
+
+  🦥 Unsloth Studio Setup
+  ────────────────────────────────────────────────────
+  frontend       up to date
+  deps           [====================]  9/9  finalizing
+  deps           installed
+  transformers   5.3.0 pre-installed
+  transformers   5.5.0 pre-installed
+  gpu            none (chat-only / GGUF)
+                 Training and GPU inference require an NVIDIA or AMD ROCm GPU.
+                 installing prebuilt llama.cpp...
+                 existing install detected -- validating update
+  llama.cpp      prebuilt installed and validated
+                 installed release: ggml-org/llama.cpp@b9496
+  ────────────────────────────────────────────────────
+  Unsloth Studio Installed
+  ────────────────────────────────────────────────────
+  launch         unsloth studio -p 8888
+                 (add -H 0.0.0.0 to allow network / cloud access)
+
+                 Created Unsloth Studio shortcut
+
+  Unsloth Studio installed!
+  ────────────────────────────────────────────────────
+
+
+  Start Unsloth Studio now? [Y/n]
 </pre>
 
-<p>サーバ起動:</p>
+<p>ここで <code>Y</code> と打てばサーバが起動します。</p>
 
 <pre>
-unsloth studio -H 0.0.0.0 -p 8888 &amp;
+  launch         starting Unsloth Studio...
+Starting Unsloth Studio on http://127.0.0.1:8888
+[OK] Frontend loaded from /Users/okumura/.unsloth/studio/unsloth_studio/lib/python3.13/site-packages/studio/frontend/dist
+INFO:     Started server process [30521]
+INFO:     Waiting for application startup.
+Hardware detected: MLX — Apple Silicon (arm64)
+INFO:     Application startup complete.
+INFO:     Unsloth Studio running on http://127.0.0.1:8888 (To stop: press Ctrl+C -- on macOS, Control+C not Command+C)
+
+🦥 Unsloth Studio is running
+────────────────────────────────────────────────────
+  On this machine -- open this in your browser:
+    http://127.0.0.1:8888
+    (same as http://localhost:8888)
+
+  API & health:
+    http://127.0.0.1:8888/api
+    http://127.0.0.1:8888/api/health
+────────────────────────────────────────────────────
+  Tip: if you are on this computer, open http://localhost:8888/ in your browser.
+
+  Studio is only reachable on this machine (bound to 127.0.0.1).
+  To deploy and access globally:
+    1. press Ctrl+C to stop Studio
+    2. relaunch with:  unsloth studio -H 0.0.0.0 -p 8888
+  Only do this on trusted networks -- it exposes the API on every interface.
+
+  To stop Unsloth Studio: press Ctrl+C in this terminal.
+  (On macOS this is Control+C, not Command+C.)
+────────────────────────────────────────────────────
 </pre>
 
-<p>ブラウザで <a href="http://localhost:8888">http://localhost:8888</a> を開くとUnsloth Studioの画面が現れます。Select model... からQwen3.5-4B-GGUFを選んで実行してみましょう。うまくいったら、もっと大きいモデルを試してみましょう。</p>
+<p>ブラウザで <a href="http://127.0.0.1:8888/">http://127.0.0.1:8888/</a> をひらけばUnsloth Studioの画面が現れます。最初はパスワードの設定を促されます。</p>
 
-<aside>
-<p>私の環境だけの問題かもしれませんが、外付けのやや遅いSSDを使っているためか、大きいモデルを選ぶとタイムアウトしてしまうことがありました。再度試してもうまくいかないなら、ターミナルのメッセージに <code>~/.unsloth/llama.cpp/build/bin/llama-server</code> を実行するコマンドが表示されますので、そのコマンドだけ打ち込んで単独で実行し、うまくいけば Control-C で止めます。これでキャッシュされて、次回は速くロードされ、うまくいきます。</p>
+<p>Select model... からお好きなモデルを選んで実行してみましょう。</p>
 
-<p>コードを書き換えてタイムアウト値を大きくするには、<code>studio/backend/core/inference/llama_cpp.py</code> の <code>if not self._wait_for_health(timeout = 120.0):</code> の値を増やし、さらには <code>studio/backend/core/inference/orchestrator.py</code> の <code>resp = self._wait_response("loaded", timeout = 180)</code> の値を増やすと良さそうです。ソースは頻繁に更新されますので、うまくいかなければコーディングエージェントに聞いてください。</p>
-</aside>
+<p>APIも使えるようになりました。設定の「API」で、適当なトークン名を入れ、「Create token」すると、<code>sk-unsloth-XXXXXX</code> のようなトークンが発行されます。これを使って、例えばEmacsのgptelであれば</p>
+
+<pre>
+(setq gptel-backend
+      (gptel-make-openai "unsloth"
+        :key "sk-unsloth-XXXXXX"
+	:protocol "http"
+	:host "localhost:8888"
+	:models '((current))
+	:stream t))
+</pre>
+
+<p>のように設定すれば使えます。Pythonからも</p>
+
+<pre>
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8888/v1",
+    api_key="sk-unsloth-XXXXXX",
+)
+
+response = client.chat.completions.create(
+    model="current",
+    messages=[{"role": "user", "content": "Hello"}],
+    stream=True,
+)
+for chunk in response:
+    print(chunk.choices[0].delta.content or "", end="")
+</pre>
+
+<p>で使えるはずです。</p>
+
+<p>終了は、先ほどのターミナルで Ctrl-C を打ちます。</p>
+
+<p>次に起動するには、ターミナルに次のように打ち込みます：</p>
+
+<pre>
+unsloth studio -p 8888
+</pre>
+
+<p>あるいは、他のマシンからもアクセスしたい場合は、次のように打ち込みます：</p>
+
+<pre>
+unsloth studio -H 0.0.0.0 -p 8888
+</pre>
+
+<p>いずれの場合も、コマンドの最後に <code>&amp;</code> を付ければ、バックグラウンドでの起動になります。途中からバックグラウンドに切り替えたい場合は Ctrl-Z を打ってから <code>bg</code> と打ちます。</p>
+
+<p>更新はターミナルに次のように打ち込めばいいはずです：</p>
+
+<pre>
+unsloth studio update
+</pre>
+
+<p>ところがMacではうまくいかないことがあるようで、Unslothのサポートによれば再インストールの方が確実だということです。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-03-29 07:56:32 JST</time></p>
+<p>Last modified: <time>2026-06-04 17:58:16 JST</time></p>
 </footer>
 </body>
 </html>

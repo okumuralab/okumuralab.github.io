@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/misc/260517.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>findの代わりにfdを使う</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">雑記</a> &gt;
+</nav>
+
+<h1>findの代わりにfdを使う</h1>
+
+<p><a href="https://github.com/sharkdp/fd">fd</a> はRustで書かれた現代版findです。</p>
+
+<p>Homebrewの入ったMacなら <code>brew install fd</code> でインストールできます。Alma Linuxでは <code>sudo dnf install fd-find</code> でインストールできました。</p>
+
+<p>単に <code>fd hoge</code> と打ち込めば、カレントディレクトリ以下にある <code>hoge.txt</code> や <code>foohogebar.md</code> など <code>hoge</code> を含むファイル名を列挙してくれます。</p>
+
+<p>パターンは正規表現ですので、<code>hoge.txt</code> だけを見つけたい場合は <code>fd '^hoge\.txt$'</code> のようにします。</p>
+
+<p>拡張子が <code>zip</code> のファイルを全部見つけるには <code>fd '\.zip$'</code> でもいいのですが、<code>fd -e zip</code> という書き方もできます。</p>
+
+<p><code>fd -e zip -x unzip</code> とすれば、カレントディレクトリ以下のすべてのzipファイルを個々にunzipします。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-05-17 10:13:37 JST</time></p>
+</footer>
+</body>
+</html>

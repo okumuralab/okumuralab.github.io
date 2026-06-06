@@ -87,6 +87,10 @@ mdfind "kMDItemFinderComment == 'attention is*'cd"
 <p>日本語が文字化けする場合は <code>unicode</code> オプションを入れたり <code>pxjahyper</code> パッケージを併用したりするなどの工夫が必要かもしれない。</p>
 </aside>
 
+<aside>
+<p>すでにあるPDFファイルのメタデータを書き換えるにはexiftool（Macなら <code>brew install exiftool</code> で入る）を使って <code>exiftool -Title="タイトル" hoge.pdf</code> のようにするのが簡単である。</p>
+</aside>
+
 <p>参考</p>
 
 <ul>
@@ -100,7 +104,7 @@ mdfind "kMDItemFinderComment == 'attention is*'cd"
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-02-11 17:56:19 JST</time></p>
+<p>Last modified: <time>2026-05-04 17:16:28 JST</time></p>
 </footer>
 </body>
 </html>
