@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/javascript/htmlpaste.html">
+<meta charset="UTF-8">
+<title>HTML形式でペースト</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">JavaScript講座</a> &gt;
+</nav>
+
+<h1>HTML形式でペースト</h1>
+
+<p>ブラウザやWord、Excelなどの書式を含む文書から文字列をコピーし、下の入力欄に貼り付けてください。</p>
+    
+<textarea id="paste-box" rows="10" cols="80"></textarea>
+
+<p>コピーした文字列にHTML形式の書式が含まれるなら、以下にそれが表示されるはずです。WordやExcelではユーザ名を含むローカルパスも晒されるかもしれません。このページではブラウザ内のJavaScriptで表示しているだけですが、サーバ側に送ることも可能です。心配なら、いったんテキストエディタに貼り付けてから、そこからブラウザにコピペすれば、余計な情報が送られません。</p>
+
+<pre id="output"></pre>
+
+<script>
+  const pasteBox = document.getElementById('paste-box');
+  const outputElement = document.getElementById('output');
+
+  pasteBox.addEventListener('paste', (event) => {
+      const clipboardData = event.clipboardData;
+      if (clipboardData && clipboardData.types.includes('text/html')) {
+          const htmlText = clipboardData.getData('text/html');
+          outputElement.textContent = htmlText;
+      }
+  });
+</script>
+</body>
+</html>

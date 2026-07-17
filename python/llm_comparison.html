@@ -26,26 +26,35 @@ td, th { border: 1px solid; }
   <tr><th>Model</th><th>Context/Output</th><th>Knowledge Cutoff</th><th>$Input/1M</th><th>$Output/1M</th></tr>
   </thead>
   <tbody>
-  <tr><td><code>gpt-5.5-pro</code></td><td>1M/128k</td><td>2025-12</td><td>30</td><td>180</td></tr>
-  <tr><td><code>gpt-5.5</code></td><td>1M/128k</td><td>2025-12</td><td>5</td><td>30</td></tr>
-  <tr><td><code>gpt-5.4-pro</code></td><td>1M/128k</td><td>2025-08</td><td>30</td><td>180</td></tr>
-  <tr><td><code>gpt-5.4</code></td><td>1M/128k</td><td>2025-08</td><td>2.5</td><td>15</td></tr>
+  <tr><td><code>gpt-5.6-sol</code></td><td>1M/128k</td><td>2026-02</td><td>5</td><td>30</td></tr>
+  <tr><td><code>gpt-5.6-terra</code></td><td>1M/128k</td><td>2026-02</td><td>2.5</td><td>15</td></tr>
+  <tr><td><code>gpt-5.6-luna</code></td><td>1M/128k</td><td>2026-02</td><td>1</td><td>6</td></tr>
+  <tr><td><code>gpt-5.5-pro</code></td><td>1M/128k</td><td>2025-12</td><td>30〜60</td><td>180〜270</td></tr>
+  <tr><td><code>gpt-5.5</code></td><td>1M/128k</td><td>2025-12</td><td>5〜10</td><td>30〜45</td></tr>
+  <tr><td><code>gpt-5.4-pro</code></td><td>1M/128k</td><td>2025-08</td><td>30〜60</td><td>180〜270</td></tr>
+  <tr><td><code>gpt-5.4</code></td><td>1M/128k</td><td>2025-08</td><td>2.5〜5</td><td>15〜22.5</td></tr>
   <tr><td><code>gpt-5.4-mini</code></td><td>400k/128k</td><td>2025-08</td><td>0.75</td><td>4.5</td></tr>
   <tr><td><code>gpt-5.4-nano</code></td><td>400k/128k</td><td>2025-08</td><td>0.2</td><td>1.25</td></tr>
   <tr><td><code>gpt-4.1</code></td><td>1M/32k</td><td>2024-06</td><td>2</td><td>8</td></tr>
+  <tr><td><code>(claude-mythos-5)</code></td><td>1M/128k</td><td>?</td><td>10</td><td>50</td></tr>
+  <tr><td><code>claude-fable-5</code></td><td>1M/128k</td><td>?</td><td>10</td><td>50</td></tr>
   <tr><td><code>claude-opus-4-8</code></td><td>1M/128k</td><td>2026-01</td><td>5</td><td>25</td></tr>
   <tr><td><code>claude-opus-4-7</code></td><td>1M/128k</td><td>2026-01</td><td>5</td><td>25</td></tr>
+  <tr><td><code>claude-sonnet-5</code></td><td>1M/128k</td><td>2026-01</td><td>3</td><td>15</td></tr>
   <tr><td><code>claude-sonnet-4-6</code></td><td>1M/64k</td><td>2025-08</td><td>3</td><td>15</td></tr>
   <tr><td><code>claude-haiku-4-5</code></td><td>200k/64k</td><td>2025-02</td><td>1</td><td>5</td></tr>
   <tr><td><code>gemini-3.5-flash(-preview)</code></td><td>1M/64k</td><td>2025-01</td><td>(1.5)</td><td>(9)</td></tr>
   <tr><td><code>gemini-3.1-flash-lite(-preview)</code></td><td>1M/64k</td><td>2025-01</td><td>(0.25)</td><td>(1.5)</td></tr>
   <tr><td><code>gemini-3.1-pro-preview</code></td><td>1M/64k</td><td>2025-01</td><td>2〜4</td><td>12〜18</td></tr>
+  <tr><td><code>grok-4.5</code></td><td>500k</td><td>?</td><td>2</td><td>6</td></tr>
   <tr><td><code>grok-4.3</code></td><td>1M</td><td>?</td><td>1.25</td><td>2.5</td></tr>
+  <tr><td><code>muse-spark-1.1</code></td><td>1M</td><td>?</td><td>1.25</td><td>4.25</td></tr>
+  <tr><td><code>plamo-3.0-prime</code></td><td>256k/20k</td><td></td><td>60円</td><td>250円</td></tr>
   <tr><td><code>plamo-2.2-prime</code></td><td>32k/4k</td><td></td><td>60円</td><td>250円</td></tr>
   </tbody>
-  <!-- <tfoot>
-  <tr><td colspan="5" class="footnote">* gpt-4.5-previewは2025-07-14に終了予定</td></tr>
-  </tfoot> -->
+  <tfoot>
+  <tr><td colspan="5" class="footnote">GPTの「〜」は272Kトークン以下・以上の値段</td></tr>
+  </tfoot>
 </table>
 
 <ul>
@@ -53,6 +62,7 @@ td, th { border: 1px solid; }
   <li>Claude: <a href="https://docs.anthropic.com/claude/docs/models-overview">Models</a></li>
   <li>Gemini: <a href="https://ai.google.dev/models/gemini">Models</a> / <a href="https://ai.google.dev/pricing">Pricing</a></li>
   <li>Grok: <a href="https://docs.x.ai/docs/models">Models and Pricing</a></li>
+  <li>Meta: <a href="https://dev.meta.ai/docs/getting-started/overview/">Get started with Meta Model API</a></li>
   <li><a href="https://plamo.preferredai.jp">PLaMo</a></li>
 </ul>
 
@@ -60,7 +70,7 @@ td, th { border: 1px solid; }
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-05-29 08:28:45 JST</time></p>
+<p>Last modified: <time>2026-07-14 19:55:46 JST</time></p>
 </footer>
 </body>
 </html>

@@ -21,26 +21,30 @@
 
 <h2>はじめに</h2>
 
-<p>ノンパラメトリックな<a href="u_test.html">Mann-WhitneyのU検定</a>は、パラメトリックな場合の $t$ 検定に相当するもので、二つの確率変数が同じ分布に従うという帰無仮説を検定するものでした。一方、Brunner（ブルンナー）とMunzel（ムンツェル）によるBrunner-Munzel検定（Brunner-Munzel test）は、同じ分布という仮定をせずに</p>
+<p>ノンパラメトリックな<a href="u_test.html">Mann-WhitneyのU検定</a>は、パラメトリックな場合の（等分散を仮定する）$t$ 検定に相当するもので、二つの確率変数が同じ分布に従うという帰無仮説を検定するものでした。一方、Brunner（ブルンナー）とMunzel（ムンツェル）によるBrunner-Munzel検定（Brunner-Munzel test）は、同じ分布という仮定をせずに</p>
 
-\[ P(X_1 < X_2) + \frac{1}{2}P(X_1 = X_2) = 1/2 \]
+\[ P(X < Y) + \frac{1}{2}P(X = Y) = 1/2 \]
 
 <p>を検定するもので、ざっくり言えば、パラメトリックな場合のWelchの検定（等分散を仮定しない $t$ 検定）に相当します。</p>
 
-<p>ちょっと強い言葉を使えば、分布が同じと仮定できない限り、つまり実質的にほぼすべての場合に、Mann-WhitneyのU検定ではなく、Brunner-Munzel検定を使うべきです。</p>
+<p>上の式の左辺は（不等号の向きが逆ですが）<a href="u_test.html">Mann-WhitneyのU検定</a>の $U$ をXとYの個数の積で割ったものと実質同じものですが、こちらはXとYの分布が同じことを仮定しません。</p>
 
-<p>理論的な説明についてはR版の<a href="../stat/brunner-munzel.html">Brunner-Munzel検定</a>をご覧ください。ここではPythonを使った計算だけについて説明します。</p>
+<p>分布が同じと仮定できない限り、Mann-WhitneyのU検定ではなく、Brunner-Munzel検定を使うべきです。</p>
+
+<aside>
+<p>Brunner-Munzelの $p$ 値の並べ替え検定による定義は次の通りです。まず <code>(x[i] < y[j]) + 0.5 * (x[i] == y[j])</code> を $h(x_i,y_j)$ とすると、最初の式の左辺に相当する量は $\hat{p} = \frac{1}{nm} \sum_{i=1}^{n} \sum_{j=1}^{m} h(x_i,y_j)$ です。それぞれの $x_i$ について $q_i = \frac{1}{m} \sum_{j=1}^{m} h(x_i,y_j)$ を求めます。また、それぞれの $y_j$ について $r_j = \frac{1}{n} \sum_{i=1}^{n} h(x_i,y_j)$ を求めます。$q_i$ と $r_j$ の標本分散をそれぞれ $s_x^2$、$s_y^2$ とします。そして、$T = (\hat{p} - \frac{1}{2}) / \sqrt{s_x^2/n + s_y^2/m}$ と定義します。この $T$ を最初のX、Yについて求めます。XとYを合わせた集合をランダムに元と同じ大きさに2分割したものについて求めた $T$ が最初の $T$ と等しいかまたはより極端な値になる確率が、求める $p$ 値です。</p>
+</aside>
 
 <h2>Pythonでの計算</h2>
 
 <p>Pythonには SciPy パッケージに <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.brunnermunzel.html"><code>scipy.stats.brunnermunzel()</code></a> があります。<a href="ttest.html">t検定</a>で使った Lumley (1996) のデータで試してみましょう。</p>
 
 <pre class="cell">
-from scipy.stats import brunnermunzel
+from scipy import stats
 
 x = [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1]
 y = [3, 3, 4, 3, 1, 2, 3, 1, 1, 5, 4]
-brunnermunzel(x, y)
+stats.brunnermunzel(x, y)
 </code></pre>
 
 <p>結果は次のようになりました：</p>
@@ -50,6 +54,29 @@ BrunnerMunzelResult(statistic=np.float64(3.1374674823029505), pvalue=np.float64(
 </pre>
 
 <p>つまり $p = 0.006$ 程度です。</p>
+
+<p>効果量 $P(X &lt; Y) + \frac{1}{2}P(X = Y)$ の推定値と95%信頼区間も求めておきます：</p>
+
+<pre class="cell">
+import numpy as np
+
+m, n = len(x), len(y)
+r = stats.rankdata(np.concatenate([x, y]))
+rx, ry = r[:m], r[m:]
+p_hat = (ry.mean() - (n + 1) / 2) / m
+v1 = np.var(rx - stats.rankdata(x), ddof=1)
+v2 = np.var(ry - stats.rankdata(y), ddof=1)
+se = np.sqrt(v1 / (m * n**2) + v2 / (n * m**2))
+df = (m * v1 + n * v2) ** 2 / ((m * v1) ** 2 / (m - 1) + (n * v2) ** 2 / (n - 1))
+ci = p_hat + np.array([-1, 1]) * stats.t.ppf(0.975, df) * se
+print(f"P(X&lt;Y) + 0.5P(X=Y) = {p_hat:.3f}")
+print(f"95% confidence interval: [{ci[0]:.3f}, {ci[1]:.3f}]")
+</pre>
+
+<pre>
+P(X&lt;Y) + 0.5P(X=Y) = 0.789
+95% confidence interval: [0.595, 0.983]
+</pre>
 
 <h2>並べ替えBrunner-Munzel検定</h2>
 
@@ -117,11 +144,30 @@ repeated_permutation_test(
 
 <p><code>test</code> は <code>"friedman"</code>、<code>"friedman_t2"</code>、<code>"wilcoxon"</code> が指定できます。それぞれFriedman検定、タイがある場合にConoverのT2統計量を使うFriedman検定、Wilcoxonの符号つき順位検定です。</p>
 
+<h2>Codexで作った並べ替え検定コード</h2>
+
+<p><a href="code/brunner_munzel_permutation.py">brunner_munzel_permutation.py</a> はCodex（GPT-5.5）に作ってもらったものです。</p>
+
+<pre class="cell">
+from brunner_munzel_permutation import bm_permutation_test
+
+x = [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1]
+y = [3, 3, 4, 3, 1, 2, 3, 1, 1, 5, 4]
+
+bm_permutation_test(x, y)
+</pre>
+
+<pre style="white-space: pre-wrap">
+BMResult(effect=0.788961038961039, standard_error=0.09210009046816862, degrees_freedom=17.682841979481548, p_value=0.008037645264055279, asymptotic_ci_low=0.5952168642537363, asymptotic_ci_high=0.9827052136683416, permutation_ci_low=0.5886308159550016, permutation_ci_high=0.9892912619670764, ci_level=0.95, exact=True, permutations=160, total_permutations=4457400, method='count', count_allocations=160)
+</pre>
+
+<p><code>permutation_ci_low</code>、<code>permutation_ci_high</code> はstudentized permutation分位点による信頼区間、<code>asymptotic_ci_low</code>、<code>asymptotic_ci_high</code> は $t$ 分布近似による信頼区間です。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-06-05 17:36:00 JST</time></p>
+<p>Last modified: <time>2026-06-15 20:29:15 JST</time></p>
 </footer>
 </body>
 </html>

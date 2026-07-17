@@ -43,64 +43,7 @@ defaults write org.python.python ApplePersistenceIgnoreState NO
 
 <p>ライブラリ名のタイポ（綴り間違い）を狙ってマルウェアをインストールさせる手口が見つかっています。ライブラリをインストールするコマンド <code>pip3 install 〜</code> を打ち込むときは、正しい例をコピペしましょう。</p>
 
-<h2>公式サイト Python.org からのインストール（Windows）</h2>
-
-<p>まず、初心者のかたで、今までどこかで Python をインストールしたけれどうまく設定できていないという場合は、［スタートボタン］→［⚙設定］→［アプリ］で、それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
-
-<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> から最新版をダウンロードし、開きます。「Install Now」をクリックする前に、特に初心者のかたは、インストーラの最初の画面で「Add Python 3.14 to PATH」にチェックを付けるほうが楽だと思います。また、「Install Now」のすぐ下に、インストールされるパスが表示されます。私の場合、<code>C:\Users\okumu\AppData\Local\Programs\Python\Python314</code> と表示されました。ここが全角だったり文字化けしていたりする場合は、下の説明を見てください。問題なければ「Install Now」をクリックします。ユーザーアカウント制御「このアプリがデバイスに変更を加えることを許可しますか？」が出ますので「はい」をクリックするとインストールが始まります。インストールが無事終われば「Close」をクリックします。</p>
-
-<div class="note">
-<p>インストールされるパスが全角だったり文字化していたりする場合は、インストーラが起動した画面で「Customize installation」をクリックし、「Next」をクリックし、「Customize install location」の右の「Browse」をクリックし、「PC」→「C:」を選び、「新しいフォルダーの作成」で例えば <code>Python</code> というフォルダを作り、それをインストール場所に設定します。このあたりは実験が不十分なので、情報があれば教えてください。</p>
-</div>
-
-<p>確認として、Windows PowerShell（あるいは VS Code のターミナル、またはコマンドプロンプト）を立ち上げ、</p>
-
-<pre>
-where.exe python
-</pre>
-
-<p>と打ち込んで、正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell ではうまくいかないようです）。うまくいっていれば</p>
-
-<pre>
-C:\Users\ユーザ名\AppData\Local\Programs\Python\Python314\python.exe
-C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
-</pre>
-
-<p>と出ます（2行目はもともと入っている <code>python</code> コマンドで、後述のように、ストアアプリをダウンロードする画面を開くだけの機能しかありません）。これ以外の <code>python.exe</code> が出ても、それが最初の行でなければ、問題ありません。</p>
-
-<p>同様に <code>pip</code> も確認します。</p>
-
-<pre>
-C:\Users\ユーザ名\AppData\Local\Programs\Python\Python314\Scripts\pip.exe
-</pre>
-
-<p>ほかに <a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされますが、ここでは使いません。</p>
-
-<p>いろいろなパッケージのインストールは <code>pip</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
-
-<p>まずは、アップデートの必要なパッケージを、次のコマンドで調べます：</p>
-
-<pre>
-pip list --outdated
-</pre>
-
-<p>もし <code>pip</code> そのものが古いと言われたら、</p>
-
-<pre>
-pip install --upgrade pip
-</pre>
-
-<p>としてアップグレードします。これ以外に必要なパッケージは、その都度インストールします。例：</p>
-
-<pre>
-pip install matplotlib pandas jupyterlab
-</pre>
-
-<p>念のため、Windows PowerShell でパスを確認するには <code>$env:path</code> と打ち込みます。コマンドプロンプトなら <code>path</code> と打ち込みます。</p>
-
-<p>追記：サードパーティのウイルス対策ソフトによっては、Python の動作、特に Jupyter Notebook に支障があるようです。Windows にもともと入っているウイルス対策ソフト Windows Defender なら大丈夫です。</p>
-
-<p>なお、python のパスが設定されていない場合でも使えるように、py.exe というランチャー（起動用プログラム）が C:\Windows の中にインストールされます。こちらを使ってもかまいません。この場合、pip コマンドの代わりに <code>py -m pip</code> のように打ち込みます。</p>
+<p>古いライブラリの脆弱性に注意しましょう。<code>pip-audit</code> ライブラリをインストール（<code>pip3 install pip-audit</code>）して、ときどき <code>pip-audit</code> を実行してみましょう。</p>
 
 <h2>公式サイト Python.org からのインストール（Mac）</h2>
 
@@ -223,6 +166,65 @@ pip3 install --upgrade パッケージ名をスペースで区切って並べる
 </pre>
 
 <p>Python をアンインストールするには <code>/Library/Frameworks/Python.framework</code> および <code>~/Library/Python</code> を消します。<code>/usr/local/bin</code> にできたシンボリックリンクも消します。<code>~/.bash_profile</code> の類に追加した PATH も消します。</p>
+
+<h2>公式サイト Python.org からのインストール（Windows）</h2>
+
+<p>まず、初心者のかたで、今までどこかで Python をインストールしたけれどうまく設定できていないという場合は、［スタートボタン］→［⚙設定］→［アプリ］で、それっぽいものをアンインストールしてから始めるほうがいいかもしれません。</p>
+
+<p>Python のインストーラを <a href="https://www.python.org/download/">Download Python</a> から最新版をダウンロードし、開きます。「Install Now」をクリックする前に、特に初心者のかたは、インストーラの最初の画面で「Add Python 3.14 to PATH」にチェックを付けるほうが楽だと思います。また、「Install Now」のすぐ下に、インストールされるパスが表示されます。私の場合、<code>C:\Users\okumu\AppData\Local\Programs\Python\Python314</code> と表示されました。ここが全角だったり文字化けしていたりする場合は、下の説明を見てください。問題なければ「Install Now」をクリックします。ユーザーアカウント制御「このアプリがデバイスに変更を加えることを許可しますか？」が出ますので「はい」をクリックするとインストールが始まります。インストールが無事終われば「Close」をクリックします。</p>
+
+<div class="note">
+<p>インストールされるパスが全角だったり文字化していたりする場合は、インストーラが起動した画面で「Customize installation」をクリックし、「Next」をクリックし、「Customize install location」の右の「Browse」をクリックし、「PC」→「C:」を選び、「新しいフォルダーの作成」で例えば <code>Python</code> というフォルダを作り、それをインストール場所に設定します。このあたりは実験が不十分なので、情報があれば教えてください。</p>
+</div>
+
+<p>確認として、Windows PowerShell（あるいは VS Code のターミナル、またはコマンドプロンプト）を立ち上げ、</p>
+
+<pre>
+where.exe python
+</pre>
+
+<p>と打ち込んで、正しい位置にある <code>python</code> コマンドが実行されているかを確認します（コマンドプロンプトなら <code>where python</code> でいいのですが PowerShell ではうまくいかないようです）。うまくいっていれば</p>
+
+<pre>
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python314\python.exe
+C:\Users\ユーザ名\AppData\Local\Microsoft\WindowsApps\python.exe
+</pre>
+
+<p>と出ます（2行目はもともと入っている <code>python</code> コマンドで、後述のように、ストアアプリをダウンロードする画面を開くだけの機能しかありません）。これ以外の <code>python.exe</code> が出ても、それが最初の行でなければ、問題ありません。</p>
+
+<p>同様に <code>pip</code> も確認します。</p>
+
+<pre>
+C:\Users\ユーザ名\AppData\Local\Programs\Python\Python314\Scripts\pip.exe
+</pre>
+
+<p>ほかに <a href="https://docs.python.org/3/library/idle.html">IDLE</a>（Integrated Development and Learning Environment）という簡単な統合開発環境がインストールされますが、ここでは使いません。</p>
+
+<p>いろいろなパッケージのインストールは <code>pip</code> コマンドを使って行います。インストールされるパッケージは <a href="https://pypi.org">PyPI</a> にあるものです。</p>
+
+<p>まずは、アップデートの必要なパッケージを、次のコマンドで調べます：</p>
+
+<pre>
+pip list --outdated
+</pre>
+
+<p>もし <code>pip</code> そのものが古いと言われたら、</p>
+
+<pre>
+pip install --upgrade pip
+</pre>
+
+<p>としてアップグレードします。これ以外に必要なパッケージは、その都度インストールします。例：</p>
+
+<pre>
+pip install matplotlib pandas jupyterlab
+</pre>
+
+<p>念のため、Windows PowerShell でパスを確認するには <code>$env:path</code> と打ち込みます。コマンドプロンプトなら <code>path</code> と打ち込みます。</p>
+
+<p>追記：サードパーティのウイルス対策ソフトによっては、Python の動作、特に Jupyter Notebook に支障があるようです。Windows にもともと入っているウイルス対策ソフト Windows Defender なら大丈夫です。</p>
+
+<p>なお、python のパスが設定されていない場合でも使えるように、py.exe というランチャー（起動用プログラム）が C:\Windows の中にインストールされます。こちらを使ってもかまいません。この場合、pip コマンドの代わりに <code>py -m pip</code> のように打ち込みます。</p>
 
 <h2>macOS に最初から入っている Python</h2>
 
@@ -373,7 +375,7 @@ apk add python3 py3-pip
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-05-12 21:07:55 JST</time></p>
+<p>Last modified: <time>2026-06-19 17:06:21 JST</time></p>
 </footer>
 </body>
 </html>

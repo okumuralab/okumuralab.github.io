@@ -20,7 +20,7 @@
 
 <h2>生成する</h2>
 
-<p>ここでは <a href="https://github.com/lincolnloop/python-qrcode">Pure python QR Code generator</a> を使ってみます。<code>pip install qrcode</code> などとしてインストールします（<code>pillow</code> も使われます）。Python ライブラリだけでなく，<code>qr</code> というスクリプトもインストールされます。Mac のターミナルまたは Windows のコマンドプロンプト等で</p>
+<p>ここでは <a href="https://github.com/lincolnloop/python-qrcode">Pure python QR Code generator</a> を使ってみます。<code>pip install qrcode</code> などとしてインストールします（<code>pillow</code> も使われます）。Python ライブラリだけでなく、<code>qr</code> というスクリプトもインストールされます。Mac のターミナルまたは Windows のコマンドプロンプト等で</p>
 
 <pre>
 qr '奥村晴彦です' &gt; test.png
@@ -35,7 +35,7 @@ qr '奥村晴彦です' &gt; test.png
 !qr '奥村晴彦です' &gt; test.png
 </pre>
 
-<p>これで test.png というファイルができているので左ペインからダウンロードして表示します。あるいは，Google Colab のノートブックの中に表示したいのであれば次のようにします。</p>
+<p>これで test.png というファイルができているので左ペインからダウンロードして表示します。あるいは、Google Colab のノートブックの中に表示したいのであれば次のようにします。</p>
 
 <pre>
 from IPython.display import Image
@@ -52,23 +52,25 @@ img.show()           # 表示
 img.save("test.png") # 保存
 </pre>
 
-<p>ほかに <a href="https://pypi.org/project/qrcodegen/">qrcodegen</a> や，<a href="https://pypi.org/project/PyQRCode/">PyQRCode</a> からフォークした <a href="https://pypi.org/project/PyQRCodeNG/">PyQRCodeNG</a> など，多数のQRコード生成ライブラリがあるようです。</p>
+<p>ほかに以下で述べる zxing-cpp でもQRコードの生成ができます。</p>
 
 <h2>読む</h2>
 
-<p>QRコードを読むためのライブラリとして，ここでは <a href="https://pypi.org/project/pyzbar/">pyzbar</a> を使ってみます。インストールは <code>pip install pyzbar</code> です。Mac ではあらかじめ <code>brew install zbar</code> として zbar を入れておきます。次のような実行ファイル qrdecode.py を作っておくと便利です。パスの通ったところに置いておき <code>qrdecode.py *.png *.jpg</code> などとすれば画像からQRコードを見つけて復号してくれるはずです。ファイル名を与えなければクリップボードから画像を読みます。Macなら Control + Shift + Command + 4 でQRコードを含む部分をマウスで選択してから実行します。</p>
+<p>QRコードを読むためのライブラリとして、古くからある <a href="https://pypi.org/project/pyzbar/">pyzbar</a> を以前はここで紹介していたのですが、さすがに古くなったので、<a href="https://pypi.org/project/zxing-cpp/">zxing-cpp</a> を使うことにしました。インストールは <code>pip install zxing-cpp</code> です。</p>
+
+<p>次のような実行ファイル qrdecode.py を作っておくと便利です。パスの通ったところに置いておき <code>qrdecode.py *.png *.jpg</code> などとすれば画像からQRコードを見つけて復号してくれるはずです。ファイル名を与えなければクリップボードから画像を読みます。Macなら Control + Shift + Command + 4 でQRコードを含む部分をマウスで選択してから実行します。</p>
 
 <pre>
 #! /usr/bin/env python3
 
 import sys
-from pyzbar.pyzbar import decode
+import zxingcpp
 from PIL import Image, ImageGrab
 
 
 def qrdecode(img):
-    for x in decode(img):
-        print(x.data.decode("utf-8"))
+    for x in zxingcpp.read_barcodes(img):
+        print(x.text)
 
 
 if len(sys.argv) == 1:
@@ -78,13 +80,11 @@ else:
         qrdecode(Image.open(arg))
 </pre>
 
-<p>実はこれはQRコードだけでなく通常のバーコードも読めます。</p>
-
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-04-10 09:23:08 JST</time></p>
+<p>Last modified: <time>2026-06-26 21:18:34 JST</time></p>
 </footer>
 </body>
 </html>

@@ -18,28 +18,42 @@
 
 <h1>DoclingでPDFを読む</h1>
 
-<p><a href="https://github.com/DS4SD/docling">Docling</a> はPDF等を解釈してMarkdown/JSONにするツールです。IBMが開発しました。arXivの <a href="https://arxiv.org/abs/2408.09869">Docling Technical Report</a> に解説されています。Pythonから使えるほか、コマンド <code>docling</code> で使うこともできます。</p>
+<p><a href="https://github.com/docling-project/docling">Docling</a> はPDF等を解釈してMarkdown/JSONにするツールです。IBMが開発しました。arXivの <a href="https://arxiv.org/abs/2408.09869">Docling Technical Report</a> に解説されています。Pythonから使えるほか、コマンド <code>docling</code> で使うこともできます。</p>
 
-<p><code>pip install docling</code> でインストールできますが、依存関係が複雑なので、普段使いのPythonに入れるのではなく、例えばuvを使って</p>
+<p>Pythonで使うなら <code>pip install docling</code> あるいは <code>uv add docling</code> でインストールできますが、コマンドとして使うなら</p>
 
 <pre>
-uv tool install docling@latest
+uv tool install docling
 </pre>
 
-<p>とすれば <code>~/.local/bin</code> にインストールされます（実体は UV_TOOL_DIR、デフォルトは <code>~/.local/share/uv/tools</code> に入ります）。Pythonは3.14で大丈夫でした。更新は <code>uv tool upgrade docling</code> です。</p>
+<p>とするのが便利です。この場合 <code>~/.local/bin</code> にインストールされます（実体は UV_TOOL_DIR、デフォルトは <code>~/.local/share/uv/tools</code> に入ります）。更新は</p>
 
-<p><code>docling --help</code> で詳しいヘルプが出ます。<code>docling example.pdf</code> で <code>example.md</code> が生成されます。ローカルのPDFファイルの代わりにURLを与えることもできます。初回実行時にHugging Faceからモデルがダウンロードされ、<code>~/.cache/huggingface/hub</code> 以下に入ります。</p>
+<pre>
+uv tool upgrade docling
+</pre>
 
-<p>実行はかなり遅いので、最初は小さいファイルで試してみるのがよさそうです。日本語についてはPDFバックエンドをオプション <code>--pdf-backend=pypdfium2</code> で <a href="pypdfium2.html">pypdfium2</a> に変えるなどする方がいいかもしれません。</p>
+<p>です。</p>
+
+<p><code>docling convert --help</code> で使い方が表示されます。詳しい説明は<a href="https://docling-project.github.io/docling/">ドキュメント</a>をご覧ください。<code>docling convert example.pdf</code> で <code>example.md</code> が生成されます。ローカルのPDFファイルの代わりにURLを与えることもできます。初回実行時にHugging Faceからモデルがダウンロードされ、<code>~/.cache/huggingface/hub</code> 以下に入ります。</p>
+
+<p>実行はかなり遅いので、最初は小さいファイルで試してみるのがよさそうです。</p>
 
 <p>図はデフォルトでは <code>![Image](data:image/png;base64,...)</code> のようにbase64でMarkdownに埋め込んでくれます。図をPNGにして参照する形にするにはオプション <code>--image-export-mode=referenced</code> を付けます。</p>
 
-<p>MarkdownはMacでは <code>qlmanage -p *.md</code> でプレビューできます。</p>
+<p>日本語については</p>
+
+<pre>
+docling convert --image-export-mode=referenced --pdf-backend=pypdfium2 example.pdf
+</pre>
+
+<p>のようにしてPDFバックエンドを <a href="pypdfium2.html">pypdfium2</a> に変える方が良さそうです。バックエンドのデフォルトは <code>docling_parse</code> で、これら以外に <code>threaded_docling_parse</code>、<code>dlparse_v1</code>、<code>dlparse_v2</code>、<code>dlparse_v4</code> が使えるようです。</p>
+
+<p>ちなみに、MarkdownはMacでは <code>qlmanage -p example.md</code> でプレビューできます。VS Codeで開いてMarkdownプレビューモードにする方が読みやすいかもしれません。</p>
 
 <hr>
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-02-01 09:38:46 JST</time></p>
+<p>Last modified: <time>2026-07-14 10:11:07 JST</time></p>
 </footer>
 </body>
 </html>

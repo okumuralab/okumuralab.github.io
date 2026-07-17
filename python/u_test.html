@@ -31,7 +31,6 @@
 <p>まずは正規分布近似です：</p>
 
 <pre class="cell">
-import numpy as np
 from scipy import stats
 
 x = [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 1]
@@ -44,9 +43,22 @@ stats.mannwhitneyu(x, y)
 MannwhitneyuResult(statistic=np.float64(32.5), pvalue=np.float64(0.007740786705107166))
 </pre>
 
-<p>$U = 32.5$、$p = 0.007741$ で、Rと同じ結果になりました。</p>
+<p>$U = 32.5$、$p = 0.007741$ で、Rと同じ結果になりました。この統計量 $U$ は、ここでは</p>
 
-<p>厳密なテストをするためには、<a href="brunner-munzel.html">Brunner-Munzel検定</a>でも紹介した <a href="https://pypi.org/project/permutations-stats/">permutations-stats</a> パッケージを使います。あらかじめ <code>pip install permutations-stats</code> しておきます。</p>
+<pre class="cell">
+def mann_whitney(x, y):
+    u = 0
+    for v in x:
+        for w in y:
+            u += (v > w) + 0.5 * (v == w)
+    return u
+</pre>
+
+<p>で定義される量で、帰無仮説（XとYの分布が同じ）の下での期待値は <code>len(x) * len(y) / 2</code> です。それより小さいということは <code>x</code> の方が小さいという意味です。</p>
+
+<p>厳密な $p$ 値は並べ替え検定（permutation test）で定義できます。XとYを合わせてた集合をランダムに元のXとYと同じ大きさに2分し、$U$ を求めます。元の $U$ か、それより極端な値が出る確率が $p$ 値です。</p>
+
+<p>並べ替え検定をするためには、<a href="brunner-munzel.html">Brunner-Munzel検定</a>でも紹介した <a href="https://pypi.org/project/permutations-stats/">permutations-stats</a> パッケージを使います。あらかじめ <code>pip install permutations-stats</code> しておきます。</p>
 
 <pre class="cell">
 from permutations_stats.permutations import permutation_test
@@ -361,7 +373,7 @@ plt.plot(x, b)  # 正規分布近似
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-06-05 09:33:44 JST</time></p>
+<p>Last modified: <time>2026-06-15 16:27:32 JST</time></p>
 </footer>
 </body>
 </html>

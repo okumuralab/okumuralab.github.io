@@ -52,8 +52,8 @@ x = np.abs(rng.random(n) - rng.random(n))
 <pre class="cell">
 from scipy import stats
 
-a, b = stats.ttest_1samp(x, 0).confidence_interval()
-print(a, b)
+low, high = stats.ttest_1samp(x, 0).confidence_interval()
+print(low, high)
 </pre>
 
 <pre>
@@ -79,22 +79,47 @@ boot = np.fromiter((np.mean(x[rng.integers(0, n, size=n)]) for _ in range(B)), f
 <p>これで</p>
 
 <pre class="cell">
-a, b = np.quantile(boot, [0.025, 0.975])
-print(a, b)
+low, high = np.quantile(boot, [0.025, 0.975])
+print(low, high)
 </pre>
 
 <pre>
 0.26856405025665725 0.3623282666882384
 </pre>
 
-<p>平均値の95%信頼区間は $[0.269, 0.362]$ です。この方法をパーセンタイル信頼区間（percentile confidence interval, percentile CI）といいます。</p>
+<p>ベクトル化すればもっと速くなりますが、メモリは消費します：</p>
+
+<pre class="cell">
+indices = rng.integers(0, n, size=(B, n))
+boot = x[indices].mean(axis=1)
+
+low, high = np.quantile(boot, [0.025, 0.975])
+print(low, high)
+</pre>
+
+<p>大きなデータでは次のようなバッチ処理が安全です：</p>
+
+<pre class="cell">
+batch_size = 1000
+boot = np.empty(B)
+
+for start in range(0, B, batch_size):
+    stop = min(start + batch_size, B)
+    indices = rng.integers(0, n, size=(stop - start, n))
+    boot[start:stop] = x[indices].mean(axis=1)
+
+low, high = np.quantile(boot, [0.025, 0.975])
+print(low, high)
+</pre>
+
+<p>上の方法で求めた平均値の95%信頼区間は $[0.269, 0.362]$ です。この方法をパーセンタイル信頼区間（percentile confidence interval, percentile CI）といいます。</p>
 
 <p>実は、これより少し良い次の方法があります。</p>
 
 <pre class="cell">
-a, b = np.quantile(boot, [0.025, 0.975])
+low, high = np.quantile(boot, [0.025, 0.975])
 m = np.mean(boot)  
-print(2 * m - b, 2 * m - a)
+print(2 * m - high, 2 * m - low)
 </pre>
 
 <pre>
@@ -118,7 +143,35 @@ print(2 * m - b, 2 * m - a)
 <p>となります。つまり、母集団の統計量 $\theta$ の95%信頼区間は $2\hat\theta - \hat\theta^*_U$ 以上 $2\hat\theta - \hat\theta^*_L$ 以下となることがわかります。</p>
 </aside>
 
-<p>さらに改良したものとして、BCa (Bias-Corrected and accelerated) と呼ばれる方法や、Studentized bootstrap (bootstrap-$t$) と呼ばれる方法があります。</p>
+<p>さらに改良したものとして、BCa (Bias-Corrected and accelerated) と呼ばれる方法や、Studentized bootstrap (bootstrap-$t$) と呼ばれる方法があります。次はBCaの例です：</p>
+
+<pre class="cell">
+import numpy as np
+from scipy.stats import bootstrap
+
+# サンプルデータ
+rng = np.random.default_rng(20251220)
+n = 100
+x = np.abs(rng.random(n) - rng.random(n))
+
+result = bootstrap(
+    (x,),
+    np.mean,
+    confidence_level=0.95,
+    n_resamples=10000,
+    method="BCa",
+    vectorized=True,
+    batch=1000,
+    rng=rng,
+)
+
+ci = result.confidence_interval
+print(ci.low, ci.high)
+</pre>
+
+<pre>
+0.2700347835500123 0.3636602466490255
+</pre>
 
 <p>一方で、このような非対称な分布でも、最初の $t$ 分布による方法が十分頑健であることもわかります。</p>
 
@@ -126,7 +179,7 @@ print(2 * m - b, 2 * m - a)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2025-12-25 06:51:12 JST</time></p>
+<p>Last modified: <time>2026-07-17 10:02:44 JST</time></p>
 </footer>
 </body>
 </html>

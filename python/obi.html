@@ -24,6 +24,7 @@
 <p>帯グラフに相当する英語は <span lang="en">stacked bar chart</span> つまり<a href="stacked_bar.html">積み重ね棒グラフ</a>である。特に日本の帯グラフは割合を表すので <span lang="en">(horizontal) proportional stacked bar chart</span> あるいは具体的に <span lang="en">stacked bar chart showing the proportion of ...</span> ということになる。</p>
 
 <pre class="cell">
+import matplotlib.pyplot as plt
 import pandas as pd
 
 df = pd.DataFrame({"反対": [10, 40],
@@ -32,8 +33,13 @@ df = pd.DataFrame({"反対": [10, 40],
                    "賛成": [40, 10]},
                   index = ["男", "女"])
 
-df[::-1].plot(figsize=(6.4, 2), kind="barh", stacked=True,
-              xlim=[0, 100], colormap="coolwarm", edgecolor="black")
+fig, ax = plt.subplots(figsize=(7, 2))
+
+df[::-1].plot(ax=ax, kind="barh", stacked=True,
+              xlim=[0, 100], colormap="coolwarm_r", edgecolor="black")
+
+ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left')  # 凡例をグラフの外側に配置
+plt.tight_layout()
 </pre>
 
 <figure><img src="img/obi1.svg" alt="帯グラフ1"></figure>
@@ -47,16 +53,12 @@ df[::-1].plot(figsize=(6.4, 2), kind="barh", stacked=True,
 <p>帯の左端にヒゲ（tick mark）が付くのが嫌なら、次のようにする：</p>
 
 <pre>
-ax = df[::-1].plot(figsize=(6.4, 2), kind="barh", stacked=True,
-                   xlim=[0, 100], colormap="coolwarm")
 ax.tick_params(left=False)
 </pre>
 
-<p>この <code>ax</code> とMatplotlibの機能を使えばいろいろなことができる。例えば凡例を図の下に移動してみよう：</p>
+<p>凡例を図の下に移動する：</p>
 
 <pre>
-import matplotlib.pyplot as plt
-
 ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=4)
 plt.tight_layout()
 </pre>
@@ -78,10 +80,14 @@ for i in range(len(ax.patches)-len(df)-1):
 <p>反対と賛成の中央で揃える方法もある：</p>
 
 <pre>
+fig, ax = plt.subplots(figsize=(7, 2))
+
 left = df.iloc[::-1, :2].sum(axis=1)
-df[::-1].plot(figsize=(6.4, 2), kind="barh", stacked=True,
+df[::-1].plot(ax=ax, kind="barh", stacked=True,
               left=-left, xlim=[-max(left),100-min(left)],
-              colormap="coolwarm", edgecolor="black", legend="reverse")
+              colormap="coolwarm", edgecolor="black")
+ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=4)
+plt.tight_layout()
 </pre>
 
 <figure><img src="img/obi4.svg" alt="帯グラフ4"></figure>
@@ -93,10 +99,10 @@ df[::-1].plot(figsize=(6.4, 2), kind="barh", stacked=True,
 <p>Matplotlibだけで描くこともできる：</p>
 
 <pre class="cell">
-plt.figure(figsize=(6.4, 2))
+fig, ax = plt.subplots(figsize=(7, 2))
 
 df1 = df[::-1]
-cmap = plt.get_cmap("coolwarm")
+cmap = plt.get_cmap("coolwarm_r")
 bottom = 0
 for i in range(4):
     plt.barh(df1.index, df1.iloc[:,i], left=bottom, color=cmap(i/3))
@@ -112,7 +118,7 @@ plt.xlim(0, 100)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2024-09-12 11:27:22 JST</time></p>
+<p>Last modified: <time>2026-07-17 15:52:08 JST</time></p>
 </footer>
 </body>
 </html>

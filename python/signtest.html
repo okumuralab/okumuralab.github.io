@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/signtest.html">
+<meta charset="UTF-8">
+<title>符号検定</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="http://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>符号検定</h1>
+
+<p>Rの<a href="../stat/signtest.html">符号検定とWilcoxonの符号付き順位検定</a>の符号検定をPythonにしたものです。</p>
+
+<p>10人の患者にある睡眠薬を飲ませたところ，睡眠時間がそれぞれ次の時間だけ増えました
+(Arthur R. Cushny and A. Roy Peebles, <i>The Journal of Physiology</i> <b>32</b>, 501-510 (1905)):</p>
+
+<blockquote>
+<p>1.9,  0.8,  1.1,  0.1, -0.1,  4.4,  5.5,  1.6,  4.6,  3.4</p>
+</blockquote>
+
+<p>つまり，10個のうち負の値は1個だけで，残り9個は正です。正・負の符号の付き方は全部で $2^{10} = 1024$ 通りあり，そのうちで</p>
+
+<ul>
+  <li>すべて正になる場合は $_{10}C_0 = 1$ 通り</li>
+  <li>一つだけ負になる場合は $_{10}C_1 = 10$ 通り</li>
+  <li>二つだけ負になる場合は $_{10}C_2 = (10 \times 9) / (2 \times 1) = 45$ 通り</li>
+</ul>
+
+<p>等々のように場合分けできます。すべての場合を合計すると，当然ですが $2^{10} = 1024$
+になります。</p>
+
+<p>もし正になる確率と負になる確率が同じなら，</p>
+
+<ul>
+  <li>すべて正になる確率は 1/1024</li>
+  <li>一つだけ負になる確率は 10/1024</li>
+  <li>二つだけ負になる確率は 45/1024</li>
+</ul>
+
+<p>となるはずです。実際のデータは10個のうち一つだけ負ですので，このようになる確率と，もっと極端な（すべて正になる）確率を合計すれば，10/1024 + 1/1024 = 11/1024
+です。逆に，すべて負になる確率と，一つだけ正になる確率を合計すれば，やはり 10/1024 + 1/1024 = 11/1024
+です。そこで，10個のうち1個以下の符号が他と異なる確率は，22/1024
+で，$p$ 値は約0.02です。つまり，偶然では50回に1回しか起きない事象です。</p>
+
+<p>このような検定法を符号検定（sign test）といいます。</p>
+
+<p>符号検定では，差が 0 のデータは外して考えます。</p>
+
+<p>一般に，0でない数が <code>n</code> 個あって，そのうち <code>m</code> 個が正（または負）であるなら，<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html">scipy.stats.binomtest</a> で符号検定できます。例えば上の例の場合は</p>
+
+<pre class="cell">
+import numpy as np
+from scipy import stats
+
+x = np.array([1.9, 0.8, 1.1, 0.1, -0.1, 4.4, 5.5, 1.6, 4.6, 3.4])
+
+stats.binomtest(np.sum(x > 0), np.sum(x != 0))
+</pre>
+
+<pre>
+BinomTestResult(k=1.0, n=10.0, alternative='two-sided', statistic=0.1, pvalue=0.021484375)
+</pre>
+
+<p>で，$p = 0.02148$ となります。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-07-12 21:32:32 JST</time></p>
+</footer>
+</body>
+</html>

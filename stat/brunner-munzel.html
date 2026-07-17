@@ -19,25 +19,27 @@
 
 <h1>Brunner-Munzel検定</h1>
 
-<p><em>[2019-02-16追記]</em> <a href="https://twitter.com/TA25140989">@TA25140989</a> さんが <a href="https://github.com/toshi-ara/brunnermunzel">brunnermunzel</a> パッケージを作られました。これは，内部を Fortran で高速化し，並べ替え Brunner-Munzel 検定もできる優れものです。</p>
+<p><em>[2019-02-16追記]</em> <a href="https://twitter.com/TA25140989">@TA25140989</a> さんが <a href="https://github.com/toshi-ara/brunnermunzel">brunnermunzel</a> パッケージを作られました。これは、内部を Fortran で高速化し、並べ替え Brunner-Munzel 検定もできる優れものです。</p>
 
 <p><em>[2019-03-10追記]</em> 上記パッケージがCRANに入りました: <a href="https://CRAN.R-project.org/package=brunnermunzel">brunnermunzel: (Permuted) Brunner-Munzel Test</a>。「lawstatパッケージに由来する<a href="https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q14184344664">不具合</a>は次回更新時に修正します（GitHubでは対応済）」とのことです。</p>
 
-<p><em>[2019-04-10追記]</em> 上記パッケージに計算のおかしいところがあったようで，<del>これから修正が入るようです</del><ins>修正版が出ました</ins>。</p>
+<p><em>[2019-04-10追記]</em> 上記パッケージに計算のおかしいところがあったようで、<del>これから修正が入るようです</del><ins>修正版が出ました</ins>。</p>
+
+<p>Python版の<a href="../python/brunner-munzel.html">Brunner-Munzel検定</a>のページも作りました。</p>
 
 <h2>はじめに</h2>
 
-<p>二つの確率変数 $X_1$，$X_2$ が同じ分布に従うという帰無仮説を検定するには，有名なWMW検定（Wilcoxon-Mann-Whitney test）が使えます。しかし，分布が異なる（例えば分散が異なる）場合には，これでは正確に検定できません。</p>
+<p>二つの確率変数 $X_1$、$X_2$ が同じ分布に従うという帰無仮説を検定するには、有名なWMW検定（Wilcoxon-Mann-Whitney test）が使えます。しかし、分布が異なる（例えば分散が異なる）場合には、これでは正確に検定できません。</p>
 
-<p>そこで，分布が同じことは仮定せず，両群から一つずつ値を取り出したとき，どちらが大きい確率も等しいという帰無仮説を検定することにします。つまり，</p>
+<p>そこで、分布が同じことは仮定せず、両群から一つずつ値を取り出したとき、どちらが大きい確率も等しいという帰無仮説を検定することにします。つまり、</p>
 
 \[ p = P(X_1 < X_2) + \frac{1}{2}P(X_1 = X_2) \]
 
-<p>としたとき，$p = 1/2$ が帰無仮説になります。</p>
+<p>としたとき、$p = 1/2$ が帰無仮説になります。</p>
 
-<p>この考え方から生まれたのが，Brunner（ブルンナー）とMunzel（ムンツェル）によるBrunner-Munzel検定（Brunner-Munzel test）です。</p>
+<p>この $p$ は（本質的でない不等号の向きを無視すれば）WMW検定の統計量を各群の個数の積で割ったものに過ぎません。ただ、WMW検定では両群の分布が同じと仮定するのに対して、ちょうど $t$ 検定を各群の分散が等しくない場合にWelchが拡張したのと同じように拡張したのが、Brunner（ブルンナー）とMunzel（ムンツェル）によるBrunner-Munzel検定（Brunner-Munzel test）です。</p>
 
-<p>以下では，彼らの次の論文に基づいて解説します。</p>
+<p>以下では、彼らの次の論文に基づいて解説します。</p>
 
 <ul>
   <li lang="en">Edgar Brunner and Ullrich Munzel,
@@ -56,7 +58,7 @@
 
 \[ X_{11}, X_{12}, \ldots, X_{1n_1}, \quad X_{21}, X_{22}, \ldots, X_{2n_2} \]
 
-<p>の，全体を通しての順位を</p>
+<p>の、全体を通しての順位を</p>
 
 \[ R_{11}, R_{12}, \ldots, R_{1n_1}, \quad R_{21}, R_{22}, \ldots, R_{2n_2} \]
 
@@ -64,17 +66,17 @@
 
 \[ \bar{R}_{i\cdot} = \frac{1}{n_i}(R_{i1} + R_{i2} + \cdots + R_{in_i}) \]
 
-<p>とすると，</p>
+<p>とすると、</p>
 
 \[ \hat{p} = \frac{\bar{R}_{2\cdot} - \bar{R}_{1\cdot}}{N} + \frac{1}{2} \]
 
-<p>が，最初に挙げた $p$ の不偏推定量になります。</p>
+<p>が、最初に挙げた $p$ の不偏推定量になります。</p>
 
-<p>一方，それぞれの群内での順位を</p>
+<p>一方、それぞれの群内での順位を</p>
 
 \[ R_{i1}^{(i)}, R_{i2}^{(i)}, \ldots, R_{in_i}^{(i)} \]
 
-<p>とすると，その平均は</p>
+<p>とすると、その平均は</p>
 
 \[ \frac{1}{n_i}(R_{i1}^{(i)} + R_{i2}^{(i)} + \cdots + R_{in_i}^{(i)}) = \frac{n_i + 1}{2} \]
 
@@ -89,14 +91,14 @@
   \end{gather*}
 \]
 
-<p>とすると，</p>
+<p>とすると、</p>
 
 \[ W_N^{BF} = \frac{1}{\sqrt{N}} \cdot
               \frac{\bar{R}_{2\cdot} - \bar{R}_{1\cdot}}{\hat{\sigma}_N}
    = \frac{n_1 n_2 (\bar{R}_{2\cdot} - \bar{R}_{1\cdot})}{(n_1 + n_2)\sqrt{n_1 S_1^2 + n_2 S_2^2}}
 \]
 
-<p>は，漸近的に（$n_i$ や $n_2$ が大きくなると），標準正規分布 $N(0,1)$ に近づきます。小標本の場合には，より良い近似として，$W_N^\mathrm{BF}$ を自由度</p>
+<p>は、漸近的に（$n_i$ や $n_2$ が大きくなると）、標準正規分布 $N(0,1)$ に近づきます。小標本の場合には、より良い近似として、$W_N^\mathrm{BF}$ を自由度</p>
 
 \[ \hat{f} = \frac{(\hat{\sigma}_1^2 / n_1 + \hat{\sigma}_2^2 / n_2)^2}
               {\dfrac{(\hat{\sigma}_1^2 / n_1)^2}{n_1 - 1} +
@@ -112,16 +114,16 @@
 <p>Rには lawstat パッケージに <code>brunner.munzel.test()</code> があります。<a href="ttest.html">t検定</a>で使った Lumley (1996) のデータで試してみましょう。</p>
 
 <pre>
-<code>library(lawstat)
+library(lawstat)
 x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
 y = c(3,3,4,3,1,2,3,1,1,5,4)
 brunner.munzel.test(x, y)
-</code></pre>
+</pre>
 
 <p>結果は次のようになりました：</p>
 
 <pre>
-<code>Brunner-Munzel Test
+Brunner-Munzel Test
 
 data:  x and y
 Brunner-Munzel Test Statistic = 3.1375, df = 17.683,
@@ -131,22 +133,22 @@ p-value = 0.005786
 sample estimates:
 P(X&lt;Y)+.5*P(X=Y)
         0.788961
-</code></pre>
+</pre>
 
 <p>新しい<a href="https://CRAN.R-project.org/package=brunnermunzel">brunnermunzel</a>パッケージでは次のようになります：</p>
 
 <pre>
-<code>install.packages("brunnermunzel")
+install.packages("brunnermunzel")
 library(brunnermunzel)
 x = c(1,2,1,1,1,1,1,1,1,1,2,4,1,1)
 y = c(3,3,4,3,1,2,3,1,1,5,4)
 brunnermunzel.test(x, y)
-</code></pre>
+</pre>
 
 <p>結果：</p>
 
 <pre>
-<code>	Brunner-Munzel Test
+	Brunner-Munzel Test
 
 data:  x and y
 Brunner-Munzel Test Statistic = 3.1375, df = 17.683, p-value = 0.005786
@@ -155,11 +157,11 @@ Brunner-Munzel Test Statistic = 3.1375, df = 17.683, p-value = 0.005786
 sample estimates:
 P(X&lt;Y)+.5*P(X=Y) 
         0.788961 
-</code></pre>
+</pre>
 
 <h2>並べ替えBrunner-Munzel検定</h2>
 
-<p>サンプルが非常に小さい場合には，Brunner-Munzelの統計量に並べ替え検定を適用すれば，もっと正確に計算できます。この方法（permuted Brunner-Munzel test）は次の文献で評価されています：</p>
+<p>サンプルが非常に小さい場合には、Brunner-Munzelの統計量に並べ替え検定を適用すれば、もっと正確に計算できます。この方法（permuted Brunner-Munzel test）は次の文献で評価されています：</p>
 
 <ul>
   <li lang="en">Karin Neubert and Edgar Brunner,
@@ -168,10 +170,10 @@ P(X&lt;Y)+.5*P(X=Y)
   Vol. 51, pp. 5192-5204 (2007).</li>
 </ul>
 
-<p>さきほどと同じデータでやってみましょう。全部の並べ替えでやってみたところ，Pentium 4 3.20GHzのLinuxマシンで6000秒あまりかかりました。</p>
+<p>さきほどと同じデータでやってみましょう。全部の並べ替えでやってみたところ、Pentium 4 3.20GHzのLinuxマシンで6000秒あまりかかりました。</p>
 
 <pre>
-<code>bm = brunner.munzel.test(x, y)$statistic
+bm = brunner.munzel.test(x, y)$statistic
 n1 = length(x)
 n2 = length(y)
 N = n1 + n2
@@ -181,7 +183,7 @@ foo = function(X) {
 }
 z = combn(1:N, n1, foo)
 mean(abs(z) &gt;= abs(bm))
-</code></pre>
+</pre>
 
 <p>結果は <code>0.008037645</code> となりました。</p>
 
@@ -200,12 +202,12 @@ mean(abs(z) &gt;= abs(bm))
 
 <img src="img/081208b.png" alt="graph" class="right">
 
-<p>Brunner-Munzel検定と，Welchの $t$ 検定を順位について適用した場合とでは，右図のように，どちらかといえば前者のほうが小さい $p$ 値が出やすいようです。</p>
+<p>Brunner-Munzel検定と、Welchの $t$ 検定を順位について適用した場合とでは、右図のように、どちらかといえば前者のほうが小さい $p$ 値が出やすいようです。</p>
 
 <p>この図は次のRのプログラムで描きました：</p>
 
 <pre>
-<code>ni = 1000
+ni = 1000
 pt = pbm = numeric(ni)
 for (i in 1:ni) {
   a = sample(20)
@@ -218,7 +220,7 @@ for (i in 1:ni) {
 par(mgp=c(1.5,0.6,0)) # 数字とラベルをもっと軸に近づける
 plot(pt, pbm, xlim=c(0,0.1), ylim=c(0,0.1))
 abline(0, 1)
-</code></pre>
+</pre>
 
 <hr>
 
@@ -230,11 +232,7 @@ abline(0, 1)
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>
-<!-- hhmts start -->
-Last modified: <time>2019-04-13 22:01:05</time>
-<!-- hhmts end -->
-</p>
+<p>Last modified: <time>2026-06-18 10:06:53 JST</time></p>
 </footer>
 </body>
 </html>

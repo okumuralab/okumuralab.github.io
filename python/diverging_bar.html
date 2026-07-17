@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/diverging_bar.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>中央揃え帯グラフ</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<header>
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+</header>
+
+<main>
+<h1>中央揃え帯グラフ</h1>
+
+<p><a href="obi.html">帯グラフ</a>で中央で揃える方法を紹介しました。これは <a href="https://www.jstatsoft.org/article/view/v057i05">Design of Diverging Stacked Bar Charts for Likert Scales and Other Applications</a> で提案された “diverging stacked bar chart”（発散型積み上げ棒グラフ）というものです。日本語にするとわかりにくいので、ここでは「中央揃え帯グラフ」と呼びました。特に中央が「どちらでもない」を表すLikert尺度の可視化に向いています。</p>
+
+<pre class="cell">
+import numpy as np
+import pandas as pd
+from collections import Counter
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+
+# データの例
+x = [3]*200 + [4]*600 + [5]*200
+y = [1]*50 + [2]*100 + [3]*150 + [4]*290 + [5]*410
+
+df = pd.DataFrame([Counter(x), Counter(y)], index=["x", "y"])
+df = df.fillna(0).astype(int)
+df = df.reindex(columns=range(min(x+y), max(x+y)+1), fill_value=0)
+df = df[::-1] 
+
+n = len(df.columns)
+
+def get_offset(row):
+    mid_idx = n // 2
+    if n % 2 == 1:
+        return -(row.iloc[:mid_idx].sum() + row.iloc[mid_idx] / 2)
+    else:
+        return -row.iloc[:mid_idx].sum()
+
+offsets = df.apply(get_offset, axis=1)
+
+fig, ax = plt.subplots(figsize=(6.4, 2))
+cmap = plt.get_cmap("coolwarm_r")
+colors = cmap(np.linspace(0, 1, n))
+y_pos = np.arange(len(df.index))
+
+for i, col in enumerate(df.columns):
+    widths = df[col]
+    lefts = offsets + df.iloc[:, :i].sum(axis=1)
+    ax.barh(y_pos, widths, left=lefts, color=colors[i], edgecolor="black", label=col)
+
+ax.set_yticks(y_pos)
+ax.set_yticklabels(df.index)
+ax.axvline(0, color='gray', linewidth=1, zorder=-1)
+ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+
+min_x = offsets.min()
+max_x = (offsets + df.sum(axis=1)).max()
+ax.set_xlim(1.05 * min_x - 0.05 * max_x, 1.05 * max_x - 0.05 * min_x)
+
+# 目盛を整数に限る
+ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+# 見やすい位置に移動
+plt.tight_layout()
+plt.show()
+</pre>
+
+<figure><img src="img/diverging_bar.svg" alt="中央揃え帯グラフ"></figure>
+
+<p>ここでは帯の長さを数にしましたが、割合にすることもできます。</p>
+
+<p>「賛成」側を暖色にするか寒色にするかは悩ましいところです。このページでは以前は「賛成」側を暖色にしていましたが、元論文に合わせて逆にしました。</p>
+
+<p><a href="../misc/260717.html">賛成と反対、どっちが暖色系？</a>もご覧ください。</p>
+</main>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-07-17 15:15:42 JST</time></p>
+</footer>
+</body>
+</html>

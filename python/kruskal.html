@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/kruskal.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kruskal-Wallis検定</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>Kruskal-Wallis検定</h1>
+
+<p>Kruskal-Wallis（クラスカル・ウォリス）検定は、<a href="u_test.html">Mann-WhitneyのU検定</a>を3群以上に拡張したノンパラメトリックな検定です（2群でも使えます）。どの群も同じ分布だというのが帰無仮説です（中央値が等しいことではありませんが、同じ分布なら結果的に中央値も等しくなります）。パラメトリックな検定では（等分散の場合の）分散分析に対応します。</p>
+
+<p>通常は、順序に直して、各群の個数 $n_i$、順位和 $R_i$ を使って</p>
+
+\[ H = \frac{12}{N(N + 1)} \sum_{i=1}^k \frac{R_i^2}{n_i} - 3(N + 1) \]
+
+<p>が（中心極限定理により）近似的に自由度 $k-1$ の $\chi^2$ 分布に従うことを使います。$k$ は群数、$N$ は総数です。</p>
+
+<p>上の式を変形して</p>
+
+\[ H = \frac{12}{N(N + 1)} \sum_{i=1}^k n_k \left( \frac{R_i}{n_i} - \frac{N + 1}{2} \right)^2 \]
+
+<p>と書けば、順位平均 $R_i/n_i$ の帰無仮説における値 $(N+1)/2$ からの偏差の2乗和だから $\chi^2$ 分布で近似できることがわかりやすいと思います。</p>
+
+<p>ただし、タイがあると順位の分散が小さくなるので、その補正も必要です。</p>
+
+<p>Pythonでは <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.kruskal.html">scipy.stats.kruskal</a> で上記の計算ができます。<p>
+
+<pre class="cell">
+from scipy import stats
+
+x = [1, 2, 3, 4]
+y = [2, 4, 5, 6]
+z = [5, 7, 8, 9]
+
+stats.kruskal(x, y, z)
+</pre>
+
+<pre>
+KruskalResult(statistic=np.float64(7.41431095406361), pvalue=np.float64(0.024547249270391307))
+</pre>
+
+<p>行列で与えた場合は次のようになります。</p>
+
+<pre class="cell">
+from scipy import stats
+
+groups = [
+    [1, 2, 3, 4],
+    [2, 4, 5, 6],
+    [5, 7, 8, 9]
+]
+
+stats.kruskal(groups, axis=-1).pvalue
+</pre>
+
+<p>シミュレーションをしてみましょう。1から5までの整数を10個ずつ乱数で作り、$p$ 値の分布が一様になることを確かめます。</p>
+
+<pre class="cell">
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy import stats
+
+rng = np.random.default_rng()
+
+def p():
+    x = rng.integers(1, 6, 10)
+    y = rng.integers(1, 6, 10)
+    z = rng.integers(1, 6, 10)
+    return stats.kruskal(x, y, z).pvalue
+
+a = [p() for _ in range(100000)]
+plt.hist(a, color="lightgray", edgecolor="black", bins=np.arange(21)/20, density=True)
+plt.savefig("kruskal.svg", bbox_inches="tight")
+</pre>
+
+<figure><img src="img/kruskal.svg" alt="Kruskal-Wallis検定"></figure>
+
+<p>だいたい良さそうです。</p>
+
+<p>以上は近似値です。厳密に計算するには、permutation testを使います。Pythonでは <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.permutation_test.html">scipy.stats.permutation_test</a> を使うのが便利です。</p>
+
+<pre class="cell">
+import numpy as np
+from scipy import stats
+
+groups = [
+    [1, 2, 3, 4],
+    [2, 4, 5, 6],
+    [5, 7, 8, 9]
+]
+
+def kw_statistic(*samples, axis=-1):
+    return stats.kruskal(*samples, axis=axis).statistic
+
+result = stats.permutation_test(
+    groups,
+    kw_statistic,
+    permutation_type="independent",
+    n_resamples=np.inf,
+    alternative="greater",
+    vectorized=True,
+    batch=1000,
+)
+
+print("exact p =", result.pvalue) # 0.01471861471861472
+</pre>
+
+<p>近似値が 0.025 であったのに対して、厳密な値は 0.015 です。</p>
+
+<p><code>np.inf</code> は全部の置換を試します。サンプルサイズが大きい場合には非現実的ですので、適当な値にします。</p>
+
+<p>Kruskal-Wallis検定で例えば3群の分布に有意な差があることがわかれば、次にDunn（ダン）検定＋Holm（ホルム）の多重比較補正、あるいはSteel-Dwass（スティール・デュワス）検定をして、3群のうちどのペアが有意に異なっているかを調べる、というのが伝統的（）な方法です。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-07-16 16:14:06 JST</time></p>
+</footer>
+</body>
+</html>
