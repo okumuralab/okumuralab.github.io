@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<link rel="canonical" href="https://okumuralab.org/~okumura/python/anova.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分散分析</title>
+<link rel="stylesheet" href="style.css">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<script src="../js/load-mathjax.js" async></script>
+<script src="../js/copypre.js"></script>
+</head>
+<body>
+
+<nav id="breadcrumbs">
+<a href="../">ホーム</a> &gt;
+<a href="./">Python</a> &gt;
+</nav>
+
+<h1>分散分析</h1>
+
+<h2>はじめに</h2>
+
+<p>Rの<a href="../stat/anova.html">分散分析</a>のPython版です。</p>
+
+<p>分散分析（Analysis of Variance、ANOVA、アノーヴァ）は、複数の群の平均値が等しいかどうかを調べる方法です。ここではとりあえず一元配置分散分析（oneway-anova）だけ扱います。</p>
+
+<p>なお、分散分析をする前に、しかるべき方法でデータを可視化して、どのようなデータを扱っているかをよく見るようにしましょう。</p>
+
+<h2>SciPyによる方法</h2>
+
+<p>2群の平均値を比べるには $t$ 検定を使いますが、一般に2群以上の平均値が等しいかどうか調べるには一元配置分散分析を使います。Rでは <code>oneway.test</code> という関数を使いますが、Python（SciPy）では <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f_oneway.html">scipy.stats.f_oneway</a> を使います。<code>f_</code> は $F$ 分布を使うことから来ているのだと思います。</p>
+
+<p>注意すべきは、Rの <code>oneway.test</code> が等分散を仮定しないWelchの方法（<code>var.equal=FALSE</code>）がデフォルトなのに対し、こちらは等分散を仮定する（<code>equal_var=True</code>）がデフォルトです。等分散であることが初めからわかっている場合を除き、<code>equal_var=False</code> を付けましょう。</p>
+
+<aside>
+<p>そもそも <code>equal_var</code> オプションがサポートされたのは2025年6月のSciPy 1.16.0からです。それまではAlexander-Govern検定（<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.alexandergovern.html">scipy.stats.alexandergovern</a>）で非等分散の場合をカバーしていたようです。</p>
+</aside>
+
+<pre class="cell">
+from scipy import stats
+
+x = [1, 3]
+y = [5, 8, 5]
+z = [4, 2]
+stats.f_oneway(x, y, z, equal_var=False)
+</pre>
+
+<pre>
+F_onewayResult(statistic=np.float64(3.391304347826088), pvalue=np.float64(0.1998454186043655))
+</pre>
+
+<p>$F = 3.3913$、$p = 0.1998$ です。</p>
+
+<p>あるいは次のようにしてもかまいません。</p>
+
+<pre class="cell">
+from scipy import stats
+
+groups = [
+    [1, 3],
+    [5, 8, 5],
+    [4, 2]
+]
+stats.f_oneway(*groups, equal_var=False)
+</pre>
+
+<h2>pingouinによる方法</h2>
+
+<p>よりRに近い簡便さを望むなら、<a href="https://pingouin-stats.org">Pingouin</a> パッケージを使います（<code>pip install pingouin</code>）。等分散を仮定しないWelchの分散分析は次のように行えます。</p>
+
+<pre class="cell">
+import pandas as pd
+import pingouin as pg
+
+df = pd.DataFrame({
+    "score": [1, 3, 5, 8, 5, 4, 2],
+    "group": [1, 1, 2, 2, 2, 3, 3]
+})
+
+pg.welch_anova(data=df, dv="score", between="group")
+</pre>
+
+<pre>
+  Source  ddof1  ddof2         F     p_unc     np2
+0  group      2    2.4  3.391304  0.199845  0.6875
+</pre>
+
+<p>$p = 0.1998$ で有意ではありませんが、仮に有意なら、伝統的にはGames–Howell法を使ってどのペアが異なるかを調べます。</p>
+
+<pre class="cell">
+pg.pairwise_gameshowell(data=df, dv="score", between="group", effsize="hedges")
+</pre>
+
+<pre>
+   A  B  mean_A  mean_B  diff        se         T        df      pval    hedges
+0  1  2     2.0     6.0  -4.0  1.414214 -2.828427  2.666667  0.143617 -1.781447
+1  1  3     2.0     3.0  -1.0  1.414214 -0.707107  2.000000  0.784182 -0.404061
+2  2  3     6.0     3.0   3.0  1.414214  2.121320  2.666667  0.247435  1.336085
+</pre>
+
+<p><code>pval</code> は多重比較調整済みの $p$ 値です。<code>hedges</code> は Hedges' $g$ という効果量です。</p>
+
+<p>なお、各群の分散が等しいと仮定できる場合は通常の（Welchでない）分散分析をしてからTukeyのHSD法でどのペアが有意かを調べます。</p>
+
+<hr>
+
+<footer>
+<p><a href="../" rel="author">奥村 晴彦</a></p>
+<p>Last modified: <time>2026-07-19 08:19:51 JST</time></p>
+</footer>
+</body>
+</html>

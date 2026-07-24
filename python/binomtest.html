@@ -21,6 +21,34 @@
 
 <p>Rを使った<a href="../stat/tests_and_CI.html">検定と区間推定</a>もご参照ください。</p>
 
+<h2>要約</h2>
+
+<p>Rの <code>binom.test</code> に相当するのは <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binomtest.html">scipy.stats.binomtest</a> です。例えば、表の出る確率 0.5 の硬貨を10回投げて2回表が出たとすると、両側 $p$ 値は 0.109 です。</p>
+
+<pre class="cell">
+from scipy import stats
+
+stats.binomtest(2, 10, 0.5)
+</pre>
+
+<pre>
+BinomTestResult(k=2.0, n=10.0, alternative='two-sided', statistic=0.2, pvalue=0.109375)
+</pre>
+
+<p>$p$ 値だけ欲しい場合は <code>stats.binomtest(2, 10, 0.5).pvalue</code> とします。</p>
+
+<p>硬貨を10回投げて2回表が出たとすると、表の出る確率の95%信頼区間は [0.025, 0.556] です。</p>
+
+<pre class="cell">
+stats.binomtest(2, 10).proportion_ci()
+</pre>
+
+<pre>
+ConfidenceInterval(low=np.float64(0.025210726326833386), high=np.float64(0.5560954623076415))
+</pre>
+
+<p>下限・上限を別々の変数に代入するには <code>low, hi = stats.binomtest(2, 10).proportion_ci()</code> とします。</p>
+
 <h2>2項分布</h2>
 
 <p>歪んだ硬貨があって、投げると確率 $\theta$ で<ruby>表<rp>（</rp><rt>おもて</rt><rp>）</rp></ruby>が出て、確率 $1 - \theta$ で裏が出るとします。この硬貨を $n$ 回投げて、表が $r$ 回出る確率を求めてください。</p>
@@ -346,7 +374,7 @@ probability of success
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-05-17 11:18:04 JST</time></p>
+<p>Last modified: <time>2026-07-19 09:27:41 JST</time></p>
 </footer>
 </body>
 </html>

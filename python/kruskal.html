@@ -51,7 +51,7 @@ stats.kruskal(x, y, z)
 KruskalResult(statistic=np.float64(7.41431095406361), pvalue=np.float64(0.024547249270391307))
 </pre>
 
-<p>行列で与えた場合は次のようになります。</p>
+<p>リストのリストで与えた場合は次のようになります。</p>
 
 <pre class="cell">
 from scipy import stats
@@ -62,7 +62,7 @@ groups = [
     [5, 7, 8, 9]
 ]
 
-stats.kruskal(groups, axis=-1).pvalue
+stats.kruskal(*groups)
 </pre>
 
 <p>シミュレーションをしてみましょう。1から5までの整数を10個ずつ乱数で作り、$p$ 値の分布が一様になることを確かめます。</p>
@@ -87,7 +87,15 @@ plt.savefig("kruskal.svg", bbox_inches="tight")
 
 <figure><img src="img/kruskal.svg" alt="Kruskal-Wallis検定"></figure>
 
-<p>だいたい良さそうです。</p>
+<pre>
+def p():
+    x = rng.integers(1, 6, 10)
+    y = rng.integers(1, 6, 15)
+    z = rng.integers(0, 3, 20) + rng.integers(1, 4, 20)
+    return stats.kruskal(x, y, z).pvalue
+</pre>
+
+<figure><img src="img/kruskal2.svg" alt="Kruskal-Wallis検定"></figure>
 
 <p>以上は近似値です。厳密に計算するには、permutation testを使います。Pythonでは <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.permutation_test.html">scipy.stats.permutation_test</a> を使うのが便利です。</p>
 
@@ -121,13 +129,13 @@ print("exact p =", result.pvalue) # 0.01471861471861472
 
 <p><code>np.inf</code> は全部の置換を試します。サンプルサイズが大きい場合には非現実的ですので、適当な値にします。</p>
 
-<p>Kruskal-Wallis検定で例えば3群の分布に有意な差があることがわかれば、次にDunn（ダン）検定＋Holm（ホルム）の多重比較補正、あるいはSteel-Dwass（スティール・デュワス）検定をして、3群のうちどのペアが有意に異なっているかを調べる、というのが伝統的（）な方法です。</p>
+<p>Kruskal-Wallis検定で例えば3群の分布に有意な差があることがわかれば、次にDunn（ダン）検定＋Holm（ホルム）の多重比較補正、あるいはSteel-Dwass（スティール・デュワス）検定をして、3群のうちどのペアが有意に異なっているかを調べる、というのが伝統的（）な方法です。ただ、本来はまず3群の違いがわかるような可視化をしたいところです。</p>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-07-16 16:14:06 JST</time></p>
+<p>Last modified: <time>2026-07-24 14:59:58 JST</time></p>
 </footer>
 </body>
 </html>

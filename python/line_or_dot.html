@@ -34,86 +34,56 @@ school = [93.9, 66.5, 69.7, 42.7, 59.7, 49.2]
 fig, ax = plt.subplots(figsize=(6.4, 4.0))
 ax.plot(home,   countries, marker="o", linestyle="-", label="自宅での利用")
 ax.plot(school, countries, marker="s", linestyle="-", label="学校での利用")
-ax.invert_yaxis()
+ax.set_yinverted(True) # または ax.set_ylim(5.5, -0.5)
 ax.set_xlim(0, 100)
 ax.set_xlabel("利用率（%）")
 ax.set_title("高校生のインターネット利用率（2012年）")
-ax.grid(True, alpha=0.3)
-ax.legend()
-plt.tight_layout()
-</pre>
-
-<figure><img src="img/260212a.svg" alt="高校生のインターネット利用率（2012年）"></figure>
-
-<p>Clevelandもこのような図が嫌いだったらしく、ドットプロット（dot plot）と称して、線を除いた描き方を提案している。線を除けばこんな感じになる。</p>
-
-<pre class="cell">
-import matplotlib.pyplot as plt
-
-countries = ["オランダ", "イタリア", "シンガポール", "韓国", "日本", "トルコ"]
-home   = [98.9, 97.4, 95.4, 83.5, 81.4, 68.3]
-school = [93.9, 66.5, 69.7, 42.7, 59.7, 49.2]
-
-fig, ax = plt.subplots(figsize=(6.4, 4.0))
-ax.scatter(home,   countries, marker="$H$", label="自宅での利用")
-ax.scatter(school, countries, marker="$S$", label="学校での利用")
-ax.invert_yaxis()
-ax.set_xlim(0, 100)
-ax.set_xlabel("利用率（%）")
-ax.set_title("高校生のインターネット利用率（2012年）")
-ax.grid(True, alpha=0.3)
-ax.legend()
-plt.tight_layout()
-</pre>
-
-<figure><img src="img/260212b.svg" alt="高校生のインターネット利用率（2012年）"></figure>
-
-<p>マーカーを日本語の文字にするのは少し厄介だ（GPT-4.2に教えてもらった。もっと良い方法があったら教えてください）：</p>
-
-<pre class="cell">
-import matplotlib.pyplot as plt
-from matplotlib.textpath import TextPath
-from matplotlib.transforms import Affine2D
-
-def text_marker(ch, size=1, prop=None):
-    """
-    文字 ch を TextPath でパス化し、中心が(0,0)になるように平行移動した Path を返す
-    size は “元の字形サイズ” で、表示サイズは plot の markersize で調整するのが楽
-    """
-    tp = TextPath((0, 0), ch, size=size, prop=prop)
-    bb = tp.get_extents()
-    cx, cy = (bb.x0 + bb.x1) / 2, (bb.y0 + bb.y1) / 2
-    return tp.transformed(Affine2D().translate(-cx, -cy))
-
-countries = ["オランダ", "イタリア", "シンガポール", "韓国", "日本", "トルコ"]
-home   = [98.9, 97.4, 95.4, 83.5, 81.4, 68.3]
-school = [93.9, 66.5, 69.7, 42.7, 59.7, 49.2]
-
-y = range(len(countries))
-m_home   = text_marker("自")
-m_school = text_marker("学")
-
-fig, ax = plt.subplots(figsize=(6.4, 4.0))
-
-ax.plot(home,   countries, linestyle="None", marker=m_home,
-        markersize=12, markeredgecolor="none", label="自宅での利用")
-ax.plot(school, countries, linestyle="None", marker=m_school,
-        markersize=12, markeredgecolor="none", label="学校での利用")
-
-ax.set_yticks(y)
-ax.set_yticklabels(countries)
-ax.invert_yaxis()
-ax.set_xlim(0, 100)
-ax.set_xlabel("利用率（%）")
 ax.grid(True, alpha=0.3)
 ax.legend()
 plt.tight_layout()
 plt.show()
 </pre>
 
-<figure><img src="img/260212c.svg" alt="高校生のインターネット利用率（2012年）"></figure>
+<figure><img src="img/260212a.svg" alt="高校生のインターネット利用率（2012年）"></figure>
 
-<p><a href="https://x.com/bob3bob3/status/2021627887934414881">ボブさん</a>のご指摘のように、2変数なら散布図にする方が賢そうだ。</p>
+<p>さて、問題はこのような順不同の名義尺度について、線で結ぶのが妥当かどうかである。Clevelandはドットプロット（dot plot）と称して、線を除いた描き方を提案している。線を除くには、上の <code>linestyle="-"</code> を <code>linestyle="none"</code> にすればよい。</p>
+
+<p>点だけではわかりにくいので、文字にしてみよう。それには <code>marker="o"</code> などとなっているところを  <code>marker="$H$"</code> のようにすればよい。ただし、文字は数式フォント（イタリック体）になり、日本語文字は化ける。これを防ぐためには、次のようにすればよい：</p>
+
+<pre class="cell">
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+
+countries = ["オランダ", "イタリア", "シンガポール", "韓国", "日本", "トルコ"]
+home   = [98.9, 97.4, 95.4, 83.5, 81.4, 68.3]
+school = [93.9, 66.5, 69.7, 42.7, 59.7, 49.2]
+
+fig, ax = plt.subplots(figsize=(6.4, 4.0))
+
+with mpl.rc_context({
+        # "font.family": "Hiragino Sans",
+        # "font.weight": 400,
+        "mathtext.default": "regular", # 数式にも標準（regular）のフォント設定を適用
+}):
+    ax.plot(home,   countries, marker="$家$", markersize=10,
+            linestyle="none", label="自宅での利用")
+    ax.plot(school, countries, marker="$学$", markersize=10,
+            linestyle="none", label="学校での利用")
+
+ax.set_yticks(range(len(countries)), labels=countries)
+ax.set_xlim(0, 102)    # 98.9のマーカーが切れないよう少し余白を設ける
+ax.set_yinverted(True) # または ax.set_ylim(5.5, -0.5)
+ax.set_xlabel("利用率（%）")
+ax.set_title("高校生のインターネット利用率（2012年）")
+ax.grid(alpha=0.3)
+ax.legend()
+plt.tight_layout()
+plt.show()
+</pre>
+
+<figure><img src="img/260719b.svg" alt="高校生のインターネット利用率（2012年）"></figure>
+
+<p>あるいは、<a href="https://x.com/bob3bob3/status/2021627887934414881">ボブさん</a>のご指摘のように、2変数なら散布図にする方が賢そうだ。</p>
 
 <pre class="cell">
 import matplotlib.pyplot as plt
@@ -147,14 +117,14 @@ plt.show()
 <p>[追記] その他の提案:</p>
 
 <ul>
-  <li><a href="https://x.com/mwakenni/status/2022034480731762718">左右に伸びた人口ピラミッドのような棒グラフ</a></li>
+  <li><a href="https://x.com/mwakenni/status/2022034480731762718">左右に伸びた人口ピラミッドのような棒グラフ</a>（<a href="diverging_bar.html">中央揃え帯グラフ</a>の一種？）</li>
 </ul>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-02-13 09:38:01 JST</time></p>
+<p>Last modified: <time>2026-07-20 13:41:39 JST</time></p>
 </footer>
 </body>
 </html>

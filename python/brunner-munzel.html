@@ -19,17 +19,19 @@
 
 <h1>Brunner-Munzel検定</h1>
 
+<p>Rの<a href="../stat/brunner-munzel.html">Brunner-Munzel検定</a>のPython版です。</p>
+
 <h2>はじめに</h2>
 
-<p>ノンパラメトリックな<a href="u_test.html">Mann-WhitneyのU検定</a>は、パラメトリックな場合の（等分散を仮定する）$t$ 検定に相当するもので、二つの確率変数が同じ分布に従うという帰無仮説を検定するものでした。一方、Brunner（ブルンナー）とMunzel（ムンツェル）によるBrunner-Munzel検定（Brunner-Munzel test）は、同じ分布という仮定をせずに</p>
+<p>ノンパラメトリックな<a href="u_test.html">Mann-WhitneyのU検定</a>は、パラメトリックな場合の（等分散を仮定する）$t$ 検定に相当するもので、二つの確率変数が同じ分布に従うという帰無仮説を検定するものでした。Brunner（ブルンナー）とMunzel（ムンツェル）によるBrunner-Munzel検定（Brunner-Munzel test）も、U検定の $U$ を両群の個数の積で割ったものに相当する量</p>
 
-\[ P(X < Y) + \frac{1}{2}P(X = Y) = 1/2 \]
+\[ P(X &lt; Y) + \frac{1}{2}P(X = Y) \]
 
-<p>を検定するもので、ざっくり言えば、パラメトリックな場合のWelchの検定（等分散を仮定しない $t$ 検定）に相当します。</p>
+<p>が 0.5 より大きいか小さいかについて検定します。その際に、XとYの分散の違いを考慮した補正をする点がMann-Whitneyの $U$ 検定と違うところです。つまり、$U$ 検定とBrunner-Munzel検定の違いは、（等分散を仮定する）$t$ 検定と（等分散を仮定しない）Welchの検定の違いと同じです。なお、不等号の向きは統計ツールによって異なります。</p>
 
-<p>上の式の左辺は（不等号の向きが逆ですが）<a href="u_test.html">Mann-WhitneyのU検定</a>の $U$ をXとYの個数の積で割ったものと実質同じものですが、こちらはXとYの分布が同じことを仮定しません。</p>
+<p>ちなみに、上の量は、Xを負例のスコア、Yを正例のスコアとしたときの、ROC曲線下の面積（AUC）にも相当します。<a href="intransitive_dice.html">非推移的さいころ</a>の勝率とも同じで、推移率を満たしません。</p>
 
-<p>分布が同じと仮定できない限り、Mann-WhitneyのU検定ではなく、Brunner-Munzel検定を使うべきです。</p>
+<p>分布（特に散らばり具合）が等しいと仮定できない場合は、一般に、Mann-WhitneyのU検定よりBrunner-Munzel検定の方を使うべきです。</p>
 
 <aside>
 <p>Brunner-Munzelの $p$ 値の並べ替え検定による定義は次の通りです。まず <code>(x[i] < y[j]) + 0.5 * (x[i] == y[j])</code> を $h(x_i,y_j)$ とすると、最初の式の左辺に相当する量は $\hat{p} = \frac{1}{nm} \sum_{i=1}^{n} \sum_{j=1}^{m} h(x_i,y_j)$ です。それぞれの $x_i$ について $q_i = \frac{1}{m} \sum_{j=1}^{m} h(x_i,y_j)$ を求めます。また、それぞれの $y_j$ について $r_j = \frac{1}{n} \sum_{i=1}^{n} h(x_i,y_j)$ を求めます。$q_i$ と $r_j$ の標本分散をそれぞれ $s_x^2$、$s_y^2$ とします。そして、$T = (\hat{p} - \frac{1}{2}) / \sqrt{s_x^2/n + s_y^2/m}$ と定義します。この $T$ を最初のX、Yについて求めます。XとYを合わせた集合をランダムに元と同じ大きさに2分割したものについて求めた $T$ が最初の $T$ と等しいかまたはより極端な値になる確率が、求める $p$ 値です。</p>
@@ -53,9 +55,9 @@ stats.brunnermunzel(x, y)
 BrunnerMunzelResult(statistic=np.float64(3.1374674823029505), pvalue=np.float64(0.005786208666151469))
 </pre>
 
-<p>つまり $p = 0.006$ 程度です。</p>
+<p>つまり $p = 0.006$ 程度です。<code>statistic</code> は近似的に $t$ 分布に従う統計量 $W$ です。</p>
 
-<p>効果量 $P(X &lt; Y) + \frac{1}{2}P(X = Y)$ の推定値と95%信頼区間も求めておきます：</p>
+<p>効果量 $P(X &lt; Y) + \frac{1}{2}P(X = Y)$ の推定値と95%信頼区間は次のようにして求められます：</p>
 
 <pre class="cell">
 import numpy as np
@@ -77,6 +79,8 @@ print(f"95% confidence interval: [{ci[0]:.3f}, {ci[1]:.3f}]")
 P(X&lt;Y) + 0.5P(X=Y) = 0.789
 95% confidence interval: [0.595, 0.983]
 </pre>
+
+<p><a href="https://www.statsmodels.org/stable/generated/statsmodels.stats.nonparametric.rank_compare_2indep.html">statsmodels.stats.nonparametric.rank_compare_2indep</a> でもBrunner-Munzel検定ができます。</p>
 
 <h2>並べ替えBrunner-Munzel検定</h2>
 
@@ -144,9 +148,9 @@ repeated_permutation_test(
 
 <p><code>test</code> は <code>"friedman"</code>、<code>"friedman_t2"</code>、<code>"wilcoxon"</code> が指定できます。それぞれFriedman検定、タイがある場合にConoverのT2統計量を使うFriedman検定、Wilcoxonの符号つき順位検定です。</p>
 
-<h2>Codexで作った並べ替え検定コード</h2>
+<h2>（おまけ）Codexで作った並べ替え検定コード</h2>
 
-<p><a href="code/brunner_munzel_permutation.py">brunner_munzel_permutation.py</a> はCodex（GPT-5.5）に作ってもらったものです。</p>
+<p><a href="code/brunner_munzel_permutation.py">brunner_munzel_permutation.py</a> は以前にCodex（GPT-5.5）に作ってもらったものです。</p>
 
 <pre class="cell">
 from brunner_munzel_permutation import bm_permutation_test
@@ -167,7 +171,7 @@ BMResult(effect=0.788961038961039, standard_error=0.09210009046816862, degrees_f
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-06-15 20:29:15 JST</time></p>
+<p>Last modified: <time>2026-07-21 09:53:19 JST</time></p>
 </footer>
 </body>
 </html>

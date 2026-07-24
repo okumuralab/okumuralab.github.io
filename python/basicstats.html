@@ -60,11 +60,11 @@ statistics.pstdev(x)    # n で割る方式の標準偏差
 
 <p><code>mean()</code> は結果が整数になるなら多倍長整数演算を使います。<code>fmean()</code> はつねに浮動小数点で計算し、より高速です。</p>
 
-<p>Python 3.10 で <code>correlation()</code>、<code>covariance()</code>、<code>linear_regression()</code> が追加されました。</p>
+<p>Python 3.10 で <code>correlation()</code>、<code>covariance()</code>、<code>linear_regression()</code> が追加されました。Python 3.13 で <code>kde()</code>、<code>kde_random()</code> が追加されました。</p>
 
 <h2>NumPy パッケージ</h2>
 
-<p><a href="https://numpy.org">NumPy</a> パッケージはベクトルや行列を扱う科学技術計算に不可欠なものです。</p>
+<p><a href="https://numpy.org">NumPy</a>（ナムパイ）パッケージはベクトルや行列を扱う科学技術計算に不可欠なものです。</p>
 
 <pre>
 import numpy as np
@@ -100,7 +100,7 @@ x.mean()   # np.mean(x) と同じ
 
 <h2>SciPy パッケージ</h2>
 
-<p><a href="https://www.scipy.org">SciPy</a> は科学計算用の巨大なパッケージです。統計計算用の関数はこの中の <code>stats</code> に含まれています。</p>
+<p><a href="https://www.scipy.org">SciPy</a>（サイパイ）は NumPy をベースとした科学計算用の巨大なパッケージです。統計計算用の関数はこの中の <code>stats</code> に含まれています。</p>
 
 <p>NumPy と被らないようにという趣旨なのか、頭に <code>t</code> が付いた trimmed なバージョン（オプションで <code>limits=[a,b]</code> と与えればその範囲だけの値を対象にする）になっています。</p>
 
@@ -154,7 +154,7 @@ s.describe()  # 基本統計量をまとめて求める
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-03-07 10:27:53 JST</time></p>
+<p>Last modified: <time>2026-07-19 09:04:59 JST</time></p>
 </footer>
 </body>
 </html>

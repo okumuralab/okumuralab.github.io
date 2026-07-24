@@ -23,6 +23,8 @@
 
 <p>例えば<a href="ttest.html">t検定</a>で使ったLumleyのデータのそれぞれの平均値にエラーバーを付けて描いてみます。</p>
 
+<figure><img src="img/260613a.svg" alt="t検定によるエラーバー"></figure>
+
 <pre class="cell">
 import matplotlib.pyplot as plt
 import numpy as np
@@ -58,7 +60,7 @@ plt.errorbar(
 )
 
 # Y軸を反転させて上をX、下をYにする
-plt.gca().invert_yaxis()
+plt.gca().set_yinverted(True)
 
 # グラフの見栄えを調整
 plt.xlabel('Value')
@@ -66,11 +68,8 @@ plt.title('Means ± 95% Confidence Intervals')
 plt.grid(axis='x', linestyle='--', alpha=0.5)
 plt.ylim(1.5, -0.5)
 plt.tight_layout()
-plt.savefig('260613a.svg')
 plt.show()
 </pre>
-
-<figure><img src="img/260613a.svg" alt="t検定によるエラーバー"></figure>
 
 </main>
 
@@ -78,7 +77,7 @@ plt.show()
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-06-13 11:23:10 JST</time></p>
+<p>Last modified: <time>2026-07-20 13:09:30 JST</time></p>
 </footer>
 </body>
 </html>

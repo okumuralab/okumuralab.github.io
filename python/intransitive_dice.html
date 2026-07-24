@@ -40,11 +40,13 @@ print(sum([i > j for i in C for j in A]) / 36)  # CのAに対する勝率
 
 <p>やってみましょう。何がわかるでしょうか。</p>
 
+<p>引き分けのときは0.5勝とするには、<code>i > j</code> を <code>(i > j) + (i == j)/2</code> とします。このようにすれば、<a href="u_test.html">Mann-WhitneyのU検定</a>や<a href="brunner-munzel.html">Brunner-Munzel検定</a>で使われる判断基準 probability of superiority と同じになります。</p>
+
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2023-01-22 09:56:27 JST</time></p>
+<p>Last modified: <time>2026-07-19 17:33:58 JST</time></p>
 </footer>
 </body>
 </html>

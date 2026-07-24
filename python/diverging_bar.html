@@ -21,7 +21,11 @@
 <main>
 <h1>中央揃え帯グラフ</h1>
 
-<p><a href="obi.html">帯グラフ</a>で中央で揃える方法を紹介しました。これは <a href="https://www.jstatsoft.org/article/view/v057i05">Design of Diverging Stacked Bar Charts for Likert Scales and Other Applications</a> で提案された “diverging stacked bar chart”（発散型積み上げ棒グラフ）というものです。日本語にするとわかりにくいので、ここでは「中央揃え帯グラフ」と呼びました。特に中央が「どちらでもない」を表すLikert尺度の可視化に向いています。</p>
+<p><a href="https://www.jstatsoft.org/article/view/v057i05">Design of Diverging Stacked Bar Charts for Likert Scales and Other Applications</a> という論文で、次のようなグラフが提案されています。ここで1〜5は、例えば1は「反対」、2は「やや反対」、3は「どちらでもない」、4は「やや賛成」、5は「賛成」のような、いわゆるLikert（リッカート）尺度の値です。</p>
+
+<figure><img src="img/diverging_bar.svg" alt="中央揃え帯グラフ"></figure>
+
+<p>この “diverging stacked bar chart” は、直訳すれば「発散型積み上げ棒グラフ」となりますが、“stacked bar chart” は日本では「<a href="obi.html">帯グラフ</a>」と呼ぶのが一般的ですし、両側に伸びるという意味の “diverging” を「発散型」と訳してもわかりにくいので、ここでは「中央揃え帯グラフ」と呼んでみました。特に中央が「どちらでもない」を表すLikert尺度の可視化に向いています。</p>
 
 <pre class="cell">
 import numpy as np
@@ -77,20 +81,16 @@ plt.tight_layout()
 plt.show()
 </pre>
 
-<figure><img src="img/diverging_bar.svg" alt="中央揃え帯グラフ"></figure>
-
 <p>ここでは帯の長さを数にしましたが、割合にすることもできます。</p>
 
-<p>「賛成」側を暖色にするか寒色にするかは悩ましいところです。このページでは以前は「賛成」側を暖色にしていましたが、元論文に合わせて逆にしました。</p>
-
-<p><a href="../misc/260717.html">賛成と反対、どっちが暖色系？</a>もご覧ください。</p>
+<p>「賛成」側を暖色系にするか寒色系にするかは悩ましいところです。ここでは元論文に合わせて「賛成」側を寒色系にしました。<a href="../misc/260717.html">賛成と反対、どっちが暖色系？</a>もご覧ください。逆の色にするには <code>"coolwarm_r"</code> を <code>"coolwarm"</code> にします。</p>
 </main>
 
 <hr>
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-07-17 15:15:42 JST</time></p>
+<p>Last modified: <time>2026-07-19 10:30:45 JST</time></p>
 </footer>
 </body>
 </html>

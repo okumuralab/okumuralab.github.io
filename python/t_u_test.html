@@ -18,7 +18,7 @@
 </nav>
 
 <main>
-<h1>$t$ 検定とMann-Whitneyの $U$ 検定（とBrunner-Munzel検定）</h1>
+<h1>$t$ 検定、Mann-Whitneyの $U$ 検定、Brunner-Munzel検定</h1>
 
 <p>「<a href="ttest.html">$t$ 検定</a>はデータが正規分布をしていないと使えない。正規分布でない場合は<a href="u_test.html">Mann-Whitneyの $U$ 検定</a>（<a href="../stat/wmw.html">Wilcoxon-Mann-Whitney検定</a>、Wilcoxonの順位和検定ともいう）のようなノンパラメトリックな（順位だけに基づいた）検定を使え」とよく言われてきました。</p>
 
@@ -105,6 +105,54 @@ print(s / (len(x) * len(y)))
 
 <hr>
 
+<p>Brunner-Munzel検定は、勝率（優越率、probability of superiority）</p>
+
+\[ \theta_{ij} = P(X_i &lt; X_j) + 0.5P(X_i = X_j) \]
+
+<p>が 0.5 より大きいか小さいかで、$i$ 群と $j$ 群の勝ち負けを決めます。Wilcoxon-Mann-Whitney検定も基本的に同じです（分布についての仮定が違います）。</p>
+
+<p>この勝率は、<a href="intransitive_dice.html">非推移的さいころ</a>の勝率とまったく同じで、推移律が成り立ちません。つまり、$X > Y$、$Y > Z$ でも $X > Z$ とは限りません。</p>
+
+<p>例えば次の例を考えましょう。</p>
+
+<pre>
+x = [1] * 6 + [2] * 2 + [3] * 2 + [4] * 7 + [5] * 3
+y = [1] * 3 + [2] * 8 + [3] * 1 + [4] * 2 + [5] * 6
+z = [1] * 2 + [2] * 2 + [3] * 11 + [4] * 4 + [5] * 1
+</pre>
+
+<figure><img src="img/260719c.svg" alt="t検定によるエラーバー"></figure>
+
+<p>$\theta_{xy} = 0.53$、$\theta_{yz} = 0.53125$、$\theta_{zx} = 0.52125$ のように循環し、グーチョキパーのように勝者が決まりません。</p>
+
+<p>これでは2群は比較できても3群以上の順序関係は決められません。何とかする方法はないでしょうか。</p>
+
+<p>一つの方法は、すべての群からランダムに一つの群を選び、その中からランダムに一つを選んで、それと比較することです。あるいは同じことですが</p>
+
+\[ \psi_j = \frac{1}{k} \sum_{i=1}^k \theta_{ij} \]
+
+<p>で、それぞれの群の強さを定義することです。これであれば各群の順序関係が決められます。</p>
+
+\[ \theta_{ij} = \begin{pmatrix} 0.5 & 0.53 & 0.47875 \\ 0.47 & 0.5 & 0.53125 \\ 0.52125 & 0.46875 & 0.5 \end{pmatrix} \]
+
+<p>ですので</p>
+
+\[ \psi_1 = 0.49708, \quad \psi_2 = 0.49958, \quad \psi_3 = 0.50333 \]
+
+<p>になります。ちなみに、各群の平均はそれぞれ 2.95、3.0、3.0 です。</p>
+
+<p>以上は主にGPT 5.6 Sol（一部Fable 5）と壁打ちして考えたことです。以下はその際に教えてもらった文献です（読めていません）。</p>
+
+<ul style="list-style: none; padding-left: 0;">
+  <li style="padding-left: 2.5em; text-indent: -1.7em;">[1] B. M. Brown, T. P. Hettmansperger (2003), <a href="https://doi.org/10.1111/1467-842X.00244">Kruskal–Wallis, Multiple Comparisons and Efron Dice</a></li>
+  <li style="padding-left: 2.5em; text-indent: -1.7em;">[2] Karthinathan Thangavelu, Edgar Brunner (2007), <a href="https://doi.org/10.1016/j.jspi.2006.06.005">Wilcoxon–Mann–Whitney test for stratified samples and Efron's paradox dice</a></li>
+  <li style="padding-left: 2.5em; text-indent: -1.7em;">[3] Thomas Lumley, Daniel L. Gillen (2016), <a href="https://doi.org/10.1016/j.spl.2015.11.005">Characterising transitive two-sample tests</a></li>
+  <li style="padding-left: 2.5em; text-indent: -1.7em;">[4] Edgar Brunner, Frank Konietschke, Markus Pauly, Madan L. Puri (2017), <a href="https://doi.org/10.1111/rssb.12222">Rank-Based Procedures in Factorial Designs: Hypotheses About Non-Parametric Treatment Effects</a></li>
+  <li style="padding-left: 2.5em; text-indent: -1.7em;">[5] Olivier Thas, Jan De Neve, Lieven Clement, Jean-Pierre Ottoy (2012), <a href="https://doi.org/10.1111/j.1467-9868.2011.01020.x">Probabilistic Index Models</a></li>
+</ul>
+
+<hr>
+
 <p>以下は昔やったシミュレーションの結果です。</p>
 
 <aside>
@@ -181,7 +229,7 @@ plt.hist(p_values, color="lightgray", edgecolor="black",
 
 <footer>
 <p><a href="../" rel="author">奥村 晴彦</a></p>
-<p>Last modified: <time>2026-07-16 20:26:18 JST</time></p>
+<p>Last modified: <time>2026-07-20 19:42:57 JST</time></p>
 </footer>
 </body>
 </html>
